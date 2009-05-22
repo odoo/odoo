@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:46:06+0000\n"
-"PO-Revision-Date: 2009-04-09 13:46:06+0000\n"
+"POT-Creation-Date: 2009-05-19 14:30:05+0000\n"
+"PO-Revision-Date: 2009-05-20 10:30:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,18 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_be
+#: selection:vat.intra.xml,init,trimester:0
+msgid "Oct/Nov/Dec"
+msgstr ""
+
+#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
 msgid "Tiers - Recevable"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,go:0
+#: wizard_view:vat.intra.xml,go:0
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "Notification"
 msgstr ""
@@ -30,6 +36,11 @@ msgstr ""
 #: code:addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:vat.intra.xml,init,trimester:0
+msgid "Trimester Number"
 msgstr ""
 
 #. module: l10n_be
@@ -55,6 +66,7 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,init,go:0
+#: wizard_button:vat.intra.xml,init,go:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,go:0
 msgid "Create XML"
 msgstr ""
@@ -66,18 +78,24 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,msg:0
+#: wizard_field:vat.intra.xml,go,msg:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,msg:0
 msgid "File created"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_stock
-msgid "Stock et Encours"
+#: selection:vat.intra.xml,init,trimester:0
+msgid "Apr/May/Jun"
 msgstr ""
 
 #. module: l10n_be
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
+msgstr ""
+
+#. module: l10n_be
+#: selection:vat.intra.xml,init,trimester:0
+msgid "Jul/Aug/Sep"
 msgstr ""
 
 #. module: l10n_be
@@ -87,8 +105,14 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,file_save:0
+#: wizard_field:vat.intra.xml,go,file_save:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,file_save:0
 msgid "Save File"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_view:vat.intra.xml,init:0
+msgid "This wizard will create an XML file for Vat Intra"
 msgstr ""
 
 #. module: l10n_be
@@ -99,6 +123,11 @@ msgstr ""
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "Select Fiscal Year"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_view:vat.intra.xml,init:0
+msgid "Partner VAT Intra"
 msgstr ""
 
 #. module: l10n_be
@@ -144,6 +173,7 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,go,end:0
+#: wizard_button:vat.intra.xml,go,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,go,end:0
 msgid "Ok"
 msgstr "V redu"
@@ -166,12 +196,18 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
+#: wizard_field:vat.intra.xml,init,fyear:0
 msgid "Fiscal Year"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "XML Flie has been Created."
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_stock
+msgid "Stock et Encours"
 msgstr ""
 
 #. module: l10n_be
@@ -188,6 +224,7 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,test_xml:0
+#: wizard_field:vat.intra.xml,init,test_xml:0
 msgid "Test XML file"
 msgstr ""
 
@@ -199,6 +236,7 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,mand_id:0
+#: wizard_field:vat.intra.xml,init,mand_id:0
 msgid "MandataireId"
 msgstr ""
 
@@ -215,7 +253,19 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
+#: wizard_view:vat.intra.xml,init:0
+#: wizard_field:vat.intra.xml,init,country_ids:0
+msgid "European Countries"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_view:vat.intra.xml,init:0
+msgid "General Information"
+msgstr ""
+
+#. module: l10n_be
 #: wizard_view:list.vat.detail,go:0
+#: wizard_view:vat.intra.xml,go:0
 msgid "XML File has been Created."
 msgstr ""
 
@@ -226,6 +276,7 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,init,end:0
+#: wizard_button:vat.intra.xml,init,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
 msgstr "Prekliči"
@@ -233,5 +284,16 @@ msgstr "Prekliči"
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
 msgid "Régime Intra-Communautaire"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.actions.wizard,name:l10n_be.partner_vat_intra
+#: model:ir.ui.menu,name:l10n_be.partner_intra_vat_menu
+msgid "Partner VAT intra"
+msgstr ""
+
+#. module: l10n_be
+#: selection:vat.intra.xml,init,trimester:0
+msgid "Jan/Feb/Mar"
 msgstr ""
 

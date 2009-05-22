@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
-"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
+"POT-Creation-Date: 2009-05-19 14:23:06+0000\n"
+"PO-Revision-Date: 2009-05-20 10:23:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,11 @@ msgstr "Managt einen Anwendersupport."
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
 msgstr "Stufe Bezeichnung"
+
+#. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_categ2
+msgid "Cases by Opportunities, Category and Type"
+msgstr ""
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -258,7 +263,6 @@ msgstr "Kategorie"
 
 #. module: crm_configuration
 #: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ_stage
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_stage
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_stage_tree
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_stage_tree_month
 #: view:report.crm.case.section.categ.stage:0
@@ -327,6 +331,12 @@ msgid "HelpDesk"
 msgstr ""
 
 #. module: crm_configuration
+#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ_phone_outgoing4
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_phone_outgoing4
+msgid "Calls Not Held"
+msgstr ""
+
+#. module: crm_configuration
 #: model:crm.case.stage,name:crm_configuration.stage6
 msgid "Works For Me"
 msgstr ""
@@ -340,11 +350,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor_all2
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_oppor_all2
 msgid "All Unassigned Opportunities"
-msgstr ""
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ
-msgid "Cases by Leads and Category2"
 msgstr ""
 
 #. module: crm_configuration
@@ -416,10 +421,9 @@ msgid "Negotiation/Review"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.actions.act_window,name:crm_configuration.crm_case_categ_phone_outgoing4
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_phone_outgoing4
-msgid "Calls Not Held"
-msgstr ""
+#: field:crm.menu.config_wizard,opportunity:0
+msgid "Business Opportunities"
+msgstr "Verkaufschancen"
 
 #. module: crm_configuration
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_claim
@@ -623,13 +627,9 @@ msgid "Next"
 msgstr "Weiter"
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ_categ2
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_categ2
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree_month
-#: view:report.crm.case.section.categ.categ2:0
-msgid "Cases by Section, Category and Category2"
-msgstr "Fälle nach Sektion, Kategorie und Kategorie2"
+#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_stage
+msgid "Cases by Opportunities, Category and Stage"
+msgstr ""
 
 #. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_lead4
@@ -758,8 +758,6 @@ msgid "My Funds Waiting Validation"
 msgstr ""
 
 #. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree
-#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree_month
 #: view:report.crm.case.section.categ2:0
 msgid "Cases by Section and Category2"
 msgstr "Fälle nach Sektionen und Kategorien"
@@ -1081,9 +1079,12 @@ msgid "Lead Partner"
 msgstr "Partner Interessent"
 
 #. module: crm_configuration
-#: field:crm.menu.config_wizard,opportunity:0
-msgid "Business Opportunities"
-msgstr "Verkaufschancen"
+#: field:report.crm.case.section.categ.categ2,nbr:0
+#: field:report.crm.case.section.categ.stage,nbr:0
+#: field:report.crm.case.section.categ2,nbr:0
+#: field:report.crm.case.section.stage,nbr:0
+msgid "# of Cases"
+msgstr "# Fälle"
 
 #. module: crm_configuration
 #: field:report.crm.case.section.categ2,amount_revenue:0
@@ -1659,12 +1660,9 @@ msgid "Deadlines"
 msgstr "Deadlines"
 
 #. module: crm_configuration
-#: field:report.crm.case.section.categ.categ2,nbr:0
-#: field:report.crm.case.section.categ.stage,nbr:0
-#: field:report.crm.case.section.categ2,nbr:0
-#: field:report.crm.case.section.stage,nbr:0
-msgid "# of Cases"
-msgstr "# Fälle"
+#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ
+msgid "Cases by Leads and Type"
+msgstr ""
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_my3
@@ -1698,6 +1696,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_leads_unassigned
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_leads_unassigned
 msgid "Unassigned Leads"
+msgstr ""
+
+#. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_tree_month
+#: view:report.crm.case.section.categ2:0
+msgid "Cases by Section and Type"
 msgstr ""
 
 #. module: crm_configuration
@@ -1751,6 +1756,11 @@ msgid "All Open Opportunities"
 msgstr ""
 
 #. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ
+msgid "Cases by Opportunities and Type"
+msgstr ""
+
+#. module: crm_configuration
 #: field:report.crm.case.section.categ.categ2,section_id:0
 #: field:report.crm.case.section.categ.stage,section_id:0
 #: field:report.crm.case.section.categ2,section_id:0
@@ -1781,7 +1791,6 @@ msgid "New"
 msgstr ""
 
 #. module: crm_configuration
-#: view:crm.case:0
 #: model:crm.case.category2,name:crm_configuration.category_lead3
 msgid "Email"
 msgstr "E-Mail:"
@@ -1819,11 +1828,6 @@ msgstr "Erwartetes Einkommen"
 #: model:process.node,note:crm_configuration.process_node_leads0
 msgid "Very first contact with new prospect"
 msgstr "Erstkontakt mit Kaufinteressent"
-
-#. module: crm_configuration
-#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ
-msgid "Cases by Opportunities and Category2"
-msgstr ""
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_fund_my3
@@ -2007,6 +2011,14 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: crm_configuration
+#: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_lead_categ_categ2
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree
+#: model:ir.ui.menu,name:crm_configuration.menu_crm_case_section_categ_categ2_tree_month
+#: view:report.crm.case.section.categ.categ2:0
+msgid "Cases by Section, Category and Type"
+msgstr ""
+
+#. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_job2
 msgid "Licenced"
 msgstr ""
@@ -2170,6 +2182,11 @@ msgstr ""
 #: model:ir.model,name:crm_configuration.model_crm_menu_config_wizard
 msgid "crm.menu.config_wizard"
 msgstr "crm.menu.config_wizard"
+
+#. module: crm_configuration
+#: field:crm.case.stage,sequence:0
+msgid "Sequence"
+msgstr ""
 
 #. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_lead8

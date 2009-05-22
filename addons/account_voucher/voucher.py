@@ -251,6 +251,7 @@ class account_voucher(osv.osv):
                 
             date = inv.date
             total_currency = 0
+            acc_id = None
             for i in iml:
                 partner_id=i['partner_id']
                 acc_id = i['account_id']    

@@ -43,8 +43,10 @@
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
+       <lineStyle kind="LINEBELOW" colorName="#777777" start="0,2" stop="1,2"/>
+       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,3" stop="-1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
@@ -99,8 +101,8 @@
   </stylesheet>
   <images/>
   <story>
-    <section>
-      <blockTable colWidths="57.0,280.0,50.0,50.0,50.0,50.0" style="Table1" repeatRows="1">
+
+      <blockTable colWidths="57.0,280.0,50.0,50.0,50.0,50.0" style="Table1">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Code</para>
@@ -121,7 +123,7 @@
             <para style="terp_tblheader_Details_Right">Quantity</para>
           </td>
         </tr>
-      
+
         <tr>
           <td>
             <para style="terp_tblheader_General">Total</para>
@@ -140,13 +142,12 @@
             <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_quantity(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
         </tr>
-            
+        </blockTable>
+        <section>
+        <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+        <blockTable colWidths="57.0,280.0,50.0,50.0,50.0,50.0" style="tbl_data">
         <tr>
-          <td>
-            <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-            <blockTable colWidths="51.0,280.0,50.0,50.0,50.0,50.0" style="tbl_data">
-              <tr>
-                <td>
+        <td>
                   <para style="terp_default_8_bold">[[ o.code ]]</para>
                 </td>
                 <td>
@@ -185,17 +186,11 @@
                 <td>
                   <para style="terp_default_Right_8">[[ formatLang(move_g['quantity']) ]]</para>
                 </td>
-              </tr>
-            </blockTable>
-            <para style="terp_default_8">
-              <font color="white"> </font>
-            </para>
-          </td>
-        </tr>
+              </tr>   
       </blockTable>
+      </section>
       <para style="terp_default_8">
         <font color="white"> </font>
       </para>
-    </section>
   </story>
 </document>

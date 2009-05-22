@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:37:53+0000\n"
-"PO-Revision-Date: 2009-04-09 13:37:53+0000\n"
+"POT-Creation-Date: 2009-05-19 14:24:37+0000\n"
+"PO-Revision-Date: 2009-05-20 10:24:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,6 @@ msgstr "Profitto"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Analytic account incomplete"
 msgstr "Conto analitico incompleto"
@@ -118,6 +117,12 @@ msgstr "Periodo da data finale"
 #. module: hr_timesheet_invoice
 #: wizard_button:hr.timesheet.invoice.create,init,create:0
 msgid "Create Invoices"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Analytic Account incomplete"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -278,12 +283,6 @@ msgid "Uninvoiced Entries"
 msgstr "Registrazioni non Fatturate"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid "At least on line have no product !"
-msgstr "Almeno online non ci sono prodotti!"
-
-#. module: hr_timesheet_invoice
 #: wizard_button:hr.timesheet.final.invoice.create,init,create:0
 msgid "Create invoices"
 msgstr "Prepara Fatture"
@@ -342,6 +341,12 @@ msgid "Date"
 msgstr "Data"
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Address field in the Partner: %s."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,factor:0
 msgid "Discount (%)"
 msgstr "Sconto (%)"
@@ -362,9 +367,9 @@ msgid "Total:"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Credit"
-msgstr "Credito"
+#: field:account.analytic.account,amount_max:0
+msgid "Max. Invoice Price"
+msgstr "Prezzo Massimo Fattura"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
@@ -403,20 +408,9 @@ msgid "Do you want to show details of work in invoice ?"
 msgstr "Vuoi mostrare i dettagli di lavoro in fattura?"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid "Please fill in the partner and pricelist field in the analytic account:\n%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Period from"
 msgstr "Periodo da"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_max:0
-msgid "Max. Invoice Price"
-msgstr "Prezzo Massimo Fattura"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,invoice_id:0
@@ -454,14 +448,20 @@ msgid "Employee"
 msgstr "Impiegato"
 
 #. module: hr_timesheet_invoice
+#: help:hr.timesheet.final.invoice.create,init,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Mostra il costo di oggetti che sono stati rifatturati"
+
+#. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,date:0
 msgid "The real date of each work will be displayed on the invoice"
 msgstr "La data reale di ciascun lavoro verrà mostrata sulla fattura"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr "Mostra il costo di oggetti che sono stati rifatturati"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "At least one line has no product !"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
@@ -495,6 +495,12 @@ msgid "No Records Found for Report!"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
 msgid "Units"
 msgstr "Unità"
@@ -508,7 +514,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_pending_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_pending_analytic_accounts
 msgid "Pending Analytic Accounts"
-msgstr "Contabilità analitiche in attesa"
+msgstr "Contabilità Analitica in sospeso"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -532,6 +538,11 @@ msgid "Invoicing"
 msgstr "Fatturazione"
 
 #. module: hr_timesheet_invoice
+#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Credit"
+msgstr "Credito"
+
+#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_invoice_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_open_invoice_analytic_accounts
 msgid "Unclosed Invoiceable Accounts"
@@ -549,10 +560,4 @@ msgstr "Si prega di compilare un Saldo prodotto nella procedura guidata"
 #: wizard_field:hr.timesheet.invoice.create,init,price:0
 msgid "Cost"
 msgstr "Costo"
-
-#. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
-#, python-format
-msgid "Please fill in the address field in the partner: %s."
-msgstr "Per favore compila l'indirizzo del partner: %s."
 
