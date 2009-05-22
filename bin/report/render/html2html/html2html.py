@@ -25,6 +25,7 @@ from lxml import etree
 import copy
 import pooler 
 import base64
+import cStringIO
 from reportlab.lib.utils import ImageReader
 
 
