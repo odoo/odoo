@@ -26,8 +26,10 @@ import copy
 import pooler 
 import base64
 import cStringIO
+import re
 from reportlab.lib.utils import ImageReader
 
+_regex = re.compile('\[\[(.+?)\]\]')
 
 class html2html(object):
     def __init__(self, html, localcontext):
@@ -49,16 +51,17 @@ class html2html(object):
                     process_text(child, new_child)
                 else:
                     if new_child.tag=='img' and new_child.get('name'):
-                        src =  utils._process_text(self, new_child.get('name'))
-                        if src :
-                            new_child.set('src','data:image/gif;base64,%s'%src)
-                            output = cStringIO.StringIO(base64.decodestring(src))
-                            img = ImageReader(output)
-                            (width,height) = img.getSize()
-                            new_child.set('width',str(width))
-                            new_child.set('height',str(height))
-                        else :
-                            new_child.getparent().remove(new_child)
+                        if _regex.findall(new_child.get('name')) :
+                            src =  utils._process_text(self, new_child.get('name'))
+                            if src :
+                                new_child.set('src','data:image/gif;base64,%s'%src)
+                                output = cStringIO.StringIO(base64.decodestring(src))
+                                img = ImageReader(output)
+                                (width,height) = img.getSize()
+                                new_child.set('width',str(width))
+                                new_child.set('height',str(height))
+                            else :
+                                new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
