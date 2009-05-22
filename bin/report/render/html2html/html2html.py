@@ -24,6 +24,8 @@ from report.render.rml2pdf import utils
 from lxml import etree
 import copy
 import pooler 
+import base64
+from reportlab.lib.utils import ImageReader
 
 
 class html2html(object):
@@ -49,6 +51,11 @@ class html2html(object):
                         src =  utils._process_text(self, new_child.get('name'))
                         if src :
                             new_child.set('src','data:image/gif;base64,%s'%src)
+                            output = cStringIO.StringIO(base64.decodestring(src))
+                            img = ImageReader(output)
+                            (width,height) = img.getSize()
+                            new_child.set('width',str(width))
+                            new_child.set('height',str(height))
                         else :
                             new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)
