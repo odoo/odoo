@@ -295,6 +295,7 @@ CREATE TABLE ir_module_module (
     latest_version character varying(64),
     shortdesc character varying(256),
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
+    certificate character varying(64),
     description text,
     demo boolean default False,
     primary key(id)

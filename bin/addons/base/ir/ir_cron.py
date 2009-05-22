@@ -108,6 +108,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                     cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
                     cr.commit()
             finally:
+                cr.commit()
                 cr.close()
 
         #

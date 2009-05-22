@@ -49,6 +49,8 @@ class html2html(object):
                         src =  utils._process_text(self, new_child.get('name'))
                         if src :
                             new_child.set('src','data:image/gif;base64,%s'%src)
+                        else :
+                            new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
