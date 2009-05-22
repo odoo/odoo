@@ -90,7 +90,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'])
+                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
                     res['uos']=uos_name['name']
             else:
 
@@ -132,13 +132,13 @@ class account_invoice_with_message(report_sxw.rml_parse):
                     res['price_subtotal']=''
                     res['currency']=''
                 elif entry.state=='line':
-                    res['quantity']='____________'
-                    res['price_unit']='______________'
-                    res['discount']='____________'
-                    res['tax_types']='_________________'
+                    res['quantity']='___________________'
+                    res['price_unit']='______________________'
+                    res['discount']='____________________________________'
+                    res['tax_types']='_____________________'
                     res['uos']='_____'
-                    res['name']='_____________________________________________'
-                    res['price_subtotal']='_____________________'
+                    res['name']='______________________________________'
+                    res['price_subtotal']='___________'
                     res['currency']='_'
                 elif entry.state=='break':
                     res['type']=entry.state
