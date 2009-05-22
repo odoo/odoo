@@ -607,6 +607,10 @@ class _rml_flowable(object):
                     image_data = self.doc.images[node.get('name')].read()
                 else:
                     import base64
+                    if self.localcontext:
+                        newtext = utils._process_text(self, node.text or '')
+                        node.text = newtext
+                        if not node.text: return False
                     image_data = base64.decodestring(node.text)
                 image = cStringIO.StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
