@@ -177,10 +177,9 @@
 		<td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<i>[[ a['code'] or removeParentNode('tr')  ]]</i></para></td>
         <td>
 	       <para style="P14">
-	       	<font color="white">[[ ...*(a['level']) ]]</font> [[ a['name'] ]]
 	       	<font>[[ (a['level']&lt;3 and setTag('tr','tr',{'style':'TrLevel'+str(a['level']), 'paraStyle':('Level'+str(a['level']))})) or removeParentNode('font') ]]</font>
 	       	<font>[[ (a['level']&gt;2 and setTag('tr','tr',{'style':'TrLevel', 'paraStyle':('Level')})) or removeParentNode('font') ]] </font>
-          	</para>
+          	<font color="white">[[ '...'*(a['level']) ]]</font><font>[[ a['name'] ]]</font></para>
         </td>
         <td>
 		<para style="P3"><font>[[ a['type']=='view' and removeParentNode('font') ]][[ formatLang(a['debit']) ]]</font>
