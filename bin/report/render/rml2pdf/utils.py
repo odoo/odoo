@@ -81,7 +81,6 @@ def _child_get(node, self=None, tagname=None):
                 n2 = copy.deepcopy(n)
                 n2.tag = tag
                 n2.attrib.update(attr or {})
-                print etree.tostring(n2)
                 yield n2
                 tagname = ''
             except:
