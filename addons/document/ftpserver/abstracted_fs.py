@@ -567,7 +567,7 @@ class abstracted_fs:
                         val['partner_id']=dst_basedir.object2.id
                     else:
                         obj2=pool.get(dst_basedir.object2._name) 
-                        val['partner_id']= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
+                        val['partner_id']= obj2.fields_get(src.cr, src.uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 elif src.object.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
                     # change if one day we decide to improve osv/fields.py
