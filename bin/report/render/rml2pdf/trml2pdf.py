@@ -495,6 +495,9 @@ class _rml_flowable(object):
 
                 flow = []
                 for n in utils._child_get(td, self):
+                    if n.tag == etree.Comment:
+                        n.text = ''
+                        continue
                     fl = self._flowable(n, extra_style=paraStyle)
                     if isinstance(fl,list):
                         flow  += fl
@@ -676,6 +679,9 @@ class _rml_flowable(object):
         def process_story(node_story):
             sub_story = []
             for node in utils._child_get(node_story, self):
+                if node.tag == etree.Comment:
+                    node.text = ''
+                    continue
                 flow = self._flowable(node)
                 if flow:
                     if isinstance(flow,list):
