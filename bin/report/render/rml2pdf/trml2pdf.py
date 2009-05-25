@@ -446,9 +446,14 @@ class _rml_flowable(object):
     def _textual(self, node):
         rc1 = utils._process_text(self, node.text or '')
         for n in utils._child_get(node,self):
-            rc1 += '<'+n.tag+'>'
-            rc1 += self._textual(n)
-            rc1 += '</'+n.tag+'>'
+            txt_n = copy.deepcopy(n)
+            for key in txt_n.attrib.keys():
+                if key in ('rml_except', 'rml_loop', 'rml_tag'):
+                    del txt_n.attrib[key]
+            if not self._textual(n).isspace():
+                txt_n.text = self._textual(n)
+                txt_n.tail = ''
+                rc1 += etree.tostring(txt_n)
         rc1 += utils._process_text(self, node.tail or '')
         return rc1
 
