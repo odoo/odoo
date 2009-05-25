@@ -92,6 +92,7 @@ def init_db(cr):
                 state = 'uninstallable'
             cr.execute('select nextval(\'ir_module_module_id_seq\')')
             id = cr.fetchone()[0]
+            print info.get('name', False)
             cr.execute('insert into ir_module_module \
                     (id, author, website, name, shortdesc, description, \
                         category_id, state, certificate) \

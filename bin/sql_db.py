@@ -159,6 +159,7 @@ class Cursor(object):
 
     @check
     def close(self):
+        self.rollback() # Ensure we close the current transaction.
         self.print_log()
         self._obj.close()
 

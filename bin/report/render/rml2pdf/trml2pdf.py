@@ -446,9 +446,14 @@ class _rml_flowable(object):
     def _textual(self, node):
         rc1 = utils._process_text(self, node.text or '')
         for n in utils._child_get(node,self):
-            rc1 += '<'+n.tag+'>'
-            rc1 += self._textual(n)
-            rc1 += '</'+n.tag+'>'
+            txt_n = copy.deepcopy(n)
+            for key in txt_n.attrib.keys():
+                if key in ('rml_except', 'rml_loop', 'rml_tag'):
+                    del txt_n.attrib[key]
+            if not self._textual(n).isspace():
+                txt_n.text = self._textual(n)
+                txt_n.tail = ''
+                rc1 += etree.tostring(txt_n)
         rc1 += utils._process_text(self, node.tail or '')
         return rc1
 
@@ -490,6 +495,9 @@ class _rml_flowable(object):
 
                 flow = []
                 for n in utils._child_get(td, self):
+                    if n.tag == etree.Comment:
+                        n.text = ''
+                        continue
                     fl = self._flowable(n, extra_style=paraStyle)
                     if isinstance(fl,list):
                         flow  += fl
@@ -607,7 +615,11 @@ class _rml_flowable(object):
                     image_data = self.doc.images[node.get('name')].read()
                 else:
                     import base64
+                    if self.localcontext:
+                        newtext = utils._process_text(self, node.text or '')
+                        node.text = newtext
                     image_data = base64.decodestring(node.text)
+                if not image_data: return False
                 image = cStringIO.StringIO(image_data)
                 return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
             else:
@@ -671,6 +683,9 @@ class _rml_flowable(object):
         def process_story(node_story):
             sub_story = []
             for node in utils._child_get(node_story, self):
+                if node.tag == etree.Comment:
+                    node.text = ''
+                    continue
                 flow = self._flowable(node)
                 if flow:
                     if isinstance(flow,list):
