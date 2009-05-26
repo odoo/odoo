@@ -891,7 +891,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
 
         'date': fields.datetime('Date Created'),
-        'date_planned': fields.datetime('Scheduled Date', required=True),
+        'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
