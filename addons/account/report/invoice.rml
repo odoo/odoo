@@ -296,7 +296,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="211.0,62.0,63.0,63.0,36.0,89.0" style="Table_Header_Invoice_Line">
+    <blockTable colWidths="211.0,62.0,63.0,63.0,80.0,69.0" style="Table_Header_Invoice_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -465,7 +465,7 @@
           <para style="terp_default_8">
             <font color="white"> </font>
           </para>
-          <blockTable colWidths="54.0,58.0,67.0" style="Table_Tax_Header">
+          <blockTable colWidths="54.0,80.0,67.0" style="Table_Tax_Header">
             <tr>
               <td>
                 <para style="terp_tblheader_Details_Centre">Tax</para>
@@ -486,16 +486,16 @@
       <tr>
         <td>
           <para style="terp_default_8">[[ repeatIn(o.tax_line,'t') ]]</para>
-          <blockTable colWidths="53.0,60.0,65.0" style="Table_Tax_Content">
+          <blockTable colWidths="53.0,80.0,65.0" style="Table_Tax_Content">
             <tr>
               <td>
-                <para style="terp_default_Centre_8">[[ lt.description and lt.description + ' - ' + t.name or t.name ]] </para>
+                <para style="terp_default_Centre_8">[[ t.name ]] </para>
               </td>
               <td>
                 <para style="terp_default_Right_8">[[ formatLang(t.base) ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_8">[[ formatLang(t.amount) ]][[  t.tax_code_id.notprintable and removeParentNode('blockTable') or '' ]]</para>
+                <para style="terp_default_Right_8">[[  t.tax_code_id.notprintable and removeParentNode('blockTable') or '' ]][[ formatLang(t.amount) ]]</para>
               </td>
             </tr>
           </blockTable>

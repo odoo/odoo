@@ -888,12 +888,12 @@ class sale_order_line(osv.osv):
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
-            if qty and (not (qty % q) == 0):
+            if qty and (q and not (qty % q) == 0):
                 ean = pack.ean
                 qty_pack = pack.qty
                 type_ul = pack.ul
                 warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
-                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantiny: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantity: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
                 warning={
                     'title':'Packing Information !',
                     'message': warn_msg

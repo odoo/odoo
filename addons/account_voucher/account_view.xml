@@ -1,7 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <openerp>
 	<data>
+		<record model="ir.ui.view" id="account_move_inherit">
+			<field name="name">account.move.type.form.inherit1</field>
+			<field name="inherit_id" ref="account.view_move_form"/>
+			<field name="model">account.move</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="journal_id" position="after">
+                    <field name="voucher_type" groups="base.group_extended" select="2"/>
+				</field>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="account_move_inherit_new">
+			<field name="name">account.move.type.form.inherit2</field>
+			<field name="inherit_id" ref="account_move_inherit"/>
+			<field name="model">account.move</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="line_id" position="replace">
+				    <field colspan="4" default_get="{'lines':line_id ,'journal':journal_id }" name="line_id" nolabel="1" widget="one2many_list" height="275">
+                        <form string="Account Entry Line">
+                            <separator colspan="4" string="General Information"/>
+                            <field name="name" select="1"/>
+                            <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
+
+                            <field name="debit" select="1"/>
+                            <field name="credit" select="1"/>
+
+                            <separator colspan="4" string="Optional Information"/>
+                            <field name="currency_id"/>
+                            <field name="amount_currency"/>
+                            <field name="quantity" select="1"/>
+                            <newline/>
+                            <field name="date_maturity"/>
+                            <field name="date_created"/>
+
+                            <separator colspan="4" string="State"/>
+                            <field name="reconcile_id"/>
+                            <field name="reconcile_partial_id"/>
+                            <field name="statement_id"/>
+                            <field name="state"/>
+                        </form>
+                        <tree editable="top" string="Account Entry Line">
+                            <field name="ref"/>
+                            <field name="invoice"/>
+                            <field name="name"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
+                            <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
+                            <field name="date_maturity"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
+                            <field name="analytic_account_id"/>
+                            <field groups="base.group_extended" name="amount_currency"/>
+                            <field groups="base.group_extended" name="currency_id"/>
+                            <field name="tax_code_id"/>
+                            <field name="tax_amount"/>
+                            <field name="state"/>
+                            <field name="reconcile_id"/>
+                            <field groups="base.group_extended" name="reconcile_partial_id"/>
+                        </tree>
+                    </field>
+                    <separator colspan="4" string="Narration"/>
+                    <field name="narration" select="2" colspan="4" nolabel="1"/>
+				</field>
+			</field>
+		</record>
+
 		<record model="ir.ui.view" id="account_form1">
 			<field name="name">account.form</field>
 			<field name="inherit_id" ref="account.view_account_form"/>
@@ -9,10 +76,11 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<field name="user_type" position="after">
-					<field name="diff" select="2" />
+<!--					<field name="diff" select="2" />-->
 					<field name="balance" string="Closing Balance" select="2"/>
 					<field name="type1" select="2" />
 					<field name="open_bal" select="2"/>
+					<field name="journal_id"/>
 				</field>
 			</field>
 		</record>
@@ -28,6 +96,7 @@
 				</field>
 			</field>
 		</record>
+		
 		<record model="ir.ui.view" id="account_form3">
 			<field name="name">account.form</field>
 			<field name="inherit_id" ref="account.view_account_tree"/>
@@ -53,5 +122,24 @@
 			</field>
 		</record>
 	
+<!--	sub_currency	-->
+		<record model="ir.ui.view" id="sub_currency_form">
+			<field name="name">sub.currency.form</field>
+			<field name="inherit_id" ref="base.view_currency_form" />
+			<field name="model">res.currency</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="name" position="after">
+					<field name="sub_name" />
+				</field>
+			</field>
+		</record>
+		
+		<act_window name="Opening Balance Entry"
+			domain="[('journal_id', '=', journal_id)]"
+			res_model="account.move.line"
+			src_model="account.account"
+			id="act_account_acount_move_line_open1"/>
+
 	</data>
 </openerp>

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -274,7 +274,7 @@ class product_template(osv.osv):
         'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-    
+
     def _get_uom_id(self, cr, uid, *args):
         cr.execute('select id from product_uom order by id limit 1')
         res = cr.fetchone()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:35:34+0000\n"
-"PO-Revision-Date: 2009-04-09 13:35:34+0000\n"
+"POT-Creation-Date: 2009-05-19 14:23:07+0000\n"
+"PO-Revision-Date: 2009-05-20 10:23:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,11 @@ msgid "Contact Partner Function"
 msgstr ""
 
 #. module: base_contact
+#: field:res.partner.job,other:0
+msgid "Other"
+msgstr ""
+
+#. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
 msgstr "Kontaktdaten"
@@ -86,14 +91,24 @@ msgid "# of Contacts"
 msgstr ""
 
 #. module: base_contact
+#: help:res.partner.job,other:0
+msgid "Additional phone field"
+msgstr ""
+
+#. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
 msgstr "Funktion"
 
 #. module: base_contact
-#: field:res.partner.contact,function_id:0
-msgid "Main Job"
-msgstr "Beruf"
+#: field:res.partner.job,fax:0
+msgid "Fax"
+msgstr ""
+
+#. module: base_contact
+#: field:res.partner.contact,lang_id:0
+msgid "Language"
+msgstr "Sprache"
 
 #. module: base_contact
 #: field:res.partner.job,phone:0
@@ -126,6 +141,7 @@ msgid "Order of importance of this job title in the list of job title of the lin
 msgstr "Wichtigkeit der Anschriften in der Adressliste des Partners"
 
 #. module: base_contact
+#: field:res.partner.contact,email:0
 #: field:res.partner.job,email:0
 msgid "E-Mail"
 msgstr "E-Mail"
@@ -158,9 +174,20 @@ msgid "Order of importance of this address in the list of addresses of the linke
 msgstr "Wichtigkeit der Anschriften in der Adressliste des Kontakts"
 
 #. module: base_contact
+#: field:res.partner.address,job_id:0
+#: field:res.partner.contact,job_id:0
+msgid "Main Job"
+msgstr ""
+
+#. module: base_contact
 #: view:res.partner:0
 msgid "Categories"
 msgstr "Kategorien"
+
+#. module: base_contact
+#: field:res.partner.contact,function_id:0
+msgid "Main Function"
+msgstr ""
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
@@ -183,14 +210,19 @@ msgid "Seq."
 msgstr "Seq."
 
 #. module: base_contact
-#: field:res.partner.contact,lang_id:0
-msgid "Language"
-msgstr "Sprache"
+#: field:res.partner.job,extension:0
+msgid "Extension"
+msgstr ""
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
 msgstr "Mobil"
+
+#. module: base_contact
+#: help:res.partner.job,extension:0
+msgid "Internal/External extension phone number"
+msgstr ""
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0

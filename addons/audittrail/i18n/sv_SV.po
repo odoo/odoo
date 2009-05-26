@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:19:09+0000\n"
-"PO-Revision-Date: 2009-02-06 15:19:09+0000\n"
+"POT-Creation-Date: 2009-05-19 14:34:58+0000\n"
+"PO-Revision-Date: 2009-05-20 10:34:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -63,6 +63,11 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
+msgstr ""
+
+#. module: audittrail
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: audittrail
@@ -153,6 +158,12 @@ msgid "Date"
 msgstr ""
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.log,user_id:0
 msgid "User"
 msgstr ""
@@ -168,8 +179,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
 
 #. module: audittrail
@@ -295,5 +307,10 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log deletes"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
 msgstr ""
 

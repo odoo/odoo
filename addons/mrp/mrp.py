@@ -1055,6 +1055,8 @@ class mrp_procurement(osv.osv):
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
+            newdate = newdate - procurement.product_id.seller_ids[0].delay
+
             context.update({'lang':partner.lang})
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 

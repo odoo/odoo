@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,37 +16,42 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_account_acount_move_line_open1
+msgid "Opening Balance Entry"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_receipt_bakreceipt_voucher_list
 msgid "Bank Receipts"
 msgstr "Pangakviitungid"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Particulars"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "State :"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_posted_cash_rec_voucher_form
-msgid "Posted Cash Receipt"
-msgstr "Postitatud kassakviitung"
-
-#. module: account_voucher
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Ref. :"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Ref. :"
-msgstr "Viide:"
-
-#. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cont_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_cont_voucher_form
 msgid "Contra Voucher"
@@ -58,13 +63,36 @@ msgid "Company"
 msgstr "Ettevõte"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_jour_voucher_form
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_voucher_form
+msgid "Journal Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_receipt.drcr:0
+msgid ","
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Set to Draft"
 msgstr "Määra mustandiks"
 
 #. module: account_voucher
+#: wizard_button:account.voucher.open,init,open:0
+msgid "Open Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Line"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Total Credit"
 msgstr ""
 
 #. module: account_voucher
@@ -74,35 +102,49 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: account_voucher
+#: rml:voucher.cash_amount:0
+msgid "D"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.account,level:0
+msgid "Level"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Account Entry Line"
+msgstr "Raamatupidamiskande rida"
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Total Debit"
+msgstr "Kogu deebet"
+
+#. module: account_voucher
 #: field:account.voucher,amount:0
 #: field:account.voucher.line,amount:0
+#: rml:voucher.cash_amount:0
 msgid "Amount"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.account,diff:0
-msgid "Difference of Opening Bal."
-msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Receiver's Signature"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "No."
-msgstr "Nr."
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_performa_cash_rec_voucher_form
-msgid "Pro-forma Cash Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Amount (in words) :"
-msgstr "Summa (sõnadega) :"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -110,7 +152,9 @@ msgid "Analytic Account"
 msgstr "Analüütiline konto"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_sale_voucher_form
 msgid "Journal Sale Voucher"
@@ -123,7 +167,13 @@ msgid "Receipt Vouchers"
 msgstr "Sissetulekuorderid"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+msgid "Account :"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "On Account of :"
 msgstr ""
 
@@ -142,6 +192,7 @@ msgstr "Loo"
 
 #. module: account_voucher
 #: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
 msgid "None"
 msgstr "Puudub"
 
@@ -151,22 +202,19 @@ msgid "Number"
 msgstr "Number"
 
 #. module: account_voucher
+#: view:account.move:0
 #: field:account.voucher,state:0
+#: wizard_field:account.voucher.open,init,state:0
 msgid "State"
-msgstr "Staatus"
+msgstr "Olek"
 
 #. module: account_voucher
 #: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
 #: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Debit"
 msgstr "Deebet"
-
-#. module: account_voucher
-#: code:addons/account_voucher/voucher.py:0
-#, python-format
-msgid "Cannot delete invoice(s) which are already opened or paid !"
-msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,type:0
@@ -180,7 +228,8 @@ msgid "Voucher Entries"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Authorised Signatory"
 msgstr ""
 
@@ -191,9 +240,16 @@ msgid "Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/voucher.py:0
-#, python-format
-msgid "Invalid action !"
+#: view:account.voucher:0
+#: field:account.voucher.line,voucher_id:0
+#: model:res.request.link,name:account_voucher.req_link_voucher
+msgid "Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: wizard_view:account.voucher.open,init:0
+#: model:ir.ui.menu,name:account_voucher.menu_wizard_account_voucher_open
+msgid "Open Vouchers"
 msgstr ""
 
 #. module: account_voucher
@@ -202,7 +258,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Dated :"
 msgstr ""
 
@@ -212,6 +269,7 @@ msgid "Cash Receipts"
 msgstr "Kassakviitungid"
 
 #. module: account_voucher
+#: field:account.voucher,partner_id:0
 #: field:account.voucher.line,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -233,6 +291,8 @@ msgid "Currency"
 msgstr "Valuuta"
 
 #. module: account_voucher
+#: view:account.move:0
+#: field:account.move,narration:0
 #: view:account.voucher:0
 #: field:account.voucher,narration:0
 msgid "Narration"
@@ -249,7 +309,7 @@ msgid "New Cash Receipt"
 msgstr "Uus kassakviitung"
 
 #. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_amt
 msgid "Voucher Report"
 msgstr ""
 
@@ -260,24 +320,17 @@ msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
-#: rml:voucher.cash_receipt:0
+#: selection:account.voucher.open,init,state:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Draft"
 msgstr "Mustand"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "PRO-FORMA"
 msgstr ""
-
-#. module: account_voucher
-#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
-msgid "Accounting - Voucher Management"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_cancel_cash_rec_voucher_form
-msgid "Cancel Cash Receipt"
-msgstr "Loobu kassakviitungist"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
@@ -290,27 +343,54 @@ msgid "New Cash Payment"
 msgstr "Uus kassamakse"
 
 #. module: account_voucher
+#: view:account.move:0
+msgid "Optional Information"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "General Entries"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher,date:0
 msgid "Date"
 msgstr "Kuupäev"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid ":"
-msgstr ":"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.account,type1:0
+#: field:account.account.template,type1:0
 msgid "Dr/Cr"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_draft_cash_rec_voucher_form
-msgid "Draf Cash Receipt"
-msgstr "Kassakviitungi mustand"
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
+msgid "Voucher Report (Cr/Dr)"
+msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: field:account.move,voucher_type:0
+#: wizard_field:account.voucher.open,init,type:0
+msgid "Voucher Type"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
+#: selection:account.voucher.line,type:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Credit"
+msgstr "Krediit"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Through :"
 msgstr ""
 
@@ -335,21 +415,27 @@ msgid "Bank Payments"
 msgstr "Pangamaksed"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher.line,voucher_id:0
-#: model:res.request.link,name:account_voucher.req_link_voucher
-msgid "Voucher"
+#: view:account.move:0
+msgid "General Information"
+msgstr ""
+
+#. module: account_voucher
+#: wizard_field:account.voucher.open,init,period_ids:0
+msgid "Periods"
 msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
+#: wizard_button:account.voucher.open,init,end:0
+#: selection:account.voucher.open,init,state:0
 msgid "Cancel"
 msgstr "Loobu"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,state:0
+#: selection:account.voucher.open,init,state:0
 msgid "Pro-forma"
 msgstr ""
 
@@ -364,6 +450,16 @@ msgid "Other Info"
 msgstr "Muu info"
 
 #. module: account_voucher
+#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
+msgid "Accounting Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
+#: field:res.currency,sub_name:0
+msgid "Sub Currency"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_other_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_action_other_voucher_list
 msgid "Other Vouchers"
@@ -375,14 +471,18 @@ msgid "Description"
 msgstr "Kirjeldus"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Canceled"
-msgstr "Tühistatud"
+msgstr ""
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Cash Payment Voucher"
 msgstr "Kassa väljaminekuorder"
 
@@ -392,12 +492,15 @@ msgid "Bank Receipt"
 msgstr "Pangakviitung"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "-"
-msgstr "-"
+msgstr ""
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_pur_voucher_form
 msgid "Journal Purchase Voucher"
@@ -415,7 +518,9 @@ msgstr "Viide"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
-#: rml:voucher.cash_receipt:0
+#: selection:account.voucher.open,init,state:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Posted"
 msgstr "Postitatud"
 
@@ -430,9 +535,9 @@ msgid "Real Entry"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Entry"
-msgstr "Kirje"
+#: model:ir.actions.wizard,name:account_voucher.wizard_account_voucher_open
+msgid "Open a Voucher Entry"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -440,11 +545,9 @@ msgid "Account Entry"
 msgstr "Konto kirje"
 
 #. module: account_voucher
-#: selection:account.account,type1:0
-#: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt:0
-msgid "Credit"
-msgstr "Krediit"
+#: view:account.voucher:0
+msgid "Entry Lines"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_rec_voucher_form
@@ -457,31 +560,37 @@ msgid "Cash Payments"
 msgstr "Kassamaksed"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_cancel_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_draft_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_performa_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_posted_cash_rec_voucher_form
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_rec_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Cash Receipt Voucher"
 msgstr "Kassa sissetulekuorder"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_pay_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Payment Voucher"
 msgstr "Panga väljaminekuorder"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_rec_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Receipt Voucher"
 msgstr "Panga sissetulekuorder"
 
 #. module: account_voucher
+#: field:account.account,journal_id:0
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr ""

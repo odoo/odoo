@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,12 +23,6 @@
 import time
 from report import report_sxw
 import pooler
-parents = {
-    'tr':1,
-    'li':1,
-    'story': 0,
-    'section': 0
-    }
 
 class account_invoice_with_message(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -37,67 +31,13 @@ class account_invoice_with_message(report_sxw.rml_parse):
             'time': time,
             'spcl_msg': self.spcl_msg,
             'invoice_lines': self.invoice_lines,
-            'repeat_In':self.repeat_In,
 
         })
         self.context = context
 
-    def repeat_In(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[]):
-        self._node.data = ''
-        node = self._find_parent(self._node, nodes_parent or parents)
-        ns = node.nextSibling
-
-        value=['tax_types','quantity','uos','price_unit','discount','price_subtotal','currency']
-        type=['string','string','string','string','string','string','string']
-        width=[62,42,20,62,51,50,24]
-        td=7
-
-        tableFlag=0
-
-        if not lst:
-            lst.append(1)
-        for ns in node.childNodes :
-            if tableFlag==1:
-                break
-            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
-                tableFlag=1
-
-                width_str = ns._attrs['colWidths'].nodeValue
-                ns.removeAttribute('colWidths')
-                total_td = td * len(value)
-
-                if not width:
-                    for v in value:
-                        width.append(30)
-                for v in range(len(value)):
-                    width_str +=',%d'%width[v]
-
-                ns.setAttribute('colWidths',width_str)
-
-                child_list =  ns.childNodes
-
-                for child in child_list:
-                    if child.nodeName=='tr':
-                        lc = child.childNodes[1]
-        #                        for t in range(td):
-                        i=0
-                        for v in value:
-                            t2="[[%s['type']=='text' and removeParentNode('tr')]]"%(name)
-                            t1= "[[ %s['%s'] ]]"%(name,v)
-                            t3="[[ %s['type']=='subtotal' and ( setTag('para','para',{'fontName':'Times-bold'})) ]]"%name
-                            newnode = lc.cloneNode(1)
-
-                            newnode.childNodes[1].lastChild.data = t1 + t2 +t3
-        #                           newnode.childNodes[1].lastChild.data=[[ a['status']==1 and ( setTag('para','para',{'fontName':'Times-bold'})) ]]
-                            child.appendChild(newnode)
-                            newnode=False
-                            i+=1
-
-        return super(account_invoice_with_message,self).repeatIn(lst, name, nodes_parent=False)
-
     def spcl_msg(self, form):
         account_msg_data = pooler.get_pool(self.cr.dbname).get('notify.message').browse(self.cr, self.uid, form['message'])
-        msg = account_msg_data.msg        
+        msg = account_msg_data.msg
         return msg
 
 
@@ -113,7 +53,6 @@ class account_invoice_with_message(report_sxw.rml_parse):
         for id in range(0,len(ids)):
             info = self.pool.get('account.invoice.line').browse(self.cr, self.uid,ids[id], self.context.copy())
             list_in_seq[info]=info.sequence
-        #            invoice_list +=[info]
         i=1
         j=0
         final=sorted(list_in_seq.items(), lambda x, y: cmp(x[1], y[1]))
@@ -151,7 +90,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'])
+                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
                     res['uos']=uos_name['name']
             else:
 
@@ -193,14 +132,14 @@ class account_invoice_with_message(report_sxw.rml_parse):
                     res['price_subtotal']=''
                     res['currency']=''
                 elif entry.state=='line':
-                    res['quantity']='____________'
-                    res['price_unit']='______________'
-                    res['discount']='____________'
-                    res['tax_types']='_________________'
+                    res['quantity']='___________________'
+                    res['price_unit']='______________________'
+                    res['discount']='____________________________________'
+                    res['tax_types']='_____________________'
                     res['uos']='_____'
-                    res['name']='________________________________________'
-                    res['price_subtotal']='_______________________'
-                    res['currency']='_______'
+                    res['name']='______________________________________'
+                    res['price_subtotal']='___________'
+                    res['currency']='_'
                 elif entry.state=='break':
                     res['type']=entry.state
                     res['name']=entry.name

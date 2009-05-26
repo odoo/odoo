@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-01-23 14:23+0000\n"
-"PO-Revision-Date: 2008-10-16 03:51+0000\n"
+"POT-Creation-Date: 2009-04-09 13:53+0000\n"
+"PO-Revision-Date: 2009-04-10 13:24+0000\n"
 "Last-Translator: opix <inur.opix@gmail.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-02-06 09:28+0000\n"
+"X-Launchpad-Export-Date: 2009-05-19 13:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_account
@@ -23,10 +23,36 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Salah dalam penyusunan format XML"
 
 #. module: report_account
+#: field:report.account.receivable,balance:0
+#: field:report.aged.receivable,balance:0
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: report_account
+#: field:report.account.receivable,credit:0
+msgid "Credit"
+msgstr "Kredit"
+
+#. module: report_account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Minggu dalam setahun"
+
+#. module: report_account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Akun berdasarkan tipe"
+
+#. module: report_account
 #: model:ir.actions.act_window,name:report_account.action_account_receivable_graph
 #: model:ir.ui.menu,name:report_account.menu_account_receivable_graph
 msgid "Balance by Type of Account"
 msgstr "Saldo berdasarkan Jenis Akun"
+
+#. module: report_account
+#: field:report.account.receivable,debit:0
+msgid "Debit"
+msgstr "Debit"
 
 #. module: report_account
 #: constraint:ir.model:0
@@ -35,34 +61,47 @@ msgid ""
 msgstr "Nama Objek harus berawalan _x dan tidak mengandung karakter khusus !"
 
 #. module: report_account
+#: field:report.account.receivable,type:0
+msgid "Account Type"
+msgstr "Jenis Akun"
+
+#. module: report_account
 #: model:ir.model,name:report_account.model_report_account_receivable
 msgid "Receivable accounts"
 msgstr "Akun Piutang"
 
 #. module: report_account
-#: field:report.account.receivable,credit:0
-msgid "Credit"
-msgstr "Kredit"
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
 
 #. module: report_account
-#: view:report.account.receivable:0
-msgid "Accounts by type"
-msgstr "Akun berdasarkan tipe"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: report_account
-#: field:report.account.receivable,name:0
-msgid "Week of Year"
-msgstr "Minggu dalam setahun"
+#: model:ir.model,name:report_account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
 
 #. module: report_account
-#: field:report.account.receivable,debit:0
-msgid "Debit"
-msgstr "Debit"
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
 
 #. module: report_account
-#: field:report.account.receivable,balance:0
-msgid "Balance"
-msgstr "Saldo"
+#: model:ir.actions.act_window,name:report_account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
 
-#~ msgid "Account Type"
-#~ msgstr "Jenis Akun"
+#. module: report_account
+#: model:ir.module.module,description:report_account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: report_account
+#: model:ir.module.module,shortdesc:report_account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
