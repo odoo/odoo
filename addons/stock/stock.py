@@ -1142,7 +1142,6 @@ class stock_move(osv.osv):
         track_flag=False
         for move in self.browse(cr, uid, ids):
             if move.move_dest_id.id and (move.state != 'done'):
-                mid = move.move_dest_id.id
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting','confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
