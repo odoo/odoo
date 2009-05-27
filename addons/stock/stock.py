@@ -791,7 +791,7 @@ class stock_production_lot(osv.osv):
         ''')
         res.update(dict(cr.fetchall()))
         return res
-    
+
     def _stock_search(self, cr, uid, obj, name, args):
         locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')])
         cr.execute('''select
@@ -803,12 +803,12 @@ class stock_production_lot(osv.osv):
                 location_id in ('''+','.join(map(str, locations)) +''')
             group by
                 prodlot_id
-            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2]) 
+            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2])
         )
         res = cr.fetchall()
         ids = [('id','in',map(lambda x:x[0], res))]
         return ids
-    
+
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
         'ref': fields.char('Internal Ref', size=64),

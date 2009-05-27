@@ -134,10 +134,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.title) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.zip) or '' ]] [[ (picking.address_id and picking.address_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]][[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]][[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]]</para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]][[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]][[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]]</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
@@ -176,7 +176,7 @@
           <para style="terp_tblheader_General_Centre">Expected Shipping Date </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre"></para>
+          <para style="terp_tblheader_General_Centre">weight</para>
         </td>
       </tr>
     </blockTable>
@@ -186,13 +186,13 @@
           <para style="terp_default_Centre_8">[[ picking.origin ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ (picking.address_id and picking.address_id.title) or '' ]] [[ (picking.address_id and picking.address_id.name) or '' ]] </para>
+          <para style="terp_default_Centre_8">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]][[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
+          <para style="terp_default_Centre_8">[[  formatLang(picking.min_date,date_time = True) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8"></para>
+          <para style="terp_default_Centre_8">[[ formatLang(picking.weight) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -218,7 +218,9 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2"/>
+    <para style="terp_default_2">
+      <font color="white"> </font>
+    </para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'assigned' )],'move_lines') ]]</para>
       <blockTable colWidths="277.0,51.0,56.0,58.0,22.0,56.0" style="Move_Line_Contect_Assign_State">
@@ -227,13 +229,13 @@
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or  '' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ move_lines.state ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ move_lines.product_qty ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(move_lines.product_qty) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ move_lines.product_uom.name ]]</para>
@@ -250,25 +252,25 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_Bold_9">Non Assigned Products: [[ (line.state == 'assigned') and removeParentNode('para') ]]</para>
+    <para style="terp_default_Bold_9">Non Assigned Products: [[ ((line.state == 'assigned') or (line.state == 'done')) and  removeParentNode('para') ]]</para>
     <para style="terp_default_Bold_9">
       <font color="white"> </font>
     </para>
     <section>
-      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state != 'assigned' )],'move_lines') ]]</para>
+      <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state !=  'assigned' )],'move_lines') ]]</para>
       <blockTable colWidths="277.0,51.0,56.0,58.0,22.0,55.0" style="Move_Line_Content_Other_State">
         <tr>
           <td>
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or  '' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ move_lines.state ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ move_lines.product_qty ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(move_lines.product_qty) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ move_lines.product_uom.name ]]</para>
