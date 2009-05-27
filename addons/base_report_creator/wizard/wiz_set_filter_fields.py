@@ -165,7 +165,8 @@ def _set_form_value(self, cr, uid, data, context):
         if field_type == 'selection':
             selection_data = pooler.get_pool(cr.dbname).get(field_data['model']).fields_get(cr,uid,[field_data['name']])
             value_field['selection'] = selection_data.get(field_data['name']).get('selection')
-    ret_dict={'field_id':field_id,'operator':'=', 'condition':'and','value':False}  
+    operator = (field_type=='many2one') and 'in' or '='
+    ret_dict={'field_id':field_id,'operator':operator, 'condition':'and','value':False}  
     return ret_dict
 
 def _set_operator(self, cr, uid, data, context):
