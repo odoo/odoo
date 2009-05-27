@@ -891,7 +891,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
 
         'date': fields.datetime('Date Created'),
-        'date_planned': fields.datetime('Scheduled Date', required=True),
+        'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
@@ -1142,7 +1142,6 @@ class stock_move(osv.osv):
         track_flag=False
         for move in self.browse(cr, uid, ids):
             if move.move_dest_id.id and (move.state != 'done'):
-                mid = move.move_dest_id.id
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting','confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})

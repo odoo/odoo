@@ -1031,6 +1031,8 @@ class mrp_procurement(osv.osv):
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
+            self.pool.get('stock.move').write(cr, uid, [res_id],
+                    {'location_id':procurement.location_id.id})
         return produce_id
 
     def action_po_assign(self, cr, uid, ids, context={}):
@@ -1053,6 +1055,8 @@ class mrp_procurement(osv.osv):
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
+            newdate = newdate - procurement.product_id.seller_ids[0].delay
+
             context.update({'lang':partner.lang})
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 
