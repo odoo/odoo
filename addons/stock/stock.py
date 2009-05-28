@@ -205,8 +205,11 @@ class stock_location(osv.osv):
             products_by_id.setdefault(product.id, [])
             products_by_id[product.id] = product
 
-        result = []
+        result = {}
+        result['product'] = []
         for id in ids:
+            quantity_total = 0.0
+            total_price = 0.0
             for uom_id in products_by_uom.keys():
                 fnc = self._product_get
                 if recursive:
@@ -219,14 +222,20 @@ class stock_location(osv.osv):
                     if not qty[product_id]:
                         continue
                     product = products_by_id[product_id]
-                    result.append({
+                    quantity_total += qty[product_id]
+                    price = qty[product_id] * product.standard_price
+                    total_price += price
+                    result['product'].append({
                         'price': product.standard_price,
-                        'name': product.name,
+                        'prod_name': product.name,
                         'code': product.default_code, # used by lot_overview_all report!
                         'variants': product.variants or '',
                         'uom': product.uom_id.name,
-                        'amount': qty[product_id],
+                        'prod_qty': qty[product_id],
+                        'price_value':price,
                     })
+        result['total'] = quantity_total
+        result['total_price'] = total_price
         return result
 
     def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):

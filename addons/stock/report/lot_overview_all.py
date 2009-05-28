@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -27,56 +27,28 @@ class lot_overview_all(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(lot_overview_all, self).__init__(cr, uid, name, context)
         self.price_total = 0.0
+        self.grand_total = 0.0
         self.localcontext.update({
             'time': time,
             'process':self.process,
             'price_total': self._price_total,
+            'grand_total_price':self._grand_total,
         })
 
     def process(self,location_id):
-        res = {}
         location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
-        product_obj = pooler.get_pool(self.cr.dbname).get('product.product')
-       
-        product_ids = product_obj.search(self.cr, self.uid, [])
+        data = location_obj._product_get_all_report(self.cr,self.uid, [location_id])
+        data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['name'])[0]['name']
+        self.price_total = 0.0
+        self.price_total += data['total_price']
+        self.grand_total += data['total_price']
+        return [data]
 
-        products = product_obj.browse(self.cr,self.uid, product_ids)
-        products_by_uom = {}
-        products_by_id = {}
-        for product in products:
-            products_by_uom.setdefault(product.uom_id.id, [])
-            products_by_uom[product.uom_id.id].append(product)
-            products_by_id.setdefault(product.id, [])
-            products_by_id[product.id] = product
-
-        result = []
-#        res['prod'] = []
-        for id in self.ids:
-            for uom_id in products_by_uom.keys():
-                fnc = location_obj._product_get
-                qty = fnc(self.cr, self.uid, id, [x.id for x in products_by_uom[uom_id]])
-                for product_id in qty.keys():
-                    if not qty[product_id]:
-                        continue
-                    product = products_by_id[product_id]
-                    value=(product.standard_price)*(qty[product_id])
-                    self.price_total += value
-                    result.append({
-                        
-                        'name': product.name,
-                        'variants': product.variants or '',
-                        'code': product.default_code,
-                       'amount': str(qty[product_id]),
-                        'uom': product.uom_id.name,
-                        'price': str(product.standard_price),
-                        'value':str(value),
-                    })
-                    
-        
-        return result
-    
     def _price_total(self):
-            return str( self.price_total)
+        return str( self.price_total)
+
+    def _grand_total(self):
+        return str( self.grand_total)
 
 report_sxw.report_sxw('report.lot.stock.overview_all', 'stock.location', 'addons/stock/report/lot_overview_all.rml', parser=lot_overview_all)
 
