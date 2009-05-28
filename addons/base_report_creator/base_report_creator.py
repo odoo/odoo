@@ -294,9 +294,9 @@ class report_creator(osv.osv):
         'name': fields.char('Report Name',size=64, required=True),
         'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
         'active': fields.boolean('Active'),
-        'view_type1': fields.selection([('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'First View', required=True),
-        'view_type2': fields.selection([('','/'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Second View'),
-        'view_type3': fields.selection([('','/'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Third View'),
+        'view_type1': fields.selection([('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'First View', required=True),
+        'view_type2': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Second View'),
+        'view_type3': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Third View'),
         'view_graph_type': fields.selection([('pie','Pie Chart'),('bar','Bar Chart')], 'Graph Type', required=True),
         'view_graph_orientation': fields.selection([('horz','Horizontal'),('vert','Vertical')], 'Graph Orientation', required=True),
         'model_ids': fields.many2many('ir.model', 'base_report_creator_report_model_rel', 'report_id','model_id', 'Reported Objects'),
