@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -28,12 +28,37 @@ import re
 
 class account_tax_code_report(rml_parse.rml_parse):
     #_name = 'report.account.tax.code.entries'
+    
     def __init__(self, cr, uid, name, context):
         super(account_tax_code_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
+            'get_line':self.get_line,
         })
-
+        
+    def get_line(self,obj):
+        res ={}
+        result=[]
+        line_ids = self.pool.get('account.move.line').search(self.cr,self.uid,[('tax_code_id','=',obj.id)])
+        if line_ids:
+            b_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
+            for line in b_objs:
+               res['date'] = line.date
+               res['ref'] = line.ref
+               res['acode'] = line.account_id.code
+               if line.partner_id:
+                   res['pname'] = line.partner_id.name
+                   res['country'] = ''
+                   if line.partner_id.address:
+                       if line.partner_id.address[0].country_id:
+                           res['country'] = line.partner_id.address[0].country_id.code
+               else:
+                   res['pname'] = ''
+               res['name'] = line.name
+               res['debit'] = line.debit
+               res['credit'] = line.credit
+               result.append(res)
+        return result
         
 report_sxw.report_sxw('report.account.tax.code.entries', 'account.tax.code',
     'addons/account/report/account_tax_code.rml', parser=account_tax_code_report, header=False)

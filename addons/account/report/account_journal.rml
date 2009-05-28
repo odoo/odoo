@@ -120,70 +120,31 @@
     <para style="Table Contents">[[ repeatIn(objects, 'o') ]]</para>
     <blockTable colWidths="65.0,62.0,58.0,62.0,174.0,57.0,61.0" style="Table1" repeatRows="1">
       <tr>
-        <td>
-          <para style="P10a">Date</para>
-        </td>
-        <td>
-          <para style="P10">Voucher No</para>
-        </td>
-        <td>
-          <para style="P10">A/c No.</para>
-        </td>
-        <td>
-          <para style="P10a">Third party</para>
-        </td>
-        <td>
-          <para style="P10a">Entry label</para>
-        </td>
-        <td>
-          <para style="P10b">Debit</para>
-        </td>
-        <td>
-          <para style="P10b">Credit</para>
-        </td>
+        <td><para style="P10a">Date</para></td>
+        <td><para style="P10">Voucher No</para></td>
+        <td><para style="P10">A/c No.</para></td>
+        <td><para style="P10a">Third party</para></td>
+        <td><para style="P10a">Entry label</para></td>
+        <td><para style="P10b">Debit</para></td>
+        <td><para style="P10b">Credit</para></td>
       </tr>
        <tr>
-        <td>
-            <para style="P11">[[o.period_id.name ]]</para>
-        </td>
-        <td>
-          <para style="P11a">[[ o.journal_id.code ]]</para></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td>
-          <para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]]</u></para>
-        </td>
-        <td>
-          <para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para>
-        </td>
+        <td><para style="P11">[[o.period_id.name ]]</para></td>
+        <td><para style="P11a">[[ o.journal_id.code ]]</para></td>
+        <td><para style="P11"><font color="white"></font></para></td>
+        <td><para style="P11"><font color="white"></font></para></td>
+        <td><para style="P11"><font color="white"></font></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
+        <td><para style="P12"><u>[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]]</u></para></td>
       </tr>
-       <tr>
-        <td>
-          <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para>
-          <para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ line.ref ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ line.account_id.code ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[ line.partner_id and line.partner_id.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[ line.name ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ formatLang(line.debit) ]]</para>
-        </td>
-        <td>
-          <para style="P8">[[ formatLang(line.credit) ]]</para>
-        </td>
-        <para style="Standard">
-      <font color="white"> </font>
-    </para>
+      <tr>
+        <td><para style="terp_default_8">[[ repeatIn(lines(o.period_id.id, o.journal_id.id), 'line') ]]</para><para style="terp_default_8">[[ formatLang(line.date,date=True) ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ line.ref ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ line.account_id.code ]]</para></td>
+        <td><para style="terp_default_8">[[ line.partner_id and line.partner_id.name ]]</para></td>
+        <td><para style="terp_default_8">[[ line.name ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.debit) ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.credit) ]]</para></td>
       </tr>
     </blockTable>
   </story>

@@ -52,6 +52,7 @@
     </initialize>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -84,13 +85,10 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="180.0,180.0,179.0" style="Table_Header_Title">
@@ -110,10 +108,10 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="68.0,471.0" style="Table_Print_Current_datetime">
+    <blockTable colWidths="88.0,451.0" style="Table_Print_Current_datetime">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Printing Date :</para>
@@ -123,60 +121,27 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
-    </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
+    </para>    
     <blockTable colWidths="72.0,218.0,89.0,83.0,77.0" style="Table_Journal_Title">
       <tr>
-        <td>
-          <para style="terp_tblheader_Details">Code</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Journal Name</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Period</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Debit Trans.</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Credit Trans.</para>
-        </td>
+        <td><para style="terp_tblheader_Details">Code</para></td>
+        <td><para style="terp_tblheader_Details">Journal Name</para></td>
+        <td><para style="terp_tblheader_Details">Period</para></td>
+        <td><para style="terp_tblheader_Details_Right">Debit Trans.</para></td>
+        <td><para style="terp_tblheader_Details_Right">Credit Trans.</para></td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="71.0,219.0,89.0,83.0,77.0" style="Table_Final_Total">
       <tr>
-        <td>
-          <para style="terp_default_Bold_9">Total:</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para>
-        </td>
+        <td><para style="terp_default_Bold_9">Total:</para></td>
+        <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
+        <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang(sum_debit()) ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit()) ]]</para></td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <section>
       <para style="terp_default_8">[[ repeatIn( periods(objects), 'o') ]]</para>
       <blockTable colWidths="176.0,115.0,89.0,83.0,76.0" style="Table_Sub_Total">
@@ -228,7 +193,7 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
   </story>
