@@ -305,6 +305,7 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
+
     """Send an email."""
     import smtplib
     from email.MIMEText import MIMEText
@@ -314,6 +315,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
+    import netsvc
 
     if x_headers is None:
         x_headers = {}
@@ -369,29 +371,48 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             Encoders.encode_base64(part)
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
+    
+    class WriteToLogger(object):
+        def __init__(self):
+            self.logger = netsvc.Logger()
+
+        def write(self, s):
+            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
+
     try:
+        oldstderr = smtplib.stderr
         s = smtplib.SMTP()
+        
+        try:
+            # in case of debug, the messages are printed to stderr.
+            if debug:
+                smtplib.stderr = WriteToLogger()
 
-        if debug:
-            s.debuglevel = 5
-        s.connect(config['smtp_server'], config['smtp_port'])
-        if ssl:
-            s.ehlo()
-            s.starttls()
-            s.ehlo()
+            s.set_debuglevel(int(bool(debug)))  # 0 or 1
+            
+            s.connect(config['smtp_server'], config['smtp_port'])
+            if ssl:
+                s.ehlo()
+                s.starttls()
+                s.ehlo()
 
-        if config['smtp_user'] or config['smtp_password']:
-            s.login(config['smtp_user'], config['smtp_password'])
+            if config['smtp_user'] or config['smtp_password']:
+                s.login(config['smtp_user'], config['smtp_password'])
 
-        s.sendmail(email_from, 
-                   flatten([email_to, email_cc, email_bcc]), 
-                   msg.as_string()
-                  )
-        s.quit()
+            s.sendmail(email_from, 
+                       flatten([email_to, email_cc, email_bcc]), 
+                       msg.as_string()
+                      )
+
+        finally:
+            s.quit()
+            if debug:
+                smtplib.stderr = oldstderr
+
     except Exception, e:
-        import netsvc
         netsvc.Logger().notifyChannel('email_send', netsvc.LOG_ERROR, e)
         return False
+    
     return True
 
 #----------------------------------------------------------
