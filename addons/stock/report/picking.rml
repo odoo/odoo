@@ -199,7 +199,7 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="276.0,51.0,56.0,80.0,55.0" repeatRows="1" style="Move_Line_Header">
+    <blockTable colWidths="255.0,65.0,70.0,83.0,75.0" repeatRows="1" style="Move_Line_Header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -223,7 +223,7 @@
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'assigned' )],'move_lines') ]]</para>
-      <blockTable colWidths="277.0,51.0,56.0,58.0,22.0,56.0" style="Move_Line_Contect_Assign_State">
+      <blockTable colWidths="255.0,65.0,70.0,50.0,30.0,75.0" style="Move_Line_Contect_Assign_State">
         <tr>
           <td>
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]]</para>
@@ -241,7 +241,7 @@
             <para style="terp_default_Right_9">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_9">[[ (((picking.type == 'out') and move_lines.location_id.name) or  ((picking.type == 'in') and move_lines.location_dest_id.name) or ((picking.type == 'internal') and (move_lines.location_id.name + '-' + move_lines.location_dest_id.name)) or '' ) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -258,7 +258,7 @@
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state !=  'assigned' )],'move_lines') ]]</para>
-      <blockTable colWidths="277.0,51.0,56.0,58.0,22.0,55.0" style="Move_Line_Content_Other_State">
+      <blockTable colWidths="255.0,65.0,70.0,50.0,30.0,75.0" style="Move_Line_Content_Other_State">
         <tr>
           <td>
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]]</para>
@@ -276,7 +276,7 @@
             <para style="terp_default_Right_9">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_9">[[ (((picking.type == 'out') and move_lines.location_id.name) or  ((picking.type == 'in') and move_lines.location_dest_id.name) or ((picking.type == 'internal') and (move_lines.location_id.name + '-' + move_lines.location_dest_id.name)) or '' ) ]]</para>
           </td>
         </tr>
       </blockTable>
