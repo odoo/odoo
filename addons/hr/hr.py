@@ -22,6 +22,7 @@
 
 from mx import DateTime
 import time
+import math
 
 from osv import fields, osv
 from tools.translate import _
@@ -34,50 +35,57 @@ class hr_timesheet_group(osv.osv):
         'timesheet_id' : fields.one2many('hr.timesheet', 'tgroup_id', 'Working Time'),
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
-    #
-    # TODO: improve; very slow !
-    #       bug if transition to another period
-    #
+    def interval_min_get(self, cr, uid, id, dt_from, hours):
+        if not id:
+            return [(dt_from-DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
+        todo = hours
+        cycle = 0
+        result = []
+        maxrecur = 100
+        current_hour = dt_from.hour
+        while (todo>0) and maxrecur:
+            cr.execute("select hour_from,hour_to from hr_timesheet where dayofweek='%s' and tgroup_id=%s order by hour_from desc", (dt_from.day_of_week,id))
+            for (hour_from,hour_to) in cr.fetchall():
+                if (hour_from<current_hour) and (todo>0):
+                    m = min(hour_to, current_hour)
+                    if (m-hour_from)>todo:
+                        hour_from = m-todo
+                    d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_from)),int((hour_from%1) * 60))
+                    d2 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
+                    result.append((d1, d2))
+                    current_hour = hour_from
+                    todo -= (m-hour_from)
+            dt_from -= DateTime.RelativeDateTime(days=1)
+            current_hour = 24
+            maxrecur -= 1
+        result.reverse()
+        return result
+
     def interval_get(self, cr, uid, id, dt_from, hours, byday=True):
         if not id:
             return [(dt_from,dt_from+DateTime.RelativeDateTime(hours=int(hours)*3))]
         todo = hours
         cycle = 0
         result = []
-        while todo>0:
+        maxrecur = 100
+        current_hour = dt_from.hour
+        while (todo>0) and maxrecur:
             cr.execute("select hour_from,hour_to from hr_timesheet where dayofweek='%s' and tgroup_id=%s order by hour_from", (dt_from.day_of_week,id))
             for (hour_from,hour_to) in cr.fetchall():
-                
-                import math
-
-                hour_from = '%02d:%02d' % (math.floor(abs(hour_from)),round(abs(hour_from)%1+0.01,2) * 60)
-                hour_to = '%02d:%02d' % (math.floor(abs(hour_to)),round(abs(hour_to)%1+0.01,2) * 60)
-                
-                h1,m1 = map(int,hour_from.split(':'))
-                h2,m2 = map(int,hour_to.split(':'))
-                d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,h1,m1)
-                d2 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,h2,m2)
-                if dt_from<d2:
-                    date1 = max(dt_from,d1)
-                    if date1+DateTime.RelativeDateTime(hours=todo)<=d2:
-                        result.append((date1, date1+DateTime.RelativeDateTime(hours=todo)))
-                        todo = 0
-                    else:
-                        todo -= (d2-date1).hours
-                        result.append((date1, d2))
-            dt_from = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day)+DateTime.RelativeDateTime(days=1)
-            cycle+=1
-            if cycle>7 and todo==hours:
-                return [(dt_from,dt_from+DateTime.RelativeDateTime(hours=hours*3))]
-        if byday:
-            i = 1
-            while i<len(result):
-                if (result[i][0]-result[i-1][1]).days<1:
-                    result[i-1]=(result[i-1][0],result[i][1])
-                    del result[i]
-                else:
-                    i+=1
+                if (hour_to>current_hour) and (todo>0):
+                    m = max(hour_from, current_hour)
+                    if (hour_to-m)>todo:
+                        hour_to = m+todo
+                    d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
+                    d2 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                    result.append((d1, d2))
+                    current_hour = hour_to
+                    todo -= (hour_to - m)
+            dt_from += DateTime.RelativeDateTime(days=1)
+            current_hour = 0
+            maxrecur -= 1
         return result
+
 hr_timesheet_group()
 
 
