@@ -127,8 +127,9 @@ class sale_order(osv.osv):
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
                     tot += invoice.amount_untaxed
+
             if tot:
-                res[sale.id] = min(100.0, tot * 100.0 / sale.amount_untaxed)
+                res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
                 res[sale.id] = 0.0
         return res

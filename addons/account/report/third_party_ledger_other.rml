@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      	<header>
+			<pageGraphics>
+				<!--logo-->
+				<!--<fill color="darkblue"/>-->
+				<!--<stroke color="darkblue"/>-->
+
+				<!--TITLE COMPANY-->
+				<!-- <drawString x="4.6cm" y="28.7cm">[[ company.partner_id.name ]]</drawString> -->
+
+				<setFont name="Helvetica-Bold" size="9"/>
+
+
+				<!--COL 1-->
+				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
+				<drawRightString x="20cm" y="28.1cm">Third Party Ledger [[ data['form']['result_selection'] == 'customer' and '/ Débiteur' ]] [[ data['form']['result_selection'] == 'supplier' and '/ Créancier' ]] [[ data['form']['result_selection'] == 'all' and '/ Créancier et Débiteur' ]]</drawRightString>
+
+				<!-- Header -->
+
+
+				<setFont name="Helvetica" size="9"/>
+				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
+				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
+				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
+
+
+			    <lineMode width="0.7"/>
+				<lines>1cm 27.7cm 20cm 27.7cm</lines>
+				<setFont name="Helvetica" size="8"/>
+
+			</pageGraphics>
+			</header>
+    </pageTemplate>
+
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="tbl_heading">
+
+      <blockValign value="TOP"/>
+
+       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+    </blockTableStyle>
+
+	<blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="LEFT"/>
+
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+
+
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockLeftPadding length="0" start="1,0" stop="1,0"/>
+      <blockAlignment value="LEFT"/>
+      <blockValign value="LEFT"/>
+
+     <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="LEFT"/>
+	  <lineStyle kind="LINEBELOW" colorName="#777777" start="0,0" stop="0,-1"/>
+
+
+    </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="LEFT"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+    </blockTableStyle>
+
+
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="2.0" leading="1" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="14.5" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="7.5" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="7.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="7.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Balance" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="14.5" leftIndent="-5.0"/>
+    <paraStyle name="P9a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9c" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9b" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="total" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
+    <paraStyle name="P11" fontName="Helvetica" fontSize="8.0" leading="14"/>
+    <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="date" fontName="Helvetica" fontSize="8.0" leading="9" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P15" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="7.5" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P16" fontName="Helvetica" fontSize="8.0" leading="12" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+  </stylesheet>
+  <story>
+	<para style="P2"><font color="white"></font></para>
+    <blockTable colWidths="50.0,30.0,42.0,220.0,69.0,72.0,63.0" repeatRows="1" style="tbl_heading">
+  	 <tr>
+        <td><para style="date">Date</para></td>
+       	<td><para style="P12">JNRL</para></td>
+       	<td><para style="P12">Ref.</para></td>
+       	<td><para style="P12">Entry label</para></td>
+       	<td><para style="P16">Debit</para></td>
+       	<td><para style="P16">Credit</para></td>
+       	<td><para style="P16">Balance</para></td>
+     </tr>
+     <tr>
+     	<td>
+    	 <blockTable colWidths="337.0,69.0,72.0,63.0" style="Table3">
+    	 <tr>
+     		<td><para style="Balance">Balance brought forward</para></td>
+	        <td><para style="P8"><u>[[ formatLang((sum_debit(data))) ]]</u></para></td>
+	        <td><para style="P8"><u>[[ formatLang((sum_credit(data))) ]]</u></para></td>
+	        <td><para style="P8"><u>[[ formatLang((sum_debit(data) - sum_credit(data))) ]]</u></para></td>
+	     </tr>
+	    </blockTable>
+	    </td>
+     </tr>
+     <tr>
+     	<td>
+		 	<para style="P1">[[ repeatIn(objects, 'p') ]]</para>
+		   	<blockTable colWidths="300.0,37.0,69.0,72.0,63.0" style="Table5">
+		     <tr>
+		     	<td><para style="total">[[ p.ref ]] - [[ p.name ]]</para></td>
+		        <td><para style="total"></para></td>
+		        <td><para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data))) ]]</u></para></td>
+		        <td><para style="P9b"><u>[[ formatLang((sum_credit_partner(p,data))) ]]</u></para></td>
+		        <td><para style="P9b"><u>[[ formatLang((sum_debit_partner(p,data) - sum_credit_partner(p,data))) ]]</u></para></td>
+		     </tr>
+		    </blockTable>
+		    <blockTable colWidths="45.0,30.0,262.0,0.0,69.0,72.0,63.0" style="Table2">
+		     <tr>
+			     <td><para style="P15"><font face="Helvetica">[[ repeatIn(lines(p,data), 'line') ]]</font>[[ formatLang(line['date'],date=True) ]]</para></td>
+		         <td><para style="P3">[[ line['code'] ]]</para></td>
+		         <td><para style="P3">[[ line['ref'] ]] / [[ line['name'] ]]</para></td>
+		         <td><para style="P4"></para></td>
+		         <td><para style="P5">[[ formatLang((line['debit'])) ]]</para></td>
+		         <td><para style="P5">[[ formatLang((line['credit'])) ]]</para></td>
+		         <td><para style="P5">[[ formatLang((line['progress'])) ]]</para></td>
+		     </tr>
+		    </blockTable>
+     	</td>
+     </tr>
+    </blockTable>
+  </story>
+</document>

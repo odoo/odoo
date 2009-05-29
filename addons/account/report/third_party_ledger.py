@@ -447,4 +447,8 @@ report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
 		'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
 		header=False)
 
+report_sxw.report_sxw('report.account.third_party_ledger_other', 'res.partner',
+		'addons/account/report/third_party_ledger_other.rml',parser=third_party_ledger,
+		header=False)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
