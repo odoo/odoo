@@ -106,7 +106,7 @@ class wizard_report(wizard.interface):
         return data['form']
 
     def _check(self, cr, uid, data, context):
-        if data['form']['page_split']==True:
+        if data['form']['page_split']:
             return 'report'
         else:
             return 'report_other'
