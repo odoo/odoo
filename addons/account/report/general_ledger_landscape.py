@@ -54,6 +54,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(general_ledger_landscape, self).__init__(cr, uid, name, context)
 		self.date_borne = {}
+		self.sum_debit = 0.00
+		self.sum_credit = 0.00
 		self.query = ""
 		self.child_ids = ""
 		self.tot_currency = 0.0
@@ -178,11 +180,10 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 
 
-	def get_children_accounts(self, account, form):
-
+	def get_children_accounts(self, acc_l, form):
 		self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
 			[('parent_id', 'child_of', self.ids)])
-#
+		done_l = []
 		res = []
 		ctx = self.context.copy()
 		## We will make the test for period or date
@@ -198,61 +199,32 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
 		#
 		self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-		if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
-			ctx['consolidate_childs'] = True
-			ctx['account_id'] = account.id
-		ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
+		ids_acc = []
+		for acc in acc_l:
+			if acc and acc.child_consol_ids: # add ids of consolidated childs also of selected account
+				ctx['consolidate_childs'] = True
+				ctx['account_id'] = acc.id
+			ids_acc += self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [acc.id])], context=ctx)
 		for child_id in ids_acc:
+			if child_id not in done_l:
+				done_l.append(child_id)
+			else:
+				continue
 			child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
 			sold_account = self._sum_solde_account(child_account,form)
 			self.sold_accounts[child_account.id] = sold_account
+			accounts = self.pool.get('account.account').read(self.cr, self.uid, child_id,['debit','credit','balance'])
 			if form['display_account'] == 'bal_mouvement':
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
-					context=ctx)) <> 0 :
+				if accounts['credit'] > 0 or accounts['debit'] > 0 or accounts['balance'] > 0 :
+					#if child_account not in res:
 					res.append(child_account)
 			elif form['display_account'] == 'bal_solde':
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','=',child_account.id)],
-					context=ctx)) <> 0 :
+				if  accounts['balance'] != 0:
 					if ( sold_account <> 0.0):
 						res.append(child_account)
+						
 			else:
-				if child_account.type != 'view' \
-				and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-					[('account_id','>=',child_account.id)],
-					context=ctx)) <> 0 :
-					res.append(child_account)
-		##
-		if not len(res):
-
-			return [account]
-		else:
-			## We will now compute solde initiaux
-			for move in res:
-				SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
-				self.cr.execute(SOLDEINIT)
-				resultat = self.cr.dictfetchall()
-				if resultat[0] :
-					if resultat[0]['sum_debit'] == None:
-						sum_debit = 0
-					else:
-						sum_debit = resultat[0]['sum_debit']
-					if resultat[0]['sum_credit'] == None:
-						sum_credit = 0
-					else:
-						sum_credit = resultat[0]['sum_credit']
-
-					move.init_credit = sum_credit
-					move.init_debit = sum_debit
-
-				else:
-					move.init_credit = 0
-					move.init_debit = 0
-
-
+				res.append(child_account)
 		return res
 
 	def lines(self, account, form):
@@ -315,44 +287,17 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		return res
 
 	def _sum_debit_account(self, account, form):
-
-		self.cr.execute("SELECT sum(debit) "\
-				"FROM account_move_line l "\
-				"WHERE l.account_id = %s AND %s "%(account.id, self.query))
-		## Add solde init to the result
-		#
-		sum_debit = self.cr.fetchone()[0] or 0.0
-		#if form['soldeinit']:
-		sum_debit += account.init_debit
-		#
-		##
-		return sum_debit
+		accounts = self.pool.get('account.account').read(self.cr, self.uid, account.id,['debit'])
+		return accounts['debit']
 
 	def _sum_credit_account(self, account, form):
-
-		self.cr.execute("SELECT sum(credit) "\
-				"FROM account_move_line l "\
-				"WHERE l.account_id = %s AND %s "%(account.id,self.query))
-		## Add solde init to the result
-		#
-		sum_credit = self.cr.fetchone()[0] or 0.0
-		#if form['soldeinit']:
-		sum_credit += account.init_credit
-		#
-		##
-
-		return sum_credit
+		accounts = self.pool.get('account.account').read(self.cr, self.uid, account.id,['credit'])
+		return accounts['credit']
 
 	def _sum_solde_account(self, account, form):
-		self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
-				"FROM account_move_line l "\
-				"WHERE l.account_id = %s AND %s"%(account.id,self.query))
-		sum_solde = self.cr.fetchone()[0] or 0.0
-		#if form['soldeinit'] != 0:
-		sum_solde += account.init_debit - account.init_credit
-
-		return sum_solde
-
+		accounts = self.pool.get('account.account').read(self.cr, self.uid, account.id,['balance'])
+		return accounts['balance']
+	
 	def _sum_debit(self, form):
 		if not self.ids:
 			return 0.0
