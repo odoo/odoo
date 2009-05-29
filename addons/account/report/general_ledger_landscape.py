@@ -322,8 +322,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		## Add solde init to the result
 		#
 		sum_debit = self.cr.fetchone()[0] or 0.0
-		if form['soldeinit']:
-			sum_debit += account.init_debit
+		#if form['soldeinit']:
+		sum_debit += account.init_debit
 		#
 		##
 		return sum_debit
@@ -336,8 +336,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 		## Add solde init to the result
 		#
 		sum_credit = self.cr.fetchone()[0] or 0.0
-		if form['soldeinit']:
-			sum_credit += account.init_credit
+		#if form['soldeinit']:
+		sum_credit += account.init_credit
 		#
 		##
 
@@ -348,8 +348,8 @@ class general_ledger_landscape(rml_parse.rml_parse):
 				"FROM account_move_line l "\
 				"WHERE l.account_id = %s AND %s"%(account.id,self.query))
 		sum_solde = self.cr.fetchone()[0] or 0.0
-		if form['soldeinit']:
-			sum_solde += account.init_debit - account.init_credit
+		#if form['soldeinit'] != 0:
+		sum_solde += account.init_debit - account.init_credit
 
 		return sum_solde
 

@@ -84,7 +84,7 @@ period_fields = {
     'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Movement')]},
     'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
     'landscape':{'string':"Landscape Mode",'type':'boolean'},
-    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
+   # 'soldeinit':{'string':"Include initial balances",'type':'boolean'},
     'amount_currency':{'string':"With Currency",'type':'boolean'},
     'date_from': {'string':"           Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
     'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
