@@ -57,7 +57,7 @@ class tax_report(rml_parse.rml_parse):
 			return new
 		else:
 			return self.comma_me(new)
-	def _get_lines(self, based_on,period_list,company_id, parent=False, level=0):
+	def _get_lines(self, based_on,period_list,company_id=False, parent=False, level=0):
 		res = self._get_codes(based_on,company_id,parent,level,period_list)
 		
 		if period_list[0][2] :
