@@ -73,9 +73,9 @@
         <blockTable colWidths="202.0,234.0,65.0,25" repeatRows="1" style="Table4">
           <tr>
             <td><para style="P5">[[ ob['location_name'] ]]</para></td>
-            <td><para style="Standard"><font color="white"> </font></para></td>
-            <td><para style="Standard"><font color="white"> </font></para></td>
-            <td><para style="Standard"><font color="white"> </font></para></td>
+            <td><para style="Standard">[[ ob['product'] or 'No products in this Location !' ]]</para></td>
+            <td><para><font color="white"> </font></para></td>
+            <td><para><font color="white"> </font></para></td>
           </tr>
           <tr>
             <td><para style="P3">[[ repeatIn(ob['product'], 'p') ]] </para></td>

@@ -13,7 +13,7 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,0" stop="-1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
@@ -44,7 +44,7 @@
     <paraStyle name="P2" fontName="Helvetica-BoldOblique" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Helvetica"/>
     <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
-    <paraStyle name="P41" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P41" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
     <paraStyle name="P6" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
     <paraStyle name="P7" fontName="Helvetica-BoldOblique" fontSize="6.0" leading="8"/>
@@ -69,7 +69,7 @@
   <images/>
   <story>
     <section>
-      <blockTable colWidths="60.0,180.0,61.0,55.0,59.0,56.0,61.0" repeatRows="1" style="Table1">
+      <blockTable colWidths="60.0,190.0,61.0,55.0,59.0,56.0,61.0" repeatRows="1" style="Table1">
         <tr>
          <td><para style="P1">Location</para></td>
          <td><para style="P1">Product</para></td>
@@ -83,15 +83,15 @@
       <para style="P9">[[ repeatIn(objects,'o') ]]</para>
       <section>
       	<para style="P12">[[ repeatIn(process(o.id),'ob') ]]</para>
-        <blockTable colWidths="70.0,190.0,56.0,55.0,52.0,56.0,68.0" repeatRows="1" style="Table2">
+        <blockTable colWidths="60.0,200.0,56.0,55.0,52.0,56.0,68.0" repeatRows="1" style="Table2">
         <tr>
 	        <td><para style="P41">[[ ob['location_name'] ]]</para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard"><font color="white"></font></para></td>
+	        <td><para style="Standard">[[ ob['product'] or 'No products in this Location !' ]]</para></td>
+	        <td><para><font color="white"></font></para></td>
+	        <td><para><font color="white"></font></para></td>
+	        <td><para><font color="white"></font></para></td>
+	        <td><para><font color="white"></font></para></td>
+	        <td><para><font color="white"></font></para></td>
         </tr>
         <tr>
             <td><para style="P7">[[ repeatIn(ob['product'],'p') ]]</para></td>
@@ -103,7 +103,7 @@
             <td><para style="P10b">[[ p['price_value'] ]]</para></td>
           </tr>
         </blockTable>
-        <blockTable colWidths="70.0,190.0,56.0,55.0,52.0,56.0,68.0" style="Table4">
+        <blockTable colWidths="60.0,200.0,56.0,55.0,52.0,56.0,68.0" style="Table4">
           <tr>
             <td><para style="P8"></para></td>
             <td><para style="P8">Total:</para></td>
