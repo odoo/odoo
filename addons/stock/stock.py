@@ -205,8 +205,11 @@ class stock_location(osv.osv):
             products_by_id.setdefault(product.id, [])
             products_by_id[product.id] = product
 
-        result = []
+        result = {}
+        result['product'] = []
         for id in ids:
+            quantity_total = 0.0
+            total_price = 0.0
             for uom_id in products_by_uom.keys():
                 fnc = self._product_get
                 if recursive:
@@ -219,14 +222,20 @@ class stock_location(osv.osv):
                     if not qty[product_id]:
                         continue
                     product = products_by_id[product_id]
-                    result.append({
+                    quantity_total += qty[product_id]
+                    price = qty[product_id] * product.standard_price
+                    total_price += price
+                    result['product'].append({
                         'price': product.standard_price,
-                        'name': product.name,
+                        'prod_name': product.name,
                         'code': product.default_code, # used by lot_overview_all report!
                         'variants': product.variants or '',
                         'uom': product.uom_id.name,
-                        'amount': qty[product_id],
+                        'prod_qty': qty[product_id],
+                        'price_value':price,
                     })
+        result['total'] = quantity_total
+        result['total_price'] = total_price
         return result
 
     def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):
@@ -791,7 +800,7 @@ class stock_production_lot(osv.osv):
         ''')
         res.update(dict(cr.fetchall()))
         return res
-    
+
     def _stock_search(self, cr, uid, obj, name, args):
         locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')])
         cr.execute('''select
@@ -803,12 +812,12 @@ class stock_production_lot(osv.osv):
                 location_id in ('''+','.join(map(str, locations)) +''')
             group by
                 prodlot_id
-            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2]) 
+            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2])
         )
         res = cr.fetchall()
         ids = [('id','in',map(lambda x:x[0], res))]
         return ids
-    
+
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
         'ref': fields.char('Internal Ref', size=64),

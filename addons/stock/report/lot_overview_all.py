@@ -23,28 +23,34 @@ import pooler
 import time
 from report import report_sxw
 
-class lot_location(report_sxw.rml_parse):
+class lot_overview_all(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(lot_location, self).__init__(cr, uid, name, context)
+        super(lot_overview_all, self).__init__(cr, uid, name, context)
+        self.price_total = 0.0
         self.grand_total = 0.0
-
         self.localcontext.update({
             'time': time,
             'process':self.process,
-            'qty_total':self._qty_total,
+            'price_total': self._price_total,
+            'grand_total_price':self._grand_total,
         })
 
     def process(self,location_id):
         location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
-        data = location_obj._product_get_report(self.cr,self.uid, [location_id])
+        data = location_obj._product_get_all_report(self.cr,self.uid, [location_id])
         data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['name'])[0]['name']
-        self.grand_total += data['total']
+        self.price_total = 0.0
+        self.price_total += data['total_price']
+        self.grand_total += data['total_price']
         return [data]
 
-    def _qty_total(self):
+    def _price_total(self):
+        return str( self.price_total)
+
+    def _grand_total(self):
         return str( self.grand_total)
 
-report_sxw.report_sxw('report.lot.location', 'stock.location', 'addons/stock/report/lot_location.rml', parser=lot_location)
+report_sxw.report_sxw('report.lot.stock.overview_all', 'stock.location', 'addons/stock/report/lot_overview_all.rml', parser=lot_overview_all)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
