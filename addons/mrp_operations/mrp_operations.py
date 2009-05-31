@@ -120,8 +120,8 @@ class mrp_production_workcenter_line(osv.osv):
             pids2 = {}
             for prod in self.browse(cr, uid, ids, context=context):
                 if prod.production_id.workcenter_lines:
-                    dstart = prod.production_id.workcenter_lines[0]['date_planned']
-                    self.pool.get('mrp.production').write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context)
+                    dstart = min(vals['date_planned'], prod.production_id.workcenter_lines[0]['date_planned'])
+                    self.pool.get('mrp.production').write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context, mini=False)
         return result
 
     def action_draft(self, cr, uid, ids):
@@ -178,7 +178,7 @@ class mrp_production(osv.osv):
             tmp=self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,[workcenter_line.id])
         return super(mrp_production,self).action_cancel(cr,uid,ids)
 
-    def _compute_planned_workcenter(self, cr, uid, ids, context={}):
+    def _compute_planned_workcenter(self, cr, uid, ids, context={}, mini=False):
         dt_end = DateTime.now()
         for po in self.browse(cr, uid, ids, context=context):
             dt_end = DateTime.strptime(po.date_start or po.date_planned, '%Y-%m-%d %H:%M:%S')
@@ -193,7 +193,7 @@ class mrp_production(osv.osv):
                     dt = dt_end
                 if context.get('__last_update'):
                     del context['__last_update']
-                if wc.date_planned<dt.strftime('%Y-%m-%d %H:%M:%S'):
+                if (wc.date_planned<dt.strftime('%Y-%m-%d %H:%M:%S')) or mini:
                     self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
                         'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)
@@ -234,9 +234,9 @@ class mrp_production(osv.osv):
                                 wc.workcenter_id.timesheet_id.id or False, 
                                 dt, wc.hour or 0.0
                             )
-                        dt = i[0][0]
+                            dt = i[0][0]
                         if l.production_id.date_start>dt.strftime('%Y-%m-%d %H:%M:%S'):
-                            self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')})
+                            self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')}, mini=True)
         return True
 
     def _move_futur(self, cr, uid, ids, context={}):
@@ -256,14 +256,14 @@ class mrp_production(osv.osv):
                         break
 
 
-    def write(self, cr, uid, ids, vals, context={}, update=True):
+    def write(self, cr, uid, ids, vals, context={}, update=True, mini=True):
         direction = {}
         if vals.get('date_start', False):
             for po in self.browse(cr, uid, ids, context=context):
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
         result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
         if (vals.get('workcenter_lines', False) or vals.get('date_start', False)) and update:
-            self._compute_planned_workcenter(cr, uid, ids, context=context)
+            self._compute_planned_workcenter(cr, uid, ids, context=context, mini=mini)
         for d in direction:
             if direction[d]==1:
                 # the production order has been moved to the passed

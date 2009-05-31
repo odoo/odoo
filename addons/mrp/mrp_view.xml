@@ -411,8 +411,8 @@
             <field name="arch" type="xml">
                 <gantt color="product_id" date_stop="date_finnished" date_start="date_start" string="Productions">
                     <level object="mrp.routing" link="routing_id" domain="[]">
+                        <field name="name"/>
                         <field name="origin"/>
-                        <field name="product_id"/>
                     </level>
                 </gantt>
             </field>
