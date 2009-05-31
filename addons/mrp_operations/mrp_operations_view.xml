@@ -241,8 +241,9 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Graph view in hours by workcenter" type="bar">
-                     <field name="workcenter_id"/>
+                     <field name="date_start_date"/>
                      <field name="hour" operator="+"/>
+                     <field name="workcenter_id" group="True"/>
                 </graph>
             </field>
         </record>
