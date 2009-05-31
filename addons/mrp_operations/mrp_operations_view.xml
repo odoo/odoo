@@ -137,6 +137,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
         <field name="view_mode">gantt,tree,form,graph,calendar</field>
     </record>
 
@@ -275,6 +276,18 @@
         parent="mrp.menu_mrp_root"
         id="menu_mrp_production_operation_action"
         action="mrp_production_operation_action"/>
+
+    <record id="mrp_production_reorder_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.allow_reorder.form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="model">mrp.production</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="priority" position="after">
+                <field name="allow_reorder"/>
+            </field>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="operation_calendar_view">
             <field name="name">mrp.perations.calendar</field>

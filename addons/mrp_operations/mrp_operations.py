@@ -108,13 +108,11 @@ class mrp_production_workcenter_line(osv.osv):
         result = super(mrp_production_workcenter_line, self).write(cr, uid, ids, vals, context=context)
         if vals.get('date_planned', False) and update:
             pids = {}
+            pids2 = {}
             for prod in self.browse(cr, uid, ids, context=context):
-                if prod.production_id.date_start>vals['date_planned']:
-                    pids[prod.production_id.id] = True
-                    continue
-                if prod.production_id.date_finnished<prod.date_planned_end:
-                    pids[prod.production_id.id] = True
-            self.pool.get('mrp.production').write(cr, uid, pids.keys(), {'date_start':vals['date_planned']})
+                if prod.production_id.workcenter_lines:
+                    dstart = prod.production_id.workcenter_lines[0]['date_planned']
+                    self.pool.get('mrp.production').write(cr, uid, [prod.production_id.id], {'date_start':dstart}, context=context)
         return result
 
     def action_draft(self, cr, uid, ids):
@@ -146,9 +144,10 @@ class mrp_production_workcenter_line(osv.osv):
 mrp_production_workcenter_line()
 
 class mrp_production(osv.osv):
-    _name = 'mrp.production'
     _inherit = 'mrp.production'
-    _description = 'Production'
+    _columns = {
+        'allow_reorder': fields.boolean('Free Serialisation', help="Check this to be able to move independently all production orders, without moving dependent ones."),
+    }
 
     def _production_date_end(self, cr, uid, ids, prop, unknow_none, context={}):
         result = {}
@@ -183,19 +182,24 @@ class mrp_production(osv.osv):
                 wc  = po.workcenter_lines[wci]
                 if (old is None) or (wc.sequence>old):
                     dt = dt_end
-                self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
-                    'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
-                }, context=context, update=False)
-                i = self.pool.get('hr.timesheet.group').interval_get(
-                    cr,
-                    uid,
-                    wc.workcenter_id.timesheet_id and wc.workcenter_id.timesheet_id.id or False,
-                    dt,
-                    wc.hour or 0.0
-                )
-                old = wc.sequence
-                if i:
-                    dt_end = max(dt_end, i[-1][1])
+                if context.get('__last_update'):
+                    del context['__last_update']
+                if wc.date_planned<dt.strftime('%Y-%m-%d %H:%M:%S'):
+                    self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
+                        'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
+                    }, context=context, update=False)
+                    i = self.pool.get('hr.timesheet.group').interval_get(
+                        cr,
+                        uid,
+                        wc.workcenter_id.timesheet_id and wc.workcenter_id.timesheet_id.id or False,
+                        dt,
+                        wc.hour or 0.0
+                    )
+                    if i:
+                        dt_end = max(dt_end, i[-1][1])
+                else:
+                    dt_end = DateTime.strptime(wc.date_planned_end, '%Y-%m-%d %H:%M:%S')
+                old = wc.sequence or 0
             super(mrp_production, self).write(cr, uid, [po.id], {
                 'date_finnished': dt_end
             })
@@ -203,6 +207,8 @@ class mrp_production(osv.osv):
 
     def _move_pass(self, cr, uid, ids, context={}):
         for po in self.browse(cr, uid, ids, context):
+            if po.allow_reorder:
+                continue
             todo = po.move_lines
             dt = DateTime.strptime(po.date_start,'%Y-%m-%d %H:%M:%S')
             while todo:
@@ -211,25 +217,30 @@ class mrp_production(osv.osv):
                     continue
                 todo += l.move_dest_id_lines
                 if l.production_id and (l.production_id.date_finnished>dt):
-                    for wc in l.production_id.workcenter_lines:
-                        i = self.pool.get('hr.timesheet.group').interval_min_get(
-                            cr, 
-                            uid, 
-                            wc.workcenter_id.timesheet_id.id or False, 
-                            dt, wc.hour or 0.0
-                        )
+                    if l.production_id.state not in ('done','cancel'):
+                        for wc in l.production_id.workcenter_lines:
+                            i = self.pool.get('hr.timesheet.group').interval_min_get(
+                                cr, 
+                                uid, 
+                                wc.workcenter_id.timesheet_id.id or False, 
+                                dt, wc.hour or 0.0
+                            )
                         dt = i[0][0]
-                    self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')})
-                    continue
+                        if l.production_id.date_start>dt.strftime('%Y-%m-%d %H:%M:%S'):
+                            self.write(cr, uid, [l.production_id.id], {'date_start':dt.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def _move_futur(self, cr, uid, ids, context={}):
         for po in self.browse(cr, uid, ids, context):
+            if po.allow_reorder:
+                continue
             for line in po.move_created_ids:
                 l = line
                 while l.move_dest_id:
                     l = l.move_dest_id
                     if l.state in ('done','cancel','draft'):
+                        break
+                    if l.production_id.state in ('done','cancel'):
                         break
                     if l.production_id and (l.production_id.date_start<po.date_finnished):
                         self.write(cr, uid, [l.production_id.id], {'date_start':po.date_finnished})
@@ -240,8 +251,6 @@ class mrp_production(osv.osv):
         direction = {}
         if vals.get('date_start', False):
             for po in self.browse(cr, uid, ids, context=context):
-                print po, po.date_start, type(po.date_start)
-                print 'o'
                 direction[po.id] = cmp(po.date_start, vals.get('date_start', False))
         result = super(mrp_production, self).write(cr, uid, ids, vals, context=context)
         if (vals.get('workcenter_lines', False) or vals.get('date_start', False)) and update:

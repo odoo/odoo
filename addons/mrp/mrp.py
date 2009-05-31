@@ -731,6 +731,7 @@ stock_move()
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
     _description = 'Work Orders'
+    _order = 'sequence'
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
