@@ -196,7 +196,7 @@ class rml_parse(object):
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
 
-    def set_html_image(self,id,model=None,field=None):
+    def set_html_image(self,id,model=None,field=None,context=None):
         if not id :
             return ''
         if not model:
