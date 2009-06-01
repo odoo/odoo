@@ -174,8 +174,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return: fileobject if pathinfo is False else (fileobject, filepath)
     """
-
-    adp = os.path.normcase(os.path.abspath(config['addons_path']))
+    import addons
+    adps = addons.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
     if name.replace(os.path.sep, '/').startswith('addons/'):
@@ -190,7 +190,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
         subdir2 = (subdir2 != 'addons' or None) and subdir2
 
-        try:
+        for adp in adps:
+          try:
             if subdir2:
                 fn = os.path.join(adp, subdir2, name)
             else:
@@ -200,7 +201,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             if pathinfo:
                 return fo, fn
             return fo
-        except IOError, e:
+          except IOError, e:
             pass
 
     if subdir:

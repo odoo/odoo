@@ -46,11 +46,17 @@ from cStringIO import StringIO
 logger = netsvc.Logger()
 
 _ad = os.path.abspath(opj(tools.config['root_path'], 'addons'))     # default addons path (base)
-ad = os.path.abspath(tools.config['addons_path'])           # alternate addons path
+ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
 
 sys.path.insert(1, _ad)
-if ad != _ad:
-    sys.path.insert(1, ad)
+
+ad_cnt=1
+for adp in ad_paths:
+    if adp != _ad:
+	sys.path.insert(ad_cnt, adp)
+	ad_cnt+=1
+
+ad_paths.append(_ad)	# for get_module_path
 
 # Modules already loaded
 loaded = []
@@ -154,11 +160,10 @@ class Node(Singleton):
 
 def get_module_path(module, downloaded=False):
     """Return the path of the given module."""
-    if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
-        return opj(ad, module)
+    for adp in ad_paths:
+        if os.path.exists(opj(adp, module)) or os.path.exists(opj(adp, '%s.zip' % module)):
+            return opj(adp, module)
 
-    if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
-        return opj(_ad, module)
     if downloaded:
         return opj(_ad, module)
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
@@ -283,7 +288,10 @@ def get_modules():
             return os.path.isdir(name) or zipfile.is_zipfile(name)
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
-    return list(set(listdir(ad) + listdir(_ad)))
+    plist = []
+    for ad in ad_paths:
+	plist.extend(listdir(ad))
+    return list(set(plist))
 
 def get_modules_with_version():
     modules = get_modules()
@@ -311,6 +319,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
+	    logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
             cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
             continue
 
@@ -396,7 +405,7 @@ def register_class(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            fm = imp.find_module(m, [ad, _ad])
+            fm = imp.find_module(m, ad_paths)
             try:
                 imp.load_module(m, *fm)
             finally:
