@@ -105,6 +105,12 @@ class wizard_report(wizard.interface):
         data['form']['soldeinit'] = True
         return data['form']
 
+    def _check(self, cr, uid, data, context):
+        if data['form']['page_split']:
+            return 'report'
+        else:
+            return 'report_other'
+
     def _check_date(self, cr, uid, data, context):
 
         sql = """
@@ -134,12 +140,21 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('checkreport','Print','gtk-print')]}
+        },
+        'checkreport': {
+            'actions': [],
+            'result': {'type':'choice','next_state':_check}
         },
         'report': {
             'actions': [_check_state],
             'result': {'type':'print', 'report':'account.third_party_ledger', 'state':'end'}
+        },
+        'report_other': {
+            'actions': [_check_state],
+            'result': {'type':'print', 'report':'account.third_party_ledger_other', 'state':'end'}
         }
+
     }
 wizard_report('account.third_party_ledger.report')
 

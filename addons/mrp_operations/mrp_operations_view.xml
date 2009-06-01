@@ -10,6 +10,7 @@
         <field name="arch" type="xml">
             <tree string="Work Orders">
                 <field name="production_id"/>
+                <field name="date_planned"/>
                 <field name="product"/>
                 <field name="qty"/>
                 <field name="uom"/>
@@ -31,22 +32,52 @@
         <field name="inherit_id" eval="False"/>
         <field name="arch" type="xml">
             <form string="Work Orders">
-                <field colspan="4" name="name" select="1"/>
-                <field colspan="4" name="workcenter_id" select="1"/>
-                <field name="sequence"/>
-                <field name="cycle"/>
-                <field name="hour"/>
-                <field name="production_id"/>
-                <field name="delay"/>
-                <group colspan="8" col="8">
-                    <field name="state" select="2"/>
-                    <button name="button_draft" string="Set Draft" states="cancel"/>
-                    <button name="button_start_working" string="Start working" states="draft"/>
-                    <button name="button_resume" string="Resume" states="pause"/>
-                    <button name="button_done" string="Finished" states="startworking"/>
-                    <button name="button_pause" string="Pause" states="startworking"/>
-                    <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                <group col="6" colspan="4">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="workcenter_id" select="1"/>
+                    <field name="production_id"/>
+                    <field name="production_state"/>
+                    <field name="sequence"/>
                 </group>
+                <notebook colspan="4">
+                <page string="Information">
+                    <group colspan="2" col="2">
+                        <separator string="Planned Date" colspan="2"/>
+                        <field name="date_planned"/>
+                        <field name="date_planned_end"/>
+                    </group>
+
+                    <group colspan="2" col="2">
+                        <separator string="Duration" colspan="2"/>
+                        <field name="cycle"/>
+                        <field name="hour" widget="float_time"/>
+                    </group>
+
+                    <group colspan="2" col="2">
+                        <separator string="Real" colspan="2"/>
+                        <field name="date_start" readonly="1"/>
+                        <field name="date_finnished" readonly="1"/>
+                        <field name="delay" widget="float_time"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Product to Produce" colspan="2"/>
+                        <field name="product"/>
+                        <field name="qty"/>
+                        <field name="uom"/>
+                    </group>
+
+                    <separator string="Status" colspan="4"/>
+                    <group colspan="8" col="8">
+                        <field name="state" select="2"/>
+                        <button name="button_draft" string="Set Draft" states="cancel"/>
+                        <button name="button_start_working" string="Start" states="draft"/>
+                        <button name="button_resume" string="Resume" states="pause"/>
+                        <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                        <button name="button_pause" string="Pause" states="startworking"/>
+                        <button name="button_done" string="Finished" states="startworking"/>
+                    </group>
+                </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -69,8 +100,9 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
-                <level object="product.product" link="product" domain="[]">
+            <gantt color="production_id" date_stop="date_planned_end" date_start="date_planned" string="Operations">
+                <level object="mrp.workcenter" link="workcenter_id" domain="[]">
+                    <field name="product"/>
                     <field name="production_id"/>
                 </level>
             </gantt>
@@ -98,6 +130,17 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph,calendar,gantt</field>
     </record>
+
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
+        <field name="name">Work Orders Planning</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
+        <field name="view_mode">gantt,tree,form,graph,calendar</field>
+    </record>
+
 
     <!-- Action for Confirm Operations   -->
 
@@ -133,6 +176,7 @@
     <menuitem name="All Work Orders" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
     <menuitem name="Work Orders to Do" parent="menu_mrp_production_wc_action" action="mrp_production_wc_confirm_action" id="menu_mrp_production_wc_confirm_action"/>
     <menuitem name="Future Work Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
+    <menuitem parent="menu_mrp_production_wc_action" action="mrp_production_wc_action_planning" id="menu_mrp_production_wc_draft_action_planning"/>
 
 <!-- Operation codes -->
 
@@ -196,9 +240,10 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Graph view in hours by workcenter" type="bar">
-                     <field name="workcenter_id"/>
+                <graph string="Hours by Workcenter" type="bar">
+                     <field name="date_start_date"/>
                      <field name="hour" operator="+"/>
+                     <field name="workcenter_id" group="True" operator="+"/>
                 </graph>
             </field>
         </record>
@@ -232,6 +277,18 @@
         parent="mrp.menu_mrp_root"
         id="menu_mrp_production_operation_action"
         action="mrp_production_operation_action"/>
+
+    <record id="mrp_production_reorder_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.allow_reorder.form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="model">mrp.production</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="priority" position="after">
+                <field name="allow_reorder"/>
+            </field>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="operation_calendar_view">
             <field name="name">mrp.perations.calendar</field>

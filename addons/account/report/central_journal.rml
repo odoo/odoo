@@ -80,6 +80,7 @@
     <paraStyle name="Footer" fontName="Times-Roman"/>
     <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -103,79 +104,50 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
     <blockTable colWidths="180.0,180.0,180.0" style="Table_header_Content">
       <tr>
-        <td>
-          <para style="terp_header">
-            <font color="white"> </font>
-          </para>
+        <td><para style="terp_header"><font color="white"> </font></para>
         </td>
-        <td>
-          <para style="terp_header_Centre">Central Journal</para>
-        </td>
-        <td>
-          <para style="terp_header">
-            <font color="white"> </font>
-          </para>
-        </td>
+        <td><para style="terp_header_Centre">Central Journal</para></td>
+        <td><para style="terp_header"><font color="white"> </font></para></td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="180.0,180.0,180.0" style="Table_Sub_Header_Content">
       <tr>
-        <td>
-          <para style="terp_tblheader_General_Centre">Journal Code</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Journal Name</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
-        </td>
+        <td><para style="terp_tblheader_General_Centre">Journal Code</para></td>
+        <td><para style="terp_tblheader_General_Centre">Journal Name</para></td>
+        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
     </blockTable>
     <blockTable colWidths="180.0,180.0,180.0" style="Table_Subheader_Content_detail">
       <tr>
-        <td>
-          <para style="terp_tblheader_General_Centre">[[ o.journal_id.code or '' ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">[[ o.journal_id.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]] </para>
-        </td>
+        <td><para style="terp_tblheader_General_Centre">[[ o.journal_id.code or '' ]]</para></td>
+        <td><para style="terp_tblheader_General_Centre">[[ o.journal_id.name ]]</para></td>
+        <td><para style="terp_tblheader_General_Centre">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]] </para></td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="83.0,269.0,95.0,92.0" style="Table_Account_detail_Title">
       <tr>
-        <td>
-          <para style="terp_tblheader_Details">Account Num.</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Account Name</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Debit</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Credit</para>
-        </td>
+        <td><para style="terp_tblheader_Details">Account Num.</para></td>
+        <td><para style="terp_tblheader_Details">Account Name</para></td>
+        <td><para style="terp_tblheader_Details_Right">Debit</para></td>
+        <td><para style="terp_tblheader_Details_Right">Credit</para></td>
       </tr>
     </blockTable>
     <para style="terp_default_2">
@@ -183,20 +155,10 @@
     </para>
     <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Final_Total">
       <tr>
-        <td>
-          <para style="terp_default_Bold_9">Total:</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit(o.period_id.id, o.journal_id.id)) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para>
-        </td>
+        <td><para style="terp_default_Bold_9">Total:</para></td>
+        <td><para style="terp_default_Bold_9"><font color="white"> </font></para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_debit(o.period_id.id, o.journal_id.id)) ]]</para></td>
+        <td><para style="terp_default_Bold_9_Right">[[ formatLang( sum_credit(o.period_id.id, o.journal_id.id)) ]]</para></td>
       </tr>
     </blockTable>
     <para style="terp_default_2">
@@ -206,25 +168,17 @@
       <para style="terp_default_8">[[ repeatIn(lines(o.period_id.id,o.journal_id.id),'line') ]]</para>
       <blockTable colWidths="83.0,269.0,94.0,92.0" style="Table_Journal_Line_Content">
         <tr>
-          <td>
-            <para style="terp_default_9">[[ line['code'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_9">[[ line['name'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']) ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit'])]]</para>
-          </td>
+          <td><para style="terp_default_9">[[ line['code'] ]]</para></td>
+          <td><para style="terp_default_9">[[ line['name'] ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['debit']) ]]</para></td>
+          <td><para style="terp_default_Right_9">[[ formatLang(line['credit'])]]</para></td>
         </tr>
       </blockTable>
       <para style="terp_default_2">
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_8">
+    <para style="P9">
       <font color="white"> </font>
     </para>
   </story>
