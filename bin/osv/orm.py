@@ -182,7 +182,10 @@ class browse_record(object):
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
-                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
+                lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
+                if not lang_obj_ids:
+                    raise Exception(_('Language %s is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
