@@ -380,6 +380,12 @@ class mrp_production(osv.osv):
                 result[prod.id]['cycle_total'] += wc.cycle
         return result
 
+    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context={}):
+        result = {}
+        for prod in self.browse(cr, uid, ids, context=context):
+            result[prod.id] = prod.date_planned
+        return result
+
     def _production_date(self, cr, uid, ids, prop, unknow_none, context={}):
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
@@ -408,7 +414,8 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             help="Location where the system will stock the finished products."),
 
-        'date_planned_date': fields.function(_production_date, method=True, type='date', string='Planned Date'),
+        'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End'),
+        'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
         'date_finnished': fields.datetime('End Date'),
@@ -456,7 +463,8 @@ class mrp_production(osv.osv):
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
             'move_lines' : [],
-            'move_created_ids': []
+            'move_created_ids': [],
+            'state': 'draft'
         })
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
@@ -722,9 +730,10 @@ stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
-    _description = 'Production workcenters used'
+    _description = 'Work Orders'
+    _order = 'sequence'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Work Order', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
         'cycle': fields.float('Nbr of cycle', digits=(16,2)),
         'hour': fields.float('Nbr of hour', digits=(16,2)),

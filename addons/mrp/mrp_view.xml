@@ -409,9 +409,9 @@
             <field name="model">mrp.production</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="product_id" date_delay="hour_total" date_start="date_planned" string="Productions">
+                <gantt color="product_id" date_stop="date_finnished" date_start="date_start" string="Productions">
                     <level object="mrp.routing" link="routing_id" domain="[]">
-                        <field name="product_id"/>
+                        <field name="name"/>
                         <field name="origin"/>
                     </level>
                 </gantt>
