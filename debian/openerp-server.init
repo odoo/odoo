@@ -17,6 +17,8 @@ DAEMON=/usr/bin/openerp-server
 NAME=openerp-server
 DESC=openerp-server
 
+USER=openerp
+
 test -x ${DAEMON} || exit 0
 
 set -e
