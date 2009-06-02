@@ -82,7 +82,7 @@
     <para style="P5">
       <font color="white"> </font>
     </para>
-    <para style="P6">[[ setTag('para','image',{'width':'100.0','height':'80.0','name':str(o.id)}) ]][[ o.image or setTag('image','para') ]]</para>
+    <para style="P6">[[ o.image and setTag('para','image',{'width':'100.0','height':'80.0','name':str(o.id)}) ]][[ o.image ]]</para>
     <para style="P7">
       <font face="Times-Roman"/>
     </para>
