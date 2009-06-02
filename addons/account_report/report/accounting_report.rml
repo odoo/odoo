@@ -65,90 +65,44 @@
 </stylesheet>
 <images/>
 <story>
-<para style="P1">[[ repeatIn(objects,'o') ]]</para>
-<blockTable colWidths="146.0,223.0,158.0" repeatRows="1" style="Table2">
-<tr>
-<td>
-<para style="P9">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P10">Accounting Report</para>
-</td>
-<td>
-<para style="P2">
-<font color="white"> </font>
-</para>
-</td>
-</tr>
-<tr>
-<td>
-<para style="P5">[[ company.name ]]</para>
-</td>
-<td>
-<para style="P4">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P2">Currency: <font face="Times-Roman" size="11.0">[[ company.currency_id.name]]</font>
-</para>
-</td>
-</tr>
-</blockTable>
-<para style="P3">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
-<blockTable colWidths="361.0,73.0,93.0" repeatRows="1" style="Table4">
-<tr>
-<td>
-<para style="P6">Name</para>
-</td>
-<td>
-<para style="P6">Code</para>
-</td>
-<td>
-<para style="P6">Amount</para>
-</td>
-</tr>
-</blockTable>
-<para style="P3">
-<font color="white"> </font>
-</para>
-<section>
-<para style="P7">[[repeatIn(childs(o.id),'obj')]]</para>
-<blockTable colWidths="362.0,73.0,93.0" repeatRows="1" style="Table3">
-<tr>
-<td>
-<para style="P11"><font color="white">[[ '....'*(obj['level']) ]]</font>[[ obj['name'] ]]</para>
-</td>
-<td>
-<para style="P11">[[obj['code'] ]]</para>
-</td>
-<td>
-<para style="P12">[['%.2f' % obj['amount'] ]] </para>
-</td>
-</tr>
-<tr>
-<td>
-<para style="P13">[[ repeatIn((obj['note'] and obj['note'].splitlines()) or [], 'l') ]]</para>
-<para style="P14">[[ l or removeParentNode('table') ]]</para>
-</td>
-<td>
-<para style="P14">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P8">
-<font color="white"> </font>
-</para>
-</td>
-</tr>
-</blockTable>
-<para style="P1">
-<font color="white"> </font>
-</para>
-</section>
+	<para style="P1">[[ repeatIn(objects,'o') ]]</para>
+	<blockTable colWidths="146.0,223.0,158.0" repeatRows="1" style="Table2">
+	<tr>
+		<td><para style="P9"><font color="white"> </font></para></td>
+		<td><para style="P10">Accounting Report</para></td>
+		<td><para style="P2"><font color="white"> </font></para></td>
+	</tr>
+	<tr>
+		<td><para style="P5">[[ company.name ]]</para></td>
+		<td><para style="P4"><font color="white"> </font></para></td>
+		<td><para style="P2">Currency: <font face="Times-Roman" size="11.0">[[ company.currency_id.name]]</font></para></td>
+	</tr>
+	</blockTable>
+	<para style="P3">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+	<blockTable colWidths="361.0,73.0,93.0" repeatRows="1" style="Table4">
+	<tr>
+		<td><para style="P6">Name</para></td>
+		<td><para style="P6">Code</para></td>
+		<td><para style="P6">Amount</para></td>
+	</tr>
+	</blockTable>
+	<para style="P3"><font color="white"> </font></para>
+	<section>
+		<para style="P7">[[repeatIn(childs(o.id),'obj')]]</para>
+		<blockTable colWidths="362.0,73.0,93.0" repeatRows="1" style="Table3">
+			<tr>
+				<td><para style="P11"><font color="white">[[ '....'*(obj['level']) ]]</font><font>[[ obj['name'] ]]</font></para></td>
+				<td><para style="P11">[[obj['code'] ]]</para></td>
+				<td><para style="P12">[['%.2f' % obj['amount'] ]] </para></td>
+			</tr>
+			<tr>
+				<td><para style="P13">[[ repeatIn((obj['note'] and obj['note'].splitlines()) or [], 'l') ]]</para><para style="P14">[[ l or removeParentNode('table') ]]</para></td>
+				<td><para style="P14"><font color="white"> </font></para></td>
+				<td><para style="P8"><font color="white"> </font></para></td>
+			</tr>
+		</blockTable>
+		<para style="P1"><font color="white"> </font></para>
+	</section>
 </story>
 </document>
 
