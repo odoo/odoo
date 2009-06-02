@@ -28,11 +28,6 @@ from tools.translate import _
 import tools
 from wizard import except_wizard
 
-# XXX
-"""
-erreur si pos sans lignes
-"""
-
 
 class pos_config_journal(osv.osv):
     _name = 'pos.config.journal'

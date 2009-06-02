@@ -150,6 +150,16 @@ def _check(self, cr, uid, data, context):
     return action
 
 
+def _test_no_line(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    order = pool.get('pos.order').browse(cr, uid, data['id'], context)
+
+    if not order.lines:
+        raise wizard.except_wizard(_('Error'), _('No order lines defined for this sale.'))
+
+    return {}
+
+
 def create_invoice(self, cr, uid, data, context):
     wf_service = netsvc.LocalService("workflow")
     for i in data['ids']:
@@ -161,7 +171,7 @@ def create_invoice(self, cr, uid, data, context):
 class pos_payment(wizard.interface):
     states = {
         'init': {
-            'actions': [],
+            'actions': [_test_no_line],
             'result': {
                 'type': 'choice',
                 'next_state': _check,
