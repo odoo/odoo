@@ -28,18 +28,9 @@ from tools.translate import _
 import tools
 from wizard import except_wizard
 
-
 # XXX
 """
-File "/home/oli/work/projects/libeurop/server/bin/addons/point_of_sale/pos.py", line 510, in action_invoice
-[2009-05-26 13:33:55,780] ERROR:web-services:[30]:     inv_id = inv_ref.create(cr, uid, inv, context)
-[2009-05-26 13:33:55,780] ERROR:web-services:[31]:   File "/home/oli/work/projects/libeurop/server/bin/osv/orm.py", line 2451, in create
-[2009-05-26 13:33:55,780] ERROR:web-services:[32]:     cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
-[2009-05-26 13:33:55,780] ERROR:web-services:[33]:   File "/home/oli/work/projects/libeurop/server/bin/sql_db.py", line 76, in wrapper
-[2009-05-26 13:33:55,780] ERROR:web-services:[34]:     return f(self, *args, **kwargs)
-[2009-05-26 13:33:55,780] ERROR:web-services:[35]:   File "/home/oli/work/projects/libeurop/server/bin/sql_db.py", line 118, in execute
-[2009-05-26 13:33:55,780] ERROR:web-services:[36]:     res = self._obj.execute(query, params)
-[2009-05-26 13:33:55,800] ERROR:web-services:[37]: IntegrityError: null value in column "address_invoice_id" violates not-null constraint
+erreur si pos sans lignes
 """
 
 
@@ -521,6 +512,10 @@ class pos_order(osv.osv):
                 'price_type': 'tax_included'
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
+
+            if not self.pool.get('res.partner').browse(cr, uid, inv['partner_id']).address:
+                raise osv.except_osv(_('Error'), _('Unable to create invoice (partner has no address).'))
+
             inv_id = inv_ref.create(cr, uid, inv, context)
 
             self.write(cr, uid, [order.id], {'invoice_id': inv_id, 'state': 'invoiced'})
