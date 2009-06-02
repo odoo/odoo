@@ -26,6 +26,21 @@ from osv import fields, osv
 from mx import DateTime
 from tools.translate import _
 import tools
+from wizard import except_wizard
+
+
+# XXX
+"""
+File "/home/oli/work/projects/libeurop/server/bin/addons/point_of_sale/pos.py", line 510, in action_invoice
+[2009-05-26 13:33:55,780] ERROR:web-services:[30]:     inv_id = inv_ref.create(cr, uid, inv, context)
+[2009-05-26 13:33:55,780] ERROR:web-services:[31]:   File "/home/oli/work/projects/libeurop/server/bin/osv/orm.py", line 2451, in create
+[2009-05-26 13:33:55,780] ERROR:web-services:[32]:     cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+[2009-05-26 13:33:55,780] ERROR:web-services:[33]:   File "/home/oli/work/projects/libeurop/server/bin/sql_db.py", line 76, in wrapper
+[2009-05-26 13:33:55,780] ERROR:web-services:[34]:     return f(self, *args, **kwargs)
+[2009-05-26 13:33:55,780] ERROR:web-services:[35]:   File "/home/oli/work/projects/libeurop/server/bin/sql_db.py", line 118, in execute
+[2009-05-26 13:33:55,780] ERROR:web-services:[36]:     res = self._obj.execute(query, params)
+[2009-05-26 13:33:55,800] ERROR:web-services:[37]: IntegrityError: null value in column "address_invoice_id" violates not-null constraint
+"""
 
 
 class pos_config_journal(osv.osv):
@@ -44,11 +59,11 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "date_order, create_date desc"
-    _order = "date_order desc"
+    _order = "date_order desc, name desc"
 
     def unlink(self, cr, uid, ids, context={}):
         for rec in self.browse(cr, uid, ids, context=context):
-            if rec.state<>'draft':
+            if rec.state != 'draft':
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete a point of sale which is already confirmed !'))
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
@@ -56,7 +71,7 @@ class pos_order(osv.osv):
         if not part:
             return {}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
-        return {'value':{'pricelist_id': pricelist}}
+        return {'value': {'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
         id_set = ",".join(map(str, ids))
@@ -68,7 +83,7 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id IN (""" + id_set  +""") GROUP BY p.id """)
+        WHERE p.id IN (""" + id_set +""") GROUP BY p.id """)
         res = dict(cr.fetchall())
 
         for rec in self.browse(cr, uid, ids, context):
@@ -281,21 +296,21 @@ class pos_order(osv.osv):
                     # delete this product from old picking:
                     for old_line in old_picking.move_lines:
                         if old_line.product_id.id == p_id:
-                            old_line.write(cr, uid, [old_line.id], {'state': 'draft'}) # cannot delete if not draft
-                            old_line.unlink(cr, uid, [old_line.id], context)
+                            old_line.write({'state': 'draft'}, context=context) # cannot delete if not draft
+                            old_line.unlink(context=context)
                 elif qty_to_del > 0: # product qty has been modified (customer took less than the ordered quantity):
                     # subtract qty from old picking:
                     for old_line in old_picking.move_lines:
                         if old_line.product_id.id == p_id:
-                            old_line.write(cr, uid, [old_line.id], {'product_qty': old_line.product_qty - qty_to_del})
+                            old_line.write({'product_qty': old_line.product_qty - qty_to_del}, context=context)
                     # add qty to new picking:
-                    line.write(cr, uid, [line.id], {'product_qty': qty_to_del})
+                    line.write({'product_qty': qty_to_del}, context=context)
                 else: # product hasn't changed (customer took it without any change):
                     # delete this product from new picking:
-                    line.unlink(cr, uid, [line.id], context)
+                    line.unlink(context=context)
             else:
                 # delete it in the new picking:
-                line.unlink(cr, uid, [line.id], context)
+                line.unlink(context=context)
 
     def create_picking(self, cr, uid, ids, context={}):
         """Create a picking for each order and validate it."""
@@ -475,7 +490,6 @@ class pos_order(osv.osv):
                 'payments': False,
                 })
             clone_list.append(clone_id)
-
 
         for clone in self.browse(cr, uid, clone_list):
             for order_line in clone.lines:
@@ -690,12 +704,18 @@ class pos_order(osv.osv):
 
             for payment in order.payments:
 
+                if not payment.journal_id.default_debit_account_id:
+                    raise osv.except_osv(_('No Default Debit Account !'),
+                        _('You have to define a Default Debit Account for your Financial Journals!\n'))
+
+                if not payment.journal_id.default_credit_account_id:
+                    raise osv.except_osv(_('No Default Credit Account !'),
+                        _('You have to define a Default Credit Account for your Financial Journals!\n'))
+
                 if payment.amount > 0:
-                    payment_account = \
-                        payment.journal_id.default_debit_account_id.id
+                    payment_account = payment.journal_id.default_debit_account_id.id
                 else:
-                    payment_account = \
-                        payment.journal_id.default_credit_account_id.id
+                    payment_account = payment.journal_id.default_credit_account_id.id
 
                 if payment.amount > 0:
                     order_account = \
@@ -823,7 +843,7 @@ class pos_order_line(osv.osv):
 
         product_id = self.pool.get('product.product').search(cr, uid, [('ean13','=', ean)])
         if not product_id:
-           return False
+            return False
 
         # search price product
         product = self.pool.get('product.product').read(cr, uid, product_id)
@@ -845,7 +865,7 @@ class pos_order_line(osv.osv):
                    }
             line_id = self.create(cr, uid, vals)
             if not line_id:
-                raise wizard.except_wizard(_('Error'), _('Create line failed !'))
+                raise except_wizard(_('Error'), _('Create line failed !'))
         else:
             vals = {
                 'qty': qty,
@@ -853,7 +873,7 @@ class pos_order_line(osv.osv):
             }
             line_id = self.write(cr, uid, order_line_id, vals)
             if not line_id:
-                raise wizard.except_wizard(_('Error'), _('Modify line failed !'))
+                raise except_wizard(_('Error'), _('Modify line failed !'))
             line_id = order_line_id
 
         price_line = float(qty)*float(price)
