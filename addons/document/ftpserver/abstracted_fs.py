@@ -136,11 +136,7 @@ class abstracted_fs:
                 res = cr.fetchone()
                 if res and len(res):
                     self.db_name_list.append(db_name)
-                cr.commit()
-            except Exception,e:
-                log(e)
-                if cr:
-                    cr.rollback()
+                cr.commit()            
             finally:
                 if cr is not None:
                     cr.close()
