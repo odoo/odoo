@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:29:42+0000\n"
-"PO-Revision-Date: 2009-04-09 13:29:42+0000\n"
+"POT-Creation-Date: 2009-05-19 14:19:25+0000\n"
+"PO-Revision-Date: 2009-05-20 10:19:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,6 +62,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
 msgstr ""
@@ -78,6 +79,8 @@ msgid "Set to Draft"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays.per.user:0
+#: field:hr.holidays.per.user,holiday_ids:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
@@ -292,6 +295,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: view:hr.holidays.per.user:0
 msgid "Number of Days"
 msgstr ""
 
@@ -559,12 +563,6 @@ msgid "Approved Request"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.per.user:0
-#: field:hr.holidays.per.user,history:0
-msgid "History"
-msgstr ""
-
-#. module: hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidaysrequest0
 msgid "Holidays Request"
 msgstr ""
@@ -626,11 +624,6 @@ msgid "Print Summary of Holidays"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays.log:0
-msgid "Log Holidays"
-msgstr ""
-
-#. module: hr_holidays
 #: wizard_field:hr.holidays.summary,init,depts:0
 msgid "Department(s)"
 msgstr ""
@@ -665,6 +658,11 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
 msgid "Case"
+msgstr ""
+
+#. module: hr_holidays
+#: field:hr.holidays,holiday_user_id:0
+msgid "Holiday per user"
 msgstr ""
 
 #. module: hr_holidays

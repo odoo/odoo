@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:19:09+0000\n"
-"PO-Revision-Date: 2009-02-06 15:19:09+0000\n"
+"POT-Creation-Date: 2009-05-19 14:34:58+0000\n"
+"PO-Revision-Date: 2009-05-20 10:34:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,11 @@ msgstr ""
 #: field:product.template,procure_method:0
 msgid "Procure Method"
 msgstr "Inköpsmetod"
+
+#. module: product
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -644,6 +649,11 @@ msgid "HDD Seagate 7200.8 80GB"
 msgstr ""
 
 #. module: product
+#: help:product.pricelist.version,active:0
+msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
 msgid "HDD Seagate 7200.8 160GB"
 msgstr ""
@@ -853,12 +863,6 @@ msgid "Products Listprices Items"
 msgstr ""
 
 #. module: product
-#: code:addons/product/report/product_pricelist.py:0
-#, python-format
-msgid "%d unit"
-msgstr ""
-
-#. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
 msgstr ""
@@ -1063,11 +1067,6 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
-msgstr ""
-
-#. module: product
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
@@ -1244,12 +1243,6 @@ msgid "Information"
 msgstr ""
 
 #. module: product
-#: code:addons/product/report/product_pricelist.py:0
-#, python-format
-msgid "%d units"
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 msgid "Codes"
 msgstr ""
@@ -1405,6 +1398,11 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
+msgstr ""
+
+#. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr ""
 
 #. module: product

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:25:15+0000\n"
-"PO-Revision-Date: 2009-04-09 13:25:15+0000\n"
+"POT-Creation-Date: 2009-05-19 14:16:35+0000\n"
+"PO-Revision-Date: 2009-05-20 10:16:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,11 @@ msgid "Printed Message"
 msgstr "Missatge imprès"
 
 #. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "Total deure"
+
+#. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Amount In Currency"
 msgstr ""
@@ -55,11 +60,6 @@ msgstr ""
 #: rml:account_followup.followup.print:0
 msgid "Due"
 msgstr "Degut"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Total deure"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -175,6 +175,11 @@ msgid "Paid"
 msgstr "Pagat"
 
 #. module: account_followup
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
+
+#. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(line)s: Account Move lines"
 msgstr "%(line)s: Línies de moviments comptables"
@@ -236,11 +241,6 @@ msgid "\n"
 "Best Regards,\n"
 "			"
 msgstr ""
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0

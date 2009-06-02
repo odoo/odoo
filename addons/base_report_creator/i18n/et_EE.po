@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: base_report_creator
+#: help:base_report_creator.report.filter,expression:0
+msgid "Provide an expression for the field based on which you want to filter the records.\n"
+" e.g. res_partner.id=3"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -39,7 +45,7 @@ msgstr "Graafiku laad"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
-msgstr ""
+msgstr "See/need on mudel(id) (%s) valikus, mis ei ole seotud ühegi teise mudeliga"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -104,12 +110,12 @@ msgstr "Kohandatud aruanded"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "No Related Models!!"
-msgstr ""
+msgstr "Puuduvad seotud mudelid!"
 
 #. module: base_report_creator
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
@@ -400,7 +406,12 @@ msgid "This modules allows you to create any statistic\n"
 "After installing the module, it adds a menu to define custom report in\n"
 "the \"Dashboard\" menu.\n"
 ""
-msgstr ""
+msgstr "See moodul võimaldab sul luua mistahes statistilist\n"
+"aruannet mitmel objektil. See on SQL päringu ehitaja ja sirvija.\n"
+"\n"
+"Pärast mooduli paigaldamist luuakse menüü, et määrata kohandatud\n"
+"aruanne \"Töölauad\" menüüs.\n"
+""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0

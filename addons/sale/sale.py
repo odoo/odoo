@@ -127,8 +127,9 @@ class sale_order(osv.osv):
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
                     tot += invoice.amount_untaxed
+
             if tot:
-                res[sale.id] = min(100.0, tot * 100.0 / sale.amount_untaxed)
+                res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
                 res[sale.id] = 0.0
         return res
@@ -764,6 +765,7 @@ class sale_order_line(osv.osv):
                         line.procurement_id.id, context)
 
         create_ids = []
+        sales = {}
         for line in self.browse(cr, uid, ids, context):
             if not line.invoiced:
                 if line.product_id:
@@ -802,7 +804,14 @@ class sale_order_line(osv.osv):
                 })
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced':True})
+
+                sales[line.order_id.id] = True
                 create_ids.append(inv_id)
+
+        # Trigger workflow events
+        wf_service = netsvc.LocalService("workflow")
+        for sid in sales.keys():
+            wf_service.trg_write(uid, 'sale.order', sid, cr)
         return create_ids
 
     def button_cancel(self, cr, uid, ids, context={}):

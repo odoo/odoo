@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
-"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
+"POT-Creation-Date: 2009-05-19 14:27:42+0000\n"
+"PO-Revision-Date: 2009-05-20 10:27:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,11 @@ msgstr ""
 #. module: report_intrastat
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: report_intrastat
+#: field:report.intrastat,name:0
+msgid "Period"
 msgstr ""
 
 #. module: report_intrastat
@@ -138,6 +143,11 @@ msgid "Total (inclu. taxes):"
 msgstr ""
 
 #. module: report_intrastat
+#: rml:account.invoice.intrastat:0
+msgid "Refund"
+msgstr ""
+
+#. module: report_intrastat
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
@@ -185,6 +195,11 @@ msgid "Draft Invoice"
 msgstr ""
 
 #. module: report_intrastat
+#: field:report.intrastat,supply_units:0
+msgid "Supply Units"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
 #: field:product.template,intrastat_id:0
 #: field:report.intrastat,intrastat_id:0
@@ -193,8 +208,8 @@ msgid "Intrastat code"
 msgstr "Código interestadual"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Refund"
+#: field:report.intrastat,ref:0
+msgid "Origin"
 msgstr ""
 
 #. module: report_intrastat
@@ -217,11 +232,6 @@ msgstr ""
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Código do país"
-
-#. module: report_intrastat
-#: field:report.intrastat,name:0
-msgid "Month"
-msgstr "Mês"
 
 #. module: report_intrastat
 #: field:report.intrastat,currency_id:0

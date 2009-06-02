@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Allahindl. (%)"
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat
 msgid "Intrastat (this month)"
-msgstr ""
+msgstr "Intrastat (see kuu)"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -49,6 +49,11 @@ msgstr "Ühiku hind"
 #. module: report_intrastat
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#. module: report_intrastat
+#: field:report.intrastat,name:0
+msgid "Period"
 msgstr ""
 
 #. module: report_intrastat
@@ -95,7 +100,7 @@ msgstr "Liik"
 #. module: report_intrastat
 #: model:ir.actions.report.xml,name:report_intrastat.invoice_intrastat_id
 msgid "Invoice Intrastat"
-msgstr ""
+msgstr "Arve intrastat"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -105,7 +110,7 @@ msgstr "Arve kuupäev"
 #. module: report_intrastat
 #: model:ir.module.module,shortdesc:report_intrastat.module_meta_information
 msgid "Intrastat Reporting - Reporting"
-msgstr ""
+msgstr "Intrastat aruandlus - Aruandlus"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -138,6 +143,11 @@ msgid "Total (inclu. taxes):"
 msgstr "Kokku (sisald. makse):"
 
 #. module: report_intrastat
+#: rml:account.invoice.intrastat:0
+msgid "Refund"
+msgstr "Tagasimakse"
+
+#. module: report_intrastat
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
@@ -145,7 +155,7 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
 msgid "Intrastat report"
-msgstr ""
+msgstr "Intrastat aruanne"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -165,7 +175,7 @@ msgstr "Summa"
 #. module: report_intrastat
 #: view:report.intrastat:0
 msgid "Intrastat Data"
-msgstr ""
+msgstr "Intrastat andmed"
 
 #. module: report_intrastat
 #: field:report.intrastat,value:0
@@ -177,7 +187,7 @@ msgstr "Väärtus"
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 msgid "Intrastat"
-msgstr ""
+msgstr "Intrastat"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -185,17 +195,22 @@ msgid "Draft Invoice"
 msgstr "Arve Mustand"
 
 #. module: report_intrastat
+#: field:report.intrastat,supply_units:0
+msgid "Supply Units"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
 #: field:product.template,intrastat_id:0
 #: field:report.intrastat,intrastat_id:0
 #: view:report.intrastat.code:0
 msgid "Intrastat code"
-msgstr ""
+msgstr "Intrastat kood"
 
 #. module: report_intrastat
-#: rml:account.invoice.intrastat:0
-msgid "Refund"
-msgstr "Tagasimakse"
+#: field:report.intrastat,ref:0
+msgid "Origin"
+msgstr ""
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -206,7 +221,7 @@ msgstr "Kaal"
 #. module: report_intrastat
 #: field:res.country,intrastat:0
 msgid "Intrastat member"
-msgstr ""
+msgstr "Intrastat liige"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -217,11 +232,6 @@ msgstr "Maksud"
 #: field:report.intrastat,code:0
 msgid "Country code"
 msgstr "Riigi kood"
-
-#. module: report_intrastat
-#: field:report.intrastat,name:0
-msgid "Month"
-msgstr "Kuu"
 
 #. module: report_intrastat
 #: field:report.intrastat,currency_id:0
@@ -241,7 +251,7 @@ msgstr "Fax :"
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
 msgid "Supplier Refund"
-msgstr "Tarnija Tagasimakse"
+msgstr "Tarnija hüvitis"
 
 #. module: report_intrastat
 #: rml:account.invoice.intrastat:0
@@ -258,5 +268,5 @@ msgstr "Hind"
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
-msgstr ""
+msgstr "Intrastat kood"
 

@@ -9,11 +9,11 @@
         <report id="report_picking_list" model="stock.picking" name="stock.picking.list" string="Packing list" rml="stock/report/picking.rml"/>
         <report id="report_move_labels" model="stock.move" name="stock.move.label" string="Print Item Labels" xml="stock/report/lot_move_label.xml" xsl="stock/report/lot_move_label.xsl"/>
 
-        <report id="report_location_overview" model="stock.location" name="stock.location.overview" string="Location Overview" xml="stock/report/lot_overview.xml" xsl="stock/report/lot_overview.xsl"/>
+        <report auto="False"  id="report_location_overview" model="stock.location" name="lot.stock.overview" string="Location Overview" rml="stock/report/lot_overview.rml"/>
 
         <report auto="False" id="report_lot_location" model="stock.location" name="lot.location" rml="stock/report/lot_location.rml" string="Lots by location"/>
 
-        <report id="report_location_overview_all" model="stock.location" name="stock.location.overview.all" string="Location Content (With children)" xml="stock/report/lot_overview_all.xml" xsl="stock/report/lot_overview_all.xsl"/>
+        <report id="report_location_overview_all" model="stock.location" name="lot.stock.overview_all" string="Location Content (With children)" rml="stock/report/lot_overview_all.rml"/>
 
     </data>
 </openerp>
