@@ -63,8 +63,8 @@ class report_intrastat(osv.osv):
     _auto = False
     _columns = {
         'name': fields.many2one('account.period', 'Period', readonly=True, select=True),
-        'supply_units': fields.float('Supply Units', readonly=True),
-        'ref': fields.char('Origin', size=64, readonly=True),
+        'supply_units':fields.float('Supply Units', readonly=True),
+        'ref':fields.char('Origin',size=64, readonly=True),
         'code': fields.char('Country code', size="2", readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),

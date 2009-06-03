@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+  <data>
 
-		<wizard string="Refund Orders" model="pos.order"
-				name="pos.refund_order" id="pos_refund" menu="False"/>
+    <wizard string="Refund Orders" model="pos.order"
+        name="pos.refund_order" id="pos_refund" menu="True"/>
 
-		<wizard string="Payment" model="pos.order"
-				name="pos.payment" id="pos_payment" menu="False"/>
+    <wizard string="Payment" model="pos.order"
+        name="pos.payment" id="pos_payment" menu="False"/>
 
-			<!--<wizard string="Create Invoices" model="pos.order"
-				name="pos.create_invoice" id="pos_invoice" multi="True"/>-->
+      <!--<wizard string="Create Invoices" model="pos.order"
+        name="pos.create_invoice" id="pos_invoice" multi="True"/>-->
 
-		<wizard string="Add products" model="pos.order"
-				name="pos.add_product" id="pos_add_product"  menu="False"/>
+    <wizard string="Add products" model="pos.order"
+        name="pos.add_product" id="pos_add_product"  menu="False"/>
 
-			<!--<wizard string="Cancel" model="pos.order"
-				name="pos.cancel" id="pos_cancel" multi="True"/>-->
+      <!--<wizard string="Cancel" model="pos.order"
+        name="pos.cancel" id="pos_cancel" multi="True"/>-->
 
-		<wizard string="Confirm" model="pos.order"
-				name="pos.confirm" id="pos_confirm" multi="True"/>
+    <wizard string="Confirm" model="pos.order"
+        name="pos.confirm" id="pos_confirm" multi="True"/>
 
-		<wizard string="Discount" model="pos.order"
-				name="pos.discount" id="pos_discount" menu="False"/>
+    <wizard string="Discount" model="pos.order"
+        name="pos.discount" id="pos_discount" menu="False"/>
 
-		<wizard string="Get From Order" model="pos.order"
-				name="pos.sale.get" id="pos_sale_get"/>
+    <wizard string="Get From Order" model="pos.order"
+        name="pos.sale.get" id="pos_sale_get"/>
 
-		<wizard string="Scan Product" model="pos.order"
-				name="pos.scan_product" id="pos_scan_product"/>
+    <wizard string="Scan Product" model="pos.order"
+        name="pos.scan_product" id="pos_scan_product"/>
 
-	</data>
+  </data>
 </openerp>

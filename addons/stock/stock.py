@@ -785,20 +785,26 @@ class stock_production_lot(osv.osv):
         if 'location_id' not in context:
             locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')], context=context)
         else:
-            locations = [context['location_id']]
+            locations = context['location_id'] and [context['location_id']] or []
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        
         res = {}.fromkeys(ids, 0.0)
-        cr.execute('''select
-                prodlot_id,
-                sum(name)
-            from
-                stock_report_prodlots
-            where
-                location_id in ('''+','.join(map(str, locations))+''')  and
-                prodlot_id in  ('''+','.join(map(str, ids))+''')
-            group by
-                prodlot_id
-        ''')
-        res.update(dict(cr.fetchall()))
+        
+        if locations:
+            cr.execute('''select
+                    prodlot_id,
+                    sum(name)
+                from
+                    stock_report_prodlots
+                where
+                    location_id in ('''+','.join(map(str, locations))+''')  and
+                    prodlot_id in  ('''+','.join(map(str, ids))+''')
+                group by
+                    prodlot_id
+            ''')
+            res.update(dict(cr.fetchall()))
         return res
 
     def _stock_search(self, cr, uid, obj, name, args):

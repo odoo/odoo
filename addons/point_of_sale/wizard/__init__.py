@@ -28,5 +28,6 @@ import wizard_confirm
 import wizard_discount
 import wizard_get_sale
 import wizard_scan_product
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+from wizard import except_wizard
 
