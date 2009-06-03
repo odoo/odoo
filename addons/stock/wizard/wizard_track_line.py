@@ -77,6 +77,7 @@ def _track_lines(self, cr, uid, data, context):
         'product_uos_qty': uos_qty,
     }
     new_move = []
+    production_ids = []
     for idx in range(int(move.product_qty//quantity)):
         if idx:
             current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
