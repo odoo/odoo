@@ -12,6 +12,8 @@ class report(object):
         _regex2 = re.compile("\[\[(.*?)(removeParentNode\(\s*(?:['\"](.*?)['\"])\s*\))(.*?)\]\]")
         _regex3 = re.compile("\[\[\s*(.*?setTag\(\s*['\"](.*?)['\"]\s*,\s*['\"].*?['\"]\s*(?:,.*?)?\).*?)\s*\]\]")
         for node in root_node:
+            if node.tag == etree.Comment:
+                continue
             if node.text:
                 def _sub3(txt):
                     n = node
