@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
+      <frame id="first" x1="34.0" y1="42.0" width="145" height="758"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -42,8 +42,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -91,7 +89,7 @@
       <font color="white"> </font>
     </para>
     <para style="terp_header">Operation N° : [[ o.name ]]</para>
-    <blockTable colWidths="357.0,84.0,97.0" repeatRows="1" style="Tableau2">
+    <blockTable colWidths="78.0,30.0,38.0" repeatRows="1" style="Tableau2">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -106,7 +104,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.lines,'line') ]]</para>
-      <blockTable colWidths="353.0,85.0,99.0" style="Tableau3">
+      <blockTable colWidths="77.0,30.0,38.0" style="Tableau3">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.product_id.name ]]</para>
@@ -120,18 +118,13 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="342.0,197.0" style="Table_Dicount_Total">
+    <blockTable colWidths="146.0" style="Table_Dicount_Total">
       <tr>
         <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <blockTable colWidths="85.0,100.0" style="Table_Discount_Total">
+          <blockTable colWidths="57.0,88.0" style="Table_Discount_Total">
             <tr>
               <td>
-                <para style="terp_tblheader_Details_Right">Total :</para>
+                <para style="terp_tblheader_Details">Total :</para>
               </td>
               <td>
                 <para style="terp_default_Bold_9_Right">[[ '%.2f' % o.amount_total ]] [[ o.pricelist_id.currency_id.name ]]</para>
@@ -141,10 +134,10 @@
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
-          <blockTable colWidths="86.0,100.0" style="Table_Total">
+          <blockTable colWidths="62.0,82.0" style="Table_Total">
             <tr>
               <td>
-                <para style="terp_tblheader_Details_Right">Discount : </para>
+                <para style="terp_tblheader_Details">Discount : </para>
               </td>
               <td>
                 <para style="terp_default_Bold_9_Right">[[ disc(o.id) or 0.00 ]] [[ o.pricelist_id.currency_id.name ]]</para>
