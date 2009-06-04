@@ -98,7 +98,10 @@ class account_report_bs(osv.osv):
         'report_type' : fields.selection([('only_obj', 'Report Objects Only'),('with_account', 'Report Objects With Accounts'),('acc_with_child', 'Report Objects With Accounts and child of Accounts')],"Report Type")
     }
     _defaults = {
-        'report_type': lambda *a :'only_obj'
+        'report_type': lambda *a :'only_obj',
+        'color_font': lambda *a :'',
+        'color_back': lambda *a :'',
+        'font_style': lambda *a :'',
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):

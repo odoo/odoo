@@ -29,8 +29,10 @@
 <blockValign value="TOP"/>
   <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,0"/>
   
-  <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,1" stop="-1,-1"/>
-  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,-1"/>
+  <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,1" stop="-1,1"/>
+  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,1" stop="-1,1"/>
+  <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,2" stop="-1,-1"/>
+  <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,2" stop="-1,-1"/>
 </blockTableStyle>
 <blockTableStyle id="Tableau8">
 <blockAlignment value="LEFT"/>
@@ -139,41 +141,34 @@
 <para style="P17"><font>Invoice Date: </font><font>[[ formatLang(o.date_invoice,date=True) ]]</font></para>
 <para style="P18"><font>Customer Ref:</font> [[ o.address_invoice_id.partner_id.ref or '/' ]]</para>
 <para style="P8b"><font color="white"> </font></para>
-<blockTable colWidths="212.0,62.0,62.0,70.0,61.0,74.0" style="Tableau6">
-	<tr>
-		<td><para style="P3">Description</para></td>
-		<td><para style="P4">Taxes</para></td>
-		<td><para style="P4">Quantity</para></td>
-		<td><para style="P4">Unit Price</para></td>
-		<td><para style="P4">Disc. (%)</para></td>
-		<td><para style="P4a">Price</para></td>
-	</tr>
+<blockTable colWidths="274.0,62.0,70.0,61.0,74.0" style="Tableau6">
+<tr>
+<td><para style="P3">Description / Taxes</para></td>
+<td><para style="P3">Quantity</para></td>
+<td><para style="P4">Unit Price</para></td>
+<td><para style="P4">Disc. (%)</para></td>
+<td><para style="P3">Price</para></td>
+</tr>
 </blockTable>
 <section>
 	<para style="P20">[[ repeatIn(invoice_lines(o), 'a') ]]</para>
-	<blockTable colWidths="0.0,221.5,60.0,31.0,16.0,31.0,39.0,61.0,45.0,23.0" style="Tableau7">
+	<blockTable colWidths="0.0,250.0,77.5,31.0,39.0,50.0,79.0" style="Tableau7">
 		<tr>
 			<td><para style="P8">[[ a['type']=='text' and removeParentNode('blockTable')]]</para></td>
-			<td><para style="P8a">[[ (a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['name'] ]]</para></td>
-			<td><para style="P8a">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['tax_types'] ]]</para></td>
-			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['quantity'] ]]</para></td>
-			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['uos'] ]]</para></td>
+			<td><para style="P8a">[[ (a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['name'] ]] / ( [[ a['tax_types'] ]] )</para></td>
+			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['quantity'] ]] [[ a['uos'] ]]</para></td>
 			<td><para><font color="white"></font></para></td>
 			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['price_unit'] ]]</para></td>
 			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['discount'] ]]</para></td>
-			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['price_subtotal'] ]]</para></td>
-			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['currency'] ]]</para></td>
+			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]]<font>[[ a['price_subtotal'] ]]</font><font> [[ a['currency'] ]]</font></para></td>
 		</tr>
 		<tr>
 			<td><para style="P8"><font color="white"></font></para></td>
-			<td><para style="terp_default_Note">[[ format(a['note'] or '') ]]</para></td>
-			<td><para style="P8a"><font color="white"></font></para></td>
-			<td><para style="Table Contents"><font color="white"></font></para></td>
+			<td><para style="terp_default_Note">Note : [[ format(a['note'] or removeParentNode('tr')) ]]</para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 			<td><para><font color="white"></font></para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 			<td><para style="Table Contents1"><font color="white"></font></para></td>
-			<td><para style="Table Contents"><font color="white"></font></para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 		</tr>
 	</blockTable>
@@ -184,21 +179,20 @@
 		</tr>
 	</blockTable>
 	<pageBreak>[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
-	<blockTable colWidths="212.0,62.0,62.0,70.0,61.0,74.0" style="Tableau6">
+	<blockTable colWidths="274.0,62.0,20.0,70.0,61.0,74.0" style="Tableau6">
 		<tr>
-			<td><para style="P3">Description [[ a['type']!='break' and removeParentNode('blockTable')]]</para></td>
-			<td><para style="P4">Taxes</para></td>
+			<td><para style="P3">Description/Taxes [[ a['type']!='break' and removeParentNode('blockTable')]]</para></td>
 			<td><para style="P4">Quantity</para></td>
 			<td><para style="P4">Unit Price</para></td>
 			<td><para style="P4">Disc. (%)</para></td>
-			<td><para style="P4a">Price</para></td>
+			<td><para style="P3">Price</para></td>
 		</tr>
 	</blockTable>
 </section>
-<blockTable colWidths="340.0,191.0" style="Tableau3">
+<blockTable colWidths="331.0,200.0" style="Tableau3">
 <tr>
 <td>
-	<blockTable colWidths="81.0,73.0,65.0" style="Tableau8">
+	<blockTable colWidths="100.0,73.0,100.0" style="Tableau8">
 		<tr>
 		<td><para style="P10"><font color="white"></font></para></td>
 		<td><para style="P8"><font color="white"></font></para></td>
@@ -212,18 +206,18 @@
 	</blockTable>
 </td>
 <td>
-	<blockTable colWidths="110.0,81.0" style="Tableau5">
+	<blockTable colWidths="110.0,90.0" style="Tableau5">
 		<tr>
 		<td><para style="P13">Total (Excl. taxes):</para></td>
 		<td><para style="P12"><u>[[ '%.2f' % o.amount_untaxed ]] [[o.currency_id.code ]]</u></para></td>
 		</tr>
 		<tr>
 		<td><para style="P13">Taxes:</para></td>
-		<td><para style="P12"><u>[[ '%.2f' % o.amount_tax ]] [[o.currency_id.code ]]</u></para></td>
+		<td><para style="P11a">[[ '%.2f' % o.amount_tax ]] [[o.currency_id.code ]]</para></td>
 		</tr>
 		<tr>
 		<td><para style="P13">Total <font>(Incl. taxes):</font></para></td>
-		<td><para style="P22"><u>[[ '%.2f' % o.amount_total ]] [[o.currency_id.code ]]</u></para></td>
+		<td><para style="P12"><u>[[ '%.2f' % o.amount_total ]] [[o.currency_id.code ]]</u></para></td>
 		</tr>
 	</blockTable>
 </td>
