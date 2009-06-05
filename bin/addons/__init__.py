@@ -673,10 +673,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
-        has_updates = False
-        if update_module:
-            has_updates = load_module_graph(cr, graph, status, perform_checks=False, report=report)
+        
+        has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
+        if update_module:
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
