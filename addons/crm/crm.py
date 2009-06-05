@@ -500,11 +500,12 @@ class crm_case(osv.osv):
                         if action.act_mail_to_partner:
                             emails.append(case.email_from)
                         if action.act_mail_to_watchers:
-                            emails += (case.email_cc or '').split(',')
+                            emails += (action.act_email_cc or '').split(',')
                         if action.act_mail_to_email:
                             emails += (action.act_mail_to_email or '').split(',')
                         emails = filter(None, emails)
                         if len(emails) and action.act_mail_body:
+                            emails = list(set(emails))                            
                             self.email_send(cr, uid, case, emails, action.act_mail_body)
                         break
             action_ids = newactions
