@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 17:05:23+0000\n"
-"PO-Revision-Date: 2009-04-09 17:05:23+0000\n"
+"POT-Creation-Date: 2009-05-19 14:23:06+0000\n"
+"PO-Revision-Date: 2009-05-20 10:23:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,30 +16,166 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_voucher
-#: field:account.voucher,type:0
-#: field:account.voucher.line,type:0
-msgid "Type"
-msgstr "Typ"
+#: model:ir.actions.act_window,name:account_voucher.act_account_acount_move_line_open1
+msgid "Opening Balance Entry"
+msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_bakreceipt_voucher_list
+msgid "Bank Receipts"
+msgstr "Bankauszug"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Particulars"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "State :"
-msgstr "Status"
+msgstr ""
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher
-msgid "Accounting Voucher"
-msgstr "Buchungsbeleg"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Ref. :"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_cont_voucher_form
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_cont_voucher_form
+msgid "Contra Voucher"
+msgstr "Gegenkonto"
+
+#. module: account_voucher
+#: field:account.voucher,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_jour_voucher_form
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_voucher_form
+msgid "Journal Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_receipt.drcr:0
+msgid ","
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Set to Draft"
+msgstr "Entwurf"
+
+#. module: account_voucher
+#: wizard_button:account.voucher.open,init,open:0
+msgid "Open Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+msgid "Voucher Line"
+msgstr "Zahlung"
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Total Credit"
+msgstr "Summe Haben"
+
+#. module: account_voucher
+#: field:account.voucher,account_id:0
+#: field:account.voucher.line,account_id:0
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+msgid "D"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.account,level:0
+msgid "Level"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Account Entry Line"
+msgstr "Buchungszeile"
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "Total Debit"
+msgstr "Summe Soll"
+
+#. module: account_voucher
+#: field:account.voucher,amount:0
+#: field:account.voucher.line,amount:0
+#: rml:voucher.cash_amount:0
+msgid "Amount"
+msgstr "Betrag"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Receiver's Signature"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "No."
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Amount (in words) :"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Analytisches Konto"
+
+#. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_sale_voucher_form
+msgid "Journal Sale Voucher"
+msgstr "Journal Verkaufsbeleg"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_receipt_vou_voucher_list
+#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_vou_voucher_list
+msgid "Receipt Vouchers"
+msgstr "Erhaltene Belege"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+msgid "Account :"
+msgstr ""
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "On Account of :"
-msgstr "Bezug Konto:"
-
-#. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
-msgid "Voucher Report"
-msgstr "Zahlungsbestätigung"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_payments_bankpay_voucher_list
@@ -51,105 +187,40 @@ msgstr "Einzahlungsbeleg"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Other Info"
-msgstr "Weitere Info"
-
-#. module: account_voucher
-#: view:account.voucher:0
 msgid "Create"
 msgstr "Erzeuge"
 
 #. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Ref. :"
-msgstr "Bez. :"
+#: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
+msgid "None"
+msgstr "Kein"
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_bakreceipt_voucher_list
-msgid "Bank Receipts"
-msgstr "Bankauszug"
+#: field:account.voucher,number:0
+msgid "Number"
+msgstr "Nummer"
 
 #. module: account_voucher
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter xml Code für diese Ansicht!"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Particulars"
-msgstr "Personendaten"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_performa_cash_rec_voucher_form
-msgid "Pro-forma Cash Receipt"
-msgstr "Pro-forma Zahlungsbeleg"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Receiver's Signature"
-msgstr "Empfänger Bestätigung"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
-msgid "New Cash Receipt"
-msgstr "Neuer Zahlungsbeleg"
-
-#. module: account_voucher
-#: selection:account.voucher,state:0
-#: rml:voucher.cash_receipt:0
-msgid "Draft"
-msgstr "Entwurf"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_payments_bankpay_voucher_list
-msgid "Bank Payments"
-msgstr "Bankzahlung"
-
-#. module: account_voucher
-#: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_sale_voucher_form
-msgid "Journal Sale Voucher"
-msgstr "Journal Verkaufsbeleg"
+#: view:account.move:0
+#: field:account.voucher,state:0
+#: wizard_field:account.voucher.open,init,state:0
+msgid "State"
+msgstr "Status"
 
 #. module: account_voucher
 #: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
 #: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Debit"
 msgstr "Belastung"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_other_voucher_list
-#: model:ir.ui.menu,name:account_voucher.menu_action_other_voucher_list
-msgid "Other Vouchers"
-msgstr "Andere Belege"
-
-#. module: account_voucher
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
-
-#. module: account_voucher
-#: code:addons/account_voucher/voucher.py:0
-#, python-format
-msgid "Cannot delete invoice(s) which are already opened or paid !"
-msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "PRO-FORMA"
-msgstr "PRO-FORMA"
-
-#. module: account_voucher
-#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
-msgid "Accounting - Voucher Management"
-msgstr "Buchhaltung - Belegverwaltung"
-
-#. module: account_voucher
-#: field:account.voucher,move_ids:0
-msgid "Real Entry"
-msgstr "Tats. Buchung"
+#: field:account.voucher,type:0
+#: field:account.voucher.line,type:0
+msgid "Type"
+msgstr "Typ"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_voucher_list
@@ -157,47 +228,10 @@ msgid "Voucher Entries"
 msgstr "Belegzeilen"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cont_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cont_voucher_form
-msgid "Contra Voucher"
-msgstr "Gegenkonto"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_cancel_cash_rec_voucher_form
-msgid "Cancel Cash Receipt"
-msgstr "Abbrechen Belegausgabe"
-
-#. module: account_voucher
-#: field:account.voucher.line,name:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: account_voucher
-#: field:account.voucher,currency_id:0
-msgid "Currency"
-msgstr "Währung"
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
-msgid "Cash Receipt"
-msgstr "Zahlungsbeleg"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Authorised Signatory"
-msgstr "Autorisierte Signatur"
-
-#. module: account_voucher
-#: code:addons/account_voucher/voucher.py:0
-#, python-format
-msgid "Invalid action !"
 msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "-"
-msgstr "-"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -207,15 +241,101 @@ msgstr "Zahlungsbelege"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Set to Draft"
+#: field:account.voucher.line,voucher_id:0
+#: model:res.request.link,name:account_voucher.req_link_voucher
+msgid "Voucher"
+msgstr "Beleg"
+
+#. module: account_voucher
+#: wizard_view:account.voucher.open,init:0
+#: model:ir.ui.menu,name:account_voucher.menu_wizard_account_voucher_open
+msgid "Open Vouchers"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Dated :"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_cashreceipt_voucher_list
+msgid "Cash Receipts"
+msgstr "Zahlungsbelege"
+
+#. module: account_voucher
+#: field:account.voucher,partner_id:0
+#: field:account.voucher.line,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_voucher
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_pay_voucher_form
+msgid "New Bank Payment"
+msgstr "Neue Bankzahlung"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: field:account.voucher,payment_ids:0
+msgid "Voucher Lines"
+msgstr "Auszugspositionen"
+
+#. module: account_voucher
+#: field:account.voucher,currency_id:0
+msgid "Currency"
+msgstr "Währung"
+
+#. module: account_voucher
+#: view:account.move:0
+#: field:account.move,narration:0
+#: view:account.voucher:0
+#: field:account.voucher,narration:0
+msgid "Narration"
+msgstr "Beschreibung"
+
+#. module: account_voucher
+#: field:account.voucher,reference:0
+msgid "Voucher Reference"
+msgstr "Zahlungsbeleg Bezug"
+
+#. module: account_voucher
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
+msgid "New Cash Receipt"
+msgstr "Neuer Zahlungsbeleg"
+
+#. module: account_voucher
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_amt
+msgid "Voucher Report"
+msgstr "Zahlungsbestätigung"
+
+#. module: account_voucher
+#: field:account.account,open_bal:0
+msgid "Opening Balance"
+msgstr "Anfangssaldo"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: selection:account.voucher.open,init,state:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Draft"
 msgstr "Entwurf"
 
 #. module: account_voucher
-#: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_pur_voucher_form
-msgid "Journal Purchase Voucher"
-msgstr "Journal Einkaufsbeleg"
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "PRO-FORMA"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
+msgid "Cash Receipt"
+msgstr "Zahlungsbeleg"
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_pay_voucher_form
@@ -223,14 +343,168 @@ msgid "New Cash Payment"
 msgstr "Neue Barzahlung"
 
 #. module: account_voucher
+#: view:account.move:0
+msgid "Optional Information"
+msgstr "Informationen (Optional)"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "General Entries"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid ":"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.account,type1:0
+#: field:account.account.template,type1:0
+msgid "Dr/Cr"
+msgstr "S/H"
+
+#. module: account_voucher
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
+msgid "Voucher Report (Cr/Dr)"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.move,voucher_type:0
+#: wizard_field:account.voucher.open,init,type:0
+msgid "Voucher Type"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.account,type1:0
+#: selection:account.account.template,type1:0
+#: selection:account.voucher.line,type:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Credit"
+msgstr "Guthaben"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Through :"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,reference_type:0
+msgid "Reference Type"
+msgstr "Bezugstyp"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Buchungsbeleg"
+
+#. module: account_voucher
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Periode"
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_pay_voucher_form
-msgid "New Bank Payment"
-msgstr "Neue Bankzahlung"
+#: model:ir.ui.menu,name:account_voucher.menu_action_payments_bankpay_voucher_list
+msgid "Bank Payments"
+msgstr "Bankzahlung"
+
+#. module: account_voucher
+#: view:account.move:0
+msgid "General Information"
+msgstr "Grundinformation"
+
+#. module: account_voucher
+#: wizard_field:account.voucher.open,init,period_ids:0
+msgid "Periods"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: selection:account.voucher,state:0
+#: wizard_button:account.voucher.open,init,end:0
+#: selection:account.voucher.open,init,state:0
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: selection:account.voucher,state:0
+#: selection:account.voucher.open,init,state:0
+msgid "Pro-forma"
+msgstr "Pro-forma"
+
+#. module: account_voucher
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Other Info"
+msgstr "Weitere Info"
+
+#. module: account_voucher
+#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
+msgid "Accounting Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
+#: field:res.currency,sub_name:0
+msgid "Sub Currency"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_other_voucher_list
+#: model:ir.ui.menu,name:account_voucher.menu_action_other_voucher_list
+msgid "Other Vouchers"
+msgstr "Andere Belege"
+
+#. module: account_voucher
+#: field:account.voucher.line,name:0
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Canceled"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "Cash Payment Voucher"
+msgstr "Barzahlungsbeleg"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_receipt_bakreceipt_voucher_list
+msgid "Bank Receipt"
+msgstr "Bankauszug"
+
+#. module: account_voucher
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
+msgid "-"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.move,voucher_type:0
+#: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
+#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_pur_voucher_form
+msgid "Journal Purchase Voucher"
+msgstr "Journal Einkaufsbeleg"
 
 #. module: account_voucher
 #: view:account.account:0
@@ -243,41 +517,12 @@ msgid "Ref."
 msgstr "Bez."
 
 #. module: account_voucher
-#: field:account.voucher,date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid ":"
-msgstr ":"
-
-#. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
-msgid "Voucher Line"
-msgstr "Zahlung"
-
-#. module: account_voucher
 #: selection:account.voucher,state:0
-#: rml:voucher.cash_receipt:0
+#: selection:account.voucher.open,init,state:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Posted"
 msgstr "Versendet"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Through :"
-msgstr "Durch :"
-
-#. module: account_voucher
-#: field:account.voucher,account_id:0
-#: field:account.voucher.line,account_id:0
-msgid "Account"
-msgstr "Konto"
-
-#. module: account_voucher
-#: field:account.account,type1:0
-msgid "Dr/Cr"
-msgstr "S/H"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -285,83 +530,14 @@ msgid "Name"
 msgstr "Name"
 
 #. module: account_voucher
-#: field:account.voucher,reference_type:0
-msgid "Reference Type"
-msgstr "Bezugstyp"
+#: field:account.voucher,move_ids:0
+msgid "Real Entry"
+msgstr "Tats. Buchung"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,narration:0
-msgid "Narration"
-msgstr "Beschreibung"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Dated :"
-msgstr "Datiert am :"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_cashreceipt_voucher_list
-msgid "Cash Receipts"
-msgstr "Zahlungsbelege"
-
-#. module: account_voucher
-#: field:account.voucher,amount:0
-#: field:account.voucher.line,amount:0
-msgid "Amount"
-msgstr "Betrag"
-
-#. module: account_voucher
-#: field:account.account,diff:0
-msgid "Difference of Opening Bal."
-msgstr "Differenz Anfangssaldo"
-
-#. module: account_voucher
-#: field:account.voucher,reference:0
-msgid "Voucher Reference"
-msgstr "Zahlungsbeleg Bezug"
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_vou_voucher_list
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_vou_voucher_list
-msgid "Receipt Vouchers"
-msgstr "Erhaltene Belege"
-
-#. module: account_voucher
-#: selection:account.account,type1:0
-msgid "None"
-msgstr "Kein"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Entry"
-msgstr "Eingabe"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_posted_cash_rec_voucher_form
-msgid "Posted Cash Receipt"
-msgstr "Versendeter Zahlungsbeleg"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_draft_cash_rec_voucher_form
-msgid "Draf Cash Receipt"
-msgstr "Entwurf Zahlungsbeleg"
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher,payment_ids:0
-msgid "Voucher Lines"
-msgstr "Auszugspositionen"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "No."
-msgstr "Nr."
-
-#. module: account_voucher
-#: field:account.voucher,company_id:0
-msgid "Company"
-msgstr "Firma"
+#: model:ir.actions.wizard,name:account_voucher.wizard_account_voucher_open
+msgid "Open a Voucher Entry"
+msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -369,16 +545,9 @@ msgid "Account Entry"
 msgstr "Buchungssatz"
 
 #. module: account_voucher
-#: field:account.voucher,state:0
-msgid "State"
-msgstr "Satus"
-
-#. module: account_voucher
-#: selection:account.account,type1:0
-#: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt:0
-msgid "Credit"
-msgstr "Guthaben"
+#: view:account.voucher:0
+msgid "Entry Lines"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_rec_voucher_form
@@ -386,97 +555,42 @@ msgid "New Bank Receipt"
 msgstr "Neuer Bankauszug"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-msgid "Pro-forma"
-msgstr "Pro-forma"
-
-#. module: account_voucher
 #: model:ir.ui.menu,name:account_voucher.menu_action_payments_cashpay_voucher_list
 msgid "Cash Payments"
 msgstr "Barzahlungen"
 
 #. module: account_voucher
-#: field:account.voucher,number:0
-msgid "Number"
-msgstr "Nummer"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Amount (in words) :"
-msgstr "Betrag (in Worten)"
-
-#. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_cancel_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_draft_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_performa_cash_rec_voucher_form
-#: model:ir.actions.act_window,name:account_voucher.action_posted_cash_rec_voucher_form
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_rec_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Cash Receipt Voucher"
 msgstr "Zahlungsbeleg"
 
 #. module: account_voucher
-#: field:account.voucher.line,account_analytic_id:0
-msgid "Analytic Account"
-msgstr "Analytisches Konto"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt:0
-msgid "Canceled"
-msgstr "Abgebrochen"
-
-#. module: account_voucher
-#: field:account.account,open_bal:0
-msgid "Opening Balance"
-msgstr "Anfangssaldo"
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher.line,voucher_id:0
-#: model:res.request.link,name:account_voucher.req_link_voucher
-msgid "Voucher"
-msgstr "Beleg"
-
-#. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_pay_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Payment Voucher"
 msgstr "Bankzahlungsbeleg"
 
 #. module: account_voucher
+#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
-#: rml:voucher.cash_receipt:0
-msgid "Cash Payment Voucher"
-msgstr "Barzahlungsbeleg"
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: selection:account.voucher,state:0
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#. module: account_voucher
-#: field:account.voucher.line,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: account_voucher
-#: selection:account.voucher,type:0
+#: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_rec_voucher_form
-#: rml:voucher.cash_receipt:0
+#: rml:voucher.cash_amount:0
+#: rml:voucher.cash_receipt.drcr:0
 msgid "Bank Receipt Voucher"
 msgstr "Bankauszugsbeleg"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_bakreceipt_voucher_list
-msgid "Bank Receipt"
-msgstr "Bankauszug"
-
-#. module: account_voucher
+#: field:account.account,journal_id:0
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Journal"

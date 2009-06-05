@@ -25,6 +25,8 @@ import product_stock
 import lot_location
 import ups
 import picking
+import lot_overview
+import lot_overview_all
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

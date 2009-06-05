@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,11 +39,16 @@ msgstr ""
 #. module: account_followup
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
 msgstr ""
 
 #. module: account_followup
@@ -55,11 +60,6 @@ msgstr ""
 #: rml:account_followup.followup.print:0
 msgid "Due"
 msgstr "Tähtaeg"
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -175,6 +175,11 @@ msgid "Paid"
 msgstr ""
 
 #. module: account_followup
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(line)s: Account Move lines"
 msgstr ""
@@ -236,11 +241,6 @@ msgid "\n"
 "Best Regards,\n"
 "			"
 msgstr ""
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0

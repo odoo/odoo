@@ -30,22 +30,25 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
+        
+    def set_context(self, objects, data, ids, report_type = None):
+        super(pos_invoice, self).set_context(objects, data, ids, report_type)
+        iids = []
+        nids = []
+        for order in objects:
+            order.write({'nb_print': order.nb_print + 1})
+            if order.invoice_id and order.invoice_id not in iids:
+                iids.append(order.invoice_id)
+                nids.append(order.invoice_id.id)
+        self.cr.commit()
+        data['ids'] = nids
+        self.datas = data
+        self.ids = nids
+        self.objects = iids
+        self.localcontext['data'] = data
+        self.localcontext['objects'] = iids
 
-    def preprocess(self, objects, data, ids):
-        super(pos_invoice, self).preprocess(objects, data, ids)
+report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'account/report/invoice.rml', parser= pos_invoice)
 
-        post_objects = []
-        for obj in objects:
-            if obj.invoice_id:
-                post_objects.append(obj.invoice_id)
-
-        #self.localcontext['objects'] = objects
-        self.localcontext['objects'] = post_objects
-
-
-report_sxw.report_sxw(
-    'report.pos.invoice',
-    'pos.order',
-    'addons/point_of_sale/report/pos_invoice.rml',
-    parser=pos_invoice)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -58,7 +58,7 @@ class tax_report(rml_parse.rml_parse):
 		else:
 			return self.comma_me(new)
 	def _get_lines(self, based_on,period_list,company_id=False, parent=False, level=0):
-		res = self._get_codes(based_on,parent,level,period_list)
+		res = self._get_codes(based_on,company_id,parent,level,period_list)
 		
 		if period_list[0][2] :
 			res = self._add_codes(based_on,res,period_list)
@@ -157,15 +157,15 @@ class tax_report(rml_parse.rml_parse):
 			i+=1
 		return res
 
-	def _get_codes(self, based_on, parent=False, level=0,period_list=[]):
+	def _get_codes(self,based_on, company_id, parent=False, level=0,period_list=[]):
 		tc = self.pool.get('account.tax.code')
-		ids = tc.search(self.cr, self.uid, [('parent_id','=',parent)])
+		ids = tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)])
 	
 		res = []
 		for code in tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
 			res.append(('.'*2*level,code))
 			
-			res += self._get_codes(based_on, code.id, level+1)
+			res += self._get_codes(based_on, company_id, code.id, level+1)
 		return res
 	
 	def _add_codes(self,based_on, account_list=[],period_list=[]):

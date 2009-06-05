@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-02-06 15:19:09+0000\n"
-"PO-Revision-Date: 2009-02-06 15:19:09+0000\n"
+"POT-Creation-Date: 2009-05-19 14:34:58+0000\n"
+"PO-Revision-Date: 2009-05-20 10:34:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,82 +28,88 @@ msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specia
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
 msgid "Wiki Groups Links"
-msgstr "Wikigrupplänkar"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,create_uid:0
 msgid "Author"
-msgstr "Författare"
+msgstr ""
 
 #. module: wiki
 #: code:addons/wiki/wizard/open_page.py:0
+#: model:ir.actions.wizard,name:wiki.wizard_open_page
 #, python-format
 msgid "Open Page"
-msgstr "Öppna sida"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
 msgid "Menu"
-msgstr "Meny"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,child_ids:0
 msgid "Child Groups"
-msgstr "Undergrupper"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
-msgstr "Wikisidor"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,section:0
 msgid "Make Section ?"
-msgstr "Skapa område?"
+msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
 #: view:wiki.wiki.history:0
 msgid "Wiki History"
-msgstr "Wikihistoria"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,minor_edit:0
 msgid "Minor edit"
-msgstr "Mindre förändring"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,text_area:0
 msgid "Content"
-msgstr "Innehåll"
+msgstr ""
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document_configuration
 msgid "Wiki Configuration"
-msgstr "Wikikonfiguration"
+msgstr ""
+
+#. module: wiki
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
-msgstr "Wikigrupp"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,name:0
 msgid "Title"
-msgstr "Rubrik"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
-msgstr "Historietidslinje"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,template:0
 msgid "Wiki Template"
-msgstr "Wikimall"
+msgstr ""
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
@@ -113,37 +119,37 @@ msgstr ""
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Create a Menu"
-msgstr "Skapa en meny"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,notes:0
 msgid "Description"
-msgstr "Beskrivning"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,section:0
 msgid "Section"
-msgstr "Område"
+msgstr ""
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
-msgstr "Hiskorisk skillnad"
+msgstr ""
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
-msgstr "Gruppera hemsida"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
 msgid "Last Author"
-msgstr "Senaste författare"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_view_diff
 msgid "Differences"
-msgstr "Skillnader"
+msgstr ""
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -153,17 +159,17 @@ msgstr ""
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Page Template"
-msgstr "Mall för Sida"
+msgstr ""
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document2
 msgid "Document Management"
-msgstr "Dokumenthantering"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
 msgid "Date"
-msgstr "Datum"
+msgstr ""
 
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
@@ -173,13 +179,19 @@ msgstr ""
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Configuration"
-msgstr "Konfiguration"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
-msgstr "Sidor"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
 
 #. module: wiki
 #: constraint:ir.ui.view:0
@@ -189,51 +201,51 @@ msgstr ""
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
 msgid "Text area"
-msgstr "Textområde"
+msgstr ""
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_parent_id:0
 msgid "Parent Menu"
-msgstr "Huvudmeny"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
 msgid "Created on"
-msgstr "Skapad"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Notes"
-msgstr "Anteckningar"
+msgstr ""
 
 #. module: wiki
 #: wizard_view:wiki.create.menu,init:0
 #: wizard_view:wiki.make.index,init:0
 msgid "Menu Information"
-msgstr "Menyinformation"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,parent_id:0
 #: field:wiki.groups.link,group_id:0
 msgid "Parent Group"
-msgstr "Huvudgrupp"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
 #: field:wiki.wiki.history,summary:0
 msgid "Summary"
-msgstr "Sammanfattning"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,create_date:0
 msgid "Created Date"
-msgstr "Skapelsedatum"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
 #: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
-msgstr "Alla sidors historik"
+msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
@@ -248,7 +260,7 @@ msgstr ""
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
-msgstr "Wiki-Id"
+msgstr ""
 
 #. module: wiki
 #: code:addons/wiki/wizard/open_page.py:0
@@ -259,39 +271,39 @@ msgstr ""
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
 msgid "Menu Name"
-msgstr "Menynamn"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modifications"
-msgstr "Ändringar"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "History"
-msgstr "Historik"
+msgstr ""
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document
 #: view:wiki.wiki:0
 msgid "Wiki"
-msgstr "Wiki"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,write_date:0
 msgid "Modification Date"
-msgstr "Ändringsdatum"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_make_index
 #: wizard_button:wiki.make.index,init,yes:0
 msgid "Create Index"
-msgstr "Skapa index"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
 msgid "This is a major edit ?"
-msgstr "Är det här en betydande redigering?"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
@@ -299,12 +311,12 @@ msgstr "Är det här en betydande redigering?"
 #: wizard_button:wiki.create.menu,init,create_menu:0
 #: wizard_view:wiki.make.index,init:0
 msgid "Create Menu"
-msgstr "Skapa meny"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Tags"
-msgstr "Nyckelord"
+msgstr ""
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
@@ -314,28 +326,34 @@ msgstr "Nyckelord"
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
-msgstr "Wikigrupper"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
 msgid "Modify By"
-msgstr "Ändrad av"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,toc:0
 msgid "Table of Contents"
-msgstr "Innehållsförteckning"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0
 #: wizard_button:wiki.make.index,init,end:0
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr ""
 
 #. module: wiki
 #: field:wizard.wiki.history.show_diff,diff:0
 msgid "Diff"
-msgstr "Skillnad"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,review:0

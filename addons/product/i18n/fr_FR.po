@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:34:23+0000\n"
-"PO-Revision-Date: 2009-04-09 13:34:23+0000\n"
+"POT-Creation-Date: 2009-05-19 14:22:20+0000\n"
+"PO-Revision-Date: 2009-05-20 10:22:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -260,13 +260,6 @@ msgid "Products"
 msgstr "Produits"
 
 #. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
-
-#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Nouveau prix ="
@@ -507,12 +500,9 @@ msgid "The mode for computing the price for this rule."
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "Unités de mesure"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Unité de livraison"
 
 #. module: product
 #: field:product.product,partner_ref:0
@@ -746,13 +736,6 @@ msgid "Units of Measure categories"
 msgstr "Catégories d'unités de mesure"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Séquence"
-
-#. module: product
 #: view:product.supplierinfo:0
 msgid "Supplier Information"
 msgstr "Informations sur le fournisseur"
@@ -880,12 +863,6 @@ msgid "Products Listprices Items"
 msgstr "Lignes de liste de prix"
 
 #. module: product
-#: code:addons/product/report/product_pricelist.py:0
-#, python-format
-msgid "%d unit"
-msgstr "Unité %d"
-
-#. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
 msgstr "Précision d'arrondi"
@@ -1001,13 +978,9 @@ msgid "Information about a product supplier"
 msgstr "Information sur le fournisseur du produit"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Actif"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr "Donne les différentes manières de coliser le même produit. Ceci n'a pas d'impacte sur l'ordre de colisage et est principalement utilisé si vous utilisez le module EDI."
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1085,14 +1058,13 @@ msgid "Gross weight"
 msgstr "Poids"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr "Donne les différentes manières de coliser le même produit. Ceci n'a pas d'impacte sur l'ordre de colisage et est principalement utilisé si vous utilisez le module EDI."
-
-#. module: product
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
-msgstr "Vous en pouvez pas avoir 2 listes de prix avec des dates qui se chevauchent"
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Actif"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1168,9 +1140,11 @@ msgid "Product Template"
 msgstr "Modèle de produit"
 
 #. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Unité de livraison"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1267,12 +1241,6 @@ msgstr "Quantité-2"
 #: view:product.template:0
 msgid "Information"
 msgstr "Information"
-
-#. module: product
-#: code:addons/product/report/product_pricelist.py:0
-#, python-format
-msgid "%d units"
-msgstr "%d unités"
 
 #. module: product
 #: view:product.product:0
@@ -1433,6 +1401,11 @@ msgid "Price Surcharge"
 msgstr "Surcharge du prix"
 
 #. module: product
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Méthode d'arrondi"
@@ -1540,6 +1513,13 @@ msgid "The weight of a full of products palet or box."
 msgstr "Le poids d'une palette ou d'une boite de produits remplie"
 
 #. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+
+#. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
 msgstr "Fin de cycle de vie"
@@ -1611,6 +1591,14 @@ msgstr "Privé"
 #: help:product.supplierinfo,delay:0
 msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
 msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
+msgstr "Unités de mesure"
 
 #. module: product
 #: help:product.template,uom_po_id:0

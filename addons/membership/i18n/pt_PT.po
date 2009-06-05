@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:42:33+0000\n"
-"PO-Revision-Date: 2009-04-09 13:42:33+0000\n"
+"POT-Creation-Date: 2009-05-19 14:27:42+0000\n"
+"PO-Revision-Date: 2009-05-20 10:27:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -362,6 +362,11 @@ msgid "Invoiced members"
 msgstr "Membros facturados"
 
 #. module: membership
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_old
 #: model:ir.ui.menu,name:membership.menu_members_old
 msgid "Old members"
@@ -509,11 +514,6 @@ msgstr "Facturar sociedade"
 #: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
 msgstr "Produto da sociedade"
-
-#. module: membership
-#: constraint:product.pricelist.version:0
-msgid "You can not have 2 pricelist version that overlaps!"
-msgstr "Você não pode ter duas versões da lista de preços que se sobrepõem!"
 
 #. module: membership
 #: constraint:product.product:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 13:33:12+0000\n"
-"PO-Revision-Date: 2009-04-09 13:33:12+0000\n"
+"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
+"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,12 +29,12 @@ msgstr "Remonditellimuse viide"
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "Inventuuri liikumine"
 
 #. module: mrp_repair
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -98,7 +98,7 @@ msgstr "Garantiiaeg"
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Maksud"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -211,7 +211,7 @@ msgstr "Alusta remonti"
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "Kogus (mõõtühik)"
+msgstr "Kogus (MÜ)"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -264,7 +264,7 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
 msgid "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
-msgstr ""
+msgstr "Garantiilimiit on arvutatud nii: viimase liikumise kuupäev + määratletud garantii valitud tootel. Kui käesolev kuupäev on allpool garantiilimiiti siis iga lisatav operatsioon ja tasu seatakse vaikimisi 'mitte arveldada'. Sa saad seda hiljem käsitsi muuta."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -305,7 +305,7 @@ msgstr "Kogusumma"
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Canceled"
-msgstr "Loobutud"
+msgstr "Tühistatud"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -327,13 +327,13 @@ msgstr "Jah"
 #: field:mrp.repair.fee,invoiced:0
 #: field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
-msgstr "Arve tegemine"
+msgstr "Arveldatud"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "You have to select a partner in the repair form !"
-msgstr ""
+msgstr "Sa pead valima partneri remondi vormil!"
 
 #. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
@@ -371,7 +371,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Maksustamatta summa"
+msgstr "Maksustamata summa"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,state:0
@@ -455,7 +455,7 @@ msgstr "Valmis"
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_2binvoiced_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_2binvoiced
 msgid "Repairs to be invoiced"
-msgstr "Remondid arvete tegemiseks"
+msgstr "Remondid arveldamiseks"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -496,12 +496,12 @@ msgstr "Tarnea asukoht"
 #. module: mrp_repair
 #: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
 msgid "Products Repairs Module"
-msgstr ""
+msgstr "Toodete remondi moodul"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
 msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
-msgstr ""
+msgstr "See väli võimaldab sul muuta remondikorralduse töövoogu. Kui valitud väärtus pole 'Arveta' siis võimaldab see sul valida hinnakirja ja arveldamise aadressi."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -661,5 +661,5 @@ msgstr "Valmis remondiks"
 #: code:addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "Partner puudub!"
 
