@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+USER="openerp"
+
+case "${1}" in
+	purge)
+		# Removing system user
+		if [ -x /usr/sbin/deluser ]
+		then
+			deluser --quiet --system ${USER}
+		fi
+		;;
+
+	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+
+		;;
+
+	*)
+		echo "postrm called with unknown argument \`${1}'" >&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0

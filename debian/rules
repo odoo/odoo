@@ -1,0 +1,59 @@
+#!/usr/bin/make -f
+
+include /usr/share/quilt/quilt.make
+
+clean: clean-patched unpatch
+clean-patched: patch
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+
+	python setup.py clean
+
+	rm -rf build openerp-server
+	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
+
+	dh_clean
+
+build:
+
+install: patch
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	python setup.py install --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
+
+	# Adjusting program location
+	sed -i -e 's|cd .*python.*/site-packages|cd /usr/lib|' debian/openerp-server/usr/bin/openerp-server
+	mv debian/openerp-server/usr/lib/python*/site-packages/openerp-server debian/openerp-server/usr/lib
+	rm -rf debian/openerp-server/usr/lib/python*
+
+	# Fixing permissions
+	find debian/openerp-server/usr/lib/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
+
+	# Removing double files
+	rm -rf debian/openerp-server/usr/share/doc/openerp-server-*
+
+binary: binary-indep
+
+binary-arch:
+
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs doc/Changelog
+	dh_installdocs
+	dh_install
+	dh_installinit --update-rcd-params='defaults 21'
+	dh_lintian
+	dh_link
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+.PHONY: clean build install binary binary-arch binary-indep
