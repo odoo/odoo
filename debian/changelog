@@ -1,0 +1,313 @@
+openerp-server (5.0.1-0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.1-0.
+  * Correcting path of openerp-server in README.Debian (Closes:
+    #520890).
+  * Correcting user handling in init script and config file (Closes:
+    #513263, #516348).
+  * Setting port to 8070.
+  * Also mentioning debug_mode and price_accuracy in config file
+    (Closes: #513264).
+  * Using correct rfc-2822 date formats in changelog.
+  * Rediffing shebang.patch.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 30 May 2009 12:53:39 +0200
+
+openerp-server (5.0.0-3-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0-3.
+  * Improving init call in README.Debian, thanks to David Goodenough
+    <david.goodenough@btconnect.com>.
+  * Fixed wrapping in README.Debian.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 14 Feb 2009 00:51:00 +0100
+
+openerp-server (5.0.0-2-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0-2 (Closes: #514920).
+  * Updating README.Debian.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 14 Feb 2009 00:12:00 +0100
+
+openerp-server (5.0.0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 07 Feb 2009 13:33:00 +0100
+
+openerp-server (5.0.0~rc3-1) unstable; urgency=low
+
+  * Adding note about initializing the database in README.Debian.
+  * Adding changelog for debian version 4.2.3.4-3.
+  * Merging upstream version 5.0.0~rc3.
+  * Using quilt rather than dpatch.
+  * Updating year in copyright file.
+  * Updating python-openssl depends.
+  * Updating lintian overrides.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 09 Jan 2009 18:31:00 -0500
+
+openerp-server (5.0.0~rc2-1) unstable; urgency=low
+
+  * Updating python xml depends (Closes: #508911).
+  * Merging upstream version 5.0.0~rc2.
+  * New upstream no longer uses embedded copies of pydot, pychart and
+    reportlab (Closes: #468104).
+  * Rediffing shebang.dpatch.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 25 Dec 2008 15:13:00 +0100
+
+openerp-server (5.0.0~rc1.1-2) unstable; urgency=low
+
+  * Adjusting sed call to correct path in /usr/bin/openerp-server.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 17 Dec 2008 08:32:00 +0100
+
+openerp-server (5.0.0~rc1.1-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0~rc1.1.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 16 Dec 2008 13:08:00 +0100
+
+openerp-server (5.0.0~rc1-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0~rc1.
+  * Removing openerp.dpatch, went upstream.
+  * Rediffing shebang.dpatch.
+  * Removing workaround for import_xml.rng, not needed anymore.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 16 Dec 2008 12:51:00 +0100
+
+openerp-server (5.0.0~alpha-3) unstable; urgency=low
+
+  * Adding ghostscript, python-matplotlib, and python-pyopenssl to recommends.
+  * Correcting chown calls in postinst.
+  * Prefixing debhelper files with package name.
+  * Adding changelog for debian version 4.2.3.4-2.
+  * Dropping tinyerp-server transitional package, this allows to have both
+    packages available in unstable.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 07 Dec 2008 20:13:00 +0100
+
+openerp-server (5.0.0~alpha-2) experimental; urgency=low
+
+  * Renaming tinyerp-server to new upstream openerp-server name.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 18:59:00 +0100
+
+tinyerp-server (5.0.0~alpha-1) experimental; urgency=low
+
+  * Merging upstream version 5.0.0~alpha.
+  * Rediffing autobuild.dpatch.
+  * Removing shebang.dpatch, not needed anymore.
+  * Removing python2.5.dpatch, not needed anymore.
+  * Rediffing openerp.dpatch.
+  * Rediffing migrate.dpatch.
+  * Not moving server to sbin anymore for the sake of consistency.
+  * Removing unneeded chmod call for tinyerp-server.py.
+  * Sorting build-depends, depends and recommends.
+  * Dropping /etc/default/tinyerp-server in favour of using
+    /etc/tinyerp-server.conf directly.
+  * Updating chmod call in rules to also cope with filenames that embedd
+    whitespaces.
+  * Adding patch to correct shebang in two addon files.
+  * Adding workaround for bug in setup.py that puts import_xml.rng into the
+    wrong location.
+  * Adding symlink for tinyerp_serverrc manpage to tinyerp-server.conf.
+  * Renaming everything except the package name itself from tinyerp-server to
+    openerp-server.
+  * Updating copyright file to current upstream.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 15:52:00 +0100
+
+tinyerp-server (4.2.3.4-3) unstable; urgency=high
+
+  * Updating python depends (Closes: #506615).
+  * Adding note about initializising the database in README.Debian
+    (Closes: #464557).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Nov 2008 12:40:00 +0100
+
+tinyerp-server (4.2.3.4-2) unstable; urgency=low
+
+  * Correcting chown calls in postinst.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Nov 2008 12:40:00 +0100
+
+tinyerp-server (4.2.3.4-1) unstable; urgency=low
+
+  * Merging upstream version 4.2.3.4.
+  * Upgrading package to debhelper 7.
+  * Upgrading package to standards 3.8.0.
+  * Updating homepage field in control file.
+  * Adding vcs fields in control file.
+  * Rewriting copyright file in machine-interpretable format.
+  * Using lintian debhelper to install lintian overrides.
+  * Removing bind-exit.dpatch, went upstream.
+  * Updating default database port.
+  * Adding logfile handling.
+  * Updating postresql recommends.
+  * Reordering and splitting out rules file into individual debhelper files.
+  * Applying some shell cosmetics to init and maintainer scripts.
+  * Adding patch to update homepage location of tinyerp.
+  * Setting ownership of addons directory in postinst (Closes: #487112).
+  * Adding patch from Brian DeRocher <brian@derocher.org> to fix sql syntax in
+    migrate script (Closes: #467517).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 09:11:00 +0100
+
+tinyerp-server (4.2.2-2) unstable; urgency=medium
+
+  * Readding depends to python-psycopg (Closes: #463079, #493374).
+  * Adding depends to python-tz (Closes: #482359).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 03 Aug 2008 00:20:00 +0200
+
+tinyerp-server (4.2.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: #477698).
+  * Dropping depends against python-xml (Closes: #468619).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 26 Apr 2008 16:15:00 +0200
+
+tinyerp-server (4.2.1-1) unstable; urgency=low
+
+  * Maintainer upload from the Zuerich BSP.
+  * New upstream release.
+  * Bumping to new policy.
+  * Using new homepage field in control.
+  * Including documentation for migration and testing (Closes: #445464).
+  * Adjusting 04-bind-exit.dpatch to new upstream release.
+  * Added lintian overrides.
+  * Depending now on python-psycopg2, not python-psycopg anymore
+    (Closes: #445464).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 12 Jan 2008 15:20:00 +0100
+
+tinyerp-server (4.2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 31 Oct 2007 21:31:00 +0100
+
+tinyerp-server (4.0.3-3) unstable; urgency=medium
+
+  * Setting database port to 5433 (Closes: #443626).
+  * Applied patch from Aldrin Martoq to make tinyerp-server compatible with
+    python 2.5.
+  * Applied patch from Luca Falavigna <dktrkranz@ubuntu.com> to fix exception
+    raised when address is already in use.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 29 Sep 2007 17:07:00 +0200
+
+tinyerp-server (4.0.3-2) unstable; urgency=low
+
+  * Check for existence of deluser in postrm (Closes: #431532).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 03 Jul 2007 11:01:00 +0200
+
+tinyerp-server (4.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Taking package back, Jean-Marc seems to be MIA.
+  * Changed wording of 'listen to all interfaces' paragraph in README.Debian,
+    thanks to Gerfried Fuchs <alfie@debian.org>.
+  * Added lsb header to init script.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 01 Jun 2007 11:59:00 +0200
+
+tinyerp-server (4.0.2-3) unstable; urgency=low
+
+  * Setting maintainer to Jean-Marc, this time really :)
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 28 Mar 2007 21:48:00 +0100
+
+tinyerp-server (4.0.2-2) unstable; urgency=low
+
+  * Setting maintainer to Jean-Marc.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Feb 2007 13:41:00 +0100
+
+tinyerp-server (4.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Some minor cleanups.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 18 Jan 2007 14:19:00 +0100
+
+tinyerp-server (4.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed 03-setup.dpatch, went upstream.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 29 Dec 2006 01:03:00 +0100
+
+tinyerp-server (4.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added patch to fix a typo in setup.py.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 17:43:00 +0100
+
+tinyerp-server (4.0.0~rc1-2) unstable; urgency=low
+
+  * Cleaned up build-depends.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 13:19:00 +0100
+
+tinyerp-server (4.0.0~rc1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 12:57:00 +0100
+
+tinyerp-server (3.5.0-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 23 Oct 2006 12:23:00 +0200
+
+tinyerp-server (3.4.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * New email address.
+  * Complying with new python policy (Closes: #380973).
+  * Adjusted postgre depends (Closes: #376614).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 16 Oct 2006 14:45:00 +0200
+
+tinyerp-server (3.3.0-1) unstable; urgency=low
+
+  * New upstream release (Closes: #369769):
+    - fixed installation script to install all needed files (Closes: #355224)
+  * Updated README.Debian (Closes: #352322, #360222, #360223).
+  * Set to architecture to all (Closes: #356962).
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Sun, 04 Jun 2006 00:50:00 +0100
+
+tinyerp-server (3.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Thu, 02 Feb 2006 09:44:00 +0100
+
+tinyerp-server (3.2.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Adjusted shellbang in bin/addons/base/ir/workflow/pydot/dot_parser.py.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 24 Jan 2006 07:00:00 +0100
+
+tinyerp-server (3.1.99+3.2.0rc1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 27 Dec 2005 20:00:00 +0100
+
+tinyerp-server (3.1.1+debian-1) unstable; urgency=low
+
+  * Initial release (Closes: #301510).
+  * Rebuild orig.tar.gz to remove unnecessary files in upstreams debian/.
+  * Added changelog from website.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Sun, 16 Oct 2005 13:35:00 +0200
