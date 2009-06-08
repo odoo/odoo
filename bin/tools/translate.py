@@ -424,11 +424,14 @@ def trans_generate(lang, modules, dbname=None):
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
-    if not 'all' in modules:
+    query_param = None
+    if 'all_installed' in modules:
+        query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
+    elif not 'all' in modules:
         query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
+        query_param = modules
     query += ' ORDER BY module, model, name'
 
-    query_param = not 'all' in modules and modules or None
     cr.execute(query, query_param)
 
     _to_translate = []
