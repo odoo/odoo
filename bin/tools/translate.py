@@ -273,7 +273,8 @@ class TinyPoFile(object):
     def write(self, modules, tnrs, source, trad):
         def quote(s):
             return '"%s"' % s.replace('"','\\"') \
-                             .replace('\n', '\\n"\n"')
+                             .replace('\n', '\\n"\n"') \
+			     .replace(' \\ ',' \\\\ ')
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
