@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-<template pageSize="(5.5cm,2.8cm)" title="Test" author="Martin Simon" allowSplitting="20">
+<template pageSize="(550,280)" title="Test" author="Martin Simon" allowSplitting="20">
 <pageTemplate id="first">
-  <frame id="first" x1="0.1cm" y1="0.1cm" width="5.3cm" height="2.4cm"/>
+  <frame id="first" x1="0.1cm" y1="0.1cm" width="530" height="240"/>
 </pageTemplate>
 </template>
 <stylesheet>
@@ -34,7 +34,7 @@
 	  <tr>
 		<td>
 		  <para style="P1">[[ str(o.name) ]] ([[ str(o.code) ]])</para>
-	<barCode code="code128" x="26.9mm" height="68.1mm" quiet="9" fontName="Times-Roman" fontSize="50"  alignment="CENTER">[['ID'+str(o.id)]]</barCode>
+	<barCode code="code128" x="300" height="180" quiet="9" fontName="Times-Roman" fontSize="50"  alignment="CENTER">[['ID'+str(o.id)]]</barCode>
 		</td>
 	  </tr>
 	</blockTable>
