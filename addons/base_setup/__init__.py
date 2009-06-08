@@ -20,14 +20,7 @@
 #
 ##############################################################################
 
-import wizard_pos_payment
-import wizard_default_journal
-import wizard_refund_order
-import wizard_add_product
-import wizard_confirm
-import wizard_discount
-import wizard_get_sale
-import wizard_scan_product
+import wizard
 
-from wizard import except_wizard
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

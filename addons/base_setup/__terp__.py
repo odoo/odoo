@@ -20,14 +20,32 @@
 #
 ##############################################################################
 
-import wizard_pos_payment
-import wizard_default_journal
-import wizard_refund_order
-import wizard_add_product
-import wizard_confirm
-import wizard_discount
-import wizard_get_sale
-import wizard_scan_product
 
-from wizard import except_wizard
+{
+    'name': 'Base Setup',
+    'version': '1.0',
+    'category': 'Generic Modules/Base',
+    'description': """
+    This module implements a configuration system that helps user
+    to configure the system at the installation of a new database.
 
+    It allows you to select between a list of profiles to install:
+    * Minimal profile
+    * Accounting only
+    * Services companies
+    * Manufacturing companies
+
+    It also asks screens to help easily configure your company, the header and
+    footer, the account chart to install and the language.
+    """,
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': ['base_setup_data.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'base_setup_wizard.xml'],
+    'demo_xml': ['base_setup_demo.xml'],
+    'installable': True,
+    'active': True,
+    'certificate': '0086711085869',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
