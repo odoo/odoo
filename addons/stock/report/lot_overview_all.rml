@@ -10,45 +10,16 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Table1">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-    </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#d4d4d4" start="1,0" stop="-1,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table2">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,-1"/>
-    </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -68,6 +39,7 @@
     <paraStyle name="P102" fontName="Helvetica-Bold" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P11" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P121" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="1.0"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
@@ -80,13 +52,13 @@
   </stylesheet>
   <images/>
   <story>
-    <para style="P1">
-      <font color="white"> </font>
-    </para>
     <section>
-      <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" repeatRows="1" style="Table1">
-        <tr>
-        	<td><para style="P2">Location</para></td>
+      <para style="P121"><font color="white">[[ repeatIn(objects,'o') ]] </font></para>
+      <section>
+        <para style="P121"><font color="white">[[ repeatIn(process(o.id),'ob') ]]</font></para>
+        <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" style="Table4">
+         <tr>
+        	<td><para style="P2">[[ ob['product'] or removeParentNode('blockTable') ]] Location</para></td>
             <td><para style="P2">Code</para></td>
             <td><para style="P2">Product</para></td>
             <td><para style="P2">Variants</para></td>
@@ -94,16 +66,11 @@
             <td><para style="P4">UoM</para></td>
             <td><para style="P3">UnitPrice</para></td>
             <td><para style="P3">Value</para></td>
-        </tr>
-      </blockTable>
-      <para>[[repeatIn(objects,'o')]]</para>
-      <section>
-        <para style="P12">[[ repeatIn(process(o.id),'ob') ]]</para>
-        <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" repeatRows="1" style="Table4">
+         </tr>
          <tr>
 	        <td><para style="P102">[[ ob['location_name'] ]]</para></td>
 	        <td><para style="Standard"><font color="white"></font></para></td>
-	        <td><para style="Standard">[[ ob['product'] or 'No products in this Location' ]]</para></td>
+	        <td><para style="Standard"><font color="white"></font></para></td>
 	        <td><para style="Standard"><font color="white"></font></para></td>
 	        <td><para style="Standard"><font color="white"></font></para></td>
 	        <td><para style="Standard"><font color="white"></font></para></td>
@@ -120,36 +87,29 @@
             <td><para style="P12">[[ p['price'] ]]</para></td>
             <td><para style="P12">[[ p['price_value'] ]]</para></td>
           </tr>
-        </blockTable>
-        <para style="P10">
-          <font color="white"> </font>
-        </para>
-        <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" style="Table2">
-           <tr>
-           	<td><para style="P5"></para></td>
+          <tr>
+           	<td><para style="P5"><font color="white"> </font></para></td>
             <td><para style="P5">Total:</para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
             <td><para style="P5a"><u>[[ price_total() ]]</u></para></td>
           </tr>
         </blockTable>
-        <para style="P1"><font color="white"> </font></para>
-        <para style="P1"><font color="white"> </font></para>
       </section>
     </section>
     <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" style="Table3">
           <tr>
             <td><para style="P5">Grand Total:</para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5"></para></td>
-            <td><para style="P5a"><u>[[ grand_total_price() ]]</u></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5"><font color="white"> </font></para></td>
+            <td><para style="P5a">[[ grand_total_price() ]]</para></td>
           </tr>
         </blockTable>
   </story>

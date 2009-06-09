@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <openerp>
-	<data>
-		<report
-			id="pos_receipt"
-			string="Receipt"
-			model="pos.order"
-			name="pos.receipt"
-			rml="point_of_sale/report/pos_receipt.rml"
-			auto="False"
-			header="False"
-			/>
+  <data>
+    <report
+      id="pos_receipt"
+      string="Receipt"
+      model="pos.order"
+      name="pos.receipt"
+      rml="point_of_sale/report/pos_receipt.rml"
+      auto="False"
+      header="False"
+      />
 
-		<report
-			id="pos_invoice_report"
-			string="Invoice"
-			model="pos.order"
-			name="pos.invoice"
-			auto="False"
-			rml="account/report/invoice.rml"
-			 />
+    <report
+      id="pos_invoice_report"
+      string="Invoice"
+      model="pos.order"
+      name="pos.invoice"
+      auto="False"
+      rml="point_of_sale/report/pos_invoice.rml"
+       />
 
-		<report
-			id="pos_lines_detail"
-			string="Details of Sales"
-			model="pos.order"
-			name="pos.details"
-			auto="False"
-			multi="True"
-			rml="point_of_sale/report/pos_details.rml"
-			 />
+    <report
+      id="pos_lines_detail"
+      string="Details of Sales"
+      model="pos.order"
+      name="pos.details"
+      auto="False"
+      multi="True"
+      rml="point_of_sale/report/pos_details.rml"
+       />
 
-		<report
-			id="pos_details_summary"
-			string="Sales (summary)"
-			model="pos.order"
-			name="pos.details_summary"
-			auto="False"
-			multi="True"
-			rml="point_of_sale/report/pos_details_summary.rml"
-			 />
+    <report
+      id="pos_details_summary"
+      string="Sales (summary)"
+      model="pos.order"
+      name="pos.details_summary"
+      auto="False"
+      multi="True"
+      rml="point_of_sale/report/pos_details_summary.rml"
+       />
 
-		<report
-			id="pos_lines_report"
-			string="Pos Lines"
-			model="pos.order"
-			name="pos.lines"
-			auto="False"
-			rml="point_of_sale/report/pos_lines.rml"
-			 />
+    <report
+      id="pos_lines_report"
+      string="Pos Lines"
+      model="pos.order"
+      name="pos.lines"
+      auto="False"
+      rml="point_of_sale/report/pos_lines.rml"
+       />
 
-	</data>
+  </data>
 </openerp>

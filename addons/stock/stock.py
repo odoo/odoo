@@ -785,20 +785,26 @@ class stock_production_lot(osv.osv):
         if 'location_id' not in context:
             locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')], context=context)
         else:
-            locations = [context['location_id']]
+            locations = context['location_id'] and [context['location_id']] or []
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        
         res = {}.fromkeys(ids, 0.0)
-        cr.execute('''select
-                prodlot_id,
-                sum(name)
-            from
-                stock_report_prodlots
-            where
-                location_id in ('''+','.join(map(str, locations))+''')  and
-                prodlot_id in  ('''+','.join(map(str, ids))+''')
-            group by
-                prodlot_id
-        ''')
-        res.update(dict(cr.fetchall()))
+        
+        if locations:
+            cr.execute('''select
+                    prodlot_id,
+                    sum(name)
+                from
+                    stock_report_prodlots
+                where
+                    location_id in ('''+','.join(map(str, locations))+''')  and
+                    prodlot_id in  ('''+','.join(map(str, ids))+''')
+                group by
+                    prodlot_id
+            ''')
+            res.update(dict(cr.fetchall()))
         return res
 
     def _stock_search(self, cr, uid, obj, name, args):
@@ -975,10 +981,12 @@ class stock_move(osv.osv):
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
 
-    def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
+    def onchange_lot_id(self, cr, uid, context=None, prodlot_id=False, product_qty=False, loc_id=False):
         if not prodlot_id or not loc_id:
             return {}
-        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
+        ctx = context and context.copy() or {}
+        ctx['location_id'] = loc_id 
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):

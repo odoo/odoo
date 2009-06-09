@@ -73,13 +73,6 @@ import tools
 import os
 
 
-parents = {
-    'tr':1,
-    'li':1,
-    'story': 0,
-    'section': 0
-}
-
 class accounting_report_indicator(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
@@ -91,6 +84,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
             'lines':self.lines,
             'getarray':self.getarray,
             'gettree':self.gettree,
+            'getarray_head':self.getarray_head,
         })
         self.count = 0
         self.treecount = 0
@@ -98,61 +92,8 @@ class accounting_report_indicator(report_sxw.rml_parse):
         self.header_name = []
         self.header_val = []
         self.main_dict = {}
-        
-    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[],data=''):
-        self._node.data = ''
-        node = self._find_parent(self._node, nodes_parent or parents)
-        ns = node.nextSibling
-#start
-        if (not name in ['array','array_header']):
-            return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
-        
-        array_header = eval(data,{'year':'Fiscal Year','periods':'Periods'})
-#        value = [array_header]
-        value = []
-        value.extend(self.header_name)
 
-        if name=='array':
-            type = ['float']*len(self.header_name)
-        else:
-            type = ['lable'] * (len(self.header_name))
-        
-        width = [438/float(len(value))]*(len(value))
-        
-        if not lst:
-            lst.append(1)
-        for ns in node.childNodes :
-            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
-                width_str = ns._attrs['colWidths'].nodeValue
-                ns.removeAttribute('colWidths')
-#                total_td = td * len(value)
-                
-                if not width:
-                    for v in value:
-                        width.append(30)
-                for v in range(len(width)):
-                    width_str +=',%d'%width[v]
-                
-                ns.setAttribute('colWidths',width_str)
-
-                child_list =  ns.childNodes
-                for child in child_list:
-                    if child.nodeName=='tr':
-                        lc = child.childNodes[1]
-                        i=0
-                        for v in value:
-                            newnode = lc.cloneNode(1)
-                            if type[i] == 'float':
-                                t1="[[ '%.2f' % " + "%s['%s'] ]]"%(name,v)
-                            if type[i] == 'lable':
-                                t1="%s"%(v)
-                            else:
-                                t1="[[ %s['%s'] ]]"%(name,v)   
-                            newnode.childNodes[1].lastChild.data = t1    
-                            child.appendChild(newnode)
-                            newnode=False
-                            i+=1
-        return super(accounting_report_indicator,self).repeatIn(lst, name, nodes_parent=False)
+#
 
     def lines(self,data):
         res={}
@@ -193,12 +134,30 @@ class accounting_report_indicator(report_sxw.rml_parse):
             result.append(res)
         return result
 
+    def getarray_head(self,data,object,array_header=''):
+        self.getgraph(data,object,intercall=True)
+        self.header_val=[str(x) for x in self.header_val]
+        if data['select_base'] == 'year':
+            year = [1,2,3,4,5,6,7,8]
+            temp_head = [str(x) for x in self.header_name]
+            head_dict = dict(zip(year,temp_head))
+        else:
+            temp_head = [str(x[0:3]) for x in self.header_name]
+            head_dict = dict(zip(temp_head,temp_head))
+        print "head_dict",head_dict
+        return [head_dict]
+
     def getarray(self,data,object,array_header=''):
         res={}
         result=[]
         self.getgraph(data,object,intercall=True)
-        self.header_val=[str(x) for x in self.header_val]
-        temp_dict=zip(self.header_name,self.header_val)
+        self.header_val = [str(x) for x in self.header_val]
+        if data['select_base'] == 'year':
+            year = [1,2,3,4,5,6,7,8]
+            temp_dict = zip(year,self.header_val)
+        else:
+            temp_head = [str(x[0:3]) for x in self.header_name]
+            temp_dict = zip(temp_head,self.header_val)
         res=dict(temp_dict)
         array_header = eval(array_header,{'year':'Fiscal Year','periods':'Periods'})
         res[array_header]=object['name']
