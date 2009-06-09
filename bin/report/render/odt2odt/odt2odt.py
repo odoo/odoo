@@ -38,6 +38,7 @@ class odt2odt(object):
                 new_node.attrib.clear()
             for child in utils._child_get(node, self):
                 new_child = copy.deepcopy(child)
+                new_child.text  = utils._process_text(self, child.text)
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:

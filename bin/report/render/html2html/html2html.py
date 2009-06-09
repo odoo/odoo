@@ -47,6 +47,7 @@ class html2html(object):
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
+                        new_child.text  = utils._process_text(self, child.text)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:

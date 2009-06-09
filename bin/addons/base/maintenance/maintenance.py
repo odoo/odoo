@@ -77,6 +77,12 @@ class maintenance_contract(osv.osv):
         status = self.status(cr, uid)
         if status['status'] != 'full':
             raise osv.except_osv(_('Error'), _("Your can't submit bug reports due to uncovered modules: %s") % (', '.join(status['uncovered_modules']),))
+        
+        dbmsg = _('This error occurs on database %s') % (cr.dbname,)
+        if not remarks:
+            remarks = dbmsg
+        else:
+            remarks += '\n\n-----\n' + dbmsg
 
         valid_contracts = self._get_valid_contracts(cr, uid)
 
@@ -161,7 +167,7 @@ class maintenance_contract_wizard(osv.osv_memory):
         'state' : lambda *a: 'draft',
     }
 
-    def action_validate(self, cr, uid, ids, context):
+    def action_validate(self, cr, uid, ids, context=None):
         if not ids:
             return False
 
