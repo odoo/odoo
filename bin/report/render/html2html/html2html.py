@@ -47,6 +47,7 @@ class html2html(object):
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
+                        new_child.text  = utils._process_text(self, child.text)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
@@ -58,8 +59,10 @@ class html2html(object):
                                 output = cStringIO.StringIO(base64.decodestring(src))
                                 img = ImageReader(output)
                                 (width,height) = img.getSize()
-                                new_child.set('width',str(width))
-                                new_child.set('height',str(height))
+                                if not new_child.get('width'):
+                                    new_child.set('width',str(width))
+                                if not new_child.get('height') :
+                                    new_child.set('height',str(height))
                             else :
                                 new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)

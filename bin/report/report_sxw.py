@@ -72,8 +72,6 @@ rml2sxw = {
     'para': 'p',
 }
 
-
-
 class _format(object):
     def set_value(self, cr, uid, name, object, field, lang_obj):
         self.object = object
@@ -82,15 +80,15 @@ class _format(object):
         self.lang_obj = lang_obj
 
 class _float_format(float, _format):
-
     def __init__(self,value):
         super(_float_format, self).__init__()
-        self.val = value and str(value) or str(0.00)
+        self.val = value
 
     def __str__(self):
         digits = 2
         if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
             digits = self._field.digits[1]
+        if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
         return self.val
 
@@ -196,7 +194,7 @@ class rml_parse(object):
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
 
-    def set_html_image(self,id,model=None,field=None):
+    def set_html_image(self,id,model=None,field=None,context=None):
         if not id :
             return ''
         if not model:
@@ -217,14 +215,6 @@ class rml_parse(object):
         if not lang or self.default_lang.has_key(lang):
             if not lang:
                 key = 'en_US'
-                self.lang_dict_called = False
-                self.localcontext['lang'] = lang
-            elif self.default_lang.has_key(lang):
-                 key = lang
-            if self.default_lang.get(key,False):
-                self.lang_dict = self.default_lang.get(key,False).copy()
-                self.lang_dict_called = True
-            return True
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:

@@ -184,13 +184,13 @@ class browse_record(object):
                 lang = self._context.get('lang', 'en_US') or 'en_US'
                 lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
                 if not lang_obj_ids:
-                    raise Exception(_('Language %s is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
+                    raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
                 lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
-                            if d[n]:
+                            if (d[n] is not None) and (d[n] is not False):
                                 d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
