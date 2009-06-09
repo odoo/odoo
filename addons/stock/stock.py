@@ -981,7 +981,7 @@ class stock_move(osv.osv):
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
 
-    def onchange_lot_id(self, cr, uid, context=None, prodlot_id=False, product_qty=False, loc_id=False):
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
         ctx = context and context.copy() or {}
