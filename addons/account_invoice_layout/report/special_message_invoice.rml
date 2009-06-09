@@ -70,14 +70,15 @@
 <paraStyle name="P5" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="P6" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="P7" fontName="Helvetica" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="P7a" fontName="Helvetica" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 <paraStyle name="P8" fontName="Helvetica-Bold" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0" />
 <paraStyle name="P8b" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="0.0"/>
 <paraStyle name="P8a" fontName="Helvetica" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0" />
 <paraStyle name="P9" fontName="Times-Italic" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="3.0"/>
 <paraStyle name="P10" fontName="Helvetica-Bold" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="P11" fontName="Helvetica-Bold" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="P11a" fontName="Helvetica" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="P12" fontName="Helvetica-Bold" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="P11a" fontName="Helvetica" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="P12" fontName="Helvetica-Bold" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="P13" fontName="Helvetica-Bold" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="P14" fontName="Helvetica" fontSize="12.0" leading="13" alignment="LEFT"/>
 <paraStyle name="P15" fontName="Helvetica" fontSize="12.0" leading="13" alignment="CENTER"/>
@@ -152,22 +153,22 @@
 </blockTable>
 <section>
 	<para style="P20">[[ repeatIn(invoice_lines(o), 'a') ]]</para>
-	<blockTable colWidths="0.0,250.0,77.5,31.0,39.0,50.0,79.0" style="Tableau7">
+	<blockTable colWidths="0.0,240.0,77.5,41.0,39.0,50.0,79.0" style="Tableau7">
 		<tr>
 			<td><para style="P8">[[ a['type']=='text' and removeParentNode('blockTable')]]</para></td>
 			<td><para style="P8a">[[ (a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['name'] ]] / ( [[ a['tax_types'] ]] )</para></td>
-			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['quantity'] ]] [[ a['uos'] ]]</para></td>
-			<td><para><font color="white"></font></para></td>
-			<td><para style="Table Contents">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['price_unit'] ]]</para></td>
-			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['discount'] ]]</para></td>
-			<td><para style="Table Contents1">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]]<font>[[ a['price_subtotal'] ]]</font><font> [[ a['currency'] ]]</font></para></td>
+			<td><para style="P7a">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['quantity'] ]]</para></td>
+			<td><para style="P5">[[ a['uos'] ]]</para></td>
+			<td><para style="P7">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['price_unit'] ]]</para></td>
+			<td><para style="P7">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]][[ a['discount'] ]]</para></td>
+			<td><para style="P7">[[ a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]]<font>[[ a['price_subtotal'] ]]</font><font> [[ a['currency'] ]]</font></para></td>
 		</tr>
 		<tr>
 			<td><para style="P8"><font color="white"></font></para></td>
 			<td><para style="terp_default_Note">Note : [[ format(a['note'] or removeParentNode('tr')) ]]</para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 			<td><para><font color="white"></font></para></td>
-			<td><para style="Table Contents"><font color="white"></font></para></td>
+			<td><para style="P7"><font color="white"></font></para></td>
 			<td><para style="Table Contents1"><font color="white"></font></para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 		</tr>
@@ -189,7 +190,7 @@
 		</tr>
 	</blockTable>
 </section>
-<blockTable colWidths="331.0,200.0" style="Tableau3">
+<blockTable colWidths="321.0,210.0" style="Tableau3">
 <tr>
 <td>
 	<blockTable colWidths="100.0,73.0,100.0" style="Tableau8">
