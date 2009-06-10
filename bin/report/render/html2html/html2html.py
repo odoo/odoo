@@ -71,8 +71,20 @@ class html2html(object):
             self._node.remove(n)
         process_text(self.etree, self._node)
         return self._node
+        
+    def url_modify(self,root):
+        for n in root.getchildren():
+            if n.text.find('<a ')>=0 and n.text.find('style')<=0 :
+                node = (n.tag=='span' and n.getparent().tag=='u') and n.getparent().getparent() or ((n.tag=='span') and n.getparent()) or n
+                style = node.get('color') and "style='color:%s; text-decoration: none;'"%node.get('color') or ''
+                href = n.text.split('<a ')[-1]
+                n.text = ' '.join(['<a ',style,href])
+            self.url_modify(n)
+        return root
 
 def parseString(node, localcontext = {}):
     r = html2html(node, localcontext)
-    return r.render()
+    root = r.render()
+    root = r.url_modify(root)
+    return root
 
