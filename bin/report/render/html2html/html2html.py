@@ -74,11 +74,15 @@ class html2html(object):
         
     def url_modify(self,root):
         for n in root.getchildren():
-            if n.text.find('<a ')>=0 and n.text.find('style')<=0 :
+            if (n.text.find('<a ')>=0 or n.text.find('&lt;a')>=0) and n.text.find('href')>=0 and n.text.find('style')<=0 :
                 node = (n.tag=='span' and n.getparent().tag=='u') and n.getparent().getparent() or ((n.tag=='span') and n.getparent()) or n
                 style = node.get('color') and "style='color:%s; text-decoration: none;'"%node.get('color') or ''
-                href = n.text.split('<a ')[-1]
-                n.text = ' '.join(['<a ',style,href])
+                if n.text.find('&lt;a')>=0:
+                    t = '&lt;a '
+                else :
+                    t = '<a '
+                href = n.text.split(t)[-1]
+                n.text = ' '.join([t,style,href])
             self.url_modify(n)
         return root
 
