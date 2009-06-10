@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-include /usr/share/quilt/quilt.make
+# include /usr/share/quilt/quilt.make
 
 clean: clean-patched unpatch
 clean-patched: patch
@@ -8,7 +8,7 @@ clean-patched: patch
 	dh_testroot
 	rm -f build-stamp
 
-	python setup.py clean
+	NO_CHECK_MODULES=1 python setup.py clean
 
 	rm -rf build openerp-server
 	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
@@ -23,7 +23,7 @@ install: patch
 	dh_prep
 	dh_installdirs
 
-	python setup.py install --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
+	NO_CHECK_MODULES=1 python setup.py install --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
 
 	# Adjusting program location
 	sed -i -e 's|cd .*python.*/site-packages|cd /usr/lib|' debian/openerp-server/usr/bin/openerp-server
@@ -56,4 +56,8 @@ binary-indep: install
 	dh_md5sums
 	dh_builddeb
 
-.PHONY: clean build install binary binary-arch binary-indep
+patch:
+	
+unpatch:
+	
+.PHONY: clean build install binary binary-arch binary-indep patch unpatch

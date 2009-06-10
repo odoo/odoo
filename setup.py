@@ -121,7 +121,8 @@ def data_files():
 
     return files
 
-check_modules()
+if not os.getenv('NO_CHECK_MODULES',False) :
+    check_modules()
 
 f = file('openerp-server','w')
 start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage\n" """
