@@ -517,7 +517,6 @@ class ir_model_data(osv.osv):
         return res_id
 
     def _unlink(self, cr, uid, model, ids, direct=False):
-        #self.pool.get(model).unlink(cr, uid, ids)
         for id in ids:
             self.unlink_mark[(model, id)]=False
             cr.execute('delete from ir_model_data where res_id=%s and model=%s', (id, model))
