@@ -24,7 +24,8 @@ import os
 from os.path import join
 import fnmatch
 import csv, xml.dom, re
-import osv, tools, pooler
+import tools, pooler
+from osv.orm import BrowseRecordError
 import ir
 import netsvc
 from tools.misc import UpdateableStr
@@ -420,7 +421,13 @@ def trans_generate(lang, modules, dbname=None):
         if not pool.get(model):
             logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r" % (model,))
             continue
-        obj = pool.get(model).browse(cr, uid, res_id)
+        
+        try:
+            obj = pool.get(model).browse(cr, uid, res_id)
+        except BrowseRecordError:
+            logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r with id %d" % (model, res_id))
+            continue
+
         if model=='ir.ui.view':
             d = xml.dom.minidom.parseString(encode(obj.arch))
             for t in trans_parse_view(d.documentElement):
@@ -524,11 +531,8 @@ def trans_generate(lang, modules, dbname=None):
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
-                try:
-                    trad = getattr(obj, field_name) or ''
-                    push_translation(module, 'model', name, xml_name, encode(trad))
-                except:
-                    pass
+                trad = getattr(obj, field_name) or ''
+                push_translation(module, 'model', name, xml_name, encode(trad))
 
     # parse source code for _() calls
     def get_module_from_path(path):
