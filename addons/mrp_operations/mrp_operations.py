@@ -68,6 +68,7 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
     _inherit = 'mrp.production.workcenter.line'
+    _order = "sequence, date_planned"
     _columns = {
        'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'Status', readonly=True),
        'date_start_date': fields.function(_get_date_date, method=True, string='Start Date', type='date'),
