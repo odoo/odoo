@@ -80,7 +80,7 @@ def _child_get(node, self=None, tagname=None):
                 (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
                 n2 = copy.deepcopy(n)
                 n2.tag = tag
-                n2.attrib.update(attr)
+                n2.attrib.update(attr or {})
                 yield n2
                 tagname = ''
             except:
@@ -103,10 +103,10 @@ def _process_text(self, txt):
                     txt2 = eval(sps.pop(0),self.localcontext)
                 except:
                     txt2 = ''
-                if type(txt2) == type(0) or type(txt2) == type(0.0):
-                    txt2 = str(txt2)
                 if type(txt2)==type('') or type(txt2)==type(u''):
                     result += txt2
+                elif (txt2 is not None) and (txt2 is not False):
+                    result += str(txt2)
         return result
 
 def text_get(node):

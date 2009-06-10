@@ -251,7 +251,7 @@ class expression(object):
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
 
             if check_nulls:
-                query = '(%s OR %s IS NULL)' % (query, left)
+                query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
         else:
             params = []
             
