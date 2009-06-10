@@ -72,11 +72,35 @@ def check_modules():
     if not ok:
         sys.exit(1)
 
-def find_addons():
+def _find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
         if '__terp__.py' in names:
-            modname = dp.replace(os.path.sep, '.').replace('bin', 'openerp-server', 1)
-            yield modname
+            modname = os.path.basename(dp)
+            yield (modname, dp)
+    #look for extra modules
+    try:
+        empath = os.getenv('EXTRA_MODULES_PATH','../addons/')
+        f = open(opj(empath,'server_modules.list'),'r')
+        # print 'Getting modules from:' , opj(empath,'server_modules.list')
+        mods = f.readlines()
+        for mname in mods:
+            mname = mname.strip()
+            if not mname:
+                continue
+            if os.path.exists(opj(empath,mname,'__terp__.py')):
+                yield ( mname, opj(empath,mname) )
+            else:
+                print "Module %s specified, but no valid path." % mname
+    except:
+        pass
+
+__found_addons = None
+
+# Cache the results of _find_addons() and return them
+def find_addons(found_addons = None):
+    if not found_addons:
+        found_addons = _find_addons()
+    return found_addons
 
 def data_files():
     '''Build list of data files to be installed'''
@@ -107,18 +131,18 @@ def data_files():
                                               opj('bin', 'server.pkey'),
                                               opj('bin', 'server.cert')]))
 
-        for addon in find_addons():
-            addonname = addon.split('.')[-1]
-            add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
-            addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', add_path.replace('bin', 'openerp-server', 1))
+        for (addonname, add_path) in find_addons():
+            addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
-                innerfiles = filter(lambda file: os.path.splitext(file)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
+                innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
-                    res = os.path.normpath(opj(addon_path, root.replace(opj('bin','addons', addonname), '.')))
-                    pathfiles.extend(((res, map(lambda file: opj(root, file), innerfiles)),))
+                    res = os.path.normpath(opj(addon_path, root.replace(opj(add_path), '.')))
+                    pathfiles.extend(((res, map(lambda fil: opj(root, fil), innerfiles)),))
             files.extend(pathfiles)
 
+    # for tup in files:
+    #    print "Files:", tup[0], tup[1]
     return files
 
 if not os.getenv('NO_CHECK_MODULES',False) :
@@ -128,6 +152,13 @@ f = file('openerp-server','w')
 start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage\n" """
 f.write(start_script)
 f.close()
+
+def find_package_dirs():
+    res = {}
+    for (mod, path) in find_addons():
+        res ['openerp-server.addons.'+ mod ] = path
+    res ['openerp-server'] = 'bin'
+    return res
 
 class openerp_server_install(install):
     def run(self):
@@ -183,12 +214,13 @@ setup(name             = name,
                           'openerp-server.wizard',
                           'openerp-server.report.render.odt2odt',
                           'openerp-server.workflow'] + \
-                         list(find_addons()),
-      package_dir      = {'openerp-server': 'bin'},
+                          list(map( lambda (a, p): 'openerp-server.addons.'+ a ,find_addons())),
+      package_dir      = find_package_dirs(),
       console = [ { "script" : "bin\\openerp-server.py", "icon_resources" : [ (1,"pixmaps\\openerp-icon.ico") ] } ],
       options = options,
       )
 
 
+# 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
