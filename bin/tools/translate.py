@@ -524,8 +524,11 @@ def trans_generate(lang, modules, dbname=None):
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
-                trad = getattr(obj, field_name) or ''
-                push_translation(module, 'model', name, xml_name, encode(trad))
+                try:
+                    trad = getattr(obj, field_name) or ''
+                    push_translation(module, 'model', name, xml_name, encode(trad))
+                except:
+                    pass
 
     # parse source code for _() calls
     def get_module_from_path(path):
@@ -643,8 +646,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         for row in reader:
             line += 1
             # skip empty rows and rows where the translation field (=last fiefd) is empty
-            if (not row) or (not row[-1]):
-                continue
+            #if (not row) or (not row[-1]):
+            #    continue
 
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
