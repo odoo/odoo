@@ -513,6 +513,6 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['html2html']
         html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
-        return (html.replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
+        return (html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
 
 
