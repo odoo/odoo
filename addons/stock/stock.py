@@ -981,10 +981,12 @@ class stock_move(osv.osv):
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
 
-    def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
-        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
+        ctx = context and context.copy() or {}
+        ctx['location_id'] = loc_id 
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
