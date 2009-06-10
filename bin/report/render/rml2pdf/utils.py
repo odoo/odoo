@@ -44,6 +44,9 @@ import copy
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
+def str2xml(s):
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
@@ -100,7 +103,7 @@ def _process_text(self, txt):
             result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
             if sps:
                 try:
-                    txt2 = eval(sps.pop(0),self.localcontext)
+                    txt2 = str2xml(eval(sps.pop(0),self.localcontext))
                 except:
                     txt2 = ''
                 if type(txt2)==type('') or type(txt2)==type(u''):
