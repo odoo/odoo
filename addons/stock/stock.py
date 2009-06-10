@@ -86,18 +86,20 @@ class stock_location(osv.osv):
         return res
 
 
-    def product_detail(self, cr, uid, id, field):
+    def product_detail(self, cr, uid, id, field, context={}):
         res = {}
         res[id] = {}
         final_value = 0.0
         field_to_read = 'virtual_available'
         if field == 'stock_real_value':
             field_to_read = 'qty_available'
-        cr.execute('select distinct product_id from stock_move where location_id=%s',(id,))
+        cr.execute('select distinct product_id from stock_move where (location_id=%s) or (location_dest_id=%s)',(id,id))
         result = cr.dictfetchall()
         if result:
             for r in result:
-                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price','name'])
+                c = (context or {}).copy()
+                c['location'] = id
+                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price'], context=c)
                 final_value += (product[field_to_read] * product['standard_price'])
         return final_value
 
