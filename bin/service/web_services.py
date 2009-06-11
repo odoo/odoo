@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-import base64 
+import base64
 import logging
 import os
 import security
@@ -258,7 +258,7 @@ class db(netsvc.Service):
                 fs = os.path.join(tools.config['root_path'], 'filestore')
                 if os.path.exists(os.path.join(fs, old_name)):
                     os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
-                    
+
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'RENAME DB: %s -> %s' % (old_name, new_name))
         finally:
@@ -326,7 +326,7 @@ class db(netsvc.Service):
             try:
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'migrate database %s' % (db,))
                 tools.config['update']['base'] = True
-                pooler.restart_pool(db, force_demo=False, update_module=True) 
+                pooler.restart_pool(db, force_demo=False, update_module=True)
             except except_orm, inst:
                 self.abortResponse(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
@@ -352,6 +352,7 @@ class common(netsvc.Service):
         self.exportMethod(self.timezone_get)
         self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
+        self.exportMethod(self.get_environment)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -416,36 +417,36 @@ GNU Public Licence.
     def timezone_get(self, db, login, password):
         return time.tzname[0]
 
-    
+
     def get_available_updates(self, password, contract_id, contract_password):
         security.check_super(password)
         import tools.maintenance as tm
         try:
             rc = tm.remote_contract(contract_id, contract_password)
             if not rc.id:
-                raise tm.RemoteContractException('This contract does not exist or is not active') 
-            
+                raise tm.RemoteContractException('This contract does not exist or is not active')
+
             return rc.get_available_updates(rc.id, addons.get_modules_with_version())
 
         except tm.RemoteContractException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
-        
+
 
     def get_migration_scripts(self, password, contract_id, contract_password):
         security.check_super(password)
         l = netsvc.Logger()
         import tools.maintenance as tm
-        try: 
+        try:
             rc = tm.remote_contract(contract_id, contract_password)
             if not rc.id:
-                raise tm.RemoteContractException('This contract does not exist or is not active') 
+                raise tm.RemoteContractException('This contract does not exist or is not active')
             if rc.status != 'full':
                 raise tm.RemoteContractException('Can not get updates for a partial contract')
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
             zips = rc.retrieve_updates(rc.id, addons.get_modules_with_version())
-            
+
             from shutil import rmtree, copytree, copy
 
             backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
@@ -503,7 +504,27 @@ GNU Public Licence.
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
             l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
             raise
- 
+
+    def get_environment(self,lang=False):
+        try:
+            if '.bzr' in os.listdir((os.getcwd()[0:-3])):
+                fp = open(os.path.join(os.getcwd()[0:-3],'.bzr/branch/last-revision'))
+                rev_no = fp.read()
+            else:
+                rev_no = 'Bazaar Not Installed !'
+        except:
+            rev_no = 'Bazaar Not Installed !'
+        if not lang:
+            lang = os.environ.get('LANG', '').split('.')[0]
+        environment = 'Environment_Information : \n' \
+                      'Operating System : %s\n' \
+                      'PlatForm : %s\n' \
+                      'Operating System Version : %s\n' \
+                      'Python Version : %s\n'\
+                      'OpenERP-Server Version : %s\n'\
+                      'OpenERP-Server Last Revision ID : %s'\
+                      'Locale : %s'%(os.name,sys.platform,str(sys.version.split('\n')[1]),str(sys.version[0:5]),release.version,rev_no,lang)
+        return environment
 common()
 
 class objects_proxy(netsvc.Service):
