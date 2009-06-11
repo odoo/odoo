@@ -658,6 +658,7 @@ class report_spool(netsvc.Service):
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
+                logger.notifyChannel('web-services', netsvc.LOG_ERROR,common().get_environment(context.get('lang',False)))
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
