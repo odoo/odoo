@@ -510,6 +510,7 @@ GNU Public Licence.
             if '.bzr' in os.listdir((os.getcwd()[0:-3])):
                 fp = open(os.path.join(os.getcwd()[0:-3],'.bzr/branch/last-revision'))
                 rev_no = fp.read()
+                fp.close()
             else:
                 rev_no = 'Bazaar Not Installed !'
         except:
