@@ -22,11 +22,13 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
       <blockBackground colorName="#b3b3b3" start="0,0" stop="0,-1"/>
       <blockBackground colorName="#b3b3b3" start="1,0" stop="1,-1"/>
       <blockBackground colorName="#b3b3b3" start="2,0" stop="2,-1"/>
       <blockBackground colorName="#b3b3b3" start="3,0" stop="3,-1"/>
       <blockBackground colorName="#b3b3b3" start="4,0" stop="4,-1"/>
+      <blockBackground colorName="#b3b3b3" start="5,0" stop="5,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
@@ -34,18 +36,11 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <blockBackground colorName="#b3b3b3" start="0,0" stop="0,-1"/>
-      <blockBackground colorName="#b3b3b3" start="1,0" stop="1,-1"/>
-      <blockBackground colorName="#b3b3b3" start="2,0" stop="2,-1"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table8">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <blockBackground colorName="#b3b3b3" start="0,0" stop="0,-1"/>
       <blockBackground colorName="#b3b3b3" start="1,0" stop="1,-1"/>
       <blockBackground colorName="#b3b3b3" start="2,0" stop="2,-1"/>
       <blockBackground colorName="#b3b3b3" start="3,0" stop="3,-1"/>
-      <blockBackground colorName="#b3b3b3" start="4,0" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -107,16 +102,16 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Caption" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Helvetica" fontSize="9.0" leading="11"/>
-    <paraStyle name="Footer" fontName="Helvetica"/>
-    <paraStyle name="Table Contents" fontName="Helvetica"/>
-    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
-    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -153,13 +148,16 @@
       <font color="white"> </font>
     </para>
     <para style="terp_header">Year : [[ y['year'] ]]</para>
-    <blockTable colWidths="57.0,185.0,62.0,67.0,111.0" style="Table_header_account">
+    <blockTable colWidths="57.0,134.0,51.0,62.0,67.0,111.0" style="Table_header_account">
       <tr>
         <td>
           <para style="terp_tblheader_Details">[[ data['form']['show_columns'] and 'Code' or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Account Name </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details"><font>[[ data['form']['compare_pattern']!='none' and "C.S.Y.T.(C./P)" or removeParentNode('font') ]]</font></para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Debit</para>
@@ -175,13 +173,16 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="56.0,247.0,178.0" style="Table1">
+    <blockTable colWidths="56.0,134.0,50.0,240.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_Details">[[ data['form']['show_columns'] and removeParentNode('blockTable') or 'Code' ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Account Name </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details"><font>[[ data['form']['compare_pattern']!='none' and "C.S.Y.T.(C./P)" or removeParentNode('font') ]]</font></para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Balance</para>
@@ -191,31 +192,6 @@
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="56.0,135.0,50.0,128.0,112.0" style="Table8">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">[[ data['form']['compare_pattern'] == 'none' and removeParentNode('blockTable') ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Compare Selected Years In Terms of Cash/Perc</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
@@ -224,10 +200,10 @@
       <blockTable colWidths="56.0,134.0,51.0,61.0,69.0,110.0" style="Table4">
         <tr>
           <td>
-            <para style="terp_default_9"><font>[[ (data['form']['format_perc'] or not data['form']['show_columns']) and removeParentNode('blockTable') ]]</font>[[  a['code']  ]]</para>
+            <para style="terp_default_9">[[ (data['form']['format_perc'] or not data['form']['show_columns']) and removeParentNode('blockTable') ]] [[ a['code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font></para>
+            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font> <font>[[ a['name'] ]]</font></para>
           </td>
           <td>
             <para style="terp_default_9">[[ a['pattern'] ]]</para>
@@ -249,10 +225,10 @@
       <blockTable colWidths="56.0,134.0,52.0,61.0,69.0,74.0,36.0" style="Table2">
         <tr>
           <td>
-            <para style="terp_default_9"><font>[[ (not data['form']['format_perc'] or not data['form']['show_columns']) and removeParentNode('blockTable') ]]</font>[[ a['code'] ]]</para>
+            <para style="terp_default_9">[[ (not data['form']['format_perc'] or not data['form']['show_columns']) and removeParentNode('blockTable') ]] [[ a['code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font></para>
+            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font> <font>[[ a['name'] ]]</font></para>
           </td>
           <td>
             <para style="terp_default_9">[[ a['pattern'] ]]</para>
@@ -264,23 +240,21 @@
             <para style="terp_default_Right_9">[[ a['credit'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ a['balance']  ]]</para>
+            <para style="terp_default_Right_9">[[ a['balance'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ a['balance_perc'] ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
+      <para style="terp_default_2"/>
       <blockTable colWidths="55.0,135.0,113.0,178.0" style="Table6">
         <tr>
           <td>
-            <para style="terp_default_9"><font>[[ (data['form']['format_perc'] or data['form']['show_columns']) and removeParentNode('blockTable') ]]</font>[[ a['code'] ]]</para>
+            <para style="terp_default_9">[[ (data['form']['format_perc'] or data['form']['show_columns']) and removeParentNode('blockTable') ]] [[ a['code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font></para>
+            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font> <font>[[ a['name'] ]]</font></para>
           </td>
           <td>
             <para style="terp_default_9">[[ a['pattern'] ]]</para>
@@ -290,14 +264,16 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2"/>
+      <para style="terp_default_2">
+        <font color="white"> </font>
+      </para>
       <blockTable colWidths="54.0,135.0,113.0,130.0,49.0" style="Table5">
         <tr>
           <td>
-            <para style="terp_default_9"><font>[[ (not data['form']['format_perc'] or data['form']['show_columns']) and removeParentNode('blockTable') ]]</font>[[ a['code'] ]]</para>
+            <para style="terp_default_9">[[ (not data['form']['format_perc'] or data['form']['show_columns']) and removeParentNode('blockTable') ]] [[ a['code'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font><font>[[ a['name'] ]]</font></para>
+            <para style="terp_default_9"><font color="white">[['.....'*(a['level']-1) ]]</font> <font>[[ a['name'] ]]</font></para>
           </td>
           <td>
             <para style="terp_default_9">[[ a['pattern'] ]]</para>
@@ -338,8 +314,9 @@
         </td>
       </tr>
     </blockTable>
-    <para style="Standard">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
+    <para style="terp_tblheader_Details">[[ data['form']['compare_pattern']!='none' and "C.S.Y.T.(C./P) : Compare Selected Years In Terms of Cash/Perc" or removeParentNode('font') ]]</para>
   </story>
 </document>
