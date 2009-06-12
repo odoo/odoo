@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,6 +23,7 @@
 import time
 import locale
 from report import report_sxw
+import rml_parse
 
 #from addons.account.wizard import wizard_account_balance_report
 
@@ -33,9 +34,9 @@ parents = {
     'section': 0
 }
 
-class account_balance(report_sxw.rml_parse):
+class account_balance_landscape(rml_parse.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_balance, self).__init__(cr, uid, name, context)
+        super(account_balance_landscape, self).__init__(cr, uid, name, context)
         self.flag=1
         self.dr_total= 0.00
         self.cr_total= 0.00
@@ -318,9 +319,8 @@ class account_balance(report_sxw.rml_parse):
 #
 #                                newnode=False
 #                                i+=1
-#        return super(account_balance,self).repeatIn(lst, name, nodes_parent=False)
+#        return super(account_balance_landscape,self).repeatIn(lst, name, nodes_parent=False)
 #end
-    
     def linesForYear(self,form):
         temp=0
         years={}
@@ -417,6 +417,7 @@ class account_balance(report_sxw.rml_parse):
             if entry[0].id in doneAccount:
                 continue
             doneAccount[entry[0].id] = 1
+
             for k in range(0,len(entry)):
                 temp_credit=0.00
                 temp_debit=0.00
@@ -427,6 +428,7 @@ class account_balance(report_sxw.rml_parse):
                 if self.flag==1:
                     self.result_total["sum_credit" + str(k)]=0.00
                     self.result_total["sum_debit" + str(k)]=0.00
+
                 if form['account_choice']=='bal_zero':
                     if temp_credit<>temp_debit:
                         self.result_total["sum_credit" + str(k)]+=temp_credit
@@ -543,6 +545,7 @@ class account_balance(report_sxw.rml_parse):
 
                         res["bal_perc"+str(j)]=locale.format("%.2f", temp_perc) + "%"
 
+
                     if ref_bal=='nothing':
                         if level==1:
                             self.parent_bal=1
@@ -594,7 +597,7 @@ class account_balance(report_sxw.rml_parse):
                     result +=dir
 
         return result
-
+    
     def get_years(self,form):
         result =[]
         res={}
@@ -657,7 +660,7 @@ class account_balance(report_sxw.rml_parse):
     
     def total_cr(self):
         return self.cr_total
-    
-report_sxw.report_sxw('report.account.balance.account.balance', 'account.account', 'addons/account_balance/report/account_balance.rml', parser=account_balance, header=False)
+
+report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account_balance/report/account_balance_landscape.rml', parser=account_balance_landscape, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
