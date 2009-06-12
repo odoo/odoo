@@ -928,7 +928,7 @@
             <field name="res_model">ir.translation</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
-            <field name="domain">[('value', '=', False)]</field>
+            <field name="domain">['|',('value', '=', False),('value','=','')]</field>
         </record>
         <menuitem action="action_translation_untrans" id="menu_action_translation_untrans" parent="menu_action_translation"/>
 
