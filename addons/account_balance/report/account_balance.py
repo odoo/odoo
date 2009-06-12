@@ -393,7 +393,6 @@ class account_balance(report_sxw.rml_parse):
             ids = self.ids
         if not ids:
             return []
-
         ctx = self.context.copy()
         result_total_parent=[]
 
@@ -413,16 +412,16 @@ class account_balance(report_sxw.rml_parse):
         if level==1:
             doneAccount={}
         for entry in merged_accounts:
-
+            
             if entry[0].id in doneAccount:
                 continue
             doneAccount[entry[0].id] = 1
             for k in range(0,len(entry)):
                 temp_credit=0.00
                 temp_debit=0.00
-
-                temp_credit+=entry[k].credit
-                temp_debit+=entry[k].debit
+                if entry[0].type <> 'view':
+                    temp_credit+=entry[k].credit
+                    temp_debit+=entry[k].debit
 
                 if self.flag==1:
                     self.result_total["sum_credit" + str(k)]=0.00

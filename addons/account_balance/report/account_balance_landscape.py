@@ -421,9 +421,9 @@ class account_balance_landscape(rml_parse.rml_parse):
             for k in range(0,len(entry)):
                 temp_credit=0.00
                 temp_debit=0.00
-
-                temp_credit+=entry[k].credit
-                temp_debit+=entry[k].debit
+                if entry[0].type <> 'view':
+                    temp_credit+=entry[k].credit
+                    temp_debit+=entry[k].debit
 
                 if self.flag==1:
                     self.result_total["sum_credit" + str(k)]=0.00
