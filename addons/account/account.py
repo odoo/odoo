@@ -652,7 +652,7 @@ class account_journal_period(osv.osv):
         'name': fields.char('Journal-Period Name', size=64, required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-        'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
+        'icon': fields.function(_icon_get, method=True, string='Icon', type='char', size=32),
         'active': fields.boolean('Active', required=True),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
