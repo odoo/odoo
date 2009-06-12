@@ -493,10 +493,11 @@ class module(osv.osv):
         id = super(module, self).create(cr, uid, data, context)
         if data.get('name'):
             self.pool.get('ir.model.data').create(cr, uid, {
-                'name': 'module_name_translation',
+                'name': 'module_meta_information',
                 'model': 'ir.module.module',
                 'res_id': id,
-                'module': data['name']
+                'module': data['name'],
+                'noupdate': True,
             })
         return id
 module()

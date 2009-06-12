@@ -80,6 +80,8 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
+class BrowseRecordError(Exception):
+    pass
 
 # Readonly python database object browser
 class browse_null(object):
@@ -126,7 +128,6 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -138,6 +139,11 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
+        if not (id and isinstance(id, (int, long,))):
+            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+        if not table.exists(cr, uid, id, context):
+            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
         if id not in self._data:
             self._data[id] = {'id': id}
@@ -1163,6 +1169,9 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise _('The copy method is not implemented on this object !')
 
+    def exists(self, cr, uid, id, context=None):
+        raise _('The exists method is not implemented on this object !')
+
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
@@ -1204,7 +1213,7 @@ class orm_template(object):
         raise NotImplementedError()
 
 class orm_memory(orm_template):
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count']
+    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     _inherit_fields = {}
     _max_count = 200
     _max_hours = 1
@@ -1389,11 +1398,14 @@ class orm_memory(orm_template):
     def _check_removed_columns(self, cr, log=False):
         # nothing to check in memory...
         pass
+    
+    def exists(self, cr, uid, id, context=None):
+        return id in self.datas
 
 class orm(orm_template):
     _sql_constraints = []
     _table = None
-    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
@@ -2735,6 +2747,10 @@ class orm(orm_template):
             record['res_id']=new_id
             trans_obj.create(cr,uid,record)
         return new_id
+
+    def exists(self, cr, uid, id, context=None):
+        cr.execute('SELECT count(1) FROM "%s" where id=%%s' % (self._table,), (id,))
+        return bool(cr.fetchone()[0])
 
     def check_recursion(self, cr, uid, ids, parent=None):
         if not parent:

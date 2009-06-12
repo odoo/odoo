@@ -100,8 +100,8 @@ def init_db(cr):
                 info.get('website', ''), i, info.get('name', False),
                 info.get('description', ''), p_id, state, info.get('certificate')))
             cr.execute('insert into ir_model_data \
-                (name,model,module, res_id) values (%s,%s,%s,%s)', (
-                    'module_meta_information', 'ir.module.module', i, id))
+                (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
+                    'module_meta_information', 'ir.module.module', i, id, True))
             dependencies = info.get('depends', [])
             for d in dependencies:
                 cr.execute('insert into ir_module_module_dependency \
