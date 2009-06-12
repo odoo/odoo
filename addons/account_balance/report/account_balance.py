@@ -601,7 +601,7 @@ class account_balance(report_sxw.rml_parse):
         for temp in range(0,len(form['fiscalyear'][0][2])):
             res={}
             fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
-            res['year']=fy[0][1][12:16]
+            res['year']=fy[0][1]
             res['last_str']=temp
             
             result.append(res)
