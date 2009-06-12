@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -21,12 +21,11 @@
 ##############################################################################
 
 import os,types
-from xml.dom import minidom
-
+from lxml import etree
 import netsvc
 import tools
 import print_fnc
-
+import copy
 from osv.orm import browse_null, browse_record
 import pooler
 
@@ -35,7 +34,7 @@ class InheritDict(dict):
 
     def __init__(self, parent=None):
         self.parent = parent
-    
+
     def __getitem__(self, name):
         if name in self:
             return super(InheritDict, self).__getitem__(name)
@@ -51,36 +50,32 @@ def tounicode(val):
     elif isinstance(val, unicode):
         unicode_val = val
     else:
-        unicode_val = unicode(val) 
+        unicode_val = unicode(val)
     return unicode_val
 
 class document(object):
     def __init__(self, cr, uid, datas, func=False):
         # create a new document
-        self.cr = cr 
+        self.cr = cr
         self.pool = pooler.get_pool(cr.dbname)
-        self.doc = minidom.Document()
         self.func = func or {}
         self.datas = datas
         self.uid = uid
         self.bin_datas = {}
 
     def node_attrs_get(self, node):
-        attrs = {}
-        nattr = node.attributes
-        for i in range(nattr.length):
-            attr = nattr.item(i)
-            attrs[attr.localName] = attr.nodeValue
-#           attrs[attr.name] = attr.nodeValue
-        return attrs
-        
+        if len(node.attrib):
+            return node.attrib
+        return {}
+
     def get_value(self, browser, field_path):
         fields = field_path.split('.')
 
         if not len(fields):
             return ''
-                    
+
         value = browser
+
         for f in fields:
             if isinstance(value, list):
                 if len(value)==0:
@@ -90,12 +85,12 @@ class document(object):
                 return ''
             else:
                 value = value[f]
-            
+
         if isinstance(value, browse_null) or (type(value)==bool and not value):
             return ''
-        else:   
+        else:
             return value
-        
+
     def get_value2(self, browser, field_path):
         value = self.get_value(browser, field_path)
         if isinstance(value, browse_record):
@@ -104,10 +99,10 @@ class document(object):
             return False
         else:
             return value
-            
+
     def eval(self, record, expr):
 #TODO: support remote variables (eg address.title) in expr
-# how to do that: parse the string, find dots, replace those dotted variables by temporary 
+# how to do that: parse the string, find dots, replace those dotted variables by temporary
 # "simple ones", fetch the value of those variables and add them (temporarily) to the _data
 # dictionary passed to eval
 
@@ -120,13 +115,6 @@ class document(object):
         return eval(expr, {}, {'obj': record})
 
     def parse_node(self, node, parent, browser, datas=None):
-        # node is the node of the xml template to be parsed
-        # parent = the parent node in the xml data tree we are creating
-        
-        if node.nodeType == node.ELEMENT_NODE:
-            
-            # convert the attributes of the node to a dictionary
-            
             attrs = self.node_attrs_get(node)
             if 'type' in attrs:
                 if attrs['type']=='field':
@@ -134,28 +122,26 @@ class document(object):
 #TODO: test this
                     if value == '' and 'default' in attrs:
                         value = attrs['default']
-                    el = self.doc.createElement(node.localName)
-                    parent.appendChild(el)
-                    el_txt = self.doc.createTextNode(tounicode(value))
-                    el.appendChild(el_txt)
-
+                    el = etree.Element(node.tag)
+                    parent.append(el)
+                    el.text = tounicode(value)
 #TODO: test this
                     for key, value in attrs.iteritems():
                         if key not in ('type', 'name', 'default'):
-                            el.setAttribute(key, value)
+                            el.set(key, value)
 
                 elif attrs['type']=='attachment':
                     if isinstance(browser, list):
                         model = browser[0]._table_name
-                    else: 
+                    else:
                         model = browser._table_name
 
                     value = self.get_value(browser, attrs['name'])
-                    
+
                     service = netsvc.LocalService("object_proxy")
                     ids = service.execute(self.cr.dbname, self.uid, 'ir.attachment', 'search', [('res_model','=',model),('res_id','=',int(value))])
                     datas = service.execute(self.cr.dbname, self.uid, 'ir.attachment', 'read', ids)
-    
+
                     if len(datas):
                         # if there are several, pick first
                         datas = datas[0]
@@ -169,37 +155,31 @@ class document(object):
                             fp.write(dt)
                             i = str(len(self.bin_datas))
                             self.bin_datas[i] = fp
-                            
-                            el = self.doc.createElement(node.localName)
-                            parent.appendChild(el)
-                            # node content is the length of the image
-                            el_txt = self.doc.createTextNode(i)
-                            el.appendChild(el_txt)
-    
+                            el = etree.Element(node.tag)
+                            el.text = i
+                            parent.append(el)
+
                 elif attrs['type']=='data':
 #TODO: test this
-                    el = self.doc.createElement(node.localName)
-                    parent.appendChild(el)
                     txt = self.datas.get('form', {}).get(attrs['name'], '')
-                    el_txt = self.doc.createTextNode(tounicode(txt))
-                    el.appendChild(el_txt)
+                    el = etree.Element(node.tag)
+                    el.text = txt
+                    parent.append(el)
 
                 elif attrs['type']=='function':
-                    el = self.doc.createElement(node.localName)
-                    parent.appendChild(el)
                     if attrs['name'] in self.func:
                         txt = self.func[attrs['name']](node)
                     else:
                         txt = print_fnc.print_fnc(attrs['name'], node)
-                    el_txt = self.doc.createTextNode(txt)
-                    el.appendChild(el_txt)
+                    el = etree.Element(node.tag)
+                    el.text = txt
+                    parent.append(el)
 
                 elif attrs['type']=='eval':
-                    el = self.doc.createElement(node.localName)
-                    parent.appendChild(el)
                     value = self.eval(browser, attrs['expr'])
-                    el_txt = self.doc.createTextNode(str(value))
-                    el.appendChild(el_txt)
+                    el = etree.Element(node.tag)
+                    el.text = str(value)
+                    parent.append(el)
 
                 elif attrs['type']=='fields':
                     fields = attrs['name'].split(',')
@@ -216,26 +196,24 @@ class document(object):
                         keys.reverse()
 
                     v_list = [vals[k] for k in keys]
-                    for v in v_list: 
-                        el = self.doc.createElement(node.localName)
-                        parent.appendChild(el)
-                        el_cld = node.firstChild
-                        while el_cld:
+                    for v in v_list:
+                        el = etree.Element(node.tag)
+                        parent.append(el)
+                        for el_cld in node:
                             self.parse_node(el_cld, el, v)
-                            el_cld = el_cld.nextSibling
 
                 elif attrs['type']=='call':
                     if len(attrs['args']):
-#TODO: test this                    
+#TODO: test this
                         # fetches the values of the variables which names where passed in the args attribute
                         args = [self.eval(browser, arg) for arg in attrs['args'].split(',')]
                     else:
                         args = []
-                        
+
                     # get the object
                     if attrs.has_key('model'):
                         obj = self.pool.get(attrs['model'])
-                    else: 
+                    else:
                         if isinstance(browser, list):
                             obj = browser[0]._table
                         else:
@@ -244,38 +222,28 @@ class document(object):
                     # get the ids
                     if attrs.has_key('ids'):
                         ids = self.eval(browser, attrs['ids'])
-                    else: 
+                    else:
                         if isinstance(browser, list):
-                            ids = [b.id for b in browser] 
+                            ids = [b.id for b in browser]
                         else:
                             ids = [browser.id]
-                    
+
                     # call the method itself
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)
-    
+
                     def parse_result_tree(node, parent, datas):
-                        if node.nodeType == node.ELEMENT_NODE:
-                            el = self.doc.createElement(node.localName)
-                            parent.appendChild(el)
+                            el = etree.Element(node.tag)
+                            parent.append(el)
                             atr = self.node_attrs_get(node)
                             if 'value' in atr:
                                 if not isinstance(datas[atr['value']], (str, unicode)):
-                                    txt = self.doc.createTextNode(str(datas[atr['value']]))
+                                    txt = str(datas[atr['value']])
                                 else:
-#                                    txt = self.doc.createTextNode(datas[atr['value']].decode('utf-8'))
-                                    txt = self.doc.createTextNode(datas[atr['value']])
-                                el.appendChild(txt)
+                                     txt = datas[atr['value']]
+                                el.append(txt)
                             else:
-                                el_cld = node.firstChild
-                                while el_cld:
+                                for el_cld in node:
                                     parse_result_tree(el_cld, el, datas)
-                                    el_cld = el_cld.nextSibling
-                        elif node.nodeType==node.TEXT_NODE:
-                            el = self.doc.createTextNode(node.nodeValue)
-                            parent.appendChild(el)
-                        else:
-                            pass
-    
                     if not isinstance(newdatas, list):
                         newdatas = [newdatas]
                     for newdata in newdatas:
@@ -283,50 +251,38 @@ class document(object):
 
                 elif attrs['type']=='zoom':
                     value = self.get_value(browser, attrs['name'])
-                    
+
                     if value:
                         if not isinstance(value, list):
                             v_list = [value]
                         else:
                             v_list = value
                         for v in v_list:
-                            el = self.doc.createElement(node.localName)
-                            parent.appendChild(el)
-                            el_cld = node.firstChild
-                            while el_cld:
+                            el = etree.Element(node.tag)
+                            parent.append(el)
+                            for el_cld in node:
                                 self.parse_node(el_cld, el, v)
-                                el_cld = el_cld.nextSibling
             else:
                 # if there is no "type" attribute in the node, copy it to the xml data and parse its childs
-                el = self.doc.createElement(node.localName)
-                parent.appendChild(el)
-                el_cld = node.firstChild
-                while el_cld:
-                    self.parse_node(el_cld, el, browser)
-                    el_cld = el_cld.nextSibling
-
-        elif node.nodeType==node.TEXT_NODE:
-            # if it's a text node, copy it to the xml data
-            el = self.doc.createTextNode(node.nodeValue)
-            parent.appendChild(el)
-        else:
-            pass
+                for el_cld in node:
+                    self.parse_node(el_cld, parent, browser)
 
     def xml_get(self):
-        return self.doc.toxml('utf-8')
+        #return self.doc.toxml('utf-8')
+        return etree.tostring(self.doc,encoding="utf-8",xml_declaration=True)
 
     def parse_tree(self, ids, model, context=None):
         if not context:
             context={}
         browser = self.pool.get(model).browse(self.cr, self.uid, ids, context)
-        self.parse_node(self.dom.documentElement, self.doc, browser)
-        
+        self.parse_node(self.dom, self.doc, browser)
+
     def parse_string(self, xml, ids, model, context=None):
         if not context:
             context={}
         # parses the xml template to memory
-        self.dom = minidom.parseString(xml)
-        
+        self.dom = etree.XML(xml)
+
         # create the xml data from the xml template
         self.parse_tree(ids, model, context)
 
@@ -334,9 +290,8 @@ class document(object):
         if not context:
             context={}
         # parses the xml template to memory
-        self.dom = minidom.parseString(tools.file_open(filename).read())
-
-        # create the xml data from the xml template
+        self.dom = etree.XML(tools.file_open(filename).read())
+        self.doc = etree.Element(self.dom.tag)
         self.parse_tree(ids, model, context)
 
     def close(self):
