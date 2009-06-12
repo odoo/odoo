@@ -233,7 +233,7 @@ class ir_ui_menu(osv.osv):
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
-        'icon_pict': fields.function(_get_icon_pict, method=True, type='picture'),
+        'icon_pict': fields.function(_get_icon_pict, method=True, type='char', size=32),
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
