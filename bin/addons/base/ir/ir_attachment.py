@@ -94,9 +94,10 @@ class ir_attachment(osv.osv):
         context['bin_size'] = False
         for i in self.browse(cr, uid, ids, context=context):
             result[i.id] = False
-            for format in ('png','PNG','jpg','JPG'):
-                if (i.datas_fname or '').endswith(format):
+            for format in ('png','jpg','jpeg','gif','bmp'):
+                if (i.datas_fname.lower() or '').endswith(format):
                     result[i.id]= i.datas
+                    break
         return result
 
     _name = 'ir.attachment'
