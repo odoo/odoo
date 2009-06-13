@@ -107,8 +107,10 @@ class ir_cron(osv.osv, netsvc.Agent):
                         addsql = ', active=False'
                     cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
                     cr.commit()
-            except:
-                print "Exception in cron!"
+            except Exception,ex:
+	        logger=netsvc.Logger()
+                logger.notifyChannel('cron', netsvc.LOG_WARNING,
+			'Exception in cron:'+str(ex))
             finally:
                 cr.commit()
                 cr.close()
