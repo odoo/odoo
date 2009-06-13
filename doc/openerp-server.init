@@ -51,7 +51,7 @@ RETVAL=0
 
 start() {
     echo -n $"Starting $desc ($prog): "
-    daemon --user tinyerp --check openerp-server \
+    daemon --user openerp --check openerp-server \
     "/usr/bin/setsid /usr/bin/openerp-server \
     -c /etc/openerp-server.conf \
     --pidfile=$PIDFILE \
