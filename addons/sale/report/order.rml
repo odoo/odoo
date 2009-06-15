@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="15.0" y1="42.0" width="539" height="758"/>
+      <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -125,6 +125,7 @@
     <paraStyle name="terp_default_Italic" rightIndent="0.0" leftIndent="20.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Preformatted Text" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_space" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -171,12 +172,11 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
-    <para style="terp_header">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Quotation N° [[ o.name ]]</para>
-    <para style="terp_header">[[ o.state=='draft' and removeParentNode('para') ]] Order N° [[ o.name ]]</para>
-    <para style="terp_default_8">
+    <para style="terp_header">[[ o.state&lt;&gt;'draft' and 'Order' or 'Quotation' ]] N° [[ o.name ]]</para>
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="132.0,134.0,135.0,135.0" style="Table2">
@@ -211,10 +211,10 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="208.0,99.0,64.0,59.0,43.0,65.0" repeatRows="1" style="Table4">
+    <blockTable colWidths="207.0,99.0,63.0,59.0,43.0,65.0" repeatRows="1" style="Table4">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -238,7 +238,7 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="208.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Table5">
+      <blockTable colWidths="207.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Table5">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -299,7 +299,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="384.0,67.0,64.0,22.0" style="Table6">
+    <blockTable colWidths="383.0,66.0,64.0,22.0" style="Table6">
       <tr>
         <td>
           <para style="terp_default_9">
