@@ -762,9 +762,10 @@ class _rml_template(object):
         story_cnt = 0
         for node_story in node_stories:
             fis += r.render(node_story)
-            story_cnt += 1
-            if story_cnt == len(self.localcontext['objects']):
-                fis.append(PageCount())
+            if self.localcontext:
+                story_cnt += 1
+                if story_cnt == len(self.localcontext['objects']):
+                    fis.append(PageCount())
             fis.append(platypus.PageBreak())
         self.doc_tmpl.build(fis)
 
