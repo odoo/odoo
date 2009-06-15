@@ -98,6 +98,8 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -153,13 +155,13 @@
               <td>
                 <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="terp_default_9">[[ addr.partner_id.name ]]</para>
-                <para style="terp_default_9">[[ addr.title or '' ]] [[ addr.name ]]</para>
-                <para style="terp_default_9">[[ addr.street ]]</para>
-                <para style="terp_default_9">[[ addr.street2 or '' ]]</para>
-                <para style="terp_default_9">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
-                <para style="terp_default_9">[[ addr.state_id and addr.state_id.name or '' ]]</para>
-                <para style="terp_default_9">[[ addr.country_id and addr.country_id.name or '' ]]</para>
+                <para style="P1">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+                <para style="P1">[[ addr.title or '' ]] [[ addr.name ]]</para>
+                <para style="P1">[[ addr.street ]]</para>
+                <para style="P1">[[ addr.street2 or '' ]]</para>
+                <para style="P1">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
+                <para style="P1">[[ addr.state_id and addr.state_id.name or '' ]]</para>
+                <para style="P2">[[ addr.country_id and addr.country_id.name or '' ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -180,12 +182,12 @@
           <para style="terp_default_9">[[ o.partner_address_id.zip or '' ]] [[ o.partner_address_id.city or '' ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.state_id and o.partner_address_id.state_id.name or '' ]]</para>
           <para style="terp_default_9">[[ o.partner_address_id.country_id and o.partner_address_id.country_id.name or '' ]]</para>
-          <para style="terp_default_9">
+          <para style="P1">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tél. : [[ o.partner_address_id.phone or '' ]]</para>
-          <para style="terp_default_9">Fax : [[ o.partner_address_id.fax or '' ]]</para>
-          <para style="terp_default_9">TVA : [[ o.partner_id.vat or '' ]]</para>
+          <para style="P1">Tél. : [[ o.partner_address_id.phone or '' ]]</para>
+          <para style="P1">Fax : [[ o.partner_address_id.fax or '' ]]</para>
+          <para style="P1">TVA : [[ o.partner_id.vat or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -198,7 +200,8 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_header">[[ o.state&lt;&gt;'draft' and 'Purchase Order Confirmation' or 'Request for Quotation' ]] N° [[ o.name ]]</para>
+    <para style="terp_header">[[ o.state=='draft' and removeParentNode('para') ]] Purchase Order Confirmation N° [[ o.name ]]</para>
+    <para style="terp_header">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Request for Quotation N° [[ o.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -237,7 +240,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="202.0,57.0,106.0,47.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="202.0,57.0,106.0,46.0,59.0,62.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -261,7 +264,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="200.0,58.0,106.0,29.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="200.0,58.0,106.0,28.0,20.0,59.0,63.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
