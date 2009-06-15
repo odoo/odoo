@@ -132,6 +132,23 @@
         </td>
         <td>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]][[ picking.address_id and picking.address_id.zip or '' ]]</para>
+          <para style="terp_default_2">
+            <font color="white"> </font>
+          </para>
+          <para style="terp_default_2">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">[[ picking.sale_id and picking.sale_id.partner_shipping_id and 'Shipping Address :' or removeParentNode('para') ]] </para>
           <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
@@ -215,9 +232,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
+    <para style="terp_default_2"/>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state == 'assigned' )],'move_lines') ]]</para>
       <blockTable colWidths="277.0,51.0,56.0,55.0,23.0,59.0" style="Move_Line_Contect_Assign_State">
