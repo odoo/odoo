@@ -34,9 +34,9 @@
 
     Note that:
     - You can define new types of events in
-                Events \ Configuration \ Types of Events
+                Events / Configuration / Types of Events
     - You can access predefined reports about number of registration per event or per event category in :
-                Events \ Reporting
+                Events / Reporting
 """,
     'author': 'Tiny',
     'depends': ['crm', 'base_contact', 'account'],

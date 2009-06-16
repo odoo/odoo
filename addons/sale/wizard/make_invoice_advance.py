@@ -72,6 +72,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             'uos_id': val['value']['uos_id'],
             'product_id':data['form']['product_id'],
             'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            'account_analytic_id': sale.project_id and sale.project_id.id or False,
             'note':'',
         })
         create_ids.append(line_id)
