@@ -450,11 +450,11 @@ class _rml_flowable(object):
             for key in txt_n.attrib.keys():
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
-            if not self._textual(n).isspace():
+            if True or not self._textual(n).isspace():
                 txt_n.text = self._textual(n)
                 txt_n.tail = ''
                 rc1 += etree.tostring(txt_n)
-        rc1 += utils._process_text(self, node.tail or '')
+        #rc1 += utils._process_text(self, node.tail or '')
         return rc1
 
     def _table(self, node):
