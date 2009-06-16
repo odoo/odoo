@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+  <template pageSize="(224.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="34.0" y1="42.0" width="145" height="758"/>
+      <frame id="first" x1="0.0" y1="0.0" width="224" height="842"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -82,6 +82,8 @@
     <para style="terp_default_Centre_9">[[ address and address.country_id.name ]]</para>
     <para style="terp_default_Centre_9">Tel : [[ address and address.phone ]]</para>
     <para style="terp_default_Centre_9">E-mail : [[ address and address.email ]]</para>
+    <para style="terp_default_Centre_9">User : [[ o.user_id.name ]]</para>
+    <para style="terp_default_Centre_9">Date : [[ time.strftime('%d/%m/%Y %H:%M') ]]</para>
     <para style="terp_default_Centre_9">
       <font color="white"> </font>
     </para>

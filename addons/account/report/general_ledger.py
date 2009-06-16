@@ -319,7 +319,7 @@ class general_ledger(rml_parse.rml_parse):
         ## Add solde init to the result
         #
         sum_debit = self.cr.fetchone()[0] or 0.0
-        if form['soldeinit']:
+        if form.get('soldeinit', False):
             sum_debit += account.init_debit
         #
         ##
@@ -333,7 +333,7 @@ class general_ledger(rml_parse.rml_parse):
         ## Add solde init to the result
         #
         sum_credit = self.cr.fetchone()[0] or 0.0
-        if form['soldeinit']:
+        if form.get('soldeinit', False):
             sum_credit += account.init_credit
         #
         ##
@@ -345,7 +345,7 @@ class general_ledger(rml_parse.rml_parse):
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s"%(account.id,self.query))
         sum_solde = self.cr.fetchone()[0] or 0.0
-        if form['soldeinit']:
+        if form.get('soldeinit', False):
             sum_solde += account.init_debit - account.init_credit
 
         return sum_solde

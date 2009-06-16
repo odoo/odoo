@@ -41,8 +41,8 @@ def fnct_call(fnct):
             if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
                 if _old_args is not None:
                     args[5].update(_old_args)
-                if args[5]:
-                    mod.recording_data.append(('query', args, argv,res))
+                    if args[5]:
+                        mod.recording_data.append(('query', args, argv,res))
         return res
     return execute
 
