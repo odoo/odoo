@@ -279,10 +279,25 @@
 		  <field name="domain"></field>
 		  <field name="view_mode">tree,form</field>
 		</record>
+		
+		<record model="ir.actions.act_window" id="action_registration_1">
+		  <field name="name">New Registration</field>
+		  <field name="res_model">event.registration</field>
+		  <field name="view_type">form</field>
+		  <field name="domain"></field>
+		  <field name="view_mode">form,tree</field>
+		</record>
+
 		<menuitem
 			name="All Registrations"
 			id="menu_action_registration" parent="menu_event_main"
 			action="action_registration"/>
+			
+		<menuitem
+			parent="menu_action_registration"
+			id="menu_action_registration_new"
+			action="action_registration_1"/>
+
 		<record model="ir.actions.act_window" id="action_registration_draft">
 		  <field name="name">Unconfirmed Registrations</field>
 		  <field name="res_model">event.registration</field>
