@@ -142,8 +142,8 @@ class browse_record(object):
 
         if not (id and isinstance(id, (int, long,))):
             raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
-        if not table.exists(cr, uid, id, context):
-            raise BrowseRecordError(_('Object %s does not exists') % (self,))
+#        if not table.exists(cr, uid, id, context):
+#            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
         if id not in self._data:
             self._data[id] = {'id': id}
