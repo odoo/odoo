@@ -27,6 +27,7 @@ from mx import DateTime
 from tools.translate import _
 import tools
 from wizard import except_wizard
+from decimal import Decimal
 
 
 class pos_config_journal(osv.osv):
@@ -230,11 +231,14 @@ class pos_order(osv.osv):
         return True
 
     def test_paid(self, cr, uid, ids, context=None):
+        def deci(val):
+            return Decimal(str(val))
+
         for order in self.browse(cr, uid, ids, context):
             if order.lines and not order.amount_total:
                 return True
             if (not order.lines) or (not order.payments) or \
-                (order.amount_paid != order.amount_total):
+                (deci(order.amount_paid) != deci(order.amount_total)):
                 return False
         return True
 
@@ -413,6 +417,8 @@ class pos_order(osv.osv):
 
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
+
+        print data
 
         order = self.browse(cr, uid, order_id, context)
         if order.invoice_wanted and not order.partner_id:
