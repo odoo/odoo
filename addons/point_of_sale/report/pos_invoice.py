@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -33,7 +33,6 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
-        print
 
     def set_context(self, objects, data, ids, report_type=None):
         super(pos_invoice, self).set_context(objects, data, ids, report_type)
