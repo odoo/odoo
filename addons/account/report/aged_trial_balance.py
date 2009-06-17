@@ -74,66 +74,112 @@ class aged_trial_report(rml_parse.rml_parse):
 			self.total_account.append(0)
 		#
 
+		# Build a string like (1,2,3) for easy use in SQL query
+                partner_ids = '(' + ','.join( [str(x['id']) for x in partners] ) + ')'
+
+		# This dictionary will store the debit-credit for all partners, using partner_id as key.
+		totals = {}
+		self.cr.execute("SELECT partner_id, SUM(debit-credit) " \
+				"FROM account_move_line AS line, account_account " \
+				"WHERE (line.account_id = account_account.id) " \
+					"AND (account_account.type IN %s) " \
+					"AND (partner_id in %s) " \
+					"AND ((reconcile_id IS NULL) " \
+					"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) " \
+					"AND (account_account.company_id = %s) " \
+					"AND account_account.active " \
+					"GROUP BY partner_id" % (self.ACCOUNT_TYPE, partner_ids,form['date1'],form['company_id']))
+		t = self.cr.fetchall()
+		for i in t:
+			totals[i[0]] = i[1]
+
+		# This dictionary will store the future or past of all partners
+		future_past = {}
+		if form['direction_selection'] == 'future':
+			self.cr.execute("SELECT partner_id, SUM(debit-credit) " \
+					"FROM account_move_line AS line, account_account " \
+					"WHERE (line.account_id=account_account.id) " \
+						"AND (account_account.type IN %s) " \
+						"AND (COALESCE(date_maturity,date) < %s) " \
+						"AND (partner_id in %s) " \
+						"AND ((reconcile_id IS NULL) " \
+						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
+						"AND (account_account.company_id = %s) " \
+						"AND account_account.active " \
+						"GROUP BY partner_id", (self.ACCOUNT_TYPE, form['date1'], partner_ids,form['date1'], form['company_id']))
+			t = self.cr.fetchall()
+			for i in t:
+				future_past[i[0]] = i[1]
+		elif form['direction_selection'] == 'past': # Using elif so people could extend without this breaking
+			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
+					FROM account_move_line AS line, account_account
+					WHERE (line.account_id=account_account.id)
+						AND (account_account.type IN %s)
+						AND (COALESCE(date_maturity,date) > '%s')
+						AND (partner_id in %s)
+						AND ((reconcile_id IS NULL)
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' )))
+						AND (account_account.company_id = %s)
+						AND account_account.active
+						GROUP BY partner_id""" % (self.ACCOUNT_TYPE, form['date1'], partner_ids, form['date1'], form['company_id']))
+			t = self.cr.fetchall()
+			for i in t:
+				future_past[i[0]] = i[1]
+
+		# Use one query per period and store results in history (a list variable)
+		# Each history will contain : history[1] = {'<partner_id>': <partner_debit-credit>}
+                history = []
+                for i in range(5):
+			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
+					FROM account_move_line AS line, account_account
+					WHERE (line.account_id=account_account.id)
+						AND (account_account.type IN %s)
+						AND (COALESCE(date_maturity,date) BETWEEN '%s' AND '%s')
+						AND (partner_id in %s )
+						AND ((reconcile_id IS NULL)
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' )))
+						AND (account_account.company_id = %s)
+						AND account_account.active
+					GROUP BY partner_id""" % (self.ACCOUNT_TYPE, form[str(i)]['start'], form[str(i)]['stop'],partner_ids ,form['date1'] ,form['company_id']))
+
+			t = self.cr.fetchall()
+			d = {}
+			for i in t:
+				d[i[0]] = i[1]
+			history.append(d)
+
 		for partner in partners:
 			values = {}
 			## If choise selection is in the future
 			if form['direction_selection'] == 'future':
-				self.cr.execute("SELECT SUM(debit-credit) " \
-					"FROM account_move_line AS line, account_account " \
-					"WHERE (line.account_id=account_account.id) " \
-						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (COALESCE(date_maturity,date) < %s) AND (partner_id=%s) " \
-						"AND ((reconcile_id IS NULL) " \
-						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %s) " \
-						"AND account_account.active",
-						(form['date1'], partner['id'],form['date1'], form['company_id']))
-				before = self.cr.fetchone()
+				# Query here is replaced by one query which gets the all the partners their 'before' value
+				before = False
+				if future_past.has_key(partner['id']):
+					before = [ future_past[partner['id']] ]
 
 				self.total_account[6] = self.total_account[6] + (before and before[0] or 0.0)
 
 				values['direction'] = before and before[0] or 0.0
-			else:
-				self.cr.execute("SELECT SUM(debit-credit) " \
-					"FROM account_move_line AS line, account_account " \
-					"WHERE (line.account_id=account_account.id) " \
-						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (COALESCE(date_maturity,date) > %s) AND (partner_id=%s) " \
-						"AND ((reconcile_id IS NULL) " \
-						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %s) " \
-						"AND account_account.active",
-						(form['date1'], partner['id'],form['date1'], form['company_id']))
-				after = self.cr.fetchone()
+			elif form['direction_selection'] == 'past': # Changed this so people could in the future create new direction_selections
+				# Query here is replaced by one query which gets the all the partners their 'after' value
+				after = False
+				if future_past.has_key(partner['id']): # Making sure this partner actually was found by the query
+					after = [ future_past[partner['id']] ]
+
 				self.total_account[6] = self.total_account[6] + (after and after[0] or 0.0)
 				values['direction'] = after and after[0] or ""
+
 			for i in range(5):
-				self.cr.execute("SELECT SUM(debit-credit) " \
-						"FROM account_move_line AS line, account_account " \
-						"WHERE (line.account_id=account_account.id) " \
-							"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-							"AND (COALESCE(date_maturity,date) BETWEEN %s AND  %s) " \
-							"AND (partner_id = %s) " \
-							"AND ((reconcile_id IS NULL) " \
-							"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-							"AND (account_account.company_id = %s) " \
-							"AND account_account.active",
-							(form[str(i)]['start'], form[str(i)]['stop'],partner['id'],form['date1'] ,form['company_id']))
-				during = self.cr.fetchone()
+				during = False
+				if history[i].has_key(partner['id']):
+					during = [ history[i][partner['id']] ]
 				# Ajout du compteur
 				self.total_account[(i)] = self.total_account[(i)] + (during and during[0] or 0)
 				values[str(i)] = during and during[0] or ""
-			self.cr.execute("SELECT SUM(debit-credit) " \
-					"FROM account_move_line AS line, account_account " \
-					"WHERE (line.account_id = account_account.id) " \
-						"AND (account_account.type IN " + self.ACCOUNT_TYPE + ") " \
-						"AND (partner_id = %s) " \
-						"AND ((reconcile_id IS NULL) " \
-						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %s) " \
-						"AND account_account.active",
-						(partner['id'],form['date1'],form['company_id']))
-			total = self.cr.fetchone()
+
+			total = False
+			if totals.has_key( partner['id'] ):
+				total = [ totals[partner['id']] ]
 			values['total'] = total and total[0] or 0.0
 			## Add for total
 			self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
