@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-06-08 21:23:39+0000\n"
-"PO-Revision-Date: 2009-06-08 21:23:39+0000\n"
+"POT-Creation-Date: 2009-06-17 14:57:53+0000\n"
+"PO-Revision-Date: 2009-06-17 14:57:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -220,8 +220,8 @@ msgid "Categories of Modules"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Email Configuration"
+#: help:ir.actions.server,expression:0
+msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
 msgstr ""
 
 #. module: base
@@ -256,7 +256,7 @@ msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_100"
+msgid "STOCK_MEDIA_PAUSE"
 msgstr ""
 
 #. module: base
@@ -1028,6 +1028,11 @@ msgid "This is the filename of the attachment used to store the printing result.
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_10
+msgid "Scheduler"
+msgstr ""
+
+#. module: base
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
@@ -1166,8 +1171,8 @@ msgid "Action to Trigger"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.next_id_10
-msgid "Scheduler"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_ZOOM_100"
 msgstr ""
 
 #. module: base
@@ -2114,8 +2119,8 @@ msgid "Work Days"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_roles
-msgid "res.roles"
+#: model:ir.model,name:base.model_ir_module_module_dependency
+msgid "Module dependency"
 msgstr ""
 
 #. module: base
@@ -2892,7 +2897,6 @@ msgstr ""
 
 #. module: base
 #: view:ir.attachment:0
-#: field:ir.attachment,datas:0
 msgid "Data"
 msgstr ""
 
@@ -3166,7 +3170,6 @@ msgid "Source Activity"
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,res_id:0
 #: field:ir.model.data,res_id:0
 #: field:ir.translation,res_id:0
 #: field:workflow.instance,res_id:0
@@ -3747,6 +3750,11 @@ msgid "STOCK_FILE"
 msgstr ""
 
 #. module: base
+#: field:ir.attachment,res_id:0
+msgid "Attached ID"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
 msgstr ""
@@ -4043,8 +4051,8 @@ msgid "Specify the message. You can use the fields from the object. e.g. `Dear [
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_PAUSE"
+#: field:ir.attachment,res_model:0
+msgid "Attached Model"
 msgstr ""
 
 #. module: base
@@ -4437,7 +4445,6 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_address_form
 #: model:ir.model,name:base.model_res_partner_address
-#: model:ir.ui.menu,name:base.menu_partner_address_form
 #: view:res.partner.address:0
 msgid "Partner Addresses"
 msgstr ""
@@ -4464,6 +4471,11 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.so
 msgid "Somalia"
+msgstr ""
+
+#. module: base
+#: field:ir.attachment,datas:0
+msgid "File Content"
 msgstr ""
 
 #. module: base
@@ -4796,8 +4808,8 @@ msgid "Force Domain"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.server,expression:0
-msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
+#: view:ir.actions.server:0
+msgid "Email Configuration"
 msgstr ""
 
 #. module: base
@@ -5745,6 +5757,11 @@ msgid "Azerbaijan"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_res_roles
+msgid "res.roles"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
 #: model:ir.ui.menu,name:base.menu_module_tree_install
 msgid "Installed modules"
@@ -6282,8 +6299,8 @@ msgid "closed"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_module_module_dependency
-msgid "Module dependency"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: base
@@ -6799,7 +6816,6 @@ msgid "Arguments"
 msgstr ""
 
 #. module: base
-#: field:ir.attachment,res_model:0
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
@@ -7067,6 +7083,11 @@ msgstr ""
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_partner_address_form
+msgid "Addresses"
 msgstr ""
 
 #. module: base
