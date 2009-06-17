@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--
+		Default bank account description
+		-->
+        <record id="bank_rib" model="res.partner.bank.type">
+            <field name="name">RIB Bank Details</field>
+            <field name="code">rib</field>
+        </record>
+        <record id="rib_bank_field" model="res.partner.bank.type.field">
+            <field name="name">bank</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+        <record id="rib_office_field" model="res.partner.bank.type.field">
+            <field name="name">office</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+        <record id="bank_acc_number_field" model="res.partner.bank.type.field">
+            <field name="name">acc_number</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+            <field name="size">11</field>
+        </record>
+        <record id="rib_key_field" model="res.partner.bank.type.field">
+            <field name="name">key</field>
+            <field name="bank_type_id" ref="bank_rib"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+    </data>
+</openerp>
