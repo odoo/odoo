@@ -67,7 +67,7 @@ class res_partner_bank(osv.osv):
 		for ham, spam, address in context['address']:
 			if 'type' in address.keys() :
 				if address['type'] == 'default':
-					return address[field]
+					return address.get(field,False)
 				elif not address['type']:
 					value = address[field]
 			else :
