@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -77,6 +77,7 @@ def _pre_init(self, cr, uid, data, context):
         pos_config_journal = pool.get('pos.config.journal')
         ids = pos_config_journal.search(cr, uid, [('code', '=', journal_to_fetch)])
         objs = pos_config_journal.browse(cr, uid, ids)
+        journal = None
         if objs:
             journal = objs[0].journal_id.id
         else:
@@ -121,6 +122,7 @@ def _add_pay(self, cr, uid, data, context):
     order_obj.add_payment(cr, uid, data['id'], result, context=context)
     return {}
 
+
 def _validate(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('pos.order')
@@ -129,7 +131,8 @@ def _validate(self, cr, uid, data, context):
 #       return 'receipt'
     order_obj.test_order_lines(cr, uid, order, context=context)
     return {}
-    
+
+
 def _check(self, cr, uid, data, context):
     """Check the order:
     if the order is not paid: continue payment,
@@ -165,7 +168,7 @@ def create_invoice(self, cr, uid, data, context):
     order_obj = pool.get('pos.order')
     order = order_obj.browse(cr, uid, data['id'], context)
     if not order.invoice_id:
-        inv_id = order_obj.action_invoice(cr,uid,[data['id']])
+        inv_id = order_obj.action_invoice(cr, uid, [data['id']])
         #raise wizard.except_wizard(_('Error !'), _('Please create an invoice for this sale.'))
 #    wf_service = netsvc.LocalService("workflow")
 #    for i in data['ids']:
