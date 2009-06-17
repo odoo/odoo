@@ -316,7 +316,7 @@
             <field name="name">View sprint Tasks</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('product_backlog_id', '=', 'S('+str(active_id)+')')]</field>
+            <field name="domain">[('product_backlog_id', '=', active_id)]</field>
         </record>
         <record id="ir_scrum_sprint_open_task" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
