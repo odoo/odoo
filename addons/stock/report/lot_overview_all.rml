@@ -58,7 +58,7 @@
         <para style="P121"><font color="white">[[ repeatIn(process(o.id),'ob') ]]</font></para>
         <blockTable colWidths="80,35.0,140.0,50.0,50.0,42.0,56.0,58.0" style="Table4">
          <tr>
-        	<td><para style="P2">[[ ob['product'] or removeParentNode('blockTable') ]] Location</para></td>
+        	<td><para style="P2">[[ not ob['product'] and removeParentNode('blockTable') ]] Location</para></td>
             <td><para style="P2">Code</para></td>
             <td><para style="P2">Product</para></td>
             <td><para style="P2">Variants</para></td>
