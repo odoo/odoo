@@ -33,9 +33,10 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
+        print
 
-    def preprocess(self, objects, data, ids):
-        super(pos_invoice, self).preprocess(objects, data, ids)
+    def set_context(self, objects, data, ids, report_type=None):
+        super(pos_invoice, self).set_context(objects, data, ids, report_type)
         iids = []
         nids = []
 
@@ -55,5 +56,5 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext['data'] = data
         self.localcontext['objects'] = iids
 
-report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/point_of_sale/report/pos_invoice.rml', parser= pos_invoice)
+report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/invoice.rml', parser= pos_invoice)
 
