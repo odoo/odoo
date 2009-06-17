@@ -152,18 +152,18 @@ class pos_order(osv.osv):
             states={'draft': [('readonly', False)]}, readonly=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
             states={'draft': [('readonly', False)]}, readonly=True),
-        'date_order': fields.date('Date Ordered', readonly=True),
+        'date_order': fields.datetime('Date Ordered', readonly=True),
         'date_validity': fields.date('Validity Date', required=True),
-        'user_id': fields.many2one('res.users', 'Salesman',
-            readonly=True),
+        'user_id': fields.many2one('res.users', 'Logged in User', readonly=True,
+            help="This is the logged in user (not necessarily the salesman)."),
+        'salesman_id': fields.many2one('res.users', 'Salesman',
+            help="This is the salesman actually making the order."),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
-        'amount_total': fields.function(_amount_total, method=True,
-            string='Total'),
+        'amount_total': fields.function(_amount_total, method=True, string='Total'),
         'amount_paid': fields.function(_total_payment, 'Paid',
             states={'draft': [('readonly', False)]}, readonly=True,
             method=True),
-        'amount_return': fields.function(_total_return, 'Returned',
-                                        method=True),
+        'amount_return': fields.function(_total_return, 'Returned', method=True),
         'lines': fields.one2many('pos.order.line', 'order_id',
             'Order Lines', states={'draft': [('readonly', False)]},
             readonly=True),
@@ -181,10 +181,8 @@ class pos_order(osv.osv):
             ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced')], 'State',
             readonly=True, ),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-        'account_move': fields.many2one('account.move', 'Account Entry',
-            readonly=True),
-        'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking',
-            readonly=True),
+        'account_move': fields.many2one('account.move', 'Account Entry', readonly=True),
+        'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
         'last_out_picking': fields.many2one('stock.picking',
                                             'Last Output Picking',
                                             readonly=True),
@@ -211,7 +209,7 @@ class pos_order(osv.osv):
         'state': lambda *a: 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence')\
             .get(cr, uid, 'pos.order'),
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+6)).strftime('%Y-%m-%d'),
         'nb_print': lambda *a: 0,
         'sale_journal': _sale_journal_get,
@@ -417,9 +415,6 @@ class pos_order(osv.osv):
 
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
-
-        print data
-
         order = self.browse(cr, uid, order_id, context)
         if order.invoice_wanted and not order.partner_id:
             raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
