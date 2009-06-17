@@ -180,7 +180,6 @@ class general_ledger(rml_parse.rml_parse):
 
     def get_children_accounts(self, account, form):
 
-        print self.ids
         self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
             [('parent_id', 'child_of', self.ids)])
 #
