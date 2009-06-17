@@ -45,6 +45,8 @@ period_form = '''<?xml version="1.0"?>
 
     <field name="display_account" required="True"/>
     <field name="sortbydate" required="True"/>
+
+    <field name="soldeinit" invisible="1"/>
   
     <field name="landscape"/>
     <field name="amount_currency"/>
