@@ -1405,12 +1405,16 @@ class stock_picking_move_wizard(osv.osv_memory):
         for act in self.read(cr,uid,ids):
             move_lines=move_obj.browse(cr,uid,act['move_ids'])
             for line in move_lines:
-                 picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
-                 picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
-                 cr.commit()
-                 old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
-                 if not len(old_picking['move_lines']):
-                    picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
+                if line.picking_id:
+                    picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
+                    picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
+                    cr.commit()
+                    old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
+                    if not len(old_picking['move_lines']):
+                        picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
+                else:
+                    raise osv.except_osv(_('UserError'),
+                        _('You can not create new moves.'))
         return {'type':'ir.actions.act_window_close' }
 
 stock_picking_move_wizard()
