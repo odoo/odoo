@@ -43,10 +43,9 @@ import pwd
 # the path needs to be updated before any `import xml`
 # TODO: remove PyXML dependencies, use lxml instead.
 #----------------------------------------------------------
-_oldxml = '/usr/lib/python%s/site-packages/oldxml' % sys.version[:3]
+_oldxml = '/usr/lib/python%s/dist-packages/oldxml' % sys.version[:3]
 if os.path.exists(_oldxml):
-    sys.path.append(_oldxml)
-
+    sys.path.insert(0,_oldxml)
 
 import release
 __author__ = release.author
