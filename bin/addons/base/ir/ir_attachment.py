@@ -95,7 +95,7 @@ class ir_attachment(osv.osv):
         for i in self.browse(cr, uid, ids, context=context):
             result[i.id] = False
             for format in ('png','jpg','jpeg','gif','bmp'):
-                if (i.datas_fname.lower() or '').endswith(format):
+                if (i.datas_fname and i.datas_fname.lower() or '').endswith(format):
                     result[i.id]= i.datas
                     break
         return result

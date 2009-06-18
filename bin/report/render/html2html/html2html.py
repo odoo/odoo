@@ -30,7 +30,7 @@ import re
 from reportlab.lib.utils import ImageReader
 
 _regex = re.compile('\[\[(.+?)\]\]')
-
+utils._regex = re.compile('\[\[\s*(.+?)\s*\]\]',re.DOTALL)
 class html2html(object):
     def __init__(self, html, localcontext):
         self.localcontext = localcontext
@@ -48,6 +48,7 @@ class html2html(object):
                 if len(child):
                     for n in new_child:
                         new_child.text  = utils._process_text(self, child.text)
+                        new_child.tail  = utils._process_text(self, child.tail)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
@@ -66,6 +67,7 @@ class html2html(object):
                             else :
                                 new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)
+                    new_child.tail  = utils._process_text(self, child.tail)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
             self._node.remove(n)
