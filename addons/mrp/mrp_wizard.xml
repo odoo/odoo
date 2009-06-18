@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
+        <wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="100"/>
         
-		<wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
+        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
         
-		<wizard id="wiz_mrp_proc2" model="mrp.procurement" string="Compute Stock Minimum Rules Only" name="mrp.procurement.orderpoint.compute"/>
+        <wizard id="wiz_mrp_proc2" model="mrp.procurement" string="Compute Stock Minimum Rules Only" name="mrp.procurement.orderpoint.compute"/>
         <menuitem action="wiz_mrp_proc2" id="menu_wiz_mrp_proc2" parent="mrp.mrp_Sched_all" type="wizard"/>
         
         <wizard id="wizard_workcenter_load" model="mrp.workcenter" name="mrp.workcenter.load" string="Workcenter load"/>
@@ -21,12 +21,12 @@
             <field eval="True" name="object"/>
         </record>
 
-	<wizard
-		string="Create Procurement"
-		model="product.product"
-		name="product.product.procurement"
-		keyword="client_action_multi"
-		id="product_procurement_wizard"/>
+    <wizard
+        string="Procurement Request"
+        model="product.product"
+        name="product.product.procurement"
+        keyword="client_action_multi"
+        id="product_procurement_wizard"/>
 
     </data>
 </openerp>
