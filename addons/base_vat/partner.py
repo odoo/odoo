@@ -955,9 +955,13 @@ class res_partner(osv.osv):
             int(vat)
         except:
             return False
-        if int(vat[9:11]) <= 0:
-            return False
 
+        if int(vat[9:11]) < 0:
+            return False
+        
+#        if int(vat[-2:]) != 1:
+#            return False
+        
         sum = mult_add(2, int(vat[0])) + int(vat[1]) + \
                 mult_add(2, int(vat[2])) + int(vat[3]) + \
                 mult_add(2, int(vat[4])) + int(vat[5]) + \

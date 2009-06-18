@@ -125,10 +125,10 @@
 	    <td><para style="P12a">Tax Amount</para></td>
 	  </tr>
 	  <tr>
-	       <td><para style="P5"><font>[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</font><font color="white">[[ '...'*len(o['level']) ]]</font> <font>[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica-Bold'}))]]</font>[[ o['code'] ]]  [[ o['name'] ]]</para></td>
-	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font>[[ formatLang(o['debit']) ]]</para></td>
-	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font>[[ formatLang(o['credit'])]]</para></td>
-	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font>[[ formatLang(o['tax_amount']) ]]</para></td>
+	       <td><para style="P5"><font>[[ repeatIn(get_lines(data['form']['based_on'],data['form']['periods'],data['form']['company_id']), 'o') ]]</font><font color="white">[[ '...'*len(o['level']) ]]</font> <font>[[o['type']==1 and ( setTag('para','para',{'fontName':'Helvetica-Bold'}))]]</font><font>[[ o['code'] ]]  [[ o['name'] ]]</font></para></td>
+	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font><font>[[ formatLang(o['debit']) ]]</font></para></td>
+	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font><font>[[ formatLang(o['credit'])]]</font></para></td>
+	       <td><para style="P6"><font>[[ len(o['level'])&lt;3 and setTag('para','para',{'fontName':"Helvetica-Bold"}) ]]</font><font>[[ formatLang(o['tax_amount']) ]]</font></para></td>
 	  </tr>
 	  </blockTable>
   </story>
