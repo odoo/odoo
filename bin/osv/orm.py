@@ -52,12 +52,13 @@ import fields
 import tools
 
 import sys
+
 try:
     from xml import dom, xpath
 except ImportError:
     sys.stderr.write("ERROR: Import xpath module\n")
     sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.exit(2)
+    raise
 
 from tools.config import config
 
