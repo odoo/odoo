@@ -58,6 +58,7 @@ try:
 except ImportError:
     sys.stderr.write("ERROR: Import xpath module\n")
     sys.stderr.write("ERROR: Try to install the old python-xml package\n")
+    sys.stderr.write('On Ubuntu Jaunty, try this: sudo cp /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils\n')
     raise
 
 from tools.config import config
