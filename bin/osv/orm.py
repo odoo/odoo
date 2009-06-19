@@ -2285,7 +2285,7 @@ class orm(orm_template):
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         # default element in context must be remove when call a one2many or many2many
-        rel_context = context
+        rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
@@ -2493,7 +2493,7 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
                 
         # default element in context must be remove when call a one2many or many2many
-        rel_context = context
+        rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
