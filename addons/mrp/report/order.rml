@@ -98,6 +98,26 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+    </blockTableStyle>
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -113,6 +133,7 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -147,7 +168,9 @@
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_space" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="0.0"/>
   </stylesheet>
+  <images/>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]] </para>
     <para style="terp_default_8">
@@ -160,7 +183,7 @@
       <font color="white"> </font>
     </para>
     <para style="terp_header">Production Order N° : [[ o.name ]]</para>
-    <para style="terp_default_8">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="193.0,106.0,96.0,132.0" style="Table3">
@@ -195,10 +218,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="118.0,147.0,132.0,131.0" repeatRows="1" style="Table1">
@@ -235,10 +255,13 @@
         </tr>
       </blockTable>
     </section>
-    <para style="terp_default_9">
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
     <para style="terp_default_Bold_8">Work Orders</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="81.0,155.0,125.0,84.0,83.0" style="Table6">
       <tr>
         <td>
@@ -257,36 +280,46 @@
           <para style="terp_tblheader_General_Centre">No. Of Hours</para>
         </td>
       </tr>
-      <tr>
-        <td>
-          <para style="terp_default_Centre_8">[[ repeatIn(o.workcenter_lines,'line2') ]]</para>
-          <para style="terp_default_Centre_8">[[ line2.sequence ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ line2.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ line2.workcenter_id.name ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ formatLang(line2.cycle) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ formatLang(line2.hour) ]]</para>
-        </td>
-      </tr>
     </blockTable>
-    <para style="terp_default_9">
+    <section>
+      <para style="terp_default_8">[[ repeatIn(o.workcenter_lines,'line2') ]]</para>
+      <blockTable colWidths="81.0,155.0,125.0,84.0,83.0" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_default_Centre_8">[[ line2.sequence ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ line2.name ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ line2.workcenter_id.name ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ formatLang(line2.cycle) ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_8">[[ formatLang(line2.hour) ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="terp_default_2">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="terp_default_space">
       <font color="white"> </font>
     </para>
     <para style="terp_default_Bold_9">Bill Of Material </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
     <blockTable colWidths="235.0,82.0,107.0,104.0" style="Table8">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Qty</para>
+          <para style="terp_tblheader_Details_Centre">Quantity</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Source Location</para>
@@ -298,13 +331,16 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.move_lines,'line') ]]</para>
-      <blockTable colWidths="235.0,81.0,108.0,104.0" style="Table9">
+      <blockTable colWidths="235.0,47.0,34.0,108.0,104.0" style="Table9">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.product_id.code ]] [[ line.product_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang( line.product_qty) ]] [[line.product_uom.name]]</para>
+            <para style="terp_default_Right_9">[[ formatLang( line.product_qty) ]] </para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[line.product_uom.name]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line.location_id.name ]]</para>
@@ -320,4 +356,3 @@
     </section>
   </story>
 </document>
-
