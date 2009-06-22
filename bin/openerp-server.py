@@ -42,9 +42,12 @@ import signal
 # the path needs to be updated before any `import xml`
 # TODO: remove PyXML dependencies, use lxml instead.
 #----------------------------------------------------------
-_oldxml = '/usr/lib/python%s/site-packages/oldxml' % sys.version[:3]
-if os.path.exists(_oldxml):
-    sys.path.append(_oldxml)
+_oldxml1 = '/usr/lib/python%s/site-packages/oldxml' % sys.version[:3]
+_oldxml2 = '/usr/lib/python%s/dist-packages/oldxml' % sys.version[:3]
+if os.path.exists(_oldxml1):
+    sys.path.insert(0,_oldxml1)
+elif os.path.exists(_oldxml2):
+    sys.path.insert(0,_oldxml2)    
 
 
 import release
