@@ -119,7 +119,7 @@
     <blockTable colWidths="539.0" style="Table_Tilte">
       <tr>
         <td>
-          <para style="terp_header_Centre">Analitic Journal - [[ company.currency_id.name ]]</para>
+          <para style="terp_header_Centre">Analytic Journal - [[ company.currency_id.name ]]</para>
         </td>
       </tr>
       <tr>
@@ -203,10 +203,10 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move.name ]]</para>
+            <para style="terp_default_9">[[ move.name ]] KI</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move.account_id.code ]] - [[ move.account_id.name ]]</para>
+            <para style="terp_default_9">[[ move.account_id.code ]] [[ move.account_id.name ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(move.debit-move.credit) ]]</para>
@@ -226,13 +226,13 @@
         <blockTable colWidths="85.0,62.0,168.0,73.0,74.0,77.0" style="Table4">
           <tr>
             <td>
-              <para style="terp_default_9">[[ move_a or removeParentNode('blockTable') ]] [[ formatLang(move_a.date,date = True) ]]</para>
+              <para style="terp_default_9">[[ (not move_a) and removeParentNode('blockTable') ]] [[ formatLang(move_a.date,date = True) ]]</para>
             </td>
             <td>
               <para style="terp_default_9">[[ move_a.code ]]</para>
             </td>
             <td>
-              <para style="terp_default_9">[[ move_a.name ]]</para>
+              <para style="terp_default_9">[[ move_a.name ]] asgfas</para>
             </td>
             <td>
               <para style="terp_default_9">[[ move_a.account_id.code ]] - [[ move_a.account_id.name ]]</para>
@@ -266,7 +266,7 @@
       <blockTable colWidths="85.0,62.0,168.0,73.0,74.0,77.0" style="Table3">
         <tr>
           <td>
-            <para style="terp_default_9">[[ move_a or removeParentNode('blockTable') ]] [[ formatLang(move_a.date,date = True) ]]</para>
+            <para style="terp_default_9">[[ (not move_a) and removeParentNode('blockTable') ]] [[ formatLang(move_a.date,date = True) ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ move_a.code ]]</para>

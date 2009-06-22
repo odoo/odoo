@@ -33,7 +33,6 @@ class pos_invoice(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
-        print
 
     def set_context(self, objects, data, ids, report_type=None):
         super(pos_invoice, self).set_context(objects, data, ids, report_type)

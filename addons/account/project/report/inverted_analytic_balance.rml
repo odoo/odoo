@@ -157,7 +157,7 @@
       <blockTable colWidths="58.0,238.0,62.0,62.0,60.0,59.0" style="Table3">
         <tr>
           <td>
-            <para style="terp_default_Bold_9">[[ move_g or removeParentNode('blockTable') ]] [[ move_g['code'] ]]</para>
+            <para style="terp_default_Bold_9">[[ (not move_g) and removeParentNode('blockTable') ]] [[ move_g['code'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Bold_9">[[ move_g['name'] ]]</para>
@@ -184,7 +184,7 @@
         <blockTable colWidths="58.0,238.0,62.0,62.0,60.0,59.0" style="Table4">
           <tr>
             <td>
-              <para style="terp_default_9">[[ move_a or removeParentNode('blockTable') ]] [[ move_a['code'] ]]</para>
+              <para style="terp_default_9">[[ (not move_a) and removeParentNode('blockTable') ]] [[ move_a['code'] ]]</para>
             </td>
             <td>
               <para style="terp_default_9">[[ move_a['complete_name'] ]]</para>
