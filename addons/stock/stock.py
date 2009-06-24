@@ -542,7 +542,6 @@ class stock_picking(osv.osv):
 
     def test_finnished(self, cr, uid, ids):
         move_ids=self.pool.get('stock.move').search(cr,uid,[('picking_id','in',ids)])
-
         for move in self.pool.get('stock.move').browse(cr,uid,move_ids):
             if move.state not in ('done','cancel') :
                 if move.product_qty != 0.0:
@@ -763,6 +762,14 @@ class stock_picking(osv.osv):
             }, context=context)
         return res
 
+    def test_cancel(self,cr, uid, ids, context={}):
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return False
+            for move in pick.move_lines:
+                if move.state not in ('cancel',):
+                    return False
+        return True
 stock_picking()
 
 

@@ -33,28 +33,23 @@
         <record id="stock_location_13" model="stock.location">
             <field name="name">Stock Level 1</field>
             <field name="location_id" ref="stock_location_stock"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="stock_location_14" model="stock.location">
             <field name="name">Finished products</field>
             <field name="location_id" ref="stock_location_13"/>
             <field model="account.account" name="account_id" search="[('name','=','Merchandise Type B')]"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="stock_location_15" model="stock.location">
             <field name="name">Sub Products</field>
             <field name="location_id" ref="stock_location_13"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="stock_location_workshop" model="stock.location">
             <field name="name">Workshop</field>
             <field name="location_id" ref="stock_location_stock"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="stock_location_components" model="stock.location">
             <field name="name">Components</field>
             <field name="location_id" ref="stock_location_workshop"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
         
         <!--

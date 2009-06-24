@@ -94,6 +94,16 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        
+
+        <record id="trans_assigned_cancel_auto" model="workflow.transition">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="condition">test_cancel()</field>
+        </record>
+        <record id="trans_confirmed_cancel_auto" model="workflow.transition">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="condition">test_cancel()</field>
+        </record>
     </data>
 </openerp>
