@@ -62,8 +62,10 @@ class product_product(osv.osv):
             else:
                 location_ids = context['location']
         else:
-            cr.execute("select lot_stock_id from stock_warehouse")
-            location_ids = [id for (id,) in cr.fetchall()]
+            location_ids = []
+            wids = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
+            for w in self.pool.get('stock.warehouse').browse(cr, uid, wids, context=context):
+                location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
