@@ -120,9 +120,9 @@ class ir_rule(osv.osv):
         return res
 
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1, required=True),
-        'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator', required=True),
-        'operand':fields.selection(_operand,'Operand', size=64, required=True),
+        'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1),
+        'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator'),
+        'operand':fields.selection(_operand,'Operand', size=64),
         'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade"),
         'domain_force': fields.char('Force Domain', size=250),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250)
