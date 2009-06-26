@@ -236,16 +236,19 @@ class _rml_canvas(object):
     def _drawString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawString(text=text, **v)
 
     def _drawCenteredString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawCentredString(text=text, **v)
 
     def _drawRightString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawRightString(text=text, **v)
 
     def _rect(self, node):

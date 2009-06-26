@@ -47,6 +47,9 @@ _regex = re.compile('\[\[(.+?)\]\]')
 def str2xml(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
+def xml2str(s):
+    return s.replace('&amp;','&').replace('&lt;','<').replace('&gt;','>')
+
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
