@@ -653,9 +653,21 @@ class orm_template(object):
             if warning:
                 cr.rollback()
                 return (-1, res, warning, '')
-            id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
-                    current_module, res, xml_id=data_id, mode=mode,
-                    noupdate=noupdate)
+            
+            try:
+                id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
+                     current_module, res, xml_id=data_id, mode=mode,
+                     noupdate=noupdate)
+            except Exception, e:
+                import psycopg2
+                if isinstance(e,psycopg2.IntegrityError):
+                    msg= 'Insertion Failed!'
+                    for key in self.pool._sql_error.keys():
+                        if key in e[0]:
+                            msg = self.pool._sql_error[key]
+                            break
+                    return (-1, res,msg,'' )
+                
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
