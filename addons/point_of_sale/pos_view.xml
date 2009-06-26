@@ -285,7 +285,7 @@
             <field name="res_model">report.transaction.pos</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('date_create','=',time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date_create','like',time.strftime('%Y-%m-%d'))]</field>
         </record>
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep"/>
         <menuitem name="Sales of the day" parent="menu_point_rep" action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
