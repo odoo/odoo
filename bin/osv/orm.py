@@ -52,12 +52,14 @@ import fields
 import tools
 
 import sys
+
 try:
     from xml import dom, xpath
 except ImportError:
     sys.stderr.write("ERROR: Import xpath module\n")
     sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.exit(2)
+    sys.stderr.write('On Ubuntu Jaunty, try this: sudo cp /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils\n')
+    raise
 
 from tools.config import config
 
@@ -80,6 +82,8 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
+class BrowseRecordError(Exception):
+    pass
 
 # Readonly python database object browser
 class browse_null(object):
@@ -126,7 +130,6 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -138,6 +141,11 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
+        if not (id and isinstance(id, (int, long,))):
+            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+#        if not table.exists(cr, uid, id, context):
+#            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
         if id not in self._data:
             self._data[id] = {'id': id}
@@ -1163,6 +1171,9 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise _('The copy method is not implemented on this object !')
 
+    def exists(self, cr, uid, id, context=None):
+        raise _('The exists method is not implemented on this object !')
+
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
@@ -1204,7 +1215,7 @@ class orm_template(object):
         raise NotImplementedError()
 
 class orm_memory(orm_template):
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count']
+    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     _inherit_fields = {}
     _max_count = 200
     _max_hours = 1
@@ -1389,11 +1400,14 @@ class orm_memory(orm_template):
     def _check_removed_columns(self, cr, log=False):
         # nothing to check in memory...
         pass
+    
+    def exists(self, cr, uid, id, context=None):
+        return id in self.datas
 
 class orm(orm_template):
     _sql_constraints = []
     _table = None
-    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
@@ -2271,9 +2285,16 @@ class orm(orm_template):
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
+
+        # default element in context must be remove when call a one2many or many2many
+        rel_context = context.copy()
+        for c in context.items():
+            if c[0].startswith('default_'):
+                del rel_context[c[0]]
+
         for field in upd_todo:
             for id in ids:
-                self._columns[field].set(cr, self, id, field, vals[field], user, context=context)
+                self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context)
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -2472,8 +2493,15 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
+                
+        # default element in context must be remove when call a one2many or many2many
+        rel_context = context.copy()
+        for c in context.items():
+            if c[0].startswith('default_'):
+                del rel_context[c[0]]
+
         for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
         self._validate(cr, user, [id_new], context)
 
         result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
@@ -2735,6 +2763,10 @@ class orm(orm_template):
             record['res_id']=new_id
             trans_obj.create(cr,uid,record)
         return new_id
+
+    def exists(self, cr, uid, id, context=None):
+        cr.execute('SELECT count(1) FROM "%s" where id=%%s' % (self._table,), (id,))
+        return bool(cr.fetchone()[0])
 
     def check_recursion(self, cr, uid, ids, parent=None):
         if not parent:

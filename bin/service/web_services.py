@@ -352,7 +352,7 @@ class common(netsvc.Service):
         self.exportMethod(self.timezone_get)
         self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
-        self.exportMethod(self.get_environment)
+        self.exportMethod(self.get_server_environment)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -505,7 +505,7 @@ GNU Public Licence.
             l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
             raise
 
-    def get_environment(self,lang=False):
+    def get_server_environment(self,lang=False):
         try:
             if '.bzr' in os.listdir((os.getcwd()[0:-3])):
                 fp = open(os.path.join(os.getcwd()[0:-3],'.bzr/branch/last-revision'))
@@ -522,9 +522,10 @@ GNU Public Licence.
                       'PlatForm : %s\n' \
                       'Operating System Version : %s\n' \
                       'Python Version : %s\n'\
+                      'Locale : %s\n' \
                       'OpenERP-Server Version : %s\n'\
-                      'OpenERP-Server Last Revision ID : %s'\
-                      'Locale : %s'%(os.name,sys.platform,str(sys.version.split('\n')[1]),str(sys.version[0:5]),release.version,rev_no,lang)
+                      'OpenERP-Server Last Revision ID : %s' \
+                      %(os.name,sys.platform,str(sys.version.split('\n')[1]),str(sys.version[0:5]), lang, release.version,rev_no)
         return environment
 common()
 
@@ -659,7 +660,7 @@ class report_spool(netsvc.Service):
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
-                logger.notifyChannel('web-services', netsvc.LOG_ERROR,common().get_environment(context.get('lang',False)))
+                logger.notifyChannel('web-services', netsvc.LOG_ERROR,common().get_server_environment(context.get('lang',False)))
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)

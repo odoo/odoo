@@ -450,11 +450,11 @@ class _rml_flowable(object):
             for key in txt_n.attrib.keys():
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
-            if not self._textual(n).isspace():
+            if True or not self._textual(n).isspace():
                 txt_n.text = self._textual(n)
                 txt_n.tail = ''
                 rc1 += etree.tostring(txt_n)
-        rc1 += utils._process_text(self, node.tail or '')
+        #rc1 += utils._process_text(self, node.tail or '')
         return rc1
 
     def _table(self, node):
@@ -759,8 +759,13 @@ class _rml_template(object):
     def render(self, node_stories):
         fis = []
         r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
+        story_cnt = 0
         for node_story in node_stories:
             fis += r.render(node_story)
+            if self.localcontext:
+                story_cnt += 1
+                if story_cnt == len(self.localcontext['objects']):
+                    fis.append(PageCount())
             fis.append(platypus.PageBreak())
         self.doc_tmpl.build(fis)
 

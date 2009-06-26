@@ -517,7 +517,6 @@ class ir_model_data(osv.osv):
         return res_id
 
     def _unlink(self, cr, uid, model, ids, direct=False):
-        #self.pool.get(model).unlink(cr, uid, ids)
         for id in ids:
             self.unlink_mark[(model, id)]=False
             cr.execute('delete from ir_model_data where res_id=%s and model=%s', (id, model))
@@ -582,8 +581,9 @@ class ir_model_data(osv.osv):
                             self.unlink(cr, uid, [id])
                             cr.execute('DELETE FROM ir_values WHERE value=%s', ('%s,%s' % (model, res_id),))
                         cr.commit()
-                    except:
+                    except Exception, e:
                         cr.rollback()
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, e)
                         logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\nThere should be some relation that points to this resource\nYou should manually fix this and restart --update=module' % (res_id, model))
         return True
 ir_model_data()

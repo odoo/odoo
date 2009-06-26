@@ -103,13 +103,14 @@ def _process_text(self, txt):
             result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
             if sps:
                 try:
-                    txt2 = str2xml(eval(sps.pop(0),self.localcontext))
+                    txt = eval(sps.pop(0),self.localcontext)
                 except:
-                    txt2 = ''
-                if type(txt2)==type('') or type(txt2)==type(u''):
+                    pass
+                if type(txt)==type('') or type(txt)==type(u''):
+                    txt2 = str2xml(txt)
                     result += txt2
-                elif (txt2 is not None) and (txt2 is not False):
-                    result += str(txt2)
+                elif (txt is not None) and (txt is not False):
+                    result += str(txt)
         return result
 
 def text_get(node):

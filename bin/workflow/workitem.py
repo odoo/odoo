@@ -88,10 +88,11 @@ def _execute(cr, workitem, activity, ident, stack):
     #
     # send a signal to parent workflow (signal: subflow.signal_name)
     #
+    signal_todo = []
     if (workitem['state']=='active') and activity['signal_send']:
         cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id in (select inst_id from wkf_workitem where subflow_id=%s)", (workitem['inst_id'],))
         for i in cr.fetchall():
-            instance.validate(cr, i[0], (ident[0],i[1],i[2]), activity['signal_send'], force_running=True)
+            signal_todo.append((i[0], (ident[0],i[1],i[2]), activity['signal_send']))
 
     if activity['kind']=='dummy':
         if workitem['state']=='active':
@@ -139,6 +140,9 @@ def _execute(cr, workitem, activity, ident, stack):
             state= cr.fetchone()[0]
             if state=='complete':
                 _state_set(cr, workitem, activity, 'complete', ident)
+    for t in signal_todo:
+        instance.validate(cr, t[0], t[1], t[2], force_running=True)
+
     return result
 
 def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
