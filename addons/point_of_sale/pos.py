@@ -944,14 +944,14 @@ class report_transaction_pos(osv.osv):
                     count(pp.id) as no_trans,
                     sum(amount) as amount,
                     pp.journal_id,
-                    date_trunc('day',pp.create_date)::text as date_create,
+                    to_char(pp.create_date, 'YYYY-MM-DD') as date_create,
                     ps.user_id,
                     ps.invoice_id
                 from
                     pos_payment pp, pos_order ps
                 WHERE ps.id = pp.order_id
                 group by
-                    pp.journal_id, date_trunc('day',pp.create_date), ps.user_id, ps.invoice_id
+                    pp.journal_id, date_create, ps.user_id, ps.invoice_id
             )
             """)
 report_transaction_pos()
