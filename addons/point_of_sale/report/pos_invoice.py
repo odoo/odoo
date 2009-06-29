@@ -22,30 +22,38 @@
 
 import time
 from report import report_sxw
+from osv import osv
+from tools.translate import _
 
 
 class pos_invoice(report_sxw.rml_parse):
+
     def __init__(self, cr, uid, name, context):
         super(pos_invoice, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
         })
 
-    def preprocess(self, objects, data, ids):
-        super(pos_invoice, self).preprocess(objects, data, ids)
+    def set_context(self, objects, data, ids, report_type=None):
+        super(pos_invoice, self).set_context(objects, data, ids, report_type)
+        iids = []
+        nids = []
 
-        post_objects = []
-        for obj in objects:
-            if obj.invoice_id:
-                post_objects.append(obj.invoice_id)
+        for order in objects:
+            order.write({'nb_print': order.nb_print + 1})
 
-        #self.localcontext['objects'] = objects
-        self.localcontext['objects'] = post_objects
+            if order.invoice_id and order.invoice_id not in iids:
+                if not order.invoice_id:
+                    raise osv.except_osv(_('Error !'), _('Please create an invoice for this sale.'))
+                iids.append(order.invoice_id)
+                nids.append(order.invoice_id.id)
+        self.cr.commit()
+        data['ids'] = nids
+        self.datas = data
+        self.ids = nids
+        self.objects = iids
+        self.localcontext['data'] = data
+        self.localcontext['objects'] = iids
 
-
-report_sxw.report_sxw(
-    'report.pos.invoice',
-    'pos.order',
-    'addons/point_of_sale/report/pos_invoice.rml',
-    parser=pos_invoice)
+report_sxw.report_sxw('report.pos.invoice', 'pos.order', 'addons/account/report/invoice.rml', parser= pos_invoice)
 

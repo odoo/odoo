@@ -35,7 +35,7 @@
             <field name="arch" type="xml">
                 <tree string="Invoice Line">
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="base.group_user"/>
                     <field name="quantity"/>
                     <field name="uos_id"/>
                     <field name="price_unit"/>
@@ -59,8 +59,8 @@
                             <field name="discount"/>
                             <field colspan="4" name="name" select="1"/>
                             <field colspan="4" name="origin" select="1"/>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
+                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user"/>
                             <newline/>
                             <field name="price_subtotal"/>
                             <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
@@ -81,7 +81,7 @@
                     <field name="sequence"/>
                     <field name="manual"/>
                     <field name="name"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="base.group_user"/>
                     <field name="base"/>
                     <field name="amount"/>
                 </tree>
@@ -95,7 +95,7 @@
                 <form string="Manual Invoice Taxes">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="base.group_user"/>
                     <field name="manual" select="1"/>
                     <field name="amount" select="1"/>
                     <field name="base" readonly="0"/>
@@ -117,7 +117,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="number"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" groups="base.group_user"/>
                     <field name="amount_untaxed" sum="Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="currency_id"/>
@@ -237,19 +237,21 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="6">
-                        <field name="journal_id" select="2"/>
+                        <field name="journal_id" select="2" groups="base.group_user"/>
                         <field name="type" readonly="1" select="2"/>
                         <field name="number" select="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
+                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1" groups="base.group_user"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
                         <field name="date_invoice" select="1"/>
-                        <field name="period_id"/>
-                        <label align="0.0" colspan="2" string="(keep empty to use the current period)"/>
+                        <field name="period_id" groups="base.group_user"/>
+                        <group colspan="2" col="1" groups="base.group_user">
+                            <label align="0.0" string="(keep empty to use the current period)"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
                             <field name="name" select="2"/>
                             <field name="payment_term"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
@@ -265,7 +267,7 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
@@ -273,7 +275,7 @@
                                 <field name="amount_total"/>
                                 <field name="state" select="2"/>
                                 <field name="residual"/>
-                                <group col="3" colspan="4">
+                                <group col="3" colspan="4" groups="base.group_user">
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -284,14 +286,14 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id"/>
-                            <field name="fiscal_position" groups="base.group_extended"/>
+                            <field name="fiscal_position" groups="base.group_extended,base.group_user"/>
                             <newline/>
                             <field name="date_due" select="1"/>
                             <newline/>
                             <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank" select="2"/>
                             <field name="origin" select="2"/>
                             <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"/>
-                            <field name="move_id"/>
+                            <field name="move_id" groups="base.group_user"/>
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
@@ -301,7 +303,7 @@
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
-                                    <field name="journal_id"/>
+                                    <field name="journal_id" groups="base.group_user"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
                                 </tree>

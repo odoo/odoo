@@ -114,7 +114,7 @@ class res_partner(osv.osv):
         '''
         Check Bulgaria VAT number.
         '''
-        if len(vat) != 10:
+        if len(vat) not in [9,10]:
             return False
         try:
             int(vat)
@@ -129,10 +129,10 @@ class res_partner(osv.osv):
         check = 11 - (sum % 11)
         if check == 11:
             check = 0
-        if check == 10:
-            return False
-        if check != int(vat[9]):
-            return False
+#        if check == 10:
+#            return False
+#        if check != int(vat[9]):
+#            return False
         return True
 
     def check_vat_cy(self, vat):
@@ -890,10 +890,10 @@ class res_partner(osv.osv):
                 6 * int(vat[3]) + 5 * int(vat[4]) + 4 * int(vat[5]) + \
                 3 * int(vat[6]) + 2 * int(vat[7])
         check = 11 - (sum % 11)
-        if check == 10:
+        if check == 10 or check == 11:
             check = 0
-        if check != int(vat[8]):
-            return False
+#        if check != int(vat[8]):
+#            return False
         return True
 
     def check_vat_ro(self, vat):
@@ -955,9 +955,13 @@ class res_partner(osv.osv):
             int(vat)
         except:
             return False
-        if int(vat[9:11]) <= 0:
-            return False
 
+        if int(vat[9:11]) < 0:
+            return False
+        
+#        if int(vat[-2:]) != 1:
+#            return False
+        
         sum = mult_add(2, int(vat[0])) + int(vat[1]) + \
                 mult_add(2, int(vat[2])) + int(vat[3]) + \
                 mult_add(2, int(vat[4])) + int(vat[5]) + \

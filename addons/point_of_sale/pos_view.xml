@@ -11,6 +11,7 @@
                         <page string="Order lines">
                             <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                             <field name="pricelist_id" domain="[('type','=','sale')]"/>
+                            <field name="salesman_id" />
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
@@ -32,8 +33,8 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
 
-                                <button name="%(pos_discount)d"
-                                    string="D_iscount"
+                                <button name="%(pos_add_product)d"
+                                    string="_Add product"
                                     type="action" states="draft"/>
 
                                 <button name="dummy_button"
@@ -47,8 +48,8 @@
 
                                 <field name="state" select="2"/>
 
-                                <button name="%(pos_add_product)d"
-                                    string="_Add product"
+                                <button name="%(pos_discount)d"
+                                    string="D_iscount"
                                     type="action" states="draft"/>
 
                                 <button name="%(pos_payment)d"
@@ -96,7 +97,7 @@
                         <page string="Other">
                             <field name="shop_id" />
                             <field name="name" select="1"/>
-                            <field name="date_order" select="1"/>
+                            <field name="date_order" select="1" />
                             <field name="date_validity" />
                             <field name="user_id" />
 
@@ -119,7 +120,7 @@
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_pos_form"/>
-            <field name="domain">[ ('date_order','>=',time.strftime('%Y-%m-%d')) ]</field>
+            <field name="domain">[ ('date_order','>=',time.strftime('%Y-%m-%d 00:00:00')) ]</field>
         </record>
 
 
@@ -175,7 +176,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('date_order','=', time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date_order','=', time.strftime('%Y-%m-%d 00:00:00'))]</field>
         </record>
 
         <menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/>
@@ -284,7 +285,7 @@
             <field name="res_model">report.transaction.pos</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('date_create','=',time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date_create','like',time.strftime('%Y-%m-%d'))]</field>
         </record>
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep"/>
         <menuitem name="Sales of the day" parent="menu_point_rep" action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>

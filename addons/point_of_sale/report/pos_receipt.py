@@ -22,6 +22,7 @@
 
 import time
 from report import report_sxw
+from mx.DateTime.ISO import ParseAny
 import pooler
 
 
@@ -35,10 +36,16 @@ class order(report_sxw.rml_parse):
 
         self.localcontext.update({
             'time': time,
+            'dformat': '%Y/%m/%d %H:%M:%S',
             'disc': self.discount,
             'net': self.netamount,
+            'formatdate': self.formatdate,
             'address': partner.address and partner.address[0] or False,
         })
+
+    def formatdate(self, datestr):
+        dateobj = ParseAny(datestr)
+        return dateobj.strftime(self.localcontext['dformat'])
 
     def netamount(self, order_line_id):
         sql = 'select (qty*price_unit) as net_price from pos_order_line where id = %s'

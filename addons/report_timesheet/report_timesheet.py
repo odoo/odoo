@@ -21,8 +21,7 @@
 ##############################################################################
 
 from osv import fields,osv
-
-import tools.sql
+from tools.sql import drop_view_if_exists
 
 class report_timesheet_user(osv.osv):
     _name = "report_timesheet.user"
@@ -36,7 +35,7 @@ class report_timesheet_user(osv.osv):
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'report_timesheet_user')
+        drop_view_if_exists(cr, 'report_timesheet_user')
         cr.execute("""
             create or replace view report_timesheet_user as (
                 select
@@ -66,6 +65,7 @@ class report_timesheet_account(osv.osv):
     }
     _order = 'name desc,account_id desc,user_id desc'
     def init(self, cr):
+        drop_view_if_exists(cr, 'report_timesheet_account')
         cr.execute("""
             create or replace view report_timesheet_account as (
                 select
@@ -96,6 +96,7 @@ class report_timesheet_account_date(osv.osv):
     _order = 'name desc,account_id desc,user_id desc'
     
     def init(self, cr):
+        drop_view_if_exists(cr, 'report_timesheet_account_date')
         cr.execute("""
             create or replace view report_timesheet_account_date as (
                 select
@@ -127,6 +128,7 @@ class report_timesheet_invoice(osv.osv):
     _rec_name = 'user_id'
     _order = 'user_id desc'
     def init(self, cr):
+        drop_view_if_exists(cr, 'report_timesheet_invoice')
         cr.execute("""
             create or replace view report_timesheet_invoice as (
                 select
@@ -181,6 +183,7 @@ class report_random_timsheet(osv.osv):
         return res
     
     def init(self, cr, uid=1):
+        drop_view_if_exists(cr, 'report_random_timesheet')
         
         cr.execute("""create or replace view report_random_timesheet as (
 
@@ -220,6 +223,7 @@ class random_timesheet_lines(osv.osv):
     _order = "date desc"
     
     def init(self, cr):
+        drop_view_if_exists(cr, 'random_timesheet_lines')
         
         cr.execute("""create or replace view random_timesheet_lines as (
             select 

@@ -295,9 +295,7 @@ class product_template(osv.osv):
         return False
 
     _defaults = {
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'company_id': lambda self, cr, uid, context: False, # Visible by all
         'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',

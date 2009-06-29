@@ -86,18 +86,20 @@ class stock_location(osv.osv):
         return res
 
 
-    def product_detail(self, cr, uid, id, field):
+    def product_detail(self, cr, uid, id, field, context={}):
         res = {}
         res[id] = {}
         final_value = 0.0
         field_to_read = 'virtual_available'
         if field == 'stock_real_value':
             field_to_read = 'qty_available'
-        cr.execute('select distinct product_id from stock_move where location_id=%s',(id,))
+        cr.execute('select distinct product_id from stock_move where (location_id=%s) or (location_dest_id=%s)',(id,id))
         result = cr.dictfetchall()
         if result:
             for r in result:
-                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price','name'])
+                c = (context or {}).copy()
+                c['location'] = id
+                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read,'standard_price'], context=c)
                 final_value += (product[field_to_read] * product['standard_price'])
         return final_value
 
@@ -540,7 +542,6 @@ class stock_picking(osv.osv):
 
     def test_finnished(self, cr, uid, ids):
         move_ids=self.pool.get('stock.move').search(cr,uid,[('picking_id','in',ids)])
-
         for move in self.pool.get('stock.move').browse(cr,uid,move_ids):
             if move.state not in ('done','cancel') :
                 if move.product_qty != 0.0:
@@ -761,6 +762,14 @@ class stock_picking(osv.osv):
             }, context=context)
         return res
 
+    def test_cancel(self,cr, uid, ids, context={}):
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return False
+            for move in pick.move_lines:
+                if move.state not in ('cancel',):
+                    return False
+        return True
 stock_picking()
 
 
@@ -981,10 +990,12 @@ class stock_move(osv.osv):
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
 
-    def onchange_lot_id(self, cr, uid, context, prodlot_id=False,product_qty=False, loc_id=False):
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
-        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id)
+        ctx = context and context.copy() or {}
+        ctx['location_id'] = loc_id 
+        prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
@@ -1401,12 +1412,16 @@ class stock_picking_move_wizard(osv.osv_memory):
         for act in self.read(cr,uid,ids):
             move_lines=move_obj.browse(cr,uid,act['move_ids'])
             for line in move_lines:
-                 picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
-                 picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
-                 cr.commit()
-                 old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
-                 if not len(old_picking['move_lines']):
-                    picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
+                if line.picking_id:
+                    picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
+                    picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
+                    cr.commit()
+                    old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
+                    if not len(old_picking['move_lines']):
+                        picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
+                else:
+                    raise osv.except_osv(_('UserError'),
+                        _('You can not create new moves.'))
         return {'type':'ir.actions.act_window_close' }
 
 stock_picking_move_wizard()

@@ -476,7 +476,7 @@ class account_analytic_account_summary_user(osv.osv):
                         'SUM(l.unit_amount) AS unit_amount ' \
                     'FROM account_analytic_line AS l, ' \
                         'account_analytic_journal AS j ' \
-                    'WHERE j.type = \'general\' ' \
+                    'WHERE (j.type = \'general\') and (j.id=l.journal_id) ' \
                     'GROUP BY l.account_id, l.user_id ' \
                     ') AS l '
                     'ON (' \
@@ -657,7 +657,7 @@ class account_analytic_account_summary_month(osv.osv):
                         'SUM(l.unit_amount) AS unit_amount ' \
                     'FROM account_analytic_line AS l, ' \
                         'account_analytic_journal AS j ' \
-                    'WHERE j.type = \'general\' ' \
+                    'WHERE (j.type = \'general\') and (j.id=l.journal_id) ' \
                     'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) ' \
                     ') AS l '
                     'ON (' \

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -77,6 +77,7 @@ def _pre_init(self, cr, uid, data, context):
         pos_config_journal = pool.get('pos.config.journal')
         ids = pos_config_journal.search(cr, uid, [('code', '=', journal_to_fetch)])
         objs = pos_config_journal.browse(cr, uid, ids)
+        journal = None
         if objs:
             journal = objs[0].journal_id.id
         else:
@@ -114,13 +115,21 @@ def _add_pay(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('pos.order')
     result = data['form']
-
     invoice_wanted = data['form']['invoice_wanted']
-
     # add 'invoice_wanted' in 'pos.order'
     order_obj.write(cr, uid, [data['id']], {'invoice_wanted': invoice_wanted})
 
     order_obj.add_payment(cr, uid, data['id'], result, context=context)
+    return {}
+
+
+def _validate(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('pos.order')
+    order = order_obj.browse(cr, uid, data['id'], context)
+#    if not order.amount_total:
+#       return 'receipt'
+    order_obj.test_order_lines(cr, uid, order, context=context)
     return {}
 
 
@@ -129,14 +138,9 @@ def _check(self, cr, uid, data, context):
     if the order is not paid: continue payment,
     if the order is paid print invoice (if wanted) or ticket.
     """
-
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('pos.order')
     order = order_obj.browse(cr, uid, data['id'], context)
-    #if not order.amount_total:
-    #   return 'receipt'
-    order_obj.test_order_lines(cr, uid, order, context=context)
-
     action = 'ask_pay'
     if order.state == 'paid':
         if order.partner_id:
@@ -146,7 +150,6 @@ def _check(self, cr, uid, data, context):
                 action = 'paid'
         else:
             action = 'receipt'
-
     return action
 
 
@@ -161,17 +164,22 @@ def _test_no_line(self, cr, uid, data, context):
 
 
 def create_invoice(self, cr, uid, data, context):
-    wf_service = netsvc.LocalService("workflow")
-    for i in data['ids']:
-        wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
-
+    pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('pos.order')
+    order = order_obj.browse(cr, uid, data['id'], context)
+    if not order.invoice_id:
+        inv_id = order_obj.action_invoice(cr, uid, [data['id']])
+        #raise wizard.except_wizard(_('Error !'), _('Please create an invoice for this sale.'))
+#    wf_service = netsvc.LocalService("workflow")
+#    for i in data['ids']:
+#        wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
     return {}
 
 
 class pos_payment(wizard.interface):
     states = {
         'init': {
-            'actions': [_test_no_line],
+            'actions': [_validate],
             'result': {
                 'type': 'choice',
                 'next_state': _check,

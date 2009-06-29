@@ -37,6 +37,8 @@ class account_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_balance, self).__init__(cr, uid, name, context)
         self.flag=1
+        self.dr_total= 0.00
+        self.cr_total= 0.00
         self.parent_bal=0
         self.status=0
         self.done_total=0
@@ -47,268 +49,278 @@ class account_balance(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
+            'get_lines':self.get_lines,
             'linesForTotal': self.linesForTotal,
             'linesForYear': self.linesForYear,
+            'get_years':self.get_years,
+            'cal_total':self.cal_total,
+            'total_dr':self.total_dr,
+            'total_cr':self.total_cr
             })
         self.context = context
 
-    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[]):
-        self._node.data = ''
-        node = self._find_parent(self._node, nodes_parent or parents)
-        ns = node.nextSibling
-#start
-        if value==['Cash','%']:
-            if show==1:
-                if perc==1:
-                    if pattern=='none':
-                        value=['','Cash','%']
-                        type=['lable','lable','lable']
-                        width=[130,65,65]
-                    else:
-                        value=[' ','','Cash','%']
-                        type=['string','lable','lable','lable']
-                        width=[65,130,65,65]
-                else:
-                    if pattern=='none':
-                        value=['']
-                        type=['lable']
-                        width=[195]
-                    else:
-                        value=[' ','']
-                        type=['string','lable']
-                        width=[65,195]
-            else:
-                if perc==1:
-                    if pattern=='none':
-                        value=['Cash','%']
-                        type=['lable','lable']
-                        width=[65,65]
-                    else:
-                        value=[' ','Cash','%']
-                        type=['string','lable','lable']
-                        width=[65,65,65]
-                else:
-                    if pattern=='none':
-                        value=['']
-                        type=['lable']
-                        width=[65]
-                    else:
-                        value=[' ','']
-                        type=['string','lable']
-                        width=[65,65]
-
-
-        if value==['year']:
-            if show==1:
-                if perc==1:
-                    if pattern=='none':
-                        width=[260]
-                    else:
-                        value=[' ','year']
-                        type=['string','string']
-                        width=[65,260]
-                else:
-                    if pattern=='none':
-                        width=[195]
-                    else:
-                        value=[' ','year']
-                        type=['string','string']
-                        width=[65,195]
-            else:
-                if perc==1:
-                    if pattern=='none':
-                        width=[130]
-                    else:
-                        value=[' ','year']
-                        type=['string','string']
-                        width=[65,130]
-
-                else:
-                    if pattern=='none':
-                        width=[65]
-                    else:
-                        value=[' ','year']
-                        type=['string','string']
-                        width=[65,65]
-
-        if value==['Debit','Credit','Balance']:
-            if show==1:
-                if perc==1:
-                    if pattern=='none':
-                        width=[65,65,130]
-                    else:
-                        value=[' ','Debit','Credit','Balance']
-                        type=['string','lable','lable','lable']
-                        width=[65,65,65,130]
-                else:
-                    if pattern=='none':
-                        width=[65,65,65]
-                    else:
-                        value=[' ','Debit','Credit','Balance']
-                        type=['string','lable','lable','lable']
-                        width=[65,65,65,65]
-
-            else:
-                if perc==1:
-                    if pattern=='none':
-                        value=['Balance']
-                        type=['lable']
-                        width=[130]
-                    else:
-                        value=[' ','Balance']
-                        type=['string','lable']
-                        width=[65,130]
-                else:
-                    if pattern=='none':
-                        value=['Balance']
-                        type=['lable']
-                        width=[65]
-                    else:
-                        value=[' ','Balance']
-                        type=['string','lable']
-                        width=[65,65]
-
-        if value==['debit','credit','balance']:
-            if show==1:
-                if perc==1:
-                    if pattern=='none':
-                        value=['debit','credit','balance','balance_perc']
-                        type=['string','string','string','string']
-                        width=[65,65,65,65]
-                    else:
-                        value=[pattern,'debit','credit','balance','balance_perc']
-                        type=['string','string','string','string','string']
-                        width=[65,65,65,65,65]
-                else:
-                    if pattern=='none':
-                        value=['debit','credit','balance']
-                        type=['string','string','string']
-                        width=[65,65,65]
-                    else:
-                        value=[pattern,'debit','credit','balance']
-                        type=['string','string','string','string']
-                        width=[65,65,65,65]
-
-            else:
-                if perc==1:
-                    if pattern=='none':
-                        value=['balance','balance_perc']
-                        type=['string','string']
-                        width=[65,65]
-                    else:
-                        value=[pattern,'balance','balance_perc']
-                        type=['string','string','string']
-                        width=[65,65,65]
-                else:
-                    if pattern=='none':
-                        value=['balance']
-                        type=['string']
-                        width=[65]
-                    else:
-                        value=[pattern,'balance']
-                        type=['string','string']
-                        width=[65,65]
-
-        if value==['sum_debit','sum_credit','']:
-            if show==1:
-                if perc==1:
-                    if pattern=='none':
-                        width=[65,65,130]
-                    else:
-                        value=[' ','sum_debit','sum_credit','']
-                        type=['string','string','string','lable']
-                        width=[65,65,65,130]
-                else:
-                    if pattern=='none':
-                        width=[65,65,65]
-                    else:
-                        value=[' ','sum_debit','sum_credit','']
-                        type=['string','string','string','lable']
-                        width=[65,65,65,65]
-            else:
-                if perc==1:
-                    if pattern=='none':
-                        value=['']
-                        type=['lable']
-                        width=[130]
-                    else:
-                        value=[' ','']
-                        type=['string','lable']
-                        width=[65,130]
-                else:
-                    if pattern=='none':
-                        value=['']
-                        type=['lable']
-                        width=[65]
-                    else:
-                        value=[' ','']
-                        type=['string','lable']
-                        width=[65,65]
-
-        if not lst:
-            lst.append(1)
-        for ns in node.childNodes :
-            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
-                width_str = ns._attrs['colWidths'].nodeValue
-                ns.removeAttribute('colWidths')
-                total_td = td * len(value)
-
-                if not width:
-                    for v in value:
-                        width.append(30)
-                check1=0
-                for t in range(td):
-                    for v in range(len(value)):
-                        if type[v] in ('String','STRING','string'):
-                            if (value[v]==" " or value[0]==pattern):
-                                if check1==0:
-                                    check1=1
-                                    width_str +=',0.0'
-                                else:
-                                    width_str +=',%d'%width[v]
-                            else:
-                                width_str +=',%d'%width[v]
-                        else:
-                            width_str +=',%d'%width[v]
-                ns.setAttribute('colWidths',width_str)
-
-                child_list =  ns.childNodes
-
-                check=0
-                for child in child_list:
-                    if child.nodeName=='tr':
-                        lc = child.childNodes[1]
-                        for t in range(td):
-                            i=0
-                            for v in value:
-
-                                newnode = lc.cloneNode(1)
-                                temp2="%s['status']==1 and ( setTag('para','para',{'fontName':'Times-bold'})) ]]"%(name)
+#    def repeatIn(self, lst, name, nodes_parent=False,td=False,width=[],value=[],type=[]):
+#        self._node.data = ''
+#        node = self._find_parent(self._node, nodes_parent or parents)
+#        ns = node.nextSibling
+##start
+#        if value==['Cash','%']:
+#            if show==1:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['','Cash','%']
+#                        type=['lable','lable','lable']
+#                        width=[130,65,65]
+#                    else:
+#                        value=[' ','','Cash','%']
+#                        type=['string','lable','lable','lable']
+#                        width=[65,130,65,65]
+#                else:
+#                    if pattern=='none':
+#                        value=['']
+#                        type=['lable']
+#                        width=[195]
+#                    else:
+#                        value=[' ','']
+#                        type=['string','lable']
+#                        width=[65,195]
+#            else:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['Cash','%']
+#                        type=['lable','lable']
+#                        width=[65,65]
+#                    else:
+#                        value=[' ','Cash','%']
+#                        type=['string','lable','lable']
+#                        width=[65,65,65]
+#                else:
+#                    if pattern=='none':
+#                        value=['']
+#                        type=['lable']
+#                        width=[65]
+#                    else:
+#                        value=[' ','']
+#                        type=['string','lable']
+#                        width=[65,65]
 #
-                                if type[i] in ('String','STRING','string'):
-                                    if (v==" " or v==pattern) and i==0 and check==0:
-                                        check=1
-                                        newnode.childNodes[1].lastChild.data=""
-                                    else:
-                                        if v==" ":
-                                            newnode.childNodes[1].lastChild.data=""
-                                        else:
-                                            t1= "[[ %s['%s%d'] ]]"%(name,v,t)
-                                            if v=="year" or v=="sum_debit" or v=="sum_credit":
-                                                newnode.childNodes[1].lastChild.data = t1
-                                            else:
-                                                newnode.childNodes[1].lastChild.data = t1+"[["+temp2
-#                                   newnode.childNodes[1].lastChild.data=[[ a['status']==1 and ( setTag('para','para',{'fontName':'Times-bold'})) ]]
-                                elif type[i] in ('Lable','LABLE','lable'):
-
-                                    newnode.childNodes[1].lastChild.data= v
-
-                                child.appendChild(newnode)
-
-                                newnode=False
-                                i+=1
-        return super(account_balance,self).repeatIn(lst, name, nodes_parent=False)
+#
+#        if value==['year']:
+#            if show==1:
+#                if perc==1:
+#                    if pattern=='none':
+#                        width=[260]
+#                    else:
+#                        value=[' ','year']
+#                        type=['string','string']
+#                        width=[65,260]
+#                else:
+#                    if pattern=='none':
+#                        width=[195]
+#                    else:
+#                        value=[' ','year']
+#                        type=['string','string']
+#                        width=[65,195]
+#            else:
+#                if perc==1:
+#                    if pattern=='none':
+#                        width=[130]
+#                    else:
+#                        value=[' ','year']
+#                        type=['string','string']
+#                        width=[65,130]
+#
+#                else:
+#                    if pattern=='none':
+#                        width=[65]
+#                    else:
+#                        value=[' ','year']
+#                        type=['string','string']
+#                        width=[65,65]
+#
+#        if value==['Debit','Credit','Balance']:
+#            if show==1:
+#                if perc==1:
+#                    if pattern=='none':
+#                        width=[65,65,130]
+#                    else:
+#                        value=[' ','Debit','Credit','Balance']
+#                        type=['string','lable','lable','lable']
+#                        width=[65,65,65,130]
+#                else:
+#                    if pattern=='none':
+#                        width=[65,65,65]
+#                    else:
+#                        value=[' ','Debit','Credit','Balance']
+#                        type=['string','lable','lable','lable']
+#                        width=[65,65,65,65]
+#
+#            else:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['Balance']
+#                        type=['lable']
+#                        width=[130]
+#                    else:
+#                        value=[' ','Balance']
+#                        type=['string','lable']
+#                        width=[65,130]
+#                else:
+#                    if pattern=='none':
+#                        value=['Balance']
+#                        type=['lable']
+#                        width=[65]
+#                    else:
+#                        value=[' ','Balance']
+#                        type=['string','lable']
+#                        width=[65,65]
+#
+#        if value==['debit','credit','balance']:
+#            if show==1:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['debit','credit','balance','balance_perc']
+#                        type=['string','string','string','string']
+#                        width=[65,65,65,65]
+#                    else:
+#                        value=[pattern,'debit','credit','balance','balance_perc']
+#                        type=['string','string','string','string','string']
+#                        width=[65,65,65,65,65]
+#                else:
+#                    if pattern=='none':
+#                        value=['debit','credit','balance']
+#                        type=['string','string','string']
+#                        width=[65,65,65]
+#                    else:
+#                        value=[pattern,'debit','credit','balance']
+#                        type=['string','string','string','string']
+#                        width=[65,65,65,65]
+#
+#            else:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['balance','balance_perc']
+#                        type=['string','string']
+#                        width=[65,65]
+#                    else:
+#                        value=[pattern,'balance','balance_perc']
+#                        type=['string','string','string']
+#                        width=[65,65,65]
+#                else:
+#                    if pattern=='none':
+#                        value=['balance']
+#                        type=['string']
+#                        width=[65]
+#                    else:
+#                        value=[pattern,'balance']
+#                        type=['string','string']
+#                        width=[65,65]
+#
+#        if value==['sum_debit','sum_credit','']:
+#            if show==1:
+#                if perc==1:
+#                    if pattern=='none':
+#                        width=[65,65,130]
+#                    else:
+#                        value=[' ','sum_debit','sum_credit','']
+#                        type=['string','string','string','lable']
+#                        width=[65,65,65,130]
+#                else:
+#                    if pattern=='none':
+#                        width=[65,65,65]
+#                    else:
+#                        value=[' ','sum_debit','sum_credit','']
+#                        type=['string','string','string','lable']
+#                        width=[65,65,65,65]
+#            else:
+#                if perc==1:
+#                    if pattern=='none':
+#                        value=['']
+#                        type=['lable']
+#                        width=[130]
+#                    else:
+#                        value=[' ','']
+#                        type=['string','lable']
+#                        width=[65,130]
+#                else:
+#                    if pattern=='none':
+#                        value=['']
+#                        type=['lable']
+#                        width=[65]
+#                    else:
+#                        value=[' ','']
+#                        type=['string','lable']
+#                        width=[65,65]
+#
+#        if not lst:
+#            lst.append(1)
+#        for ns in node.childNodes :
+#            if ns and ns.nodeName!='#text' and ns.tagName=='blockTable' and td :
+#                width_str = ns._attrs['colWidths'].nodeValue
+#                ns.removeAttribute('colWidths')
+#                total_td = td * len(value)
+#
+#                if not width:
+#                    for v in value:
+#                        width.append(30)
+#                check1=0
+#                for t in range(td):
+#                    for v in range(len(value)):
+#                        if type[v] in ('String','STRING','string'):
+#                            if (value[v]==" " or value[0]==pattern):
+#                                if check1==0:
+#                                    check1=1
+#                                    width_str +=',0.0'
+#                                else:
+#                                    width_str +=',%d'%width[v]
+#                            else:
+#                                width_str +=',%d'%width[v]
+#                        else:
+#                            width_str +=',%d'%width[v]
+#                ns.setAttribute('colWidths',width_str)
+#
+#                child_list =  ns.childNodes
+#
+#                check=0
+#                for child in child_list:
+#                    if child.nodeName=='tr':
+#                        lc = child.childNodes[1]
+#                        for t in range(td):
+#                            i=0
+#                            for v in value:
+#
+#                                newnode = lc.cloneNode(1)
+#                                temp2="%s['status']==1 and ( setTag('para','para',{'fontName':'Helvetica-bold'})) ]]"%(name)
+##
+#                                if type[i] in ('String','STRING','string'):
+#                                    if (v==" " or v==pattern) and i==0 and check==0:
+#                                        check=1
+#                                        if newnode.childNodes[1].lastChild:
+#                                            newnode.childNodes[1].lastChild.data=""
+#                                    else:
+#                                        if v==" ":
+#                                            if newnode.childNodes[1].lastChild:
+#                                                newnode.childNodes[1].lastChild.data=""
+#                                        else:
+#                                            t1= "[[ %s['%s%d'] ]]"%(name,v,t)
+#                                            if v=="year" or v=="sum_debit" or v=="sum_credit":
+#                                                if newnode.childNodes[1].lastChild:
+#                                                    newnode.childNodes[1].lastChild.data = t1
+#                                            else:
+#                                                if newnode.childNodes[1].lastChild:
+#                                                    newnode.childNodes[1].lastChild.data = t1+"[["+temp2
+##                                   newnode.childNodes[1].lastChild.data=[[ a['status']==1 and ( setTag('para','para',{'fontName':'Times-bold'})) ]]
+#                                elif type[i] in ('Lable','LABLE','lable'):
+#                                    if newnode.childNodes[1].lastChild:
+#                                        newnode.childNodes[1].lastChild.data= v
+#
+#                                child.appendChild(newnode)
+#
+#                                newnode=False
+#                                i+=1
+#        return super(account_balance,self).repeatIn(lst, name, nodes_parent=False)
 #end
+    
     def linesForYear(self,form):
         temp=0
         years={}
@@ -381,7 +393,6 @@ class account_balance(report_sxw.rml_parse):
             ids = self.ids
         if not ids:
             return []
-
         ctx = self.context.copy()
         result_total_parent=[]
 
@@ -401,22 +412,20 @@ class account_balance(report_sxw.rml_parse):
         if level==1:
             doneAccount={}
         for entry in merged_accounts:
-
+            
             if entry[0].id in doneAccount:
                 continue
             doneAccount[entry[0].id] = 1
-
             for k in range(0,len(entry)):
                 temp_credit=0.00
                 temp_debit=0.00
-
-                temp_credit+=entry[k].credit
-                temp_debit+=entry[k].debit
+                if entry[0].type <> 'view':
+                    temp_credit+=entry[k].credit
+                    temp_debit+=entry[k].debit
 
                 if self.flag==1:
                     self.result_total["sum_credit" + str(k)]=0.00
                     self.result_total["sum_debit" + str(k)]=0.00
-
                 if form['account_choice']=='bal_zero':
                     if temp_credit<>temp_debit:
                         self.result_total["sum_credit" + str(k)]+=temp_credit
@@ -533,7 +542,6 @@ class account_balance(report_sxw.rml_parse):
 
                         res["bal_perc"+str(j)]=locale.format("%.2f", temp_perc) + "%"
 
-
                     if ref_bal=='nothing':
                         if level==1:
                             self.parent_bal=1
@@ -586,7 +594,69 @@ class account_balance(report_sxw.rml_parse):
 
         return result
 
+    def get_years(self,form):
+        result =[]
+        res={}
+        for temp in range(0,len(form['fiscalyear'][0][2])):
+            res={}
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
+            res['year']=fy[0][1]
+            res['last_str']=temp
+            
+            result.append(res)
+        self.linesForYear(form)
+        return result
+    
+    def get_lines(self,year_dict,form):
+        final_result = []
+        line_l =[]
+        res = {}         
+        line_l = self.lines(form)
+        self.cal_total(year_dict)
+        if line_l:
+            for l in line_l:
+                res = {}
+                res['code'] = l['code']
+                res['name'] = l['name']
+                res['level'] = l['level']
+                for k,v in l.items():
+                    if k.startswith('debit'+str(year_dict['last_str'])):
+                     res['debit'] = v  
+                    if k.startswith('credit'+str(year_dict['last_str'])):
+                     res['credit'] = v
+                    if k.startswith('balance'+str(year_dict['last_str'])) and not k.startswith('balance_perc'+str(year_dict['last_str'])):
+                     res['balance'] =v 
+                    if k.startswith('balance_perc'+str(year_dict['last_str'])) and not k.startswith('balance'+str(year_dict['last_str'])):
+                     res['balance_perc'] = v
+                    if form['compare_pattern'] == 'bal_perc':
+                        if k.startswith('bal_perc'+str(year_dict['last_str'])):
+                         res['pattern'] = v
+                    elif form['compare_pattern'] == 'bal_cash':
+                        if k.startswith('bal_cash'+str(year_dict['last_str'])):
+                         res['pattern'] = v
+                    else:
+                         res['pattern'] = ''
+                final_result.append(res)
+        return final_result
+
+    def cal_total(self,year_dict):
+        total_l = self.result_total
+        if total_l:
+            for k,v in total_l.items():
+                if k.startswith('sum_debit'+str(year_dict['last_str'])):
+                    self.dr_total = v
+                elif k.startswith('sum_credit'+str(year_dict['last_str'])):
+                    self.cr_total = v
+                else:
+                    continue
+        return True
+    
+    def total_dr(self):
+        return self.dr_total
+    
+    def total_cr(self):
+        return self.cr_total
+    
 report_sxw.report_sxw('report.account.balance.account.balance', 'account.account', 'addons/account_balance/report/account_balance.rml', parser=account_balance, header=False)
-report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account_balance/report/account_balance_landscape.rml', parser=account_balance, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

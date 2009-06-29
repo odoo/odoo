@@ -389,7 +389,7 @@ class crm_case(osv.osv):
         'partner_id': _get_default_partner,
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
-        'state': lambda *a: 'open',
+        'state': lambda *a: 'draft',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
@@ -500,11 +500,12 @@ class crm_case(osv.osv):
                         if action.act_mail_to_partner:
                             emails.append(case.email_from)
                         if action.act_mail_to_watchers:
-                            emails += (case.email_cc or '').split(',')
+                            emails += (action.act_email_cc or '').split(',')
                         if action.act_mail_to_email:
                             emails += (action.act_mail_to_email or '').split(',')
                         emails = filter(None, emails)
                         if len(emails) and action.act_mail_body:
+                            emails = list(set(emails))                            
                             self.email_send(cr, uid, case, emails, action.act_mail_body)
                         break
             action_ids = newactions

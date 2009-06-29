@@ -94,7 +94,7 @@
           </para>
         </td>
         <td>
-          <para style="P1"><font>[[o.name]] [[o.font_style and (setTag('font','font',{'face':o.font_style} ) ) ]] [[ o.color_font and ( setTag('font','font',{'color':o.color_font.name})) ]] [[ o.color_back and ( setTag('para','para',{'backColor':o.color_back.name})) ]]</font></para>
+          <para style="P1"><font>[[ setTag('font','font',{'face':o.font_style,'color':o.color_font.name,'backColor':o.color_back.name}) ]] [[o.name]]</font></para>
         </td>
         <td>
           <para style="P2">
@@ -119,15 +119,14 @@
     <blockTable colWidths="131.0,280.0,131.0" style="Table4">
       <tr>
         <td>
-          <para style="P10">[[ repeatIn(lines(data['form'],object=o), 'a') ]]<font> [[ a['code'] ]] [[ (a['font_style']) and (setTag('font','font',{'face':a['font_style']})) or (a['level']==1 and (setTag('para','para',{'fontName':'Helvetica-Bold'}))) ]] [[ a['color_font'] and ( setTag('font','font',{'color':a['color_font']})) ]] [[ a['color_back'] and ( setTag('para','para',{'backColor':a['color_back']})) ]]</font></para>
+          <para style="P10"><font>[[ repeatIn(lines(data['form'],object=o), 'a') ]]</font><font>[[ setTag('font','font',{'face':o.font_style,'color':o.color_font.name,'backColor':o.color_back.name}) ]] [[ a['code'] ]]</font></para>
         </td>
         <td>
-          <para style="P17"><font><font color="white">[[ '..'*(a['level']-1) ]]</font> [[ a['name'] ]] [[ (a['font_style']) and (setTag('font','font',{'face':a['font_style']})) or (a['level']==1 and (setTag('para','para',{'fontName':'Helvetica-Bold'}))) ]] [[ a['color_font'] and ( setTag('font','font',{'color':a['color_font']})) ]] [[ a['color_back'] and ( setTag('para','para',{'backColor':a['color_back']})) ]]</font></para>
+          <para style="P17"><font color="white">[[ '..'*(a['level']-1) ]]</font><font>[[ setTag('font','font',{'face':o.font_style,'color':o.color_font.name,'backColor':o.color_back.name}) ]] [[ a['name'] ]]</font></para>
         </td>
         <td>
-          <para style="P18"><font>[[ '%.2f'% a['balance'] ]] [[ (a['font_style']) and (setTag('font','font',{'face':a['font_style']})) or (a['level']==1 and (setTag('para','para',{'fontName':'Helvetica-Bold'}))) ]] [[ a['color_font'] and ( setTag('font','font',{'color':a['color_font']})) ]] [[ a['color_back'] and ( setTag('para','para',{'backColor':a['color_back']})) ]]</font></para>
+          <para style="P18"><font>[[ setTag('font','font',{'face':o.font_style,'color':o.color_font.name,'backColor':o.color_back.name}) ]][[ '%.2f'% a['balance'] ]]</font></para>
         </td>
-
       </tr>
     </blockTable>
     <para style="Standard">

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="view_company_inherit_form">
+			<field name="name">res.company.form.inherit</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
+			<field name="model">res.company</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			 <notebook>
+                <page string="Overdue Payments" position="inside">
+                	<separator string="Overdue Payments Message" colspan="4"/>
+                	<field name="overdue_msg" nolabel="1" colspan ="4"/>
+                </page>
+             </notebook>
+            </field>
+		</record>
+		
+		<!-- Wizard for Configuration of Overdue Payments -->
+		
+		<record model="ir.ui.view" id="wizard_company_setup_form">
+			<field name="name">wizard.company.setup.form</field>
+			<field name="model">wizard.company.setup</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Overdue Payment Report Message">
+					<field name="company_id" select="1" on_change="onchange_company_id(company_id)"/>
+					<field name="partner_id" select="1" readonly="1"/>
+					<separator string="Message" colspan="4"/>
+					<field name="overdue_msg" nolabel="1" colspan="4"/>
+					<group col="2" colspan="4">
+						<button icon="gtk-cancel" special="cancel" type="object" name="action_cancel" string="Cancel"/>
+						<button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+        <record id="action_wizard_company_setup_form" model="ir.actions.act_window">
+            <field name="name">Overdue Payment Report Message</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.company.setup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- register configuration wizard -->
+
+        <record id="config_wizard_account_base_setup_form" model="ir.actions.todo">
+            <field name="name">Overdue Payment Report Message</field>
+            <field name="note">Specify The Message for the Overdue Payment Report.</field>
+            <field name="action_id" ref="action_wizard_company_setup_form"/>
+        </record>
+	</data>
+</openerp>

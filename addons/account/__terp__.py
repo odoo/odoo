@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -59,7 +59,8 @@
         'process/statement_process.xml',
         'process/customer_invoice_process.xml',
         'process/supplier_invoice_process.xml',
-        'sequence_view.xml'
+        'sequence_view.xml',
+        'company_view.xml',
     ],
     'demo_xml': [
         'account_demo.xml',
