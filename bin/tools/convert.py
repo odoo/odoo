@@ -256,7 +256,11 @@ form: module.record_id""" % (xml_id,)
         if len(d_search):
             ids = self.pool.get(d_model).search(cr,self.uid,eval(d_search))
         if len(d_id):
-            ids.append(self.id_get(cr, d_model, d_id))
+            try:
+                ids.append(self.id_get(cr, d_model, d_id))
+            except:
+                # d_id cannot be found. doesn't matter in this case
+                pass
         if len(ids):
             self.pool.get(d_model).unlink(cr, self.uid, ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids, direct=True)
