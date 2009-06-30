@@ -41,8 +41,10 @@ class product_product(osv.osv):
             result[product.id] = ""
             for pricelist in pricelist_browse:
                 for version in pricelist.version_id:
-                    for items in version.items_id:
-                        qty = items.min_quantity
+                    cr.execute("""select min_quantity from product_pricelist_item where price_version_id = %s""", [version.id])
+                    items_lines = cr.fetchall()
+                    for line in items_lines:
+                        qty = line[0]
                         try:
                             prices = pricelist_obj.price_get(cr, uid, [pricelist.id], product.id, qty, partner=None, context=None)
                             price = prices.get(pricelist.id) or 0.0

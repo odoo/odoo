@@ -998,15 +998,6 @@ class sale_order_line(osv.osv):
 sale_order_line()
 
 
-
-_policy_form = '''<?xml version="1.0"?>
-<form string="Select Bank Account">
-    <field name="picking_policy" colspan="4"/>
-</form>'''
-
-_policy_fields = {
-    'picking_policy': {'string': 'Packing Policy', 'type': 'selection','selection': [('direct','Direct Delivery'),('one','All at once')],'required': True,}
-}
 class sale_config_picking_policy(osv.osv_memory):
     _name='sale.config.picking_policy'
     _columns = {

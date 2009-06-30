@@ -2,9 +2,9 @@
 <openerp>
     <data>
 
-        <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note"/>
+        <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note" groups="base.group_user"/>
 
-        <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice"/>
+        <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/>
 
         <!-- close year, period, journal -->
         <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Generate Fiscal Year Opening Entries"/>
@@ -80,8 +80,8 @@
         <wizard id="wizard_balance_report" keyword="client_print_multi" model="account.account" name="account.account.balance.report" string="Account Balance"/>
         <wizard id="wizard_general_ledger_report" keyword="client_print_multi" model="account.account" name="account.general.ledger.report" string="General Ledger"/>
 
-        <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices"/>
-        <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices"/>
+        <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices" groups="base.group_user"/>
+        <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices" groups="base.group_user"/>
 
 
         <!-- account.move validate -->
@@ -97,7 +97,7 @@
         <wizard string="Create Entries From Models" model="account.move.line" name="account_use_models" menu="True" id="wizard_line_account_use_model"/>
 
 		<!-- account.invoice -->
-	    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open"/>
+	    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open" groups="base.group_user"/>
 
 	    <!-- generic report wizard -->
 	    <wizard id="wizard_account_balance_report" menu="False" model="account.account" name="account.account.balance.report" string="Account Balance"/>

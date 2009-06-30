@@ -862,6 +862,7 @@ class account_invoice(osv.osv):
             'account_id': src_account_id,
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
+            'date': date,
         }
         l2 = {
             'debit': direction * pay_amount<0 and - direction * pay_amount,
@@ -869,6 +870,7 @@ class account_invoice(osv.osv):
             'account_id': pay_account_id,
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
+            'date': date,
         }
 
         if not name:
