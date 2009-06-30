@@ -4,6 +4,7 @@ import re
 rml_parents = ['tr','story','section']
 html_parents = ['tr','body','div']
 sxw_parents = ['{http://openoffice.org/2000/table}table-row','{http://openoffice.org/2000/office}body','{http://openoffice.org/2000/text}section']
+odt_parents = ['{urn:oasis:names:tc:opendocument:xmlns:office:1.0}body','{urn:oasis:names:tc:opendocument:xmlns:table:1.0}table-row','{urn:oasis:names:tc:opendocument:xmlns:text:1.0}section']
 
 class report(object):
     def preprocess_rml(self, root_node,type='pdf'):
@@ -37,7 +38,9 @@ class report(object):
                     if len(txt.group(4)) > 1:
                         return " "
                     match = rml_parents
-                    if type in ['odt','sxw']:
+                    if type == 'odt':
+                        match = odt_parents
+                    if type == 'sxw':
                         match = sxw_parents
                     if type =='html2html':
                         match = html_parents
