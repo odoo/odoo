@@ -383,6 +383,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
+            res[product.id] =  (res[product.id] or 0.0) * product.price_margin + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
