@@ -305,7 +305,7 @@ class rml_parse(object):
         head_dom = etree.XML(rml_head)
         for tag in head_dom.getchildren():
             found = rml_dom.find('.//'+tag.tag)
-            if len(found):
+            if found and len(found):
                 if tag.get('position'):
                     found.append(tag)
                 else :
@@ -464,10 +464,47 @@ class report_sxw(report_rml, preprocess.report):
         meta = etree.tostring(rml_dom_meta)
 
         rml_dom =  etree.XML(rml)
+        body = rml_dom.getchildren()[-1]
+        elements = []
+        key1 = rml_parser.localcontext['name_space']["text"]+"p"
+        key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
+        for n in rml_dom.iterdescendants():
+            if n.tag == key1:
+                elements.append(n)
+        if report_type == 'odt':
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp=de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de.getchildren():
+                        if cnd.text or cnd.tail:
+                            if pe.text:
+                                pe.text +=  cnd.text or cnd.tail
+                            else:
+                                pe.text =  cnd.text or cnd.tail
+                            pp.remove(de)
+        else:
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp = de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de:
+                        text = cnd.get("{http://openoffice.org/2000/text}value",False)
+                        if text:
+                            if pe.text and text.startswith('[['):
+                                pe.text +=  text
+                            elif text.startswith('[['):
+                                pe.text =  text
+                            if de.getparent():
+                                pp.remove(de)
+
         rml_dom = self.preprocess_rml(rml_dom,report_type)
         create_doc = self.generators[report_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
-
         sxw_z = zipfile.ZipFile(sxw_io, mode='a')
         sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                 odt)
