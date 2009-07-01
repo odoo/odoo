@@ -466,24 +466,42 @@ class report_sxw(report_rml, preprocess.report):
         rml_dom =  etree.XML(rml)
         body = rml_dom.getchildren()[-1]
         elements = []
-        key = rml_parser.localcontext['name_space']["text"]+'label'
-        key1 = rml_parser.localcontext['name_space']["text"]+'value'
+        key1 = rml_parser.localcontext['name_space']["text"]+"p"
+        key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
         for n in rml_dom.iterdescendants():
-            if n.tag == rml_parser.localcontext['name_space']["text"]+"p":
+            if n.tag == key1:
                 elements.append(n)
-        for pe in elements:
-            e = pe.findall(rml_parser.localcontext['name_space']["text"]+"drop-down")
-            for de in e:
-                pp=de.getparent()
-                for cnd in de.getchildren():
-                    if cnd.text or cnd.tail:
-                        if de.text or de.tail:
-                            pe.text = de.text or de.tail
-                        if pe.text:
-                            pe.text +=  cnd.text or cnd.tail
-                        else:
-                            pe.text =  cnd.text or cnd.tail
-                        pp.remove(de)
+        if report_type == 'odt':
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp=de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de.getchildren():
+                        if cnd.text or cnd.tail:
+                            if pe.text:
+                                pe.text +=  cnd.text or cnd.tail
+                            else:
+                                pe.text =  cnd.text or cnd.tail
+                            pp.remove(de)
+        else:
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp = de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de:
+                        text = cnd.get("{http://openoffice.org/2000/text}value",False)
+                        if text:
+                            if pe.text and text.startswith('[['):
+                                pe.text +=  text
+                            elif text.startswith('[['):
+                                pe.text =  text
+                            if de.getparent():
+                                pp.remove(de)
+
         rml_dom = self.preprocess_rml(rml_dom,report_type)
         create_doc = self.generators[report_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
