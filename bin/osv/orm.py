@@ -1633,7 +1633,9 @@ class orm(orm_template):
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
+                            # !!! Avoid reduction of varchar field !!!
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                            # if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
                                 logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
