@@ -103,23 +103,38 @@ class node_class(object):
                     test_nodename=test_nodename.replace('/', '_')
                 path = self.path+'/'+test_nodename
                 if not nodename:
-                    n = node_class(self.cr, self.uid,path, self.object2, False, content=content, type='content', root=False)
+                    n = node_class(self.cr, self.uid,path, self.object2, False, context=self.context, content=content, type='content', root=False)
                     res2.append( n)
                 else:
                     if nodename == test_nodename:
-                        n = node_class(self.cr, self.uid, path, self.object2, False, content=content, type='content', root=False)
+                        n = node_class(self.cr, self.uid, path, self.object2, False, context=self.context, content=content, type='content', root=False)
                         res2.append(n)
 
-        ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ], context=self.context)
+        ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ])
         if self.object and self.root and (self.object.type=='ressource'):
-            ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ], context=self.context)
+            ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ])
         res = fobj.browse(self.cr, self.uid, ids, context=self.context)
-        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, type='file', root=False), res) + res2
-
+        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, context=self.context, type='file', root=False), res) + res2
+    
+    def get_translation(self,value,lang):
+        result = value
+        pool = pooler.get_pool(self.cr.dbname)        
+        translation_ids = pool.get('ir.translation').search(self.cr, self.uid, [('value','=',value),('lang','=',lang),('type','=','model')])
+        if len(translation_ids):
+            tran_id = translation_ids[0]
+            translation = pool.get('ir.translation').read(self.cr, self.uid, tran_id, ['res_id','name'])
+            res_model,field_name = tuple(translation['name'].split(','))  
+            res_id = translation['res_id']        
+            res = pool.get(res_model).read(self.cr, self.uid, res_id, [field_name])
+            if res:
+                result = res[field_name]
+        return result 
+    
     def directory_list_for_child(self,nodename,parent=False):
         pool = pooler.get_pool(self.cr.dbname)
         where = []
-        if nodename:
+        if nodename:    
+            nodename = self.get_translation(nodename, self.context['lang'])            
             where.append(('name','like',nodename))
         if (self.object and self.object.type=='directory') or not self.object2:
             where.append(('parent_id','=',self.object and self.object.id or False))
@@ -130,17 +145,17 @@ class node_class(object):
         else:
             where.append(('ressource_parent_type_id','=',False))
 
-        ids = pool.get('document.directory').search(self.cr, self.uid, where+[('ressource_id','=',0)], self.context)
+        ids = pool.get('document.directory').search(self.cr, self.uid, where+[('ressource_id','=',0)])
         if self.object2:
-            ids += pool.get('document.directory').search(self.cr, self.uid, where+[('ressource_id','=',self.object2.id)], self.context)
-        res = pool.get('document.directory').browse(self.cr, self.uid, ids,self.context)
+            ids += pool.get('document.directory').search(self.cr, self.uid, where+[('ressource_id','=',self.object2.id)])        
+        res = pool.get('document.directory').browse(self.cr, self.uid, ids, self.context)
         return res
 
     def _child_get(self, nodename=False):        
         if self.type not in ('collection','database'):
             return []
         res = self.directory_list_for_child(nodename)
-        result= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, x.type=='directory' and self.object2 or False, root=self.root), res)
+        result= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, x.type=='directory' and self.object2 or False, context=self.context, root=self.root), res)
         if self.type=='database':
             pool = pooler.get_pool(self.cr.dbname)
             fobj = pool.get('ir.attachment')
@@ -150,7 +165,7 @@ class node_class(object):
             file_ids=fobj.search(self.cr,self.uid,vargs)
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
-            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, type='file', root=self.root), res)
+            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, context=self.context, type='file', root=self.root), res)
         if self.type=='collection' and self.object.type=="ressource":
             where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
             pool = pooler.get_pool(self.cr.dbname)            
@@ -169,12 +184,17 @@ class node_class(object):
                     nodename=nodename.replace('__','/')
                 for invalid in INVALID_CHARS:
                     if nodename.find(INVALID_CHARS[invalid]) :
-                        nodename=nodename.replace(INVALID_CHARS[invalid],invalid)                
+                        nodename=nodename.replace(INVALID_CHARS[invalid],invalid)
+                nodename = self.get_translation(nodename, self.context['lang'])
                 where.append((_dirname_field,'like',nodename))
-            
+
             if self.object.ressource_tree:
                 if obj._parent_name in obj.fields_get(self.cr,self.uid):                    
-                    where.append((obj._parent_name,'=',self.object2 and self.object2.id or False))                    
+                    where.append((obj._parent_name,'=',self.object2 and self.object2.id or False))
+                    ids = obj.search(self.cr, self.uid, where)
+                    res = obj.browse(self.cr, self.uid, ids,self.context)
+                    result+= map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, context=self.context, root=x.id), res)
+                    return result
                 else :
                     if self.object2:
                         return result
@@ -183,31 +203,22 @@ class node_class(object):
                     return result
 
             
-            ids = obj.search(self.cr, self.uid, where, self.context)
-            res = obj.browse(self.cr, self.uid, ids,self.context)            
-            if _dirname_field == 'dirname':
-                for r in res:
-                    if not r.dirname:
-                        r.dirname = name_for+'%d'%r.id
-                    for invalid in INVALID_CHARS:
-                        if r.dirname.find(invalid) :
-                            r.dirname=r.dirname.replace(invalid,INVALID_CHARS[invalid])            
-                result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.dirname.replace('/','__'), self.object, x, root=x.id), res)
-            
-            else:
-                for r in res:
-                    if not len(obj.fields_get(self.cr, self.uid, ['name'])):
-                        r.name = name_for+'%d'%r.id
-                    for invalid in INVALID_CHARS:
-                        if r.name.find(invalid) :
-                            r.name=r.name.replace(invalid,INVALID_CHARS[invalid])            
-                result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, root=x.id), res)
-               
+            ids = obj.search(self.cr, self.uid, where)
+            res = obj.browse(self.cr, self.uid, ids,self.context)
+            for r in res:                
+                if len(obj.fields_get(self.cr, self.uid, [_dirname_field])):
+                    r.name = eval('r.'+_dirname_field)
+                else:
+                    r.name = name_for+'%d'%r.id               
+                for invalid in INVALID_CHARS:
+                    if r.name.find(invalid) :
+                        r.name=r.name.replace(invalid,INVALID_CHARS[invalid])            
+            result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, context=self.context, root=x.id), res)
             if result2:
                 if self.object.ressource_tree:
                     result += result2
                 else:
-                    result = result2            
+                    result = result2                  
         return result
 
     def children(self):
@@ -232,7 +243,7 @@ class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Document directory'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1),
+        'name': fields.char('Name', size=64, required=True, select=1, translate=True),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -304,7 +315,6 @@ class document_directory(osv.osv):
     def __init__(self, *args, **kwargs):
         res = super(document_directory, self).__init__(*args, **kwargs)
         self._cache = {}
-        return res
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}
@@ -312,6 +322,7 @@ class document_directory(osv.osv):
     def _get_childs(self, cr, uid, node, nodename=False, context={}):
         where = []
         if nodename:
+            nodename = self.get_translation(nodename, self.context['lang'])
             where.append(('name','like',nodename))
         if object:
             where.append(('parent_id','=',object.id))
@@ -326,12 +337,17 @@ class document_directory(osv.osv):
             object: the object.directory or object.directory.content
             object2: the other object linked (if object.directory.content)
     """
-    def get_object(self, cr, uid, uri, context={}):        
+    def get_object(self, cr, uid, uri, context={}):
+        lang = context.get('lang',False)
+        if not lang:
+            user = self.pool.get('res.users').browse(cr, uid, uid)
+            lang = user.context_lang 
+        context['lang'] = lang
         if not uri:
-            return node_class(cr, uid, '', False, type='database')
+            return node_class(cr, uid, '', False, context=context, type='database')
         turi = tuple(uri)
-        if False and (turi in self._cache):            
-            (path, oo, oo2, content,type,root) = self._cache[turi]            
+        if False and (turi in self._cache):
+            (path, oo, oo2, context, content,type,root) = self._cache[turi]
             if oo:
                 object = self.pool.get(oo[0]).browse(cr, uid, oo[1], context)
             else:
@@ -340,10 +356,10 @@ class document_directory(osv.osv):
                 object2 = self.pool.get(oo2[0]).browse(cr, uid, oo2[1], context)
             else:
                 object2 = False
-            node = node_class(cr, uid, path, object,object2, context, content, type, root)
+            node = node_class(cr, uid, '/', False, context=context, type='database')
             return node
 
-        node = node_class(cr, uid, '/', False, type='database')
+        node = node_class(cr, uid, '/', False, context=context, type='database')
         for path in uri[:]:
             if path:
                 node = node.child(path)
@@ -351,7 +367,7 @@ class document_directory(osv.osv):
                     return False
         oo = node.object and (node.object._name, node.object.id) or False
         oo2 = node.object2 and (node.object2._name, node.object2.id) or False
-        self._cache[turi] = (node.path, oo, oo2, node.content,node.type,node.root)
+        self._cache[turi] = (node.path, oo, oo2, node.context, node.content,node.type,node.root)
         return node
 
     def get_childs(self, cr, uid, uri, context={}):
@@ -378,7 +394,7 @@ class document_directory(osv.osv):
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)
         ressource_id=vals.get('ressource_id',0)
         if op=='write':
-           for directory in self.browse(cr,uid,ids):
+            for directory in self.browse(cr,uid,ids):
                 if not name:
                     name=directory.name
                 if not parent_id:
@@ -591,7 +607,7 @@ class document_file(osv.osv):
         res_model=vals.get('res_model',False)
         res_id=vals.get('res_id',0)
         if op=='write':
-           for file in self.browse(cr,uid,ids):
+            for file in self.browse(cr,uid,ids):
                 if not name:
                     name=file.name
                 if not parent_id:
@@ -603,7 +619,6 @@ class document_file(osv.osv):
                 res=self.search(cr,uid,[('id','<>',file.id),('name','=',name),('parent_id','=',parent_id),('res_model','=',res_model),('res_id','=',res_id)])
                 if len(res):
                     return False
-                
         if op=='create':
             res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('res_id','=',res_id),('res_model','=',res_model)])
             if len(res):
@@ -790,6 +805,6 @@ class document_configuration_wizard(osv.osv_memory):
                 "view_mode": 'form',
                 'res_model': 'ir.actions.configuration.wizard',
                 'type': 'ir.actions.act_window',
-                'target':'new',
+                'target': 'new',
         }
 document_configuration_wizard()
