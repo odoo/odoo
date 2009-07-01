@@ -2291,11 +2291,12 @@ class orm(orm_template):
                 else:
                     cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
                             'where id in ('+ids_str+')', upd1)
-
+            
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)

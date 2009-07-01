@@ -94,7 +94,7 @@ class ir_translation(osv.osv):
                 translations[res_id] = value
         return translations
 
-    def _set_ids(self, cr, uid, name, tt, lang, ids, value):
+    def _set_ids(self, cr, uid, name, tt, lang, ids, value, src=None):
         # clear the caches
         tr = self._get_ids(cr, uid, name, tt, lang, ids)
         for res_id in tr:
@@ -117,6 +117,7 @@ class ir_translation(osv.osv):
                 'name':name,
                 'res_id':id,
                 'value':value,
+                'src':src,
                 })
         return len(ids)
 
