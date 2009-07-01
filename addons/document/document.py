@@ -196,7 +196,7 @@ class node_class(object):
             
             else:
                 for r in res:
-                    if not r.name:
+                    if not len(obj.fields_get(self.cr, self.uid, ['name'])):
                         r.name = name_for+'%d'%r.id
                     for invalid in INVALID_CHARS:
                         if r.name.find(invalid) :
@@ -648,7 +648,7 @@ class document_file(osv.osv):
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
             if len(result):
                 obj=result[0]
-                vals['title'] = (obj['name'] or '')[:60]
+                vals['title'] = (obj.get('name',''))[:60]
                 if obj_model._name=='res.partner':
                     vals['partner_id']=obj['id']
                 elif obj.get('address_id',False):
