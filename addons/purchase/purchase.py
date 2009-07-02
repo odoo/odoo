@@ -432,7 +432,7 @@ class purchase_order_line(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Description', size=64, required=True),
+        'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
         'date_planned': fields.datetime('Scheduled date', required=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
