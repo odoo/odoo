@@ -459,7 +459,7 @@ class orm_template(object):
                         elif f[i] in self._inherit_fields:
                             r = check_type(self._inherit_fields[f[i]][2]._type,r)
                            
-                        data[fpos] = r
+                        data[fpos] = tools.ustr(r)
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
