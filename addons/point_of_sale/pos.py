@@ -138,7 +138,7 @@ class pos_order(osv.osv):
         default.update({
             'state': 'draft',
             'payments': [],
-            'partner_id': False,
+            #'partner_id': False,
             'invoice_id': False,
             'account_move': False,
             'last_out_picking': False,
@@ -481,7 +481,7 @@ class pos_order(osv.osv):
         for clone in self.browse(cr, uid, clone_list):
             for order_line in clone.lines:
                 line_obj.write(cr, uid, [order_line.id], {
-                    'qty': -order_line.qty
+                    'qty': -order_line.qty,
                     })
         return clone_list
 
