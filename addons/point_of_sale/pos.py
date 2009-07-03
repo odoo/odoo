@@ -206,6 +206,7 @@ class pos_order(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
+        'salesman_id': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence')\
             .get(cr, uid, 'pos.order'),
