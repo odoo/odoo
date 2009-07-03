@@ -921,7 +921,7 @@ class account_invoice_line(osv.osv):
         if 'check_total' in context:
             t = context['check_total']
             for l in context.get('invoice_line', {}):
-                if len(l) >= 3 and l[2]:
+                if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
                     tax_obj = self.pool.get('account.tax')
                     p = l[2].get('price_unit', 0) * (1-l[2].get('discount', 0)/100.0)
                     t = t - (p * l[2].get('quantity'))

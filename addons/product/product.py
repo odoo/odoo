@@ -383,6 +383,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
+            res[product.id] =  (res[product.id] or 0.0) * product.price_margin + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
@@ -403,7 +404,7 @@ class product_product(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
             if not data['code']:
-                data['name'] = p.code
+                data['code'] = p.code
             if not data['name']:
                 data['name'] = p.name
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
