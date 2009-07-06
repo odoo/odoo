@@ -31,7 +31,7 @@ class ir_rule_group(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.boolean('Global', select=1, help="Make the rule global, otherwise it needs to be put on a group or user"),
+        'global': fields.boolean('Global', select=1, help="Make the rule global, otherwise it needs to be put on a group"),
         'rules': fields.one2many('ir.rule', 'rule_group', 'Tests', help="The rule is satisfied if at least one test is True"),
         'groups': fields.many2many('res.groups', 'group_rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'users': fields.many2many('res.users', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Users'),
