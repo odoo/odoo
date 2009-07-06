@@ -573,7 +573,7 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import usps
             except Exception, e:
                 return None
-            args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'bool','quiet':'bool'})
+            args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'int','quiet':'int','width':'unit','stop':'bool','bearers':'int','barWidth':'float','barHeight':'float'})
             codes = {
                 'codabar': lambda x: common.Codabar(x, **args),
                 'code11': lambda x: common.Code11(x, **args),
