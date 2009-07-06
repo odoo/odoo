@@ -893,10 +893,10 @@ class sale_order_line(osv.osv):
                 ean = pack.ean
                 qty_pack = pack.qty
                 type_ul = pack.ul
-                warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
-                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantity: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
+                warn_msg = warn_msg + "\n\n"+_("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
                 warning={
-                    'title':'Packing Information !',
+                    'title':_('Packing Information !'),
                     'message': warn_msg
                     }
             result['product_uom_qty'] = qty

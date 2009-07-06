@@ -428,7 +428,7 @@ class stock_picking(osv.osv):
             ('confirmed','Confirmed'),
             ('assigned','Available'),
             ('done','Done'),
-            ('cancel','Cancel'),
+            ('cancel','Canceled'),
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True,store=True, type='datetime', string='Planned Date', select=1),
