@@ -322,7 +322,10 @@ class pos_order(osv.osv):
                 self.write(cr, uid, [order.id], {'last_out_picking': picking_id})
             else:
                 picking_id = order.last_out_picking.id
-                picking_obj.write(cr, uid, [picking_id], {'auto_picking': True})
+                picking_obj.write(cr, uid, [picking_id], {
+                    'auto_picking': True,
+                    'invoice_state': '2binvoiced',
+                })
                 picking = picking_obj.browse(cr, uid, [picking_id], context)[0]
                 new = False
 
