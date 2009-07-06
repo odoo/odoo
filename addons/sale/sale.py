@@ -193,7 +193,7 @@ class sale_order(osv.osv):
             ('shipping_except','Shipping Exception'),
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
-            ('cancel','Cancel')
+            ('cancel','Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'.", select=True),
         'date_order':fields.date('Date Ordered', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 

@@ -206,6 +206,7 @@ class pos_order(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
+        'salesman_id': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence')\
             .get(cr, uid, 'pos.order'),
@@ -321,7 +322,10 @@ class pos_order(osv.osv):
                 self.write(cr, uid, [order.id], {'last_out_picking': picking_id})
             else:
                 picking_id = order.last_out_picking.id
-                picking_obj.write(cr, uid, [picking_id], {'auto_picking': True})
+                picking_obj.write(cr, uid, [picking_id], {
+                    'auto_picking': True,
+                    'invoice_state': '2binvoiced',
+                })
                 picking = picking_obj.browse(cr, uid, [picking_id], context)[0]
                 new = False
 
@@ -477,11 +481,14 @@ class pos_order(osv.osv):
                 'payments': False,
                 })
             clone_list.append(clone_id)
+            self.write(cr, uid, clone_id, {
+                'partner_id': order.partner_id.id,
+            })
 
         for clone in self.browse(cr, uid, clone_list):
             for order_line in clone.lines:
                 line_obj.write(cr, uid, [order_line.id], {
-                    'qty': -order_line.qty
+                    'qty': -order_line.qty,
                     })
         return clone_list
 

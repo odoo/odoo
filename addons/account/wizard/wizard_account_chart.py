@@ -41,7 +41,7 @@ class wizard_account_chart(wizard.interface):
             'target_move': {
                 'string': 'Target Moves',
                 'type': 'selection',
-                'selection': [('all','All Entries'),('posted_only','All Posted Entries')],
+                'selection': [('all','All Entries'),('posted','All Posted Entries')],
                 'required': True,
                 'default': lambda *a:"all",
         },
@@ -60,7 +60,7 @@ class wizard_account_chart(wizard.interface):
         result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'target_move':data['form']['target_move']})
+        result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'state':data['form']['target_move']})
         if data['form']['fiscalyear']:
             result['name']+=':'+pooler.get_pool(cr.dbname).get('account.fiscalyear').read(cr,uid,[data['form']['fiscalyear']])[0]['code']
         return result
