@@ -359,7 +359,7 @@ class sale_order(osv.osv):
         else:
             pay_term = False
         for preinv in order.invoice_ids:
-            if preinv.state in ('open','paid','proforma'):
+            if preinv.state not in ('cancel',):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id':False, 'price_unit':-preline.price_unit})
                     lines.append(inv_line_id)
