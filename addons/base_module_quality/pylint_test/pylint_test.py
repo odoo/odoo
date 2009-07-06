@@ -58,10 +58,14 @@ class quality_test(base_module_quality.abstract_quality_check):
                     flag = True
                 file_path = os.path.join(module_path, file_py)
                 try:
+                    import pylint
                     res = os.popen('pylint --rcfile=' + config_file_path + ' ' + file_path).read()
                 except:
-                    self.result += _("Error. Is pylint correctly installed?")+"\n"
-                    break
+                    self.error = True
+                    import netsvc
+                    netsvc.Logger().notifyChannel('Pylint:', netsvc.LOG_WARNING, "Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")
+                    self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"
+                    return None
                 count += 1
 #                leftchar = -1
 #                while res[leftchar:leftchar+1] != ' ' and leftchar-1 <= 0:

@@ -56,7 +56,15 @@ class quality_test(base_module_quality.abstract_quality_check):
                     flag = True
                 file_path = os.path.join(module_path, file_py)
                 try:
-                    res = os.popen('pyflakes' + ' ' + file_path).read()
+                    try:
+                        import pyflakes
+                        res = os.popen('pyflakes' + ' ' + file_path).read()
+                    except:
+                        self.error = True
+                        import netsvc
+                        netsvc.Logger().notifyChannel('Pyflakes', netsvc.LOG_WARNING, "Is pyflakes correctly installed? (http://pypi.python.org/pypi/pyflakes/0.3.0)")
+                        self.result += _("Error! Is pyflakes correctly installed? (http://pypi.python.org/pypi/pyflakes/0.3.0)")+"\n"
+                        return None
                     if not res:
                         continue
                     self.result_details += '''<table border="2" bordercolor="black" width="100%" align="center"><tr><td width="30%"> ''' + file_py + '</td><td width="70%"><table border=2 bordercolor=black >'
@@ -95,8 +103,9 @@ class quality_test(base_module_quality.abstract_quality_check):
                         if str(temp_dict[t]) != '0':
                             final_str += '\n' + str(t) + ' : ' + str(temp_dict[t]) + '\n'
                 except:
-                    self.result += _("Error! Is pyflakes correctly installed? (http://pypi.python.org/pypi/pyflakes/0.3.0)")+"\n"
-                    break
+                    self.error = True
+                    self.result += _("Error in running pyflakes") + "\n"
+                    return None
                 try:
                     dict_py[file_py] = [file_py, final_str]
                 except:
