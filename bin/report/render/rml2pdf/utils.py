@@ -162,6 +162,8 @@ def attr_get(node, attrs, dict={}):
                 res[key] = int(node.get(key))
             elif dict[key]=='unit':
                 res[key] = unit_get(node.get(key))
+            elif dict[key] == 'float' : 
+                res[key] = float(node.get(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

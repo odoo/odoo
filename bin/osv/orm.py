@@ -433,6 +433,16 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
+        
+        def check_type(type,r):
+            if type == 'float':
+                return 0.0
+            elif type == 'integer':
+                return 0
+            elif type == 'char':
+                return ''
+            return r
+        
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -444,6 +454,12 @@ class orm_template(object):
                 while i < len(f):
                     r = r[f[i]]
                     if not r:
+                        if f[i] in self._columns: 
+                            r = check_type(self._columns[f[i]]._type,r)
+                        elif f[i] in self._inherit_fields:
+                            r = check_type(self._inherit_fields[f[i]][2]._type,r)
+                           
+                        data[fpos] = tools.ustr(r)
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -2291,11 +2307,12 @@ class orm(orm_template):
                 else:
                     cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
                             'where id in ('+ids_str+')', upd1)
-
+            
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
