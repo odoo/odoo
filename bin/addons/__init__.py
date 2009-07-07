@@ -573,16 +573,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     modobj = None
 
     for package in graph:
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
+        migrations.migrate_module(package, 'pre')
+        register_class(package.name)
+        modules = pool.instanciate(package.name, cr)
+        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+            init_module_objects(cr, package.name, modules)
+        cr.commit()
+        
+    for package in graph:
+        status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % m)
-        migrations.migrate_module(package, 'pre')
-        register_class(m)
-        modules = pool.instanciate(m, cr)
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            init_module_objects(cr, m, modules)
-        cr.commit()
-        status['progress'] = (float(statusi)+0.1) / len(graph)
 
         if modobj is None:
             modobj = pool.get('ir.module.module')
@@ -627,7 +629,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                         tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
                     fp.close()
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-            package_todo.append(m)
+            package_todo.append(package.name)
 
             migrations.migrate_module(package, 'post')
 
