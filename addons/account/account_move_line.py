@@ -837,7 +837,7 @@ class account_move_line(osv.osv):
             if journal.type_control_ids:
                 type = account.user_type
                 for t in journal.type_control_ids:
-                    if type==t.code:
+                    if type.code == t.code:
                         ok = True
                         break
             if journal.account_control_ids and not ok:
