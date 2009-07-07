@@ -505,27 +505,22 @@ GNU Public Licence.
             l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
             raise
 
-    def get_server_environment(self,lang=False):
+    def get_server_environment(self):
         try:
-            if '.bzr' in os.listdir((os.getcwd()[0:-3])):
-                fp = open(os.path.join(os.getcwd()[0:-3],'.bzr/branch/last-revision'))
-                rev_no = fp.read()
-                fp.close()
-            else:
-                rev_no = 'Bazaar Not Installed !'
-        except:
-            rev_no = 'Bazaar Not Installed !'
-        if not lang:
-            lang = os.environ.get('LANG', '').split('.')[0]
-        environment = 'Environment_Information : \n' \
-                      'Operating System : %s\n' \
+            rev_no = os.popen('bzr revno').read()
+        except Exception,e:
+             bzr_info = 'Exception: %s\n' % (str(e))
+
+        os_lang = os.environ.get('LANG', '').split('.')[0]
+        environment = '\nEnvironment_Information : \n' \
                       'PlatForm : %s\n' \
+                      'Operating System : %s\n' \
                       'Operating System Version : %s\n' \
+                      'Operating System Locale : %s\n'\
                       'Python Version : %s\n'\
-                      'Locale : %s\n' \
                       'OpenERP-Server Version : %s\n'\
-                      'OpenERP-Server Last Revision ID : %s' \
-                      %(os.name,sys.platform,str(sys.version.split('\n')[1]),str(sys.version[0:5]), lang, release.version,rev_no)
+                      'Last revision no: %s' \
+                      %(sys.platform,os.name,str(sys.version.split('\n')[1]),os_lang,str(sys.version[0:5]),release.version,rev_no)
         return environment
 common()
 
@@ -660,7 +655,6 @@ class report_spool(netsvc.Service):
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
-                logger.notifyChannel('web-services', netsvc.LOG_ERROR,common().get_server_environment(context.get('lang',False)))
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
