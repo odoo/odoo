@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 17:23+0000\n"
-"PO-Revision-Date: 2009-07-06 13:04+0000\n"
-"Last-Translator: Olivier (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 12:47+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-06 13:20+0000\n"
+"X-Launchpad-Export-Date: 2009-07-07 11:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -63,9 +63,15 @@ msgid "Operation Not Permitted !"
 msgstr "Opération non permises !"
 
 #. module: project
-#: view:project.task:0
-msgid "Delegations"
-msgstr "Délégations"
+#: code:addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
+msgstr "CONTROLE: "
+
+#. module: project
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -138,12 +144,9 @@ msgid "User you want to delegate this task to."
 msgstr "Utilisateur à qui vous voulez déléguer votre tâche."
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose."
+#: model:ir.actions.wizard,name:project.wizard_attachment_task
+msgid "All Attachments"
 msgstr ""
-"Membre du projet. Non utilisé dans aucun calcul, juste proposer à titre "
-"d'information"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -186,6 +189,14 @@ msgstr "Très urgent"
 #: wizard_button:project.task.delegate,init,valid:0
 msgid "Validate"
 msgstr "Valider"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid ""
+"Project management module that track multi-level projects, tasks,\n"
+"works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
+"    "
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
@@ -297,8 +308,6 @@ msgid ""
 "A new project has been created !\n"
 "We suggest you to close this one and work on this new project."
 msgstr ""
-"Un nouveau projet a été crée !\n"
-"Nous vous suggerons de fermer celui-ci et de travailler sur le nouveau."
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -313,6 +322,11 @@ msgid ""
 msgstr ""
 "Si vous cochez la case, l'utilisateur verra un menu surgissant quand une "
 "tâche sera fermé proposant un message pour envoyer un mail au client."
+
+#. module: project
+#: help:project.task.delegate,init,new_task_description:0
+msgid "Reinclude the description of the task in the task of the user."
+msgstr ""
 
 #. module: project
 #: field:project.project,category_id:0
@@ -364,14 +378,17 @@ msgid "Reset as Project"
 msgstr "Réinitialiser en projet"
 
 #. module: project
-#: selection:project.project,state:0
-msgid "Template"
-msgstr "Modèle"
+#: view:project.task:0
+msgid "Delegations"
+msgstr "Délégations"
 
 #. module: project
-#: wizard_button:project.task.close,mail_ask,mail_send:0
-msgid "Send Message"
-msgstr "Envoyer un message"
+#: help:project.project,members:0
+msgid ""
+"Project's member. Not used in any computation, just for information purpose."
+msgstr ""
+"Membre du projet. Non utilisé dans aucun calcul, juste proposer à titre "
+"d'information"
 
 #. module: project
 #: view:project.project:0
@@ -399,6 +416,11 @@ msgstr "Tache délégué"
 msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr ""
 "Pourcentage des tâches fermés en accord avec le total des tâches à faire."
+
+#. module: project
+#: wizard_field:project.task.delegate,init,new_task_description:0
+msgid "New Task Description"
+msgstr "Description de la nouvelle tâche"
 
 #. module: project
 #: help:project.project,notes:0
@@ -508,6 +530,11 @@ msgid "Estimated time to close this task by the delegated user."
 msgstr "Temps estimés pour fermer cette tâche par l'utilisateur délégué"
 
 #. module: project
+#: selection:project.project,state:0
+msgid "Template"
+msgstr "Modèle"
+
+#. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
 #: view:res.company:0
 msgid "Configuration"
@@ -609,6 +636,12 @@ msgstr ""
 "de Gantt"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr "Tâche '%s' mise en cours"
+
+#. module: project
 #: view:project.project:0
 msgid "Project's members"
 msgstr "Membres du projet"
@@ -633,6 +666,12 @@ msgstr "Mes tâches"
 #: view:project.project:0
 msgid "Status: %(state)s"
 msgstr "Statut: %(state)s"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
+msgstr "Tâche '%s' annullée"
 
 #. module: project
 #: view:project.task:0
@@ -723,7 +762,12 @@ msgstr "Unité de temps du projet"
 #: field:project.project,complete_name:0
 #: field:project.project,name:0
 msgid "Project Name"
-msgstr "Nom du projet"
+msgstr "Nom du groupe"
+
+#. module: project
+#: wizard_button:project.task.close,mail_ask,mail_send:0
+msgid "Send Message"
+msgstr "Envoyer un message"
 
 #. module: project
 #: field:project.project,total_hours:0
@@ -833,6 +877,11 @@ msgid "Delegate this task to a user"
 msgstr "Délégué cette tâche à un utilisateur"
 
 #. module: project
+#: field:project.task,delegated_user_id:0
+msgid "Delegated To"
+msgstr "Déléguer à"
+
+#. module: project
 #: field:project.task,date_close:0
 msgid "Date Closed"
 msgstr "Date fin"
@@ -855,6 +904,13 @@ msgstr ""
 #: help:project.project,effective_hours:0
 msgid "Sum of spent hours of all tasks related to this project."
 msgstr "Somme des heures passés de toutes les tâches reliés à ce projet"
+
+#. module: project
+#: help:project.task,project_id:0
+msgid ""
+"If you have [?] in the project name, it means there are no analytic account "
+"linked to this project."
+msgstr ""
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -891,6 +947,14 @@ msgstr "Résumé de la tâche"
 #: view:project.project:0
 msgid "Date Start: %(date_start)s"
 msgstr "Date de début: %(date_start)s"
+
+#. module: project
+#: help:project.project,category_id:0
+msgid ""
+"Link this project to an analytic account if you need financial management on "
+"projects. It enables you to connect projects with budgets, planning, cost "
+"and revenue analysis, timesheets on projects, etc."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1033,6 +1097,13 @@ msgid "Running"
 msgstr "En cours"
 
 #. module: project
+#: help:project.project,parent_id:0
+msgid ""
+"If you have [?] in the name, it means there are no analytic account linked "
+"to project."
+msgstr ""
+
+#. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
 msgid "Delegate Task"
 msgstr "Délégué Tâche"
@@ -1055,6 +1126,12 @@ msgstr ""
 #: model:project.task.type,name:project.project_tt_feature
 msgid "New Feature"
 msgstr "Nouvelle fonctionnalité"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
+msgstr "Tâche '%s' clôturée"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -1168,83 +1245,3 @@ msgstr "pied du mail"
 #: model:ir.ui.menu,name:project.menu_open_view_project_open
 msgid "Running projects"
 msgstr "Projets en cours"
-
-#. module: project
-#: code:addons/project/wizard/task_delegate.py:0
-#, python-format
-msgid "CHECK: "
-msgstr "CONTROLE: "
-
-#. module: project
-#: model:ir.module.module,description:project.module_meta_information
-msgid ""
-"Project management module that track multi-level projects, tasks,\n"
-"works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-"    "
-msgstr ""
-"Module de gestion de projets pour gérer des projets et tâches à multiples "
-"niveaux\n"
-"    "
-
-#. module: project
-#: help:project.task.delegate,init,new_task_description:0
-msgid "Reinclude the description of the task in the task of the user."
-msgstr "Réinclure la description de la tâche dans la tâche de l'utilisateur"
-
-#. module: project
-#: wizard_field:project.task.delegate,init,new_task_description:0
-msgid "New Task Description"
-msgstr "Description de la nouvelle tâche"
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' set in progress"
-msgstr "Tâche '%s' mise en cours"
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' cancelled"
-msgstr "Tâche '%s' annullée"
-
-#. module: project
-#: field:project.task,delegated_user_id:0
-msgid "Delegated To"
-msgstr "Déléguer à"
-
-#. module: project
-#: help:project.task,project_id:0
-msgid ""
-"If you have [?] in the project name, it means there are no analytic account "
-"linked to this project."
-msgstr ""
-"So vous avez [?] dans le nom du projet, cela signifie qu'il n'y a pas de "
-"compte analytique lié au projet."
-
-#. module: project
-#: help:project.project,category_id:0
-msgid ""
-"Link this project to an analytic account if you need financial management on "
-"projects. It enables you to connect projects with budgets, planning, cost "
-"and revenue analysis, timesheets on projects, etc."
-msgstr ""
-"Associe ce projet à un compte analytique si vous avez besoin de la gestion "
-"financière des projets. Il vous permet de relier des projets aux budgets, la "
-"planification, l'analyse des coûts et des revenus, des feuilles de temps sur "
-"des projets, etc."
-
-#. module: project
-#: help:project.project,parent_id:0
-msgid ""
-"If you have [?] in the name, it means there are no analytic account linked "
-"to project."
-msgstr ""
-"So vous avez [?] dans le nom, cela signifie qu'il n'y a pas de compte "
-"analytique lié au projet."
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' closed"
-msgstr "Tâche '%s' clôturée"

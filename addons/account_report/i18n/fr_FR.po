@@ -1,27 +1,366 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* account_reporting
+#	* account_report
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-04-09 17:23+0000\n"
-"PO-Revision-Date: 2009-07-06 13:35+0000\n"
-"Last-Translator: Olivier (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 13:34+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-06 14:04+0000\n"
+"X-Launchpad-Export-Date: 2009-07-07 11:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. module: account_reporting
-#: field:color.rml,code:0
-msgid "code"
-msgstr "code"
+#. module: account_report
+#: field:account.report.history,name:0
+#: selection:account.report.report,type:0
+#: model:ir.model,name:account_report.model_account_report_history
+msgid "Indicator"
+msgstr "Indicateur"
 
-#. module: account_reporting
+#. module: account_report
+#: wizard_field:print.indicators.pdf,init,file:0
+msgid "Select a PDF File"
+msgstr "Sélectionnez un fichier PDF"
+
+#. module: account_report
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Operators:"
+msgstr "Opérateurs"
+
+#. module: account_report
+#: field:account.report.report,parent_id:0
+msgid "Parent"
+msgstr "Parent"
+
+#. module: account_report
+#: field:account.report.report,disp_graph:0
+msgid "Display As Graph"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Account Debit:"
+msgstr ""
+
+#. module: account_report
+#: selection:account.report.report,type:0
+msgid "Others"
+msgstr "Autres"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Tabular Summary"
+msgstr "Résumé tabulaire"
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "Please select maximum 8 records to fit the page-width."
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "= Goodness Indicator Limit:"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Very bad"
+msgstr "Très mauvais"
+
+#. module: account_report
+#: field:account.report.history,val:0
+#: field:account.report.report,amount:0
+msgid "Value"
+msgstr "Valeur"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "= Badness Indicator Limit:"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+#: selection:account.report.report,status:0
+msgid "Bad"
+msgstr "Mauvais"
+
+#. module: account_report
+#: wizard_view:print.indicators.pdf,init:0
+msgid "Select the PDF file on which Indicators will be printed."
+msgstr ""
+"Sélectionnez le fichier PDF sur lequel les indicateurs seront imprimés."
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "> Goodness Indicator Limit:"
+msgstr ""
+
+#. module: account_report
+#: field:account.report.report,badness_limit:0
+msgid "Badness Indicator Limit"
+msgstr ""
+
+#. module: account_report
+#: selection:account.report.report,status:0
+msgid "Very Bad"
+msgstr "Très mauvais"
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.account_report_history_record_structure
+msgid "Indicator history"
+msgstr "Historique de l'Indicateur"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "credit(['ACCOUNT_CODE',],fiscalyear)"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Report Amount:"
+msgstr ""
+
+#. module: account_report
+#: model:ir.actions.report.xml,name:account_report.fiscal_statements
+msgid "Fiscal Statements"
+msgstr "Extraits fiscaux"
+
+#. module: account_report
+#: wizard_button:print.indicators,init,next:0
+msgid "Next"
+msgstr "Suivant"
+
+#. module: account_report
+#: model:ir.module.module,shortdesc:account_report.module_meta_information
+msgid "Reporting for accounting"
+msgstr ""
+
+#. module: account_report
+#: wizard_button:print.indicators,next,print:0
+#: wizard_button:print.indicators.pdf,init,print:0
+msgid "Print"
+msgstr "Imprimer"
+
+#. module: account_report
+#: field:account.report.report,type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: account_report
+#: model:ir.actions.report.xml,name:account_report.report_indicator_pdf
+msgid "Print Indicators in PDF"
+msgstr "Imprimer les Indicateurs dans le fichier PDF"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Account Tax Code:"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+#: selection:account.report.report,status:0
+msgid "Good"
+msgstr "Bon"
+
+#. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "Error !"
+msgstr "Erreur !"
+
+#. module: account_report
+#: view:account.report.history:0
+msgid "Account Report History"
+msgstr ""
+
+#. module: account_report
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valide pour l'architecture de la vue"
+
+#. module: account_report
+#: help:account.report.report,badness_limit:0
+msgid "This Value sets the limit of badness."
+msgstr ""
+
+#. module: account_report
+#: wizard_field:print.indicators,init,select_base:0
+msgid "Choose Criteria"
+msgstr "Choisissez les critères"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "debit(['ACCOUNT_CODE',],fiscalyear)"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Account Credit:"
+msgstr ""
+
+#. module: account_report
+#: wizard_view:print.indicators,init:0
+msgid "Select the criteria based on which Indicators will be printed."
+msgstr ""
+"Sélectionnez les critères sur lesquels seront basés les indicateurs à "
+"imprimer."
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "< Badness Indicator Limit:"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+#: selection:account.report.report,status:0
+msgid "Very Good"
+msgstr "Très bien"
+
+#. module: account_report
+#: field:account.report.report,note:0
+msgid "Note"
+msgstr "Note"
+
+#. module: account_report
+#: rml:accounting.report:0
+#: rml:print.indicators:0
+msgid "Currency:"
+msgstr "Devise"
+
+#. module: account_report
+#: field:account.report.report,status:0
+msgid "Status"
+msgstr "Status"
+
+#. module: account_report
+#: help:account.report.report,disp_tree:0
+msgid ""
+"When the indicators are printed, if one indicator is set with this field to "
+"True, then it will display one more graphs with all its children in tree"
+msgstr ""
+
+#. module: account_report
+#: selection:account.report.report,status:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Example: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"
+msgstr ""
+
+#. module: account_report
+#: field:account.report.report,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: account_report
+#: field:account.report.report,disp_tree:0
+msgid "Display Tree"
+msgstr ""
+
+#. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based On Fiscal Years"
+msgstr "Basé sur les Années Fiscales"
+
+#. module: account_report
+#: model:ir.model,name:account_report.model_account_report_report
+msgid "Account reporting"
+msgstr "Rapport de compte"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Account Balance:"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Expression :"
+msgstr "Expression :"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr "Rapport comptable"
+
+#. module: account_report
+#: field:account.report.report,expression:0
+msgid "Expression"
+msgstr "Expression"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Accounting reporting"
+msgstr "Rapport comptable"
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_form
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_form
+msgid "New Reporting Item Formula"
+msgstr "Nouvelle formule"
+
+#. module: account_report
+#: field:account.report.report,code:0
+#: rml:accounting.report:0
+msgid "Code"
+msgstr "Code"
+
+#. module: account_report
+#: field:account.report.history,tmp:0
+msgid "temp"
+msgstr ""
+
+#. module: account_report
+#: field:account.report.history,period_id:0
+msgid "Period"
+msgstr "Période"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "General"
+msgstr "Général"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "Legend of operators"
+msgstr "Légende des opérateurs"
+
+#. module: account_report
+#: wizard_button:print.indicators,init,end:0
+#: wizard_button:print.indicators,next,end:0
+#: wizard_button:print.indicators.pdf,init,end:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_report
+#: field:account.report.report,child_ids:0
+msgid "Children"
+msgstr ""
+
+#. module: account_report
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -29,214 +368,195 @@ msgstr ""
 "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
 "spéciaux !"
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Helvetica-Bold"
-msgstr "Helvetica-Bold"
-
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Helvetica"
-msgstr "Helvetica"
-
-#. module: account_reporting
-#: field:account.report.bs,note:0
-msgid "Note"
-msgstr "Note"
-
-#. module: account_reporting
-#: field:account.report.bs,report_type:0
-msgid "Report Type"
-msgstr "Type de Rapport"
-
-#. module: account_reporting
-#: model:ir.ui.menu,name:account_reporting.action_account_report_bs_form
-#: model:ir.ui.menu,name:account_reporting.menu_finan_config_BSheet
-msgid "Balance Sheet Report"
-msgstr "Rapport de bilan"
-
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Courier"
-msgstr "Courier"
-
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Courier-BoldOblique"
-msgstr "Courier-BoldOblique"
-
-#. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,report:0
-msgid "Print BalanceSheet"
-msgstr "Impression du bilan"
-
-#. module: account_reporting
-#: help:account.account.balancesheet.report,init,periods:0
-msgid "All periods if empty"
-msgstr "Toutes les périodes si vide"
-
-#. module: account_reporting
-#: field:account.report.bs,color_font:0
-msgid "Font Color"
-msgstr "Couleur de la police"
-
-#. module: account_reporting
-#: selection:account.report.bs,report_type:0
-msgid "Report Objects With Accounts and child of Accounts"
-msgstr "Rapport des objets avec les comptes et les comptes fils"
-
-#. module: account_reporting
-#: model:ir.module.module,description:account_reporting.module_meta_information
-msgid ""
-"Financial and accounting reporting\n"
-"    Balance Sheet Report"
+#. module: account_report
+#: help:account.report.report,goodness_limit:0
+msgid "This Value sets the limit of goodness."
 msgstr ""
-"Rapports financiers et comptables \n"
-"    Rapport de bilan"
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Courier-Oblique"
-msgstr "Courier-Oblique"
+#. module: account_report
+#: model:ir.actions.wizard,name:account_report.wizard_print_indicators
+#: model:ir.ui.menu,name:account_report.menu_wizard_print_indicators
+#: wizard_view:print.indicators,init:0
+#: wizard_view:print.indicators,next:0
+msgid "Print Indicators"
+msgstr "Imprimer les Indicateurs"
 
-#. module: account_reporting
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#. module: account_report
+#: view:account.report.report:0
+msgid "+ - * / ( )"
+msgstr "+ - * / ( )"
 
-#. module: account_reporting
-#: field:account.report.bs,name:0
-#: field:color.rml,name:0
+#. module: account_report
+#: rml:accounting.report:0
+#: rml:print.indicators:0
+msgid "Printing date:"
+msgstr "Date d'impression"
+
+#. module: account_report
+#: model:ir.actions.wizard,name:account_report.wizard_indicators_with_pdf
+msgid "Indicators in PDF"
+msgstr "Indicateurs en PDF"
+
+#. module: account_report
+#: rml:accounting.report:0
+#: rml:print.indicators:0
+msgid "at"
+msgstr "à"
+
+#. module: account_report
+#: rml:accounting.report:0
+msgid "Accounting Report"
+msgstr "Rapport comptable"
+
+#. module: account_report
+#: field:account.report.report,goodness_limit:0
+msgid "Goodness Indicator Limit"
+msgstr ""
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
+msgid "Other reports"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid ""
+"Note: The second arguement 'fiscalyear' and 'period' are optional "
+"arguements.If the value is -1,previous fiscalyear or period is considered."
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid ")"
+msgstr ")"
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_fiscal
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_fiscal
+msgid "Fiscal Statements reporting"
+msgstr "Rapport des extraits fiscaux"
+
+#. module: account_report
+#: selection:print.indicators,init,select_base:0
+msgid "Based on Fiscal Periods"
+msgstr "Basé sur les Périodes Fiscales"
+
+#. module: account_report
+#: model:ir.actions.report.xml,name:account_report.report_print_indicators
+#: rml:print.indicators:0
+msgid "Indicators"
+msgstr "Indicateurs"
+
+#. module: account_report
+#: wizard_view:print.indicators.pdf,init:0
+msgid "Print Indicators with PDF"
+msgstr "Imprimer les Indicateurs dans le fichier PDF"
+
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_indicator
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_indicator
+msgid "Indicators reporting"
+msgstr "Rapport d'indicateurs"
+
+#. module: account_report
+#: field:account.report.report,name:0
+#: rml:accounting.report:0
+#: rml:print.indicators:0
 msgid "Name"
 msgstr "Nom"
 
-#. module: account_reporting
-#: view:account.report.bs:0
-msgid "Account reporting"
-msgstr "Rapport de compte"
+#. module: account_report
+#: wizard_field:print.indicators,next,base_selection:0
+msgid "Select Criteria"
+msgstr "Sélectionnez les critères"
 
-#. module: account_reporting
-#: model:ir.ui.menu,name:account_reporting.bs_report_action_form
-msgid "Balance Sheet Report Form"
-msgstr "Formulaire du rapport de bilan"
+#. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid ""
+"You cannot delete an indicator history record. You may have to delete the "
+"concerned Indicator!"
+msgstr ""
+"Vous ne pouvez pas supprimer un enregistrement de l'historique d'un "
+"indicateur. Vous devez supprimer l'Indicateur concerné."
 
-#. module: account_reporting
-#: view:account.report.bs:0
-msgid "Notes"
-msgstr "Notes"
+#. module: account_report
+#: view:account.report.report:0
+msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
+msgstr ""
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Times-BoldItalic"
-msgstr "Times-BoldItalic"
+#. module: account_report
+#: field:account.report.history,fiscalyear_id:0
+msgid "Fiscal Year"
+msgstr "Année Fiscale"
 
-#. module: account_reporting
-#: model:ir.model,name:account_reporting.model_account_report_bs
-msgid "Account reporting for Balance Sheet"
-msgstr "Rapports des comptes pour le bilan"
+#. module: account_report
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree
+#: model:ir.actions.act_window,name:account_report.action_account_report_tree_view
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_define
+#: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view
+msgid "Custom reporting"
+msgstr "Personnaliser un rapport"
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Courier-Bold"
-msgstr "Courier-Bold"
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "User Error!"
+msgstr ""
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Times-Italic"
-msgstr "Times-Italic"
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Page"
+msgstr "Page"
 
-#. module: account_reporting
-#: selection:account.report.bs,report_type:0
-msgid "Report Objects Only"
-msgstr "Rapport sur les objets seulement"
+#. module: account_report
+#: selection:account.report.report,type:0
+msgid "View"
+msgstr "Vue"
 
-#. module: account_reporting
-#: model:ir.model,name:account_reporting.model_color_rml
-msgid "Rml Colors"
-msgstr "Couleurs RML"
+#. module: account_report
+#: rml:print.indicators:0
+msgid "Indicators -"
+msgstr "Indicateurs -"
 
-#. module: account_reporting
-#: model:ir.module.module,shortdesc:account_reporting.module_meta_information
-msgid "Reporting of Balancesheet for accounting"
-msgstr "Rapport sur bilan pour la comptabilité"
+#. module: account_report
+#: help:account.report.report,disp_graph:0
+msgid ""
+"If the field is set to True, information will be printed as a Graph, "
+"otherwise as an array."
+msgstr ""
 
-#. module: account_reporting
-#: field:account.report.bs,code:0
-msgid "Code"
-msgstr "Code"
+#. module: account_report
+#: view:account.report.report:0
+msgid "Return value for status"
+msgstr "Valeur de retour pour status"
 
-#. module: account_reporting
-#: field:account.report.bs,parent_id:0
-msgid "Parent"
-msgstr "Parent"
-
-#. module: account_reporting
-#: field:account.report.bs,sequence:0
+#. module: account_report
+#: field:account.report.report,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
 
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Times-Bold"
-msgstr "Times-Bold"
+#. module: account_report
+#: rml:accounting.report:0
+msgid "Amount"
+msgstr "Montant"
 
-#. module: account_reporting
-#: view:account.report.bs:0
-msgid "General"
-msgstr "Général"
+#. module: account_report
+#: rml:print.indicators:0
+msgid "1cm 27.7cm 20cm 27.7cm"
+msgstr "1cm 27.7cm 20cm 27.7cm"
 
-#. module: account_reporting
-#: wizard_field:account.account.balancesheet.report,init,fiscalyear:0
-msgid "Fiscal year"
-msgstr "Année fiscale"
+#. module: account_report
+#: model:ir.module.module,description:account_report.module_meta_information
+msgid ""
+"Financial and accounting reporting\n"
+"    Fiscal statements\n"
+"    Indicators\n"
+"    "
+msgstr ""
 
-#. module: account_reporting
-#: view:account.report.bs:0
-#: field:account.report.bs,account_id:0
-msgid "Accounts"
-msgstr "Comptes"
-
-#. module: account_reporting
-#: wizard_field:account.account.balancesheet.report,init,periods:0
-msgid "Periods"
-msgstr "Périodes"
-
-#. module: account_reporting
-#: field:account.report.bs,color_back:0
-msgid "Back Color"
-msgstr "Couleur de fond"
-
-#. module: account_reporting
-#: field:account.report.bs,child_id:0
-msgid "Children"
-msgstr "Fils"
-
-#. module: account_reporting
-#: wizard_button:account.account.balancesheet.report,init,end:0
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Times-Roman"
-msgstr "Times-Roman"
-
-#. module: account_reporting
-#: selection:account.report.bs,font_style:0
-msgid "Helvetica-Oblique"
-msgstr "Helvetica-Oblique"
-
-#. module: account_reporting
-#: field:account.report.bs,font_style:0
-msgid "Font"
-msgstr "Police"
-
-#. module: account_reporting
-#: wizard_view:account.account.balancesheet.report,init:0
-msgid "Customize Report"
-msgstr "Personnaliser  le Rapport"
-
-#. module: account_reporting
-#: selection:account.report.bs,report_type:0
-msgid "Report Objects With Accounts"
-msgstr "Rapport des objets avec les comptes"
+#. module: account_report
+#: selection:account.report.report,type:0
+msgid "Fiscal Statement"
+msgstr ""
