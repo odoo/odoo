@@ -71,6 +71,11 @@ class ir_model(osv.osv):
         pooler.restart_pool(cr.dbname)
         return res
 
+    def write(self, cr, user, ids, vals, context=None):
+        if context:
+            del context['__last_update']
+        return super(ir_model,self).write(cr, user, ids, vals, context)
+
     def create(self, cr, user, vals, context=None):
         if context and context.get('manual',False):
             vals['state']='manual'
