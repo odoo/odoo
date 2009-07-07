@@ -496,12 +496,15 @@ class product_product(osv.osv):
             args=[]
         if not context:
             context={}
-        ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
-        if not len(ids):
-            ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
-        if not len(ids):
-            ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-            ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        if name:
+            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+            if not len(ids):
+                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+            if not len(ids):
+                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
+                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context)
         return result
 
