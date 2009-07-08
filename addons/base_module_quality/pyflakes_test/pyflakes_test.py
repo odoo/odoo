@@ -78,6 +78,9 @@ class quality_test(base_module_quality.abstract_quality_check):
                     map(lambda key:temp_dict.setdefault(key, 0), keys)
                     detail_str = ''
                     for line in list_res:
+                        line = line.split(':')
+                        line.pop(0)
+                        line = " ".join(line)
                         self.result_details += '''<tr><td width="100%"> ''' + line + '</td></tr>'
                         detail_str += line + '\n'
                         if line.find("imported but unused") != -1:
