@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-
 import SimpleXMLRPCServer
 import SocketServer
 import logging
@@ -95,7 +94,7 @@ def init_logger():
     logger = logging.getLogger()
     # create a format for log messages and dates
     formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s')
-    
+
     logging_to_stdout = False
     if tools.config['syslog']:
         # SysLog Handler
@@ -117,7 +116,7 @@ def init_logger():
             handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
         except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
-            handler = logging.StreamHandler(sys.stdout) 
+            handler = logging.StreamHandler(sys.stdout)
             logging_to_stdout = True
     else:
         # Normal Handler on standard output
@@ -156,7 +155,10 @@ def init_logger():
 
 
 class Logger(object):
+
     def notifyChannel(self, name, level, msg):
+        from service.web_services import common
+
         log = logging.getLogger(tools.ustr(name))
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
@@ -167,6 +169,9 @@ class Logger(object):
 
         if isinstance(msg, Exception):
             msg = tools.exception_to_unicode(msg)
+
+        if level in (LOG_ERROR,LOG_CRITICAL):
+            msg = common().get_server_environment() + msg
 
         result = tools.ustr(msg).strip().split('\n')
         if len(result)>1:
@@ -197,7 +202,7 @@ class Agent(object):
             for timer in self._timers[db]:
                 if not timer.isAlive():
                     self._timers[db].remove(timer)
-    
+
     @classmethod
     def cancel(cls, db_name):
         """Cancel all timers for a given database. If None passed, all timers are cancelled"""
@@ -205,7 +210,7 @@ class Agent(object):
             if db_name is None or db == db_name:
                 for timer in cls._timers[db]:
                     timer.cancel()
-    
+
     @classmethod
     def quit(cls):
         cls.cancel(None)
