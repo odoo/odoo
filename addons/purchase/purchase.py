@@ -438,7 +438,7 @@ class purchase_order_line(osv.osv):
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
-        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
+        'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
@@ -455,7 +455,7 @@ class purchase_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
-        default.update({'state':'draft', 'move_id':False})
+        default.update({'state':'draft', 'move_id':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
