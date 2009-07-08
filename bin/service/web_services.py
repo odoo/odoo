@@ -507,9 +507,16 @@ GNU Public Licence.
 
     def get_server_environment(self):
         try:
-            rev_no = os.popen('bzr revno').read()
+            revno = os.popen('bzr revno').read()
+            rev_log = ''
+            cnt = 0
+            for line in os.popen('bzr log -r %s'%(int(revno))).readlines():
+                if line.find(':')!=-1:
+                    if not cnt == 4:
+                        rev_log += line
+                        cnt += 1
         except Exception,e:
-             bzr_info = 'Exception: %s\n' % (str(e))
+             rev_log = 'Exception: %s\n' % (str(e))
 
         os_lang = os.environ.get('LANG', '').split('.')[0]
         environment = '\nEnvironment_Information : \n' \
@@ -519,8 +526,8 @@ GNU Public Licence.
                       'Operating System Locale : %s\n'\
                       'Python Version : %s\n'\
                       'OpenERP-Server Version : %s\n'\
-                      'Last revision no: %s' \
-                      %(sys.platform,os.name,str(sys.version.split('\n')[1]),os_lang,str(sys.version[0:5]),release.version,rev_no)
+                      'Last revision Details: \n%s' \
+                      %(sys.platform,os.name,str(sys.version.split('\n')[1]),os_lang,str(sys.version[0:5]),release.version,rev_log)
         return environment
 common()
 
