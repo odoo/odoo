@@ -159,44 +159,45 @@ class Account(osv.osv):
             else:
                  vals['type1'] = 'none'
         super(Account, self).write(cr, uid,ids, vals, context)
-        self_obj= self.browse(cr,uid,ids)
-        move_pool=self.pool.get('account.move')
-        if vals:
-            for obj in self_obj:
-                flg=0
-                if obj.journal_id and obj.journal_id.type == 'situation':
-                    move=move_pool.search(cr,uid,[('journal_id','=',obj.journal_id.id)])
-                    if move:
-                        move_obj=move_pool.browse(cr,uid,move[0])
-                        move=move[0]
-                    else:
-                        name = self.pool.get('ir.sequence').get_id(cr, uid, obj.journal_id.sequence_id.id)
-                        move_data = {'name': name, 'journal_id': obj.journal_id.id}
-                        move=self.pool.get('account.move').create(cr,uid,move_data)
-                        move_obj=move_pool.browse(cr,uid,move)
-                    move_line_data={'name':obj.journal_id.name,
-                                           'debit':obj.debit or 0.0,
-                                           'credit':obj.credit or 0.0,
-                                           'account_id':obj.id,
-                                           'move_id':move,
-                                           'journal_id':obj.journal_id.id,
-                                           'period_id':move_obj.period_id.id,
-                                           }
-                    if obj.type1:
-                        if obj.type1 == 'dr':
-                            move_line_data['debit'] = obj.open_bal
-                        elif obj.type1 == 'cr':
-                            move_line_data['credit'] = obj.open_bal
-                    if move_obj and move:
-                        for move_line in move_obj.line_id:
-                            if move_line.account_id.id == obj.id:
-                                if move_line_data['debit'] == 0.0 and move_line_data['credit']== 0.0:
-                                    self.pool.get('account.move.line').unlink(cr,uid,[move_line.id])
-                                else:
-                                    self.pool.get('account.move.line').write(cr,uid,[move_line.id],move_line_data)
-                                flg=1
-                        if not flg:
-                            self.pool.get('account.move.line').create(cr,uid,move_line_data)
+        if vals.has_key('open_bal'):
+            self_obj= self.browse(cr,uid,ids)
+            move_pool=self.pool.get('account.move')
+            if vals:
+                for obj in self_obj:
+                    flg=0
+                    if obj.journal_id and obj.journal_id.type == 'situation':
+                        move=move_pool.search(cr,uid,[('journal_id','=',obj.journal_id.id)])
+                        if move:
+                            move_obj=move_pool.browse(cr,uid,move[0])
+                            move=move[0]
+                        else:
+                            name = self.pool.get('ir.sequence').get_id(cr, uid, obj.journal_id.sequence_id.id)
+                            move_data = {'name': name, 'journal_id': obj.journal_id.id}
+                            move=self.pool.get('account.move').create(cr,uid,move_data)
+                            move_obj=move_pool.browse(cr,uid,move)
+                        move_line_data={'name':obj.journal_id.name,
+                                               'debit':obj.debit or 0.0,
+                                               'credit':obj.credit or 0.0,
+                                               'account_id':obj.id,
+                                               'move_id':move,
+                                               'journal_id':obj.journal_id.id,
+                                               'period_id':move_obj.period_id.id,
+                                               }
+                        if obj.type1:
+                            if obj.type1 == 'dr':
+                                move_line_data['debit'] = obj.open_bal
+                            elif obj.type1 == 'cr':
+                                move_line_data['credit'] = obj.open_bal
+                        if move_obj and move:
+                            for move_line in move_obj.line_id:
+                                if move_line.account_id.id == obj.id:
+                                    if move_line_data['debit'] == 0.0 and move_line_data['credit']== 0.0:
+                                        self.pool.get('account.move.line').unlink(cr,uid,[move_line.id])
+                                    else:
+                                        self.pool.get('account.move.line').write(cr,uid,[move_line.id],move_line_data)
+                                    flg=1
+                            if not flg:
+                                self.pool.get('account.move.line').create(cr,uid,move_line_data)
         return True
 
     def onchange_type(self, cr, uid, ids,user_type,type1):
