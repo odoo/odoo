@@ -66,8 +66,10 @@ def random_name():
 #   root: if we are at the first directory of a ressource
 #
 INVALID_CHARS={'*':str(hash('*')), '|':str(hash('|')) , "\\":str(hash("\\")), '/':'__', ':':str(hash(':')), '"':str(hash('"')), '<':str(hash('<')) , '>':str(hash('>')) , '?':str(hash('?'))}
+
+
 class node_class(object):
-    def __init__(self, cr, uid, path,object,object2=False, context={}, content=False, type='collection', root=False):
+    def __init__(self, cr, uid, path, object, object2=False, context={}, content=False, type='collection', root=False):
         self.cr = cr
         self.uid = uid
         self.path = path
@@ -171,9 +173,9 @@ class node_class(object):
             pool = pooler.get_pool(self.cr.dbname)            
             obj = pool.get(self.object.ressource_type_id.model)
             if len(obj.fields_get(self.cr, self.uid, ['dirname'])):
-                 _dirname_field = 'dirname'
+                _dirname_field = 'dirname'
             else:
-                 _dirname_field = 'name'
+                _dirname_field = 'name'
 
             name_for = obj._name.split('.')[-1]
             if nodename  and nodename.find(name_for) == 0  :
@@ -718,9 +720,45 @@ class document_configuration_wizard(osv.osv_memory):
         'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
             "Keep localhost if you don't know what to write.", required=True)
     }
+
+    def detect_ip_addr(self, cr, uid, context=None):
+        def _detect_ip_addr(self, cr, uid, context=None):
+            from array import array
+            import socket
+            from struct import pack, unpack
+
+            try:
+                import fcntl
+            except ImportError:
+                fcntl = None
+
+            if not fcntl: # not UNIX:
+                host = socket.gethostname()
+                ip_addr = socket.gethostbyname(host)
+            else: # UNIX:
+                # get all interfaces:
+                nbytes = 128 * 32
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                names = array('B', '\0' * nbytes)
+                outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
+                namestr = names.tostring()
+                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
+
+                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
+                    break
+            return ip_addr
+
+        try:
+            ip_addr = _detect_ip_addr(self, cr, uid, context)
+        except:
+            ip_addr = 'localhost'
+        return ip_addr
+
     _defaults = {
-        'host': lambda *args: 'localhost'
+        'host': detect_ip_addr,
     }
+
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
                 'view_type': 'form',
