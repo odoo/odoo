@@ -686,8 +686,9 @@ class related(function):
                         t_data = False
                         break
                     if field_detail['type'] in ('one2many', 'many2many'):
-                        t_id=t_data.id
-                        t_data = t_data[self.arg[i]][0]
+                        if self._type != "many2one":
+                            t_id=t_data.id
+                            t_data = t_data[self.arg[i]][0]
                     else:
                         t_id=t_data['id']
                         t_data = t_data[self.arg[i]]
@@ -826,6 +827,14 @@ class property(function):
                     int(prop.value.split(',')[1])) or False
 
         obj = obj.pool.get(self._obj)
+        existing_ids = obj.search(cr, uid, [('id','in',res.values())])
+        deleted_ids = []
+
+        for res_id in res.values():
+            if res_id and (res_id not in existing_ids):
+                if res_id not in deleted_ids:
+                    cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
+                    deleted_ids.append(res_id)
         names = dict(obj.name_get(cr, uid, filter(None, res.values()), context))
         for r in res.keys():
             if res[r] and res[r] in names:

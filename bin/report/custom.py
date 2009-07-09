@@ -554,6 +554,7 @@ class report_custom(report_int):
                 abscissa.update(fields_bar[idx])
             idx0 += 1
         abscissa = map(lambda x : [x, None], abscissa)
+        abscissa.sort()
         ar.x_coord = category_coord.T(abscissa,0)
         ar.draw(can)
 

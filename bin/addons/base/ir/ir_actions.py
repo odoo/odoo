@@ -378,7 +378,7 @@ class actions_server(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name e.g. One Sales Order -> Many Invoices"),
+        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name e.g. One Sales Order -> Many Invoices", translate=True),
         'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"),
         'state': fields.selection([
             ('client_action','Client Action'),

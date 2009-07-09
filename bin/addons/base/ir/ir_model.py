@@ -71,6 +71,11 @@ class ir_model(osv.osv):
         pooler.restart_pool(cr.dbname)
         return res
 
+    def write(self, cr, user, ids, vals, context=None):
+        if context:
+            del context['__last_update']
+        return super(ir_model,self).write(cr, user, ids, vals, context)
+
     def create(self, cr, user, vals, context=None):
         if context and context.get('manual',False):
             vals['state']='manual'
@@ -408,6 +413,9 @@ class ir_model_data(osv.osv):
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'noupdate': lambda *a: False
     }
+    _sql_constraints = [
+        ('module_name_uniq', 'unique(name, module)', 'You can not have multiple records with the same id for the same module'),
+    ]
 
     def __init__(self, pool, cr):
         osv.osv.__init__(self, pool, cr)
@@ -415,11 +423,13 @@ class ir_model_data(osv.osv):
         self.doinit = True
         self.unlink_mark = {}
 
-    def _get_id(self,cr, uid, module, xml_id):
+    @tools.cache()
+    def _get_id(self, cr, uid, module, xml_id):
         ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
-        assert len(ids)==1, '%d reference(s) to %s.%s. You should have one and only one !' % (len(ids), module, xml_id)
+        if not ids:
+            raise Exception('No references to %s.%s' % (module, xml_id))
+        # the sql constraints ensure us we have only one result
         return ids[0]
-    _get_id = tools.cache(skiparg=2)(_get_id)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
@@ -517,7 +527,6 @@ class ir_model_data(osv.osv):
         return res_id
 
     def _unlink(self, cr, uid, model, ids, direct=False):
-        #self.pool.get(model).unlink(cr, uid, ids)
         for id in ids:
             self.unlink_mark[(model, id)]=False
             cr.execute('delete from ir_model_data where res_id=%s and model=%s', (id, model))
@@ -582,8 +591,9 @@ class ir_model_data(osv.osv):
                             self.unlink(cr, uid, [id])
                             cr.execute('DELETE FROM ir_values WHERE value=%s', ('%s,%s' % (model, res_id),))
                         cr.commit()
-                    except:
+                    except Exception, e:
                         cr.rollback()
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, e)
                         logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\nThere should be some relation that points to this resource\nYou should manually fix this and restart --update=module' % (res_id, model))
         return True
 ir_model_data()

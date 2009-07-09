@@ -24,27 +24,26 @@ from report.render.rml2pdf import utils
 from lxml import etree
 import copy
 
-
 class odt2odt(object):
     def __init__(self, odt, localcontext):
         self.localcontext = localcontext
         self.etree = odt
         self._node = None
 
-
     def render(self):
         def process_text(node,new_node):
-            if new_node.tag in ['story','tr','section']:
-                new_node.attrib.clear()
             for child in utils._child_get(node, self):
                 new_child = copy.deepcopy(child)
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
+                        new_child.text  = utils._process_text(self, child.text)
+                        new_child.tail  = utils._process_text(self, child.tail)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
                     new_child.text  = utils._process_text(self, child.text)
+                    new_child.tail  = utils._process_text(self, child.tail)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
             self._node.remove(n)
@@ -52,16 +51,6 @@ class odt2odt(object):
         return self._node
 
 def parseNode(node, localcontext = {}):
-    body = node.getchildren()[-1]
-    elements = body.findall(localcontext['name_space']["text"]+"p")
-    for pe in elements:
-        e = pe.findall(localcontext['name_space']["text"]+"drop-down")
-        for de in e:
-            pp=de.getparent()
-            for cnd in de.getchildren():
-                if cnd.text:
-                    pe.append(cnd)
-                    pp.remove(de)
     r = odt2odt(node, localcontext)
     return r.render()
 

@@ -52,12 +52,14 @@ import fields
 import tools
 
 import sys
+
 try:
     from xml import dom, xpath
 except ImportError:
     sys.stderr.write("ERROR: Import xpath module\n")
     sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.exit(2)
+    sys.stderr.write('On Ubuntu Jaunty, try this: sudo cp /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils\n')
+    raise
 
 from tools.config import config
 
@@ -80,6 +82,8 @@ class except_orm(Exception):
         self.value = value
         self.args = (name, value)
 
+class BrowseRecordError(Exception):
+    pass
 
 # Readonly python database object browser
 class browse_null(object):
@@ -126,7 +130,6 @@ class browse_record(object):
         '''
         if not context:
             context = {}
-        assert id and isinstance(id, (int, long,)), _('Wrong ID for the browse record, got %r, expected an integer.') % (id,)
         self._list_class = list_class or browse_record_list
         self._cr = cr
         self._uid = uid
@@ -138,6 +141,11 @@ class browse_record(object):
 
         cache.setdefault(table._name, {})
         self._data = cache[table._name]
+
+        if not (id and isinstance(id, (int, long,))):
+            raise BrowseRecordError(_('Wrong ID for the browse record, got %r, expected an integer.') % (id,))
+#        if not table.exists(cr, uid, id, context):
+#            raise BrowseRecordError(_('Object %s does not exists') % (self,))
 
         if id not in self._data:
             self._data[id] = {'id': id}
@@ -182,12 +190,15 @@ class browse_record(object):
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
-                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
+                lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
+                if not lang_obj_ids:
+                    raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
-                            if d[n]:
+                            if (d[n] is not None) and (d[n] is not False):
                                 d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
@@ -431,6 +442,16 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
+        
+        def check_type(type,r):
+            if type == 'float':
+                return 0.0
+            elif type == 'integer':
+                return 0
+            elif type == 'char':
+                return ''
+            return r
+        
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -442,6 +463,12 @@ class orm_template(object):
                 while i < len(f):
                     r = r[f[i]]
                     if not r:
+                        if f[i] in self._columns: 
+                            r = check_type(self._columns[f[i]]._type,r)
+                        elif f[i] in self._inherit_fields:
+                            r = check_type(self._inherit_fields[f[i]][2]._type,r)
+                           
+                        data[fpos] = tools.ustr(r)
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -653,9 +680,21 @@ class orm_template(object):
             if warning:
                 cr.rollback()
                 return (-1, res, warning, '')
-            id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
-                    current_module, res, xml_id=data_id, mode=mode,
-                    noupdate=noupdate)
+            
+            try:
+                id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
+                     current_module, res, xml_id=data_id, mode=mode,
+                     noupdate=noupdate)
+            except Exception, e:
+                import psycopg2
+                if isinstance(e,psycopg2.IntegrityError):
+                    msg= 'Insertion Failed!'
+                    for key in self.pool._sql_error.keys():
+                        if key in e[0]:
+                            msg = self.pool._sql_error[key]
+                            break
+                    return (-1, res,msg,'' )
+                
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1177,6 +1216,9 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise _('The copy method is not implemented on this object !')
 
+    def exists(self, cr, uid, id, context=None):
+        raise _('The exists method is not implemented on this object !')
+
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
@@ -1218,7 +1260,7 @@ class orm_template(object):
         raise NotImplementedError()
 
 class orm_memory(orm_template):
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count']
+    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     _inherit_fields = {}
     _max_count = 200
     _max_hours = 1
@@ -1403,11 +1445,14 @@ class orm_memory(orm_template):
     def _check_removed_columns(self, cr, log=False):
         # nothing to check in memory...
         pass
+    
+    def exists(self, cr, uid, id, context=None):
+        return id in self.datas
 
 class orm(orm_template):
     _sql_constraints = []
     _table = None
-    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
@@ -1621,7 +1666,9 @@ class orm(orm_template):
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
+                            # !!! Avoid reduction of varchar field !!!
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                            # if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
                                 logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
@@ -2277,17 +2324,25 @@ class orm(orm_template):
                 else:
                     cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
                             'where id in ('+ids_str+')', upd1)
-
+            
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
+
+        # default element in context must be remove when call a one2many or many2many
+        rel_context = context.copy()
+        for c in context.items():
+            if c[0].startswith('default_'):
+                del rel_context[c[0]]
+
         for field in upd_todo:
             for id in ids:
-                self._columns[field].set(cr, self, id, field, vals[field], user, context=context)
+                self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context)
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -2486,8 +2541,15 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
+                
+        # default element in context must be remove when call a one2many or many2many
+        rel_context = context.copy()
+        for c in context.items():
+            if c[0].startswith('default_'):
+                del rel_context[c[0]]
+
         for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
         self._validate(cr, user, [id_new], context)
 
         result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
@@ -2750,6 +2812,10 @@ class orm(orm_template):
             record['res_id']=new_id
             trans_obj.create(cr,uid,record)
         return new_id
+
+    def exists(self, cr, uid, id, context=None):
+        cr.execute('SELECT count(1) FROM "%s" where id=%%s' % (self._table,), (id,))
+        return bool(cr.fetchone()[0])
 
     def check_recursion(self, cr, uid, ids, parent=None):
         if not parent:

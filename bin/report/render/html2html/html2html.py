@@ -30,7 +30,7 @@ import re
 from reportlab.lib.utils import ImageReader
 
 _regex = re.compile('\[\[(.+?)\]\]')
-
+utils._regex = re.compile('\[\[\s*(.+?)\s*\]\]',re.DOTALL)
 class html2html(object):
     def __init__(self, html, localcontext):
         self.localcontext = localcontext
@@ -47,6 +47,8 @@ class html2html(object):
                 new_node.append(new_child)
                 if len(child):
                     for n in new_child:
+                        new_child.text  = utils._process_text(self, child.text)
+                        new_child.tail  = utils._process_text(self, child.tail)
                         new_child.remove(n)
                     process_text(child, new_child)
                 else:
@@ -65,13 +67,30 @@ class html2html(object):
                             else :
                                 new_child.getparent().remove(new_child)
                     new_child.text  = utils._process_text(self, child.text)
+                    new_child.tail  = utils._process_text(self, child.tail)
         self._node = copy.deepcopy(self.etree)
         for n in self._node:
             self._node.remove(n)
         process_text(self.etree, self._node)
         return self._node
+        
+    def url_modify(self,root):
+        for n in root.getchildren():
+            if (n.text.find('<a ')>=0 or n.text.find('&lt;a')>=0) and n.text.find('href')>=0 and n.text.find('style')<=0 :
+                node = (n.tag=='span' and n.getparent().tag=='u') and n.getparent().getparent() or ((n.tag=='span') and n.getparent()) or n
+                style = node.get('color') and "style='color:%s; text-decoration: none;'"%node.get('color') or ''
+                if n.text.find('&lt;a')>=0:
+                    t = '&lt;a '
+                else :
+                    t = '<a '
+                href = n.text.split(t)[-1]
+                n.text = ' '.join([t,style,href])
+            self.url_modify(n)
+        return root
 
 def parseString(node, localcontext = {}):
     r = html2html(node, localcontext)
-    return r.render()
+    root = r.render()
+    root = r.url_modify(root)
+    return root
 

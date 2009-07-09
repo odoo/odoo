@@ -31,7 +31,7 @@ class ir_rule_group(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.boolean('Global', select=1, help="Make the rule global, otherwise it needs to be put on a group or user"),
+        'global': fields.boolean('Global', select=1, help="Make the rule global, otherwise it needs to be put on a group"),
         'rules': fields.one2many('ir.rule', 'rule_group', 'Tests', help="The rule is satisfied if at least one test is True"),
         'groups': fields.many2many('res.groups', 'group_rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'users': fields.many2many('res.users', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Users'),
@@ -120,9 +120,9 @@ class ir_rule(osv.osv):
         return res
 
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1, required=True),
-        'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator', required=True),
-        'operand':fields.selection(_operand,'Operand', size=64, required=True),
+        'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1),
+        'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator'),
+        'operand':fields.selection(_operand,'Operand', size=64),
         'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade"),
         'domain_force': fields.char('Force Domain', size=250),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250)

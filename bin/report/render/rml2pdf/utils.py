@@ -44,6 +44,12 @@ import copy
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
+def str2xml(s):
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+
+def xml2str(s):
+    return s.replace('&amp;','&').replace('&lt;','<').replace('&gt;','>')
+
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
@@ -100,13 +106,14 @@ def _process_text(self, txt):
             result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
             if sps:
                 try:
-                    txt2 = eval(sps.pop(0),self.localcontext)
+                    txt = eval(sps.pop(0),self.localcontext)
                 except:
-                    txt2 = ''
-                if type(txt2) == type(0) or type(txt2) == type(0.0):
-                    txt2 = str(txt2)
-                if type(txt2)==type('') or type(txt2)==type(u''):
+                    pass
+                if type(txt)==type('') or type(txt)==type(u''):
+                    txt2 = str2xml(txt)
                     result += txt2
+                elif (txt is not None) and (txt is not False):
+                    result += str(txt)
         return result
 
 def text_get(node):
@@ -155,6 +162,8 @@ def attr_get(node, attrs, dict={}):
                 res[key] = int(node.get(key))
             elif dict[key]=='unit':
                 res[key] = unit_get(node.get(key))
+            elif dict[key] == 'float' : 
+                res[key] = float(node.get(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

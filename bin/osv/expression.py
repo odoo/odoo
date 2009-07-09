@@ -201,18 +201,30 @@ class expression(object):
                 if field.translate:
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
+                    
+                    operator = operator == '=like' and 'like' or operator
 
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
                              '     AND lang = %s'       \
-                             '     AND type = %s'       \
-                             '     AND value ' + operator + ' %s'    \
+                             '     AND type = %s'
+                    instr = ' %s'
+                    #Covering in,not in operators with operands (%s,%s) ,etc.
+                    if operator in ['in','not in']:
+                        instr = ','.join(['%s'] * len(right))
+                        query1 += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + ' %s' \
-                             ')'
+                             '   WHERE "' + left + '" ' + operator + ' ' +" (" + instr + "))"
+                    else:
+                        query1 += '     AND value ' + operator + instr +   \
+                             ') UNION ('                \
+                             '  SELECT id'              \
+                             '    FROM "' + working_table._table + '"'       \
+                             '   WHERE "' + left + '" ' + operator + instr + ")"
+                                                        
                     query2 = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
                               'model',

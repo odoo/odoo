@@ -27,7 +27,10 @@ _uid_cache = {}
 
 def login(db, login, password):
     cr = pooler.get_db(db).cursor()
-    cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), password.encode('utf-8')))
+    if password:
+        cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), password.encode('utf-8')))
+    else:
+        cr.execute('select id from res_users where login=%s and password is null and active', (login.encode('utf-8'),))
     res = cr.fetchone()
     cr.close()
     if res:
@@ -45,7 +48,10 @@ def check(db, uid, passwd):
     if _uid_cache.get(db, {}).get(uid) == passwd:
         return True
     cr = pooler.get_db(db).cursor()
-    cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
+    if passwd:
+        cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
+    else:
+        cr.execute('select count(*) from res_users where id=%s and password is null', (int(uid),))    
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
@@ -60,7 +66,10 @@ def check(db, uid, passwd):
 
 def access(db, uid, passwd, sec_level, ids):
     cr = pooler.get_db(db).cursor()
-    cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
+    if passwd:
+        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
+    else:
+        cr.execute('select id from res_users where id=%s and password is null', (uid,))    
     res = cr.fetchone()
     cr.close()
     if not res:

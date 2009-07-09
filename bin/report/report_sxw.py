@@ -72,8 +72,6 @@ rml2sxw = {
     'para': 'p',
 }
 
-
-
 class _format(object):
     def set_value(self, cr, uid, name, object, field, lang_obj):
         self.object = object
@@ -82,15 +80,15 @@ class _format(object):
         self.lang_obj = lang_obj
 
 class _float_format(float, _format):
-
     def __init__(self,value):
         super(_float_format, self).__init__()
-        self.val = value and str(value) or str(0.00)
+        self.val = value
 
     def __str__(self):
         digits = 2
         if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
             digits = self._field.digits[1]
+        if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
         return self.val
 
@@ -217,14 +215,6 @@ class rml_parse(object):
         if not lang or self.default_lang.has_key(lang):
             if not lang:
                 key = 'en_US'
-                self.lang_dict_called = False
-                self.localcontext['lang'] = lang
-            elif self.default_lang.has_key(lang):
-                 key = lang
-            if self.default_lang.get(key,False):
-                self.lang_dict = self.default_lang.get(key,False).copy()
-                self.lang_dict_called = True
-            return True
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
         for obj in self.objects:
@@ -474,10 +464,47 @@ class report_sxw(report_rml, preprocess.report):
         meta = etree.tostring(rml_dom_meta)
 
         rml_dom =  etree.XML(rml)
+        body = rml_dom.getchildren()[-1]
+        elements = []
+        key1 = rml_parser.localcontext['name_space']["text"]+"p"
+        key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
+        for n in rml_dom.iterdescendants():
+            if n.tag == key1:
+                elements.append(n)
+        if report_type == 'odt':
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp=de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de.getchildren():
+                        if cnd.text or cnd.tail:
+                            if pe.text:
+                                pe.text +=  cnd.text or cnd.tail
+                            else:
+                                pe.text =  cnd.text or cnd.tail
+                            pp.remove(de)
+        else:
+            for pe in elements:
+                e = pe.findall(key2)
+                for de in e:
+                    pp = de.getparent()
+                    if de.text or de.tail:
+                        pe.text = de.text or de.tail
+                    for cnd in de:
+                        text = cnd.get("{http://openoffice.org/2000/text}value",False)
+                        if text:
+                            if pe.text and text.startswith('[['):
+                                pe.text +=  text
+                            elif text.startswith('[['):
+                                pe.text =  text
+                            if de.getparent():
+                                pp.remove(de)
+
         rml_dom = self.preprocess_rml(rml_dom,report_type)
         create_doc = self.generators[report_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
-
         sxw_z = zipfile.ZipFile(sxw_io, mode='a')
         sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
                 odt)
@@ -523,6 +550,6 @@ class report_sxw(report_rml, preprocess.report):
         create_doc = self.generators['html2html']
         html = etree.tostring(create_doc(html_dom, html_parser.localcontext))
 
-        return (html.replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
+        return (html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
 
 

@@ -48,7 +48,7 @@ _oldxml2 = '/usr/lib/python%s/dist-packages/oldxml' % sys.version[:3]
 if os.path.exists(_oldxml1):
     sys.path.insert(0,_oldxml1)
 elif os.path.exists(_oldxml2):
-    sys.path.insert(0,_oldxml2)
+    sys.path.insert(0,_oldxml2)    
 
 import release
 __author__ = release.author
@@ -135,7 +135,7 @@ if tools.config["translate_out"]:
     tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
     buf.close()
 
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written successfully')
     sys.exit(0)
 
 if tools.config["translate_in"]:
