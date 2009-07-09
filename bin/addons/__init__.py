@@ -68,7 +68,7 @@ class Graph(dict):
             father.addChild(name)
         else:
             Node(name, self)
-    
+
     def update_from_db(self, cr):
         # update the graph with values from the database (if exist)
         ## First, we set the default values for each package in graph
@@ -141,7 +141,7 @@ class Node(Singleton):
 
     def __iter__(self):
         return itertools.chain(iter(self.children), *map(iter, self.children))
-    
+
     def __str__(self):
         return self._pprint()
 
@@ -322,7 +322,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-                
+
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
@@ -352,7 +352,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
     for package in later:
         unmet_deps = filter(lambda p: p not in graph, dependencies[package])
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
-    
+
     result = len(graph) - len_graph
     if result != len(module_list):
         logger.notifyChannel('init', netsvc.LOG_WARNING, 'Not all modules have loaded.')
@@ -513,7 +513,7 @@ class MigrationManager(object):
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
         current_version = parse_version(convert_version(pkg.data.get('version', '0')))
-        
+
         versions = _get_migration_versions(pkg)
 
         for version in versions:
@@ -580,12 +580,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_objects(cr, package.name, modules)
         cr.commit()
-
+        
     for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
-
 
         if modobj is None:
             modobj = pool.get('ir.module.module')
@@ -595,7 +594,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
         idref = {}
         status['progress'] = (float(statusi)+0.4) / len(graph)
-        
+
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
@@ -633,7 +632,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             package_todo.append(package.name)
 
             migrations.migrate_module(package, 'post')
-            
+
             if modobj:
                 ver = release.major_version + '.' + package.data.get('version', '1.0')
                 # Set new modules and dependencies
@@ -642,21 +641,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 # Update translations for all installed languages
                 modobj.update_translations(cr, 1, [mid], None)
                 cr.commit()
-            
+
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
         statusi += 1
-    
+
     cr.execute('select model from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
         pool.get('ir.model').instanciate(cr, 1, model['model'], {})
 
     pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
-    
+
     return has_updates
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
@@ -664,6 +663,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         status = {}
 
     cr = db.cursor()
+    if cr:
+       cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
+       if len(cr.fetchall())==0:    
+           logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+           tools.init_db(cr)
+#           cr.execute("update res_users set password=%s where id=%s",('admin',1))
+           # in that case, force --init=all
+           tools.config["init"]["all"] = 1
+           tools.config['update']['all'] = 1
+           if not tools.config['without_demo']:
+               tools.config["demo"]['all'] = 1 
     force = []
     if force_demo:
         force.append('demo')
@@ -673,7 +683,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
-        
+
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if update_module:
@@ -695,9 +705,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     modobj.button_upgrade(cr, 1, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-            
+
             STATES_TO_LOAD += ['to install']
-        
+
         loop_guardrail = 0
         while True:
             loop_guardrail += 1
@@ -713,7 +723,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
-            
+
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r

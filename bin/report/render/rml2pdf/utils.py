@@ -47,6 +47,9 @@ _regex = re.compile('\[\[(.+?)\]\]')
 def str2xml(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
+def xml2str(s):
+    return s.replace('&amp;','&').replace('&lt;','<').replace('&gt;','>')
+
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop', False):
@@ -159,6 +162,8 @@ def attr_get(node, attrs, dict={}):
                 res[key] = int(node.get(key))
             elif dict[key]=='unit':
                 res[key] = unit_get(node.get(key))
+            elif dict[key] == 'float' : 
+                res[key] = float(node.get(key))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,7 +26,6 @@ import tools
 
 from report import render
 from lxml import etree
-from xml.dom import minidom
 import libxml2
 import libxslt
 
@@ -38,24 +37,19 @@ class report_printscreen_list(report_int):
 
     def _parse_node(self, root_node):
         result = []
-        for node in root_node.getchildren():
+        for node in root_node:
             if node.tag == 'field':
-                #attrsa = node.attributes
                 attrsa = node.attrib
-                print "typppppp",type(attrsa),dir(attrsa)
                 attrs = {}
                 if not attrsa is None:
-                       for key,val in attrsa.items():
+                    for key,val in attrsa.items():
                         attrs[key] = val
-                    #for i in range(attrsa.length):
-                     #   attrs[attrsa.item(i).localName] = attrsa.item(i).nodeValue
                 result.append(attrs['name'])
             else:
                 result.extend(self._parse_node(node))
         return result
 
     def _parse_string(self, view):
-        #dom = minidom.parseString(view)
         dom = etree.XML(view)
         return self._parse_node(dom)
 
@@ -85,16 +79,14 @@ class report_printscreen_list(report_int):
         pageSize=[297.0,210.0]
 
         impl = minidom.getDOMImplementation()
-        new_doc = impl.createDocument(None, "report", None)
+        new_doc = etree.Element("report")
+        config = etree.Element("config")
 
         # build header
-        config = new_doc.createElement("config")
-
         def _append_node(name, text):
-            n = new_doc.createElement(name)
-            t = new_doc.createTextNode(text)
-            n.appendChild(t)
-            config.appendChild(n)
+            n = etree.Element(name)
+            n.text = text
+            config.append(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
@@ -119,20 +111,17 @@ class report_printscreen_list(report_int):
                 s = fields[fields_order[pos]].get('size', 56) / 28 + 1
                 l[pos] = strmax * s / t
         _append_node('tableSize', ','.join(map(str,l)) )
-        new_doc.childNodes[0].appendChild(config)
-        header = new_doc.createElement("header")
+        new_doc.append(config)
+        header=etree.Element("header")
 
         for f in fields_order:
-            field = new_doc.createElement("field")
-            field_txt = new_doc.createTextNode(str(fields[f]['string']))
-            field.appendChild(field_txt)
-            header.appendChild(field)
-
-        new_doc.childNodes[0].appendChild(header)
-
-        lines = new_doc.createElement("lines")
+            field = etree.Element("field")
+            field.text = fields[f]['string'] or ''
+            header.append(field)
+        new_doc.append(header)
+        lines = etree.Element("lines")
         for line in results:
-            node_line = new_doc.createElement("row")
+            node_line = etree.Element("row")
             for f in fields_order:
                 if fields[f]['type']=='many2one' and line[f]:
                     line[f] = line[f][1]
@@ -141,16 +130,15 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] == 'float':
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]=round(line[f],precision)
-                col = new_doc.createElement("col")
-                col.setAttribute('tree','no')
+                col = etree.Element("col")
+                col.set('tree','no')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(str(line[f] or ''))
+                     col.text = tools.ustr(line[f] or '')
                 else:
-                    txt = new_doc.createTextNode('/')
-                col.appendChild(txt)
-                node_line.appendChild(col)
-            lines.appendChild(node_line)
-        new_doc.childNodes[0].appendChild(lines)
+                    col.text = '/'
+                node_line.append(col)
+            lines.append(node_line)
+        new_doc.append(node_line)
 
         styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
         style = libxslt.parseStylesheetDoc(styledoc)

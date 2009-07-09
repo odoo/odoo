@@ -236,16 +236,19 @@ class _rml_canvas(object):
     def _drawString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawString(text=text, **v)
 
     def _drawCenteredString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawCentredString(text=text, **v)
 
     def _drawRightString(self, node):
         v = utils.attr_get(node, ['x','y'])
         text=self._textual(node, **v)
+        text = utils.xml2str(text)
         self.canvas.drawRightString(text=text, **v)
 
     def _rect(self, node):
@@ -570,7 +573,7 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import usps
             except Exception, e:
                 return None
-            args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'bool','quiet':'bool'})
+            args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'int','quiet':'int','width':'unit','stop':'bool','bearers':'int','barWidth':'float','barHeight':'float'})
             codes = {
                 'codabar': lambda x: common.Codabar(x, **args),
                 'code11': lambda x: common.Code11(x, **args),

@@ -129,7 +129,7 @@ if tools.config["translate_out"]:
     tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
     buf.close()
 
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written successfully')
     sys.exit(0)
 
 if tools.config["translate_in"]:

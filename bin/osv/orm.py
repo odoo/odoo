@@ -433,6 +433,16 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
+        
+        def check_type(type,r):
+            if type == 'float':
+                return 0.0
+            elif type == 'integer':
+                return 0
+            elif type == 'char':
+                return ''
+            return r
+        
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -444,6 +454,12 @@ class orm_template(object):
                 while i < len(f):
                     r = r[f[i]]
                     if not r:
+                        if f[i] in self._columns: 
+                            r = check_type(self._columns[f[i]]._type,r)
+                        elif f[i] in self._inherit_fields:
+                            r = check_type(self._inherit_fields[f[i]][2]._type,r)
+                           
+                        data[fpos] = tools.ustr(r)
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -553,12 +569,16 @@ class orm_template(object):
                             sel = fields_def[field[len(prefix)]]['selection'](self,
                                     cr, uid, context)
                         for key, val in sel:
-                            if str(key) == line[i]:
+                            if line[i] in [str(key),str(val)]: #Acepting key or value for selection field
                                 res = key
+                                break
                         if line[i] and not res:
                             logger.notifyChannel("import", netsvc.LOG_WARNING,
                                     "key '%s' not found in selection field '%s'" % \
                                             (line[i], field[len(prefix)]))
+                            
+                            warning += "Key/value '"+ str(line[i]) +"' not found in selection field '"+str(field[len(prefix)])+"'"
+                            
                     elif fields_def[field[len(prefix)]]['type']=='many2one':
                         res = False
                         if line[i]:
@@ -652,10 +672,22 @@ class orm_template(object):
                     process_liness(self, datas, [], fields_def)
             if warning:
                 cr.rollback()
-                return (-1, res, warning, '')
-            id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
-                    current_module, res, xml_id=data_id, mode=mode,
-                    noupdate=noupdate)
+                return (-1, res, 'Line ' + str(counter) +' : ' + warning, '')
+            
+            try:
+                id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
+                     current_module, res, xml_id=data_id, mode=mode,
+                     noupdate=noupdate)
+            except Exception, e:
+                import psycopg2
+                if isinstance(e,psycopg2.IntegrityError):
+                    msg= 'Insertion Failed!'
+                    for key in self.pool._sql_error.keys():
+                        if key in e[0]:
+                            msg = self.pool._sql_error[key]
+                            break
+                    return (-1, res,'Line ' + str(counter) +' : ' + msg,'' )
+                
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1621,7 +1653,9 @@ class orm(orm_template):
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
+                            # !!! Avoid reduction of varchar field !!!
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                            # if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
                                 logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
@@ -2277,11 +2311,12 @@ class orm(orm_template):
                 else:
                     cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
                             'where id in ('+ids_str+')', upd1)
-
+            
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
