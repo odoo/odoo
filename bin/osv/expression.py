@@ -37,7 +37,7 @@ class expression(object):
         return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
-        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
         INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
@@ -275,6 +275,18 @@ class expression(object):
                 query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
                 query = '%s.%s IS NOT NULL' % (table._table, left)
+            elif (operator == '=?'):
+                op = '='
+                if (right is False or right is None):
+                    return ( 'TRUE',[])
+                if left in table._columns:
+                        format = table._columns[left]._symbol_set[0]
+                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                        params = table._columns[left]._symbol_set[1](right)
+                else:
+                        query = "(%s.%s %s '%%s')" % (table._table, left, op)
+                        params = right
+
             else:
                 if left == 'id':
                     query = '%s.id %s %%s' % (table._table, operator)
