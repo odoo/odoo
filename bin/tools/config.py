@@ -67,6 +67,7 @@ class configmanager(object):
             'import_partial': "",
             'pidfile': None,
             'logfile': None,
+	    'logrotate': '1',
             'smtp_server': 'localhost',
             'smtp_user': False,
             'smtp_port':25,
@@ -129,6 +130,8 @@ class configmanager(object):
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
+        group.add_option("--no-logrotate", dest="logrotate", action="store_false",
+		default=None, help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog",
                          default=False, help="Send the log to the syslog server")
         group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
@@ -229,7 +232,7 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init']
+                'stop_after_init', 'logrotate']
 
         for arg in keys:
             if getattr(opt, arg) is not None:

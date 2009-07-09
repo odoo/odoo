@@ -113,7 +113,12 @@ def init_logger():
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
-            handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
+	    if tools.config['logrotate'] is not False:
+                handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
+	    elif os.name == 'posix':
+		handler = logging.handlers.WatchedFileHandler(logf)
+	    else:
+		handler = logging.handlers.FileHandler(logf)
         except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout) 
@@ -169,11 +174,19 @@ class Logger(object):
         	result = tools.ustr(msg).strip().split('\n')
 	except UnicodeDecodeError:
 		result = msg.strip().split('\n')
-        if len(result)>1:
-            for idx, s in enumerate(result):
-                level_method('[%02d]: %s' % (idx+1, s,))
-        elif result:
-            level_method(result[0])
+	try:
+            if len(result)>1:
+                for idx, s in enumerate(result):
+                    level_method('[%02d]: %s' % (idx+1, s,))
+            elif result:
+                level_method(result[0])
+	except IOError,e:
+		# TODO: perhaps reset the logger streams?
+		#if logrotate closes our files, we end up here..
+		pass
+	except:
+		# better ignore the exception and carry on..
+		pass
 
     def shutdown(self):
         logging.shutdown()
