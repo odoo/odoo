@@ -76,7 +76,7 @@ class auction_dates(osv.osv):
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
         'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication',store=True),
-        'state': fields.selection((('draft','Draft'),('close','Closed')),'Status',select=1, readonly=True),
+        'state': fields.selection((('draft','Draft'),('closed','Closed')),'Status',select=1, readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
 
     }
