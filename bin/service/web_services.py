@@ -60,6 +60,8 @@ class db(netsvc.Service):
         self.id = 0
         self.id_protect = threading.Semaphore()
 
+        self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
+
     def create(self, password, db_name, demo, lang, user_password='admin'):
         security.check_super(password)
         self.id_protect.acquire()
@@ -169,9 +171,20 @@ class db(netsvc.Service):
             sql_db.close_db('template1')
         return True
 
+    def _set_pg_psw_env_var(self):
+        if os.name == 'nt' and not os.environ.get('PGPASSWORD', ''):
+            os.environ['PGPASSWORD'] = tools.config['db_password']
+            self._pg_psw_env_var_is_set = True
+
+    def _unset_pg_psw_env_var(self):
+        if os.name == 'nt' and self._pg_psw_env_var_is_set:
+            os.environ['PGPASSWORD'] = ''
+
     def dump(self, password, db_name):
         security.check_super(password)
         logger = netsvc.Logger()
+
+        self._set_pg_psw_env_var()
 
         cmd = ['pg_dump', '--format=c', '--no-owner']
         if tools.config['db_user']:
@@ -192,11 +205,16 @@ class db(netsvc.Service):
             raise Exception, "Couldn't dump database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 'DUMP DB: %s' % (db_name))
+
+        self._unset_pg_psw_env_var()
+
         return base64.encodestring(data)
 
     def restore(self, password, db_name, data):
         security.check_super(password)
         logger = netsvc.Logger()
+
+        self._set_pg_psw_env_var()
 
         if self.db_exist(db_name):
             logger.notifyChannel("web-services", netsvc.LOG_WARNING,
@@ -238,6 +256,9 @@ class db(netsvc.Service):
             raise Exception, "Couldn't restore database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 'RESTORE DB: %s' % (db_name))
+
+        self._unset_pg_psw_env_var()
+
         return True
 
     def rename(self, password, old_name, new_name):
