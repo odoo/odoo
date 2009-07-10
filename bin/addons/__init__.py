@@ -663,6 +663,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         status = {}
 
     cr = db.cursor()
+    if cr:
+       cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
+       if len(cr.fetchall())==0:    
+           logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+           tools.init_db(cr)
+#           cr.execute("update res_users set password=%s where id=%s",('admin',1))
+           # in that case, force --init=all
+           tools.config["init"]["all"] = 1
+           tools.config['update']['all'] = 1
+           if not tools.config['without_demo']:
+               tools.config["demo"]['all'] = 1 
     force = []
     if force_demo:
         force.append('demo')

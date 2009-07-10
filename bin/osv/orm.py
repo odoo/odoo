@@ -569,12 +569,16 @@ class orm_template(object):
                             sel = fields_def[field[len(prefix)]]['selection'](self,
                                     cr, uid, context)
                         for key, val in sel:
-                            if str(key) == line[i]:
+                            if line[i] in [str(key),str(val)]: #Acepting key or value for selection field
                                 res = key
+                                break
                         if line[i] and not res:
                             logger.notifyChannel("import", netsvc.LOG_WARNING,
                                     "key '%s' not found in selection field '%s'" % \
                                             (line[i], field[len(prefix)]))
+                            
+                            warning += "Key/value '"+ str(line[i]) +"' not found in selection field '"+str(field[len(prefix)])+"'"
+                            
                     elif fields_def[field[len(prefix)]]['type']=='many2one':
                         res = False
                         if line[i]:
@@ -668,7 +672,7 @@ class orm_template(object):
                     process_liness(self, datas, [], fields_def)
             if warning:
                 cr.rollback()
-                return (-1, res, warning, '')
+                return (-1, res, 'Line ' + str(counter) +' : ' + warning, '')
             
             try:
                 id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
@@ -682,7 +686,7 @@ class orm_template(object):
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
                             break
-                    return (-1, res,msg,'' )
+                    return (-1, res,'Line ' + str(counter) +' : ' + msg,'' )
                 
             for lang in translate:
                 context2 = context.copy()
