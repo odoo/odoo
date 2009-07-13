@@ -275,7 +275,7 @@ class purchase_order(osv.osv):
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                        })
-    def inv_line_create(self,a,ol):
+    def inv_line_create(self, cr, uid, a, ol):
         return (0, False, {
             'name': ol.name,
             'account_id': a,
@@ -313,7 +313,7 @@ class purchase_order(osv.osv):
                     a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
                 fpos = o.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                il.append(self.inv_line_create(a,ol))
+                il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
