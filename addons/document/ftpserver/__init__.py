@@ -35,23 +35,59 @@ if len(pps) == 2:
     PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
 class ftp_server(threading.Thread):
-    def log(self, level, message):        
+    def log(self, level, message):
         logger = netsvc.Logger()
         logger.notifyChannel('FTP', level, message)
 
+    def detect_ip_addr(self):
+        def _detect_ip_addr():
+            from array import array
+            import socket
+            from struct import pack, unpack
+
+            try:
+                import fcntl
+            except ImportError:
+                fcntl = None
+
+            if not fcntl: # not UNIX:
+                hostname = socket.gethostname()
+                ip_addr = socket.gethostbyname(hostname)
+            else: # UNIX:
+                # get all interfaces:
+                nbytes = 128 * 32
+                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                names = array('B', '\0' * nbytes)
+                outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
+                namestr = names.tostring()
+                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
+
+                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
+                    break
+            return ip_addr
+
+        try:
+            ip_addr = _detect_ip_addr()
+        except:
+            ip_addr = 'localhost'
+        return ip_addr
+
+
     def run(self):
-        autho = authorizer.authorizer()        
+        autho = authorizer.authorizer()
         ftpserver.FTPHandler.authorizer = autho
         ftpserver.max_cons = 300
         ftpserver.max_cons_per_ip = 50
         ftpserver.FTPHandler.abstracted_fs = abstracted_fs.abstracted_fs
         if PASSIVE_PORTS:
             ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
-        
+
         ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
         ftpserver.logline = lambda msg: None
         ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
 
+        HOST = self.detect_ip_addr()
         address = (HOST, PORT)
         ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
         ftpd.serve_forever()
