@@ -447,7 +447,7 @@ class orm_template(object):
         data = map(lambda x: '', range(len(fields)))
         done = []
         for fpos in range(len(fields)):
-            f = fields[fpos]
+            f = fields[fpos]            
             if f:
                 r = row
                 i = 0
@@ -466,7 +466,7 @@ class orm_template(object):
                         else:
                             break
                     else:
-                        r = r[f[i]]                    
+                        r = r[f[i]]                   
                     if not r:
                         if f[i] in self._columns: 
                             r = check_type(self._columns[f[i]]._type)
@@ -480,18 +480,26 @@ class orm_template(object):
                                 or [], fields)
                         if fields2 in done:
                             break
-                        done.append(fields2)
+                        done.append(fields2)                        
                         for row2 in r:
                             lines2 = self.__export_row(cr, uid, row2, fields2,
-                                    context)
+                                    context)                            
                             if first:
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
                                         data[fpos2] = lines2[0][fpos2]
+                                if not data[fpos]:
+                                    dt = ''
+                                    for rr in r :
+                                        if isinstance(rr.name, browse_record):
+                                            rr = rr.name
+                                        dt+=rr.name+','
+                                    data[fpos] = dt[:-1]
+                                    break
                                 lines += lines2[1:]
                                 first = False
                             else:
-                                lines += lines2
+                                lines += lines2                            
                         break
                     i += 1
                 if i == len(f):
@@ -500,9 +508,10 @@ class orm_template(object):
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
-    def export_data(self, cr, uid, ids, fields_to_export, context=None, imp_comp= False):
+    def export_data(self, cr, uid, ids, fields_to_export, context=None):
         if not context:
             context = {}
+        imp_comp = context.get('import_comp',False)        
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})        
