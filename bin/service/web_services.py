@@ -38,7 +38,7 @@ import pooler
 import release
 import sql_db
 import tools
-
+import locale
 logging.basicConfig()
 
 class db(netsvc.Service):
