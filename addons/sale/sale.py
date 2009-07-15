@@ -913,8 +913,7 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-
-        result .update({'type': product_obj.procure_method})
+        result.update({'type': product_obj.procure_method})
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
