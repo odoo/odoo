@@ -151,6 +151,7 @@
                                         <page groups="base.group_extended" string="Extra Info">
                                             <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
                                             <field groups="product.group_uos" name="product_uos"/>
+                                            <field name="th_weight"/>
                                             <field name="address_allotment_id" select="2"/>
                                             <separator colspan="4" string="Properties"/>
                                             <field colspan="4" name="property_ids" nolabel="1"/>
@@ -371,6 +372,7 @@
                     <field name="price_unit"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
+                    <field name="th_weight"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -398,6 +400,7 @@
                             <field name="type"/>
                             <field name="delay" select="2"/>
                             <field name="price_subtotal"/>
+                            <field name="th_weight"/>
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
