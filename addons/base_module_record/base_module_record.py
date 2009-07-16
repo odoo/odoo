@@ -25,6 +25,7 @@ from osv import fields,osv
 import netsvc
 import pooler
 import string
+import tools
 
 objects_proxy = netsvc.SERVICES['object'].__class__
 
@@ -174,7 +175,7 @@ class base_module_record(osv.osv):
                     val = str(val)
 
                 val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
-                field.setAttribute(u"eval",  val.decode('utf-8'))
+                field.setAttribute(u"eval",  tools.ustr(val))
                 record.appendChild(field)
         return record_list, noupdate
 
