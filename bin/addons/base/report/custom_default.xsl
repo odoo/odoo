@@ -7,8 +7,10 @@
 	<xsl:variable name="rightMargin">1cm</xsl:variable>
 	<xsl:variable name="topMargin">1cm</xsl:variable>
 	<xsl:variable name="bottomMargin">1cm</xsl:variable>
-	<xsl:variable name="pageSize">29.7cm,21cm</xsl:variable>
-
+	<!--:variable name="pageSize">29.7cm,21cm</xsl:variable> Or use default width and height for frame -->
+    <xsl:variable name="pageSize">
+        <xsl:value-of select="/report/config/PageSize"/>
+    </xsl:variable>
 	<xsl:variable name="page_format">a4_letter</xsl:variable>
 
 	<xsl:template name="first_page_frames">
