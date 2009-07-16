@@ -685,7 +685,7 @@ class orm_template(object):
                         if line[i]:
                             relation = fields_def[field[len(prefix)]]['relation']
                             res2 = self.pool.get(relation).name_search(cr, uid,
-                                    line[i], [], operator='=')
+                                    line[i], [], operator='=', context=context)
                             res = (res2 and res2[0][0]) or False
                             if not res:
                                 warning += ('Relation not found: ' + line[i] + \
@@ -699,7 +699,7 @@ class orm_template(object):
                             relation = fields_def[field[len(prefix)]]['relation']
                             for word in line[i].split(config.get('csv_internal_sep')):
                                 res2 = self.pool.get(relation).name_search(cr,
-                                        uid, word, [], operator='=')
+                                        uid, word, [], operator='=', context=context)
                                 res3 = (res2 and res2[0][0]) or False
                                 if not res3:
                                     warning += ('Relation not found: ' + \
