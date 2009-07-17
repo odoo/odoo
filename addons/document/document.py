@@ -207,10 +207,11 @@ class node_class(object):
             
             ids = obj.search(self.cr, self.uid, where)
             res = obj.browse(self.cr, self.uid, ids,self.context)
-            for r in res:
-                r.name = False                
+            for r in res:                               
                 if len(obj.fields_get(self.cr, self.uid, [_dirname_field])):
                     r.name = eval('r.'+_dirname_field)
+                else:
+                    r.name = False
                 if not r.name:
                     r.name = name_for + '%d'%r.id               
                 for invalid in INVALID_CHARS:
