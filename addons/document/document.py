@@ -94,7 +94,7 @@ class node_class(object):
             where.append( ('parent_id','=',self.object.id) )
             where.append( ('res_id','=',False) )
         if nodename:
-            where.append( (fobj._rec_name,'like',nodename) )
+            where.append( (fobj._rec_name,'=',nodename) )
         for content in self.object.content_ids:
             if self.object2 or not content.include_name:
                 if content.include_name:
@@ -137,7 +137,7 @@ class node_class(object):
         where = []
         if nodename:    
             nodename = self.get_translation(nodename, self.context['lang'])            
-            where.append(('name','like',nodename))
+            where.append(('name','=',nodename))
         if (self.object and self.object.type=='directory') or not self.object2:
             where.append(('parent_id','=',self.object and self.object.id or False))
         else:
@@ -163,7 +163,7 @@ class node_class(object):
             fobj = pool.get('ir.attachment')
             vargs = [('parent_id','=',False),('res_id','=',False)]
             if nodename:
-                vargs.append(('name','like',nodename))
+                vargs.append(('name','=',nodename))
             file_ids=fobj.search(self.cr,self.uid,vargs)
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
@@ -188,7 +188,7 @@ class node_class(object):
                     if nodename.find(INVALID_CHARS[invalid]) :
                         nodename=nodename.replace(INVALID_CHARS[invalid],invalid)
                 nodename = self.get_translation(nodename, self.context['lang'])
-                where.append((_dirname_field,'like',nodename))
+                where.append((_dirname_field,'=',nodename))
 
             if self.object.ressource_tree:
                 if obj._parent_name in obj.fields_get(self.cr,self.uid):                    
@@ -207,14 +207,15 @@ class node_class(object):
             
             ids = obj.search(self.cr, self.uid, where)
             res = obj.browse(self.cr, self.uid, ids,self.context)
-            for r in res:                
+            for r in res:
+                r.name = False                
                 if len(obj.fields_get(self.cr, self.uid, [_dirname_field])):
                     r.name = eval('r.'+_dirname_field)
-                else:
-                    r.name = name_for+'%d'%r.id               
+                if not r.name:
+                    r.name = name_for + '%d'%r.id               
                 for invalid in INVALID_CHARS:
                     if r.name.find(invalid) :
-                        r.name=r.name.replace(invalid,INVALID_CHARS[invalid])            
+                        r.name = r.name.replace(invalid,INVALID_CHARS[invalid])            
             result2 = map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name.replace('/','__'), self.object, x, context=self.context, root=x.id), res)
             if result2:
                 if self.object.ressource_tree:
@@ -325,7 +326,7 @@ class document_directory(osv.osv):
         where = []
         if nodename:
             nodename = self.get_translation(nodename, self.context['lang'])
-            where.append(('name','like',nodename))
+            where.append(('name','=',nodename))
         if object:
             where.append(('parent_id','=',object.id))
         ids = self.search(cr, uid, where, context)
