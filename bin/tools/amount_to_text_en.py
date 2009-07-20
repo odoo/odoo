@@ -98,7 +98,9 @@ def amount_to_text(number, currency):
     cents_number = int(number * 100) % 100
     cents_name = (cents_number > 1) and 'cents' or 'cent'
     cents = _100_to_text(cents_number)
-    cents = cents_number and '%s %s' % (cents, cents_name) or ''
+    cents = cents_number and '%s %s' % (cents.lower(), cents_name) or ''
+    if cents:
+        lacs += ' and %s' % (cents, )
     return lacs
 
 
