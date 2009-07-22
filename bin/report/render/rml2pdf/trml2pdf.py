@@ -203,7 +203,7 @@ class _rml_doc(object):
             self.canvas.save()
 
 class _rml_canvas(object):
-    def __init__(self, canvas,localcontext, doc_tmpl=None, doc=None, images={}, path='.', title=None):
+    def __init__(self, canvas, localcontext, doc_tmpl=None, doc=None, images={}, path='.', title=None):
         self.localcontext = localcontext
         self.canvas = canvas
         self.styles = doc.styles
@@ -295,7 +295,7 @@ class _rml_canvas(object):
         self.canvas.circle(x_cen=utils.unit_get(node.get('x')), y_cen=utils.unit_get(node.get('y')), r=utils.unit_get(node.get('radius')), **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def _place(self, node):
-        flows = _rml_flowable(self.doc, images=self.images, path=self.path, title=self.title).render(node)
+        flows = _rml_flowable(self.doc, self.localcontext, images=self.images, path=self.path, title=self.title).render(node)
         infos = utils.attr_get(node, ['x','y','width','height'])
 
         infos['y']+=infos['height']
@@ -433,12 +433,12 @@ class _rml_draw(object):
 
     def render(self, canvas, doc):
         canvas.saveState()
-        cnv = _rml_canvas(canvas,self.localcontext, doc, self.styles, images=self.images, path=self.path, title=self.canvas_title)
+        cnv = _rml_canvas(canvas, self.localcontext, doc, self.styles, images=self.images, path=self.path, title=self.canvas_title)
         cnv.render(self.node)
         canvas.restoreState()
 
 class _rml_flowable(object):
-    def __init__(self,doc,localcontext, images={}, path='.', title=None):
+    def __init__(self, doc, localcontext, images={}, path='.', title=None):
         self.localcontext = localcontext
         self.doc = doc
         self.styles = doc.styles
@@ -454,7 +454,7 @@ class _rml_flowable(object):
                 if key in ('rml_except', 'rml_loop', 'rml_tag'):
                     del txt_n.attrib[key]
             if True or not self._textual(n).isspace():
-                txt_n.text = self._textual(n)
+                txt_n.text = utils.xml2str(self._textual(n))
                 txt_n.tail = ''
                 rc1 += etree.tostring(txt_n)
         #rc1 += utils._process_text(self, node.tail or '')
