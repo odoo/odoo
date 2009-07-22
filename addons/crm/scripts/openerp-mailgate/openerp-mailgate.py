@@ -109,7 +109,14 @@ class email_parser(object):
             import netsvc
             netsvc.Logger().notifyChannel('mailgate', netsvc.LOG_ERROR, "%s" % e)
 
-        id = self.rpc('crm.case', 'create', data)
+        try:
+            id = self.rpc('crm.case', 'create', data)
+        
+
+        except Exception,e:
+            if getattr(e,'faultCode','') and 'AccessError' in e.faultCode:
+                e = '\n\nThe Specified user does not have an access to the CRM case.'
+            print e
         attachments = message['attachment']
 
         for attach in attachments or []:
@@ -316,7 +323,11 @@ if __name__ == '__main__':
 
     msg_txt = email.message_from_file(sys.stdin)
 
-    parser.parse(msg_txt)
-
+    try :
+        parser.parse(msg_txt)
+    except Exception,e:
+        if getattr(e,'faultCode','') and 'Connection unexpectedly closed' in e.faultCode:
+            print e
+ 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
