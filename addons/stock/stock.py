@@ -955,7 +955,12 @@ class stock_move(osv.osv):
             ['prodlot_id'])]
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
-            return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
+            if context['move_line'][0]:
+                if isinstance(context['move_line'][0],(tuple,list)):
+                    return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
+                else:
+                    move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0],['location_dest_id'])
+                    return move_list and move_list['location_dest_id'][0] or False
         if context.get('address_out_id', False):
             return self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer.id
         return False
