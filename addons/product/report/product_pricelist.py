@@ -45,7 +45,7 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-            if form['qty'+str(i)] >= 0 and form['qty'+str(i)] not in vals.values():
+            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
                 vals['qty'+str(qtys)] = form['qty'+str(i)]
                 qtys += 1
         lst.append(vals)
@@ -54,7 +54,7 @@ class product_pricelist(report_sxw.rml_parse):
     def _set_quantity(self,form):
         for i in range(1,6):
             q = 'qty%d'%i
-            if form[q] >=0 and form[q] not in self.quantity:
+            if form[q] >0 and form[q] not in self.quantity:
                 self.quantity.append(form[q])
 #            else:
 #                self.quantity.append(0)
