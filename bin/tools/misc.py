@@ -379,6 +379,18 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         def write(self, s):
             self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
 
+    smtp_server = config['smtp_server']
+    if smtp_server.startswith('maildir:/'):
+        from mailbox import Maildir
+	maildir_path = smtp_server[8:]
+	try:
+		mdir = Maildir(maildir_path,factory=None, create = True)
+		mdir.add(msg.as_string(True))
+		return True
+	except Exception,e:
+		netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
+		return False
+	
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
@@ -390,7 +402,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
             s.set_debuglevel(int(bool(debug)))  # 0 or 1
             
-            s.connect(config['smtp_server'], config['smtp_port'])
+            s.connect(smtp_server, config['smtp_port'])
             if ssl:
                 s.ehlo()
                 s.starttls()
