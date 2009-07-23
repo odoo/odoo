@@ -670,7 +670,7 @@ class orm_template(object):
                             sel = fields_def[field[len(prefix)]]['selection'](self,
                                     cr, uid, context)
                         for key, val in sel:
-                            if line[i] in [str(key),str(val)]: #Acepting key or value for selection field
+                            if line[i] in [tools.ustr(key),tools.ustr(val)]: #Acepting key or value for selection field
                                 res = key
                                 break
                         if line[i] and not res:
