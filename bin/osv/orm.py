@@ -434,32 +434,45 @@ class orm_template(object):
 
     def __export_row(self, cr, uid, row, fields, context=None):
         
-        def check_type(type,r):
-            if type == 'float':
+        def check_type(field_type):
+            if field_type == 'float':
                 return 0.0
-            elif type == 'integer':
+            elif field_type == 'integer':
                 return 0
-            elif type == 'char':
-                return ''
-            return r
+            elif field_type == 'boolean':   
+                return False                                
+            return ''
         
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
         for fpos in range(len(fields)):
-            f = fields[fpos]
+            f = fields[fpos]            
             if f:
                 r = row
                 i = 0
                 while i < len(f):
-                    r = r[f[i]]
+                    if f[i] == 'db_id':
+                        r = r['id']                        
+                    elif f[i] == 'id':                        
+                        model_data = self.pool.get('ir.model.data')
+                        data_ids = model_data.search(cr, uid, [('model','=',r._table_name),('res_id','=',r['id'])])
+                        if len(data_ids):
+                            d = model_data.read(cr, uid, data_ids, ['name','module'])[0]
+                            if d['module']:
+                                r = '%s.%s'%(d['module'],d['name'])
+                            else:
+                                r = d['name']
+                        else:
+                            break
+                    else:
+                        r = r[f[i]]                   
                     if not r:
                         if f[i] in self._columns: 
-                            r = check_type(self._columns[f[i]]._type,r)
+                            r = check_type(self._columns[f[i]]._type)
                         elif f[i] in self._inherit_fields:
-                            r = check_type(self._inherit_fields[f[i]][2]._type,r)
-                           
-                        data[fpos] = tools.ustr(r)
+                            r = check_type(self._inherit_fields[f[i]][2]._type)                        
+                        data[fpos] = r                        
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -467,56 +480,89 @@ class orm_template(object):
                                 or [], fields)
                         if fields2 in done:
                             break
-                        done.append(fields2)
+                        done.append(fields2)                        
                         for row2 in r:
                             lines2 = self.__export_row(cr, uid, row2, fields2,
-                                    context)
+                                    context)                            
                             if first:
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
                                         data[fpos2] = lines2[0][fpos2]
+                                if not data[fpos]:
+                                    dt = ''
+                                    for rr in r :
+                                        if isinstance(rr.name, browse_record):
+                                            rr = rr.name
+                                        dt+=rr.name+','
+                                    data[fpos] = dt[:-1]
+                                    break
                                 lines += lines2[1:]
                                 first = False
                             else:
-                                lines += lines2
+                                lines += lines2                            
                         break
                     i += 1
                 if i == len(f):
+                    if isinstance(r, browse_record):
+                        r = r.name
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
-    def export_data(self, cr, uid, ids, fields, context=None):
+    def export_data(self, cr, uid, ids, fields_to_export, context=None):
         if not context:
             context = {}
-        fields = map(lambda x: x.split('/'), fields)
+        imp_comp = context.get('import_comp',False)        
+        cols = self._columns.copy()
+        for f in self._inherit_fields:
+            cols.update({f: self._inherit_fields[f][2]})        
+        fields_to_export = map(lambda x: x.split('/'), fields_to_export)
+        fields_export = fields_to_export+[]        
+        warning = ''  
+        warning_fields = []      
+        for field in fields_export:
+            if imp_comp and len(field)>1:                              
+                warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
+            elif len (field) <=1:
+                if imp_comp and cols.get(field and field[0],False):
+                    if ((isinstance(cols[field[0]], fields.function) and not cols[field[0]].store) \
+                                     or isinstance(cols[field[0]], fields.related)\
+                                     or isinstance(cols[field[0]], fields.one2many)):                        
+                        warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
         datas = []
+        if imp_comp and len(warning_fields):
+            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' %('\n'.join(warning_fields))        
+            cr.rollback()
+            return {'warning' : warning}
         for row in self.browse(cr, uid, ids, context):
-            datas += self.__export_row(cr, uid, row, fields, context)
-        return datas
+            datas += self.__export_row(cr, uid, row, fields_to_export, context)
+        return {'datas':datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
         logger = netsvc.Logger()
-
-        def process_liness(self, datas, prefix, fields_def, position=0):
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0):
             line = datas[position]
             row = {}
             translate = {}
             todo = []
             warning = ''
             data_id = False
+            data_res_id = False
+            is_xml_id = False
+            is_db_id = False
+            ir_model_data_obj = self.pool.get('ir.model.data')
             #
             # Import normal fields
             #
             for i in range(len(fields)):
                 if i >= len(line):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
-                field = fields[i]
-                if field == ["id"]:
-                    data_id = line[i]
+                if not line[i]:
                     continue
+                field = fields[i]                
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':id'):
                     res_id = False
                     if line[i]:
@@ -526,8 +572,7 @@ class orm_template(object):
                                 if '.' in word:
                                     module, xml_id = word.rsplit('.', 1)
                                 else:
-                                    module, xml_id = current_module, word
-                                ir_model_data_obj = self.pool.get('ir.model.data')
+                                    module, xml_id = current_module, word                                
                                 id = ir_model_data_obj._get_id(cr, uid, module,
                                         xml_id)
                                 res_id2 = ir_model_data_obj.read(cr, uid, [id],
@@ -540,8 +585,7 @@ class orm_template(object):
                             if '.' in line[i]:
                                 module, xml_id = line[i].rsplit('.', 1)
                             else:
-                                module, xml_id = current_module, line[i]
-                            ir_model_data_obj = self.pool.get('ir.model.data')
+                                module, xml_id = current_module, line[i]                            
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
                             res_id = ir_model_data_obj.read(cr, uid, [id],
                                     ['res_id'])[0]['res_id']
@@ -554,6 +598,63 @@ class orm_template(object):
                     continue
                 if (len(field) == len(prefix)+1) and \
                         (prefix == field[0:len(prefix)]):
+                    if field[len(prefix)] == "id":  
+                        # XML ID                         
+                        db_id = False                 
+                        is_xml_id = data_id = line[i] 
+                        d =  data_id.split('.')
+                        module = len(d)>1 and d[0] or ''
+                        name = len(d)>1 and d[1] or d[0] 
+                        data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('name','=',name)])                    
+                        if len(data_ids):
+                            d = ir_model_data_obj.read(cr, uid, data_ids, ['res_id'])[0]                                                
+                            db_id = d['res_id']                       
+                        if is_db_id and not db_id:
+                           data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('res_id','=',is_db_id)])                     
+                           if not len(data_ids):
+                               ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id}) 
+                               db_id = is_db_id 
+                        if is_db_id and int(db_id) != int(is_db_id):                        
+                            warning += ("Id is not the same than existing one: " + str(is_db_id) + " !\n")
+                            logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                    "Id is not the same than existing one: " + str(is_db_id) + ' !\n')
+                        continue
+
+                    if field[len(prefix)] == "db_id":
+                        # Database ID                        
+                        try:                                        
+                            line[i]= int(line[i])                    
+                        except Exception, e:
+                            warning += (str(e) +  "!\n")
+                            logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                    str(e)  + '!\n')
+                            continue
+                        is_db_id = line[i]
+                        obj_model = self.pool.get(model_name)                        
+                        ids = obj_model.search(cr, uid, [('id','=',line[i])])
+                        if not len(ids):
+                            warning += ("Database ID doesn't exist: " + model_name + ": " + str(line[i]) + " !\n")
+                            logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                    "Database ID doesn't exist: " + model_name + ": " + str(line[i]) + ' !\n')
+                            continue
+                        else:
+                            data_res_id = ids[0]
+                        data_ids = ir_model_data_obj.search(cr, uid, [('model','=',model_name),('res_id','=',line[i])])
+                        if len(data_ids):
+                            d = ir_model_data_obj.read(cr, uid, data_ids, ['name','module'])[0]                                                
+                            data_id = d['name']       
+                            if d['module']:
+                                data_id = '%s.%s'%(d['module'],d['name'])
+                            else:
+                                data_id = d['name']
+                        if is_xml_id and not data_id:
+                            data_id = is_xml_id                                     
+                        if is_xml_id and is_xml_id!=data_id:  
+                            warning += ("Id is not the same than existing one: " + str(line[i]) + " !\n")
+                            logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                    "Id is not the same than existing one: " + str(line[i]) + ' !\n')  
+                                                           
+                        continue
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
                         res = line[i] and int(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'boolean':
@@ -584,7 +685,7 @@ class orm_template(object):
                         if line[i]:
                             relation = fields_def[field[len(prefix)]]['relation']
                             res2 = self.pool.get(relation).name_search(cr, uid,
-                                    line[i], [], operator='=')
+                                    line[i], [], operator='=', context=context)
                             res = (res2 and res2[0][0]) or False
                             if not res:
                                 warning += ('Relation not found: ' + line[i] + \
@@ -598,7 +699,7 @@ class orm_template(object):
                             relation = fields_def[field[len(prefix)]]['relation']
                             for word in line[i].split(config.get('csv_internal_sep')):
                                 res2 = self.pool.get(relation).name_search(cr,
-                                        uid, word, [], operator='=')
+                                        uid, word, [], operator='=', context=context)
                                 res3 = (res2 and res2[0][0]) or False
                                 if not res3:
                                     warning += ('Relation not found: ' + \
@@ -618,19 +719,20 @@ class orm_template(object):
                     if field[0] not in todo:
                         todo.append(field[len(prefix)])
             #
-            # Import one2many fields
+            # Import one2many, many2many fields
             #
             nbrmax = 1
             for field in todo:
-                newfd = self.pool.get(fields_def[field]['relation']).fields_get(
+                relation_obj = self.pool.get(fields_def[field]['relation'])
+                newfd = relation_obj.fields_get(
                         cr, uid, context=context)
-                res = process_liness(self, datas, prefix + [field], newfd, position)
-                (newrow, max2, w2, translate2, data_id2) = res
+                res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)                              
+                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res                  
                 nbrmax = max(nbrmax, max2)
-                warning = warning + w2
-                reduce(lambda x, y: x and y, newrow)
+                warning = warning + w2         
+                reduce(lambda x, y: x and y, newrow)       
                 row[field] = (reduce(lambda x, y: x or y, newrow.values()) and \
-                        [(0, 0, newrow)]) or []
+                        [(0, 0, newrow)]) or []                
                 i = max2
                 while (position+i)<len(datas):
                     ok = True
@@ -641,11 +743,11 @@ class orm_template(object):
                     if not ok:
                         break
 
-                    (newrow, max2, w2, translate2, data_id2) = process_liness(
-                            self, datas, prefix+[field], newfd, position+i)
+                    (newrow, max2, w2, translate2, data_id2, data_res_id2) = process_liness(
+                            self, datas, prefix+[field], current_module, relation_obj._name, newfd, position+i)
                     warning = warning+w2
                     if reduce(lambda x, y: x or y, newrow.values()):
-                        row[field].append((0, 0, newrow))
+                        row[field].append((0, 0, newrow))                    
                     i += max2
                     nbrmax = max(nbrmax, i)
 
@@ -653,7 +755,7 @@ class orm_template(object):
                 for i in range(max(nbrmax, 1)):
                     #if datas:
                     datas.pop(0)
-            result = (row, nbrmax, warning, translate, data_id)
+            result = (row, nbrmax, warning, translate, data_id, data_res_id)
             return result
 
         fields_def = self.fields_get(cr, uid, context=context)
@@ -668,16 +770,16 @@ class orm_template(object):
             counter += 1
             res = {}
             #try:
-            (res, other, warning, translate, data_id) = \
-                    process_liness(self, datas, [], fields_def)
-            if warning:
+            (res, other, warning, translate, data_id, res_id) = \
+                    process_liness(self, datas, [], current_module, self._name, fields_def)
+            if warning:                        
                 cr.rollback()
                 return (-1, res, 'Line ' + str(counter) +' : ' + warning, '')
             
             try:
-                id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
+                id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
-                     noupdate=noupdate)
+                     noupdate=noupdate, res_id=res_id)
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
