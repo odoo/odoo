@@ -29,7 +29,7 @@ import thread
 import threading
 import time
 import sys
-
+import platform
 from tools.translate import _
 import addons
 import ir
@@ -38,7 +38,7 @@ import pooler
 import release
 import sql_db
 import tools
-
+import locale
 logging.basicConfig()
 
 class db(netsvc.Service):
@@ -528,29 +528,23 @@ GNU Public Licence.
 
     def get_server_environment(self):
         try:
-            revno = os.popen('bzr revno').read()
-            rev_log = ''
-            cnt = 0
-            for line in os.popen('bzr log -r %s'%(int(revno))).readlines():
-                if line.find(':')!=-1:
-                    if not cnt == 4:
-                        rev_log += '\t' + line  
-                        cnt += 1
-                    else:
-                        break
+            rev_id = os.popen('bzr revision-info').read()
         except Exception,e:
-             rev_log = 'Exception: %s\n' % (str(e))
+             rev_id = 'Exception: %s\n' % (str(e))
 
-        os_lang = os.environ.get('LANG', '').split('.')[0]
-        environment = '\nEnvironment_Information : \n' \
+        os_lang = '.'.join(locale.getdefaultlocale())
+        environment = '\nEnvironment Information : \n' \
                       'PlatForm : %s\n' \
                       'Operating System : %s\n' \
+                      'Operating System Release : %s\n' \
                       'Operating System Version : %s\n' \
+                      'Operating System Architecture : %s\n' \
                       'Operating System Locale : %s\n'\
                       'Python Version : %s\n'\
                       'OpenERP-Server Version : %s\n'\
-                      'Last revision Details: \n%s' \
-                      %(sys.platform,os.name,str(sys.version.split('\n')[1]),os_lang,str(sys.version[0:5]),release.version,rev_log)
+                      'Last revision No. & ID : %s'\
+                      %(platform.platform(),os.name, platform.release(),platform.version(),
+                        platform.architecture()[0],os_lang,platform.python_version(),release.version,rev_id)
         return environment
 common()
 
