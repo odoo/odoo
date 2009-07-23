@@ -126,17 +126,20 @@ class abstracted_fs:
         for db_name in result:
             db, cr = None, None
             try:
-                db = pooler.get_db_only(db_name)
-                cr = db.cursor()
-                cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
-                if not cr.fetchone():
-                    continue
-
-                cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
-                res = cr.fetchone()
-                if res and len(res):
-                    self.db_name_list.append(db_name)
-                cr.commit()            
+                try:
+                    db = pooler.get_db_only(db_name)
+                    cr = db.cursor()
+                    cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
+                    if not cr.fetchone():
+                        continue
+    
+                    cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
+                    res = cr.fetchone()
+                    if res and len(res):
+                        self.db_name_list.append(db_name)
+                    cr.commit()
+                except Exception, e:
+                    log(e)
             finally:
                 if cr is not None:
                     cr.close()
