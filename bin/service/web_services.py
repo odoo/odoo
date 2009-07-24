@@ -532,7 +532,7 @@ GNU Public Licence.
         except Exception,e:
              rev_id = 'Exception: %s\n' % (str(e))
 
-        os_lang = '.'.join(locale.getdefaultlocale())
+        os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
         environment = '\nEnvironment Information : \n' \
                       'PlatForm : %s\n' \
                       'Operating System : %s\n' \
