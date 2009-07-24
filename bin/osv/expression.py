@@ -198,10 +198,18 @@ class expression(object):
                         self.__exp[i] = (left, 'in', right)
             else:
                 # other field type
+
+                # add the time part to datetime field when it's not there:
+                if field._type == 'datetime' and len(self.__exp[i][2]) == 10:
+                    if operator in ('>', '>='):
+                        self.__exp[i][2] += ' 00:00:00'
+                    elif operator in ('<', '<='):
+                        self.__exp[i][2] += ' 23:59:59'
+
                 if field.translate:
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
-                    
+
                     operator = operator == '=like' and 'like' or operator
 
                     query1 = '( SELECT res_id'          \
@@ -224,7 +232,7 @@ class expression(object):
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
                              '   WHERE "' + left + '" ' + operator + instr + ")"
-                                                        
+
                     query2 = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
                               'model',
