@@ -158,7 +158,7 @@ class Cursor(object):
                     log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
                     sum+= r[1][1]
                 sqllogs[type].clear()
-            log("SUM:%s/%d [%d]" % (sum, self.count,sql_counter))
+            log("SUM %s:%s/%d [%d]" % (type, sum, self.count,sql_counter))
         process('from')
         process('into')
         self.count = 0

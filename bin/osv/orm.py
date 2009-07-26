@@ -794,6 +794,7 @@ class orm_template(object):
                             and getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
 
+		#TODO: optimize
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
@@ -1225,6 +1226,7 @@ class orm_template(object):
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
+	#FIXME: collect all calls to _get_source into one SQL call.
         for lang in langs:
             res[lang] = {'code': lang}
             for f in fields:
@@ -1246,6 +1248,7 @@ class orm_template(object):
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+	#FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
                 if field in self._columns:
@@ -2022,6 +2025,7 @@ class orm(orm_template):
                 continue
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
+		#TODO: optimize out of this loop
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
                     r[f] = res_trans.get(r['id'], False) or r[f]
@@ -2326,6 +2330,7 @@ class orm(orm_template):
                             'where id in ('+ids_str+')', upd1)
             
             if totranslate:
+		# TODO: optimize
                 for f in direct:
                     if self._columns[f].translate:
                         src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
@@ -2779,6 +2784,7 @@ class orm(orm_template):
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
+	#TODO: optimize translations
         trans_name=''
         for f in fields:
             trans_flag=True
