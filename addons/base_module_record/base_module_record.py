@@ -128,8 +128,9 @@ class base_module_record(osv.osv):
                     noupdate = noupdate or update
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
-                    name = self.pool.get(fields[key]['relation']).browse(cr, uid, val).name
-                    field.setAttribute("search", "[('name','=','"+name+"')]")
+                    fld_nm = self.pool.get(fields[key]['relation'])._rec_name
+                    name = self.pool.get(fields[key]['relation']).read(cr, uid, val,[fld_nm])[fld_nm] or False
+                    field.setAttribute("search", str([(str(fld_nm) ,'=', name)]))
                 else:
                     field.setAttribute("ref", id)
                 record.appendChild(field)

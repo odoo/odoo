@@ -880,7 +880,7 @@ class account_invoice(osv.osv):
 
         lines = [(0, 0, l1), (0, 0, l2)]
         move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
-        move_id = self.pool.get('account.move').create(cr, uid, move)
+        move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
         total = 0.0

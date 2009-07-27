@@ -584,7 +584,7 @@ class account_analytic_account_summary_month(osv.osv):
     _description = "Hours summary by month"
     _auto = False
     _rec_name = 'month'
-    _order = 'month'
+#    _order = 'month'
 
     def _unit_amount(self, cr, uid, ids, name, arg, context=None):
         res = {}

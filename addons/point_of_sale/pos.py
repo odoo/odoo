@@ -304,11 +304,14 @@ class pos_order(osv.osv):
     def create_picking(self, cr, uid, ids, context={}):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
-
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
             if not order.last_out_picking:
                 new = True
+                if order.partner_id.id:
+                    address_id = partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery'])['delivery']
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
                     'type': 'out',
@@ -318,7 +321,8 @@ class pos_order(osv.osv):
                     'invoice_state': 'none',
                     'auto_picking': True,
                     'pos_order': order.id,
-                    })
+                    'address_id' : address_id
+                    },context)
                 self.write(cr, uid, [order.id], {'last_out_picking': picking_id})
             else:
                 picking_id = order.last_out_picking.id

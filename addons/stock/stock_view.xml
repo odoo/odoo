@@ -343,7 +343,7 @@
                     <field name="usage" select="1"/>
                     <field name="account_id" select="1"/>
                     <field name="location_id"/>
-                    <field name="address_id" context="{'context_display':'partner'}"/>
+                    <field name="address_id" context="{'contact_display':'partner'}"/>
                     <field name="icon"/>
                     <newline/>
                     <group col="2" colspan="2">
@@ -422,7 +422,7 @@
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
                     <newline/>
-                    <field name="partner_address_id" context="{'context_display':'partner'}"/>
+                    <field name="partner_address_id" context="{'contact_display':'partner'}"/>
                 </form>
             </field>
         </record>
@@ -436,7 +436,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="partner_address_id" context="{'context_display':'partner'}"/>
+                    <field name="partner_address_id" context="{'contact_display':'partner'}"/>
                 </tree>
             </field>
         </record>
@@ -458,7 +458,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Move Lines">
-                    <field name="address_id" invisible="True" context="{'context_display':'partner'}"/>
+                    <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
                     <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"/><newline/>
                     <group colspan="4">
@@ -521,7 +521,7 @@
             <field name="arch" type="xml">
                 <form string="Packing list">
                     <group colspan="4" col="6">
-                        <field name="address_id" select="2" context="{'context_display':'partner'}"/>
+                        <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
                         <field name="type"/>
                         <field name="name" readonly="1"/>
                         <field name="date"/>
@@ -542,7 +542,7 @@
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field name="address_id" select="1" context="{'context_display':'partner'}"/>
+                                    <field name="address_id" select="1" context="{'contact_display':'partner'}"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <field name="prodlot_id" select="2"
                                         context="{'location_id':location_id, 'product_id':product_id}"
@@ -990,7 +990,7 @@
             <field name="arch" type="xml">
                 <form string="Input Packing List">
                     <group colspan="4" col="6">
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'context_display':'partner'}"/>
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'contact_display':'partner'}"/>
                         <field name="origin" select="2"/>
                         <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="name" readonly="1" select="1"/>
@@ -1242,7 +1242,7 @@
                     <field name="date"/>
                     <field name="date_planned"/>
                     <field name="priority"/>
-                    <field name="address_id" select="2" context="{'context_display':'partner'}"/>
+                    <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
                     <newline/>
                     <field name="picking_id" select="2"/>
                     <field name="prodlot_id" select="2"
