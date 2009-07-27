@@ -224,6 +224,12 @@ msgid "Select default journals"
 msgstr "Sélectionnez le Journal par défaut"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Debit Account for your Financial Journals!\n"
+msgstr "Vous devez définir un Compte de Débit par défaut pour vos Journaux Financiers !\n"
+
+#. module: point_of_sale
 #: rml:pos.details:0
 msgid "VAT(%)"
 msgstr "TVA(%)"
@@ -797,6 +803,12 @@ msgid "Order lines"
 msgstr "Lignes de commande"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Credit Account for your Financial Journals!\n"
+msgstr "Vous devez définir un Compte de Crédit par défaut pour vos Journaux Financiers !\n"
+
+#. module: point_of_sale
 #: field:pos.order.line,order_id:0
 #: field:pos.payment,order_id:0
 msgid "Order Ref"
@@ -1014,6 +1026,11 @@ msgstr "Montant"
 #: view:pos.order:0
 msgid "Actions"
 msgstr "Actions"
+
+#. module: point_of_sale
+#: help:pos.order,salesman_id:0
+msgid "This is the salesman actually making the order."
+msgstr "C'est le vendeur effectuant la commande."
 
 #. module: point_of_sale
 #: rml:pos.details:0
