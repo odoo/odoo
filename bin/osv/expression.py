@@ -198,9 +198,8 @@ class expression(object):
                         self.__exp[i] = (left, 'in', right)
             else:
                 # other field type
-
                 # add the time part to datetime field when it's not there:
-                if field._type == 'datetime' and len(self.__exp[i][2]) == 10:
+                if field._type == 'datetime' and self.__exp[i][2] and len(self.__exp[i][2]) == 10:
                     if operator in ('>', '>='):
                         self.__exp[i][2] += ' 00:00:00'
                     elif operator in ('<', '<='):
