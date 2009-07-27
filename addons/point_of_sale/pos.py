@@ -547,6 +547,8 @@ class pos_order(osv.osv):
         return inv_ids
 
     def create_account_move(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')
@@ -701,7 +703,6 @@ class pos_order(osv.osv):
                     ' "%s" (id:%d)') % (order.sale_journal.name, order.sale_journal.id, ))
 
             for payment in order.payments:
-
                 if not payment.journal_id.default_debit_account_id:
                     raise osv.except_osv(_('No Default Debit Account !'),
                         _('You have to define a Default Debit Account for your Financial Journals!\n'))
@@ -755,17 +756,23 @@ class pos_order(osv.osv):
         return True
 
     def action_paid(self, cr, uid, ids, context=None):
-        self.create_picking(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.create_picking(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'paid'})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
-        self.cancel_order(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.cancel_order(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
     def action_done(self, cr, uid, ids, context=None):
-        self.create_account_move(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.create_account_move(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
