@@ -215,7 +215,7 @@ class sale_order(osv.osv):
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
+  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
   - The 'Invoice from the packing' choice is used to create an invoice during the packing process."""),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'project_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly', False)]}),
@@ -273,7 +273,7 @@ class sale_order(osv.osv):
         sale_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in sale_orders:
-            if s['state'] in ['draft','canceled']:
+            if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
@@ -730,7 +730,7 @@ class sale_order_line(osv.osv):
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight' : fields.float('Weight'),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled'),('exception','Exception')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Cancelled'),('exception','Exception')], 'Status', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer')
     }
     _order = 'sequence, id'
@@ -993,7 +993,14 @@ class sale_order_line(osv.osv):
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
-
+    
+    def unlink(self, cr, uid, ids, context={}):
+        """Allows to delete sale order lines in draft,cancel states"""
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.state not in ['draft','cancel']:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sale order line which is %s !')%(rec.state,))
+        return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
+    
 sale_order_line()
 
 
