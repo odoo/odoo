@@ -35,7 +35,7 @@ def _check_xml(self, cr, uid, ids, context={}):
         if not relaxng.validate(eview):
             logger = netsvc.Logger()
             logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view does not fit the required schema !')
-            logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
+            logger.notifyChannel('init', netsvc.LOG_ERROR, tools.ustr(relaxng.error_log.last_error))
             return False
     return True
 
