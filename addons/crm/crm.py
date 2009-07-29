@@ -520,6 +520,7 @@ class crm_case(osv.osv):
             'case_id': case.id,
             'case_subject': case.name,
             'case_date': case.date,
+            'case_description': case.description,
 
             'case_user': (case.user_id and case.user_id.name) or '/',
             'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',
