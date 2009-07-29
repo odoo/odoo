@@ -198,7 +198,7 @@ class sale_order(osv.osv):
         'date_order':fields.date('Date Ordered', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 
         'user_id':fields.many2one('res.users', 'Salesman', states={'draft':[('readonly',False)]}, select=True),
-        'partner_id':fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)]}, change_default=True, select=True),
+        'partner_id':fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
         'partner_order_id':fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft':[('readonly',False)]}, help="The name and address of the contact that requested the order or quotation."),
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
