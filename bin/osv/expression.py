@@ -200,11 +200,16 @@ class expression(object):
                 # other field type
                 # add the time part to datetime field when it's not there:
                 if field._type == 'datetime' and self.__exp[i][2] and len(self.__exp[i][2]) == 10:
+                    
+                    self.__exp[i] = list(self.__exp[i])
+                    
                     if operator in ('>', '>='):
                         self.__exp[i][2] += ' 00:00:00'
                     elif operator in ('<', '<='):
                         self.__exp[i][2] += ' 23:59:59'
-
+                    
+                    self.__exp[i] = tuple(self.__exp[i])
+                        
                 if field.translate:
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
