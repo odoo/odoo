@@ -73,7 +73,7 @@ class ir_model(osv.osv):
 
     def write(self, cr, user, ids, vals, context=None):
         if context:
-            del context['__last_update']
+            context.pop('__last_update', None)
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
