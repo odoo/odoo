@@ -192,7 +192,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append(db_name)
 
         stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
@@ -236,7 +236,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append('--dbname=' + db_name)
         args2 = tuple(cmd)
 
