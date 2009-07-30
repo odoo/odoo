@@ -530,21 +530,30 @@ GNU Public Licence.
         try:
             rev_id = os.popen('bzr revision-info').read()
         except Exception,e:
-             rev_id = 'Exception: %s\n' % (str(e))
+             rev_id = 'Exception: %s\n' % (tools.ustr(e))
 
         os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
+        if not os_lang:
+            os_lang = 'NOT SET'
         environment = '\nEnvironment Information : \n' \
-                      'PlatForm : %s\n' \
-                      'Operating System : %s\n' \
-                      'Operating System Release : %s\n' \
-                      'Operating System Version : %s\n' \
-                      'Operating System Architecture : %s\n' \
-                      'Operating System Locale : %s\n'\
-                      'Python Version : %s\n'\
-                      'OpenERP-Server Version : %s\n'\
-                      'Last revision No. & ID : %s'\
-                      %(platform.platform(),os.name, platform.release(),platform.version(),
-                        platform.architecture()[0],os_lang,platform.python_version(),release.version,rev_id)
+                     'System : %s\n' \
+                     'OS Name : %s\n' \
+                     %(platform.platform(), platform.os.name)
+        if os.name == 'posix':
+          if platform.system() == 'Linux':
+             lsbinfo = os.popen('lsb_release -a').read()
+             environment += '%s'%(lsbinfo)
+          else:
+             environment += 'Your System is not lsb compliant\n'
+        environment += 'Operating System Release : %s\n' \
+                    'Operating System Version : %s\n' \
+                    'Operating System Architecture : %s\n' \
+                    'Operating System Locale : %s\n'\
+                    'Python Version : %s\n'\
+                    'OpenERP-Server Version : %s\n'\
+                    'Last revision No. & ID : %s'\
+                    %(platform.release(), platform.version(), platform.architecture()[0],
+                      os_lang, platform.python_version(),release.version,rev_id)
         return environment
 common()
 
