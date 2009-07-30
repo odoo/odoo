@@ -488,7 +488,6 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         seller_delay = 0
         for s in prod.seller_ids:
-            seller_delay = s.delay
             if s.name.id == partner_id:
                 seller_delay = s.delay
                 temp_qty = s.qty # supplier _qty assigned to temp
