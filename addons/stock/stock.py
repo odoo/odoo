@@ -798,9 +798,9 @@ class stock_production_lot(osv.osv):
 
         if isinstance(ids, (int, long)):
             ids = [ids]
-        
+
         res = {}.fromkeys(ids, 0.0)
-        
+
         if locations:
             cr.execute('''select
                     prodlot_id,
@@ -986,7 +986,7 @@ class stock_move(osv.osv):
     }
 
     def _auto_init(self, cursor, context):
-        super(stock_move, self)._auto_init(cursor, context)
+        res = super(stock_move, self)._auto_init(cursor, context)
         cursor.execute('SELECT indexname \
                 FROM pg_indexes \
                 WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
@@ -994,12 +994,13 @@ class stock_move(osv.osv):
             cursor.execute('CREATE INDEX stock_move_location_id_location_dest_id_product_id_state \
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
+        return res
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
         ctx = context and context.copy() or {}
-        ctx['location_id'] = loc_id 
+        ctx['location_id'] = loc_id
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
