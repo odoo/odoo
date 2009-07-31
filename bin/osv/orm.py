@@ -381,8 +381,12 @@ class orm_template(object):
                     vals['select_level']
                 ))
                 if 'module' in context:
+                    name1 = 'field_' + self._table + '_' + k
+                    cr.execute("select name from ir_model_data where name='%s'"%(name1))
+                    if cr.fetchone():
+                        name1 = name1 + "_" + str(id)
                     cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                        (('field_'+self._table+'_'+k)[:64], context['module'], 'ir.model.fields', id)
+                        (name1[:64], context['module'], 'ir.model.fields', id)
                     )
             else:
                 for key, val in vals.items():
