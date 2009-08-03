@@ -1231,12 +1231,14 @@ class stock_move(osv.osv):
                                 move.product_id.categ_id.id,))
                 journal_id = move.product_id.categ_id.property_stock_journal.id
                 if acc_src != acc_dest:
-                    ref = move.picking_id and move.picking_id.name or False
-
+                    ref = move.picking_id and move.picking_id.name or False  
+                    product_uom_obj = self.pool.get('product.uom')
+                    default_uom = move.product_id.uom_id.id
+                    q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
                     if move.product_id.cost_method == 'average' and move.price_unit:
-                        amount = move.product_qty * move.price_unit
+                        amount = q * move.price_unit
                     else:
-                        amount = move.product_qty * move.product_id.standard_price
+                        amount = q * move.product_id.standard_price
 
                     date = time.strftime('%Y-%m-%d')
                     partner_id = False
