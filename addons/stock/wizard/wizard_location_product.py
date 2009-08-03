@@ -45,16 +45,16 @@ class product_by_location(wizard.interface):
         <field name="to_date"/>
         <newline/>
         <label string=""/>
-        <label string="(Keep empty to open the current situation)" align="0.0" colspan="3"/>
+        <label string="(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to filter all resources of the day)" align="0.0" colspan="3"/>
     </form>'''
     form1_fields = {
              'from_date': {
                 'string': 'From',
-                'type': 'date',
+                'type': 'datetime',
         },
              'to_date': {
                 'string': 'To',
-                'type': 'date',
+                'type': 'datetime',
         },
     }
 
