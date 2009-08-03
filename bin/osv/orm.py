@@ -662,7 +662,7 @@ class orm_template(object):
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
                         res = line[i] and int(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'boolean':
-                        res = line[i] and eval(line[i])
+                        res = line[i] and bool(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'float':
                         res = line[i] and float(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'selection':
