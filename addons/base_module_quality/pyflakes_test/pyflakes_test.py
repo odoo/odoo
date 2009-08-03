@@ -67,7 +67,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                         return None
                     if not res:
                         continue
-                    self.result_details += '''<table border="2" bordercolor="black" width="100%" align="center"><tr><td width="30%"> ''' + file_py + '</td><td width="70%"><table border=2 bordercolor=black >'
+                    self.result_details += '''<table border="2" bordercolor="black" width="90%"><tr><td width="40%"> ''' + file_py + '</td><td width="60%"><table border=2 bordercolor=black width="100%">'
                     list_res = res.split('\n')
                     temp_dict = {}
                     keys = ['imported but unused statements', 'unable to detect undefined names', \
@@ -78,7 +78,10 @@ class quality_test(base_module_quality.abstract_quality_check):
                     map(lambda key:temp_dict.setdefault(key, 0), keys)
                     detail_str = ''
                     for line in list_res:
-                        self.result_details += '''<tr><td width="100%"> ''' + line + '</td></tr>'
+                        line = line.split(':')
+                        line.pop(0)
+                        line = " ".join(line)
+                        self.result_details += '''<tr><td > ''' + line + '</td></tr>'
                         detail_str += line + '\n'
                         if line.find("imported but unused") != -1:
                             temp_dict['imported but unused statements'] += 1
@@ -110,7 +113,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     dict_py[file_py] = [file_py, final_str]
                 except:
                     dict_py[file_py] = [file_py, _("Unable to parse the result. Check the details.")]
-                self.result_details += '</table></td>'
+                self.result_details += '</table></td></tr></table>'
         if not flag:
             self.error = True
             self.result = _("No python file found")

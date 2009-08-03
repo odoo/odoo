@@ -47,7 +47,7 @@ def _to_xml(s):
 
 def _get_moves(self, cr, uid, data, context):
     pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    pick = pick_obj.browse(cr, uid, [data['id']], context)[0]
     res = {}
 
     _moves_fields.clear()

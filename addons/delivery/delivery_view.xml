@@ -164,6 +164,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree"/>
 

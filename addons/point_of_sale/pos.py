@@ -304,11 +304,14 @@ class pos_order(osv.osv):
     def create_picking(self, cr, uid, ids, context={}):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
-
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
             if not order.last_out_picking:
                 new = True
+                if order.partner_id.id:
+                    address_id = partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery'])['delivery']
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
                     'type': 'out',
@@ -318,7 +321,8 @@ class pos_order(osv.osv):
                     'invoice_state': 'none',
                     'auto_picking': True,
                     'pos_order': order.id,
-                    })
+                    'address_id' : address_id
+                    },context)
                 self.write(cr, uid, [order.id], {'last_out_picking': picking_id})
             else:
                 picking_id = order.last_out_picking.id
@@ -547,6 +551,8 @@ class pos_order(osv.osv):
         return inv_ids
 
     def create_account_move(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')
@@ -632,6 +638,7 @@ class pos_order(osv.osv):
                     'period_id': period,
                     'tax_code_id': tax_code_id,
                     'tax_amount': tax_amount,
+                    'partner_id' : order.partner_id and order.partner_id.id or False,
                 }, context=context)
 
                 # For each remaining tax with a code, whe create a move line
@@ -657,6 +664,7 @@ class pos_order(osv.osv):
                         'period_id': period,
                         'tax_code_id': tax_code_id,
                         'tax_amount': tax_amount,
+                        'partner_id' : order.partner_id and order.partner_id.id or False,
                     }, context=context)
 
 
@@ -675,6 +683,7 @@ class pos_order(osv.osv):
                     'period_id': period,
                     'tax_code_id': key[tax_code_pos],
                     'tax_amount': amount,
+                    'partner_id' : order.partner_id and order.partner_id.id or False,
                 }, context=context)
 
             # counterpart
@@ -690,6 +699,7 @@ class pos_order(osv.osv):
                     or 0.0,
                 'journal_id': order.sale_journal.id,
                 'period_id': period,
+                'partner_id' : order.partner_id and order.partner_id.id or False,
             }, context=context))
 
 
@@ -701,7 +711,6 @@ class pos_order(osv.osv):
                     ' "%s" (id:%d)') % (order.sale_journal.name, order.sale_journal.id, ))
 
             for payment in order.payments:
-
                 if not payment.journal_id.default_debit_account_id:
                     raise osv.except_osv(_('No Default Debit Account !'),
                         _('You have to define a Default Debit Account for your Financial Journals!\n'))
@@ -737,6 +746,7 @@ class pos_order(osv.osv):
                     'debit': ((payment.amount>0) and payment.amount) or 0.0,
                     'journal_id': payment.journal_id.id,
                     'period_id': period,
+                    'partner_id' : order.partner_id and order.partner_id.id or False,
                 }, context=context)
                 to_reconcile.append(account_move_line_obj.create(cr, uid, {
                     'name': order.name,
@@ -748,6 +758,7 @@ class pos_order(osv.osv):
                     'debit': ((payment.amount<0) and -payment.amount) or 0.0,
                     'journal_id': payment.journal_id.id,
                     'period_id': period,
+                    'partner_id' : order.partner_id and order.partner_id.id or False,
                 }, context=context))
 
             account_move_obj.button_validate(cr, uid, [move_id, payment_move_id], context=context)
@@ -755,17 +766,23 @@ class pos_order(osv.osv):
         return True
 
     def action_paid(self, cr, uid, ids, context=None):
-        self.create_picking(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.create_picking(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'paid'})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):
-        self.cancel_order(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.cancel_order(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
     def action_done(self, cr, uid, ids, context=None):
-        self.create_account_move(cr, uid, ids, context={})
+        if context is None:
+            context = {}
+        self.create_account_move(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'done'})
         return True
 
@@ -876,7 +893,14 @@ class pos_order_line(osv.osv):
 
         price_line = float(qty)*float(price)
         return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
-
+    
+    def unlink(self, cr, uid, ids, context={}):
+        """Allows to delete pos order lines in draft,cancel state"""
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.order_id.state not in ['draft','cancel']:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete an order line which is %s !')%(rec.order_id.state,))
+        return super(pos_order_line, self).unlink(cr, uid, ids, context=context)
+    
 pos_order_line()
 
 

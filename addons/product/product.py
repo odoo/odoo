@@ -383,7 +383,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * product.price_margin + product.price_extra
+            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
@@ -518,7 +518,7 @@ class product_product(osv.osv):
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
-                res[product.id] = (res[product.id] * product.price_margin) + \
+                res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
                         product.price_extra
             if 'uom' in context:
                 uom = product.uos_id or product.uom_id

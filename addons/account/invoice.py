@@ -772,7 +772,7 @@ class account_invoice(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
-    def _refund_cleanup_lines(self, lines):
+    def _refund_cleanup_lines(self, cr, uid, lines):
         for line in lines:
             del line['id']
             del line['invoice_id']
@@ -810,11 +810,11 @@ class account_invoice(osv.osv):
 
 
             invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-            invoice_lines = self._refund_cleanup_lines(invoice_lines)
+            invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
-            tax_lines = self._refund_cleanup_lines(tax_lines)
+            tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
@@ -880,7 +880,7 @@ class account_invoice(osv.osv):
 
         lines = [(0, 0, l1), (0, 0, l2)]
         move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
-        move_id = self.pool.get('account.move').create(cr, uid, move)
+        move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
         total = 0.0

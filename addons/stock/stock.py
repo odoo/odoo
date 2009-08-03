@@ -798,9 +798,9 @@ class stock_production_lot(osv.osv):
 
         if isinstance(ids, (int, long)):
             ids = [ids]
-        
+
         res = {}.fromkeys(ids, 0.0)
-        
+
         if locations:
             cr.execute('''select
                     prodlot_id,
@@ -955,7 +955,12 @@ class stock_move(osv.osv):
             ['prodlot_id'])]
     def _default_location_destination(self, cr, uid, context={}):
         if context.get('move_line', []):
-            return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
+            if context['move_line'][0]:
+                if isinstance(context['move_line'][0],(tuple,list)):
+                    return context['move_line'][0][2] and context['move_line'][0][2]['location_dest_id'] or False
+                else:
+                    move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0],['location_dest_id'])
+                    return move_list and move_list['location_dest_id'][0] or False
         if context.get('address_out_id', False):
             return self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer.id
         return False
@@ -981,7 +986,7 @@ class stock_move(osv.osv):
     }
 
     def _auto_init(self, cursor, context):
-        super(stock_move, self)._auto_init(cursor, context)
+        res = super(stock_move, self)._auto_init(cursor, context)
         cursor.execute('SELECT indexname \
                 FROM pg_indexes \
                 WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
@@ -989,12 +994,13 @@ class stock_move(osv.osv):
             cursor.execute('CREATE INDEX stock_move_location_id_location_dest_id_product_id_state \
                     ON stock_move (location_id, location_dest_id, product_id, state)')
             cursor.commit()
+        return res
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
         ctx = context and context.copy() or {}
-        ctx['location_id'] = loc_id 
+        ctx['location_id'] = loc_id
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
         location=self.pool.get('stock.location').browse(cr,uid,loc_id)
         warning={}
@@ -1005,7 +1011,7 @@ class stock_move(osv.osv):
             }
         return {'warning':warning}
 
-    def onchange_product_id(self, cr, uid, context, prod_id=False, loc_id=False, loc_dest_id=False):
+    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
             return {}
         product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
@@ -1225,12 +1231,14 @@ class stock_move(osv.osv):
                                 move.product_id.categ_id.id,))
                 journal_id = move.product_id.categ_id.property_stock_journal.id
                 if acc_src != acc_dest:
-                    ref = move.picking_id and move.picking_id.name or False
-
+                    ref = move.picking_id and move.picking_id.name or False  
+                    product_uom_obj = self.pool.get('product.uom')
+                    default_uom = move.product_id.uom_id.id
+                    q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
                     if move.product_id.cost_method == 'average' and move.price_unit:
-                        amount = move.product_qty * move.price_unit
+                        amount = q * move.price_unit
                     else:
-                        amount = move.product_qty * move.product_id.standard_price
+                        amount = q * move.product_id.standard_price
 
                     date = time.strftime('%Y-%m-%d')
                     partner_id = False

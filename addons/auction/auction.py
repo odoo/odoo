@@ -76,7 +76,7 @@ class auction_dates(osv.osv):
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
         'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication',store=True),
-        'state': fields.selection((('draft','Draft'),('close','Closed')),'Status',select=1, readonly=True),
+        'state': fields.selection((('draft','Draft'),('closed','Closed')),'Status',select=1, readonly=True),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
 
     }
@@ -999,7 +999,7 @@ class report_seller_auction(osv.osv):
                 select
                     adl.id as auction,
                     min(al.id) as id,
-                    adl.auction1 as date,
+                    to_char(adl.auction1, 'YYYY-MM-DD') as date,
                     ad.partner_id as seller,
                     count(al.id) as "object_number",
                     SUM(al.obj_price) as "total_price",
@@ -1037,7 +1037,7 @@ class report_seller_auction2(osv.osv):
         cr.execute('''create or replace view report_seller_auction2  as
             (select
                 min(al.id) as id,
-                adl.auction1 as date,
+                to_char(adl.auction1, 'YYYY-MM-DD') as date,
                 adl.id as auction,
                 ad.partner_id as seller,
                 sum(al.obj_price) as "sum_adj",
@@ -1073,7 +1073,7 @@ class report_auction_view2(osv.osv):
         cr.execute('''create or replace view report_auction_view2 as (
             select
                 ad.id as id,
-                ad.auction1 as date,
+                to_char(ad.auction1, 'YYYY-MM-DD') as date,
                 ad.id as "auction",
                 count(al.id) as "obj_number",
                 SUM(al.obj_price) as "sum_adj",

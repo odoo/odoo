@@ -25,16 +25,17 @@ from osv import fields,osv
 import netsvc
 import pooler
 import string
+import tools
 
-installed = False
+objects_proxy = netsvc.SERVICES['object'].__class__
 
-def fnct_call(fnct):
-    def execute(*args, **argv):
+class recording_objects_proxy(objects_proxy):
+    def execute(self, *args, **argv):
         if len(args) >= 6 and isinstance(args[5], dict):
             _old_args = args[5].copy()
         else:
             _old_args = None
-        res = fnct(*args, **argv)
+        res = super(recording_objects_proxy, self).execute(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
@@ -44,39 +45,28 @@ def fnct_call(fnct):
                     if args[5]:
                         mod.recording_data.append(('query', args, argv,res))
         return res
-    return execute
 
-def fnct_call_workflow(fnct):
-    def exec_workflow(*args, **argv):
-        res = fnct(*args, **argv)
+    def exec_workflow(self, *args, **argv):
+        res = super(recording_objects_proxy, self).exec_workflow(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
             mod.recording_data.append(('workflow', args, argv))
         return res
-    return exec_workflow
+
+recording_objects_proxy()
+
 
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
 
     }
-    def __init__(self, pool, cr=None):
-        global installed
-        if super(base_module_record, self).__init__.func_code.co_argcount ==3:
-            super(base_module_record, self).__init__(pool,cr)
-        else:
-            super(base_module_record, self).__init__(pool)
+    def __init__(self, *args, **kwargs):
         self.recording = 0
         self.recording_data = []
         self.depends = {}
-        if not installed:
-            obj = netsvc.SERVICES['object']
-            obj.execute = fnct_call(obj.execute)
-            obj.exportMethod(obj.execute)
-            obj.exec_workflow = fnct_call_workflow(obj.exec_workflow)
-            obj.exportMethod(obj.exec_workflow)
-            installed = True
+        super(base_module_record, self).__init__(*args, **kwargs)
 
     # To Be Improved
     def _create_id(self, cr, uid, model, data):
@@ -138,8 +128,9 @@ class base_module_record(osv.osv):
                     noupdate = noupdate or update
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
-                    name = self.pool.get(fields[key]['relation']).browse(cr, uid, val).name
-                    field.setAttribute("search", "[('name','=','"+name+"')]")
+                    fld_nm = self.pool.get(fields[key]['relation'])._rec_name
+                    name = self.pool.get(fields[key]['relation']).read(cr, uid, val,[fld_nm])[fld_nm] or False
+                    field.setAttribute("search", str([(str(fld_nm) ,'=', name)]))
                 else:
                     field.setAttribute("ref", id)
                 record.appendChild(field)
@@ -185,7 +176,7 @@ class base_module_record(osv.osv):
                     val = str(val)
 
                 val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
-                field.setAttribute(u"eval",  val.decode('utf-8'))
+                field.setAttribute(u"eval",  tools.ustr(val))
                 record.appendChild(field)
         return record_list, noupdate
 

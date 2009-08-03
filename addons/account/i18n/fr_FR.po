@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-05 12:12+0000\n"
-"Last-Translator: Olivier (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2009-06-12 11:04+0000\n"
+"Last-Translator: Olivier (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-05 12:16+0000\n"
+"X-Launchpad-Export-Date: 2009-07-07 11:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -103,7 +103,7 @@ msgstr "Résultat du lettrage"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Écritures non réconciliées"
+msgstr "Ecritures non-lettrées"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -151,7 +151,7 @@ msgstr "Coefficient multiplicateur"
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Écritures non réconciliées"
+msgstr "Ecritures non-lettrées"
 
 #. module: account
 #: constraint:account.period:0
@@ -224,7 +224,7 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
-"Vous ne pouvez pas modifier une écriture postée dans ce journal !\n"
+"Vous ne pouvez pas modifier une entrée postée dans ce journal !\n"
 "Vous devez modifier le journal pour permettre l'annulation des écritures si "
 "vous voulez permettre cela."
 
@@ -271,7 +271,7 @@ msgstr "Echéancier"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr "Écritures réccurentes"
+msgstr "Ecritures réccurentes"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -774,7 +774,7 @@ msgstr "Remise (%)"
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr "Vous ne pouvez pas ajouter/modifier les écritures dans un journal cloturé."
+msgstr "Vous ne pouvez pas ajouter/modifier un journal cloturé."
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -1154,7 +1154,7 @@ msgstr "Compte de débit par défaut"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Entries by Statements"
-msgstr "Écritures par état"
+msgstr "Ecritures par état"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -1336,7 +1336,7 @@ msgstr "Prix unitaire"
 #. module: account
 #: model:ir.actions.wizard,name:account.action_move_journal_line_form_select
 msgid "Standard entry"
-msgstr "Écriture standard"
+msgstr "Entrée standard"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -1609,7 +1609,7 @@ msgstr "Séquences"
 #. module: account
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
-msgstr "Calculer les dates d'Écriture"
+msgstr "Calculer les dates d'entrée"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -1958,7 +1958,7 @@ msgstr "Delta de crédit"
 #: model:ir.actions.wizard,name:account.wizard_reconcile_unreconcile
 #: model:ir.actions.wizard,name:account.wizard_unreconcile
 msgid "Unreconcile Entries"
-msgstr "Écritures non réconciliées"
+msgstr "Écritures non lettrées"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
@@ -2425,7 +2425,7 @@ msgstr "Montant"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "Écritures réconciliées"
+msgstr "Ecritures lettrées"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -2629,7 +2629,7 @@ msgstr "Type de Taxe"
 #. module: account
 #: model:process.transition,name:account.process_transition_statemententries0
 msgid "Statement Entries"
-msgstr "Écritures du relevé"
+msgstr "Entrées du relevé"
 
 #. module: account
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
@@ -2673,7 +2673,7 @@ msgstr "Importer une facture"
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "Des écritures semblent déjà réconciliées !"
+msgstr "Des écritures semblent déjà lettrées !"
 
 #. module: account
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
@@ -2809,7 +2809,7 @@ msgstr "Informations supplémentaires"
 #: model:process.transition,name:account.process_transition_entriesreconcile0
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Entries Reconcile"
-msgstr "Écritures réconciliées"
+msgstr "Ecritures lettrées"
 
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_amount:0
@@ -2944,7 +2944,7 @@ msgstr "Ordre de Paiement"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Cochez cette case si vous voulez que l'utilisateur réconcilie les Écritures "
+"Cochez cette case si vous voulez que l'utilisateur réconcilie les entrées "
 "dans ce compte."
 
 #. module: account
@@ -2997,7 +2997,7 @@ msgid ""
 "accounts."
 msgstr ""
 "Ce type est utilisé pour différencier les types qui ont un effet spécial "
-"dans Open ERP: les \"vues\" ne peuvent pas posséder d'écriture, "
+"dans Open ERP: les \"vues\" ne peuvent pas posséder d'entrées, "
 "\"consolidation\" veut dire les comptes qui peuvent avoir des comptes fils "
 "pour les consolidations des multi-sociétés, payable/recevable sont pour les "
 "comptes partenaire (pour le calcul des débits/crédits), \"fermé\" pour les "
@@ -3240,7 +3240,7 @@ msgstr "Compte de taxe"
 #. module: account
 #: model:process.transition,note:account.process_transition_statemententries0
 msgid "From statement, create entries"
-msgstr "Depuis le relevé, créer des Écritures"
+msgstr "Depuis le relevé, créer des entrées"
 
 #. module: account
 #: field:account.analytic.account,complete_name:0
@@ -3393,8 +3393,8 @@ msgid ""
 "between the date of the creation action or the the date of the creation of "
 "the entries plus the partner payment terms."
 msgstr ""
-"La date d'échéance de l'écriture générée pour ce modèle. Vous pouvez choisir "
-"entre la date de création de l'action ou la date de création des écritures "
+"La date d'échéance de l'entrée générée pour ce modèle. Vous pouvez choisir "
+"entre la date de création de l'action ou la date de création des entrées "
 "plus les conditions de règlement du partenaire."
 
 #. module: account
@@ -3421,7 +3421,7 @@ msgstr "Document"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Le mouvement de cette ligne d'écriture."
+msgstr "Le mouvement de cette ligne d'entrée."
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -3882,7 +3882,7 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accouting fields."
 msgstr ""
-"Toutes les écritures de comptes brouillon dans ce journal et cette période "
+"Toutes les entrées de comptes brouillon dans ce journal et cette période "
 "seront validées. Cela veut dire que vous ne pourrez plus modifier leurs "
 "champs de compte."
 
@@ -3898,7 +3898,7 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
-"Le montant exprimé dans une autre devise optionnelle si c'est une écriture "
+"Le montant exprimé dans une autre devise optionnelle si c'est une entrée "
 "multi devise."
 
 #. module: account
@@ -4161,7 +4161,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Global taxes defined, but are not in invoice lines !"
-msgstr "Taxes globales définies, mais elles ne sont pas dans les lignes de facture !"
+msgstr ""
 
 #. module: account
 #: selection:account.config.wizard,period:0
@@ -4234,7 +4234,7 @@ msgstr "Date de facture"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The old fiscal year does not have any entry to reconcile!"
-msgstr "L'ancienne année fiscale n'a pas d'écriture à réconcilier !"
+msgstr "L'ancienne année fiscale n'a pas d'entrées à réconcilier !"
 
 #. module: account
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
@@ -4565,7 +4565,7 @@ msgid ""
 "You can check this box to mark the entry line as a litigation with the "
 "associated partner"
 msgstr ""
-"Vous pouvez cocher cette boîte pour marquer la ligne d'écriture comme un "
+"Vous pouvez cocher cette boîte pour marquer la ligne d'entrée comme un "
 "litige avec le partenaire associé"
 
 #. module: account
@@ -4713,7 +4713,7 @@ msgid ""
 "date for the payment of this entry line."
 msgstr ""
 "Ce champ est utilisé pour les écritures à payer et à recevoir. Vous pouvez "
-"mettre la date limite pour le règlement de cette ligne d'écriture."
+"mettre la date limite pour le règlement de cette ligne d'entrée."
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -4942,7 +4942,7 @@ msgstr "Modèle de compte de taxe"
 #. module: account
 #: help:account.model,name:0
 msgid "This is a model for recurring accounting entries"
-msgstr "Ceci est un modèle pour des écritures comptable récurrentes"
+msgstr "Ceci est un modèle pour des entrées comptable récurrentes"
 
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
@@ -4967,7 +4967,7 @@ msgstr "Débit fournisseur"
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries"
-msgstr "La quantité optionelle des écritures"
+msgstr "La quantité optionelle des entrées"
 
 #. module: account
 #: rml:account.third_party_ledger:0
@@ -5122,13 +5122,13 @@ msgstr "La taxe est comprise dans le prix indiqué"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree2
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Entries by Journal"
-msgstr "Écritures analytiques par journal"
+msgstr "Entrées analytiques par journal"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Valid entries from invoice"
-msgstr "Écritures valides de la Facture"
+msgstr "Entrées valides de la Facture"
 
 #. module: account
 #: field:account.account,company_id:0
@@ -5298,7 +5298,7 @@ msgstr "Adresse de facturation"
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
 msgid "General Credit"
-msgstr "Crédit Général"
+msgstr ""
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -5317,7 +5317,7 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Cochez cette case pour spécifier que chaque écriture de ce journal ne créera "
+"Cochez cette case pour spécifier que chaque entrée de ce journal ne créera "
 "pas une nouvelle contrepartie mais partagera la même contrepartie. Cela est "
 "utilisé dans la clôture des années fiscales."
 
@@ -5546,7 +5546,7 @@ msgstr "Début de la Période"
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,report_name:0
 msgid "Name of new entries"
-msgstr "Nom des nouvelles écritures"
+msgstr "Nom des nouvelles entrées"
 
 #. module: account
 #: wizard_button:account_use_models,init_form,create:0
@@ -5818,7 +5818,7 @@ msgstr "Cette période est déjà cloturée !"
 #. module: account
 #: help:account.move.line,currency_id:0
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "L'autre devise optionelle si c'est une écriture multi devise."
+msgstr "L'autre devise optionelle si c'est une entrée multi devise."
 
 #. module: account
 #: view:account.invoice:0
@@ -5858,7 +5858,7 @@ msgstr "Non"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
 msgid "All account entries"
-msgstr "Toutes les écritures de compte"
+msgstr "Toutes les entrées de compte"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
@@ -5927,7 +5927,7 @@ msgstr "PRO-FORMA"
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr "Lignes d'Écriture Partielle"
+msgstr "Lignes d'Entrée Partielle"
 
 #. module: account
 #: help:account.move.line,statement_id:0
@@ -5948,7 +5948,7 @@ msgstr "Encodage standard"
 #. module: account
 #: wizard_button:account.analytic.line,init,open:0
 msgid "Open Entries"
-msgstr "Écritures Ouvertes"
+msgstr "Entrées Ouvertes"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -6154,7 +6154,7 @@ msgstr "Définition du Journal Analytique"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Omettre l'état 'Brouillon' pour les Écritures Créées"
+msgstr "Omettre l'état 'Brouillon' pour les Entrées Créées"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -6253,7 +6253,7 @@ msgstr "Vous devez définir un journal analytique sur le journal '%s' !"
 #. module: account
 #: wizard_view:account.move.validate,init:0
 msgid "Validate Account Entries"
-msgstr "Valider les Écritures du Compte"
+msgstr "Valider les Entrées du Compte"
 
 #. module: account
 #: selection:account.print.journal.report,init,sort_selection:0
@@ -6274,7 +6274,7 @@ msgstr "au"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 msgid "Entries of Open Analytic Journals"
-msgstr "Écritures des Journaux Analytiques Ouverts"
+msgstr "Entrées des Journaux Analytiques Ouverts"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -6459,7 +6459,7 @@ msgstr "account.sequence.fiscalyear"
 #. module: account
 #: wizard_field:account.print.journal.report,init,sort_selection:0
 msgid "Entries Sorted By"
-msgstr "Écritures triées par"
+msgstr "Entrées triées par"
 
 #. module: account
 #: rml:account.journal.period.print:0
@@ -6531,12 +6531,12 @@ msgstr "Note de Crédit Fournisseur"
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Reconcile Entries."
-msgstr "Réconcilier les Écritures."
+msgstr "Réconcilier les Entrées."
 
 #. module: account
 #: field:account.subscription.line,move_id:0
 msgid "Entry"
-msgstr "Écriture"
+msgstr "Entrée"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -6591,12 +6591,12 @@ msgstr "Détails de banque"
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr "Compte de Dépense sur les Modèles de Produits"
+msgstr ""
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
 msgid "General Debit"
-msgstr "Débit Général"
+msgstr ""
 
 #. module: account
 #: field:account.analytic.account,code:0
@@ -6692,7 +6692,7 @@ msgstr "Oui"
 msgid ""
 "Check this if the user is allowed to reconcile entries in this account."
 msgstr ""
-"Cochez cette case si l'utilisateur peut réconcilier les Écritures dans ce "
+"Cochez cette case si l'utilisateur peut réconcilier les entrées dans ce "
 "compte."
 
 #. module: account
