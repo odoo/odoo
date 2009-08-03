@@ -667,7 +667,8 @@ class document_file(osv.osv):
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
             if len(result):
                 obj=result[0]
-                vals['title'] = (obj.get('name',''))[:60]
+                if obj.get('name',False):
+                    vals['title'] = (obj.get('name',''))[:60]
                 if obj_model._name=='res.partner':
                     vals['partner_id']=obj['id']
                 elif obj.get('address_id',False):
