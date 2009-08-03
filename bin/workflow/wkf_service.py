@@ -52,7 +52,7 @@ class workflow_service(netsvc.Service):
         cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (res_id,res_type))
         res = cr.fetchall()
         for (instance_id,) in res:
-            cr.execute('select uid,res_type,res_id from wkf_instance where id=%s', (instance_id,))
+            cr.execute('select %s,res_type,res_id from wkf_instance where id=%s', (uid, instance_id,))
             ident = cr.fetchone()
             instance.update(cr, instance_id, ident)
 

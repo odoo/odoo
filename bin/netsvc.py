@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-
 import SimpleXMLRPCServer
 import SocketServer
 import logging
@@ -121,7 +120,7 @@ def init_logger():
 		handler = logging.handlers.FileHandler(logf)
         except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
-            handler = logging.StreamHandler(sys.stdout) 
+            handler = logging.StreamHandler(sys.stdout)
     else:
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
@@ -158,7 +157,10 @@ def init_logger():
 
 
 class Logger(object):
+
     def notifyChannel(self, name, level, msg):
+        from service.web_services import common
+
         log = logging.getLogger(tools.ustr(name))
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
@@ -171,6 +173,9 @@ class Logger(object):
             msg = tools.exception_to_unicode(msg)
 
 	try:
+            if level in (LOG_ERROR,LOG_CRITICAL):
+                msg = common().get_server_environment() + msg
+
         	result = tools.ustr(msg).strip().split('\n')
 	except UnicodeDecodeError:
 		result = msg.strip().split('\n')
@@ -210,7 +215,7 @@ class Agent(object):
             for timer in self._timers[db]:
                 if not timer.isAlive():
                     self._timers[db].remove(timer)
-    
+
     @classmethod
     def cancel(cls, db_name):
         """Cancel all timers for a given database. If None passed, all timers are cancelled"""
@@ -218,7 +223,7 @@ class Agent(object):
             if db_name is None or db == db_name:
                 for timer in cls._timers[db]:
                     timer.cancel()
-    
+
     @classmethod
     def quit(cls):
         cls.cancel(None)

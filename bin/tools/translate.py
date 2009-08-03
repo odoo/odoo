@@ -598,20 +598,28 @@ def trans_generate(lang, modules, dbname=None):
     modobj = pool.get('ir.module.module')
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
+    
+    if tools.config['root_path'] in tools.config['addons_path'] :
+        path_list = [tools.config['root_path']]
+    else :
+        path_list = [tools.config['root_path'],tools.config['addons_path']]
 
-    for root, dirs, files in tools.osutil.walksymlinks(tools.config['root_path']):
-        for fname in fnmatch.filter(files, '*.py'):
-            fabsolutepath = join(root, fname)
-            frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
-            module = get_module_from_path(frelativepath)
-            is_mod_installed = module in installed_modules
-            if (('all' in modules) or (module in modules)) and is_mod_installed:
-                code_string = tools.file_open(fabsolutepath, subdir='').read()
-                iter = re.finditer(
-                    '[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
-                    code_string, re.M)
-                for i in iter:
-                    push_translation(module, 'code', frelativepath, 0, encode(i.group(1)))
+    for path in path_list: 
+        for root, dirs, files in tools.osutil.walksymlinks(path):
+            for fname in fnmatch.filter(files, '*.py'):
+                fabsolutepath = join(root, fname)
+                frelativepath = fabsolutepath[len(path):]
+                module = get_module_from_path(frelativepath)
+                is_mod_installed = module in installed_modules
+                if (('all' in modules) or (module in modules)) and is_mod_installed:
+                    code_string = tools.file_open(fabsolutepath, subdir='').read()
+                    iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
+                        code_string, re.S)
+                    
+                    if module in installed_modules : 
+                        frelativepath =str("addons"+frelativepath)
+                    for i in iter:
+                        push_translation(module, 'code', frelativepath, 0, encode(i.group(1)))
 
 
     out = [["module","type","name","res_id","src","value"]] # header

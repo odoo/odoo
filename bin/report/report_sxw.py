@@ -305,7 +305,7 @@ class rml_parse(object):
         head_dom = etree.XML(rml_head)
         for tag in head_dom.getchildren():
             found = rml_dom.find('.//'+tag.tag)
-            if found is not None:
+            if found is not None and len(found):
                 if tag.get('position'):
                     found.append(tag)
                 else :
