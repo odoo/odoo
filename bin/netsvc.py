@@ -176,7 +176,7 @@ class Logger(object):
             if level in (LOG_ERROR,LOG_CRITICAL):
                 msg = common().get_server_environment() + msg
 
-        	result = tools.ustr(msg).strip().split('\n')
+            result = tools.ustr(msg).strip().split('\n')
 	except UnicodeDecodeError:
 		result = msg.strip().split('\n')
 	try:
