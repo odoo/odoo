@@ -876,7 +876,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     except Exception, e:
         logger = netsvc.Logger()
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file does not fit the required schema !')
-        logger.notifyChannel('init', netsvc.LOG_ERROR, tools.ustr(relaxng.error_log.last_error))
+        logger.notifyChannel('init', netsvc.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:
