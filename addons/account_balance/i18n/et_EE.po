@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,39 +31,21 @@ msgid "Entries Selection Based on"
 msgstr ""
 
 #. module: account_balance
-#: help:account.balance.account.balance.report,init,select_account:0
-msgid "Keep empty for comparision to its parent"
-msgstr ""
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Teavitus"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
 msgid "Financial Period"
-msgstr ""
+msgstr "Finantsperiood"
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
 #: model:ir.actions.report.xml,name:account_balance.account_account_balance
 #: model:ir.actions.report.xml,name:account_balance.account_account_balance_landscape
 msgid "Account balance"
 msgstr "Kontojääk"
-
-#. module: account_balance
-#: wizard_button:account.balance.account.balance.report,init,checkyear:0
-msgid "Print"
-msgstr "Trüki"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Printing date:"
-msgstr "Trükkimise kuupäev:"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "at"
-msgstr ""
 
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
@@ -74,8 +56,13 @@ msgstr "Konto nimi"
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
-msgid "Currency:"
-msgstr "Valuuta:"
+msgid "Debit"
+msgstr ""
+
+#. module: account_balance
+#: wizard_button:account.balance.account.balance.report,init,checkyear:0
+msgid "Print"
+msgstr "Trüki"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -95,12 +82,17 @@ msgstr ""
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Fiscal Year(s)(Maximum Three Years)"
-msgstr ""
+msgstr "Vali finantsaasta(d) (maksimum kolm aastat)"
+
+#. module: account_balance
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Valige võrdluskonto (% võrdluseks)"
 
 #. module: account_balance
 #: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
 msgid "Account balance-Compare Years"
-msgstr ""
+msgstr "Konto bilanss - võrdle aastaid"
 
 #. module: account_balance
 #: model:ir.module.module,description:account_balance.module_meta_information
@@ -138,18 +130,29 @@ msgstr "Kõik perioodid kui tühi"
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,account_choice:0
 msgid "With balance is not equal to 0"
+msgstr "Bilanss pole 0"
+
+#. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr ""
+
+#. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Account Balance -"
 msgstr ""
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
 msgid "Show Comparision in %"
-msgstr ""
+msgstr "Näita võrdlus protsentides %"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "Notification"
-msgstr "Teavitus"
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Vali periood"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -159,19 +162,13 @@ msgstr "Aruande valikud"
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,account_choice:0
 msgid "With movements"
-msgstr ""
+msgstr "Liikumistega"
 
 #. module: account_balance
 #: wizard_button:account.balance.account.balance.report,backtoinit,end:0
 #: wizard_button:account.balance.account.balance.report,zero_years,end:0
 msgid "Ok"
 msgstr "Ok"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Total:"
-msgstr "Kokku:"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
@@ -189,8 +186,9 @@ msgid "Show Accounts"
 msgstr "Näita Kontosid"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Credit"
 msgstr ""
 
 #. module: account_balance
@@ -204,13 +202,20 @@ msgid "Accounting and financial management-Compare Accounts"
 msgstr ""
 
 #. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr ""
+
+#. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You can select maximum 3 years. Please check again."
 msgstr "Sa võid valida maksimaalselt  3 aastat. Palun märgista uuesti."
 
 #. module: account_balance
-#: wizard_field:account.balance.account.balance.report,init,select_account:0
-msgid "Select Reference Account(for  % comparision)"
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Balance"
 msgstr ""
 
 #. module: account_balance
@@ -219,21 +224,14 @@ msgid "3. You have selected 'Percentage' option with more than 2 years, but you 
 msgstr ""
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Code"
-msgstr "Kood"
-
-#. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You might have done following mistakes. Please correct them and try again."
-msgstr ""
+msgstr "Võimalik, et Teie tegite järgmised vead. Palun parandage need ja proovige uuesti."
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Account Information"
-msgstr "Konto Informatsioon"
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr ""
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
@@ -243,7 +241,7 @@ msgstr "Loomise Kuupäev"
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,fiscalyear:0
 msgid "Fiscal year"
-msgstr ""
+msgstr "Majandusaasta"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -256,6 +254,11 @@ msgid "Periods"
 msgstr "Perioodid"
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
+msgstr ""
+
+#. module: account_balance
 #: wizard_button:account.balance.account.balance.report,init,end:0
 msgid "Cancel"
 msgstr "Tühista"
@@ -263,12 +266,7 @@ msgstr "Tühista"
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,zero_years:0
 msgid "You have to select at least 1 Fiscal Year. Try again."
-msgstr ""
-
-#. module: account_balance
-#: wizard_view:account.balance.account.balance.report,init:0
-msgid "Select Period"
-msgstr "Vali periood"
+msgstr "Te peate valima vähemalt ühe finantsaasta. Proovige uuesti."
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:29:15+0000\n"
-"PO-Revision-Date: 2009-05-20 10:29:15+0000\n"
+"POT-Creation-Date: 2009-08-06 15:33:10+0000\n"
+"PO-Revision-Date: 2009-08-06 15:33:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -210,12 +210,6 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Всего по дебету"
@@ -259,11 +253,6 @@ msgid "Created"
 msgstr "Создано"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Выбрать счета для оплаты"
-
-#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Итоговая сумма в валюте"
@@ -281,6 +270,11 @@ msgstr ""
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
+msgstr ""
+
+#. module: account_payment
+#: field:payment.line,communication:0
+msgid "Communication"
 msgstr ""
 
 #. module: account_payment
@@ -328,12 +322,6 @@ msgstr "Партнер"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "No partner defined on entry line"
 msgstr ""
 
 #. module: account_payment
@@ -444,9 +432,9 @@ msgid "Done"
 msgstr "Выполнено"
 
 #. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr ""
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Выбрать счета для оплаты"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -561,12 +549,6 @@ msgstr "Поиск"
 #: view:payment.order:0
 msgid "Entry Information"
 msgstr "Информация проводки"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:34:09+0000\n"
-"PO-Revision-Date: 2009-05-20 10:34:09+0000\n"
+"POT-Creation-Date: 2009-08-06 15:41:09+0000\n"
+"PO-Revision-Date: 2009-08-06 15:41:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,11 +31,6 @@ msgid "Small description"
 msgstr "Krátký popis"
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr ""
-
-#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
 msgid "Author"
 msgstr "Autor"
@@ -47,12 +42,10 @@ msgid "Introduction"
 msgstr "Úvod"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "Adresa pro stažení"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,step2,publish:0
@@ -152,12 +145,6 @@ msgid "Close"
 msgstr "Zavřít"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "Failed to upload the file"
-msgstr ""
-
-#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
 #: wizard_view:base_module_publish.module_publish,publish:0
 #: wizard_view:base_module_publish.module_publish,step1:0
@@ -174,11 +161,6 @@ msgid "Licence"
 msgstr "Licence"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,update:0
-msgid "Modules updated"
-msgstr "Moduly aktualizovány"
-
-#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Verify your module information"
 msgstr ""
@@ -188,13 +170,6 @@ msgstr ""
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Heslo"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
-#, python-format
-msgid "Login failed!"
-msgstr ""
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -218,10 +193,9 @@ msgid "Name"
 msgstr "Název"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Can not export module that is not installed!"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish_all,publish,update:0
+msgid "Modules updated"
+msgstr "Moduly aktualizovány"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,error:0
@@ -234,9 +208,8 @@ msgid "Documentation URL"
 msgstr "Adresa dokumentace"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "This version of the module is already exist on the server"
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
 msgstr ""
 
 #. module: base_module_publish
@@ -279,12 +252,6 @@ msgid "GPL-2"
 msgstr ""
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "You could not publish a module that is not installed!"
-msgstr ""
-
-#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
 msgstr ""
@@ -314,12 +281,6 @@ msgstr "Obecné"
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "User information"
 msgstr "Informace pro uživatele"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-msgid "Download URL"
-msgstr "Adresa pro stažení"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0

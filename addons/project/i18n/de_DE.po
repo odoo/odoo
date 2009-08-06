@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:23:07+0000\n"
-"PO-Revision-Date: 2009-05-20 10:23:07+0000\n"
+"POT-Creation-Date: 2009-08-06 15:21:51+0000\n"
+"PO-Revision-Date: 2009-08-06 15:21:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,12 +31,6 @@ msgid "New title of the task delegated to the user."
 msgstr "Neue Bezeichnung der delegierten Aufgabe."
 
 #. module: project
-#: code:addons/project/wizard/close_task.py:0
-#, python-format
-msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
-msgstr "Konnte keine E-Mail versenden weil der Kontakt dem diese Aufgabe (%s) zugewiesen wurde keine EMail Adresse hinterlegt hat!"
-
-#. module: project
 #: view:config.compute.remaining:0
 msgid "Change Remaining Hours"
 msgstr "Ändere Verbleibende Stunden"
@@ -52,16 +46,9 @@ msgid "Project Tasks"
 msgstr "Projekt Anzeige"
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Operation Not Permitted !"
-msgstr ""
-
-#. module: project
-#: code:addons/project/wizard/task_delegate.py:0
-#, python-format
-msgid "CHECK: "
-msgstr ""
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr "Öffne Erledigte Aufgaben"
 
 #. module: project
 #: constraint:ir.actions.act_window:0
@@ -139,12 +126,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
 msgstr "Setze in Wartezustand"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task7
-#: model:ir.ui.menu,name:project.menu_action_view_task7
-msgid "Unassigned Tasks"
-msgstr "Nicht erledigte Aufgaben"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -279,12 +260,6 @@ msgstr "Aufgabe ist abgeschlossen"
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
 msgstr "Delegiere Aufgaben für einen anderen Benutzer"
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
-msgstr ""
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -477,10 +452,10 @@ msgid "Tasks in Progress"
 msgstr "Aufgaben in Bearbeitung"
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Operation Done"
-msgstr "Durchgeführt"
+#: model:ir.actions.act_window,name:project.action_view_task7
+#: model:ir.ui.menu,name:project.menu_action_view_task7
+msgid "Unassigned Tasks"
+msgstr "Nicht erledigte Aufgaben"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,name:0
@@ -603,12 +578,6 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Zeiterfassung Arbeitsstunden für die Ausrichtung des Gantt Charts"
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' set in progress"
-msgstr ""
-
-#. module: project
 #: view:project.project:0
 msgid "Project's members"
 msgstr "Projektmitarbeiter"
@@ -633,12 +602,6 @@ msgstr "Meine Aufgaben"
 #: view:project.project:0
 msgid "Status: %(state)s"
 msgstr "Status: %(state)s"
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' cancelled"
-msgstr ""
 
 #. module: project
 #: view:project.task:0
@@ -738,7 +701,6 @@ msgid "Total Time"
 msgstr "Gesamtzeit"
 
 #. module: project
-#: field:project.project,active:0
 #: field:project.task,active:0
 msgid "Active"
 msgstr "Aktiv"
@@ -795,12 +757,6 @@ msgid "This will set the unit of measure used in projects and tasks.\n"
 msgstr "Dieses wird die Einheit des Zählens für Projekte und Aufgaben festlegen. Falls Sie timesheets zu Projekten zuordnen (project_timesheet_module) vergessen Sie bitte nicht die richtige Messeinheit (UoM) für Ihre Mitarbeiter festzusetzen."
 
 #. module: project
-#: code:addons/project/wizard/close_task.py:0
-#, python-format
-msgid "Error"
-msgstr "Fehler"
-
-#. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
 msgid "User's projects"
 msgstr "Benutzer Projekte"
@@ -814,12 +770,6 @@ msgstr "Reaktiviere Projekt"
 #: selection:project.task,priority:0
 msgid "Urgent"
 msgstr "Dringend"
-
-#. module: project
-#: code:addons/project/wizard/close_task.py:0
-#, python-format
-msgid "Couldn't send mail because your email address is not configured!"
-msgstr "Konnte E-Mail nicht senden, da diese noch nicht konfiguriert wurde!"
 
 #. module: project
 #: wizard_view:project.task.delegate,init:0
@@ -926,12 +876,6 @@ msgstr "Erzeuge Aufgabe"
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
 msgid "Open"
 msgstr "Offen"
-
-#. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "You can not delete a project with tasks. I suggest you to deactivate it."
-msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1057,12 +1001,6 @@ msgid "New Feature"
 msgstr "Neue Funktionalität"
 
 #. module: project
-#: code:addons/project/project.py:0
-#, python-format
-msgid "Task '%s' closed"
-msgstr ""
-
-#. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
 msgstr "Erfasse Deine Arbeitsstunden"
@@ -1081,11 +1019,6 @@ msgstr "Projektaufgabe"
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
 msgstr "geleistete Stunden"
-
-#. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr "Öffne Erledigte Aufgaben"
 
 #. module: project
 #: field:project.task,total_hours:0

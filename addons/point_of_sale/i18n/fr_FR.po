@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-11 07:58+0000\n"
-"Last-Translator: Olivier (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2009-08-06 15:20:36+0000\n"
+"PO-Revision-Date: 2009-08-06 15:20:36+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-07 11:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -40,6 +39,7 @@ msgstr "Transaction du Point de vente"
 
 #. module: point_of_sale
 #: wizard_view:pos.discount,init:0
+#: rml:pos.receipt:0
 msgid "Discount :"
 msgstr "Remise :"
 
@@ -51,7 +51,7 @@ msgstr "Numéro de pièce"
 #. module: point_of_sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,name:0
@@ -84,10 +84,14 @@ msgid "Orders of the day"
 msgstr "Commandes du jour"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "No Pricelist !"
-msgstr "Pas de Liste de Prix !"
+#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
+msgid "Sales (summary)"
+msgstr "Ventes (résumé)"
+
+#. module: point_of_sale
+#: help:pos.order,user_id:0
+msgid "This is the logged in user (not necessarily the salesman)."
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_view:pos.sale.get,init:0
@@ -105,10 +109,9 @@ msgid "Invoice Date"
 msgstr "Date de Facture"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Cannot create invoice without a partner."
-msgstr "Impossible de créer une facture sans partenaire."
+#: rml:pos.receipt:0
+msgid ","
+msgstr ","
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -186,12 +189,6 @@ msgid "No. Of Articles"
 msgstr "Nombre d'Articles"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/report/pos_invoice.py:0
-#, python-format
-msgid "Please create an invoice for this sale."
-msgstr "Veuillez créer une facture pour cette vente."
-
-#. module: point_of_sale
 #: field:pos.order,date_validity:0
 #: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
@@ -224,10 +221,15 @@ msgid "Select default journals"
 msgstr "Sélectionnez le Journal par défaut"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "You have to define a Default Debit Account for your Financial Journals!\n"
-msgstr "Vous devez définir un Compte de Débit par défaut pour vos Journaux Financiers !\n"
+#: rml:pos.details:0
+#: rml:pos.receipt:0
+msgid "Qty"
+msgstr "Qté"
+
+#. module: point_of_sale
+#: field:pos.order,user_id:0
+msgid "Logged in User"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -271,13 +273,18 @@ msgstr "Paiements des commandes"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Date :"
-msgstr "Date :"
+msgid "Tel :"
+msgstr "Tél. :"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Ma_ke Payment"
+msgstr "Effectuer le paiement"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Disc :"
-msgstr "Rem :"
+msgid "Sale Date :"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
@@ -291,7 +298,6 @@ msgid "POS Orders"
 msgstr "Commandes Point de Vente"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
 #: rml:pos.lines:0
 msgid "Disc. (%)"
 msgstr "Rem. (%)"
@@ -308,10 +314,9 @@ msgid "Supplier Invoice"
 msgstr "Facture fournisseur"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Modify line failed !"
-msgstr "Échec de modification de ligne !"
+#: field:pos.order,state:0
+msgid "State"
+msgstr "État"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -329,32 +334,24 @@ msgid "Payment name"
 msgstr "Nom sur le paiement"
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Salesman :"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
 msgstr "Lignes de la commande"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.receipt:0
-msgid "Qty"
-msgstr "Qté"
+#: rml:pos.invoice:0
+msgid "Disc.(%)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
 msgid "Point Of Sale"
 msgstr "Point de Vente"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#: code:addons/point_of_sale/report/pos_invoice.py:0
-#, python-format
-msgid "Error !"
-msgstr "Erreur !"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "User :"
-msgstr "Utilisateur :"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -365,11 +362,6 @@ msgstr "Date de Création"
 #: rml:pos.invoice:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Total :"
-msgstr "Total :"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -387,21 +379,14 @@ msgid "Point of Sale journal configuration."
 msgstr "Configuration des Journaux utilisés par les Points de Vente."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Create line failed !"
-msgstr "Échec de création de ligne"
+#: rml:pos.receipt:0
+msgid "Total :"
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal:0
 msgid "Default journal"
 msgstr "Journal par défault"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Invalid action !"
-msgstr "Action invalide !"
 
 #. module: point_of_sale
 #: field:pos.order,account_receivable:0
@@ -431,6 +416,11 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Receipt Printing Date :"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
 msgid "POS Lines of the day"
 msgstr "Lignes du Point de Vente du Jour"
@@ -446,12 +436,6 @@ msgid "Default journals"
 msgstr "Journaux par défaut"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "No valid pricelist line found !"
-msgstr "Aucune ligne de Liste de Prix valide trouvée !"
-
-#. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Draft Invoice"
 msgstr "Facture Brouillon"
@@ -460,6 +444,11 @@ msgstr "Facture Brouillon"
 #: field:pos.order.line,discount:0
 msgid "Discount (%)"
 msgstr "Ristourne (%)"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Fiscal Position Remark :"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
@@ -487,12 +476,6 @@ msgid "Define default journals"
 msgstr "Définir les journaux par défaut"
 
 #. module: point_of_sale
-#: field:pos.order,amount_paid:0
-#: field:pos.order,amount_return:0
-msgid "unknown"
-msgstr "inconnu"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree3
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -503,20 +486,15 @@ msgid "Point of Sale"
 msgstr "Point de Vente"
 
 #. module: point_of_sale
-#: field:pos.order,user_id:0
+#: field:pos.order,salesman_id:0
 msgid "Salesman"
-msgstr "Vendeur"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.details:0
 #: selection:pos.order,state:0
 msgid "Invoiced"
 msgstr "Facturée"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Tel :"
-msgstr "Tél. :"
 
 #. module: point_of_sale
 #: wizard_field:pos.config.journal,init,default_journal_rebate:0
@@ -529,20 +507,10 @@ msgid "Wizard default journals"
 msgstr "Assistant des journaux par défaut"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Ma_ke Payment"
-msgstr "Effectuer le paiement"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "No order lines defined for this sale."
-msgstr "Aucune lignes de commande pour cette vente."
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ","
-msgstr ","
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total of the day"
+msgstr "Total du Jour"
 
 #. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
@@ -586,20 +554,15 @@ msgid "Sales of the day"
 msgstr "Ventes du jour"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Please provide a partner for the sale."
-msgstr "Veuillez fournir un partenaire pour cette vente."
+#: field:pos.order,amount_paid:0
+#: field:pos.order,amount_return:0
+msgid "unknown"
+msgstr "inconnu"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order line"
 msgstr "Ligne de ticket"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "."
-msgstr "."
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_discount
@@ -673,18 +636,6 @@ msgid "Picking"
 msgstr "Colisage"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/wizard_get_sale.py:0
-#, python-format
-msgid "You can't modify this order. It has already been paid"
-msgstr "Vous ne pouvez pas modifier cetee commande. Elle a déjà été payée"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Error"
-msgstr "Erreur"
-
-#. module: point_of_sale
 #: view:pos.order:0
 msgid "Create _Invoice"
 msgstr "Créer Facture"
@@ -735,11 +686,6 @@ msgid "Receipt"
 msgstr "Reçu"
 
 #. module: point_of_sale
-#: field:pos.order,state:0
-msgid "State"
-msgstr "État"
-
-#. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
 msgid "Refund order :"
 msgstr "Rembourser la commande :"
@@ -753,12 +699,6 @@ msgstr "Nombre de Transactions"
 #: rml:pos.invoice:0
 msgid "Net Total:"
 msgstr "Total net:"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "Cannot delete a point of sale which is already confirmed !"
-msgstr "Vous ne pouvez pas supprimer de ticket déjà confimé"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -803,12 +743,6 @@ msgid "Order lines"
 msgstr "Lignes de commande"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#, python-format
-msgid "You have to define a Default Credit Account for your Financial Journals!\n"
-msgstr "Vous devez définir un Compte de Crédit par défaut pour vos Journaux Financiers !\n"
-
-#. module: point_of_sale
 #: field:pos.order.line,order_id:0
 #: field:pos.payment,order_id:0
 msgid "Order Ref"
@@ -821,17 +755,8 @@ msgstr "Ajouter un paiement :"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Total of the day"
-msgstr "Total du Jour"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
@@ -881,11 +806,6 @@ msgstr "Produit"
 #: view:pos.order:0
 msgid "Invoicing"
 msgstr "Facturation"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ":"
-msgstr ":"
 
 #. module: point_of_sale
 #: field:pos.config.journal,journal_id:0
@@ -963,11 +883,6 @@ msgid "Date Ordered"
 msgstr "Date de Commande"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Ce bon est valide jusqu'au"
-msgstr "Ce bon est valide jusqu'au"
-
-#. module: point_of_sale
 #: view:pos.order:0
 msgid "Payments"
 msgstr "Paiements"
@@ -976,12 +891,6 @@ msgstr "Paiements"
 #: rml:pos.invoice:0
 msgid "Supplier Refund"
 msgstr "Note de Crédit Fournisseur"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/wizard_get_sale.py:0
-#, python-format
-msgid "UserError"
-msgstr "Error Utilisateur"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -997,11 +906,6 @@ msgstr "Résumé"
 #: rml:pos.receipt:0
 msgid "Description"
 msgstr "Description"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
-msgid "Sales (summary)"
-msgstr "Ventes (résumé)"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
@@ -1030,7 +934,7 @@ msgstr "Actions"
 #. module: point_of_sale
 #: help:pos.order,salesman_id:0
 msgid "This is the salesman actually making the order."
-msgstr "C'est le vendeur effectuant la commande."
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -1068,3 +972,4 @@ msgstr "Total"
 #: rml:pos.receipt:0
 msgid "Price"
 msgstr "Prix"
+

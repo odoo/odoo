@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:31:42+0000\n"
-"PO-Revision-Date: 2009-05-20 10:31:42+0000\n"
+"POT-Creation-Date: 2009-08-06 15:37:12+0000\n"
+"PO-Revision-Date: 2009-08-06 15:37:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,10 +82,13 @@ msgid "Function"
 msgstr "Función"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Tipo de salario"
+#: field:hr.employee,marital_status:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
+#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
+msgid "Marital Status"
+msgstr "Estado civil"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -195,13 +198,10 @@ msgid "Contract Name"
 msgstr "Nombre contrato"
 
 #. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr "Estado civil"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Contract Wage Type"
+msgstr "Tipo de salario"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0

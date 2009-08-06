@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:31:42+0000\n"
-"PO-Revision-Date: 2009-05-20 10:31:42+0000\n"
+"POT-Creation-Date: 2009-08-06 15:37:12+0000\n"
+"PO-Revision-Date: 2009-08-06 15:37:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,9 +31,10 @@ msgid "Entries Selection Based on"
 msgstr "Selección de entradas basada en"
 
 #. module: account_balance
-#: help:account.balance.account.balance.report,init,select_account:0
-msgid "Keep empty for comparision to its parent"
-msgstr "Dejarlo vacío para comparar con sus padres"
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Notificación"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
@@ -41,29 +42,10 @@ msgid "Financial Period"
 msgstr "Periodo financiero"
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
 #: model:ir.actions.report.xml,name:account_balance.account_account_balance
 #: model:ir.actions.report.xml,name:account_balance.account_account_balance_landscape
 msgid "Account balance"
 msgstr "Balance contable"
-
-#. module: account_balance
-#: wizard_button:account.balance.account.balance.report,init,checkyear:0
-msgid "Print"
-msgstr "Imprimir"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Printing date:"
-msgstr "Fecha impresión:"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "at"
-msgstr "a las"
 
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
@@ -74,8 +56,13 @@ msgstr "Nombre de cuenta"
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
-msgid "Currency:"
-msgstr "Moneda:"
+msgid "Debit"
+msgstr ""
+
+#. module: account_balance
+#: wizard_button:account.balance.account.balance.report,init,checkyear:0
+msgid "Print"
+msgstr "Imprimir"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -96,6 +83,11 @@ msgstr "Comparar ejercicios seleccionados en términos de"
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Fiscal Year(s)(Maximum Three Years)"
 msgstr "Seleccionar ejercicio(s) fiscal(es) (máximo 3 ejercicios)"
+
+#. module: account_balance
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Selecciona cuenta de referencia (para comparación %)"
 
 #. module: account_balance
 #: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
@@ -141,15 +133,26 @@ msgid "With balance is not equal to 0"
 msgstr "Con balance si no es igual a 0"
 
 #. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr ""
+
+#. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Account Balance -"
+msgstr ""
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
 msgid "Show Comparision in %"
 msgstr "Mostrar comparación en %"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "Notification"
-msgstr "Notificación"
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Selecciona período"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -168,12 +171,6 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Total:"
-msgstr "Total:"
-
-#. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Cash"
 msgstr "Efectivo"
@@ -189,9 +186,10 @@ msgid "Show Accounts"
 msgstr "Mostrar cuentas"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
-msgstr "Puede haber seleccionado las opciones comparar con más de 1 ejercicio con columnas crédito/débito y opción %. Esto pueden ocasionar que hayan contenidos que se impriman fuera del papel. Por favor, inténtelo de nuevo."
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Credit"
+msgstr ""
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -204,14 +202,21 @@ msgid "Accounting and financial management-Compare Accounts"
 msgstr ""
 
 #. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr ""
+
+#. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You can select maximum 3 years. Please check again."
 msgstr "Puede seleccionar un máximo de 3 ejercicios. Por favor, seleccione otra vez."
 
 #. module: account_balance
-#: wizard_field:account.balance.account.balance.report,init,select_account:0
-msgid "Select Reference Account(for  % comparision)"
-msgstr "Selecciona cuenta de referencia (para comparación %)"
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Balance"
+msgstr ""
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -219,21 +224,14 @@ msgid "3. You have selected 'Percentage' option with more than 2 years, but you 
 msgstr "﻿3. Ha seleccionado la opción 'Porcentaje' con más de 2 ejercicios, pero no ha seleccionado formato horizontal."
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Code"
-msgstr "Código"
-
-#. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You might have done following mistakes. Please correct them and try again."
 msgstr "﻿Podría haber cometido los siguientes errores. Por favor, corríjalos e inténtelo de nuevo."
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Account Information"
-msgstr "Información de la cuenta"
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr "Dejarlo vacío para comparar con sus padres"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
@@ -256,6 +254,11 @@ msgid "Periods"
 msgstr "Periodos"
 
 #. module: account_balance
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
+msgstr "Puede haber seleccionado las opciones comparar con más de 1 ejercicio con columnas crédito/débito y opción %. Esto pueden ocasionar que hayan contenidos que se impriman fuera del papel. Por favor, inténtelo de nuevo."
+
+#. module: account_balance
 #: wizard_button:account.balance.account.balance.report,init,end:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -264,11 +267,6 @@ msgstr "Cancelar"
 #: wizard_view:account.balance.account.balance.report,zero_years:0
 msgid "You have to select at least 1 Fiscal Year. Try again."
 msgstr "Debe seleccionar al menos un ejercicio fiscal. Por favor, inténtelo de nuevo."
-
-#. module: account_balance
-#: wizard_view:account.balance.account.balance.report,init:0
-msgid "Select Period"
-msgstr "Selecciona período"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0

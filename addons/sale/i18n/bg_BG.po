@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:15:53+0000\n"
-"PO-Revision-Date: 2009-05-20 10:15:53+0000\n"
+"POT-Creation-Date: 2009-08-06 15:09:42+0000\n"
+"PO-Revision-Date: 2009-08-06 15:09:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -109,8 +109,8 @@ msgid "Delivery, from the warehouse to the customer."
 msgstr "Доставка - от цеха до клиента"
 
 #. module: sale
-#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
-msgid "This Configuration step use to set default picking policy when make sale order"
+#: model:ir.model,name:sale.model_sale_config_picking_policy
+msgid "sale.config.picking_policy"
 msgstr ""
 
 #. module: sale
@@ -119,9 +119,9 @@ msgid "Validate"
 msgstr "Проверка"
 
 #. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "After confirming order, Create the invoice."
-msgstr ""
+#: view:sale.order:0
+msgid "Make Invoice"
+msgstr "Направа на фактура"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -169,11 +169,6 @@ msgid "Taxes"
 msgstr ""
 
 #. module: sale
-#: field:sale.order,name:0
-msgid "Order Reference"
-msgstr ""
-
-#. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
 msgstr ""
@@ -181,6 +176,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+msgid "Cancelled"
 msgstr ""
 
 #. module: sale
@@ -271,12 +272,6 @@ msgid "The sale order will automatically create the invoice proposition (draft i
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/make_invoice_advance.py:0
-#, python-format
-msgid "You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
 msgstr ""
@@ -298,20 +293,8 @@ msgid "Confirm"
 msgstr "Потвърждение"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr ""
-
-#. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
 msgstr ""
 
 #. module: sale
@@ -390,12 +373,6 @@ msgid "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
 msgstr ""
@@ -415,12 +392,6 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
 
 #. module: sale
@@ -449,9 +420,8 @@ msgid "Confirm Order"
 msgstr "Потвърждения на поръчка"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Invalid action !"
+#: field:sale.order,name:0
+msgid "Order Reference"
 msgstr ""
 
 #. module: sale
@@ -500,11 +470,6 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
 msgstr ""
 
 #. module: sale
@@ -599,19 +564,14 @@ msgid "Shipping Default Policy"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Could not cancel sale order !"
-msgstr ""
-
-#. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Canceled"
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+#: model:ir.ui.menu,name:sale.menu_sale_root
+msgid "Sales Management"
 msgstr ""
 
 #. module: sale
@@ -662,18 +622,8 @@ msgid "Uninvoiced Lines"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "No Customer Defined !"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,order_policy:0
-msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
-"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
-"  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
-"  - The 'Invoice from the packing' choice is used to create an invoice during the packing process."
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid "This Configuration step use to set default picking policy when make sale order"
 msgstr ""
 
 #. module: sale
@@ -768,12 +718,6 @@ msgid "Product sales"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "invalid mode for test_state"
-msgstr ""
-
-#. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
 msgstr ""
@@ -792,15 +736,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_form
 #: model:ir.ui.menu,name:sale.menu_sale_order
 msgid "Sales Orders"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
-#: field:stock.picking,sale_id:0
-msgid "Sale Order"
 msgstr ""
 
 #. module: sale
@@ -860,12 +795,6 @@ msgid "Sales Order in Progress"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/make_invoice_advance.py:0
-#, python-format
-msgid "Error"
-msgstr ""
-
-#. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
 msgstr ""
@@ -876,9 +805,13 @@ msgid "History"
 msgstr ""
 
 #. module: sale
-#: view:sale.order:0
-msgid "Make Invoice"
-msgstr "Направа на фактура"
+#: help:sale.order,order_policy:0
+msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
+"  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packing' choice is used to create an invoice during the packing process."
+msgstr ""
 
 #. module: sale
 #: rml:sale.order:0
@@ -951,7 +884,6 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
 #: view:sale.config.picking_policy:0
-#: selection:sale.order,state:0
 #: view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
@@ -977,12 +909,6 @@ msgstr ""
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You cannot cancel a sale order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
@@ -1085,12 +1011,6 @@ msgid "Description"
 msgstr ""
 
 #. module: sale
-#: model:ir.module.module,shortdesc:sale.module_meta_information
-#: model:ir.ui.menu,name:sale.menu_sale_root
-msgid "Sales Management"
-msgstr ""
-
-#. module: sale
 #: rml:sale.order:0
 msgid "Price"
 msgstr ""
@@ -1113,12 +1033,6 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Could not cancel this sale order !"
 msgstr ""
 
 #. module: sale
@@ -1159,9 +1073,12 @@ msgid "Purchase Pricelists"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_saleorder0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
 msgstr ""
 
 #. module: sale
@@ -1270,6 +1187,11 @@ msgstr ""
 #. module: sale
 #: field:sale.order.line,th_weight:0
 msgid "Weight"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_order0
+msgid "After confirming order, Create the invoice."
 msgstr ""
 
 #. module: sale
