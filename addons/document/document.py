@@ -251,7 +251,7 @@ class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Document directory'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1, translate=True),
+        'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
