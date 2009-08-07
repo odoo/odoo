@@ -404,7 +404,7 @@ ir_model_access()
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=64),
+        'name': fields.char('XML Identifier', required=True, size=128),
         'model': fields.char('Object', required=True, size=64),
         'module': fields.char('Module', required=True, size=64),
         'res_id': fields.integer('Resource ID'),
