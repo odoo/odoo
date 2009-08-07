@@ -2840,7 +2840,7 @@ class orm(orm_template):
             if 'state' in self._defaults:
                 default['state'] = self._defaults['state'](self, cr, uid, context)
         data = self.read(cr, uid, [id], context=context)[0]
-        fields = self.fields_get(cr, uid)
+        fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
             ftype = fields[f]['type']
@@ -2899,11 +2899,11 @@ class orm(orm_template):
     def copy(self, cr, uid, id, default=None, context=None):
         trans_obj = self.pool.get('ir.translation')
         data, trans_data = self.copy_data(cr, uid, id, default, context)
-        new_id=self.create(cr, uid, data)
+        new_id = self.create(cr, uid, data, context)
         for record in trans_data:
             del record['id']
-            record['res_id']=new_id
-            trans_obj.create(cr,uid,record)
+            record['res_id'] = new_id
+            trans_obj.create(cr, uid, record, context)
         return new_id
 
     def exists(self, cr, uid, id, context=None):
