@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
-msgstr ""
+msgstr "Tootmisvahendite planeerimine"
 
 #. module: mrp
 #: constraint:ir.actions.act_window:0
@@ -56,11 +56,6 @@ msgstr "Arvuta ainult lao miinimum reeglid"
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
 msgstr "Mittestandartsed hanked"
-
-#. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
-msgstr ""
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -86,13 +81,7 @@ msgstr "Pakkimislist"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
-#, python-format
-msgid "Warning !"
-msgstr ""
+msgstr "Ladustatav toode"
 
 #. module: mrp
 #: field:mrp.procurement,origin:0
@@ -114,25 +103,13 @@ msgstr "Viide"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Valmistooted"
 
 #. module: mrp
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
 #: wizard_field:mrp.procurement.orderpoint.compute,init,automatic:0
 msgid "Automatic orderpoint"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "No supplier defined for this product !"
-msgstr "Sellele tootele pole defineeritud tarnijat !"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product name"
-msgstr "Toote nimi"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -182,7 +159,7 @@ msgstr "Küsi uued tooted"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "Automaatsed hanked"
 
 #. module: mrp
 #: wizard_field:change_production_qty,confirm,product_qty:0
@@ -233,12 +210,6 @@ msgid "Do nothing"
 msgstr "Ära tee midagi"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "products"
-msgstr "tooted"
-
-#. module: mrp
 #: rml:mrp.production.order:0
 msgid "Partner Ref"
 msgstr "Partneri Viide"
@@ -256,7 +227,7 @@ msgstr "Kogus tunnis"
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr ""
+msgstr "Planeeritud kaubad"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -299,12 +270,6 @@ msgstr ""
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "Stockable Request"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Workcenter name"
-msgstr "Töökeskkonna nimi"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_serviceonorder0
@@ -354,12 +319,6 @@ msgid "Confirm Production"
 msgstr "Kinnita tootmine"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product Quantity"
-msgstr "Tootekogus"
-
-#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 #: field:stock.move,procurements:0
 msgid "Procurements"
@@ -386,16 +345,15 @@ msgid "Procurement Process"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.production,date_planned_date:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Urgent"
 msgstr "Kiireloomuline"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product Standard Price"
-msgstr "Toote standardhind"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
@@ -420,7 +378,7 @@ msgstr "Reserveering"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "Kaubakoosluse struktuur"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,product_id:0
@@ -438,12 +396,6 @@ msgid "Product to stock rules"
 msgstr "Toode lattu reeglid"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "from stock: products assigned."
-msgstr ""
-
-#. module: mrp
 #: wizard_button:product_price,init,price:0
 msgid "Print product price"
 msgstr "Prindi toote hind"
@@ -451,7 +403,7 @@ msgstr "Prindi toote hind"
 #. module: mrp
 #: wizard_view:product.product.procurement,done:0
 msgid "Make Procurement"
-msgstr ""
+msgstr "Loo hange"
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
@@ -503,7 +455,7 @@ msgstr ""
 #: field:mrp.bom,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "Toote MüÜ"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
@@ -524,12 +476,6 @@ msgstr ""
 #: field:mrp.procurement,message:0
 msgid "Latest error"
 msgstr "Viimane viga"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "from stock and no minimum orderpoint rule defined"
-msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -571,12 +517,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action4
 msgid "Exceptions Procurements to Fix"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "No BoM defined for this product !"
 msgstr ""
 
 #. module: mrp
@@ -661,22 +601,14 @@ msgid "Per month"
 msgstr "Kuus"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
-#, python-format
-msgid "Couldn't find bill of material for product"
-msgstr ""
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
+msgstr "MüÜ kogus"
 
 #. module: mrp
 #: rml:bom.structure:0
 msgid "Product Name"
 msgstr "Toote nimi"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "Invalid action !"
-msgstr "Vigane tegevus !"
 
 #. module: mrp
 #: rml:mrp.production.order:0
@@ -692,12 +624,6 @@ msgstr "Noteerimisnõue"
 #. module: mrp
 #: field:mrp.bom,revision_type:0
 msgid "indice type"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Hours Cost"
 msgstr ""
 
 #. module: mrp
@@ -741,12 +667,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "If Product type is service"
 msgstr "kui Toote tüüp on teenus"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "SUBTOTAL"
-msgstr "VAHESUMMA"
 
 #. module: mrp
 #: field:res.company,security_lead:0
@@ -836,17 +756,6 @@ msgid "Parent BoM"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Unit Product Price"
-msgstr ""
-
-#. module: mrp
-#: rml:mrp.production.order:0
-msgid "Qty"
-msgstr "Kogus"
-
-#. module: mrp
 #: view:mrp.procurement:0
 msgid "References"
 msgstr "Viited"
@@ -901,12 +810,6 @@ msgid "Description of the workcenter. Explain here what's a cycle according to t
 msgstr "Töökeskonna kirjeldus. selgita siin mis tsükklid kuuluvad sellele töökeskonnale."
 
 #. module: mrp
-#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
-#, python-format
-msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
-msgstr ""
-
-#. module: mrp
 #: rml:bom.structure:0
 msgid "-"
 msgstr ""
@@ -949,24 +852,12 @@ msgstr "Tsükkli number"
 #: field:mrp.procurement,name:0
 #: rml:mrp.production.order:0
 #: field:mrp.production.product.line,name:0
-#: field:mrp.production.workcenter.line,name:0
 #: field:mrp.property,name:0
 #: field:mrp.routing,name:0
 #: field:mrp.routing.workcenter,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
 msgstr ""
-
-#. module: mrp
-#: model:ir.actions.wizard,name:mrp.product_procurement_wizard
-msgid "Create Procurement"
-msgstr "Loo hange"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product uom"
-msgstr "Toote mõõtühik"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
@@ -1002,12 +893,6 @@ msgstr "Turvalised päevad iga tootmise operatsioonijaoks."
 #: wizard_view:mrp.procurement.compute.all,init:0
 msgid "Scheduler Parameters"
 msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Cycles Cost"
-msgstr "Tsükklite maksumus"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -1173,7 +1058,6 @@ msgid "Location where the system will look for products used in raw materials."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,date_planned_date:0
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,date_planned:0
 msgid "Planned Date"
@@ -1211,9 +1095,12 @@ msgid "Procurement"
 msgstr "Hankimine"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: model:ir.actions.wizard,name:mrp.product_procurement_wizard
+msgid "Procurement Request"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
-#, python-format
 msgid "Product Cost Structure"
 msgstr "Toote maksumuse struktuur"
 
@@ -1542,6 +1429,7 @@ msgid "if Product type is Stockable in procurement order"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: view:mrp.production:0
 #: rml:mrp.production.order:0
 msgid "Work Orders"
@@ -1571,12 +1459,6 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,type:0
 msgid "Use a phantom bill of material in raw materials lines that have to be automatically computed in on eproduction order and not one per level.If you put \"Phantom/Set\" at the root level of a bill of material it is considered as a set or pack: the products are replaced by the components between the sale order to the picking without going through the production order.The normal BoM will generate one production order per BoM level."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "No address defined for the supplier"
 msgstr ""
 
 #. module: mrp
@@ -1675,11 +1557,6 @@ msgid "Confirm"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
-msgid "Production workcenters used"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Workcenters Utilisation"
 msgstr ""
@@ -1692,6 +1569,11 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
 msgid "Product Rounding"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production.workcenter.line,name:0
+msgid "Work Order"
 msgstr ""
 
 #. module: mrp
@@ -1738,12 +1620,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product quantity"
 msgstr ""
 
 #. module: mrp
@@ -1869,13 +1745,6 @@ msgid "Order to Max"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
-#, python-format
-msgid "Error"
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
@@ -1913,20 +1782,8 @@ msgid "Close"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "TOTAL"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,sale_name:0
 msgid "Sale Name"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Product supplier"
 msgstr ""
 
 #. module: mrp
@@ -2010,11 +1867,16 @@ msgstr ""
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Details"
-msgstr ""
+msgstr "Hanke detailid"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
 msgid "You can see its bill of material which are used to make product"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production,date_planned_end:0
+msgid "Scheduled End"
 msgstr ""
 
 #. module: mrp
@@ -2028,11 +1890,11 @@ msgstr ""
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Järjekord"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Materials Components"
-msgstr ""
+msgstr "Kaubakoosluse komponendid"
 

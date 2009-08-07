@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-07 13:36+0000\n"
-"Last-Translator: Olivier (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2009-08-06 15:20:36+0000\n"
+"PO-Revision-Date: 2009-08-06 15:20:36+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-07 13:44+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -28,11 +27,8 @@ msgstr "Date de Facture :"
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -47,8 +43,18 @@ msgstr "Factures avec mise en page et Message"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "/ ("
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Rem. (%)"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "(Incl. taxes):"
+msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -62,10 +68,8 @@ msgstr "Imprimer"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
-msgid ""
-"This notification will appear at the bottom of the Invoices when printed."
-msgstr ""
-"Cette notification apparaîtra en bas de la facture lorsqu'elle sera imprimée."
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Cette notification apparaîtra en bas de la facture lorsqu'elle sera imprimée."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -75,7 +79,7 @@ msgstr "Prix unitaire"
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action."
+msgstr ""
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
@@ -109,13 +113,8 @@ msgstr "Réf. client :"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description"
-msgstr "Description"
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr "account_invoice_layout"
+msgid ")"
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -209,18 +208,18 @@ msgstr "Factures sans mise en page"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "Description / Taxes"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Amount"
 msgstr "Montant"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (excl. taxes):"
-msgstr "Total (Hors Taxes) :"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
-msgstr "Taxes"
+msgid "Description/Taxes"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -259,13 +258,23 @@ msgstr "Facture fournisseur"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "Note :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Taxe"
 
 #. module: account_invoice_layout
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
+msgstr "account_invoice_layout"
+
+#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
-msgstr "(taxes incl.):"
+msgid "Total (Excl. taxes):"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -296,3 +305,4 @@ msgstr "Total"
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Tous les Messages de Notification"
+

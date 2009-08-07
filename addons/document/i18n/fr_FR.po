@@ -6,31 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:49+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2009-08-06 15:20:36+0000\n"
+"PO-Revision-Date: 2009-08-06 15:20:36+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-07 11:16+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "Le nom du répertoire ne doit pas contenir de caractères spéciaux!"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
-msgid ""
-"Select an object here and Open ERP will create a mapping for each of these "
-"objects, using the given domain, when browsing through FTP."
-msgstr ""
-"Sélectionnez un objet ici et open ERP créera un répertoire pour chaque "
-"occurrence de l'objet en fonction du domaine utilisé lorsque vous parcourrez "
-"les fichiers à travers le FTP"
+msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
+msgstr "Sélectionnez un objet ici et open ERP créera un répertoire pour chaque occurrence de l'objet en fonction du domaine utilisé lorsque vous parcourrez les fichiers à travers le FTP"
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -44,12 +32,8 @@ msgstr "Type de Contenu du Répertoire"
 
 #. module: document
 #: view:document.configuration.wizard:0
-msgid ""
-"This wizard will automatically configure the document management system "
-"according to modules installed on your system."
-msgstr ""
-"Cet assistant configurera automatiquement la gestion documentaire en "
-"fonction des modules installés sur votre système"
+msgid "This wizard will automatically configure the document management system according to modules installed on your system."
+msgstr "Cet assistant configurera automatiquement la gestion documentaire en fonction des modules installés sur votre système"
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -69,12 +53,8 @@ msgstr "Gestion des Documents"
 
 #. module: document
 #: help:document.configuration.wizard,host:0
-msgid ""
-"Put here the server address or IP. Keep localhost if you don't know what to "
-"write."
-msgstr ""
-"Saisissez l'adresse du serveur ou son IP. (Laissez localhost si vous ne "
-"savez pas quoi écrire)"
+msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
+msgstr "Saisissez l'adresse du serveur ou son IP. (Laissez localhost si vous ne savez pas quoi écrire)"
 
 #. module: document
 #: view:ir.attachment:0
@@ -93,20 +73,24 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: document
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
+msgstr "Erreur ! Vous ne pouvez pas créer de Répertoires récursivement."
+
+#. module: document
 #: field:ir.attachment,title:0
 msgid "Resource Title"
 msgstr "Titre de la Ressource"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Error!"
+#: model:document.directory,name:document.dir_my_folder
+msgid "My Folder"
 msgstr ""
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration_wizard
-msgid "document.configuration.wizard"
-msgstr "document.configuration.wizard"
+#: model:document.directory,name:document.dir_product
+msgid "Products"
+msgstr ""
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -129,26 +113,30 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: document
+#: model:document.directory,name:document.dir_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: document
 #: model:ir.model,name:document.model_document_directory
 #: field:process.node,directory_id:0
 msgid "Document directory"
 msgstr "Répertoire du Document"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "ValidateError"
+#: model:document.directory,name:document.dir_partner
+msgid "Partners"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content,include_name:0
-msgid "Include Record Name"
-msgstr "Inclure le Nom de l'Enregistrement"
+#: model:document.directory,name:document.dir_root
+msgid "Documents"
+msgstr ""
 
 #. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Erreur ! Vous ne pouvez pas créer de Répertoires récursivement."
+#: model:document.directory,name:document.dir_sale_order_all
+msgid "All Sales Order"
+msgstr ""
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -178,22 +166,13 @@ msgid "Type"
 msgstr "Type"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Directory name must be unique!"
-msgstr "Le nom du répertoire doit être unique!"
-
-#. module: document
 #: help:document.directory,ressource_tree:0
-msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
+msgid "Check this if you want to use the same tree structure as the object selected in the system."
 msgstr ""
 
 #. module: document
 #: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
+msgid "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
 
 #. module: document
@@ -217,20 +196,13 @@ msgid "Directory Type"
 msgstr "Type de Répertoire"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "You do not permissions to write on the server side."
-msgstr ""
-
-#. module: document
 #: field:document.directory.content,report_id:0
 msgid "Report"
 msgstr "Rapport"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Permission Denied !"
+#: model:document.directory,name:document.dir_project
+msgid "Projects"
 msgstr ""
 
 #. module: document
@@ -247,6 +219,11 @@ msgstr "Extension"
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Fichiers Virtuels"
+
+#. module: document
+#: model:document.directory,name:document.dir_personnal_folder
+msgid "Personnal Folders"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_files
@@ -324,10 +301,13 @@ msgid "Auto Configure Directory"
 msgstr "Configurer le Répertoire"
 
 #. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Inclure le Nom de l'Enregistrement"
+
+#. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
-msgid ""
-"This wizard will configure the URL of the server of the document management "
-"system."
+msgid "This wizard will configure the URL of the server of the document management system."
 msgstr ""
 
 #. module: document
@@ -398,6 +378,11 @@ msgid "Attached To"
 msgstr "Attaché à"
 
 #. module: document
+#: model:document.directory,name:document.dir_sale_order_quote
+msgid "Quotations"
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 msgid "History"
 msgstr "Historique"
@@ -409,13 +394,8 @@ msgstr "Créateur"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Si vous mettez un objet ici, ce répertoire modèle apparaîtra en dessous de "
-"tous ces objets. Ne pas mettre de répertoire parent si vous sélectionnez un "
-"modèle parent"
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
+msgstr "Si vous mettez un objet ici, ce répertoire modèle apparaîtra en dessous de tous ces objets. Ne pas mettre de répertoire parent si vous sélectionnez un modèle parent"
 
 #. module: document
 #: view:document.directory:0
@@ -439,20 +419,13 @@ msgstr ""
 
 #. module: document
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: document
 #: help:document.directory.content,include_name:0
-msgid ""
-"Check this field if you want that the name of the file start by the record "
-"name."
-msgstr ""
-"Cochez cette case si vous souhaitez que le nom du fichier commence par le "
-"nom de l'enregistrement"
+msgid "Check this field if you want that the name of the file start by the record name."
+msgstr "Cochez cette case si vous souhaitez que le nom du fichier commence par le nom de l'enregistrement"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -468,6 +441,11 @@ msgstr "Modèle parent"
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
 msgstr "Objet Parent"
+
+#. module: document
+#: model:document.directory,name:document.dir_partner_category
+msgid "Partners by Category"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -487,11 +465,11 @@ msgstr "Parcourir les fichiers via FTP"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
+msgid "This is a complete document management system:\n"
 "    * FTP Interface\n"
 "    * User Authentication\n"
 "    * Document Indexation\n"
+""
 msgstr ""
 
 #. module: document
@@ -505,15 +483,14 @@ msgid "Content Name"
 msgstr "Nom du Contenu"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "File name must be unique!"
-msgstr ""
-
-#. module: document
 #: field:document.directory,ressource_tree:0
 msgid "Tree Structure"
 msgstr "Structure en Arbre"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration_wizard
+msgid "document.configuration.wizard"
+msgstr "document.configuration.wizard"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -524,3 +501,4 @@ msgstr "Configuration Automatique"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Type de document"
+

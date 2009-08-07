@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:24:37+0000\n"
-"PO-Revision-Date: 2009-05-20 10:24:37+0000\n"
+"POT-Creation-Date: 2009-08-06 15:25:35+0000\n"
+"PO-Revision-Date: 2009-08-06 15:25:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -210,12 +210,6 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Error !"
-msgstr ""
-
-#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Totale debiti"
@@ -259,11 +253,6 @@ msgid "Created"
 msgstr "Creato"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Seleziona le fatture da pagare"
-
-#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Totale corrente"
@@ -282,6 +271,11 @@ msgstr "Tipo di comunicazione"
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
 msgstr ""
+
+#. module: account_payment
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicazione"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -328,12 +322,6 @@ msgstr "Partner"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "No partner defined on entry line"
 msgstr ""
 
 #. module: account_payment
@@ -444,9 +432,9 @@ msgid "Done"
 msgstr "Fatto"
 
 #. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicazione"
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Seleziona le fatture da pagare"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -560,12 +548,6 @@ msgstr "_Cerca"
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
 msgstr ""
 
 #. module: account_payment

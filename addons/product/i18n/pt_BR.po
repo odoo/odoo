@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:26:56+0000\n"
-"PO-Revision-Date: 2009-05-20 10:26:56+0000\n"
+"POT-Creation-Date: 2009-08-06 15:29:18+0000\n"
+"PO-Revision-Date: 2009-08-06 15:29:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -111,12 +111,6 @@ msgid "Standard Price"
 msgstr "Preço Padrão"
 
 #. module: product
-#: code:addons/product/product.py:0
-#, python-format
-msgid "Products: "
-msgstr "Produtos: "
-
-#. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
 msgstr "A altura do pacote"
@@ -183,10 +177,9 @@ msgid "Base price for computing the customer price. Sometimes called the catalog
 msgstr "Preço de base para calcular o preço cliente. Às vezes chamado de catálogo preço."
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Partner section of the product form"
-msgstr ""
+#: field:pricelist.partnerinfo,min_quantity:0
+msgid "Quantity"
+msgstr "Quantidade"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -258,6 +251,13 @@ msgstr "Se outra lista"
 #: view:product.product:0
 msgid "Products"
 msgstr "Produtos"
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -500,9 +500,12 @@ msgid "The mode for computing the price for this rule."
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Unidade de transporte"
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
+msgstr "Unidade de medida"
 
 #. module: product
 #: field:product.product,partner_ref:0
@@ -520,9 +523,9 @@ msgid "PC"
 msgstr "PC"
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
-msgstr "Quantidade"
+#: help:product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr "Este é o atraso médio padrão em dias entre a encomenda e a confirmação da recepção de mercadorias para este produto e para o fornecedor. Ele é usado pelo programador para ordenar os pedidos com base em reordenação atrasos."
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -569,12 +572,6 @@ msgstr "Comsumível"
 #: help:product.price.type,currency_id:0
 msgid "The currency the field is expressed in."
 msgstr ""
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Other Pricelist"
-msgstr "Outra lista"
 
 #. module: product
 #: help:product.template,weight:0
@@ -734,6 +731,13 @@ msgstr ""
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
 msgstr "Categorias de Unidades de Medida"
+
+#. module: product
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Seqüência"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -978,9 +982,13 @@ msgid "Information about a product supplier"
 msgstr "As informações sobre um fornecedor do produto"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr ""
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Ativo"
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1022,11 +1030,6 @@ msgid "Second UoM"
 msgstr "Segunda Unidade"
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "Este é o atraso médio padrão em dias entre a encomenda e a confirmação da recepção de mercadorias para este produto e para o fornecedor. Ele é usado pelo programador para ordenar os pedidos com base em reordenação atrasos."
-
-#. module: product
 #: model:product.category,name:product.product_category_4
 msgid "Dello Computer"
 msgstr ""
@@ -1058,13 +1061,9 @@ msgid "Gross weight"
 msgstr "Peso bruto"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Ativo"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1140,11 +1139,9 @@ msgid "Product Template"
 msgstr ""
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Seqüência"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Unidade de transporte"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1497,12 +1494,6 @@ msgid "Palletization"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Warning !"
-msgstr "Mensagem !"
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
@@ -1512,13 +1503,6 @@ msgstr "Preços & Fornecedores"
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
 msgstr "O peso do palet ou da caixa."
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -1592,14 +1576,6 @@ msgstr "Particular"
 #: help:product.supplierinfo,delay:0
 msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
 msgstr "Atraso em dias entre a confirmação da encomenda e a recepção dos produtos em seu armazém. Usado para agendamento automático no cálculo do planejamento de compra."
-
-#. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "Unidade de medida"
 
 #. module: product
 #: help:product.template,uom_po_id:0
