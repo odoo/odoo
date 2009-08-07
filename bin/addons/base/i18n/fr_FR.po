@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:20:36+0000\n"
-"PO-Revision-Date: 2009-08-06 15:20:36+0000\n"
+"POT-Creation-Date: 2009-08-07 13:38:24+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1382,11 +1382,6 @@ msgstr "wizard.ir.model.menu.create.line"
 
 #. module: base
 #: field:ir.attachment,res_id:0
-#: field:ir.model.data,res_id:0
-#: field:ir.translation,res_id:0
-#: field:workflow.instance,res_id:0
-#: field:workflow.triggers,res_id:0
-#, fuzzy
 msgid "Attached ID"
 msgstr "ID de la Ressource"
 
@@ -1496,9 +1491,6 @@ msgstr "Spécifier le mesage. Vous pouvez utiliser les champs de l'objet. ex: `C
 
 #. module: base
 #: field:ir.attachment,res_model:0
-#: field:workflow,osv:0
-#: field:workflow.instance,res_type:0
-#, fuzzy
 msgid "Attached Model"
 msgstr "Modèle Attaché"
 
@@ -1852,9 +1844,7 @@ msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactè
 #. module: base
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
-"Faire une règle globale, sinon il sera nécessaire de mettre un groupe ou "
-"utilisateur"
+msgstr "Faire une règle globale, sinon il sera nécessaire de mettre un groupe ou utilisateur"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -3868,7 +3858,6 @@ msgstr ""
 
 #. module: base
 #: view:ir.attachment:0
-#: field:ir.attachment,datas:0
 msgid "Data"
 msgstr "Données"
 
@@ -3903,9 +3892,7 @@ msgstr ""
 #: help:ir.actions.report.custom,multi:0
 #: help:ir.actions.report.xml,multi:0
 msgid "If set to true, the action will not be displayed on the right toolbar of a form view."
-msgstr ""
-"Si Vrai, l'action ne sera pas affiché dans la barre d'outil à droite de la "
-"vue formulaire."
+msgstr "Si Vrai, l'action ne sera pas affiché dans la barre d'outil à droite de la vue formulaire."
 
 #. module: base
 #: code:addons/addons/stock/wizard/inventory_merge.py:0
@@ -4491,7 +4478,6 @@ msgstr "Configuration de l'action client"
 #: model:ir.actions.act_window,name:base.action_partner_address_form
 #: model:ir.model,name:base.model_res_partner_address
 #: view:res.partner.address:0
-#: model:ir.ui.menu,name:base.menu_partner_address_form
 msgid "Partner Addresses"
 msgstr "Adresses des Partenaires"
 
@@ -4885,9 +4871,7 @@ msgstr "Créer / Écrire"
 #. module: base
 #: help:res.partner.category,active:0
 msgid "The active field allows you to hide the category without removing it."
-msgstr ""
-"Ce champ actif vous autorise le masquage de la catégorie au lieu de la "
-"supprimée. "
+msgstr "Ce champ actif vous autorise le masquage de la catégorie au lieu de la supprimée. "
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -4969,9 +4953,7 @@ msgstr "Lithuanien / Lietuvių kalba"
 #. module: base
 #: help:ir.actions.server,record_id:0
 msgid "Provide the field name where the record id is stored after the create operations. If it is empty, you can not track the new record."
-msgstr ""
-"Fournir le nom du champ ou l'enregistrement sera stocké après les opérations "
-"de création, si vide, vous ne pourrez pas suivre le nouvel enregistrement."
+msgstr "Fournir le nom du champ ou l'enregistrement sera stocké après les opérations de création, si vide, vous ne pourrez pas suivre le nouvel enregistrement."
 
 #. module: base
 #: code:addons/osv/orm.py:0
@@ -5298,7 +5280,6 @@ msgstr "Burundi"
 #: wizard_button:server.action.create,init,end:0
 #: wizard_button:server.action.create,step_1,end:0
 #: view:wizard.module.lang.export:0
-#: wizard_button:base.module.import,import,open_window:0
 #, python-format
 msgid "Close"
 msgstr "Fermer"
@@ -5423,12 +5404,8 @@ msgstr "acc_number"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
-#: model:ir.actions.act_window,name:base.action_partner_address_form
-#: model:ir.model,name:base.model_res_partner_address
-#: view:res.partner.address:0
-#, fuzzy
 msgid "Addresses"
-msgstr "Adresses"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -5509,7 +5486,7 @@ msgstr "Changer mes préférences"
 #. module: base
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom de model invalide dans la définition de l'action"
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,text:0
@@ -6553,8 +6530,7 @@ msgstr ""
 #. module: base
 #: help:res.partner,user_id:0
 msgid "Internal user if any."
-msgstr ""
-"L'utilisateur interne en charge de communiqué avec le partenaire éventuel."
+msgstr "L'utilisateur interne en charge de communiqué avec le partenaire éventuel."
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -6694,7 +6670,6 @@ msgstr "Partenaires Clients"
 #: view:wizard.ir.model.menu.create:0
 #: view:wizard.module.lang.export:0
 #: view:wizard.module.update_translations:0
-#: wizard_button:base.module.import,init,end:0
 #, python-format
 msgid "Cancel"
 msgstr "Annuler"
@@ -7203,8 +7178,6 @@ msgstr "Société"
 
 #. module: base
 #: field:ir.attachment,datas:0
-#: view:ir.attachment:0
-#, fuzzy
 msgid "File Content"
 msgstr "Contenu du Fichier"
 
@@ -7719,8 +7692,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_base_module_import
-#: wizard_button:base.module.import,init,import:0
-#: model:ir.ui.menu,name:base.menu_wizard_module_import
 msgid "Import module"
 msgstr "Importer le module"
 
@@ -8579,7 +8550,6 @@ msgstr "Néerlandais (Belgique) / Nederlands (Belgïe)"
 #. module: base
 #: model:ir.actions.act_window,name:base.open_repository_tree
 #: view:ir.module.repository:0
-#: model:ir.ui.menu,name:base.menu_module_repository_tree
 msgid "Repository list"
 msgstr "Liste des Dépôts"
 
@@ -9077,10 +9047,7 @@ msgstr "1.  %c ==> Ven Déc  5 18:25:20 2008"
 #. module: base
 #: help:ir.ui.menu,groups_id:0
 msgid "If you have groups, the visibility of this menu will be based on these groups. If this field is empty, Open ERP will compute visibility based on the related object's read access."
-msgstr ""
-"Si vous avez des groupes, la visibilité de ce lenu sera basé sur ces groups. "
-"si ce champ est vide,OpenERP calculera la visibilité en se basant sur les "
-"accès en lecture seule des objets liés."
+msgstr "Si vous avez des groupes, la visibilité de ce lenu sera basé sur ces groups. si ce champ est vide,OpenERP calculera la visibilité en se basant sur les accès en lecture seule des objets liés."
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -9469,7 +9436,6 @@ msgstr "Gestion des Modules"
 #: field:ir.translation,res_id:0
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
-#: field:ir.attachment,res_id:0
 msgid "Resource ID"
 msgstr "ID de la Ressource"
 
@@ -10444,10 +10410,7 @@ msgstr "Îles Cook"
 #. module: base
 #: help:ir.actions.server,mobile:0
 msgid "Provides fields that be used to fetch the mobile number, e.g. you select the invoice, then `object.invoice_address_id.mobile` is the field which gives the correct mobile number"
-msgstr ""
-"Fournir les champs qui retourneront le numéro de GSM, ex. vous sélectionnez "
-"les factures, alors `object.invoice_address_id.mobile` est le champ qui "
-"retournera le numéro de GSM"
+msgstr "Fournir les champs qui retourneront le numéro de GSM, ex. vous sélectionnez les factures, alors `object.invoice_address_id.mobile` est le champ qui retournera le numéro de GSM"
 
 #. module: base
 #: field:ir.model.data,noupdate:0
@@ -10758,7 +10721,6 @@ msgstr "Propriétaire du compte"
 #. module: base
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
-#: field:ir.attachment,res_model:0
 msgid "Resource Object"
 msgstr "Objet ressource"
 
