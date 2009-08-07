@@ -1,7 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* document
-#
+# * document
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
@@ -23,7 +22,7 @@ msgstr "Sélectionnez un objet ici et open ERP créera un répertoire pour chaqu
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de modèle invalide pour l'action définit."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -33,7 +32,7 @@ msgstr "Type de Contenu du Répertoire"
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "This wizard will automatically configure the document management system according to modules installed on your system."
-msgstr "Cet assistant configurera automatiquement la gestion documentaire en fonction des modules installés sur votre système"
+msgstr "Cet assistant configurera automatiquement le gestionnaire de documentation en accord avec les modules installés sur le système."
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -59,7 +58,7 @@ msgstr "Saisissez l'adresse du serveur ou son IP. (Laissez localhost si vous ne 
 #. module: document
 #: view:ir.attachment:0
 msgid "File Information"
-msgstr "Informations sur le fichier"
+msgstr "Information fichier"
 
 #. module: document
 #: view:ir.attachment:0
@@ -83,19 +82,25 @@ msgid "Resource Title"
 msgstr "Titre de la Ressource"
 
 #. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "Error!"
+msgstr "Erreur!"
+
+#. module: document
 #: model:document.directory,name:document.dir_my_folder
 msgid "My Folder"
-msgstr ""
+msgstr "Mon Dossier"
 
 #. module: document
 #: model:document.directory,name:document.dir_product
 msgid "Products"
-msgstr ""
+msgstr "Produits"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
 msgid "Filesystem"
-msgstr "Système de Fichiers"
+msgstr "Système de fichier"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -115,7 +120,7 @@ msgstr "Partenaire"
 #. module: document
 #: model:document.directory,name:document.dir_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Commande de Ventes"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory
@@ -124,19 +129,25 @@ msgid "Document directory"
 msgstr "Répertoire du Document"
 
 #. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "ValidateError"
+msgstr "ValidationErreur"
+
+#. module: document
 #: model:document.directory,name:document.dir_partner
 msgid "Partners"
-msgstr ""
+msgstr "Partenaires"
 
 #. module: document
 #: model:document.directory,name:document.dir_root
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #. module: document
 #: model:document.directory,name:document.dir_sale_order_all
 msgid "All Sales Order"
-msgstr ""
+msgstr "Toutes les Commandes de Vente"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -153,7 +164,7 @@ msgstr "Type de Contenu"
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "Document Management System."
-msgstr "Gestion Électronique des Documents"
+msgstr "Système de gestion des documents"
 
 #. module: document
 #: field:ir.attachment,store_method:0
@@ -166,14 +177,20 @@ msgid "Type"
 msgstr "Type"
 
 #. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "Directory name must be unique!"
+msgstr "Le nom du répertoire doit être unique"
+
+#. module: document
 #: help:document.directory,ressource_tree:0
 msgid "Check this if you want to use the same tree structure as the object selected in the system."
-msgstr ""
+msgstr "Cocher ceci si vous souhaitez utiliser la même structure en arbre que l'objet sélectionné dans le système."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
+msgstr "Utiliser un domaine si vous souhaitez appliquer un filtre automatique sur les ressources visibles."
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -193,7 +210,13 @@ msgstr "Lien"
 #. module: document
 #: view:document.directory:0
 msgid "Directory Type"
-msgstr "Type de Répertoire"
+msgstr "Type de répertoire"
+
+#. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "You do not permissions to write on the server side."
+msgstr "Vous n'avez pas les permissions d'écrire sur le serveur."
 
 #. module: document
 #: field:document.directory.content,report_id:0
@@ -203,7 +226,13 @@ msgstr "Rapport"
 #. module: document
 #: model:document.directory,name:document.dir_project
 msgid "Projects"
-msgstr ""
+msgstr "Projets"
+
+#. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "Permission Denied !"
+msgstr "Permission refusée !"
 
 #. module: document
 #: constraint:ir.ui.view:0
@@ -223,7 +252,7 @@ msgstr "Fichiers Virtuels"
 #. module: document
 #: model:document.directory,name:document.dir_personnal_folder
 msgid "Personnal Folders"
-msgstr ""
+msgstr "Dossier Personnel"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_files
@@ -267,7 +296,7 @@ msgstr "Date de Modification"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Static Directory"
-msgstr "Répertoire Statique"
+msgstr "Répertoire statique"
 
 #. module: document
 #: field:document.directory,user_id:0
@@ -308,7 +337,7 @@ msgstr "Inclure le Nom de l'Enregistrement"
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid "This wizard will configure the URL of the server of the document management system."
-msgstr ""
+msgstr "Cette assistant configurera l'adresse du gestionnaire de documentation."
 
 #. module: document
 #: view:ir.attachment:0
@@ -343,6 +372,11 @@ msgid "Groups"
 msgstr "Groupes"
 
 #. module: document
+#: field:document.directory.content.type,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: document
 #: view:ir.attachment:0
 msgid "Data"
 msgstr "Données"
@@ -365,7 +399,7 @@ msgstr "Base de données"
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr ""
+msgstr "Gestionnaire de documentation intégré"
 
 #. module: document
 #: view:ir.attachment:0
@@ -380,7 +414,7 @@ msgstr "Attaché à"
 #. module: document
 #: model:document.directory,name:document.dir_sale_order_quote
 msgid "Quotations"
-msgstr ""
+msgstr "Devis"
 
 #. module: document
 #: view:ir.attachment:0
@@ -400,7 +434,7 @@ msgstr "Si vous mettez un objet ici, ce répertoire modèle apparaîtra en desso
 #. module: document
 #: view:document.directory:0
 msgid "Auto-Generated Files"
-msgstr "Fichiers générés automatiquement"
+msgstr "Fichiers auto-générés"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -410,7 +444,7 @@ msgstr "Annuler"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Enfant"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -430,7 +464,7 @@ msgstr "Cochez cette case si vous souhaitez que le nom du fichier commence par l
 #. module: document
 #: selection:document.directory,type:0
 msgid "Other Resources"
-msgstr ""
+msgstr "Autres ressources"
 
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
@@ -445,7 +479,7 @@ msgstr "Objet Parent"
 #. module: document
 #: model:document.directory,name:document.dir_partner_category
 msgid "Partners by Category"
-msgstr ""
+msgstr "Partenaires par Catégories"
 
 #. module: document
 #: view:document.directory:0
@@ -465,12 +499,17 @@ msgstr "Parcourir les fichiers via FTP"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
-msgid "This is a complete document management system:\n"
+msgid ""
+"This is a complete document management system:\n"
 "    * FTP Interface\n"
 "    * User Authentication\n"
 "    * Document Indexation\n"
 ""
 msgstr ""
+"Ceci est une gestion documentaire complète:\n"
+"  * Interface FTP\n"
+"  * Authentification utilisateur\n"
+"  * Indexation des documents\n"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -481,6 +520,12 @@ msgstr "Séquence"
 #: field:document.directory.content,name:0
 msgid "Content Name"
 msgstr "Nom du Contenu"
+
+#. module: document
+#: code:addons/document/document.py:0
+#, python-format
+msgid "File name must be unique!"
+msgstr "Le nom du fichier doit être unique"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -495,7 +540,7 @@ msgstr "document.configuration.wizard"
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "Auto Configure"
-msgstr "Configuration Automatique"
+msgstr "Configuration automatique"
 
 #. module: document
 #: field:document.directory.content,extension:0
