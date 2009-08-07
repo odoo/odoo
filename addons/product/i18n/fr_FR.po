@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:20:36+0000\n"
-"PO-Revision-Date: 2009-08-06 15:20:36+0000\n"
+"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,11 +66,6 @@ msgid "Net weight"
 msgstr "Poid net"
 
 #. module: product
-#: help:product.pricelist.version,active:0
-msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
-msgstr "Quand une version est dupliquée, elle est mise comme non active, mais les dates ne doivent pas se chevaucher avec la version original. Vous devez changer les date et réactivée le tarif"
-
-#. module: product
 #: help:product.product,incoming_qty:0
 msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
 msgstr "Quantités de produits qui ont été planifiée pour arriver dans les emplacements sélectionnés ou tous les internes si aucun n'a été sélectionné."
@@ -98,7 +93,7 @@ msgstr "Méthode d'approvisionnement"
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom du modèle invalide pour l'action définit"
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -114,12 +109,6 @@ msgstr "Champs associé dans le formulaire du produit"
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
 msgstr "Prix standard"
-
-#. module: product
-#: code:addons/product/product.py:0
-#, python-format
-msgid "Products: "
-msgstr "Produits:"
 
 #. module: product
 #: help:product.packaging,height:0
@@ -186,12 +175,6 @@ msgstr "Services"
 #: help:product.template,list_price:0
 msgid "Base price for computing the customer price. Sometimes called the catalog price."
 msgstr "Prix de base pour le calcul du prix client. Parfois appelé prix catalogue."
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Section partenaire dans la fiche produit"
 
 #. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
@@ -496,18 +479,6 @@ msgid "PCE"
 msgstr "PCE"
 
 #. module: product
-#: field:product.category,complete_name:0
-#: field:product.category,name:0
-#: field:product.pricelist.type,name:0
-#: field:product.pricelist.version,name:0
-#: field:product.template,name:0
-#: field:product.ul,name:0
-#: field:product.uom,name:0
-#: field:product.uom.categ,name:0
-msgid "Name"
-msgstr "Nom"
-
-#. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
@@ -559,11 +530,6 @@ msgid "This is the average delay in days between the purchase order confirmation
 msgstr "C'est le temps moyen entre la confirmation de la commande du client et la réception des marchandises pour ce produit et pour le fournisseur par défaut. C'est utilisé par le planificateur pour ordonner les requètes sur base des délais de réordonnement."
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
-msgstr "Quantité"
-
-#. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Délai d'exécution du fournisseur"
@@ -610,12 +576,6 @@ msgid "The currency the field is expressed in."
 msgstr "La devise est exprimée en."
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Other Pricelist"
-msgstr "Autre liste de tarif"
-
-#. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr "La Masse brute en Kg."
@@ -638,7 +598,7 @@ msgstr "Détermine si le produit peut être visible dans la liste des produits �
 #. module: product
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
+msgstr "Erreur: l'unité de vente doit appartenir à une catégorie différente que l'unité de mesure"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -687,6 +647,11 @@ msgstr "Produits par catégorie"
 #: model:product.template,name:product.product_product_hdd1_product_template
 msgid "HDD Seagate 7200.8 80GB"
 msgstr "Disque Dur Seagate 7200.8 80GB"
+
+#. module: product
+#: help:product.pricelist.version,active:0
+msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
+msgstr "Quand une version est dupliquée, elle est mise comme non active, mais les dates ne doivent pas se chevaucher avec la version original. Vous devez changer les date et réactivée le tarif"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -830,11 +795,6 @@ msgid "Current quantities of products in selected locations or all internal if n
 msgstr "Quantités actuelles de produit dans les emplacements sélectionnés ou tous les internes si aucun n'a été sélectionné."
 
 #. module: product
-#: help:product.template,produce_delay:0
-msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
-msgstr "Temps moyen pour produire ce produit. Ceci est seulement pour l'ordre de fabrication et, si il s'agit d'une facture multi-nivaux de matériel, c'est seulement pour le niveau de ce produit. Des délais différents seront sommé pour tous les nivaux et ordres d'approvisionnement."
-
-#. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
 msgstr "PC Basique"
@@ -892,7 +852,7 @@ msgstr "PC complet avec périphériques"
 #. module: product
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même catégorie."
+msgstr "Erreur: l'unité de mesure par défaut et l'unité de mesure d'achat doivent faire partie de la même catégorie"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
@@ -934,15 +894,6 @@ msgstr "Utilisé par les entreprises qui gèrent deux unités de mesure : factur
 #: view:product.template:0
 msgid "Procurement & Locations"
 msgstr "Délais et Localisations"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"Could not resolve product category, ' \\n"
-"                                    'you have defined cyclic categories ' \\n"
-"                                    'of products!"
-msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1080,11 +1031,6 @@ msgstr "Description achat"
 #: view:product.template:0
 msgid "Second UoM"
 msgstr "Unité secondaire"
-
-#. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "C'est le temps moyen entre la confirmation de la commande du client et la réception des marchandises pour ce produit et pour le fournisseur par défaut. C'est utilisé par le planificateur pour ordonner les requètes sur base des délais de réordonnement."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1476,19 +1422,9 @@ msgid "Price Computation"
 msgstr "Calcul du prix"
 
 #. module: product
-#: model:product.uom,name:product.product_uom_unit
-msgid "PCE"
-msgstr "PCE"
-
-#. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
 msgid "Mainboard ASUStek A7N8X"
 msgstr "Carte mère ASUStek A7N8X"
-
-#. module: product
-#: view:product.pricelist.item:0
-msgid "Price Computation"
-msgstr "Calcul du prix"
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -1524,47 +1460,6 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: product
-#: model:ir.module.module,description:product.module_meta_information
-msgid ""
-"\n"
-"    This is the base module for managing products and pricelists in Open ERP.\n"
-"\n"
-"    Products support variants, different pricing methods, suppliers\n"
-"    information, make to stock/order, different unit of measures,\n"
-"    packaging and properties.\n"
-"\n"
-"    Pricelists support:\n"
-"    * Multiple-level of discount (by product, category, quantities)\n"
-"    * Compute price based on different criteria:\n"
-"        * Other pricelist,\n"
-"        * Cost price,\n"
-"        * List price,\n"
-"        * Supplier price, ...\n"
-"    Pricelists preferences by product and/or partners.\n"
-"\n"
-"    Print product labels with barcode.\n"
-"    "
-msgstr ""
-"\n"
-"    Ceci est un module de base pour gérer les produits et les listes de prix dans OpenERP.\n"
-"\n"
-"   Les produits supportent les variantes, les différentes méthodes de prix, informations \n"
-"   fournisseurs, Sur stock/ Fabrication à la commande, différentes unités de mesure,\n"
-"   Conditionnement et propriétée.\n"
-"\n"
-"   Support des listes de prix:\n"
-"   * Multi niveau de remise ( par catégorie de produit, quantités)\n"
-"   * Calcul du prix basé sur différents critères:\n"
-"       * Autre tarif,\n"
-"       * Prix standard,\n"
-"       * Prix de vente,\n"
-"       * Prix fournisseur, ...\n"
-"    Préférences de tarifs par produits et/ou partenaire. \n"
-"\n"
-"     Impressions des étiquettes produits avec code barre.\n"
-"    "
-
-#. module: product
 #: help:product.template,uos_coeff:0
 msgid "Coefficient to convert UOM to UOS\n"
 " uom = uos * coeff"
@@ -1575,15 +1470,6 @@ msgstr "Coefficient de conversion de l'UdM vers l'UdV\n"
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "Peut être acheté"
-
-#. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid ""
-"No active version for the selected pricelist !\n"
-"' \\n"
-"                                'Please create or activate one."
-msgstr ""
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1612,12 +1498,6 @@ msgid "Palletization"
 msgstr "Palletisation"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
-#, python-format
-msgid "Warning !"
-msgstr "Attention !"
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
@@ -1640,8 +1520,7 @@ msgstr "Produits & Liste de prix"
 
 #. module: product
 #: help:product.uom,factor:0
-msgid ""
-"The coefficient for the formula:\n"
+msgid "The coefficient for the formula:\n"
 "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
 msgstr "Coefficient pour la formule:\n"
 "1 (unité de base) = coeff (cette unité). Taux = 1 / Facteur."
@@ -1684,12 +1563,6 @@ msgid "Average time to produce this product. This is only for the production ord
 msgstr "Temps moyen pour produire ce produit. Ceci est seulement pour l'ordre de fabrication et, si il s'agit d'une facture multi-nivaux de matériel, c'est seulement pour le niveau de ce produit. Des délais différents seront sommé pour tous les nivaux et ordres d'approvisionnement."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Approvisionnement & Emplacements"
-
-#. module: product
 #: wizard_field:product.price_list,init,qty1:0
 msgid "Quantity-1"
 msgstr "Quantité-1"
@@ -1717,7 +1590,7 @@ msgstr "L'unité de mesure par défaut pour les commandes d'achats. Qui doit êt
 #. module: product
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Erreur: Code EAN invalide"
+msgstr "Erreur: code EAN invalide"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
