@@ -1315,7 +1315,7 @@ class orm_template(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         for lang in langs:
@@ -1338,7 +1338,7 @@ class orm_template(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
         for lang in langs:
             for field in vals:
                 if field in self._columns:
@@ -2039,13 +2039,13 @@ class orm(orm_template):
         self._inherits_reload_src()
 
     def fields_get(self, cr, user, fields=None, context=None):
-        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False)
+        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False, context=context)
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         select = ids
@@ -2260,7 +2260,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False), 
@@ -2353,7 +2353,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
 
         upd0 = []
         upd1 = []
@@ -2524,7 +2524,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
 
         default = []
 

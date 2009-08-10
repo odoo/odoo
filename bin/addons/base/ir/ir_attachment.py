@@ -25,7 +25,7 @@ from osv.orm import except_orm
 import tools
 
 class ir_attachment(osv.osv):
-    def check(self, cr, uid, ids, mode):
+    def check(self, cr, uid, ids, mode, context=None):
         if not ids: 
             return
         ima = self.pool.get('ir.model.access')
@@ -34,7 +34,7 @@ class ir_attachment(osv.osv):
         cr.execute('select distinct res_model from ir_attachment where id in ('+','.join(map(str, ids))+')')
         for obj in cr.fetchall():
             if obj[0]:
-                ima.check(cr, uid, obj[0], mode)
+                ima.check(cr, uid, obj[0], mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -52,7 +52,7 @@ class ir_attachment(osv.osv):
             if m['res_model']:
                 if m['res_model'] not in cache:
                     cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read',
-                                                      raise_exception=False)
+                                                      raise_exception=False, context=context)
                 if not cache[m['res_model']]:
                     ids.remove(m['id'])
 
@@ -60,26 +60,26 @@ class ir_attachment(osv.osv):
             return len(ids)
         return ids
 
-    def read(self, cr, uid, ids, *args, **kwargs):
-        self.check(cr, uid, ids, 'read')
-        return super(ir_attachment, self).read(cr, uid, ids, *args, **kwargs)
+    def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
+        self.check(cr, uid, ids, 'read', context=context)
+        return super(ir_attachment, self).read(cr, uid, ids, fields_to_read, context, load)
 
-    def write(self, cr, uid, ids, *args, **kwargs):
-        self.check(cr, uid, ids, 'write')
-        return super(ir_attachment, self).write(cr, uid, ids, *args, **kwargs)
+    def write(self, cr, uid, ids, vals, context=None):
+        self.check(cr, uid, ids, 'write', context=context)
+        return super(ir_attachment, self).write(cr, uid, ids, vals, context)
     
-    def copy(self, cr, uid, id, *args, **kwargs):
-        self.check(cr, uid, [id], 'write')
-        return super(ir_attachment, self).copy(cr, uid, id, *args, **kwargs)
+    def copy(self, cr, uid, id, default=None, context=None):
+        self.check(cr, uid, [id], 'write', context=context)
+        return super(ir_attachment, self).copy(cr, uid, id, default, context)
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
-        self.check(cr, uid, ids, 'unlink')
-        return super(ir_attachment, self).unlink(cr, uid, ids, *args, **kwargs)
+    def unlink(self, cr, uid, ids, context=None):
+        self.check(cr, uid, ids, 'unlink', context=context)
+        return super(ir_attachment, self).unlink(cr, uid, ids, context)
 
-    def create(self, cr, uid, values, *args, **kwargs):
+    def create(self, cr, uid, values, context=None):
         if 'res_model' in values and values['res_model'] != '':
-            self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create')
-        return super(ir_attachment, self).create(cr, uid, values, *args, **kwargs)
+            self.pool.get('ir.model.access').check(cr, uid, values['res_model'], 'create', context=context)
+        return super(ir_attachment, self).create(cr, uid, values, context)
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
