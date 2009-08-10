@@ -612,10 +612,11 @@ class account_invoice(osv.osv):
                 line2 = {}
                 for x, y, l in line:
                     tmp = str(l['account_id'])
-                    tmp += '-'+str('tax_code_id' in l and l['tax_code_id'] or "False")
-                    tmp += '-'+str('product_id' in l and l['product_id'] or "False")
-                    tmp += '-'+str('analytic_account_id' in l and l['analytic_account_id'] or "False")
-
+                    tmp += '-'+str(l.get('tax_code_id',"False"))
+                    tmp += '-'+str(l.get('product_id',"False"))
+                    tmp += '-'+str(l.get('analytic_account_id',"False"))
+                    tmp += '-'+str(l.get('date_maturity',"False"))
+                    
                     if tmp in line2:
                         am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                         line2[tmp]['debit'] = (am > 0) and am or 0.0
