@@ -2262,9 +2262,16 @@ class orm(orm_template):
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
+        properties = self.pool.get('ir.property')
+        domain = [('res_id', '=', False), 
+                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]), 
+                 ]
+        if properties.search(cr, uid, domain, context=context):
+            raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
+
         wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_delete(uid, self._name, id, cr)
+        for oid in ids:
+            wf_service.trg_delete(uid, self._name, oid, cr)
 
         #cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
         #res = cr.dictfetchall()
@@ -2282,7 +2289,7 @@ class orm(orm_template):
             if d1:
                 cr.execute('SELECT id FROM "'+self._table+'" ' \
                         'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
-                if not cr.rowcount == len({}.fromkeys(ids)):
+                if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
@@ -2294,13 +2301,13 @@ class orm(orm_template):
                 cr.execute('delete from "'+self._table+'" ' \
                         'where id in ('+str_d+')', sub_ids)
 
-        for order, object, ids, fields in result_store:
+        for order, object, store_ids, fields in result_store:
             if object<>self._name:
                 obj =  self.pool.get(object)
-                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, ids))+')')
-                ids = map(lambda x: x[0], cr.fetchall())
-                if ids:
-                    obj._store_set_values(cr, uid, ids, fields, context)
+                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, store_ids))+')')
+                rids = map(lambda x: x[0], cr.fetchall())
+                if rids:
+                    obj._store_set_values(cr, uid, rids, fields, context)
         return True
 
     #
