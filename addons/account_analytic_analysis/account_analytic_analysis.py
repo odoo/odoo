@@ -35,7 +35,7 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("select account_analytic_line.account_id, sum(amount) \
+            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id  \
@@ -62,9 +62,9 @@ class account_analytic_account(osv.osv):
             # Amount uninvoiced hours to invoice at sale price
             acc_set = ",".join(map(str, ids2))
             cr.execute("""SELECT account_analytic_account.id, \
-                        sum (product_template.list_price * \
+                        COALESCE(sum (product_template.list_price * \
                             account_analytic_line.unit_amount * \
-                            ((100-hr_timesheet_invoice_factor.factor)/100)) \
+                            ((100-hr_timesheet_invoice_factor.factor)/100)),0.0) \
                             AS ca_to_invoice \
                     FROM product_template \
                     join product_product \
@@ -114,7 +114,7 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("select account_analytic_line.account_id, sum(unit_amount) \
+            cr.execute("select account_analytic_line.account_id, COALESCE(sum(unit_amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
@@ -140,14 +140,15 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("select account_analytic_line.account_id,sum(unit_amount) \
+            cr.execute("select account_analytic_line.account_id,COALESCE(SUM(unit_amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
                     where account_analytic_line.account_id IN (%s) \
                         and account_analytic_journal.type='general' \
                     GROUP BY account_analytic_line.account_id"%acc_set)
-            for account_id, sum in cr.fetchall():
+            ff =  cr.fetchall()
+            for account_id, sum in ff:
                 res[account_id] = round(sum,2)
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
@@ -164,7 +165,7 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("""select account_analytic_line.account_id,sum(amount) \
+            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
@@ -190,9 +191,9 @@ class account_analytic_account(osv.osv):
         if ids2:
             acc_set = ",".join(map(str, ids2))
             cr.execute("""select account_analytic_line.account_id as account_id, \
-                        sum((account_analytic_line.unit_amount * pt.list_price) \
+                        COALESCE(sum((account_analytic_line.unit_amount * pt.list_price) \
                             - (account_analytic_line.unit_amount * pt.list_price \
-                                * hr.factor)) as somme
+                                * hr.factor)),0.0) as somme
                     from account_analytic_line \
                     left join account_analytic_journal \
                         on (account_analytic_line.journal_id = account_analytic_journal.id) \
@@ -584,7 +585,7 @@ class account_analytic_account_summary_month(osv.osv):
     _description = "Hours summary by month"
     _auto = False
     _rec_name = 'month'
-    _order = 'month'
+#    _order = 'month'
 
     def _unit_amount(self, cr, uid, ids, name, arg, context=None):
         res = {}

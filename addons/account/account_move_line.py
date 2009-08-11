@@ -573,7 +573,7 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
         account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
         if not context.get('fy_closing', False) and not account.reconcile:
-            raise osv.except_osv(_('Error'), _('The account is not defined to be reconcile !'))
+            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
         if r[0][1] != None:
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 

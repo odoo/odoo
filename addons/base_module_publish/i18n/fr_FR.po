@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:45+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2009-08-07 13:38:24+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:24+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-07 11:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,category:0
@@ -32,11 +31,6 @@ msgid "Small description"
 msgstr "Petite description"
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr ""
-
-#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
 msgid "Author"
 msgstr "Auteur"
@@ -48,12 +42,10 @@ msgid "Introduction"
 msgstr "Introduction"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Error"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "Télécharger lien"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,step2,publish:0
@@ -136,11 +128,8 @@ msgstr "Description"
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step2:0
 #: wizard_view:base_module_publish.module_publish_all,login:0
-msgid ""
-"If you don't have an access, you can create one http://www.openerp.com/"
-msgstr ""
-"Si vous n'avez pas d'accès, vous pouvez en créer un sur "
-"http://www.openerp.com/"
+msgid "If you don't have an access, you can create one http://www.openerp.com/"
+msgstr "Si vous n'avez pas d'accès, vous pouvez en créer un sur http://www.openerp.com/"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
@@ -154,12 +143,6 @@ msgstr "Information pour la publication"
 #: wizard_button:base_module_publish.module_publish_all,publish,end:0
 msgid "Close"
 msgstr "Fermer"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "Failed to upload the file"
-msgstr ""
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
@@ -178,11 +161,6 @@ msgid "Licence"
 msgstr "Licence"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,update:0
-msgid "Modules updated"
-msgstr "Modules mis à jours"
-
-#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Verify your module information"
 msgstr "Vérifiez les informations de votre module"
@@ -192,13 +170,6 @@ msgstr "Vérifiez les informations de votre module"
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Mot de passe"
-
-#. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
-#, python-format
-msgid "Login failed!"
-msgstr ""
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -222,10 +193,9 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/module_zip.py:0
-#, python-format
-msgid "Can not export module that is not installed!"
-msgstr ""
+#: wizard_field:base_module_publish.module_publish_all,publish,update:0
+msgid "Modules updated"
+msgstr "Modules mis à jours"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,error:0
@@ -238,9 +208,8 @@ msgid "Documentation URL"
 msgstr "Lien de documentation"
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "This version of the module is already exist on the server"
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
 msgstr ""
 
 #. module: base_module_publish
@@ -283,12 +252,6 @@ msgid "GPL-2"
 msgstr ""
 
 #. module: base_module_publish
-#: code:addons/base_module_publish/wizard/base_module_publish.py:0
-#, python-format
-msgid "You could not publish a module that is not installed!"
-msgstr ""
-
-#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
 msgstr "Télécharger l'information"
@@ -318,12 +281,6 @@ msgstr "Général"
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "User information"
 msgstr "Information utilisateur"
-
-#. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-msgid "Download URL"
-msgstr "Télécharger lien"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0
@@ -365,3 +322,4 @@ msgstr "Publier le module"
 #: wizard_button:base_module_publish.module_publish,step2,step1:0
 msgid "Previous"
 msgstr "Précédent"
+

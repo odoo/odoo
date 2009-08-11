@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,14 +43,19 @@ msgid "Operation is started"
 msgstr "Operatsioon alustatud"
 
 #. module: mrp_operations
-#: model:process.node,name:mrp_operations.process_node_productionorder0
-msgid "Production Order"
-msgstr "Tootmiskorraldus"
+#: view:mrp.production.workcenter.line:0
+msgid "Information"
+msgstr ""
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Start working"
-msgstr "Alusta tööd"
+#: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
+msgid "Start Cancel Operation"
+msgstr "Alusta Tühista operatsiooni"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr ""
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -58,28 +63,24 @@ msgid "Operations Code"
 msgstr "Operatsioonide kood"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Production Order Cannot start in [%s] state"
-msgstr "Töökorraldust ei saa alustada [%s] staatusest"
-
-#. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operation Process"
 msgstr "TVP operatsioonide protsess"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
 #: field:mrp.production.workcenter.line,state:0
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
 msgstr "Staatus"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,delay:0
-msgid "Delay"
-msgstr "Viivitus"
+#: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
+msgid "Start Done Operation"
+msgstr "Alusta Lõpeta operatsioon"
 
 #. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
 msgstr "Alusta"
@@ -115,9 +116,10 @@ msgid "Set Draft"
 msgstr "Sea mustand"
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_planned:0
-msgid "Date Planned"
-msgstr "Plaanitud kuupäev"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: view:mrp.production.workcenter.line:0
+msgid "Work Orders"
+msgstr "Töökorraldused"
 
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_code_action
@@ -135,10 +137,9 @@ msgid "Production Operation Code"
 msgstr "Tootmisoperatsiooni kood"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid " You cannot Resume the operation other then Pause state !"
-msgstr " Sa ei saa jätkata operatsiooni muus kui peatatud olekus !"
+#: field:mrp.production.workcenter.line,date_planned:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
@@ -146,19 +147,20 @@ msgid "From production order, create the workorder"
 msgstr "Tootmiskorralduse vorm, loo tootmiskorraldus"
 
 #. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
-msgid "Start Cancel Operation"
-msgstr "Alusta Tühista operatsiooni"
+#: view:mrp.production.workcenter.line:0
+msgid "Hours by Workcenter"
+msgstr ""
 
 #. module: mrp_operations
-#: selection:mrp.production.workcenter.line,state:0
-msgid "Canceled"
-msgstr "Tühistatud"
+#: help:mrp.production,allow_reorder:0
+msgid "Check this to be able to move independently all production orders, without moving dependent ones."
+msgstr ""
 
 #. module: mrp_operations
-#: rml:mrp.code.barcode:0
-msgid ")"
-msgstr ")"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action
+msgid "All Work Orders"
+msgstr "Kõik töökorraldused"
 
 #. module: mrp_operations
 #: rml:mrp.code.barcode:0
@@ -166,10 +168,9 @@ msgid "("
 msgstr "("
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_draft_action
-msgid "Future Work Orders"
-msgstr "Tulevased töökorraldused"
+#: view:mrp.production.workcenter.line:0
+msgid "Product to Produce"
+msgstr ""
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
@@ -183,21 +184,20 @@ msgid "Operation is done"
 msgstr "Operatsioon valmis"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Operation is already finished !"
-msgstr "Operatsioon on juba lõpetatud !"
+#: view:mrp.production.workcenter.line:0
+msgid "Planned Date"
+msgstr ""
 
 #. module: mrp_operations
-#: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
-msgid "Start Done Operation"
-msgstr "Alusta Lõpeta operatsioon"
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "There is no Operation to be cancelled !"
-msgstr "Siin ei ole operatsiooni mida tühistada !"
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancel"
+msgstr "Tühista"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -206,22 +206,20 @@ msgid "Finished"
 msgstr "Lõpetatud"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
-#: view:mrp.production.workcenter.line:0
-msgid "Work Orders"
-msgstr "Töökorraldused"
+#: field:mrp.production,allow_reorder:0
+msgid "Free Serialisation"
+msgstr ""
 
 #. module: mrp_operations
-#: field:mrp.production.workcenter.line,date_start:0
-#: field:mrp_operations.operation,date_start:0
-msgid "Start Date"
-msgstr "Alguskuupäev"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_draft_action_planning
+msgid "Work Orders Planning"
+msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Sorry!"
-msgstr "Vabandust!"
+#: model:process.node,name:mrp_operations.process_node_productionorder0
+msgid "Production Order"
+msgstr "Tootmiskorraldus"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
@@ -229,8 +227,8 @@ msgid "Production order for any products"
 msgstr "Tootmiskorraldus iga tootejaoks"
 
 #. module: mrp_operations
-#: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
-msgid "Workcenter Production start end workflow"
+#: field:stock.move,move_dest_id_lines:0
+msgid "Children Moves"
 msgstr ""
 
 #. module: mrp_operations
@@ -239,7 +237,13 @@ msgid "Operation Name"
 msgstr "Operatsiooni nimi"
 
 #. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr "mrp_operations.operation"
+
+#. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finnished:0
+#: field:mrp.production.workcenter.line,date_planned_end:0
 #: field:mrp_operations.operation,date_finished:0
 msgid "End Date"
 msgstr "Lõppkuupäev"
@@ -250,15 +254,14 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
-msgid "mrp_operations.operation.code"
-msgstr "mrp_operations.operation.code"
+#: view:mrp.production.workcenter.line:0
+msgid "Real"
+msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "You cannot finish the operation without Starting/Resuming it !"
-msgstr "Sa ei saa lõpetada operatsiooni enne, kui sa ei alusta/jätka seda !"
+#: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
+msgid "Workcenter Production start end workflow"
+msgstr ""
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0
@@ -276,16 +279,15 @@ msgid "From work order, define the cycles and hour for creating product"
 msgstr "Töökäsu vorm, defineeri tsüklid ja tunnid toote valmistamiseks"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Operation is not started yet !"
-msgstr "Operatsiooni pole veel alustatud !"
+#: field:mrp.production.workcenter.line,delay:0
+msgid "Working Hours"
+msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Error!"
-msgstr "Viga!"
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "Tulevased töökorraldused"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
@@ -303,15 +305,14 @@ msgid "Production Work Center"
 msgstr "Tootmise töökeskkond"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Operation is Already Cancelled  !"
-msgstr "Operatsioon on juba tühistatud !"
-
-#. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
 msgid "Production start Operation"
 msgstr "Tootmise alustamise operatsioon"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Packing Exception"
+msgstr ""
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,workcenter_id:0
@@ -319,21 +320,22 @@ msgid "Workcenter"
 msgstr "Töökeskkond"
 
 #. module: mrp_operations
-#: view:mrp.production.workcenter.line:0
-msgid "Graph view in hours by workcenter"
-msgstr "Graafiline vaade tundidele töökeskonna kohta"
+#: field:mrp.production.workcenter.line,date_start:0
+#: field:mrp.production.workcenter.line,date_start_date:0
+#: field:mrp_operations.operation,date_start:0
+msgid "Start Date"
+msgstr "Alguskuupäev"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:0
 msgid "Operations"
 msgstr "Operatsioonid"
-
-#. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "You cannot Pause the Operation other then Start/Resume state !"
-msgstr "Sa ei saa peatada operatsiooni muus kui alustamise/jätkamise staatuses !"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -383,10 +385,9 @@ msgid "Qty"
 msgstr "Kogus"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action
-#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action
-msgid "All Work Orders"
-msgstr "Kõik töökorraldused"
+#: rml:mrp.code.barcode:0
+msgid ")"
+msgstr ")"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
@@ -394,22 +395,23 @@ msgid "Production Operation"
 msgstr "Tootmise operatsioon"
 
 #. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
 msgstr "Tehtud"
 
 #. module: mrp_operations
-#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
-msgid "mrp_operations.operation"
-msgstr "mrp_operations.operation"
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr ""
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
-#: selection:mrp_operations.operation.code,start_stop:0
-msgid "Cancel"
-msgstr "Tühista"
+msgid "Duration"
+msgstr ""
 
 #. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
 #: selection:mrp.production.workcenter.line,state:0
 msgid "Draft"
 msgstr "Mustand"
@@ -421,8 +423,13 @@ msgid "Operation is cancelled"
 msgstr "Operatsioon tühistatud"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
-#, python-format
-msgid "Operation has already started !' 'You  can either Pause /Finish/Cancel the operation"
-msgstr "Operatsioon on juba alustatud !' 'Sa võid kas Peatada/Lõpetada/Tühistada operatsiooni"
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Canceled"
+msgstr "Tühistatud"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Start working"
+msgstr "Alusta tööd"
 

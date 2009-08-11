@@ -275,7 +275,7 @@ class purchase_order(osv.osv):
                        'ref_partner_id': po.partner_id.id,
                        'ref_doc1': 'purchase.order,%d' % (po.id,),
                        })
-    def inv_line_create(self,a,ol):
+    def inv_line_create(self, cr, uid, a, ol):
         return (0, False, {
             'name': ol.name,
             'account_id': a,
@@ -313,7 +313,7 @@ class purchase_order(osv.osv):
                     a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
                 fpos = o.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                il.append(self.inv_line_create(a,ol))
+                il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
@@ -438,7 +438,7 @@ class purchase_order_line(osv.osv):
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
-        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
+        'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
@@ -455,7 +455,7 @@ class purchase_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
-        default.update({'state':'draft', 'move_id':False})
+        default.update({'state':'draft', 'move_id':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
@@ -488,7 +488,6 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         seller_delay = 0
         for s in prod.seller_ids:
-            seller_delay = s.delay
             if s.name.id == partner_id:
                 seller_delay = s.delay
                 temp_qty = s.qty # supplier _qty assigned to temp

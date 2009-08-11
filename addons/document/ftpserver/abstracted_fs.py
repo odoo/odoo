@@ -13,6 +13,7 @@ import netsvc
 import os
 from service import security
 from osv import osv
+import stat
 
 def log(message):
     logger = netsvc.Logger()
@@ -126,17 +127,20 @@ class abstracted_fs:
         for db_name in result:
             db, cr = None, None
             try:
-                db = pooler.get_db_only(db_name)
-                cr = db.cursor()
-                cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
-                if not cr.fetchone():
-                    continue
-
-                cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
-                res = cr.fetchone()
-                if res and len(res):
-                    self.db_name_list.append(db_name)
-                cr.commit()            
+                try:
+                    db = pooler.get_db_only(db_name)
+                    cr = db.cursor()
+                    cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
+                    if not cr.fetchone():
+                        continue
+    
+                    cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
+                    res = cr.fetchone()
+                    if res and len(res):
+                        self.db_name_list.append(db_name)
+                    cr.commit()
+                except Exception, e:
+                    log(e)
             finally:
                 if cr is not None:
                     cr.close()
@@ -794,8 +798,7 @@ class abstracted_fs:
         if 'd' in perms:
             permdir += 'p'
         type = size = perm = modify = create = unique = mode = uid = gid = ""
-        for basename in listing:
-            file = os.path.join(basedir, basename)
+        for file in listing:                        
             try:
                 st = self.stat(file)
             except OSError:
@@ -805,12 +808,7 @@ class abstracted_fs:
             # type + perm
             if stat.S_ISDIR(st.st_mode):
                 if 'type' in facts:
-                    if basename == '.':
-                        type = 'type=cdir;'
-                    elif basename == '..':
-                        type = 'type=pdir;'
-                    else:
-                        type = 'type=dir;'
+                    type = 'type=dir;'                    
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permdir
             else:
@@ -852,9 +850,9 @@ class abstracted_fs:
             # on Windows NTFS filesystems MTF records could be used).
             if 'unique' in facts:
                 unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
-            basename=_to_decode(basename)
+            path=_to_decode(file.path)
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
-                                                mode, uid, gid, unique, basename)
+                                                mode, uid, gid, unique, path)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

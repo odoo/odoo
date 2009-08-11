@@ -130,7 +130,12 @@ class audittrail_log_line(osv.osv):
 
 audittrail_log_line()
 
-def get_value_text(cr, uid, field_name,values,object, context={}):
+
+objects_proxy = netsvc.SERVICES['object'].__class__
+
+class audittrail_objects_proxy(objects_proxy):
+
+    def get_value_text(self, cr, uid, field_name, values, object, context={}):
             pool = pooler.get_pool(cr.dbname)
             obj=pool.get(object.model)
             object_name=obj._name
@@ -169,7 +174,7 @@ def get_value_text(cr, uid, field_name,values,object, context={}):
                         return value
             return values
         
-def create_log_line(cr,uid,id,object,lines=[]):
+    def create_log_line(self, cr, uid, id, object, lines=[]):
         pool = pooler.get_pool(cr.dbname)
         obj=pool.get(object.model)
         object_name=obj._name
@@ -193,7 +198,7 @@ def create_log_line(cr,uid,id,object,lines=[]):
                 cr.commit()
         return True
 
-def log_fct( db, uid, passwd, object, method, fct_src , *args ):
+    def log_fct(self, db, uid, passwd, object, method, fct_src, *args):
             logged_uids = []
             pool = pooler.get_pool(db)
             cr = pooler.get_db(db).cursor()
@@ -215,10 +220,10 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                             line={
                                   'name':field,
                                   'new_value':new_value[field],
-                                  'new_value_text':get_value_text(cr,uid,field,new_value[field],model_object)
+                                  'new_value_text': self.get_value_text(cr,uid,field,new_value[field],model_object)
                                   }
                             lines.append(line)
-                    create_log_line(cr,uid,id,model_object,lines)
+                    self.create_log_line(cr,uid,id,model_object,lines)
                 cr.commit()
                 cr.close()
                 return res_id
@@ -229,7 +234,7 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                     old_values=pool.get(model_object.model).read(cr,uid,res_id,args[1].keys())
                     old_values_text={}
                     for field in args[1].keys():
-                        old_values_text[field]=get_value_text(cr,uid,field,old_values[field],model_object)
+                        old_values_text[field] = self.get_value_text(cr,uid,field,old_values[field],model_object)
                     res =fct_src( db, uid, passwd, object, method, *args)
                     cr.commit()
                     if res:
@@ -243,12 +248,12 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                                           'name':field,
                                           'new_value':field in new_values and new_values[field] or '',
                                           'old_value':field in old_values and old_values[field] or '',
-                                          'new_value_text':get_value_text(cr,uid,field,new_values[field],model_object),
+                                          'new_value_text': self.get_value_text(cr,uid,field,new_values[field],model_object),
                                           'old_value_text':old_values_text[field]
                                           }
                                     lines.append(line)
                             cr.commit()
-                            create_log_line(cr,uid,id,model_object,lines)
+                            self.create_log_line(cr,uid,id,model_object,lines)
                     cr.close()
                     return res
 
@@ -271,11 +276,11 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                                 line={
                                           'name':field,
                                           'old_value':old_values[res_id][field],
-                                          'old_value_text':get_value_text(cr,uid,field,old_values[res_id][field],model_object)
+                                          'old_value_text': self.get_value_text(cr,uid,field,old_values[res_id][field],model_object)
                                           }
                                 lines.append(line)
                     cr.commit()
-                    create_log_line(cr,uid,id,model_object,lines)
+                    self.create_log_line(cr,uid,id,model_object,lines)
                 cr.close()
                 return res
             
@@ -294,28 +299,27 @@ def log_fct( db, uid, passwd, object, method, fct_src , *args ):
                                 line={
                                       'name':field,
                                       'old_value':old_values[res_id][field],
-                                      'old_value_text':get_value_text(cr,uid,field,old_values[res_id][field],model_object)
+                                      'old_value_text': self.get_value_text(cr,uid,field,old_values[res_id][field],model_object)
                                       }
                                 lines.append(line)
                         cr.commit()
-                        create_log_line(cr,uid,id,model_object,lines)
+                        self.create_log_line(cr,uid,id,model_object,lines)
                 res =fct_src( db, uid, passwd, object, method, *args)
                 cr.close()
                 return res
             cr.close()
 
-def tmp_fct(fct_src):
-    def execute( db, uid, passwd, object, method, *args):
+    def execute(self, db, uid, passwd, object, method, *args):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
         obj=pool.get(object)
         logged_uids = []
         object_name=obj._name
-        obj_ids= pool.get('ir.model').search(cr, uid,[('model','=',object_name)])
-        model_object=pool.get('ir.model').browse(cr,uid,obj_ids)[0]
+       
+        fct_src = super(audittrail_objects_proxy, self).execute
         
-        def my_fct( db, uid, passwd, object, method, *args):
+        def my_fct(db, uid, passwd, object, method, *args):
             field = method
             rule = False
             obj_ids= pool.get('ir.model').search(cr, uid,[('model','=',object_name)])
@@ -323,12 +327,12 @@ def tmp_fct(fct_src):
                 if obj_name == 'audittrail.rule':
                     rule = True
             if not rule:
-                return fct_src( db, uid, passwd, object, method, *args)
+                return fct_src(db, uid, passwd, object, method, *args)
             if not len(obj_ids):
-                return fct_src(  db, uid, passwd, object, method, *args)
+                return fct_src(db, uid, passwd, object, method, *args)
             rule_ids=pool.get('audittrail.rule').search(cr, uid, [('object_id','=',obj_ids[0]),('state','=','subscribed')])
             if not len(rule_ids):
-                return fct_src( db, uid, passwd, object, method, *args)
+                return fct_src(db, uid, passwd, object, method, *args)
 
             for thisrule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
@@ -336,16 +340,13 @@ def tmp_fct(fct_src):
                 if not len(logged_uids) or uid in logged_uids:
                     if field in ('read','write','create','unlink'):
                         if getattr(thisrule, 'log_'+field):
-                            return log_fct(db, uid, passwd, object, method, fct_src , *args)
-                return fct_src(  db, uid, passwd, object, method, *args)
-        res = my_fct( db, uid, passwd, object, method, *args)
+                            return self.log_fct(db, uid, passwd, object, method, fct_src, *args)
+                return fct_src(db, uid, passwd, object, method, *args)
+        res = my_fct(db, uid, passwd, object, method, *args)
         cr.close()
         return res
-    return execute
 
-obj  = netsvc.SERVICES['object']
-obj.execute = tmp_fct(obj.execute)
-obj.exportMethod(obj.execute)
+audittrail_objects_proxy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -6,40 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:21+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-07-07 11:10+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: base_contact
-#: field:res.partner.job,other:0
-msgid "Other"
-msgstr "Autre"
-
-#. module: base_contact
-#: help:res.partner.job,other:0
-msgid "Additional phone field"
-msgstr "Champ téléphone additionnel"
-
-#. module: base_contact
-#: field:res.partner.job,fax:0
-msgid "Fax"
-msgstr "Fax"
-
-#. module: base_contact
-#: field:res.partner.job,extension:0
-msgid "Extension"
-msgstr "Poste"
-
-#. module: base_contact
-#: help:res.partner.job,extension:0
-msgid "Internal/External extension phone number"
-msgstr "Extension Interne/Externe numéro de téléphone"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -53,11 +27,8 @@ msgstr "res.partner.contact"
 
 #. module: base_contact
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: base_contact
 #: field:res.partner.job,function_id:0
@@ -82,7 +53,7 @@ msgstr "Séq. du partenaire"
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Current"
-msgstr "Courante"
+msgstr "Actuel"
 
 #. module: base_contact
 #: field:res.partner.contact,first_name:0
@@ -95,6 +66,11 @@ msgid "Contact Partner Function"
 msgstr "Fonction du contact du partenaire"
 
 #. module: base_contact
+#: field:res.partner.job,other:0
+msgid "Other"
+msgstr "Autre"
+
+#. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
 msgstr "Contact vers fonction"
@@ -102,7 +78,7 @@ msgstr "Contact vers fonction"
 #. module: base_contact
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_partnertoaddress0
@@ -112,12 +88,22 @@ msgstr "Partenaire vers adresse"
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "# of Contacts"
-msgstr ""
+msgstr "# de contacts"
+
+#. module: base_contact
+#: help:res.partner.job,other:0
+msgid "Additional phone field"
+msgstr "Champ téléphone additionnel"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
 msgstr "Fonction"
+
+#. module: base_contact
+#: field:res.partner.job,fax:0
+msgid "Fax"
+msgstr "Fax"
 
 #. module: base_contact
 #: field:res.partner.contact,lang_id:0
@@ -147,16 +133,12 @@ msgstr "Fonctions du contact"
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
 msgid "Base Contact"
-msgstr ""
+msgstr "Base Contact"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_partner:0
-msgid ""
-"Order of importance of this job title in the list of job title of the linked "
-"partner"
-msgstr ""
-"Par ordre d'importance le titre de cet emploi dans la liste des titres "
-"d'emplois est lié au partenaire"
+msgid "Order of importance of this job title in the list of job title of the linked partner"
+msgstr "Par ordre d'importance le titre de cet emploi dans la liste des titres d'emplois est lié au partenaire"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -188,18 +170,14 @@ msgstr "Nationalité"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_contact:0
-msgid ""
-"Order of importance of this address in the list of addresses of the linked "
-"contact"
-msgstr ""
-"Par ordre d'importance, cette adresse dans la liste d'adresse est lié au "
-"contact"
+msgid "Order of importance of this address in the list of addresses of the linked contact"
+msgstr "Par ordre d'importance, cette adresse dans la liste d'adresse est lié au contact"
 
 #. module: base_contact
 #: field:res.partner.address,job_id:0
 #: field:res.partner.contact,job_id:0
 msgid "Main Job"
-msgstr ""
+msgstr "Emploi principal"
 
 #. module: base_contact
 #: view:res.partner:0
@@ -209,7 +187,7 @@ msgstr "Catégories"
 #. module: base_contact
 #: field:res.partner.contact,function_id:0
 msgid "Main Function"
-msgstr ""
+msgstr "Fonction principale"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
@@ -232,9 +210,19 @@ msgid "Seq."
 msgstr "Séq."
 
 #. module: base_contact
+#: field:res.partner.job,extension:0
+msgid "Extension"
+msgstr "Extension"
+
+#. module: base_contact
 #: field:res.partner.contact,mobile:0
 msgid "Mobile"
 msgstr "Portable"
+
+#. module: base_contact
+#: help:res.partner.job,extension:0
+msgid "Internal/External extension phone number"
+msgstr "Extension du numéro de téléphone interne/externe"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0
@@ -244,7 +232,7 @@ msgstr "Personne avec qui vous travaillez"
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Extra Information"
-msgstr "Information supplémentaire"
+msgstr "Information complémentaire"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -322,7 +310,7 @@ msgstr "Général"
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Past"
-msgstr "Passée"
+msgstr "Passé"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -358,3 +346,4 @@ msgstr "Site web"
 #: field:res.partner.contact,birthdate:0
 msgid "Birth Date"
 msgstr "Date de naissance"
+

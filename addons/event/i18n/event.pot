@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36:37+0000\n"
-"PO-Revision-Date: 2009-05-20 10:36:37+0000\n"
+"POT-Creation-Date: 2009-08-07 13:39:32+0000\n"
+"PO-Revision-Date: 2009-08-07 13:39:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,9 +87,8 @@ msgid "Ticket for Opera"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:0
-#, python-format
-msgid "Error!"
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
 msgstr ""
 
 #. module: event
@@ -110,6 +109,23 @@ msgstr ""
 #. module: event
 #: wizard_view:event.reg_make_invoice,init:0
 msgid "Create Invoices"
+msgstr ""
+
+#. module: event
+#: model:ir.module.module,description:event.module_meta_information
+msgid "Organization and management of events.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements for any registration to an event\n"
+"        * ...\n"
+"\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per event or per event category in :\n"
+"                Events / Reporting\n"
+""
 msgstr ""
 
 #. module: event
@@ -223,12 +239,6 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_config
 msgid "Configuration"
-msgstr ""
-
-#. module: event
-#: code:addons/event/event.py:0
-#, python-format
-msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
 msgstr ""
 
 #. module: event
@@ -350,20 +360,8 @@ msgid "Event type on registration"
 msgstr ""
 
 #. module: event
-#: model:ir.module.module,description:event.module_meta_information
-msgid "Organization and management of events.\n"
-"\n"
-"    This module allow you\n"
-"        * to manage your events and their registrations\n"
-"        * to use emails to automatically confirm and send acknowledgements for any registration to an event\n"
-"        * ...\n"
-"\n"
-"    Note that:\n"
-"    - You can define new types of events in\n"
-"                Events \ Configuration \ Types of Events\n"
-"    - You can access predefined reports about number of registration per event or per event category in :\n"
-"                Events \ Reporting\n"
-""
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: event
@@ -393,11 +391,6 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_categories
 msgid "Events by section"
-msgstr ""
-
-#. module: event
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: event
@@ -589,11 +582,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_view_draft
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
-msgstr ""
-
-#. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
 msgstr ""
 
 #. module: event
