@@ -239,7 +239,7 @@ class rml_parse(object):
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
+    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False):
         if isinstance(value, (str, unicode)) and not value:
             return ''
         if not self.lang_dict_called:
@@ -305,7 +305,7 @@ class rml_parse(object):
         head_dom = etree.XML(rml_head)
         for tag in head_dom.getchildren():
             found = rml_dom.find('.//'+tag.tag)
-            if found and len(found):
+            if found is not None and len(found):
                 if tag.get('position'):
                     found.append(tag)
                 else :

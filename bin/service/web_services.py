@@ -29,7 +29,7 @@ import thread
 import threading
 import time
 import sys
-
+import platform
 from tools.translate import _
 import addons
 import ir
@@ -38,7 +38,7 @@ import pooler
 import release
 import sql_db
 import tools
-
+import locale
 logging.basicConfig()
 
 class db(netsvc.Service):
@@ -192,7 +192,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append(db_name)
 
         stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
@@ -236,7 +236,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append('--dbname=' + db_name)
         args2 = tuple(cmd)
 
@@ -374,6 +374,7 @@ class common(netsvc.Service):
         self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
         self.exportMethod(self.get_server_environment)
+        self.exportMethod(self.login_message)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -528,30 +529,38 @@ GNU Public Licence.
 
     def get_server_environment(self):
         try:
-            revno = os.popen('bzr revno').read()
-            rev_log = ''
-            cnt = 0
-            for line in os.popen('bzr log -r %s'%(int(revno))).readlines():
-                if line.find(':')!=-1:
-                    if not cnt == 4:
-                        rev_log += '\t' + line  
-                        cnt += 1
-                    else:
-                        break
+            rev_id = os.popen('bzr revision-info').read()
         except Exception,e:
-             rev_log = 'Exception: %s\n' % (str(e))
+             rev_id = 'Exception: %s\n' % (tools.ustr(e))
 
-        os_lang = os.environ.get('LANG', '').split('.')[0]
-        environment = '\nEnvironment_Information : \n' \
-                      'PlatForm : %s\n' \
-                      'Operating System : %s\n' \
-                      'Operating System Version : %s\n' \
-                      'Operating System Locale : %s\n'\
-                      'Python Version : %s\n'\
-                      'OpenERP-Server Version : %s\n'\
-                      'Last revision Details: \n%s' \
-                      %(sys.platform,os.name,str(sys.version.split('\n')[1]),os_lang,str(sys.version[0:5]),release.version,rev_log)
+        os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
+        if not os_lang:
+            os_lang = 'NOT SET'
+        environment = '\nEnvironment Information : \n' \
+                     'System : %s\n' \
+                     'OS Name : %s\n' \
+                     %(platform.platform(), platform.os.name)
+        if os.name == 'posix':
+          if platform.system() == 'Linux':
+             lsbinfo = os.popen('lsb_release -a').read()
+             environment += '%s'%(lsbinfo)
+          else:
+             environment += 'Your System is not lsb compliant\n'
+        environment += 'Operating System Release : %s\n' \
+                    'Operating System Version : %s\n' \
+                    'Operating System Architecture : %s\n' \
+                    'Operating System Locale : %s\n'\
+                    'Python Version : %s\n'\
+                    'OpenERP-Server Version : %s\n'\
+                    'Last revision No. & ID : %s'\
+                    %(platform.release(), platform.version(), platform.architecture()[0],
+                      os_lang, platform.python_version(),release.version,rev_id)
         return environment
+    
+
+    def login_message(self):
+        return tools.config.get('login_message', False)
+
 common()
 
 class objects_proxy(netsvc.Service):

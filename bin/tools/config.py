@@ -78,6 +78,7 @@ class configmanager(object):
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
             'cache_timeout': 100000,
+            'login_message': False,
         }
 
         hasSSL = check_ssl()
