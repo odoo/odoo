@@ -70,7 +70,7 @@ class ftp_server(threading.Thread):
         try:
             ip_addr = _detect_ip_addr()
         except:
-            ip_addr = 'localhost'
+            ip_addr = ''
         return ip_addr
 
 
