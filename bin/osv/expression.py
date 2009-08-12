@@ -111,7 +111,7 @@ class expression(object):
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
-                        self.__tables[index-1] = self.__tables[i]
+#                        self.__tables[index-1] = self.__tables[i]
                         self.__tables[i] = working_table
                         break
                     working_table = main_table.pool.get(main_table._inherit_fields[left][0])
