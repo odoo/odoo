@@ -233,7 +233,8 @@
   <images/>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+    <para style="terp_default_8">JJJJJ [[ o.partner_id.name ]]</para>
+    <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]] </para>
     <blockTable colWidths="297.0,233.0" style="Table_Partner_Address">
       <tr>
         <td><para style="P8"><font color="white"> </font></para></td>
@@ -300,7 +301,7 @@
           <td><para style="terp_default_Right_9">[[ o.currency_id.code ]]</para></td>
         </tr>
         <tr>
-          <td><para style="terp_default_Note">[[ format(l.note or removeParentNode('tr')) ]]</para></td>
+          <td><para style="terp_default_Note">[[ format(l.note) or removeParentNode('tr') ]]</para></td>
           <td><para style="terp_default_Note"><font color="white"> </font></para></td>
           <td><para style="terp_default_Note"><font color="white"> </font></para></td>
           <td><para style="terp_default_Note"><font color="white"> </font></para></td>
