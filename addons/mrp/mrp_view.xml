@@ -464,7 +464,7 @@
                         <page string="Consumed Products">
                             <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                            <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                            <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1"/>
                             <newline/>
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
