@@ -1,3 +1,19 @@
+openerp-server (5.0.2-0-1ubuntu2) intrepid; urgency=critical
+
+  [ P. Christeas ]
+  * Security: check_creds is not really needed, use "check"
+
+  [ Christophe Simonis ]
+  * [FIX] security issue: avoid access to inactive users
+  * [FIX] avoid a bug when look in stack when translate code strings
+
+  [ P. Christeas ]
+  * [SEC] [CRITICAL] Forbid RPC calls w/o credentials.
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Thu, 13 Aug 2009 15:25:26 +0300
+
 openerp-server (5.0.2-0-1ubuntu1) intrepid; urgency=low
 
   [ P. Christeas ]
