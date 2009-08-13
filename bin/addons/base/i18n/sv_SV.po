@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:34:58+0000\n"
-"PO-Revision-Date: 2009-05-20 10:34:58+0000\n"
+"POT-Creation-Date: 2009-08-06 15:43:38+0000\n"
+"PO-Revision-Date: 2009-08-06 15:43:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,8 +26,20 @@ msgid "SMS - Gateway: clickatell"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_open_closed_fiscalyear.py:0
+#, python-format
+msgid "No journal for ending writing has been defined for the fiscal year"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%j - Day of the year as a decimal number [001,366]."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product quantity"
 msgstr ""
 
 #. module: base
@@ -42,7 +54,7 @@ msgid "View Architecture"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not create this kind of document! (%s)"
 msgstr ""
@@ -60,8 +72,9 @@ msgid "Workflow"
 msgstr ""
 
 #. module: base
-#: view:wizard.module.lang.export:0
-msgid "To browse official translations, you can visit this link: "
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "Account move line \"%s\" is not valid"
 msgstr ""
 
 #. module: base
@@ -75,8 +88,20 @@ msgid "Workflow On"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "The Bank type %s of the bank account: %s is not supported"
+msgstr ""
+
+#. module: base
 #: view:ir.module.module:0
 msgid "Created Views"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can not delete posted movement: \"%s\"!"
 msgstr ""
 
 #. module: base
@@ -90,7 +115,7 @@ msgid "Yearly"
 msgstr "Årligen"
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The unlink method is not implemented on this object !"
 msgstr ""
@@ -110,9 +135,8 @@ msgid "Choose between the \"Simplified Interface\" or the extended one.\n"
 msgstr ""
 
 #. module: base
-#: code:report/custom.py:0
-#, python-format
-msgid "The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"
+#: field:ir.rule,operand:0
+msgid "Operand"
 msgstr ""
 
 #. module: base
@@ -130,6 +154,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "ir.ui.view.custom"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "There is no income account defined ' \\n"
+"                                        'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -170,7 +201,7 @@ msgid "ir.report.custom.fields"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
+#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "new"
 msgstr ""
@@ -197,12 +228,18 @@ msgid "Max. Size"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not use this general account in this journal !"
+msgstr ""
+
+#. module: base
 #: field:res.partner.address,name:0
 msgid "Contact Name"
 msgstr "Kontaktnamn"
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
+#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "Save this document to a %s file and edit it with a specific software or a text editor. The file encoding is UTF-8."
 msgstr ""
@@ -213,13 +250,13 @@ msgid "STOCK_DELETE"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password mismatch !"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "This url '%s' must provide an html file with links to zip modules"
 msgstr ""
@@ -240,8 +277,14 @@ msgid "%y - Year without century as a decimal number [00,99]."
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GOTO_FIRST"
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not add/modify entries in a closed journal."
+msgstr ""
+
+#. module: base
+#: selection:maintenance.contract.wizard,state:0
+msgid "Validated"
 msgstr ""
 
 #. module: base
@@ -250,13 +293,19 @@ msgid "The rule is satisfied if at least one test is True"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No payment mode or payment type code invalid."
+msgstr ""
+
+#. module: base
 #: selection:ir.report.custom.fields,operation:0
 msgid "Get Max"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.act_window,limit:0
-msgid "Default limit for the list view"
+#: field:res.partner,credit_limit:0
+msgid "Credit Limit"
 msgstr ""
 
 #. module: base
@@ -288,11 +337,31 @@ msgid "Group"
 msgstr ""
 
 #. module: base
+#: view:wizard.module.lang.export:0
+msgid "To browse official translations, you can visit this link: "
+msgstr ""
+
+#. module: base
 #: field:ir.exports.line,name:0
 #: field:ir.translation,name:0
 #: field:res.partner.bank.type.field,name:0
 msgid "Field Name"
 msgstr "Fältnamn"
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
+"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def button_dummy(self, cr, uid, ids, context={}):\n"
+"        return True\n"
+"\n"
+"    def onchange_dest_address_id(self, cr, uid, ids, adr_id):\n"
+"        if not adr_id:\n"
+"            return {}\n"
+"        part_id = self.pool.get('res.partner.address"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_uninstall
@@ -301,9 +370,23 @@ msgid "Uninstalled modules"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
+msgstr ""
+
+#. module: base
 #: wizard_view:server.action.create,init:0
 #: wizard_field:server.action.create,init,type:0
 msgid "Select Action Type"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid " You cannot Resume the operation other then Pause state !"
 msgstr ""
 
 #. module: base
@@ -323,6 +406,13 @@ msgid "Custom Object"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "June"
+msgstr ""
+
+#. module: base
 #: field:res.lang,date_format:0
 msgid "Date Format"
 msgstr ""
@@ -339,7 +429,13 @@ msgid "Netherlands Antilles"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Workcenter name"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)"
 msgstr ""
@@ -360,7 +456,7 @@ msgid "If you check this, then the second time the user prints with same attachm
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The read method is not implemented on this object !"
 msgstr ""
@@ -373,6 +469,12 @@ msgstr ""
 #. module: base
 #: field:ir.actions.todo,note:0
 msgid "Text"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product Quantity"
 msgstr ""
 
 #. module: base
@@ -391,8 +493,23 @@ msgid "Schedule Upgrade"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.report.custom,report_id:0
-msgid "Report Ref."
+#: code:addons/service/web_services.py:0
+#, python-format
+msgid "''\n"
+"\n"
+"OpenERP is an ERP+CRM program for small and medium businesses.\n"
+"\n"
+"The whole source code is distributed under the terms of the\n"
+"GNU Public Licence.\n"
+"\n"
+"(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You must assign a partner to this lead before converting to opportunity.\n' \\n"
+"                  'You can use the convert to partner button."
 msgstr ""
 
 #. module: base
@@ -402,14 +519,19 @@ msgid "The ISO country code in two chars.\n"
 msgstr ""
 
 #. module: base
-#: selection:workflow.activity,join_mode:0
-#: selection:workflow.activity,split_mode:0
-msgid "Xor"
+#: model:res.country,name:base.pw
+msgid "Palau"
 msgstr ""
 
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "No partner has a VAT Number asociated with him."
 msgstr ""
 
 #. module: base
@@ -436,7 +558,7 @@ msgid "Extended Interface"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr ""
@@ -444,6 +566,12 @@ msgstr ""
 #. module: base
 #: help:ir.actions.server,action_id:0
 msgid "Select the Action Window, Report, Wizard to be executed."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Can't connect instance %s"
 msgstr ""
 
 #. module: base
@@ -457,6 +585,12 @@ msgid "Model Description"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "You need to choose a model"
+msgstr ""
+
+#. module: base
 #: field:workflow.transition,trigger_expr_id:0
 msgid "Trigger Expression"
 msgstr ""
@@ -467,7 +601,12 @@ msgid "Jordan"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: model:ir.model,name:base.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr ""
@@ -493,9 +632,27 @@ msgid "ir.actions.actions"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_report_custom
-#: view:ir.report.custom:0
-msgid "Custom Report"
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign in from an other date than today"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "from stock: products assigned."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "Too much total record found!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "The General Budget '%s' has no Accounts!"
 msgstr ""
 
 #. module: base
@@ -506,6 +663,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_ERROR"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is not created"
 msgstr ""
 
 #. module: base
@@ -537,6 +700,25 @@ msgid "Sequences"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You did not installed the opportunities tracking when you configured the crm_configuration module.' \\n"
+"                  '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project_gtd/project_gtd.py:0
+#, python-format
+msgid "Eff. Hours"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_QUESTION"
 msgstr ""
@@ -544,6 +726,18 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pg
 msgid "Papua New Guinea"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/wizard/host_status.py:0
+#, python-format
+msgid "Created by the synchronization wizard"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "SAJ"
 msgstr ""
 
 #. module: base
@@ -565,6 +759,12 @@ msgstr ""
 #: wizard_view:module.upgrade,end:0
 #: wizard_view:module.upgrade,start:0
 msgid "You may have to reinstall some language pack."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur Deliveries"
 msgstr ""
 
 #. module: base
@@ -615,6 +815,12 @@ msgid "maintenance contract modules"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "TOTAL"
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 msgid "client_action_multi, client_action_relate"
 msgstr ""
@@ -656,8 +862,19 @@ msgid "Type"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_FILE"
+msgstr ""
+
+#. module: base
+#: field:ir.report.custom.fields,field_child2:0
+msgid "Field child2"
 msgstr ""
 
 #. module: base
@@ -681,6 +898,18 @@ msgid "STOCK_OK"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "The properties account payable account receivable"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Credit Account for your Financial Journals!\n"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.server,state:0
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
@@ -692,7 +921,8 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr ""
@@ -703,8 +933,15 @@ msgid "Cayman Islands"
 msgstr ""
 
 #. module: base
-#: field:ir.rule,operand:0
-msgid "Operand"
+#: code:addons/report/custom.py:0
+#, python-format
+msgid "The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
 msgstr ""
 
 #. module: base
@@ -716,6 +953,13 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.td
 msgid "Chad"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "September"
 msgstr ""
 
 #. module: base
@@ -734,6 +978,12 @@ msgid "Niger"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ba
 msgid "Bosnia-Herzegovina"
 msgstr ""
@@ -746,6 +996,12 @@ msgstr ""
 #. module: base
 #: selection:ir.rule,operator:0
 msgid ">="
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "\n\nMail sent to following Partners successfully, !\n\n"
 msgstr ""
 
 #. module: base
@@ -790,6 +1046,19 @@ msgid "Action URL"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_pay_invoice.py:0
+#: code:addons/addons/odms/odms_invoice.py:0
+#, python-format
+msgid "Your journal must have a default credit and debit account."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "This feature is only available for location type Amazon"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_JUSTIFY_FILL"
 msgstr ""
@@ -797,6 +1066,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mh
 msgid "Marshall Islands"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Bad account!"
 msgstr ""
 
 #. module: base
@@ -816,7 +1091,13 @@ msgid "Partners by Categories"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Pie charts need exactly two fields"
 msgstr ""
@@ -827,6 +1108,12 @@ msgid "To export a new language, do not select a language."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because your email address is not configured!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.md
 msgid "Moldavia"
 msgstr ""
@@ -834,6 +1121,19 @@ msgstr ""
 #. module: base
 #: view:ir.module.module:0
 msgid "Features"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "No Analytic Journal !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Unit Product Price"
 msgstr ""
 
 #. module: base
@@ -890,8 +1190,9 @@ msgid "Role Name"
 msgstr "Rollnamn"
 
 #. module: base
-#: field:res.partner,user_id:0
-msgid "Dedicated Salesman"
+#: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
 msgstr ""
 
 #. module: base
@@ -900,9 +1201,10 @@ msgid "-"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/auction/wizard/wizard_aie_send.py:0
+#: code:addons/addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
-msgid "The search method is not implemented on this object !"
+msgid "Connection to WWW.Auction-in-Europe.com failed !"
 msgstr ""
 
 #. module: base
@@ -918,8 +1220,21 @@ msgid "Bank"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "Examples"
+#: model:ir.model,name:base.model_ir_exports_line
+msgid "ir.exports.line"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def copy(self, cr, uid, id, default=None,context=None):\n"
+"        if not default:\n"
+"            default = {}\n"
+"        default.update({\n"
+"            'name': self.pool.get('ir.sequence"
 msgstr ""
 
 #. module: base
@@ -933,8 +1248,9 @@ msgid "On Create"
 msgstr ""
 
 #. module: base
-#: wizard_view:base.module.import,init:0
-msgid "Please give your module .ZIP file to import."
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
 msgstr ""
 
 #. module: base
@@ -949,6 +1265,11 @@ msgid "Login"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_ir_sequence_type
+msgid "ir.sequence.type"
+msgstr ""
+
+#. module: base
 #: view:maintenance.contract:0
 #: field:maintenance.contract,module_ids:0
 msgid "Covered Modules"
@@ -957,6 +1278,32 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_COPY"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_model.py:0
+#, python-format
+msgid "Model %s Does not Exist !\" % vals['relation']))\n"
+"                 \n"
+"            if self.pool.get(vals['model']):\n"
+"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
+"                \n"
+"        return res\n"
+"ir_model_fields()\n"
+"\n"
+"class ir_model_access(osv.osv):\n"
+"    _name = 'ir.model.access'\n"
+"    _columns = {\n"
+"        'name': fields.char('Name', size=64, required=True),\n"
+"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
+"        'group_id': fields.many2one('res.groups', 'Group"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
+#, python-format
+msgid "You can't modify this order. It has already been paid"
 msgstr ""
 
 #. module: base
@@ -997,8 +1344,30 @@ msgid "Computational Accuracy"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_account_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_general_ledger_report.py:0
+#: code:addons/addons/account/wizard/wizard_partner_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
+#, python-format
+msgid "Date to must be set between %s and %s"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.kg
 msgid "Kyrgyz Republic (Kyrgyzstan)"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/product/product.py:0
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Products: "
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank account for the company."
 msgstr ""
 
 #. module: base
@@ -1012,19 +1381,36 @@ msgid "Attached ID"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can not modify/delete a journal with entries for this period !"
+msgstr ""
+
+#. module: base
 #: view:ir.sequence:0
 msgid "Day: %(day)s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not read this document! (%s)"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "UnknownError"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_FIND_AND_REPLACE"
+msgstr ""
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "terp-crm"
 msgstr ""
 
 #. module: base
@@ -1043,9 +1429,10 @@ msgid "ir.rule"
 msgstr ""
 
 #. module: base
-#: selection:ir.cron,interval_type:0
-msgid "Days"
-msgstr "Dagar"
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Invalid Region"
+msgstr ""
 
 #. module: base
 #: field:ir.report.custom.fields,width:0
@@ -1060,6 +1447,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_YES"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "P&L Qty"
 msgstr ""
 
 #. module: base
@@ -1097,8 +1490,19 @@ msgid "Attached Model"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "fi_FI"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,trigger_name:0
 msgid "Trigger Name"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/portal.py:0
+#, python-format
+msgid "unable to find a server"
 msgstr ""
 
 #. module: base
@@ -1115,6 +1519,12 @@ msgid "Priority"
 msgstr "Prioritet (0=Mycket bråttom)"
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Missing info: Subscription"
+msgstr ""
+
+#. module: base
 #: field:workflow.transition,act_from:0
 msgid "Source Activity"
 msgstr ""
@@ -1125,12 +1535,12 @@ msgid "Legend (for prefix, suffix)"
 msgstr ""
 
 #. module: base
-#: selection:ir.server.object.lines,type:0
-msgid "Formula"
-msgstr ""
+#: view:res.request:0
+msgid "Reply"
+msgstr "Svara"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "Can not remove root user!"
 msgstr ""
@@ -1158,6 +1568,12 @@ msgstr ""
 #. module: base
 #: view:res.request:0
 msgid "End of Request"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "No production sequence defined"
 msgstr ""
 
 #. module: base
@@ -1205,7 +1621,13 @@ msgid "View Mode"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product Cost Structure"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented search_memory method !"
 msgstr ""
@@ -1213,6 +1635,13 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Spanish / Español"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "There is no receivable account defined for this journal:'\\n"
+"                    ' \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -1226,14 +1655,21 @@ msgid "STOCK_PROPERTIES"
 msgstr ""
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Uninstall (beta)"
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "The journal must have centralised counterpart"
 msgstr ""
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
 #: selection:ir.actions.url,target:0
 msgid "New Window"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to create your control center user"
 msgstr ""
 
 #. module: base
@@ -1247,7 +1683,7 @@ msgid "Commercial Prospect"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Couldn't generate the next id because some partners have an alphabetic id !"
 msgstr ""
@@ -1268,9 +1704,15 @@ msgid "Number of modules updated"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented set_memory method !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-out must be right after a sign-in !"
 msgstr ""
 
 #. module: base
@@ -1290,8 +1732,20 @@ msgid "Groups"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Address field in the Partner: %s."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bz
 msgid "Belize"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "Error, no partner !"
 msgstr ""
 
 #. module: base
@@ -1311,8 +1765,8 @@ msgid "To be removed"
 msgstr ""
 
 #. module: base
-#: field:ir.values,meta:0
-msgid "Meta Datas"
+#: view:maintenance.contract.wizard:0
+msgid "Maintenance contract added !"
 msgstr ""
 
 #. module: base
@@ -1321,16 +1775,14 @@ msgid "This wizard will detect new terms in the application so that you can upda
 msgstr ""
 
 #. module: base
-#: help:ir.actions.server,expression:0
-msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "The region should be in "
 msgstr ""
 
 #. module: base
-#: field:ir.model,name:0
-#: field:ir.model.fields,model:0
-#: field:ir.model.grid,name:0
-#: field:ir.values,model:0
-msgid "Object Name"
+#: help:ir.actions.server,expression:0
+msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
 msgstr ""
 
 #. module: base
@@ -1346,6 +1798,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_NO"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Cannot delete a point of sale which is already confirmed !"
 msgstr ""
 
 #. module: base
@@ -1379,8 +1837,8 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: base
-#: field:ir.actions.configuration.wizard,name:0
-msgid "Next Wizard"
+#: help:ir.rule.group,global:0
+msgid "Make the rule global, otherwise it needs to be put on a group"
 msgstr ""
 
 #. module: base
@@ -1407,12 +1865,10 @@ msgid "Action To Launch"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom.fields,fc0_op:0
-#: selection:ir.report.custom.fields,fc1_op:0
-#: selection:ir.report.custom.fields,fc2_op:0
-#: selection:ir.report.custom.fields,fc3_op:0
-#: selection:ir.rule,operator:0
-msgid "in"
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "There is no journal defined '\\n"
+"                            'on the product category: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -1431,9 +1887,23 @@ msgid "Confirmation"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Enter at least one field !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank defined\n' \\n"
+"					'for the bank account: %s\n' \\n"
+"					'on the partner: %s\n' \\n"
+"					'on line: %s"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.ve
+msgid "Venezuela"
 msgstr ""
 
 #. module: base
@@ -1442,8 +1912,8 @@ msgid "Shortcut Name"
 msgstr ""
 
 #. module: base
-#: field:res.partner,credit_limit:0
-msgid "Credit Limit"
+#: help:ir.actions.act_window,limit:0
+msgid "Default limit for the list view"
 msgstr ""
 
 #. module: base
@@ -1473,7 +1943,7 @@ msgid "Email Address"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not write in this document! (%s)"
 msgstr ""
@@ -1482,6 +1952,12 @@ msgstr ""
 #: view:ir.actions.server:0
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "The account is not defined to be reconciled !"
 msgstr ""
 
 #. module: base
@@ -1505,6 +1981,12 @@ msgid "Field Mappings"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/product_margin/wizard/wizard_product_margin.py:0
+#, python-format
+msgid "Product Margins"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Customization"
 msgstr ""
@@ -1512,6 +1994,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.py
 msgid "Paraguay"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You have to provide an account for the write off entry !"
 msgstr ""
 
 #. module: base
@@ -1535,14 +2023,32 @@ msgid "Lithuania"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "A partner is already defined on this lead."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_PRINT_PREVIEW"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The perm_read method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "Message !"
 msgstr ""
 
 #. module: base
@@ -1551,10 +2057,35 @@ msgid "Slovenia"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No journal defined on the related employee.\nFill in the timesheet tab of the employee form."
+msgstr ""
+
+#. module: base
 #: view:res.partner.canal:0
 #: field:res.partner.event,canal_id:0
 msgid "Channel"
 msgstr "Kanal"
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "You can not escalate this case.\nYou are already at the top level."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_budget/crossovered_budget.py:0
+#: code:addons/addons/crm/crm.py:0
+#: code:addons/addons/document/document.py:0
+#: code:addons/addons/event/event.py:0
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#: code:addons/addons/odms/odms_invoice.py:0
+#: code:addons/addons/stock/stock.py:0
+#: code:addons/addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -1582,13 +2113,41 @@ msgid "Openstuff.net"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_account_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_general_ledger_report.py:0
+#: code:addons/addons/account/wizard/wizard_partner_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
+#, python-format
+msgid "Date not in a defined fiscal year"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nf
 msgid "Norfolk Island"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_MEDIA_PLAY"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "You can't delete this server because it acts as backup for other servers."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "The account move (%s) for centralisation ' \\n"
+"                                        'has been confirmed!"
 msgstr ""
 
 #. module: base
@@ -1602,6 +2161,12 @@ msgid "Installation Done"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Registration of your account"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_OPEN"
 msgstr ""
@@ -1610,6 +2175,12 @@ msgstr ""
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 msgid "Client Action"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
+msgid "You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."
 msgstr ""
 
 #. module: base
@@ -1628,14 +2199,32 @@ msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "Please verify that an account is defined in the journal."
+msgstr ""
+
+#. module: base
 #: selection:maintenance.contract,state:0
 msgid "Valid"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not delete this document! (%s)"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide a Clearing Number for your bank account."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "No Partner!"
 msgstr ""
 
 #. module: base
@@ -1650,7 +2239,7 @@ msgid "Others Partners"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr ""
@@ -1668,6 +2257,24 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.am
 msgid "Armenia"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Missing info: Test Instance"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Unable to create invoice (partner has no address)."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/inventory_merge_zero.py:0
+#, python-format
+msgid "Please select one and only one inventory !"
 msgstr ""
 
 #. module: base
@@ -1709,6 +2316,16 @@ msgid "terp-project"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_central_journal.py:0
+#: code:addons/addons/account/wizard/wizard_general_journal.py:0
+#: code:addons/addons/account/wizard/wizard_print_journal.py:0
+#: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
+#: code:addons/addons/hr_attendance/wizard/print_attendance_error.py:0
+#, python-format
+msgid "No Data Available"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:0
 msgid "Iteration Action Configuration"
 msgstr ""
@@ -1723,6 +2340,18 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Calendar"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "No fiscal year defined for this date !\nPlease create one."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
+#, python-format
+msgid "Selected Move lines does not have any account move enties in draft state"
 msgstr ""
 
 #. module: base
@@ -1741,7 +2370,9 @@ msgid "Module dependency"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
 #: selection:maintenance.contract.wizard,state:0
+#, python-format
 msgid "Draft"
 msgstr ""
 
@@ -1785,6 +2416,12 @@ msgid "Main Company"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "Missed Address !"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,bgcolor:0
 msgid "Background Color"
 msgstr "Bakgrundsfärg"
@@ -1792,6 +2429,13 @@ msgstr "Bakgrundsfärg"
 #. module: base
 #: view:ir.actions.server:0
 msgid "If you use a formula type, use a python expression using the variable 'object'."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "January"
 msgstr ""
 
 #. module: base
@@ -1813,6 +2457,13 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_workflow_activity
 msgid "workflow.activity"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
+#, python-format
+msgid "Please create an invoice for this sale."
 msgstr ""
 
 #. module: base
@@ -1861,6 +2512,12 @@ msgid "Fields Mapping"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Balance product needed"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
 msgid "Sir"
 msgstr "Herr"
@@ -1878,6 +2535,12 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "French / Français"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product supplier"
 msgstr ""
 
 #. module: base
@@ -1900,6 +2563,12 @@ msgid "Module"
 msgstr "Modul"
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Configuration of the server"
+msgstr ""
+
+#. module: base
 #: field:ir.attachment,description:0
 #: field:ir.module.module,description:0
 #: field:res.partner.bank,name:0
@@ -1910,8 +2579,24 @@ msgid "Description"
 msgstr "Beskrivning"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
-msgid "ir.attachment"
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"							'a bank number \n' \\n"
+"							'for the partner bank: %s\n' \\n"
+"							'on line: %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/use_control/module.py:0
+#, python-format
+msgid "You are not authorized to copy module repositories"
 msgstr ""
 
 #. module: base
@@ -1922,6 +2607,12 @@ msgstr "Åtgärd"
 #. module: base
 #: field:res.lang,grouping:0
 msgid "Separator Format"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: base
@@ -1956,13 +2647,13 @@ msgid "You can also import .po files."
 msgstr ""
 
 #. module: base
-#: code:addons/base/maintenance/maintenance.py:0
+#: code:addons/addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Unable to find a valid contract"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr ""
@@ -1984,6 +2675,12 @@ msgid "Modules to be installed, upgraded or removed"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/document/document.py:0
+#, python-format
+msgid "File name must be unique!"
+msgstr ""
+
+#. module: base
 #: view:res.payterm:0
 msgid "Payment Term"
 msgstr ""
@@ -1999,7 +2696,13 @@ msgid "Right-to-Left"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Open"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Please check that all your lines have %d columns."
 msgstr ""
@@ -2007,6 +2710,12 @@ msgstr ""
 #. module: base
 #: wizard_view:module.lang.import,init:0
 msgid "Import language"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
 msgstr ""
 
 #. module: base
@@ -2024,7 +2733,13 @@ msgid "Title"
 msgstr "Titel"
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Production Order Cannot start in [%s] state"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Recursivity Detected."
 msgstr ""
@@ -2035,7 +2750,8 @@ msgid "terp-account"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
+#: code:addons/addons/base_module_merge/wizard/base_module_merge.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr ""
@@ -2067,8 +2783,8 @@ msgid "Russian Federation"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.dm
-msgid "Dominica"
+#: field:res.company,name:0
+msgid "Company Name"
 msgstr ""
 
 #. module: base
@@ -2092,9 +2808,22 @@ msgid "Record rules"
 msgstr ""
 
 #. module: base
-#: field:res.partner,vat:0
-msgid "VAT"
-msgstr "Moms"
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Checking your Promotional Code"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all invoices attached to this purchase order."
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -2130,6 +2859,11 @@ msgid "Tajikistan"
 msgstr ""
 
 #. module: base
+#: help:ir.actions.report.xml,header:0
+msgid "Add or not the coporate RML header"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_action
 #: model:ir.ui.menu,name:base.menu_values_form_action
 msgid "Connect Actions To Client Events"
@@ -2146,6 +2880,12 @@ msgid "Prospect Contact"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/subscription/subscription.py:0
+#, python-format
+msgid "Wrong Source Document !"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_actions_wizard
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.wizard"
@@ -2154,6 +2894,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
 msgstr ""
 
 #. module: base
@@ -2170,7 +2916,7 @@ msgid "Form"
 msgstr "Formulär"
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Can not define a column %s. Reserved keyword !"
 msgstr ""
@@ -2186,6 +2932,12 @@ msgid "STOCK_QUIT"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr ""
+
+#. module: base
 #: view:ir.cron:0
 msgid "Technical Data"
 msgstr ""
@@ -2194,6 +2946,15 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,category_id:0
 msgid "Categories"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"						'a Clearing Number\n' \\n"
+"						'for the partner bank: %s\n' \\n"
+"						'on line %s"
 msgstr ""
 
 #. module: base
@@ -2228,8 +2989,24 @@ msgid "Liechtenstein"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Configuration of the incremental backup servers"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
 msgid "Ltd"
+msgstr ""
+
+#. module: base
+#: field:ir.actions.server,expression:0
+msgid "Loop Expression"
+msgstr ""
+
+#. module: base
+#: field:ir.actions.report.custom,report_id:0
+msgid "Report Ref."
 msgstr ""
 
 #. module: base
@@ -2240,6 +3017,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr ""
 
 #. module: base
@@ -2263,6 +3046,12 @@ msgid "Check this box if the partner is a customer."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
 #: model:ir.model,name:base.model_res_lang
 #: model:ir.ui.menu,name:base.menu_res_lang_act_window
@@ -2271,8 +3060,21 @@ msgid "Languages"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.pw
-msgid "Palau"
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Configuration of the DNS servers"
+msgstr ""
+
+#. module: base
+#: selection:workflow.activity,join_mode:0
+#: selection:workflow.activity,split_mode:0
+msgid "Xor"
 msgstr ""
 
 #. module: base
@@ -2281,7 +3083,7 @@ msgid "Ecuador"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
+#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it."
 msgstr ""
@@ -2289,6 +3091,13 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.au
 msgid "Australia"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "August"
 msgstr ""
 
 #. module: base
@@ -2318,8 +3127,20 @@ msgid "SXW content"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "October"
+msgstr ""
+
+#. module: base
 #: view:ir.cron:0
 msgid "Action to Trigger"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_res_currency_rate
+msgid "Currency Rate"
 msgstr ""
 
 #. module: base
@@ -2356,6 +3177,24 @@ msgid "Summary"
 msgstr "Sammandrag"
 
 #. module: base
+#: code:addons/addons/account_date_check/account_date_check.py:0
+#, python-format
+msgid "The date of your account move is not in the defined period !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/wiki/wizard/open_page.py:0
+#, python-format
+msgid "No action found"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You can not cancel this holiday request. first You have to make its case in draft state."
+msgstr ""
+
+#. module: base
 #: help:ir.actions.server,subject:0
 msgid "Specify the subject. You can use fields from the object, e.g. `Hello [[ object.partner_id.name ]]`"
 msgstr ""
@@ -2381,18 +3220,15 @@ msgid "Holy See (Vatican City State)"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.server,condition:0
-msgid "Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
 msgstr ""
 
 #. module: base
-#: wizard_field:base.module.import,init,module_file:0
-msgid "Module .ZIP file"
-msgstr ""
-
-#. module: base
-#: model:res.partner.category,name:base.res_partner_category_16
-msgid "Telecom sector"
+#: code:addons/addons/account/project/wizard/wizard_account_analytic_line.py:0
+#, python-format
+msgid "Analytic Entries"
 msgstr ""
 
 #. module: base
@@ -2422,6 +3258,12 @@ msgid "Suriname"
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: field:ir.values,key2:0
 #: view:res.partner.event.type:0
 #: field:res.partner.event.type,name:0
@@ -2440,7 +3282,7 @@ msgid "Sequence Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system."
 msgstr ""
@@ -2456,7 +3298,7 @@ msgid "License"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Invalid operation"
 msgstr ""
@@ -2467,12 +3309,18 @@ msgid "STOCK_SAVE_AS"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/warning/warning.py:0
+#, python-format
+msgid "Alert for ' + product_info.name +' !"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,srcmodel_id:0
 msgid "Model"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "You try to install a module that depends on the module: %s.\nBut this module is not available in your system."
 msgstr ""
@@ -2486,6 +3334,11 @@ msgid "View"
 msgstr ""
 
 #. module: base
+#: field:ir.actions.server,write_id:0
+msgid "Write Id"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.act_window:0
 msgid "Open a Window"
 msgstr ""
@@ -2496,21 +3349,21 @@ msgid "Equatorial Guinea"
 msgstr ""
 
 #. module: base
-#: wizard_view:base.module.import,init:0
-msgid "Module Import"
-msgstr ""
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/odms/odms.py:0
 #, python-format
-msgid "You can not remove the field '%s' !"
+msgid "Unable to delete an active subdomain"
 msgstr ""
 
 #. module: base
-#: field:res.bank,zip:0
-#: field:res.partner.address,zip:0
-#: field:res.partner.bank,zip:0
-msgid "Zip"
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Language with code \"%s\" is not defined in your system !\nDefine it through the Administration menu."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
 msgstr ""
 
 #. module: base
@@ -2569,7 +3422,7 @@ msgid "Rules"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
@@ -2590,15 +3443,41 @@ msgid "Guatemala"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "The sign-out date must be in the past"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
 #: model:ir.ui.menu,name:base.menu_workflow
 msgid "Workflows"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/addons/base_module_publish/wizard/base_module_publish_all.py:0
+#, python-format
+msgid "Login failed!"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_config_wizard_form
 #: model:ir.ui.menu,name:base.menu_config_module
 msgid "Configuration Wizard"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "No Partner Defined !"
 msgstr ""
 
 #. module: base
@@ -2613,6 +3492,19 @@ msgid "0=Very Urgent\n"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+#, python-format
+msgid "You can not modify an invoiced analytic line!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
+msgstr ""
+
+#. module: base
 #: view:res.users:0
 msgid "Skip"
 msgstr ""
@@ -2621,6 +3513,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Accepted Links in Requests"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                    'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -2635,6 +3534,12 @@ msgid "Grant Access To Menus"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Debit Account for your Financial Journals!\n"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ke
 msgid "Kenya"
 msgstr ""
@@ -2645,7 +3550,7 @@ msgid "Choose the simplified interface if you are testing OpenERP for the first 
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr ""
@@ -2658,6 +3563,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bm
 msgid "Bermuda"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Cannot delete an order line which is %s !"
 msgstr ""
 
 #. module: base
@@ -2682,8 +3593,20 @@ msgid "Benin"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not change the tax, you should remove and recreate lines !"
+msgstr ""
+
+#. module: base
 #: view:ir.rule.group:0
 msgid "The rule is satisfied if all test are True (AND)"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/proforma_followup/proforma.py:0
+#, python-format
+msgid "You can not create this kind of document"
 msgstr ""
 
 #. module: base
@@ -2692,8 +3615,27 @@ msgid "STOCK_CONNECT"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Cannot delete invoice(s) that are already opened or paid !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Couldn't find bill of material for product"
+msgstr ""
+
+#. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Not Searchable"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Create line failed !"
 msgstr ""
 
 #. module: base
@@ -2717,6 +3659,12 @@ msgid "API ID"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "No sequence defined in the journal !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mu
 msgid "Mauritius"
 msgstr ""
@@ -2732,12 +3680,18 @@ msgid "Module Repository"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/wizard/host_status.py:0
+#, python-format
+msgid "This image has been created by the synchronization wizard"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_security
 msgid "Security"
 msgstr "Säkerhet"
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Using a relation field which uses an unknown object"
 msgstr ""
@@ -2764,8 +3718,26 @@ msgid "Senegal"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Invoice state"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "You can not delete this case. You should better cancel it."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.hu
 msgid "Hungary"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/use_control/module.py:0
+#, python-format
+msgid "You are not authorized to write module repositories"
 msgstr ""
 
 #. module: base
@@ -2776,6 +3748,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.br
 msgid "Brazil"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner in the repair form !"
 msgstr ""
 
 #. module: base
@@ -2800,8 +3778,9 @@ msgid "======================================================"
 msgstr ""
 
 #. module: base
-#: field:ir.report.custom.fields,field_child2:0
-msgid "Field child2"
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "SUBTOTAL"
 msgstr ""
 
 #. module: base
@@ -2825,7 +3804,27 @@ msgid "Field Selection"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Delivered Qty"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to delete non uninstalled instances"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Packing Information !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
 #: selection:res.request,state:0
+#, python-format
 msgid "draft"
 msgstr "utdrag"
 
@@ -2843,9 +3842,24 @@ msgid "SXW path"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "No period defined for this date !\nPlease create a fiscal year."
+msgstr ""
+
+#. module: base
 #: view:ir.attachment:0
 msgid "Data"
 msgstr ""
+
+#. module: base
+#: field:ir.cron,user_id:0
+#: field:ir.ui.view.custom,user_id:0
+#: field:ir.values,user_id:0
+#: field:res.partner.event,user_id:0
+#: view:res.users:0
+msgid "User"
+msgstr "Användare"
 
 #. module: base
 #: view:res.users:0
@@ -2859,10 +3873,22 @@ msgid "Parent Menu"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Some entries are already reconciled !"
+msgstr ""
+
+#. module: base
 #: help:ir.actions.act_window.view,multi:0
 #: help:ir.actions.report.custom,multi:0
 #: help:ir.actions.report.xml,multi:0
 msgid "If set to true, the action will not be displayed on the right toolbar of a form view."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/inventory_merge.py:0
+#, python-format
+msgid "Merging is only allowed on draft inventories."
 msgstr ""
 
 #. module: base
@@ -2883,6 +3909,20 @@ msgid "History"
 msgstr "Historik"
 
 #. module: base
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "Unable to reconcile entry \"%s\": %.2f"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
+#, python-format
+msgid "Your bank BVR adherent number must contain exactly seven' \\n"
+"                            'digits!\nPlease check your company ' \\n"
+"                            'information for the invoice:\n%s"
+msgstr ""
+
+#. module: base
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
 msgstr ""
@@ -2890,6 +3930,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "You can not remove a lot line !"
 msgstr ""
 
 #. module: base
@@ -2908,12 +3954,18 @@ msgid "res.users"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "All emails have been successfully sent to Partners:.\n\n"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The write method is not implemented on this object !"
 msgstr ""
@@ -2929,8 +3981,8 @@ msgid "Sale Opportunity"
 msgstr ""
 
 #. module: base
-#: view:maintenance.contract.wizard:0
-msgid "Maintenance contract added !"
+#: field:ir.values,meta:0
+msgid "Meta Datas"
 msgstr ""
 
 #. module: base
@@ -2940,13 +3992,20 @@ msgid "Field"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.ve
-msgid "Venezuela"
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Unable to change tax !"
 msgstr ""
 
 #. module: base
 #: view:res.lang:0
 msgid "9.  %j              ==> 340"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Activation of your subscription"
 msgstr ""
 
 #. module: base
@@ -2961,13 +4020,20 @@ msgid "Report Xml"
 msgstr ""
 
 #. module: base
-#: help:res.partner,user_id:0
-msgid "The internal user that is in charge of communicating with this partner if any."
+#: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid matching for this carrier !"
 msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
 msgid "Cancel Upgrade"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "This feature is only available for location of type \"Amazon\""
 msgstr ""
 
 #. module: base
@@ -3014,6 +4080,19 @@ msgid "Montserrat"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product uom"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
+#: code:addons/addons/stage/wizard/wizard_classend.py:0
+#, python-format
+msgid "Standard Encoding"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
 msgstr ""
@@ -3026,6 +4105,12 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,demo:0
 msgid "Demo data"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Please fill a Balance product in the wizard"
 msgstr ""
 
 #. module: base
@@ -3055,9 +4140,42 @@ msgid "Web"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Wed"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "You try to write on an record that doesn\'t exist ' \\n"
+"                                        '(Document type: %s)."
+msgstr ""
+
+#. module: base
+#: field:res.bank,zip:0
+#: field:res.partner.address,zip:0
+#: field:res.partner.bank,zip:0
+msgid "Zip"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is already created."
+msgstr ""
+
+#. module: base
 #: field:res.partner.event,planned_revenue:0
 msgid "Planned Revenue"
 msgstr "Planerad vinst"
+
+#. module: base
+#: code:addons/addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "Insufficient Data!"
+msgstr ""
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -3080,9 +4198,15 @@ msgid "Role"
 msgstr ""
 
 #. module: base
-#: help:res.country.state,code:0
-msgid "The state code in three chars.\n"
-""
+#: code:addons/addons/account/wizard/wizard_aged_trial_balance.py:0
+#, python-format
+msgid "You must enter a period length that cannot be 0 or below !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product name"
 msgstr ""
 
 #. module: base
@@ -3096,8 +4220,32 @@ msgid "Test"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/document/document.py:0
+#, python-format
+msgid "Permission Denied !"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,groupby:0
 msgid "Group By"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "Record found after total record!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_model.py:0
+#, python-format
+msgid "\"%s\" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/use_control/module.py:0
+#, python-format
+msgid "The \"use_control\" module is not uninstallable"
 msgstr ""
 
 #. module: base
@@ -3126,8 +4274,14 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.server,write_id:0
-msgid "Write Id"
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "BNK"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.do
+msgid "Dominican Republic"
 msgstr ""
 
 #. module: base
@@ -3138,6 +4292,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_ITALIC"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/wizard/sign_in_out.py:0
+#, python-format
+msgid "No cost unit defined for this employee !"
 msgstr ""
 
 #. module: base
@@ -3163,7 +4323,7 @@ msgid "Bank Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr ""
@@ -3186,6 +4346,14 @@ msgid "Init Date"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/account_analytic_profit.py:0
+#: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
+#: code:addons/addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr ""
+
+#. module: base
 #: field:workflow.activity,flow_start:0
 msgid "Flow Start"
 msgstr ""
@@ -3194,6 +4362,12 @@ msgstr ""
 #: view:ir.model:0
 #: view:ir.model.fields:0
 msgid "Security on Groups"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
 msgstr ""
 
 #. module: base
@@ -3223,12 +4397,18 @@ msgid "Guadeloupe (French)"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,cumulate:0
 msgid "Accumulate"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Tree can only be used in tabular reports"
 msgstr ""
@@ -3251,6 +4431,18 @@ msgstr ""
 #. module: base
 #: field:ir.report.custom.fields,fontcolor:0
 msgid "Font color"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "not implemented"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Global taxes defined, but are not in invoice lines !"
 msgstr ""
 
 #. module: base
@@ -3281,14 +4473,37 @@ msgid "Partner Addresses"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.cv
-msgid "Cape Verde"
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/subscription/subscription.py:0
+#, python-format
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr ""
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Indonesian / Bahasa Indonesia"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.as
+msgid "American Samoa"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
+#, python-format
+msgid "No bank specified on invoice:\n%s"
 msgstr ""
 
 #. module: base
@@ -3316,7 +4531,7 @@ msgid "STOCK_MEDIA_STOP"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Wrong ID for the browse record, got %r, expected an integer."
 msgstr ""
@@ -3343,9 +4558,14 @@ msgid "Role Required"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "The create method is not implemented on this object !"
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -3355,7 +4575,7 @@ msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_AUTHENTICATION"
+msgid "STOCK_INDENT"
 msgstr ""
 
 #. module: base
@@ -3384,8 +4604,21 @@ msgid "ir.cron"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mrp"
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "End of Fiscal Year Entry"
+msgstr ""
+
+#. module: base
+#: field:res.request,act_to:0
+#: field:res.request.history,act_to:0
+msgid "To"
+msgstr "Till"
+
+#. module: base
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "Operation Done"
 msgstr ""
 
 #. module: base
@@ -3401,6 +4634,18 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,size:0
 msgid "Size"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "A partner is already existing with the same name."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "This method can be called with multiple ids"
 msgstr ""
 
 #. module: base
@@ -3435,6 +4680,12 @@ msgid "Menus"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "At least one line has no product !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.il
 msgid "Israel"
 msgstr ""
@@ -3445,8 +4696,23 @@ msgid "Create Action"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.report.xml,report_type:0
-msgid "html"
+#: model:ir.actions.act_window,name:base.action_model_model
+#: model:ir.model,name:base.model_ir_model
+#: model:ir.ui.menu,name:base.ir_model_model_menu
+msgid "Objects"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/account_analytic_profit.py:0
+#, python-format
+msgid "No Records Found for Report!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "There is no stock output account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -3457,6 +4723,12 @@ msgstr ""
 #. module: base
 #: wizard_view:module.upgrade,next:0
 msgid "Your system will be upgraded."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this purchase order."
 msgstr ""
 
 #. module: base
@@ -3501,6 +4773,13 @@ msgid "Signal (button Name)"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#: code:addons/addons/account/wizard/wizard_use_model.py:0
+#, python-format
+msgid "Unable to find a valid period !"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:0
@@ -3514,9 +4793,14 @@ msgid "terp-sale"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/use_control/module.py:0
 #, python-format
-msgid "You cannot perform this operation."
+msgid "You are not authorized to create module repositories"
+msgstr ""
+
+#. module: base
+#: view:res.lang:0
+msgid "%d - Day of the month as a decimal number [01,31]."
 msgstr ""
 
 #. module: base
@@ -3535,13 +4819,23 @@ msgid "STOCK_ADD"
 msgstr ""
 
 #. module: base
+#: selection:ir.report.custom.fields,fc0_op:0
+#: selection:ir.report.custom.fields,fc1_op:0
+#: selection:ir.report.custom.fields,fc2_op:0
+#: selection:ir.report.custom.fields,fc3_op:0
+#: selection:ir.rule,operator:0
+msgid "in"
+msgstr ""
+
+#. module: base
 #: field:ir.cron,doall:0
 msgid "Repeat Missed"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.server,state:0
-msgid "Type of the Action that is to be executed"
+#: code:addons/addons/base/module/wizard/wizard_module_import.py:0
+#, python-format
+msgid "Can not create the module file: %s !"
 msgstr ""
 
 #. module: base
@@ -3581,6 +4875,17 @@ msgid "Botswana"
 msgstr ""
 
 #. module: base
+#: view:ir.module.module:0
+msgid "Uninstall (beta)"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/document/document.py:0
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
@@ -3604,6 +4909,12 @@ msgid "Modules to download"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Return lines"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_workitem_form
 #: model:ir.ui.menu,name:base.menu_workflow_workitem
 msgid "Workitems"
@@ -3612,6 +4923,17 @@ msgstr ""
 #. module: base
 #: field:wizard.module.lang.export,advice:0
 msgid "Advice"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to start The Open ERP server without backups"
 msgstr ""
 
 #. module: base
@@ -3625,7 +4947,7 @@ msgid "Provide the field name where the record id is stored after the create ope
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Couldn't find tag '%s' in parent view !"
 msgstr ""
@@ -3641,6 +4963,11 @@ msgid "ir.translation"
 msgstr ""
 
 #. module: base
+#: model:res.country,name:base.lu
+msgid "Luxembourg"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_rule_group
 msgid "ir.rule.group"
 msgstr ""
@@ -3652,7 +4979,13 @@ msgid "Installed modules"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Case"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The name_get method is not implemented on this object !"
 msgstr ""
@@ -3660,6 +4993,24 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lc
 msgid "Saint Lucia"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No IBAN for the company bank account."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "cancel"
 msgstr ""
 
 #. module: base
@@ -3691,13 +5042,31 @@ msgid "Create Access"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/use_control/module.py:0
+#, python-format
+msgid "You are not authorized to unlink module repositories"
+msgstr ""
+
+#. module: base
 #: field:res.partner.address,state_id:0
 msgid "Fed. State"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Please verify that the total difference of the sheet is lower than %.2f !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Please verify the price of the invoice !\nThe real total does not match the computed total."
 msgstr ""
 
 #. module: base
@@ -3747,7 +5116,7 @@ msgid "Signature"
 msgstr "Signatur"
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not Implemented"
 msgstr ""
@@ -3755,6 +5124,12 @@ msgstr ""
 #. module: base
 #: field:res.partner.category,complete_name:0
 msgid "Full Name"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Invoices"
 msgstr ""
 
 #. module: base
@@ -3796,19 +5171,26 @@ msgid "Maintenance"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign out from an other date than today"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mp
 msgid "Northern Mariana Islands"
 msgstr ""
 
 #. module: base
-#: wizard_view:module.lang.import,init:0
-msgid "module,type,name,res_id,src,value"
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Please provide a partner for the sale."
 msgstr ""
 
 #. module: base
-#: rml:ir.module.reference:0
-#: field:maintenance.contract.module,version:0
-msgid "Version"
+#: model:ir.actions.act_window,name:base.action_translation_untrans
+#: model:ir.ui.menu,name:base.menu_action_translation_untrans
+msgid "Untranslated terms"
 msgstr ""
 
 #. module: base
@@ -3850,8 +5232,21 @@ msgid "Mongolia"
 msgstr ""
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur P&L"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "The opening journal must not have any entry in the new fiscal year !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Taxes missing !"
 msgstr ""
 
 #. module: base
@@ -3870,13 +5265,20 @@ msgid "Burundi"
 msgstr ""
 
 #. module: base
-#: wizard_button:base.module.import,import,open_window:0
+#: code:addons/addons/crm/crm.py:0
 #: wizard_button:module.upgrade,end,end:0
 #: wizard_button:module.upgrade,start,end:0
 #: wizard_button:server.action.create,init,end:0
 #: wizard_button:server.action.create,step_1,end:0
 #: view:wizard.module.lang.export:0
+#, python-format
 msgid "Close"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close_state.py:0
+#, python-format
+msgid "Closing of states cancelled, please check the box !"
 msgstr ""
 
 #. module: base
@@ -3905,8 +5307,14 @@ msgid "res.config.view"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
-msgid "STOCK_INDENT"
+msgid "STOCK_DIALOG_AUTHENTICATION"
 msgstr ""
 
 #. module: base
@@ -3929,6 +5337,19 @@ msgid "Password"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                'for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: view:ir.model:0
 #: field:ir.model,field_id:0
@@ -3942,8 +5363,9 @@ msgid "Fields"
 msgstr ""
 
 #. module: base
-#: wizard_view:base.module.import,import:0
-msgid "Module successfully imported !"
+#: code:addons/addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
 msgstr ""
 
 #. module: base
@@ -3982,6 +5404,12 @@ msgid "Myanmar"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "You can not create new moves."
+msgstr ""
+
+#. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Chinese (CN) / 简体中文"
 msgstr ""
@@ -3999,8 +5427,9 @@ msgid "Street"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.yu
-msgid "Yugoslavia"
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
 msgstr ""
 
 #. module: base
@@ -4016,6 +5445,18 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ca
 msgid "Canada"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur Stock"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
 msgstr ""
 
 #. module: base
@@ -4059,6 +5500,12 @@ msgid "Burkina Faso"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: "
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_MEDIA_FORWARD"
 msgstr ""
@@ -4099,13 +5546,45 @@ msgid "Bank type fields"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank name defined\n' \\n"
+"					'for the bank account: %s\n' \\n"
+"					'on the partner: %s\n' \\n"
+"					'on line: %s"
+msgstr ""
+
+#. module: base
 #: wizard_view:module.lang.import,init:0
 msgid "type,name,res_id,src,value"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "No Period found on Invoice!"
+msgstr ""
+
+#. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Dutch / Nederlands"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/document/document.py:0
+#, python-format
+msgid "You do not permissions to write on the server side."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Can not export module that is not installed!"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.to
+msgid "Tonga"
 msgstr ""
 
 #. module: base
@@ -4157,7 +5636,14 @@ msgid "Object Field"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/account/account.py:0
+#: code:addons/addons/account/wizard/wizard_use_model.py:0
+#, python-format
+msgid "No period found !"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Records were modified in the meanwhile"
 msgstr ""
@@ -4168,13 +5654,25 @@ msgid "STOCK_NEW"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom.fields,operation:0
-msgid "None"
-msgstr "Ingen"
+#: code:addons/addons/stock/wizard/inventory_merge.py:0
+#, python-format
+msgid "Please select at least two inventories."
+msgstr ""
 
 #. module: base
 #: view:ir.report.custom.fields:0
 msgid "Report Fields"
+msgstr ""
+
+#. module: base
+#: view:res.partner:0
+msgid "General"
+msgstr "Allmänt"
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "The exists method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -4183,9 +5681,14 @@ msgid "Destination Activity"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The name_search method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "terp-mrp"
 msgstr ""
 
 #. module: base
@@ -4194,8 +5697,40 @@ msgid "Connect Events to Actions"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_ABOUT"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "Bank Journal "
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice cannot be created from Packing."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Please fill in the partner and pricelist field '\n"
+"                        'in the analytic account:\n%s"
 msgstr ""
 
 #. module: base
@@ -4216,8 +5751,31 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "The old fiscal year does not have any entry to reconcile!"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
 msgid "ir.ui.menu"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.tw
+msgid "Taiwan"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can not deactivate an account that contains account moves."
 msgstr ""
 
 #. module: base
@@ -4226,8 +5784,14 @@ msgid "Cancel Uninstall"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_currency_rate
-msgid "Currency Rate"
+#: model:res.country,name:base.cy
+msgid "Cyprus"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel sale order !"
 msgstr ""
 
 #. module: base
@@ -4236,7 +5800,13 @@ msgid "ir.server.object.lines"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "Please put a partner on the picking list if you want to generate invoice."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr ""
@@ -4257,6 +5827,12 @@ msgid "This is the filename of the attachment used to store the printing result.
 msgstr ""
 
 #. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid " Type of ul: "
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ng
 msgid "Nigeria"
 msgstr ""
@@ -4264,6 +5840,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_partner_event
 msgid "res.partner.event"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
 msgstr ""
 
 #. module: base
@@ -4317,6 +5899,12 @@ msgid "Philippines"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Attention!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ma
 msgid "Morocco"
 msgstr ""
@@ -4327,6 +5915,12 @@ msgid "terp-graph"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
+#, python-format
+msgid "Specified Journal does not have any account move entries in draft state for this period"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "2.  %a ,%A         ==> Fri, Friday"
 msgstr ""
@@ -4334,6 +5928,23 @@ msgstr ""
 #. module: base
 #: wizard_view:module.lang.install,start:0
 msgid "The selected language has been successfully installed. You must change the preferences of the user and open a new menu to view changes."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Operation is Already Cancelled  !"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_sequence
+msgid "ir.sequence"
 msgstr ""
 
 #. module: base
@@ -4364,8 +5975,8 @@ msgid "Polynesia (French)"
 msgstr ""
 
 #. module: base
-#: field:res.company,name:0
-msgid "Company Name"
+#: model:res.country,name:base.dm
+msgid "Dominica"
 msgstr ""
 
 #. module: base
@@ -4385,10 +5996,23 @@ msgid "iCal id"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_function_form
-#: model:ir.ui.menu,name:base.menu_partner_function_form
-#: view:res.partner.function:0
-msgid "Partner Functions"
+#: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Customer has no addresses defined!"
+msgstr ""
+
+#. module: base
+#: field:ir.actions.act_window,view_type:0
+#: field:ir.actions.act_window.view,view_mode:0
+#: field:ir.ui.view,type:0
+#: field:wizard.ir.model.menu.create.line,view_type:0
+msgid "View Type"
 msgstr ""
 
 #. module: base
@@ -4397,8 +6021,8 @@ msgid "Bulk SMS send"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%Y - Year with century as a decimal number."
+#: model:ir.ui.menu,name:base.next_id_2
+msgid "User Interface"
 msgstr ""
 
 #. module: base
@@ -4412,18 +6036,19 @@ msgid "Seconde: %(sec)s"
 msgstr ""
 
 #. module: base
-#: selection:ir.translation,type:0
-#: field:res.bank,code:0
-#: field:res.currency,code:0
-#: field:res.lang,code:0
-#: field:res.partner,ref:0
-#: field:res.partner.bank.type,code:0
-#: field:res.partner.function,code:0
-msgid "Code"
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel this sale order !"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "Could not cancel purchase order !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Can not create the module file:\n %s"
 msgstr ""
@@ -4435,8 +6060,20 @@ msgid "Update Modules List"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "This version of the module is already exist on the server"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.configuration.wizard:0
 msgid "Continue"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Object %s does not exists"
 msgstr ""
 
 #. module: base
@@ -4448,6 +6085,12 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Slovenian / slovenščina"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/warning/warning.py:0
+#, python-format
+msgid "Alert for ' + partner.name +' !"
 msgstr ""
 
 #. module: base
@@ -4498,6 +6141,24 @@ msgid "%b - Abbreviated month name."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid avaible !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
+#: code:addons/addons/stage/wizard/wizard_classend.py:0
+#, python-format
+msgid "You have to define the bank account\nin the journal definition for reconciliation."
+msgstr ""
+
+#. module: base
+#: field:ir.ui.view_sc,user_id:0
+msgid "User Ref."
+msgstr ""
+
+#. module: base
 #: field:res.partner,supplier:0
 #: model:res.partner.category,name:base.res_partner_category_8
 msgid "Supplier"
@@ -4520,15 +6181,49 @@ msgid "Full"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.as
-msgid "American Samoa"
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "March"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_model_model
-#: model:ir.model,name:base.model_ir_model
-#: model:ir.ui.menu,name:base.ir_model_model_menu
-msgid "Objects"
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "The statement balance is incorrect !\n"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.cv
+msgid "Cape Verde"
+msgstr ""
+
+#. module: base
+#: selection:ir.actions.report.xml,report_type:0
+msgid "html"
+msgstr ""
+
+#. module: base
+#: field:res.partner,vat:0
+msgid "VAT"
+msgstr "Moms"
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "No Default Credit Account !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Free Reference"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/document/document.py:0
+#, python-format
+msgid "Directory name must be unique!"
 msgstr ""
 
 #. module: base
@@ -4558,15 +6253,53 @@ msgid "terp-stock"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "invoice line account company is not match with invoice company."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify the Partner Email address !"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "You could not publish a module that is not installed!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/account/wizard/wizard_account_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_aged_trial_balance.py:0
+#: code:addons/addons/account/wizard/wizard_automatic_reconcile.py:0
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close_state.py:0
+#: code:addons/addons/account/wizard/wizard_general_ledger_report.py:0
+#: code:addons/addons/account/wizard/wizard_journal.py:0
+#: code:addons/addons/account/wizard/wizard_partner_balance_report.py:0
+#: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
+#: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
+#: code:addons/addons/hr_timesheet/wizard/sign_in_out.py:0
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
+#: code:addons/addons/multi_company_account/wizard/wizard_journal.py:0
+#: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
+#: code:addons/addons/stock/stock.py:0
+#: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "UserError"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Tax base different !\nClick on compute to update tax base"
 msgstr ""
 
 #. module: base
@@ -4577,6 +6310,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_MEDIA_RECORD"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "You must define an analytic journal of type '%s' !"
 msgstr ""
 
 #. module: base
@@ -4605,14 +6344,38 @@ msgid "Solomon Islands"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "You can not use an inactive account!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Entries are not of the same account or already reconciled ! "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The copy method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "Integrity Error !"
 msgstr ""
 
 #. module: base
@@ -4627,13 +6390,46 @@ msgid "Number padding"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/addons/mrp/mrp.py:0
+#: code:addons/addons/point_of_sale/pos.py:0
+#: code:addons/addons/purchase/purchase.py:0
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No IBAN defined \n' \\n"
+"						'for the bank account: %s\n' + \\n"
+"						'on line: %s"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ua
 msgid "Ukraine"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.to
-msgid "Tonga"
+#: code:addons/addons/stock/wizard/wizard_return.py:0
+#: selection:ir.report.custom.fields,operation:0
+#, python-format
+msgid "None"
+msgstr "Ingen"
+
+#. module: base
+#: code:addons/addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
 
 #. module: base
@@ -4688,22 +6484,22 @@ msgid "Brunei Darussalam"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.act_window,view_type:0
-#: field:ir.actions.act_window.view,view_mode:0
-#: field:ir.ui.view,type:0
-#: field:wizard.ir.model.menu.create.line,view_type:0
-msgid "View Type"
+#: model:ir.actions.act_window,name:base.action_partner_function_form
+#: model:ir.ui.menu,name:base.menu_partner_function_form
+#: view:res.partner.function:0
+msgid "Partner Functions"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.next_id_2
-msgid "User Interface"
+#: view:res.lang:0
+msgid "%Y - Year with century as a decimal number."
 msgstr ""
 
 #. module: base
-#: field:res.partner,child_ids:0
-#: field:res.request,ref_partner_id:0
-msgid "Partner Ref."
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "There is no default default credit account defined \n' \\n"
+"                                'on journal \"%s\""
 msgstr ""
 
 #. module: base
@@ -4717,8 +6513,37 @@ msgid "Date Created"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a product UOM in the same category than the purchase UOM of the product"
+msgstr ""
+
+#. module: base
+#: help:res.partner,user_id:0
+msgid "Internal user if any."
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.fk
+msgid "Falkland Islands"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Fri"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_actions_todo
 msgid "ir.actions.todo"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "Number record different from the computed!"
 msgstr ""
 
 #. module: base
@@ -4732,13 +6557,21 @@ msgid "This function will check for new modules in the 'addons' path and on modu
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "done"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GO_BACK"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#: code:osv/orm.py:0
+#: code:addons/addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "AccessError"
 msgstr ""
@@ -4754,8 +6587,9 @@ msgid "Belgium"
 msgstr ""
 
 #. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "You cannot perform this operation."
 msgstr ""
 
 #. module: base
@@ -4781,7 +6615,13 @@ msgid "Companies"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "You cannot Pause the Operation other then Start/Resume state !"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented get_memory method !"
 msgstr ""
@@ -4794,9 +6634,8 @@ msgid "Python Code"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_module_import.py:0
-#, python-format
-msgid "Can not create the module file: %s !"
+#: help:ir.actions.server,state:0
+msgid "Type of the Action that is to be executed"
 msgstr ""
 
 #. module: base
@@ -4811,7 +6650,7 @@ msgid "Customers Partners"
 msgstr ""
 
 #. module: base
-#: wizard_button:base.module.import,init,end:0
+#: code:addons/addons/crm/crm.py:0
 #: selection:ir.actions.todo,state:0
 #: wizard_button:module.lang.import,init,end:0
 #: wizard_button:module.lang.install,init,end:0
@@ -4822,23 +6661,39 @@ msgstr ""
 #: view:wizard.ir.model.menu.create:0
 #: view:wizard.module.lang.export:0
 #: view:wizard.module.update_translations:0
+#, python-format
 msgid "Cancel"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
+#, python-format
+msgid "Your bank BVR number should be of the form 0X-XXX-X!\n' \\n"
+"                            'Please check your company ' \\n"
+"                            'information for the invoice:\n%s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify server option --smtp-from !"
 msgstr ""
 
 #. module: base
-#: selection:wizard.module.lang.export,format:0
-msgid "PO File"
+#: code:addons/addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Provide the quantities of the returned products."
 msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_SPELL_CHECK"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: base
@@ -4906,6 +6761,13 @@ msgid "STOCK_APPLY"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Thu"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_maintenance_contract_form
 #: model:ir.ui.menu,name:base.menu_maintenance_contract
 msgid "Your Maintenance Contracts"
@@ -4957,12 +6819,24 @@ msgid "Select the object on which the action will work (read, write, create)."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "Can not find account chart for this company, Please Create account."
+msgstr ""
+
+#. module: base
 #: view:ir.model:0
 msgid "Fields Description"
 msgstr ""
 
 #. module: base
-#: code:tools/translate.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Please set an analytic journal on this financial journal !"
+msgstr ""
+
+#. module: base
+#: code:addons/tools/translate.py:0
 #, python-format
 msgid "Bad file format"
 msgstr ""
@@ -4973,9 +6847,28 @@ msgid "STOCK_CDROM"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/wizard/sign_in_out.py:0
+#: code:addons/addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#, python-format
+msgid "No employee defined for your user !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "Operation Not Permitted !"
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,readonly:0
 #: field:res.partner.bank.type.field,readonly:0
 msgid "Readonly"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Cycles Cost"
 msgstr ""
 
 #. module: base
@@ -5001,8 +6894,26 @@ msgid "Base"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a contact address"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.lr
 msgid "Liberia"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "Please select maximum 8 records to fit the page-width."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_state_open.py:0
+#, python-format
+msgid "Invoice is already reconciled"
 msgstr ""
 
 #. module: base
@@ -5030,8 +6941,14 @@ msgid "Update Translations"
 msgstr ""
 
 #. module: base
-#: view:res.config.view:0
-msgid "Set"
+#: selection:ir.translation,type:0
+#: field:res.bank,code:0
+#: field:res.currency,code:0
+#: field:res.lang,code:0
+#: field:res.partner,ref:0
+#: field:res.partner.bank.type,code:0
+#: field:res.partner.function,code:0
+msgid "Code"
 msgstr ""
 
 #. module: base
@@ -5057,14 +6974,32 @@ msgid "Help"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_ui_view
-msgid "ir.ui.view"
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "Couldn't create move between different companies"
 msgstr ""
 
 #. module: base
-#: code:tools/amount_to_text_en.py:0
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Analytic Account incomplete"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Entry \"%s\" is not valid !"
+msgstr ""
+
+#. module: base
+#: code:addons/tools/amount_to_text_en.py:0
 #, python-format
 msgid "Number too large '%d', can not translate it"
+msgstr ""
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "terp-hr"
 msgstr ""
 
 #. module: base
@@ -5088,9 +7023,9 @@ msgid "Flow Stop"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.ar
-msgid "Argentina"
-msgstr ""
+#: selection:ir.cron,interval_type:0
+msgid "Weeks"
+msgstr "Veckor"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -5098,7 +7033,36 @@ msgid "Afghanistan, Islamic State of"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_module_import.py:0
+#: code:addons/addons/account/account.py:0
+#: code:addons/addons/account/account_analytic_line.py:0
+#: code:addons/addons/account/account_bank_statement.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#: code:addons/addons/account/wizard/wizard_pay_invoice.py:0
+#: code:addons/addons/account/wizard/wizard_refund.py:0
+#: code:addons/addons/account_payment/account_move_line.py:0
+#: code:addons/addons/account_report/account.py:0
+#: code:addons/addons/analytic_user_function/analytic_user_function.py:0
+#: code:addons/addons/base/module/wizard/wizard_module_import.py:0
+#: code:addons/addons/crm/crm.py:0
+#: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#: code:addons/addons/crm_vertical/crm_vertical.py:0
+#: code:addons/addons/event_project/wizard/event_task.py:0
+#: code:addons/addons/hr_expense/hr_expense.py:0
+#: code:addons/addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#: code:addons/addons/membership/wizard/invoice_membership.py:0
+#: code:addons/addons/odms/odms.py:0
+#: code:addons/addons/odms/odms_invoice.py:0
+#: code:addons/addons/odms/wizard/host_status.py:0
+#: code:addons/addons/point_of_sale/pos.py:0
+#: code:addons/addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
+#: code:addons/addons/project_gtd/wizard/project_gtd_daily.py:0
+#: code:addons/addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/addons/purchase/purchase.py:0
+#: code:addons/addons/sale/sale.py:0
+#: code:addons/addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -5120,7 +7084,7 @@ msgid "Kind"
 msgstr "Sort"
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "This method does not exist anymore"
 msgstr ""
@@ -5172,8 +7136,26 @@ msgid "res.request"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Configuration of your control center account"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid " Quantity: "
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "pdf"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
 msgstr ""
 
 #. module: base
@@ -5196,8 +7178,19 @@ msgid "Panama"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom,state:0
-msgid "Unsubscribed"
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.gi
+msgid "Gibraltar"
+msgstr ""
+
+#. module: base
+#: selection:wizard.module.lang.export,format:0
+msgid "PO File"
 msgstr ""
 
 #. module: base
@@ -5222,6 +7215,12 @@ msgid "Active Partner Events"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "No partner defined on entry line"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_rule
 #: model:ir.ui.menu,name:base.menu_action_rule
 msgid "Record Rules"
@@ -5235,6 +7234,18 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.nt
 msgid "Neutral Zone"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Sorry!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm_configuration/wizard/meeting_planify.py:0
+#, python-format
+msgid "meeting"
 msgstr ""
 
 #. module: base
@@ -5273,6 +7284,13 @@ msgid "Attachments"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "Data Insufficient !"
+msgstr ""
+
+#. module: base
 #: view:maintenance.contract.wizard:0
 msgid "_Validate"
 msgstr ""
@@ -5293,8 +7311,14 @@ msgid "Done"
 msgstr ""
 
 #. module: base
-#: selection:maintenance.contract.wizard,state:0
-msgid "Validated"
+#: code:addons/addons/odms/portal.py:0
+#, python-format
+msgid "error"
+msgstr ""
+
+#. module: base
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_GOTO_FIRST"
 msgstr ""
 
 #. module: base
@@ -5341,6 +7365,18 @@ msgid "Estonian / Eesti keel"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "Total record different from the computed!"
+msgstr ""
+
+#. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "uk_UK"
 msgstr ""
@@ -5356,12 +7392,18 @@ msgid "GPL-3 or later version"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "open"
+msgstr ""
+
+#. module: base
 #: field:workflow.activity,action:0
 msgid "Python Action"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Unknown position in inherited view %s !"
 msgstr ""
@@ -5397,9 +7439,21 @@ msgid "Mauritania"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "failed. Bad Promotional Code."
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 #: field:workflow.workitem,act_id:0
 msgid "Activity"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "Can not find account chart for this company in invoice line account, Please Create account."
 msgstr ""
 
 #. module: base
@@ -5418,13 +7472,19 @@ msgid "Congo"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_exports_line
-msgid "ir.exports.line"
+#: view:res.lang:0
+msgid "Examples"
 msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_MEDIA_PAUSE"
+msgstr ""
+
+#. module: base
+#: help:res.country.state,code:0
+msgid "The state code in three chars.\n"
+""
 msgstr ""
 
 #. module: base
@@ -5445,8 +7505,43 @@ msgid "Window Actions"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.ch
+msgid "Switzerland"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to get multiple url"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "No address defined for the supplier"
 msgstr ""
 
 #. module: base
@@ -5455,8 +7550,30 @@ msgid "STOCK_HOME"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_sequence
-msgid "ir.sequence"
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Cannot create invoice without a partner."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "There is no default default debit account defined \n' \\n"
+"                                'on journal \"%s\""
+msgstr ""
+
+#. module: base
+#: field:ir.model,name:0
+#: field:ir.model.fields,model:0
+#: field:ir.model.grid,name:0
+#: field:ir.values,model:0
+msgid "Object Name"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
 
 #. module: base
@@ -5526,27 +7643,52 @@ msgid "Samoa"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_be/wizard/account_vat_declaration.py:0
+#: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
+msgstr ""
+
+#. module: base
 #: field:ir.ui.menu,child_id:0
 msgid "Child IDs"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/document/document.py:0
+#: code:addons/addons/hr_timesheet/hr_timesheet.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "ValidateError"
 msgstr ""
 
 #. module: base
-#: wizard_button:base.module.import,init,import:0
+#: code:addons/addons/base/maintenance/maintenance.py:0
+#, python-format
+msgid "This error occurs on database %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.wizard,name:base.wizard_base_module_import
-#: model:ir.ui.menu,name:base.menu_wizard_module_import
 msgid "Import module"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Modify line failed !"
 msgstr ""
 
 #. module: base
@@ -5576,6 +7718,12 @@ msgid "Togo"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "Failed to upload the file"
+msgstr ""
+
+#. module: base
 #: selection:workflow.activity,kind:0
 msgid "Stop All"
 msgstr ""
@@ -5591,9 +7739,15 @@ msgid "Cascade"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Field %d should be a figure"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No product defined on the related employee.\nFill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: base
@@ -5619,6 +7773,12 @@ msgstr ""
 #. module: base
 #: field:res.country.state,name:0
 msgid "State Name"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
 
 #. module: base
@@ -5648,6 +7808,19 @@ msgid "To improve some terms of the official translations of OpenERP, you should
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Historize"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account_report/wizard/wizard_print_indicators.py:0
+#: code:addons/addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr ""
+
+#. module: base
 #: wizard_button:module.lang.install,init,start:0
 msgid "Start installation"
 msgstr ""
@@ -5660,6 +7833,18 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "OpenERP Partners"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Operation is already finished !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Installation of your instance(s)"
 msgstr ""
 
 #. module: base
@@ -5682,23 +7867,52 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: base
+#: code:addons/addons/odms/wizard/host_status.py:0
+#, python-format
+msgid "The %(obj)s %(name)s has been created automatically but its architecture is unknown and has been set to the default one. Please check manually this %(obj)s."
+msgstr ""
+
+#. module: base
 #: field:res.bank,street2:0
 #: field:res.partner.address,street2:0
 msgid "Street2"
 msgstr ""
 
 #. module: base
-#: field:ir.cron,user_id:0
-#: field:ir.ui.view.custom,user_id:0
-#: field:ir.values,user_id:0
-#: field:res.partner.event,user_id:0
-#: view:res.users:0
-msgid "User"
-msgstr "Användare"
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "The journal must have default credit and debit account"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pr
 msgid "Puerto Rico"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base/res/res_currency.py:0
+#, python-format
+msgid "No rate found \n' \\n"
+"                    'for the currency: %s \n' \\n"
+"                    'at the date: %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet."
 msgstr ""
 
 #. module: base
@@ -5707,13 +7921,32 @@ msgid "Open Window"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
+#, python-format
+msgid "Closing of fiscal year cancelled, please check the box !"
+msgstr ""
+
+#. module: base
 #: field:ir.module.repository,filter:0
 msgid "Filter"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.ch
-msgid "Switzerland"
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Bad account !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "Sales Journal"
 msgstr ""
 
 #. module: base
@@ -5722,8 +7955,8 @@ msgid "Grenada"
 msgstr ""
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Trigger Configuration"
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
 msgstr ""
 
 #. module: base
@@ -5734,6 +7967,34 @@ msgstr ""
 #. module: base
 #: field:res.currency,rounding:0
 msgid "Rounding factor"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "No piece number !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_central_journal.py:0
+#: code:addons/addons/account/wizard/wizard_general_journal.py:0
+#: code:addons/addons/account/wizard/wizard_print_journal.py:0
+#: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
+#: code:addons/addons/hr_attendance/wizard/print_attendance_error.py:0
+#, python-format
+msgid "No records found for your selection!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "to be invoiced"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Registration on the monitoring servers"
 msgstr ""
 
 #. module: base
@@ -5763,10 +8024,16 @@ msgid "Important customers"
 msgstr ""
 
 #. module: base
-#: field:res.request,act_to:0
-#: field:res.request.history,act_to:0
-msgid "To"
-msgstr "Till"
+#: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
+#, python-format
+msgid "Mail not sent to following Partners, Email not available !\n\n"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_report_custom
+#: view:ir.report.custom:0
+msgid "Custom Report"
+msgstr ""
 
 #. module: base
 #: field:ir.cron,args:0
@@ -5779,7 +8046,20 @@ msgid "sxw"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "Could not cancel this purchase order !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "May"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 msgstr ""
@@ -5810,6 +8090,13 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,shortdesc:0
 msgid "Short Description"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -5868,8 +8155,19 @@ msgid "Number of time the function is called,\n"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_16
+msgid "Telecom sector"
+msgstr ""
+
+#. module: base
 #: view:ir.module.module:0
 msgid "Cancel Install"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 
 #. module: base
@@ -5881,6 +8179,18 @@ msgstr ""
 #: selection:ir.report.custom,frequency:0
 msgid "Monthly"
 msgstr "Månadsvis"
+
+#. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Analytic account incomplete"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_som-act
@@ -5934,6 +8244,12 @@ msgid "Object"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "You must define a responsible user for this case in order to use this action!"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr ""
@@ -5954,13 +8270,52 @@ msgid "%w - Weekday as a decimal number [0(Sunday),6]."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to find your last subscription"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that."
+msgstr ""
+
+#. module: base
 #: view:wizard.module.lang.export:0
 msgid "Export translation file"
 msgstr ""
 
 #. module: base
-#: field:ir.ui.view_sc,user_id:0
-msgid "User Ref."
+#: code:addons/addons/stock/report_stock.py:0
+#, python-format
+msgid "You cannot delete any record!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Missing info: Production Instance"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur Productions"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/crm/crm.py:0
+#: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#: code:addons/addons/crm_configuration/wizard/wizard_partner_create.py:0
+#: code:addons/addons/document_ics/document.py:0
+#: code:addons/addons/hr_holidays/hr.py:0
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
+#: code:addons/addons/product/pricelist.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: base
@@ -5971,8 +8326,9 @@ msgid "Configuration"
 msgstr "Konfiguration"
 
 #. module: base
-#: field:ir.actions.server,expression:0
-msgid "Loop Expression"
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
 msgstr ""
 
 #. module: base
@@ -5981,8 +8337,21 @@ msgid "Retailer"
 msgstr "Återförsäljare"
 
 #. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur Receptions"
+msgstr ""
+
+#. module: base
 #: selection:ir.report.custom,type:0
 msgid "Tabular"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "There is no income '\\n"
+"                        'account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -6006,13 +8375,26 @@ msgid "Partner"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "A sign-in must be right after a sign-out !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.fk
-msgid "Falkland Islands"
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete a sale order line which is %s !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_refund.py:0
+#, python-format
+msgid "Can not %s draft/proforma/cancel invoice."
 msgstr ""
 
 #. module: base
@@ -6075,6 +8457,12 @@ msgid "Load an Official Translation"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_bank_statement.py:0
+#, python-format
+msgid "The account entries lines are not in valid state."
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
 msgid "Open Source Service Company"
 msgstr ""
@@ -6100,8 +8488,15 @@ msgid "Report Ref"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-hr"
+#: code:addons/addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#, python-format
+msgid "Report does not contain the sxw content!"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "No Default Debit Account !"
 msgstr ""
 
 #. module: base
@@ -6120,6 +8515,18 @@ msgid "Heard and McDonald Islands"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "No employee defined for this user. You must create one."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,view_id:0
 msgid "View Ref."
 msgstr ""
@@ -6132,7 +8539,6 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.open_repository_tree
 #: view:ir.module.repository:0
-#: model:ir.ui.menu,name:base.menu_module_repository_tree
 msgid "Repository list"
 msgstr ""
 
@@ -6147,6 +8553,12 @@ msgid "Children"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to delete connected server"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,type:0
 #: field:ir.actions.act_window_close,type:0
 #: field:ir.actions.actions,type:0
@@ -6158,8 +8570,27 @@ msgid "Action Type"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "products"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
+msgstr ""
+
+#. module: base
 #: field:res.partner.bank.type,field_ids:0
 msgid "Type fields"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "You must first select a partner !"
 msgstr ""
 
 #. module: base
@@ -6184,7 +8615,7 @@ msgid "Costa Rica"
 msgstr ""
 
 #. module: base
-#: code:addons/base/maintenance/maintenance.py:0
+#: code:addons/addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Your can't submit bug reports due to uncovered modules: %s"
 msgstr ""
@@ -6200,6 +8631,24 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_currency_form
 #: view:res.currency:0
 msgid "Currencies"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "EAN: "
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Escalate"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project_timesheet/project_timesheet.py:0
+#, python-format
+msgid "Bad Configuration !"
 msgstr ""
 
 #. module: base
@@ -6233,7 +8682,7 @@ msgid "10. %S              ==> 20"
 msgstr ""
 
 #. module: base
-#: code:osv/fields.py:0
+#: code:addons/osv/fields.py:0
 #, python-format
 msgid "undefined get method !"
 msgstr ""
@@ -6249,8 +8698,20 @@ msgid "Estonia"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "You can not validate a non-balanced entry !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nl
 msgid "Netherlands"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "You can not delete a project with tasks. I suggest you to deactivate it."
 msgstr ""
 
 #. module: base
@@ -6269,8 +8730,26 @@ msgid "Purchase Offer"
 msgstr "Inköpserbjudande"
 
 #. module: base
+#: code:addons/addons/odms/wizard/host_status.py:0
+#, python-format
+msgid "The Host type must be Amazon to perform this action."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Product Standard Price"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_values
 msgid "ir.values"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not duplicate a timesheet !"
 msgstr ""
 
 #. module: base
@@ -6279,8 +8758,20 @@ msgid "STOCK_ZOOM_FIT"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "Opportunity"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "The object \"%s\" has no buyer assigned."
 msgstr ""
 
 #. module: base
@@ -6289,6 +8780,17 @@ msgstr ""
 #: field:res.request.history,req_id:0
 msgid "Request"
 msgstr "Ärende"
+
+#. module: base
+#: selection:ir.cron,interval_type:0
+msgid "Days"
+msgstr "Dagar"
+
+#. module: base
+#: code:addons/addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.jp
@@ -6317,6 +8819,11 @@ msgid "Company Architecture"
 msgstr ""
 
 #. module: base
+#: field:res.partner,user_id:0
+msgid "Internal User"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_BOTTOM"
 msgstr ""
@@ -6332,18 +8839,31 @@ msgid "Add RML header"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Missing info: Partner"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gr
 msgid "Greece"
 msgstr ""
 
 #. module: base
-#: field:res.request,trigger_date:0
-msgid "Trigger Date"
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Cannot create invoice move on centralised journal"
 msgstr ""
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Croatian / hrvatski jezik"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_reconcile_select.py:0
+#, python-format
+msgid "Reconciliation"
 msgstr ""
 
 #. module: base
@@ -6354,6 +8874,13 @@ msgstr ""
 #. module: base
 #: help:ir.actions.server,code:0
 msgid "Python code to be executed"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_analytic_line.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Entries: "
 msgstr ""
 
 #. module: base
@@ -6403,6 +8930,12 @@ msgid "Menu Action"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "Purchase Journal"
+msgstr ""
+
+#. module: base
 #: selection:wizard.module.lang.export,state:0
 msgid "choose"
 msgstr ""
@@ -6415,16 +8948,32 @@ msgid "Graph"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom.fields,fc0_op:0
-#: selection:ir.report.custom.fields,fc1_op:0
-#: selection:ir.report.custom.fields,fc2_op:0
-#: selection:ir.report.custom.fields,fc3_op:0
-msgid "<"
+#: field:res.partner,child_ids:0
+#: field:res.request,ref_partner_id:0
+msgid "Partner Ref."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "from stock and no minimum orderpoint rule defined"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Production instance"
 msgstr ""
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "Html from html"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
 msgstr ""
 
 #. module: base
@@ -6445,6 +8994,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ga
 msgid "Gabon"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_pay_invoice.py:0
+#, python-format
+msgid "Can not pay draft/proforma/cancel invoice."
 msgstr ""
 
 #. module: base
@@ -6489,6 +9044,12 @@ msgid "New Caledonia (French)"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "You can only delete draft moves."
+msgstr ""
+
+#. module: base
 #: field:res.partner.function,name:0
 msgid "Function Name"
 msgstr ""
@@ -6499,9 +9060,9 @@ msgid "_Cancel"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.cy
-msgid "Cyprus"
-msgstr ""
+#: field:res.partner.category,name:0
+msgid "Category Name"
+msgstr "Kategorinamn"
 
 #. module: base
 #: field:ir.actions.server,subject:0
@@ -6527,6 +9088,12 @@ msgid "terp-report"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "You cannot finish the operation without Starting/Resuming it !"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -6538,14 +9105,32 @@ msgid "Incoming transitions"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "There is no Operation to be cancelled !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password empty !"
+msgstr ""
+
+#. module: base
+#: view:res.config.view:0
+msgid "Set"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Tue"
 msgstr ""
 
 #. module: base
@@ -6569,8 +9154,14 @@ msgid "At Once"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Write Object"
+#: code:addons/addons/mrp/report/price.py:0
+#, python-format
+msgid "Hours Cost"
+msgstr ""
+
+#. module: base
+#: help:ir.actions.server,condition:0
+msgid "Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"
 msgstr ""
 
 #. module: base
@@ -6618,6 +9209,11 @@ msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr ""
 
 #. module: base
+#: wizard_view:module.lang.import,init:0
+msgid "module,type,name,res_id,src,value"
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,model_id:0
 #: field:ir.values,res_id:0
 msgid "Object ID"
@@ -6629,13 +9225,58 @@ msgid "Landscape"
 msgstr "Liggande"
 
 #. module: base
+#: code:addons/addons/project_gtd/wizard/project_gtd_daily.py:0
+#, python-format
+msgid "No timebox of the type \"%s\" defined !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Demo instance"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "Wrong Product UOM !"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Administration"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "Order not in draft state !"
+msgstr ""
+
+#. module: base
 #: selection:ir.rule,operator:0
 msgid "child_of"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_bank_statement.py:0
+#: code:addons/addons/multi_company_account/multi_company_account.py:0
+#, python-format
+msgid "Configration Error !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide a BVR number\n'\n"
+"					'for the bank account: %s' \\n"
+"					'on line: %s"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "No Invoice Address"
 msgstr ""
 
 #. module: base
@@ -6649,6 +9290,13 @@ msgstr ""
 #: field:wizard.module.lang.export,state:0
 msgid "unknown"
 msgstr "okänd"
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank account defined\n' \\n"
+"					'on line: %s"
+msgstr ""
 
 #. module: base
 #: field:ir.ui.view_sc,res_id:0
@@ -6671,20 +9319,15 @@ msgid "Action to Launch"
 msgstr ""
 
 #. module: base
-#: wizard_view:base.module.import,import:0
-#: wizard_view:base.module.import,init:0
-msgid "Module import"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_partner_supplier_form
 msgid "Suppliers Partners"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_sequence_type
-msgid "ir.sequence.type"
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Operation is not started yet !"
 msgstr ""
 
 #. module: base
@@ -6699,8 +9342,9 @@ msgid "Base Object"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-crm"
+#: code:addons/addons/odms/portal.py:0
+#, python-format
+msgid "This instance is already running the latest version of %s"
 msgstr ""
 
 #. module: base
@@ -6727,7 +9371,7 @@ msgid "terp-partner"
 msgstr ""
 
 #. module: base
-#: code:osv/orm.py:0
+#: code:addons/osv/orm.py:0
 #, python-format
 msgid "Bad query."
 msgstr ""
@@ -6735,6 +9379,12 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/portal.py:0
+#, python-format
+msgid "unable to find a server with a newer version"
 msgstr ""
 
 #. module: base
@@ -6760,6 +9410,12 @@ msgid "Condition"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/event_project/wizard/event_task.py:0
+#, python-format
+msgid "No project defined for this event.\nYou can create one with the retro-planning button !"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_management
 msgid "Modules Management"
 msgstr ""
@@ -6781,6 +9437,12 @@ msgid "Information"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/wiki/wizard/open_page.py:0
+#, python-format
+msgid "Open Page"
+msgstr ""
+
+#. module: base
 #: view:wizard.module.lang.export:0
 msgid "The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."
 msgstr ""
@@ -6796,25 +9458,31 @@ msgid "Next Configuration Wizard"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Already Reconciled"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.todo,type:0
 #: selection:res.partner.address,type:0
 msgid "Other"
 msgstr "Övrigt"
 
 #. module: base
-#: view:res.request:0
-msgid "Reply"
-msgstr "Svara"
+#: code:addons/addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
+
+#. module: base
+#: selection:ir.server.object.lines,type:0
+msgid "Formula"
+msgstr ""
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Turkish / Türkçe"
-msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_translation_untrans
-#: model:ir.ui.menu,name:base.menu_action_translation_untrans
-msgid "Untranslated terms"
 msgstr ""
 
 #. module: base
@@ -6845,9 +9513,21 @@ msgid "="
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Second field should be figures"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr ""
+
+#. module: base
+#: field:res.request,trigger_date:0
+msgid "Trigger Date"
 msgstr ""
 
 #. module: base
@@ -6875,6 +9555,12 @@ msgid "Export"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Futur Qty"
+msgstr ""
+
+#. module: base
 #: help:res.bank,bic:0
 msgid "Bank Identifier Code"
 msgstr ""
@@ -6885,15 +9571,51 @@ msgid "Turkmenistan"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/maintenance/maintenance.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#: code:report/custom.py:0
+#: code:addons/addons/account/account.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
+#: code:addons/addons/account/wizard/wizard_open_closed_fiscalyear.py:0
+#: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
+#: code:addons/addons/account_date_check/account_date_check.py:0
+#: code:addons/addons/auction/wizard/wizard_aie_send.py:0
+#: code:addons/addons/auction/wizard/wizard_aie_send_result.py:0
+#: code:addons/addons/base/ir/ir_actions.py:0
+#: code:addons/addons/base/ir/ir_model.py:0
+#: code:addons/addons/base/maintenance/maintenance.py:0
+#: code:addons/addons/base/module/module.py:0
+#: code:addons/addons/base/res/res_currency.py:0
+#: code:addons/addons/base/res/res_user.py:0
+#: code:addons/addons/base_module_merge/wizard/base_module_merge.py:0
+#: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/addons/base_module_publish/wizard/base_module_publish_all.py:0
+#: code:addons/addons/base_module_publish/wizard/module_zip.py:0
+#: code:addons/addons/base_report_designer/wizard/base_report_designer_modify.py:0
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#: code:addons/addons/mrp/mrp.py:0
+#: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
+#: code:addons/addons/odms/odms.py:0
+#: code:addons/addons/odms/portal.py:0
+#: code:addons/addons/point_of_sale/pos.py:0
+#: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
+#: code:addons/addons/proforma_followup/proforma.py:0
+#: code:addons/addons/project/wizard/close_task.py:0
+#: code:addons/addons/sale/wizard/make_invoice_advance.py:0
+#: code:addons/addons/stage/wizard/wizard_classend.py:0
+#: code:addons/addons/stock/stock.py:0
+#: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
+#: code:addons/addons/use_control/module.py:0
+#: code:addons/report/custom.py:0
 #, python-format
 msgid "Error"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "EXJ"
 msgstr ""
 
 #. module: base
@@ -6902,8 +9624,21 @@ msgid "Saint Pierre and Miquelon"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.report.xml,header:0
-msgid "Add or not the coporate RML header"
+#: code:addons/addons/base/ir/ir_model.py:0
+#, python-format
+msgid "You can not remove the field '%s' !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Programming Error"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "No supplier defined for this product !"
 msgstr ""
 
 #. module: base
@@ -6922,8 +9657,28 @@ msgid "STOCK_STOP"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "No Pricelist !"
+msgstr ""
+
+#. module: base
 #: view:wizard.module.update_translations:0
 msgid "Update"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Mon"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "No available server for this offer.\nPlease contact us."
 msgstr ""
 
 #. module: base
@@ -6944,6 +9699,18 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tz
 msgid "Tanzania"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_automatic_reconcile.py:0
+#, python-format
+msgid "You must select accounts to reconcile"
 msgstr ""
 
 #. module: base
@@ -6979,7 +9746,15 @@ msgid "Advanced Search"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
 #: view:res.request:0
+#, python-format
 msgid "Send"
 msgstr "Skicka"
 
@@ -7004,9 +9779,15 @@ msgid "Internal Header/Footer"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/wizard_export_lang.py:0
+#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "Save this document to a .tgz file. This archive containt UTF-8 %s files and may be uploaded to launchpad."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer has no Invoice Address."
 msgstr ""
 
 #. module: base
@@ -7021,8 +9802,16 @@ msgid "Catalan / Català"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.do
-msgid "Dominican Republic"
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Partner incomplete"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "July"
 msgstr ""
 
 #. module: base
@@ -7031,12 +9820,20 @@ msgid "STOCK_COLOR_PICKER"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide the bank city '\n"
+"						'or the bic code for the partner bank: \n %d\n' + \\n"
+"						'on line: %s"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_report_custom.py:0
+#: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Bar charts need at least two fields"
 msgstr ""
@@ -7049,6 +9846,20 @@ msgstr ""
 #. module: base
 #: field:ir.model.fields,relation_field:0
 msgid "Relation Field"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"						'a valid BVR reference number \n' \\n"
+"						'for the line: %s"
 msgstr ""
 
 #. module: base
@@ -7067,9 +9878,22 @@ msgid "https://translations.launchpad.net/openobject"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to select a pricelist in the sale form !\n' \\n"
+"                'Please set one before choosing a product."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title
 #: model:ir.ui.menu,name:base.menu_partner_title
 msgid "Titles"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp_operations/mrp_operations.py:0
+#, python-format
+msgid "Operation has already started !' 'You  can either Pause /Finish/Cancel the operation"
 msgstr ""
 
 #. module: base
@@ -7083,13 +9907,27 @@ msgid "XML path"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
+#, python-format
+msgid "Recursive mod10 is invalid for reference: %s"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gn
 msgid "Guinea"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.lu
-msgid "Luxembourg"
+#: code:addons/addons/point_of_sale/pos.py:0
+#: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
+#, python-format
+msgid "No order lines defined for this sale."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/invoice.py:0
+#, python-format
+msgid "Bad total !"
 msgstr ""
 
 #. module: base
@@ -7110,14 +9948,37 @@ msgid "tree_but_action, client_print_multi"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "Pending"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sv
 msgid "El Salvador"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to delete a connected backup configuration"
 msgstr ""
 
 #. module: base
 #: field:res.bank,phone:0
 #: field:res.partner.address,phone:0
 msgid "Phone"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            if abs(amount) < 0.0001:\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: base
@@ -7144,6 +10005,12 @@ msgid "Delete Permission"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
+msgstr ""
+
+#. module: base
 #: selection:workflow.activity,join_mode:0
 #: selection:workflow.activity,split_mode:0
 msgid "And"
@@ -7155,18 +10022,35 @@ msgid "Object Relation"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/auction/auction.py:0
+#, python-format
+msgid "Missed buyer !"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_PRINT"
 msgstr ""
 
 #. module: base
-#: view:res.partner:0
-msgid "General"
-msgstr "Allmänt"
+#: selection:ir.report.custom.fields,fc0_op:0
+#: selection:ir.report.custom.fields,fc1_op:0
+#: selection:ir.report.custom.fields,fc2_op:0
+#: selection:ir.report.custom.fields,fc3_op:0
+msgid "<"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Couldn't find a pricelist line matching this product\" \\n"
+"                \" and quantity.\nYou have to change either the product,\" \\n"
+"                \" the quantity or the pricelist."
 msgstr ""
 
 #. module: base
@@ -7181,13 +10065,20 @@ msgid "Virgin Islands (USA)"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.tw
-msgid "Taiwan"
+#: code:addons/addons/crm_profiling/crm_profiling.py:0
+#, python-format
+msgid "Questionnaire"
 msgstr ""
 
 #. module: base
 #: view:ir.rule:0
 msgid "If you don't force the domain, it will use the simple domain setup"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "An account already exists for this email address."
 msgstr ""
 
 #. module: base
@@ -7233,6 +10124,17 @@ msgid "Latest version"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s"
+msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Write Object"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom,print_format:0
 msgid "Print format"
 msgstr "Utskriftsformat"
@@ -7265,6 +10167,13 @@ msgid "center"
 msgstr "mitten"
 
 #. module: base
+#: code:addons/osv/fields.py:0
+#, python-format
+msgid "The second argument of the many2many field %s must be a SQL table !'\\n"
+"                'You used %s, which is not a valid SQL table name."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 #: field:maintenance.contract.wizard,state:0
@@ -7272,8 +10181,8 @@ msgid "States"
 msgstr ""
 
 #. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group or user"
+#: field:ir.actions.configuration.wizard,name:0
+msgid "Next Wizard"
 msgstr ""
 
 #. module: base
@@ -7299,9 +10208,9 @@ msgid "Aruba"
 msgstr ""
 
 #. module: base
-#: selection:ir.cron,interval_type:0
-msgid "Weeks"
-msgstr "Veckor"
+#: model:res.country,name:base.ar
+msgid "Argentina"
+msgstr ""
 
 #. module: base
 #: field:res.groups,name:0
@@ -7314,6 +10223,11 @@ msgid "Bahrain"
 msgstr ""
 
 #. module: base
+#: selection:res.partner.address,type:0
+msgid "Delivery"
+msgstr "Leverans"
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Segmentation"
 msgstr ""
@@ -7324,10 +10238,28 @@ msgid "STOCK_FIND"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_maintenance_contract_add_wizard
 #: model:ir.ui.menu,name:base.menu_maintenance_contract_add
 #: view:maintenance.contract.wizard:0
 msgid "Add Maintenance Contract"
+msgstr ""
+
+#. module: base
+#: rml:ir.module.reference:0
+#: field:maintenance.contract.module,version:0
+msgid "Version"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "No BoM defined for this product !"
 msgstr ""
 
 #. module: base
@@ -7342,8 +10274,20 @@ msgid "Workflow to be executed on this model."
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "The search method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms_invoice.py:0
+#, python-format
+msgid "This invoice is not linked to a OnDemand Subscription"
 msgstr ""
 
 #. module: base
@@ -7352,7 +10296,16 @@ msgid "Azerbaijan"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/addons/account/account_move_line.py:0
+#: code:addons/addons/account/wizard/wizard_state_open.py:0
+#: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
+#: code:addons/addons/base/res/partner/partner.py:0
+#: code:addons/addons/delivery/stock.py:0
+#: code:addons/addons/hr_attendance/hr_attendance.py:0
+#: code:addons/addons/odms/wizard/host_status.py:0
+#: code:addons/addons/stock/wizard/inventory_merge.py:0
+#: code:addons/addons/stock/wizard/inventory_merge_zero.py:0
+#: code:addons/addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -7363,8 +10316,23 @@ msgid "Arabic / الْعَرَبيّة"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.gi
-msgid "Gibraltar"
+#: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
+#, python-format
+msgid "The Sign-in date must be in the past"
+msgstr ""
+
+#. module: base
+#: selection:ir.report.custom,state:0
+msgid "Unsubscribed"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"						'a post number \n' \\n"
+"						'for the partner bank: %s\n' \\n"
+"						'on line: %s"
 msgstr ""
 
 #. module: base
@@ -7378,13 +10346,20 @@ msgid "STOCK_MEDIA_PREVIOUS"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Sun"
+msgstr ""
+
+#. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Czech / Čeština"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
+#: view:ir.actions.server:0
+msgid "Trigger Configuration"
 msgstr ""
 
 #. module: base
@@ -7395,6 +10370,13 @@ msgstr ""
 #. module: base
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_analytic_line.py:0
+#, python-format
+msgid "There is no expense account defined ' \\n"
+"                                'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -7460,6 +10442,12 @@ msgid "Complete Name"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "Entry is already reconciled"
+msgstr ""
+
+#. module: base
 #: view:ir.report.custom:0
 msgid "Subscribe Report"
 msgstr ""
@@ -7470,13 +10458,20 @@ msgid "Is Object"
 msgstr ""
 
 #. module: base
-#: field:res.partner.category,name:0
-msgid "Category Name"
-msgstr "Kategorinamn"
-
-#. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
+msgstr ""
+
+#. module: base
+#: view:ir.report.custom:0
+msgid "Unsubscribe Report"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
 msgstr ""
 
 #. module: base
@@ -7500,6 +10495,20 @@ msgid "Portrait"
 msgstr "Stående"
 
 #. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Sat"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/wizard/wizard_journal.py:0
+#: code:addons/addons/multi_company_account/wizard/wizard_journal.py:0
+#, python-format
+msgid "This period is already closed !"
+msgstr ""
+
+#. module: base
 #: selection:ir.translation,type:0
 msgid "Wizard Button"
 msgstr ""
@@ -7521,6 +10530,12 @@ msgid "ir.actions.server"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: base
 #: view:ir.actions.report.custom:0
 msgid "Report custom"
 msgstr ""
@@ -7533,6 +10548,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_11
 msgid "Configuration Wizards"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/crm/crm.py:0
+#, python-format
+msgid "You must put a Partner eMail to use this action!"
 msgstr ""
 
 #. module: base
@@ -7558,6 +10579,25 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_REVERT_TO_SAVED"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "November"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Unplanned Qty"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
 
 #. module: base
@@ -7617,6 +10657,12 @@ msgid "a5"
 msgstr "A5"
 
 #. module: base
+#: code:addons/addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sc
 msgid "Seychelles"
 msgstr ""
@@ -7649,6 +10695,12 @@ msgid "Turks and Caicos Islands"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Cannot delete Sheet(s) which are already confirmed !"
+msgstr ""
+
+#. module: base
 #: field:res.partner.bank,owner_name:0
 msgid "Account Owner"
 msgstr ""
@@ -7667,9 +10719,12 @@ msgid "Function"
 msgstr "Funktion"
 
 #. module: base
-#: selection:res.partner.address,type:0
-msgid "Delivery"
-msgstr "Leverans"
+#: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No address defined \n' \\n"
+"					'for the partner: %s\n' \\n"
+"					'on line: %s"
+msgstr ""
 
 #. module: base
 #: field:ir.attachment,preview:0
@@ -7677,8 +10732,37 @@ msgid "Image Preview"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/product.py:0
+#, python-format
+msgid "Produced Qty"
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.yu
+msgid "Yugoslavia"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 msgid "Corp."
+msgstr ""
+
+#. module: base
+#: wizard_view:module.lang.install,init:0
+msgid "Choose a language to install:"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Cannot modify a captcha"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "February"
 msgstr ""
 
 #. module: base
@@ -7692,7 +10776,7 @@ msgid "Workflow Instances"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Partners: "
 msgstr ""
@@ -7703,8 +10787,10 @@ msgid "North Korea"
 msgstr ""
 
 #. module: base
-#: view:ir.report.custom:0
-msgid "Unsubscribe Report"
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "April"
 msgstr ""
 
 #. module: base
@@ -7718,6 +10804,13 @@ msgid "BIC/Swift code"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/l10n_be/wizard/account_vat_declaration.py:0
+#: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "Data Insufficient"
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
 msgstr ""
@@ -7725,6 +10818,12 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Polish / Język polski"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/account/account_move_line.py:0
+#, python-format
+msgid "No analytic journal !"
 msgstr ""
 
 #. module: base
@@ -7738,8 +10837,14 @@ msgid "Used to select automatically the right address according to the context i
 msgstr ""
 
 #. module: base
-#: wizard_view:module.lang.install,init:0
-msgid "Choose a language to install:"
+#: code:addons/addons/mrp/mrp.py:0
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
+"        if product_id:\n"
+"            w=self.pool.get('product.product"
 msgstr ""
 
 #. module: base

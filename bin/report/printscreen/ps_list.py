@@ -72,7 +72,16 @@ class report_printscreen_list(report_int):
 
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
         fields_order = self._parse_string(result['arch'])
-        rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context )
+        rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
+        ids2 = [x['id'] for x in rows] # getting the ids from read result
+        
+        if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+            rows_new = []
+            for id in datas['ids']:
+                element = [elem for elem in rows if elem['id']==id]
+                rows_new.append(element[0])
+            rows = rows_new
+        
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 

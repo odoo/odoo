@@ -239,7 +239,7 @@ class rml_parse(object):
         self.default_lang[lang] = self.lang_dict.copy()
         return True
 
-    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False, currency=None):
+    def formatLang(self, value, digits=2, date=False,date_time=False, grouping=True, monetary=False):
         if isinstance(value, (str, unicode)) and not value:
             return ''
         if not self.lang_dict_called:
