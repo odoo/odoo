@@ -125,7 +125,11 @@ def translate(cr, name, source_type, lang, source=None):
 
 class GettextAlias(object):
     def __call__(self, source):
-        frame = inspect.stack()[1][0]
+        try:
+            frame = inspect.stack()[1][0]
+        except:
+            return source
+
         cr = frame.f_locals.get('cr')
         lang = (frame.f_locals.get('context') or {}).get('lang', False)
         if not (lang and cr):
