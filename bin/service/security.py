@@ -52,13 +52,14 @@ def check_super(passwd):
         raise ExceptionNoTb('AccessDenied')
 
 def check(db, uid, passwd):
-    if _uid_cache.get(db, {}).get(uid) and _uid_cache.get(db, {}).get(uid) == passwd:
+    cached_pass = _uid_cache.get(db, {}).get(uid)
+    if (cached_pass is not None) and cached_pass == passwd:
         return True
     cr = pooler.get_db(db).cursor()
     if passwd:
-        cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
+        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
     else:
-        cr.execute('select count(*) from res_users where id=%s and password is null', (int(uid),))    
+        cr.execute('select count(1) from res_users where id=%s and password is null and active=%s', (int(uid), True))    
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
