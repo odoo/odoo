@@ -1,3 +1,397 @@
+openerp-server (5.0.2-0-1ubuntu1) intrepid; urgency=low
+
+  [ P. Christeas ]
+  * [b98f26433c82] Greek translations, shorten terms.
+  * [2567b4e8fbc4] [IMP] Partial restrict operator for domains.
+  * [a507f9bee128] Shortcuts in RNG view definition.
+  * [e8da054afe0a] [IMP] Allow OS to rotate the logs, use
+    WatchedFileHandler if needed.
+
+  [ Jay (Open ERP) ]
+  * [8174407a30ec] [FIX] Property : Removed old referenced values from
+    property
+
+  [ mra (Open ERP) ]
+  * [819f9df328fa] [REV] revert chanegs for revision no 1810
+  * [70535423260f] [FIX] loading module sequence while creating new
+    database
+
+  [ Fabien Pinckaers ]
+  * [5aa83e5bb359] [FIX] bug 369947
+  * [dcde99cd9c5e] [FIX] bug 371496
+  * [8fbad91c586e] [FIX] bug 371768 bad tooltip
+  * [f42a9ae9115b] merge
+  * [db313489098d] merge
+
+  [ dsh (Open ERP) ]
+  * [a86dc3304dde] [IMP] attributes of barcode
+
+  [ Jay (Open ERP) ]
+  * [b2dafdb68cce] [FIX] ir_translation : corrected entry insertion when
+    adding translation
+
+  [ husen daudi ]
+  * [696445ddfb83] [MERGE]
+  * [7f9d0d2dd239] [FIX] module:base made name field translatable in
+    action.server (ref:mga)
+
+  [ Jay (Open ERP) ]
+  * [ed97326339a8] [FIX] Character Truncation problem on updation solved
+
+  [ Christophe Simonis ]
+  * [0b6c92ede314] [IMP] ir_model_data: convert assert to sql constraint
+    + exception
+
+  [ Jay (Open ERP) ]
+  * [f98cc5a0bee6] [FIX] Custom report : sorted X-axis values
+  * [0cf0628f3c8a] [FIX] SQL Constraint failure error on particular
+    record while importing
+
+  [ husen daudi ]
+  * [d56bb59ca02d] [FIX] xml encoding in header for &.<.>
+  * [04d765f45692] [Merge] Converted xml reports from xmldom to etree
+    and better error message with environment information
+
+  [ Jay (Open ERP) ]
+  * [a915dc15dbfd] [FIX] User with blank password(if so) allowed to log
+    in.
+
+  [ Fabien Pinckaers ]
+  * [19e2f2b84eac] [FIX] avoid required parameters rule (domain_force)
+  * [b8d383a666e6] merge
+  * [7cdc6778acb1] merge
+  * [70c8fcdf67f2] merge
+  * [7cd04889bd27] [IMP] better error message
+
+  [ Jay (Open ERP) ]
+  * [99f3b0db73f8] [FIX] Fixed oldxml at  python2.6 for Ubuntu
+    8.0.4,9.04
+  * [14b488955652] [IMP] default_xx in context isuue
+
+  [ Fabien Pinckaers ]
+  * [15a617ecbe04] merge
+  * [26f02d120db1] [fix] launch signal after action in workflows
+
+  [ Jay (Open ERP) ]
+  * [0ff7ddcd394d] [FIX] ORM: Defult_field name in context belongs to
+    curent object only, not to its relationals anymore
+  * [843604436871] [FIX] ir_attachment preview method corrected
+
+  [ Stephane Wirtel ]
+  * [406601019f23] [MERGE]
+  * [fa17b9e5f302] [FIX] fields.related (m2o poiting to M2M/O2M should
+    be skipped during write.
+
+  [ Jay (Open ERP) ]
+  * [7feb86ed7ad4] [IMP] Temporarily commented exception for browse
+    record that broke reports from wizard
+
+  [ husen daudi ]
+  * [665433813e7f] [FIX] Bad commit
+  * [c866dcb38c74] [FIX] Added PageCount tag in report engine
+
+  [ Fabien Pinckaers ]
+  * [a79d7777c888] merge
+  * [60d6357d3b2b] modifs
+  * [9ed525cfcd51] [FIX] bug in report engine
+
+  [ Jay (Open ERP) ]
+  * [2a571396d23e] [FIX] GIF image is previewed
+
+  [ Christophe Simonis ]
+  * [cee0846dff3c] [MERGE]
+  * [d2a31d33e1b1] [FIX] upgrade doesn't try to delete modules
+  * [1376272db30b] [MERGE]
+  * [bbaad3809f36] [FIX] xml: the tag <delete> delete also the reference
+    to the deleted objects into ir_model_data
+  * [35d4aa682b36] [FIX] translation export: catch the case when a
+    object does not exists in database
+  * [1f0cb7576704] [FIX] browse_record: raise a better exception when
+    the id doesn't exists
+
+  [ dsh (Open ERP) ]
+  * [0c8fe65fe3c0] [FIX] fix &,<,> problem for html2html-url report
+  * [71298ebb40b4] [FIX] fix &,<,> problem for html2html report
+  * [58b9464b7813] [IMP] added style for the url which are as text
+
+  [ Fabien Pinckaers ]
+  * [b934dd73d408] merge
+  * [fe33fdc8df19] [FIX] translations resynchro terms
+  * [4efe96b4f584] [FIX] Bugfix translations and float/int format in
+    reports
+  * [688883ce8183] bugfix_lang_notavailabel
+
+  [ Olivier Laurent ]
+  * [bee98151efd0] [MERGE]
+  * [adf826c7285b] [IMP] base: french translations
+
+  [ Christophe Simonis ]
+  * [cf01b2f3ee31] [IMP] maintenance: complete the remarks with the
+    database name
+  * [34e10ece0768] [FIX] complete rng file
+  * [eb179c00941a] [FIX] load the module graph even if it containt only
+    "base"
+
+  [ dsh (Open ERP) ]
+  * [5f1426c9e322] bug fix(skip text if child nodes are there) for the
+    html2html and openoffice reports
+
+  [ Panos Christeas ]
+
+  [ husen daudi ]
+  * Revert bad commit
+
+  [ Christophe Simonis ]
+  * [REL] 5.0.2
+  * [MERGE]
+  * [FIX] ensure sys is imported
+
+  [ Jay (Open ERP) ]
+  * [FIX] _inherits was misbehaving on search
+
+  [ Christophe Simonis ]
+  * [FIX] pass the context to check method of 'ir.model.access'
+  * [FIX] disallow the deletion of records set as default properties
+  * [MERGE]
+  * [FIX] increase size of field "name" of ir.model.data
+  * [IMP] update french translations
+  * [IMP] update french translations
+
+  [ Jay (Open ERP) ]
+  * [REF] Unused argument removed
+
+  [ Christophe Simonis ]
+  * [IMP] update po(t) files
+
+  [ Jay (Open ERP) ]
+  * [FIX] Login : Login and password accepting accented characters
+  * [FIX] Error reporting : library error corrected
+  * [FIX] default_xxx in context was passed to relational
+    fields,corrected.
+
+  [ P. Christeas ]
+  * Fix whitespace merging, that broke logging.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Print screen now displays the report as per WYSIWYG
+  * [FIX]Importation problem for bool fields corrected
+
+  [ Christophe Simonis ]
+  * [IMP] new method that ollow the server to return a message that will
+    be display on login page
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_model_data : SQL_Constraint failure covered
+  * [FIX] Accented characters are displayed on footer now
+  * [FIX] DB operations(backup,restore) process corrected,were blocked
+    if db_port was supplied
+
+  [ husen daudi ]
+  * Merged
+
+  [ Jay (Open ERP) ]
+  * [FIX] Expression calculation for Datetime Corrected
+  * [FIX] Logger notification improved
+  * [FIX] ir_model : context key deletion
+  * [FIX] Translation : Text with prefix '_' from py files included for
+    exports.
+  * [FIX] Corrected bug of expression calculation in previous commit
+
+  [ Olivier Laurent ]
+  * [FIX] sql expression: in search, add the time part to datetime field
+    when it's not present
+
+  [ P. Christeas ]
+  * email_send: feature to place mails in a maildir, instead of smtp
+  * Fix Greek translation of email "subject".
+
+  [ Olivier Laurent ]
+  * [FIX] setup.py: py2exe now adds 'zoneinfo' directory in library.zip
+
+  [ Jay (Open ERP) ]
+  * [FIX] Importation problem corrected for unicode.
+  * [IMP] Environment Information Notification  Improved
+
+  [ husen daudi ]
+  * [FIX] place tag
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] tools.amount_to_text_en: now displays cents
+
+  [ P. Christeas ]
+  * Greek translations, shorten terms.
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] RuntimeError in the cache system
+
+  [ Jay (Open ERP) ]
+  * [FIX] Print screen reports will behave acc. to locale for
+    date,datetime
+  * [FIX] Import : context provided for language translation
+
+  [ dsh (Open ERP) ]
+  * [FIX] size miss match for page and frame
+
+  [ husen daudi ]
+  * [FIX] removed report etree warning of len
+  * [FIX] Added sql_constraint on adding field having size<1
+
+  [ Quentin De Paoli ]
+  * [FIX] security on wokflows bugfixed. The security has to be checked
+    using the current uid, not the one that created the workflow
+    instance!
+
+  [ Harry (Open ERP) ]
+  * [FIX] export window : use context for import compatable option in
+    pass argument instend of added new argemenent
+  * [IMP] import/export : added Database ID, ID
+
+  [ P. Christeas ]
+  * [IMP] Partial restrict operator for domains.
+  * Shortcuts in RNG view definition.
+  * [IMP] Allow OS to rotate the logs, use WatchedFileHandler if needed.
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] supply password problem with pg_dump, pg_restore on win32
+  * [IMP] french translations
+
+  [ Jay (Open ERP) ]
+  * [FIX] Certificate in non-digit format will not be accepted
+  * [FIX] Certificate in non-digit format will not be accepted
+
+  [ husen daudi ]
+  * [IMP] Improved environment information message
+
+  [ Jay (Open ERP) ]
+  * [Fix] CSV Import : Accepting 'Value' of selection field
+    from[(key,value)]
+  * [FIX] Property : Removed old referenced values from property
+
+  [ mra (Open ERP) ]
+  * [REV] revert chanegs for revision no 1810
+  * [FIX] loading module sequence while creating new database
+
+  [ Fabien Pinckaers ]
+  * [FIX] bug 369947
+  * [FIX] bug 371496
+  * [FIX] bug 371768 bad tooltip
+  * merge
+  * merge
+
+  [ dsh (Open ERP) ]
+  * [IMP] attributes of barcode
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_translation : corrected entry insertion when adding
+    translation
+
+  [ husen daudi ]
+  * [MERGE]
+  * [FIX] module:base made name field translatable in action.server
+    (ref:mga)
+
+  [ Jay (Open ERP) ]
+  * [FIX] Character Truncation problem on updation solved
+
+  [ Christophe Simonis ]
+  * [IMP] ir_model_data: convert assert to sql constraint + exception
+
+  [ Jay (Open ERP) ]
+  * [FIX] Custom report : sorted X-axis values
+  * [FIX] SQL Constraint failure error on particular record while
+    importing
+
+  [ husen daudi ]
+  * [FIX] xml encoding in header for &.<.>
+  * [Merge] Converted xml reports from xmldom to etree and better error
+    message with environment information
+
+  [ Jay (Open ERP) ]
+  * [FIX] User with blank password(if so) allowed to log in.
+
+  [ Fabien Pinckaers ]
+  * [FIX] avoid required parameters rule (domain_force)
+  * merge
+  * merge
+  * merge
+  * [IMP] better error message
+
+  [ Jay (Open ERP) ]
+  * [FIX] Fixed oldxml at  python2.6 for Ubuntu 8.0.4,9.04
+  * [IMP] default_xx in context isuue
+
+  [ Fabien Pinckaers ]
+  * merge
+  * [fix] launch signal after action in workflows
+
+  [ Jay (Open ERP) ]
+  * [FIX] ORM: Defult_field name in context belongs to curent object
+    only, not to its relationals anymore
+  * [FIX] ir_attachment preview method corrected
+
+  [ Stephane Wirtel ]
+  * [MERGE]
+  * [FIX] fields.related (m2o poiting to M2M/O2M should be skipped
+    during write.
+
+  [ Jay (Open ERP) ]
+  * [IMP] Temporarily commented exception for browse record that broke
+    reports from wizard
+
+  [ husen daudi ]
+  * [FIX] Bad commit
+  * [FIX] Added PageCount tag in report engine
+
+  [ Fabien Pinckaers ]
+  * merge
+  * modifs
+  * [FIX] bug in report engine
+
+  [ Jay (Open ERP) ]
+  * [FIX] GIF image is previewed
+
+  [ Christophe Simonis ]
+  * [MERGE]
+  * [FIX] upgrade doesn't try to delete modules
+  * [MERGE]
+  * [FIX] xml: the tag <delete> delete also the reference to the deleted
+    objects into ir_model_data
+  * [FIX] translation export: catch the case when a object does not
+    exists in database
+  * [FIX] browse_record: raise a better exception when the id doesn't
+    exists
+
+  [ dsh (Open ERP) ]
+  * [FIX] fix &,<,> problem for html2html-url report
+  * [FIX] fix &,<,> problem for html2html report
+  * [IMP] added style for the url which are as text
+
+  [ Fabien Pinckaers ]
+  * merge
+  * [FIX] translations resynchro terms
+  * [FIX] Bugfix translations and float/int format in reports
+  * bugfix_lang_notavailabel
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [IMP] base: french translations
+
+  [ Christophe Simonis ]
+  * [IMP] maintenance: complete the remarks with the database name
+  * [FIX] complete rng file
+  * [FIX] load the module graph even if it containt only "base"
+
+  [ dsh (Open ERP) ]
+  * bug fix(skip text if child nodes are there) for the html2html and
+    openoffice reports
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Thu, 13 Aug 2009 10:21:28 +0300
+
 openerp-server (5.0.1-0-1ubuntu2) karmic; urgency=low
 
   * Minor updates
