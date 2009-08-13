@@ -51,7 +51,7 @@ def check_super(passwd):
     else:
         raise ExceptionNoTb('AccessDenied')
 
-def check_creds(db, uid, passwd):
+def check(db, uid, passwd):
     if _uid_cache.get(db, {}).get(uid) and _uid_cache.get(db, {}).get(uid) == passwd:
         return True
     cr = pooler.get_db(db).cursor()
@@ -82,11 +82,6 @@ def access(db, uid, passwd, sec_level, ids):
     if not res:
         raise ExceptionNoTb('Bad username or password')
     return res[0]
-
-def check(db, uid, passwd):
-    if not check_creds(db,uid,passwd):
-        raise ExceptionNoTb('Bad username or password')
-    pass
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
