@@ -170,10 +170,12 @@ class Logger(object):
         if isinstance(msg, Exception):
             msg = tools.exception_to_unicode(msg)
 
+        msg = tools.ustr(msg).strip()
+        
         if level in (LOG_ERROR,LOG_CRITICAL):
             msg = common().get_server_environment() + msg
 
-        result = tools.ustr(msg).strip().split('\n')
+        result = msg.split('\n')
         if len(result)>1:
             for idx, s in enumerate(result):
                 level_method('[%02d]: %s' % (idx+1, s,))
