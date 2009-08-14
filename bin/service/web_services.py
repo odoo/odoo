@@ -375,6 +375,7 @@ class common(netsvc.Service):
         self.exportMethod(self.get_migration_scripts)
         self.exportMethod(self.get_server_environment)
         self.exportMethod(self.login_message)
+        self.exportMethod(self.set_loglevel)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -560,6 +561,12 @@ GNU Public Licence.
 
     def login_message(self):
         return tools.config.get('login_message', False)
+
+    def set_loglevel(self, password, loglevel):
+        security.check_super(password)
+        l = netsvc.Logger()
+        l.set_loglevel(int(loglevel))
+        return True
 
 common()
 
