@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-06-08 21:23:39+0000\n"
+"POT-Creation-Date: 2009-08-13 19:05:35+0000\n"
 "PO-Revision-Date: 2009-07-24 00:40+0300\n"
 "Last-Translator: P. Christeas <p_christ@hol.gr>\n"
 "Language-Team: Greek <nls@hellug.gr>\n"
@@ -150,9 +150,11 @@ msgid "Burkina Faso"
 msgstr "Burkina Faso"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SORT_ASCENDING"
-msgstr "STOCK_SORT_ASCENDING"
+#: model:ir.actions.act_window,name:base.action_country_state
+#: model:ir.ui.menu,name:base.menu_country_state_partner
+#, fuzzy
+msgid "Fed. States"
+msgstr "Νομός"
 
 #. module: base
 #: view:ir.model:0 view:res.groups:0
@@ -190,6 +192,11 @@ msgid "Togo"
 msgstr "Togo"
 
 #. module: base
+#: field:res.partner.event,type:0
+msgid "Type of Event"
+msgstr "Τύπος Συμβάντος"
+
+#. module: base
 #: field:ir.actions.act_window,res_model:0
 #: field:ir.actions.report.custom,model:0 field:ir.actions.report.xml,model:0
 #: field:ir.actions.server,model_id:0 field:ir.actions.wizard,model:0
@@ -216,9 +223,15 @@ msgid "Categories of Modules"
 msgstr "Κατηγορίες Αρθρωμάτων"
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Email Configuration"
-msgstr "Ρυθμίσεις Email "
+#: help:ir.actions.server,expression:0
+msgid ""
+"Enter the field/expression that will return the list. E.g. select the sale "
+"order in Object, and you can have loop on the sales order line. Expression = "
+"`object.order_line`."
+msgstr ""
+"Enter the field/expression that will return the list. E.g. select the sale "
+"order in Object, and you can have loop on the sales order line. Expression = "
+"`object.order_line`."
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -256,8 +269,8 @@ msgstr "Header/Footer"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_100"
-msgstr "STOCK_ZOOM_100"
+msgid "STOCK_MEDIA_PAUSE"
+msgstr "STOCK_MEDIA_PAUSE"
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -700,9 +713,9 @@ msgid "Connect Events to Actions"
 msgstr "Σύνδεση Συνβάντων με Ενέργειες"
 
 #. module: base
-#: field:res.partner.event,type:0
-msgid "Type of Event"
-msgstr "Τύπος Συμβάντος"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_SORT_ASCENDING"
+msgstr "STOCK_SORT_ASCENDING"
 
 #. module: base
 #: selection:maintenance.contract,state:0
@@ -1032,6 +1045,11 @@ msgstr ""
 "χρησιμοποιήσετε μια έκφραση python με τις παραμέτρους object και time."
 
 #. module: base
+#: model:ir.ui.menu,name:base.next_id_10
+msgid "Scheduler"
+msgstr "Χρονοδιάγραμμα"
+
+#. module: base
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1095,9 +1113,10 @@ msgid "Menu :"
 msgstr "Menu :"
 
 #. module: base
-#: field:ir.actions.configuration.wizard,name:0
-msgid "Next Wizard"
-msgstr "Επόμενος Αυτόματος Οδηγός"
+#: help:ir.rule.group,global:0
+#, fuzzy
+msgid "Make the rule global, otherwise it needs to be put on a group"
+msgstr "Θέστε τον κανόνα ως γενικό αλλιώς ορίστε τον σε μια ομάδα ή χρήστη"
 
 #. module: base
 #: view:ir.values:0
@@ -1175,9 +1194,9 @@ msgid "Action to Trigger"
 msgstr "Ενέργεια προς Εκκίνηση"
 
 #. module: base
-#: model:ir.ui.menu,name:base.next_id_10
-msgid "Scheduler"
-msgstr "Χρονοδιάγραμμα"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_ZOOM_100"
+msgstr "STOCK_ZOOM_100"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2151,9 +2170,9 @@ msgid "Work Days"
 msgstr "Ημέρες Εργασίας"
 
 #. module: base
-#: model:ir.model,name:base.model_res_roles
-msgid "res.roles"
-msgstr "res.roles"
+#: model:ir.model,name:base.model_ir_module_module_dependency
+msgid "Module dependency"
+msgstr "Εξάρτηση Αρθρωμάτων"
 
 #. module: base
 #: help:ir.cron,priority:0
@@ -2938,7 +2957,7 @@ msgid "Iraq"
 msgstr "Iraq"
 
 #. module: base
-#: view:ir.attachment:0 field:ir.attachment,datas:0
+#: view:ir.attachment:0
 msgid "Data"
 msgstr "Δεδομένα"
 
@@ -3210,9 +3229,8 @@ msgid "Source Activity"
 msgstr "Πηγή Δράσης"
 
 #. module: base
-#: field:ir.attachment,res_id:0 field:ir.model.data,res_id:0
-#: field:ir.translation,res_id:0 field:workflow.instance,res_id:0
-#: field:workflow.triggers,res_id:0
+#: field:ir.model.data,res_id:0 field:ir.translation,res_id:0
+#: field:workflow.instance,res_id:0 field:workflow.triggers,res_id:0
 msgid "Resource ID"
 msgstr "Αριθμός Πόρου"
 
@@ -3775,6 +3793,11 @@ msgid "STOCK_FILE"
 msgstr "STOCK_FILE"
 
 #. module: base
+#: field:ir.attachment,res_id:0
+msgid "Attached ID"
+msgstr "Συνημμένη ID"
+
+#. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
 msgstr "Uzbekistan"
@@ -4063,15 +4086,20 @@ msgstr ""
 "αντικειμένου, π.χ. 'Αγαπητέ [[ object.partner_id.name ]]'"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_PAUSE"
-msgstr "STOCK_MEDIA_PAUSE"
+#: field:ir.attachment,res_model:0
+msgid "Attached Model"
+msgstr "Συνδεδεμένο Μοντέλο"
 
 #. module: base
 #: field:res.partner.bank,state:0
 #: field:res.partner.bank.type.field,bank_type_id:0
 msgid "Bank Type"
 msgstr "Τύπος Τράπεζας"
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "fi_FI"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
@@ -4471,7 +4499,6 @@ msgstr "Ημερ/νία Εκκίνησης"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_address_form
 #: model:ir.model,name:base.model_res_partner_address
-#: model:ir.ui.menu,name:base.menu_partner_address_form
 #: view:res.partner.address:0
 msgid "Partner Addresses"
 msgstr "Διευθύνσεις Συνεργάτη"
@@ -4499,6 +4526,11 @@ msgid "Somalia"
 msgstr "Somalia"
 
 #. module: base
+#: field:ir.attachment,datas:0
+msgid "File Content"
+msgstr "Περιεχόμενα Φακέλου"
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
 msgid "Sir"
 msgstr "Κύριε"
@@ -4517,6 +4549,11 @@ msgstr "Guinea"
 #: model:res.country,name:base.pa
 msgid "Panama"
 msgstr "Panama"
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Indonesian / Bahasa Indonesia"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.lu
@@ -4815,15 +4852,9 @@ msgid "Force Domain"
 msgstr "Επιβολή Τομέα"
 
 #. module: base
-#: help:ir.actions.server,expression:0
-msgid ""
-"Enter the field/expression that will return the list. E.g. select the sale "
-"order in Object, and you can have loop on the sales order line. Expression = "
-"`object.order_line`."
-msgstr ""
-"Enter the field/expression that will return the list. E.g. select the sale "
-"order in Object, and you can have loop on the sales order line. Expression = "
-"`object.order_line`."
+#: view:ir.actions.server:0
+msgid "Email Configuration"
+msgstr "Ρυθμίσεις Email "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_cron
@@ -5017,11 +5048,6 @@ msgstr "Estonian / Eesti keel"
 #: field:ir.module.module,menus_by_module:0 view:res.groups:0
 msgid "Menus"
 msgstr "Μενού"
-
-#. module: base
-#: help:ir.rule.group,global:0
-msgid "Make the rule global, otherwise it needs to be put on a group or user"
-msgstr "Θέστε τον κανόνα ως γενικό αλλιώς ορίστε τον σε μια ομάδα ή χρήστη"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5350,8 +5376,6 @@ msgid "The rate of the currency to the currency of rate 1"
 msgstr "Ισοτιμία νομίσματος"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_country_state
-#: model:ir.ui.menu,name:base.menu_country_state_partner
 #: field:maintenance.contract.wizard,state:0
 msgid "States"
 msgstr "Καταστάσεις"
@@ -5454,6 +5478,11 @@ msgstr "Κατάσταση"
 #: model:ir.ui.menu,name:base.menu_ir_action_report_xml
 msgid "Report Xml"
 msgstr "Αναφορά Xml"
+
+#. module: base
+#: field:ir.actions.configuration.wizard,name:0
+msgid "Next Wizard"
+msgstr "Επόμενος Αυτόματος Οδηγός"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
@@ -5755,6 +5784,11 @@ msgstr "Kazakhstan"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "Azerbaijan"
+
+#. module: base
+#: model:ir.model,name:base.model_res_roles
+msgid "res.roles"
+msgstr "res.roles"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_module_tree_install
@@ -6299,9 +6333,9 @@ msgid "closed"
 msgstr "κλειστά"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_module_module_dependency
-msgid "Module dependency"
-msgstr "Εξάρτηση Αρθρωμάτων"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Σφάλμα! Υπάρχει ήδη ίδια περιγραφή συνδεδεμένου μέλους."
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -6798,8 +6832,7 @@ msgid "Arguments"
 msgstr "Arguments"
 
 #. module: base
-#: field:ir.attachment,res_model:0 field:workflow,osv:0
-#: field:workflow.instance,res_type:0
+#: field:workflow,osv:0 field:workflow.instance,res_type:0
 msgid "Resource Object"
 msgstr "Αντικείμενο-Πόρος"
 
@@ -7058,6 +7091,11 @@ msgid "Sales & Purchases"
 msgstr "Πωλήσεις & Αγορές"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_partner_address_form
+msgid "Addresses"
+msgstr "Διευθύνσεις"
+
+#. module: base
 #: model:res.country,name:base.mm
 msgid "Myanmar"
 msgstr "Myanmar"
@@ -7226,9 +7264,6 @@ msgstr "XML Identifier"
 #~ msgid "The search method is not implemented on this object !"
 #~ msgstr "Η μέθοδος αναζήτησης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
 
-#~ msgid "Attached ID"
-#~ msgstr "Συνημμένη ID"
-
 #~ msgid "You can not read this document! (%s)"
 #~ msgstr "Δεν μπορείτε να διαβάσετε αυτό το έγγραφο! (%s)"
 
@@ -7239,9 +7274,6 @@ msgstr "XML Identifier"
 #~ "Κάποια εγκατεστημένα Αρθρώματα εξαρτώνται από αυτό που σχεδιάζετε να "
 #~ "απεγκαταστήσετε:\n"
 #~ " %s"
-
-#~ msgid "Attached Model"
-#~ msgstr "Συνδεδεμένο Μοντέλο"
 
 #~ msgid "Can not remove root user!"
 #~ msgstr "Can not remove root user!"
@@ -7389,9 +7421,6 @@ msgstr "XML Identifier"
 #~ msgid "Macedonia"
 #~ msgstr "F.Y.R.O.M."
 
-#~ msgid "Addresses"
-#~ msgstr "Διευθύνσεις"
-
 #~ msgid "Records were modified in the meanwhile"
 #~ msgstr "Οι εγγραφές έχουν τροποποιηθεί στο μεταξύ"
 
@@ -7447,9 +7476,6 @@ msgstr "XML Identifier"
 #~ msgid "This method does not exist anymore"
 #~ msgstr "Αυτή η μέθοδος δε χρησιμοποιείται πια"
 
-#~ msgid "File Content"
-#~ msgstr "Περιεχόμενα Φακέλου"
-
 #~ msgid "%A - Full weekday name."
 #~ msgstr "%A - Πλήρες όνομα ημέρας εβδομάδας"
 
@@ -7464,9 +7490,6 @@ msgstr "XML Identifier"
 
 #~ msgid "Field %d should be a figure"
 #~ msgstr "Το πεδίο %d πρέπει να έιναι αριθμός"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Σφάλμα! Υπάρχει ήδη ίδια περιγραφή συνδεδεμένου μέλους."
 
 #~ msgid "OpenERP Partners"
 #~ msgstr "Συνεργάτες OpenERP "
