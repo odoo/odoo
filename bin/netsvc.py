@@ -173,7 +173,7 @@ class Logger(object):
             msg = tools.exception_to_unicode(msg)
 
 	try:
-            if level in (LOG_ERROR,LOG_CRITICAL):
+            if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',True):
                 msg = common().get_server_environment() + msg
 
             result = tools.ustr(msg).strip().split('\n')
