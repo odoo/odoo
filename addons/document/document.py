@@ -174,7 +174,7 @@ class node_class(object):
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
             result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name), x, False, context=self.context, type='file', root=self.root), res)
         if self.type=='collection' and self.object.type=="ressource":
-            where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
+            where = self.object.domain and eval(self.object.domain, {'active_id':self.root, 'uid':self.uid}) or []
             pool = pooler.get_pool(self.cr.dbname)            
             obj = pool.get(self.object.ressource_type_id.model)
             _dirname_field = obj._rec_name
