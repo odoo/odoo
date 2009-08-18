@@ -313,8 +313,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (newlang and mod or lang) + ".po" + (newlang and 't' or '')
-                buf = open(join(tmpmoddir, pofilename), 'w')
+                buf = file(join(tmpmoddir, pofilename), 'w')
                 _process('po', [mod], modrows, buf, lang, newlang)
+                buf.close()
 
             tar = tarfile.open(fileobj=buffer, mode='w|gz')
             tar.add(tmpdir, '')
