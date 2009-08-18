@@ -22,6 +22,7 @@
 
 import time
 from osv import fields,osv
+import pooler
 
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
@@ -69,19 +70,21 @@ class ir_sequence(osv.osv):
             'sec': time.strftime('%S'),
         }
 
-    def get_id(self, cr, uid, sequence_id, test='id=%s', context={}):
+    def get_id(self, cr, uid, sequence_id, test='id=%s', context=None):
+        # as we have to commit, we must create a fresh new cursor
+        cr = pooler.get_db(cr.dbname).cursor()
         try:
-            cr.execute('lock table ir_sequence')
-            cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True', (sequence_id,))
+            cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+' AND active=%s FOR UPDATE', (sequence_id, True))
             res = cr.dictfetchone()
             if res:
-                cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%s and active=True', (res['id'],))
+                cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
                 if res['number_next']:
                     return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
                 else:
                     return self._process(res['prefix']) + self._process(res['suffix'])
         finally:
             cr.commit()
+            cr.close()
         return False
 
     def get(self, cr, uid, code):
