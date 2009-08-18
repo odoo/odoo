@@ -139,7 +139,7 @@ class report_printscreen_list(report_int):
 
         for f in fields_order:
             field = etree.Element("field")
-            field.text = fields[f]['string'] or ''
+            field.text = tools.ustr(fields[f]['string'] or '')
             header.append(field)
 
         new_doc.append(header)
@@ -219,7 +219,7 @@ class report_printscreen_list(report_int):
             if f == 0:
                 txt ='Total'
 
-            col.text = txt
+            col.text = tools.ustr(txt or '')
             node_line.append(col)
 
         lines.append(node_line)
