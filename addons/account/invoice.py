@@ -612,10 +612,11 @@ class account_invoice(osv.osv):
                 line2 = {}
                 for x, y, l in line:
                     tmp = str(l['account_id'])
-                    tmp += '-'+str('tax_code_id' in l and l['tax_code_id'] or "False")
-                    tmp += '-'+str('product_id' in l and l['product_id'] or "False")
-                    tmp += '-'+str('analytic_account_id' in l and l['analytic_account_id'] or "False")
-
+                    tmp += '-'+str(l.get('tax_code_id',"False"))
+                    tmp += '-'+str(l.get('product_id',"False"))
+                    tmp += '-'+str(l.get('analytic_account_id',"False"))
+                    tmp += '-'+str(l.get('date_maturity',"False"))
+                    
                     if tmp in line2:
                         am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                         line2[tmp]['debit'] = (am > 0) and am or 0.0
@@ -772,7 +773,7 @@ class account_invoice(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
-    def _refund_cleanup_lines(self, lines):
+    def _refund_cleanup_lines(self, cr, uid, lines):
         for line in lines:
             del line['id']
             del line['invoice_id']
@@ -810,11 +811,11 @@ class account_invoice(osv.osv):
 
 
             invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-            invoice_lines = self._refund_cleanup_lines(invoice_lines)
+            invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
-            tax_lines = self._refund_cleanup_lines(tax_lines)
+            tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({

@@ -101,7 +101,7 @@ class email_parser(object):
             'email_cc': self._decode_header(msg['Cc'] or ''),
             'canal_id': self.canal_id,
             'user_id': False,
-            'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })],
+            'history_line': [(0, 0, {'name': 'Create','section_id': self.section_id,'canal_id': self.canal_id,'description': message['body'], 'email': msg['From'] })],
         }
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -111,7 +111,6 @@ class email_parser(object):
 
         try:
             id = self.rpc('crm.case', 'create', data)
-        
 
         except Exception,e:
             if getattr(e,'faultCode','') and 'AccessError' in e.faultCode:
@@ -192,9 +191,8 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-            'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
+            'history_line': [(0, 0, {'name': 'Close','section_id': self.section_id,'canal_id': self.canal_id,'description': body['body'], 'email': msg['From']})],
         }
-
         act = 'case_close'
         if 'state' in actions:
             if actions['state'] in ['draft','close','cancel','open','pending']:
@@ -248,7 +246,7 @@ class email_parser(object):
         self.rpc('crm.case', act, [id])
         body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
         data = {
-                'history_line': [(0, 0, {'description': body, 'email': msg['From'][:84]})],
+                'history_line': [(0, 0, {'name': 'Open','section_id': self.section_id,'canal_id': self.canal_id,'description': body, 'email': msg['From'][:84]})],
         }
         self.rpc('crm.case', 'write', [id], data)
         return id

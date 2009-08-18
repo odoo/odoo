@@ -483,6 +483,14 @@ class mrp_production(osv.osv):
         result = {'product_uom':uom}
         return {'value':result}
 
+    def bom_id_change(self, cr, uid, ids, product):
+        if not product:
+            return {}
+        res = self.pool.get('mrp.bom').read(cr, uid, [product], ['routing_id'])[0]
+        routing_id = res['routing_id'] and res['routing_id'][0]
+        result = {'routing_id':routing_id}
+        return {'value':result}
+
     def action_picking_except(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state':'picking_except'})
         return True

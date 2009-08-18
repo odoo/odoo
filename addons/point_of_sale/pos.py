@@ -46,7 +46,6 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "date_order, create_date desc"
-    _order = "date_order desc, name desc"
 
     def unlink(self, cr, uid, ids, context={}):
         for rec in self.browse(cr, uid, ids, context=context):

@@ -98,7 +98,12 @@ class node_class(object):
         for content in self.object.content_ids:
             if self.object2 or not content.include_name:
                 if content.include_name:
-                    test_nodename = self.object2.name + (content.suffix or '') + (content.extension or '')
+                    content_name = self.object2.name
+                    obj = pool.get(self.object.ressource_type_id.model)
+                    name_for = obj._name.split('.')[-1]            
+                    if content_name  and content_name.find(name_for) == 0  :
+                        content_name = content_name.replace(name_for,'')
+                    test_nodename = content_name + (content.suffix or '') + (content.extension or '')
                 else:
                     test_nodename = (content.suffix or '') + (content.extension or '')
                 if test_nodename.find('/'):
@@ -116,7 +121,7 @@ class node_class(object):
         if self.object and self.root and (self.object.type=='ressource'):
             ids += fobj.search(self.cr, self.uid, where+[ ('parent_id','=',False) ])
         res = fobj.browse(self.cr, self.uid, ids, context=self.context)
-        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, context=self.context, type='file', root=False), res) + res2
+        return map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name), x, False, context=self.context, type='file', root=False), res) + res2
     
     def get_translation(self,value,lang):
         result = value
@@ -163,21 +168,20 @@ class node_class(object):
             fobj = pool.get('ir.attachment')
             vargs = [('parent_id','=',False),('res_id','=',False)]
             if nodename:
-                vargs.append(('name','=',nodename))
+                vargs.append((fobj._rec_name,'=',nodename))
             file_ids=fobj.search(self.cr,self.uid,vargs)
 
             res = fobj.browse(self.cr, self.uid, file_ids, context=self.context)
-            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+x.name, x, False, context=self.context, type='file', root=self.root), res)
+            result +=map(lambda x: node_class(self.cr, self.uid, self.path+'/'+eval('x.'+fobj._rec_name), x, False, context=self.context, type='file', root=self.root), res)
         if self.type=='collection' and self.object.type=="ressource":
-            where = self.object.domain and eval(self.object.domain, {'active_id':self.root}) or []
+            where = self.object.domain and eval(self.object.domain, {'active_id':self.root, 'uid':self.uid}) or []
             pool = pooler.get_pool(self.cr.dbname)            
             obj = pool.get(self.object.ressource_type_id.model)
+            _dirname_field = obj._rec_name
             if len(obj.fields_get(self.cr, self.uid, ['dirname'])):
-                _dirname_field = 'dirname'
-            else:
-                _dirname_field = 'name'
+                _dirname_field = 'dirname'            
 
-            name_for = obj._name.split('.')[-1]
+            name_for = obj._name.split('.')[-1]            
             if nodename  and nodename.find(name_for) == 0  :
                 id = int(nodename.replace(name_for,''))
                 where.append(('id','=',id))
@@ -247,7 +251,7 @@ class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Document directory'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=1, translate=True),
+        'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -525,7 +529,7 @@ def create_directory(path):
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
-
+    _rec_name = 'datas_fname'
     def _get_filestore(self, cr):
         return os.path.join(tools.config['root_path'], 'filestore', cr.dbname)
 
@@ -667,7 +671,8 @@ class document_file(osv.osv):
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
             if len(result):
                 obj=result[0]
-                vals['title'] = (obj.get('name',''))[:60]
+                if obj.get('name',False):
+                    vals['title'] = (obj.get('name',''))[:60]
                 if obj_model._name=='res.partner':
                     vals['partner_id']=obj['id']
                 elif obj.get('address_id',False):

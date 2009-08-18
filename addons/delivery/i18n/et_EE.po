@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,13 +78,7 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
-msgstr "Parandatud"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "Fikseeritud"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -104,18 +98,6 @@ msgid "Generate Draft Invoices On Receptions"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "Muutuja"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery line of grid"
 msgstr ""
@@ -128,12 +110,12 @@ msgstr "Kättetoimetamine"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr ""
+msgstr "Alusvõrgu jooned"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr ""
+msgstr "Alusvõrk"
 
 #. module: delivery
 #: view:res.partner:0
@@ -155,7 +137,7 @@ msgstr ""
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Kaal * Ruumala"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -213,10 +195,10 @@ msgid "Variable Factor"
 msgstr "Muutuja faktor"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "No grid avaible !"
-msgstr ""
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Muutuja"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -236,7 +218,7 @@ msgstr "Tarnija"
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "Ruumala"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -272,12 +254,6 @@ msgid "Carriers and deliveries"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "Order not in draft state !"
-msgstr ""
-
-#. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
 msgstr ""
@@ -310,22 +286,10 @@ msgid "To Zip"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-
-#. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
 msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:0
-#, python-format
-msgid "No price available !"
-msgstr "Hinda pole saadaval !"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -353,21 +317,9 @@ msgid "Delivery grids"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
-
-#. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
 msgstr "Loobu"
-
-#. module: delivery
-#: code:addons/delivery/stock.py:0
-#, python-format
-msgid "Warning"
-msgstr "Hoiatus"
 
 #. module: delivery
 #: field:sale.order,carrier_id:0

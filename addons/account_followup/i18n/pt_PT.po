@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:27:42+0000\n"
-"PO-Revision-Date: 2009-05-20 10:27:42+0000\n"
+"POT-Creation-Date: 2009-08-06 15:30:35+0000\n"
+"PO-Revision-Date: 2009-08-06 15:30:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,11 +47,6 @@ msgid "Printed Message"
 msgstr "Mensagem imprimida"
 
 #. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Debito total"
-
-#. module: account_followup
 #: rml:account_followup.followup.print:0
 msgid "Amount In Currency"
 msgstr ""
@@ -60,6 +55,11 @@ msgstr ""
 #: rml:account_followup.followup.print:0
 msgid "Due"
 msgstr "Dívida"
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "Debito total"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -82,12 +82,6 @@ msgstr "Continuação"
 #: field:account_followup.stat,debit:0
 msgid "Debit"
 msgstr "Débito"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "Mail not sent to following Partners, Email not available !\n\n"
-msgstr ""
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -114,12 +108,6 @@ msgstr "% (montante_de_seguimentos)s: Quantidade total devido"
 #: wizard_view:account_followup.followup.print.all,next:0
 msgid "%(date)s: Current Date"
 msgstr "%(data)s: Data actual"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "\n\nMail sent to following Partners successfully, !\n\n"
-msgstr ""
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -173,11 +161,6 @@ msgstr "Assunto do E-mail"
 #: rml:account_followup.followup.print:0
 msgid "Paid"
 msgstr "Pago"
-
-#. module: account_followup
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: account_followup
 #: wizard_view:account_followup.followup.print.all,next:0
@@ -241,6 +224,11 @@ msgid "\n"
 "Best Regards,\n"
 "			"
 msgstr ""
+
+#. module: account_followup
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,summary,end:0
@@ -479,12 +467,6 @@ msgstr "Cancelar"
 #: field:account_followup.followup.line,delay:0
 msgid "Days of delay"
 msgstr "Dias de atraso"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/wizard_followup_print.py:0
-#, python-format
-msgid "All emails have been successfully sent to Partners:.\n\n"
-msgstr ""
 
 #. module: account_followup
 #: wizard_button:account_followup.followup.print.all,next,print:0

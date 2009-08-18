@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,10 +42,9 @@ msgid "Graph Mode"
 msgstr "Graafiku laad"
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:0
-#, python-format
-msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
-msgstr "See/need on mudel(id) (%s) valikus, mis ei ole seotud ühegi teise mudeliga"
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -107,17 +106,6 @@ msgid "Custom Reports"
 msgstr "Kohandatud aruanded"
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:0
-#, python-format
-msgid "No Related Models!!"
-msgstr "Puuduvad seotud mudelid!"
-
-#. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
-
-#. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
 msgid "Menu Information"
 msgstr "Menüü info"
@@ -161,6 +149,13 @@ msgstr "Lisa filter"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
 msgstr "Loo menüü aruande jaoks"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report,view_type1:0
+#: selection:base_report_creator.report,view_type2:0
+#: selection:base_report_creator.report,view_type3:0
+msgid "Form"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type3:0
@@ -271,7 +266,7 @@ msgstr "Määra filtri väärtused"
 #. module: base_report_creator
 #: field:base_report_creator.report,state:0
 msgid "Status"
-msgstr "Olek"
+msgstr "Staatus"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
