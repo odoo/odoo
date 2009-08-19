@@ -2533,12 +2533,12 @@ class orm(orm_template):
         for (t, c) in self._inherits.items():
             if c in vals:
                 avoid_table.append(t)
-        for f in self._columns.keys(): # + self._inherit_fields.keys():
+        for f in self._columns.keys():
             if (not f in vals) and (not isinstance(self._columns[f], fields.property)):
                 default.append(f)
 
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table) and (not isinstance(self._columns[f], fields.property)):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table) and (not isinstance(self._inherit_fields[f][2], fields.property)):
                 default.append(f)
 
         if len(default):
