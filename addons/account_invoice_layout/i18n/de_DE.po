@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:23:07+0000\n"
-"PO-Revision-Date: 2009-05-20 10:23:07+0000\n"
+"POT-Creation-Date: 2009-08-06 15:21:51+0000\n"
+"PO-Revision-Date: 2009-08-06 15:21:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,6 @@ msgstr "Zwischensumme"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Invoice Date:"
 msgstr "Rechnungsdatum:"
 
@@ -44,9 +43,18 @@ msgstr "Rechungen mit Layout und Nachricht"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
+msgid "/ ("
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Rabatt (%)"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "(Incl. taxes):"
+msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -65,7 +73,6 @@ msgstr "Diese Mitteilung wird am Ende des Rechnungsformulars angezeigt."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Unit Price"
 msgstr "Preis pro Einheit"
 
@@ -81,7 +88,6 @@ msgstr "Zeige alle Meldungen an"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
@@ -102,20 +108,13 @@ msgstr "Sende Nachricht"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Customer Ref:"
 msgstr "Kundenreferenz:"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr "account_invoice_layout"
+msgid ")"
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -124,19 +123,16 @@ msgstr "Typ"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Price"
 msgstr "Preis"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Canceled Invoice"
 msgstr "Abgebrochene Rechnung"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Steuern:"
 
@@ -152,13 +148,11 @@ msgstr "Speichere Nachricht"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Base"
 msgstr "Basis"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Fax :"
 msgstr "Fax :"
 
@@ -174,7 +168,6 @@ msgstr "Schreibe eine Benachrichtigung."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Tel. :"
 msgstr "Tel. :"
 
@@ -190,7 +183,6 @@ msgstr "Seitenwechsel"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Document:"
 msgstr ""
 
@@ -216,25 +208,21 @@ msgstr "Rechungen mit Layout"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
+msgid "Description / Taxes"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Amount"
 msgstr "Betrag"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
-msgid "Total (excl. taxes):"
-msgstr "Gesamtsumme (excl. Steuern):"
+msgid "Description/Taxes"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
-msgid "Taxes"
-msgstr "Steuern"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Draft Invoice"
 msgstr "Rechnung Entwurf"
 
@@ -245,19 +233,16 @@ msgstr "Sequenz Nummer"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Quantity"
 msgstr "Menge"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Refund"
 msgstr "Gutschrift"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "VAT :"
 msgstr "MWSt :"
 
@@ -268,25 +253,31 @@ msgstr "Trennlinie"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Supplier Invoice"
 msgstr "Lieferantenrechnung"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
+msgid "Note :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Steuer"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
-msgid "(incl. taxes):"
-msgstr "(inkl. Steuer)"
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
+msgstr "account_invoice_layout"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
+msgid "Total (Excl. taxes):"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -297,7 +288,6 @@ msgstr "Abbruch"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Supplier Refund"
 msgstr "Lieferanten Gutschrift"
 
@@ -308,7 +298,6 @@ msgstr "Nachricht"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-#: rml:notify_account.invoice:0
 msgid "Total"
 msgstr "Gesamt"
 

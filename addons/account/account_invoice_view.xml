@@ -482,7 +482,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
+            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
         <record id="action_invoice_tree7_view1" model="ir.actions.act_window.view">
@@ -526,7 +526,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
+            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
         <record id="action_invoice_tree9_view1" model="ir.actions.act_window.view">
@@ -570,7 +570,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
+            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
         <record id="action_invoice_tree11_view1" model="ir.actions.act_window.view">
@@ -614,7 +614,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
+            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
         <record id="action_invoice_tree13_view1" model="ir.actions.act_window.view">

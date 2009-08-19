@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -26,14 +26,16 @@ import pooler
 from mx import DateTime
 import time
 
+
 class mrp_procurement(osv.osv):
     _inherit = 'mrp.procurement'
+
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
         use_new_cursor: False or the dbname
         '''
         if not context:
-            context={}
+            context = {}
 
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()
@@ -41,7 +43,7 @@ class mrp_procurement(osv.osv):
 
         procurement_obj = self.pool.get('mrp.procurement')
         if not ids:
-            ids=procurement_obj.search(cr,uid,[], order="date_planned")
+            ids = procurement_obj.search(cr, uid, [], order="date_planned")
         for id in ids:
             wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
         if use_new_cursor:
@@ -56,13 +58,13 @@ class mrp_procurement(osv.osv):
         report_except = 0
         report_later = 0
         while True:
-            cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by date_planned limit 500 offset %s', ('confirmed','make_to_order',offset))
-            ids = map(lambda x:x[0], cr.fetchall())
+            cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
+            ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
-                if maxdate.strftime('%Y-%m-%d')>=proc.date_planned:
+                if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned)  or (proc.procure_method=='make_to_order'):
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                 else:
-                    offset+=1
+                    offset += 1
                     report_later += 1
             for proc in procurement_obj.browse(cr, uid, ids):
                 if proc.state == 'exception':
@@ -80,20 +82,20 @@ class mrp_procurement(osv.osv):
         ids = []
         while True:
             report_ids = []
-            ids = self.pool.get('mrp.procurement').search(cr, uid, [('state','=','confirmed'),('procure_method','=','make_to_stock')], offset=offset)
+            ids = self.pool.get('mrp.procurement').search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
             for proc in procurement_obj.browse(cr, uid, ids):
-                if (maxdate).strftime('%Y-%m-%d') >= proc.date_planned:
+                if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) or (proc.procure_method=='make_to_order'):
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                     report_ids.append(proc.id)
                 else:
-                    report_later +=1
-                report_total +=1
+                    report_later += 1
+                report_total += 1
             for proc in procurement_obj.browse(cr, uid, report_ids):
                 if proc.state == 'exception':
                     report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
                             (proc.id, proc.product_qty, proc.product_uom.name,
                                 proc.product_id.name,))
-                    report_except +=1
+                    report_except += 1
             if use_new_cursor:
                 cr.commit()
             offset += len(ids)
@@ -111,12 +113,12 @@ class mrp_procurement(osv.osv):
     Not run now procurement: %d
 
     Exceptions;
-    '''% (start_date,end_date,report_total, report_except,report_later)
+    '''% (start_date, end_date, report_total, report_except, report_later)
             summary += '\n'.join(report)
             request.create(cr, uid,
-                {'name' : "Procurement calculation report.",
-                    'act_from' : uid,
-                    'act_to' : uid,
+                {'name': "Procurement calculation report.",
+                    'act_from': uid,
+                    'act_to': uid,
                     'body': summary,
                 })
         if use_new_cursor:
@@ -124,9 +126,9 @@ class mrp_procurement(osv.osv):
             cr.close()
         return {}
 
-    def create_automatic_op(self,cr, uid, context=None):
+    def create_automatic_op(self, cr, uid, context=None):
         if not context:
-            context={}
+            context = {}
         product_obj = self.pool.get('product.product')
         proc_obj = self.pool.get('mrp.procurement')
         warehouse_obj = self.pool.get('stock.warehouse')
@@ -140,7 +142,7 @@ class mrp_procurement(osv.osv):
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
             for product in self.pool.get('product.product').browse(cr, uid, products_id, context=context):
-                if product.virtual_available>=0.0:
+                if product.virtual_available >= 0.0:
                     continue
 
                 newdate = DateTime.now()
@@ -169,7 +171,7 @@ class mrp_procurement(osv.osv):
         use_new_cursor: False or the dbname
         '''
         if not context:
-            context={}
+            context = {}
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
@@ -183,9 +185,9 @@ class mrp_procurement(osv.osv):
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
         while ids:
-            ids=orderpoint_obj.search(cr,uid,[],offset=offset,limit=100)
+            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids):
-                if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft','confirmed'):
+                if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
                     continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
@@ -193,8 +195,8 @@ class mrp_procurement(osv.osv):
                 if prods < op.product_min_qty:
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
                     reste = qty % op.qty_multiple
-                    if reste>0:
-                        qty += op.qty_multiple-reste
+                    if reste > 0:
+                        qty += op.qty_multiple - reste
                     newdate = DateTime.now() + DateTime.RelativeDateTime(
                             days=op.product_id.seller_delay)
                     if op.product_id.supply_method == 'buy':
@@ -203,11 +205,11 @@ class mrp_procurement(osv.osv):
                         location_id = op.warehouse_id.lot_stock_id
                     else:
                         continue
-                    if qty<=0:
+                    if qty <= 0:
                         continue
                     if op.product_id.type not in ('consu'):
                         proc_id = procurement_obj.create(cr, uid, {
-                            'name': 'OP:'+str(op.id),
+                            'name': 'OP:' + str(op.id),
                             'date_planned': newdate.strftime('%Y-%m-%d'),
                             'product_id': op.product_id.id,
                             'product_qty': qty,

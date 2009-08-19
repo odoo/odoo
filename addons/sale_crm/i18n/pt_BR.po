@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:26:56+0000\n"
-"PO-Revision-Date: 2009-05-20 10:26:56+0000\n"
+"POT-Creation-Date: 2009-08-06 15:29:17+0000\n"
+"PO-Revision-Date: 2009-08-06 15:29:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,9 @@ msgid "Crm opportunity quotation"
 msgstr "Cotação da oportunidade de Crm"
 
 #. module: sale_crm
-#: wizard_field:crm.case.make_order,init,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
+#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
+msgid "Opportunity Analytic"
+msgstr "Oportunidade analítica"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,partner_id:0
@@ -59,18 +59,6 @@ msgstr "Conta analítica"
 #: model:process.node,note:sale_crm.process_node_crmquotation0
 msgid "Convert opportunity to quotation"
 msgstr "Converter oportunidade para cotação"
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/makesale.py:0
-#, python-format
-msgid "Data Insufficient!"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/makesale.py:0
-#, python-format
-msgid "Customer has no addresses defined!"
-msgstr ""
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,description:0
@@ -134,6 +122,11 @@ msgid "Check this to close the case after having created the sale order."
 msgstr "Verifique isto para fechar o caso depois de ter criado o pedido de venda."
 
 #. module: sale_crm
+#: wizard_field:crm.case.make_order,init,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
 msgid "Opporunity convert to the Pricelist"
 msgstr ""
@@ -147,11 +140,6 @@ msgstr "Usuário responsável"
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
 msgstr "Refletir o contrato feito com o cliente"
-
-#. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
-msgid "Opportunity Analytic"
-msgstr "Oportunidade analítica"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,products:0

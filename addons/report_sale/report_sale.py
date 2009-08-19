@@ -60,6 +60,7 @@ class report_sale_order_product(osv.osv):
                 from sale_order s
                     right join sale_order_line l on (s.id=l.order_id)
                     left join product_uom u on (u.id=l.product_uom)
+                where l.product_uom_qty != 0
                 group by l.product_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
             )
         """)
@@ -105,6 +106,7 @@ class report_sale_order_category(osv.osv):
                     left join product_product p on (p.id=l.product_id)
                     left join product_template t on (t.id=p.product_tmpl_id)
                     left join product_uom u on (u.id=l.product_uom)
+                where l.product_uom_qty != 0    
                 group by t.categ_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
             )
         """)

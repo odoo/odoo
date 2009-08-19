@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:23:06+0000\n"
-"PO-Revision-Date: 2009-05-20 10:23:06+0000\n"
+"POT-Creation-Date: 2009-08-06 15:21:50+0000\n"
+"PO-Revision-Date: 2009-08-06 15:21:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -210,12 +210,6 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr "Wähle eine Option bei der Erstellung des Zahlungsvorschlags: 'Fester Termin' steht für eine Datumsspezifikation Ihrerseits. 'Direkt' steht für eine unmittelbare Ausführung. 'Datum fällig' steht für das voraussichtliche Bezahlungsdatum (Banktransaktion)."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Error !"
-msgstr "Fehler !"
-
-#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Gesamt Soll"
@@ -259,11 +253,6 @@ msgid "Created"
 msgstr "Erzeugt"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Wähle Rechnungen"
-
-#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Betrag in Fremdwährung"
@@ -282,6 +271,11 @@ msgstr "Betreffzeile Empfänger"
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
 msgstr ""
+
+#. module: account_payment
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Betreffzeile"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -329,12 +323,6 @@ msgstr "Partner"
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Journal für Zahlungsmodus"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Kein Partner für diesen Eintrag definiert"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -444,9 +432,9 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Betreffzeile"
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Wähle Rechnungen"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -561,12 +549,6 @@ msgstr "_Suche"
 #: view:payment.order:0
 msgid "Entry Information"
 msgstr "Information Zahlungspositionen"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
-#, python-format
-msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr "Partner '+ line.partner_id.name+ ' beinhalted kein Bankkonto!"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement

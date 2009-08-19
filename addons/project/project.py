@@ -54,19 +54,21 @@ class project(osv.osv):
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
+        progress = {}
         if not ids:
             return res
         ids2 = self.search(cr, uid, [('parent_id','child_of',ids)])
-        cr.execute('''SELECT
-                project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
-            FROM
-                project_task 
-            WHERE
-                project_id in ('''+','.join(map(str,ids2))+''') AND
-                state<>'cancelled'
-            GROUP BY
-                project_id''')
-        progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
+        if ids2:
+            cr.execute('''SELECT
+                    project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
+                FROM
+                    project_task 
+                WHERE
+                    project_id in ('''+','.join(map(str,ids2))+''') AND
+                    state<>'cancelled'
+                GROUP BY
+                    project_id''')
+            progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0,0.0,0.0]
             tocompute = [project]

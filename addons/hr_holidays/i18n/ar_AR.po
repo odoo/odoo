@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:14:30+0000\n"
-"PO-Revision-Date: 2009-05-20 10:14:30+0000\n"
+"POT-Creation-Date: 2009-08-06 15:07:21+0000\n"
+"PO-Revision-Date: 2009-08-06 15:07:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,12 +65,6 @@ msgstr ""
 #: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr.py:0
-#, python-format
-msgid "Warning !"
 msgstr ""
 
 #. module: hr_holidays
@@ -390,6 +384,29 @@ msgid "Vacation start day"
 msgstr ""
 
 #. module: hr_holidays
+#: model:ir.module.module,description:hr_holidays.module_meta_information
+msgid "Human Ressources: Holidays tracking and workflow\n"
+"\n"
+"    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.\n"
+"\n"
+"    Note that:\n"
+"    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in\n"
+"                HR / Configuration / Holidays Status\n"
+"    - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).\n"
+"    - There are two ways to print the employee's holidays:\n"
+"        * The first will allow to choose employees by department and is used by clicking the menu item located in\n"
+"                HR / Holidays Request / Print Summary of Holidays\n"
+"        * The second will allow you to choose the holidays report for specific employees. Go on the list\n"
+"                HR / Employees / Employees\n"
+"            then select the ones you want to choose, click on the print icon and select the option\n"
+"                'Print Summary of Employee's Holidays'\n"
+"    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in\n"
+"                Administration / Users / Users\n"
+"            for example, you maybe will do it for the user 'admin'.\n"
+""
+msgstr ""
+
+#. module: hr_holidays
 #: wizard_view:hr.holidays.summary,notify:0
 #: wizard_view:hr.holidays.summary.employee,notify:0
 msgid "Notification"
@@ -462,29 +479,6 @@ msgid "Color of the status"
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.module.module,description:hr_holidays.module_meta_information
-msgid "Human Ressources: Holidays tracking and workflow\n"
-"\n"
-"    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.\n"
-"\n"
-"    Note that:\n"
-"    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in\n"
-"                HR / Configuration / Holidays Status\n"
-"    - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).\n"
-"    - There are two ways to print the employee's holidays:\n"
-"        * The first will allow to choose employees by department and is used by clicking the menu item located in\n"
-"                HR / Holidays Request / Print Summary of Holidays\n"
-"        * The second will allow you to choose the holidays report for specific employees. Go on the list\n"
-"                HR / Employees / Employees\n"
-"            then select the ones you want to choose, click on the print icon and select the option\n"
-"                'Print Summary of Employee's Holidays'\n"
-"    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in\n"
-"                Administration / Users / Users\n"
-"            for example, you maybe will do it for the user 'admin'.\n"
-""
-msgstr ""
-
-#. module: hr_holidays
 #: selection:hr.holidays.summary,init,holiday_type:0
 msgid "Both Validated and Confirmed"
 msgstr ""
@@ -530,12 +524,6 @@ msgid "Section"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr.py:0
-#, python-format
-msgid "Attention!"
-msgstr ""
-
-#. module: hr_holidays
 #: field:hr.holidays,manager_id:0
 msgid "Holiday manager"
 msgstr ""
@@ -549,12 +537,6 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
 msgid "My Holidays Request Draft"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr.py:0
-#, python-format
-msgid "You can not cancel this holiday request. first You have to make its case in draft state."
 msgstr ""
 
 #. module: hr_holidays
@@ -723,11 +705,5 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0
 msgid "His manager refuses the request"
-msgstr ""
-
-#. module: hr_holidays
-#: code:addons/hr_holidays/hr.py:0
-#, python-format
-msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 

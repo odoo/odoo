@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,9 +33,8 @@ msgid "Notification"
 msgstr "Teavitus"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
-#, python-format
-msgid "No partner has a VAT Number asociated with him."
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
+msgid "Régime National"
 msgstr ""
 
 #. module: l10n_be
@@ -49,19 +48,13 @@ msgid "Tiers"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_field:wizard.account.xml.vat.declaration,init,period:0
-msgid "Period"
-msgstr "Periood"
-
-#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
 msgid "Charge"
 msgstr "Kulu"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
-#, python-format
-msgid "Data Insufficient!"
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
+msgid "Régime Intra-Communautaire"
 msgstr ""
 
 #. module: l10n_be
@@ -86,7 +79,7 @@ msgstr "Fail on loodud"
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Apr/May/Jun"
-msgstr ""
+msgstr "Apr/Mai/Juun"
 
 #. module: l10n_be
 #: constraint:account.account.template:0
@@ -96,7 +89,7 @@ msgstr "Viga ! Sa ei saa luua rekrusiivseid kontomalle."
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Jul/Aug/Sep"
-msgstr ""
+msgstr "Juul/Aug/Sept"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -147,11 +140,6 @@ msgid "Tiers - Payable"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
-msgid "Régime National"
-msgstr ""
-
-#. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,init:0
 msgid "Select Period"
 msgstr "Vali periood"
@@ -198,7 +186,7 @@ msgstr ""
 #: wizard_field:list.vat.detail,init,fyear:0
 #: wizard_field:vat.intra.xml,init,fyear:0
 msgid "Fiscal Year"
-msgstr "Rahandusaasta"
+msgstr "Majandusaasta"
 
 #. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
@@ -208,13 +196,6 @@ msgstr "XML Fail on loodud."
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
 msgid "Stock et Encours"
-msgstr ""
-
-#. module: l10n_be
-#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
-#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
-#, python-format
-msgid "Data Insufficient"
 msgstr ""
 
 #. module: l10n_be
@@ -246,11 +227,9 @@ msgid "Tax"
 msgstr "Maks"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
-#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
-#, python-format
-msgid "No VAT Number Associated with Main Company!"
-msgstr ""
+#: wizard_field:wizard.account.xml.vat.declaration,init,period:0
+msgid "Period"
+msgstr "Periood"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -280,11 +259,6 @@ msgstr ""
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
 msgstr "Loobu"
-
-#. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
-msgid "Régime Intra-Communautaire"
-msgstr ""
 
 #. module: l10n_be
 #: model:ir.actions.wizard,name:l10n_be.partner_vat_intra

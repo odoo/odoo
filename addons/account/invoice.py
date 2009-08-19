@@ -223,7 +223,7 @@ class account_invoice(osv.osv):
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "\
                 "The payment term may compute several due dates, for example 50% now, 50% in one month."),
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(invoice) date."),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(invoice) date.", readonly=True, states={'draft':[('readonly',False)]}),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The partner account used for this invoice."),
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
@@ -612,10 +612,11 @@ class account_invoice(osv.osv):
                 line2 = {}
                 for x, y, l in line:
                     tmp = str(l['account_id'])
-                    tmp += '-'+str('tax_code_id' in l and l['tax_code_id'] or "False")
-                    tmp += '-'+str('product_id' in l and l['product_id'] or "False")
-                    tmp += '-'+str('analytic_account_id' in l and l['analytic_account_id'] or "False")
-
+                    tmp += '-'+str(l.get('tax_code_id',"False"))
+                    tmp += '-'+str(l.get('product_id',"False"))
+                    tmp += '-'+str(l.get('analytic_account_id',"False"))
+                    tmp += '-'+str(l.get('date_maturity',"False"))
+                    
                     if tmp in line2:
                         am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                         line2[tmp]['debit'] = (am > 0) and am or 0.0
@@ -772,7 +773,7 @@ class account_invoice(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
-    def _refund_cleanup_lines(self, lines):
+    def _refund_cleanup_lines(self, cr, uid, lines):
         for line in lines:
             del line['id']
             del line['invoice_id']
@@ -810,11 +811,11 @@ class account_invoice(osv.osv):
 
 
             invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-            invoice_lines = self._refund_cleanup_lines(invoice_lines)
+            invoice_lines = self._refund_cleanup_lines(cr, uid, invoice_lines)
 
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
-            tax_lines = self._refund_cleanup_lines(tax_lines)
+            tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
@@ -880,7 +881,7 @@ class account_invoice(osv.osv):
 
         lines = [(0, 0, l1), (0, 0, l2)]
         move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
-        move_id = self.pool.get('account.move').create(cr, uid, move)
+        move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
         total = 0.0
@@ -921,7 +922,7 @@ class account_invoice_line(osv.osv):
         if 'check_total' in context:
             t = context['check_total']
             for l in context.get('invoice_line', {}):
-                if len(l) >= 3 and l[2]:
+                if isinstance(l, (list, tuple)) and len(l) >= 3 and l[2]:
                     tax_obj = self.pool.get('account.tax')
                     p = l[2].get('price_unit', 0) * (1-l[2].get('discount', 0)/100.0)
                     t = t - (p * l[2].get('quantity'))

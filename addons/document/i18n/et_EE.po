@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Directory name contains special characters!"
-msgstr "Kaustanimi sisaldab erisümboleid!"
-
-#. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
-msgstr ""
+msgstr "Vali siia objekt ja Open ERP loob kaardistuse neile objektidele kasutades antud domeeni sirvides läbi FTP."
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -79,20 +73,24 @@ msgid "Notes"
 msgstr "Märkmed"
 
 #. module: document
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
+msgstr "Viga! Sa ei saa luua regrussiivseid kaustu."
+
+#. module: document
 #: field:ir.attachment,title:0
 msgid "Resource Title"
 msgstr "Ressursi pealkiri"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Error!"
-msgstr "Viga!"
+#: model:document.directory,name:document.dir_my_folder
+msgid "My Folder"
+msgstr ""
 
 #. module: document
-#: model:ir.model,name:document.model_document_configuration_wizard
-msgid "document.configuration.wizard"
-msgstr "dokumendi.seadistamise.wizard"
+#: model:document.directory,name:document.dir_product
+msgid "Products"
+msgstr ""
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -115,26 +113,30 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: document
+#: model:document.directory,name:document.dir_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: document
 #: model:ir.model,name:document.model_document_directory
 #: field:process.node,directory_id:0
 msgid "Document directory"
 msgstr "Dokumendi kataloog"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "ValidateError"
+#: model:document.directory,name:document.dir_partner
+msgid "Partners"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content,include_name:0
-msgid "Include Record Name"
-msgstr "Kaasa kirje nimi"
+#: model:document.directory,name:document.dir_root
+msgid "Documents"
+msgstr ""
 
 #. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Viga! Sa ei saa luua regrussiivseid kaustu."
+#: model:document.directory,name:document.dir_sale_order_all
+msgid "All Sales Order"
+msgstr ""
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -162,12 +164,6 @@ msgstr "Salvestamise meetod"
 #: field:document.directory,type:0
 msgid "Type"
 msgstr "Tüüp"
-
-#. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Directory name must be unique!"
-msgstr "Kataloogi nimi peab olema ainulaadne"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -200,20 +196,13 @@ msgid "Directory Type"
 msgstr "Kausta tüüp"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "You do not permissions to write on the server side."
-msgstr ""
-
-#. module: document
 #: field:document.directory.content,report_id:0
 msgid "Report"
 msgstr "Aruanne"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "Permission Denied !"
+#: model:document.directory,name:document.dir_project
+msgid "Projects"
 msgstr ""
 
 #. module: document
@@ -230,6 +219,11 @@ msgstr "Laiend"
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtuaalsed failid"
+
+#. module: document
+#: model:document.directory,name:document.dir_personnal_folder
+msgid "Personnal Folders"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_files
@@ -307,9 +301,14 @@ msgid "Auto Configure Directory"
 msgstr "Seadista automaatselt kataloog"
 
 #. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Kaasa kirje nimi"
+
+#. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid "This wizard will configure the URL of the server of the document management system."
-msgstr ""
+msgstr "See nõustaja seadistab serveri ja dokumendihaldussüsteemi URL-i."
 
 #. module: document
 #: view:ir.attachment:0
@@ -319,7 +318,7 @@ msgstr "Manus"
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
-msgstr ""
+msgstr "Mudeli ID"
 
 #. module: document
 #: view:ir.attachment:0
@@ -379,6 +378,11 @@ msgid "Attached To"
 msgstr "Lisatud millele"
 
 #. module: document
+#: model:document.directory,name:document.dir_sale_order_quote
+msgid "Quotations"
+msgstr ""
+
+#. module: document
 #: view:ir.attachment:0
 msgid "History"
 msgstr "Ajalugu"
@@ -391,7 +395,7 @@ msgstr "Looja"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
+msgstr "Kui sa paned objekti siia siis selle kataloogi mall ilmub allpool neid objekte. Ära pane ülemkataloogi, kui sa valid ülemmudeli."
 
 #. module: document
 #: view:document.directory:0
@@ -411,7 +415,7 @@ msgstr "Alam"
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Vahend ID"
 
 #. module: document
 #: constraint:ir.model:0
@@ -421,7 +425,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid "Check this field if you want that the name of the file start by the record name."
-msgstr ""
+msgstr "Märgi see väli, kui sa tahad et faili nimi algaks kirje nimega."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -431,12 +435,17 @@ msgstr "Teised ressursid"
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr ""
+msgstr "Ülemmudel"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
 msgstr "Ülemobjekt"
+
+#. module: document
+#: model:document.directory,name:document.dir_partner_category
+msgid "Partners by Category"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -478,15 +487,14 @@ msgid "Content Name"
 msgstr "Sisu nimi"
 
 #. module: document
-#: code:addons/document/document.py:0
-#, python-format
-msgid "File name must be unique!"
-msgstr "Faili nimi peab olema unikaalne"
-
-#. module: document
 #: field:document.directory,ressource_tree:0
 msgid "Tree Structure"
 msgstr "Puu struktuur"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration_wizard
+msgid "document.configuration.wizard"
+msgstr "dokumendi.seadistamise.wizard"
 
 #. module: document
 #: view:document.configuration.wizard:0

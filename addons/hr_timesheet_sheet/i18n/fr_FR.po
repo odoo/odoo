@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:22:21+0000\n"
-"PO-Revision-Date: 2009-05-20 10:22:21+0000\n"
+"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,15 +35,9 @@ msgid "Sheet"
 msgstr "Feuille"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
-#, python-format
-msgid "No employee defined for your user !"
-msgstr "Pas d'employé définit pour cet utilisateur !"
-
-#. module: hr_timesheet_sheet
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -118,12 +112,6 @@ msgid "Present"
 msgstr "Présent"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "UserError"
-msgstr "ErreurUtilisateur"
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
 msgid "Refuse"
@@ -140,12 +128,6 @@ msgid "You must select a Current date wich is in the timesheet dates !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not sign in from an other date than today"
-msgstr "Vous ne pouvez pas pointer une autre date qu'aujourdhui"
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Difference"
 msgstr "Différence Totale"
@@ -159,12 +141,6 @@ msgstr "Encoder les appels téléphoniques"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
 msgstr "Feuilles de Présence par Jour"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "Warning !"
-msgstr "Avertissement !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
@@ -260,13 +236,6 @@ msgid "Timesheet sheet confirm at the end of the period"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
-#, python-format
-msgid "Error !"
-msgstr "Erreur !"
-
-#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
 msgid "Total Time"
 msgstr "Temps total"
@@ -277,12 +246,6 @@ msgid "Timesheet Lines"
 msgstr "Lignes des Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr "Merci de vérifier que la différence totale de la fiche est inférieure à %.2f !"
-
-#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
 msgid "Confirm timesheet at the end of the period"
 msgstr "Confirmer la feuille de temps à la fin de la période"
@@ -291,12 +254,6 @@ msgstr "Confirmer la feuille de temps à la fin de la période"
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "No employee defined"
 msgstr "Pas d'employé défini"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "Invalid action !"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -405,12 +362,6 @@ msgid "Timesheets To Confirm"
 msgstr "Feuille de Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not sign out from an other date than today"
-msgstr "Vous ne pouvez pas pointer la sortie pour un autre jour qu'aujourdhui"
-
-#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr "État"
@@ -424,12 +375,6 @@ msgstr "Date de fin"
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
 msgstr "État actuel"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -450,12 +395,6 @@ msgstr "Feuilles de Présence par Compte"
 #: field:hr_timesheet_sheet.sheet.day,name:0
 msgid "Date"
 msgstr "Date"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr "Vous ne pouvez pas modifier une entrée d'une feuille de temps confirmée !"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -515,12 +454,6 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
 msgstr "La feuille de temps est validée par le responsable du projet"
@@ -562,12 +495,6 @@ msgstr "Description"
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
 msgstr "Pointer la sortie"
-
-#. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not duplicate a timesheet !"
-msgstr ""
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0

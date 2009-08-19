@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "uid"
-msgstr ""
+msgstr "uid"
 
 #. module: document_ics
 #: constraint:document.directory:0
@@ -38,12 +38,12 @@ msgstr ""
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Configure Calendars for CRM Sections"
-msgstr ""
+msgstr "Seadista kalendrid KSH sektsioonide jaoks"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,helpdesk:0
 msgid "Helpdesk"
-msgstr ""
+msgstr "Helpdesk"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
@@ -53,7 +53,7 @@ msgstr "Open ERO väli"
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Next"
-msgstr ""
+msgstr "Järgmine"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -63,7 +63,7 @@ msgstr "Sisu"
 #. module: document_ics
 #: field:document.ics.crm.wizard,meeting:0
 msgid "Calendar of Meetings"
-msgstr ""
+msgstr "Koosolekute kalender"
 
 #. module: document_ics
 #: model:crm.case.section,name:document_ics.section_meeting
@@ -73,7 +73,7 @@ msgstr "Jagatud kalendri koosolekud"
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
@@ -83,7 +83,7 @@ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
 msgid "Used by companies to track bugs and support requests on softwares"
-msgstr ""
+msgstr "Kasutatakse ettevõttes jälgimaks vigu ja pakkumaks tuge tarkvarale"
 
 #. module: document_ics
 #: model:ir.actions.todo,note:document_ics.config_wizard_step_case_section_menu
@@ -93,29 +93,22 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
-msgstr ""
-
-#. module: document_ics
-#: code:addons/document_ics/document.py:0
-#, python-format
-msgid "You can not set negative Duration."
-msgstr ""
+msgstr "dtend"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
 msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
-msgstr ""
+msgstr "Aitab sul organiseerida töölevõtmise protsessi; hindamine, koosolekud, e-posti integreerimine..."
 
 #. module: document_ics
-#: code:addons/document_ics/document.py:0
-#, python-format
-msgid "Warning !"
-msgstr ""
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "kirjeldus"
 
 #. module: document_ics
 #: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
 msgid "Configure Calendars for Sections "
-msgstr ""
+msgstr "Seadista kalendrid sektsioonide jaoks "
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,opportunity:0
@@ -125,22 +118,17 @@ msgstr ""
 #. module: document_ics
 #: help:document.ics.crm.wizard,fund:0
 msgid "This may help associations in their fund raising process and tracking."
-msgstr ""
+msgstr "See võib aidata assotsiatsioone vahendite kogumise protsessil ja jälgimisel."
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,helpdesk:0
 msgid "Manages an Helpdesk service."
-msgstr ""
+msgstr "Haldab helpdesk teenust."
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,fund:0
 msgid "Fund Raising Operations"
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
-msgstr "kirjeldus"
+msgstr "Vahendite kogumise operatsioonid"
 
 #. module: document_ics
 #: field:document.directory.content,ics_object_id:0
@@ -148,14 +136,19 @@ msgid "Object"
 msgstr "Objekt"
 
 #. module: document_ics
+#: model:document.directory,name:document_ics.dir_calendars
+msgid "Calendars"
+msgstr ""
+
+#. module: document_ics
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "Viga! Sa ei saa luua rekursiivseid sektsioone."
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information
 msgid "Support for iCal based on Document Management System"
-msgstr ""
+msgstr "Tugi dokumendihaldussüsteemil põhinevale iCal-ile"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -165,17 +158,17 @@ msgstr "asukoht"
 #. module: document_ics
 #: view:document.directory:0
 msgid "ICS Calendar"
-msgstr ""
+msgstr "ICS Kalender"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
-msgstr ""
+msgstr "ICS Väärtus"
 
 #. module: document_ics
 #: model:ir.module.module,description:document_ics.module_meta_information
 msgid "Allows to synchronise calendars with others applications."
-msgstr ""
+msgstr "Võimaldab sünkroniseerida kalendreid teiste rakendustega."
 
 #. module: document_ics
 #: constraint:ir.ui.view:0
@@ -190,12 +183,12 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
 msgid "Manages the calendar of meetings of the users."
-msgstr ""
+msgstr "Haldab kasutajate koosolekute kalendrit."
 
 #. module: document_ics
 #: field:document.directory.content,ics_domain:0
@@ -215,22 +208,22 @@ msgstr "viimati-muudetud"
 #. module: document_ics
 #: view:document.directory:0
 msgid "ICS Mapping"
-msgstr ""
+msgstr "ICS Kaardistamine"
 
 #. module: document_ics
 #: view:crm.case:0
 msgid "Duration(In Hour)"
-msgstr ""
+msgstr "Kestvus (Tundides)"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,document_ics:0
 msgid "Shared Calendar"
-msgstr ""
+msgstr "Jagatud kalender"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,claims:0
 msgid "Claims"
-msgstr ""
+msgstr "Nõuded"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,phonecall:0
@@ -240,17 +233,17 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstart"
-msgstr ""
+msgstr "dtstart"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,phonecall:0
 msgid "Phone Calls"
-msgstr ""
+msgstr "Telefonikõned"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,bugs:0
 msgid "Bug Tracking"
-msgstr ""
+msgstr "Vigade jälgimine"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -260,12 +253,12 @@ msgstr "kategooriad"
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
 msgid "Prospect"
-msgstr ""
+msgstr "Perspektiiv"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Create Pre-Configured Calendars"
-msgstr ""
+msgstr "Loo eelseadistatud kalendreid"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -275,7 +268,7 @@ msgstr "loodud"
 #. module: document_ics
 #: field:crm.case,code:0
 msgid "Calendar Code"
-msgstr ""
+msgstr "Kalendri kood"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -285,7 +278,7 @@ msgstr "kokkuvõte"
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
 msgid "document.ics.crm.wizard"
-msgstr ""
+msgstr "document.ics.crm.wizard"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -295,7 +288,7 @@ msgstr "kohalviibija"
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_directory_ics_fields
 msgid "document.directory.ics.fields"
-msgstr ""
+msgstr "document.directory.ics.fields"
 
 #. module: document_ics
 #: field:document.directory.content,ics_field_ids:0
@@ -305,7 +298,7 @@ msgstr "Väljade seostamised"
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Tühista"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,opportunity:0
@@ -315,5 +308,5 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstamp"
-msgstr ""
+msgstr "dtstamp"
 

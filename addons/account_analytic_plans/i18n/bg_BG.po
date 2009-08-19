@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:15:53+0000\n"
-"PO-Revision-Date: 2009-05-20 10:15:53+0000\n"
+"POT-Creation-Date: 2009-08-06 15:09:41+0000\n"
+"PO-Revision-Date: 2009-08-06 15:09:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,6 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
 #: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
@@ -41,11 +40,6 @@ msgstr "Идентификатор на сметка5"
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
 msgid "End Date"
 msgstr "Крайна дата"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Идентификатор на сметка3"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -72,9 +66,14 @@ msgid "Analytic Distribution Lines"
 msgstr "Редове на разпределение на аналитична"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Код на разпределение"
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "Печат"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
@@ -97,9 +96,9 @@ msgid "Analytic Distribution Line"
 msgstr "Ред на разпределение на аналитична"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Currency:"
-msgstr "Валута:"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Код на разпределение"
 
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
@@ -110,6 +109,11 @@ msgstr ""
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
 msgstr "Име на план"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr ""
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -127,10 +131,9 @@ msgid "Select Information"
 msgstr "Избор на информация"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "A model having this name and code already exists !"
-msgstr ""
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Идентификатор на сметка3"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -149,24 +152,14 @@ msgid "Analytic Account Ref."
 msgstr "Отпратка към аналитична сметка"
 
 #. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "Аналитично рапределение"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Line"
 msgstr "Ред на аналитичен план"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/create_model.py:0
-#, python-format
-msgid "No analytic plan defined !"
-msgstr ""
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -184,18 +177,6 @@ msgid "Default Entries"
 msgstr "Записи по подразбиране"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "to"
-msgstr "до"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#: code:addons/account_analytic_plans/wizard/create_model.py:0
-#, python-format
-msgid "Error"
-msgstr ""
-
-#. module: account_analytic_plans
 #: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
@@ -204,10 +185,9 @@ msgid "Analytic Plans"
 msgstr "Аналитични планове"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
-#, python-format
-msgid "User Error"
-msgstr ""
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "Минимално позволено (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
@@ -283,9 +263,9 @@ msgid "Analytic Plan Lines"
 msgstr "Редове на аналитичен план"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "Минимално позволено (%)"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Crossovered Analytic -"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -296,18 +276,6 @@ msgstr "План на модела"
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
 msgstr "Идентификатор на сметка2"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr ""
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/create_model.py:0
-#, python-format
-msgid "Please put a name and a code before saving the model !"
-msgstr ""
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -350,9 +318,9 @@ msgid "Root Account"
 msgstr "Основна сметка"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Печат"
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "Модела на разпределение бе запазен. Може да го използвате по-късно."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -360,35 +328,23 @@ msgid "Sequence"
 msgstr "Последователност"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Period from"
-msgstr "Период от"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "Value Error"
-msgstr ""
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr "Дата на отпечатване:"
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+msgid "Analytic Distribution"
+msgstr "Аналитично рапределение"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
 msgstr "Модели на аналитично разпределение"
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "This distribution model has been saved. You will be able to reuse it later."
-msgstr "Модела на разпределение бе запазен. Може да го използвате по-късно."
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
@@ -404,4 +360,9 @@ msgstr "Начална дата"
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
 msgstr "на"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr ""
 

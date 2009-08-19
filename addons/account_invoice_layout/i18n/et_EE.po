@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:21:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:21:36+0000\n"
+"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
+"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,12 +18,12 @@ msgstr ""
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Vahesumma"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Invoice Date:"
-msgstr ""
+msgstr "Arve kuupäev:"
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
@@ -34,37 +34,47 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
-msgstr ""
+msgstr "Pealkiri"
 
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
 msgid "Invoices with Layout and Message"
+msgstr "Arved kujunduse ja teatega"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "/ ("
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
+msgstr "Allahindl. (%)"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "(Incl. taxes):"
 msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Note"
-msgstr ""
+msgstr "Märge"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Prindi"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
 msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr ""
+msgstr "See teade ilmub printimisel arve alaossa"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Ühiku hind"
 
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
@@ -74,97 +84,92 @@ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
-msgstr ""
+msgstr "Teavita sõnumi teel"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PRO-FORMA"
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Arve read"
 
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr ""
+msgstr "Jär."
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
 msgid "Notification Message"
-msgstr ""
+msgstr "Teavitussõnum"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Customer Ref:"
-msgstr ""
+msgstr "Kliendi viide:"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description"
-msgstr ""
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
+msgid ")"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
 msgid "Type"
-msgstr ""
+msgstr "Tüüp"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Hind"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Canceled Invoice"
-msgstr ""
+msgstr "Tühistatud arve"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Maksud:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr ""
+msgstr "Lähtekonto"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
 msgid "Write Messages"
-msgstr ""
+msgstr "Kirjuta sõnumid"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Base"
-msgstr ""
+msgstr "Baas"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Fax :"
-msgstr ""
+msgstr "Faks :"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
 msgid "Special Message"
-msgstr ""
+msgstr "Spetsiaalsõnum"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Write a notification or a wishful message."
-msgstr ""
+msgstr "Kirjuta teade või soovitav sõnum."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
@@ -174,91 +179,101 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Page Break"
-msgstr ""
+msgstr "Leheküljepiir"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Document:"
-msgstr ""
+msgstr "Dokument:"
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
 msgid "Select Message"
-msgstr ""
+msgstr "Vali teade"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
+msgstr "Teated"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Product"
-msgstr ""
+msgstr "Toode"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
+msgstr "Kujundusega arved"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Description / Taxes"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Amount"
-msgstr ""
+msgstr "Kogus"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (excl. taxes):"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
+msgid "Description/Taxes"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Arve mustand"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Järjekorranumber"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kogus"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Refund"
-msgstr ""
+msgstr "Tagasimakse"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "VAT :"
-msgstr ""
+msgstr "KM :"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
-msgstr ""
+msgstr "Eraldusjoon"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Invoice"
+msgstr "Tarnija arve"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Note :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tax"
-msgstr ""
+msgstr "Maks"
+
+#. module: account_invoice_layout
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
+msgstr "account_invoice_layout"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
+msgid "Total (Excl. taxes):"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -269,25 +284,25 @@ msgstr "Arve"
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Tühista"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Tarnija tagasimakse"
 
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
+msgstr "Teade"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Total"
-msgstr ""
+msgstr "Kokku"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
-msgstr ""
+msgstr "Kõik teavitussõnumid"
 

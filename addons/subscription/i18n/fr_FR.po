@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-12 14:17+0000\n"
-"Last-Translator: Olivier (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-06-12 14:44+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -28,14 +27,9 @@ msgid "Object"
 msgstr "Objet"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Veuillez ajouter un autre document source.\n"
-"Celui ci n'existe pas !"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -65,15 +59,7 @@ msgstr "Date du jour"
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom du Modèle non valide dans la définition de l'action"
-
-#. module: subscription
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -107,11 +93,8 @@ msgstr "Mettre en brouillon"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
-"Module permettant de créer de nouveaux documents et d'ajouter une "
-"inscription à ce document."
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr "Module permettant de créer de nouveaux documents et d'ajouter une inscription à ce document."
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -255,12 +238,6 @@ msgid "Document Types"
 msgstr "Types de Documents"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Mauvais document source !"
-
-#. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
 msgstr "Champs du contrat d'abonnement !"
@@ -290,3 +267,4 @@ msgstr "Document crée"
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
 msgstr "Outils"
+

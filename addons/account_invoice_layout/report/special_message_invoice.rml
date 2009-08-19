@@ -130,7 +130,7 @@
 <para style="P23">Invoice [[ ((o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')) or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
 <para style="P23">PRO-FORMA [[ ((o.type == 'out_invoice' and o.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
 <para style="P23">Draft Invoice [[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
-<para style="P23">Canceled Invoice [[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
+<para style="P23">Cancelled Invoice [[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
 <para style="P23">Refund [[ (o.type=='out_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
 <para style="P23">Supplier Refund [[ (o.type=='in_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
 <para style="P16"><font>Supplier Invoice [[ (o.type=='in_invoice' or removeParentNode('para')) and '' ]]</font><font>[[ o.number ]]</font></para>
@@ -165,7 +165,7 @@
 		</tr>
 		<tr>
 			<td><para style="P8"><font color="white"></font></para></td>
-			<td><para style="terp_default_Note">Note : [[ format(a['note'] or removeParentNode('tr')) ]]</para></td>
+			<td><para style="terp_default_Note">Note : [[ format(a['note']) or removeParentNode('tr') ]]</para></td>
 			<td><para style="Table Contents"><font color="white"></font></para></td>
 			<td><para><font color="white"></font></para></td>
 			<td><para style="P7"><font color="white"></font></para></td>
@@ -175,8 +175,8 @@
 	</blockTable>
 	<blockTable colWidths="453.0,74.0" style="Tableau8">
 		<tr>
-			<td><para style="Table Contents">[[ a['type']=='text' and a['name'] or removeParentNode('blockTable') ]]</para></td>
-			<td><para style="P8">[[ a['type']=='text' and '' or removeParentNode('blockTable') ]]</para></td>
+			<td><para style="Table Contents">[[ a['type']=='text' and format(a['name']) or removeParentNode('blockTable') ]]</para></td>
+			<td><para style="P8">[[ a['type']=='text' and '' ]]</para></td>
 		</tr>
 	</blockTable>
 	<pageBreak>[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
@@ -234,7 +234,7 @@
 	<td><para style="P8">Amount</para></td>
 	</tr>
 	<tr>
-	<td><para style="P11a"><font>[[ repeatIn(o.tax_line,'t') ]]</font>[[ t.name ]]</para></td>
+	<td><para style="P10"><font>[[ repeatIn(o.tax_line,'t') ]]</font><font>[[ t.name ]]</font></para></td>
 	<td><para style="P11">[[ '%.2f' % t.base ]]</para></td>
 	<td><para style="P11">[[ '%.2f' % t.amount]]</para></td>
 	</tr>
@@ -259,14 +259,14 @@
 <para style="P8b">
 <font color="white"> </font>
 </para>
-<para style="P19">[[ format(o.comment) or '' ]]</para>
-<para style="P19">[[ format(o.payment_term and o.payment_term.note) or '' ]]</para>
+<para style="P19">[[ format(o.comment) or removeParentNode('para') ]]</para>
+<para style="P19">[[ format(o.payment_term and o.payment_term.note) or removeParentNode('para') ]]</para>
 <para style="P8b">
 <font color="white"> </font>
 </para>
 <section>
 <para style="P19">[[ repeatIn((spcl_msg(data['form']) and spcl_msg(data['form']).splitlines()) or [], 'note') ]]</para>
-<para style="P19">[[ note or removeParentNode('para') ]]</para>
+<para style="P19">[[ format(note) or removeParentNode('para') ]]</para>
 </section>
 </story>
 </document>

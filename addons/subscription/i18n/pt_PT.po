@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:27:42+0000\n"
-"PO-Revision-Date: 2009-05-20 10:27:42+0000\n"
+"POT-Creation-Date: 2009-08-06 15:30:35+0000\n"
+"PO-Revision-Date: 2009-08-06 15:30:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,10 +27,9 @@ msgid "Object"
 msgstr "Objecto"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "Please provide another source document.\nThis one does not exist !"
-msgstr ""
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -61,11 +60,6 @@ msgstr "Data actual"
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr ""
-
-#. module: subscription
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -242,12 +236,6 @@ msgstr "Subscrições"
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
 msgstr "Tipos de documentos"
-
-#. module: subscription
-#: code:addons/subscription/subscription.py:0
-#, python-format
-msgid "Wrong Source Document !"
-msgstr "Fonte do documento errado!"
 
 #. module: subscription
 #: view:subscription.document.fields:0

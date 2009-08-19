@@ -70,13 +70,12 @@
 		</record>
 
 		<record model="ir.ui.view" id="account_form1">
-			<field name="name">account.form</field>
+			<field name="name">account.form1</field>
 			<field name="inherit_id" ref="account.view_account_form"/>
 			<field name="model">account.account</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<field name="user_type" position="after">
-<!--					<field name="diff" select="2" />-->
 					<field name="balance" string="Closing Balance" select="2"/>
 					<field name="type1" select="2" />
 					<field name="open_bal" select="2"/>
@@ -86,7 +85,7 @@
 		</record>
 		
 		<record model="ir.ui.view" id="account_form2">
-			<field name="name">account.form</field>
+			<field name="name">account.form2</field>
 			<field name="inherit_id" ref="account.view_account_form"/>
 			<field name="model">account.account</field>
 			<field name="type">form</field>
@@ -97,11 +96,11 @@
 			</field>
 		</record>
 		
-		<record model="ir.ui.view" id="account_form3">
-			<field name="name">account.form</field>
+		<record model="ir.ui.view" id="account_tree1">
+			<field name="name">account.tree1</field>
 			<field name="inherit_id" ref="account.view_account_tree"/>
 			<field name="model">account.account</field>
-			<field name="type">form</field>
+			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<field name="name" position="after">
 						<field name="open_bal" select="1"/>
@@ -109,15 +108,14 @@
 			</field>
 		</record>
 		
-		<record model="ir.ui.view" id="account_form4">
-			<field name="name">account.form</field>
+		<record model="ir.ui.view" id="account_tree2">
+			<field name="name">account.tree2</field>
 			<field name="inherit_id" ref="account.view_account_tree"/>
 			<field name="model">account.account</field>
-			<field name="type">form</field>
+			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<field name="balance" position="replace">
-						<field name="balance" />
-				<field name="type1"/>
+				<field name="company_currency_id" position="before">
+					<field name="type1"/>
 				</field>
 			</field>
 		</record>

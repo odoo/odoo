@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:22:20+0000\n"
-"PO-Revision-Date: 2009-05-20 10:22:20+0000\n"
+"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
+"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "Types de Salaire"
 #. module: hr_contract
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de modèle invalide pour la définition de l'action"
 
 #. module: hr_contract
 #: field:hr.contract,employee_id:0
@@ -69,7 +69,7 @@ msgstr "Net"
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
 msgid "Human Resources Contracts"
-msgstr ""
+msgstr "Contrats Ressources Humaines"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,factor_days:0
@@ -82,10 +82,13 @@ msgid "Function"
 msgstr "Fonction"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Type de COntrat Salarial"
+#: field:hr.employee,marital_status:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
+#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
+msgid "Marital Status"
+msgstr "État matrimonial"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -182,7 +185,7 @@ msgstr "Période Salariale"
 #. module: hr_contract
 #: field:hr.employee,audiens_num:0
 msgid "AUDIENS Number"
-msgstr ""
+msgstr "Numéro AUDIENS"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -195,13 +198,10 @@ msgid "Contract Name"
 msgstr "Nom du Contrat"
 
 #. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr "État matrimonial"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Contract Wage Type"
+msgstr "Type de COntrat Salarial"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0

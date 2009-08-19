@@ -27,13 +27,20 @@ import netsvc
 import pooler
 from osv.orm import browse_record, browse_null
 
+
 merge_form = """<?xml version="1.0"?>
 <form string="Merge orders">
     <separator string="Are you sure you want to merge these orders ?"/>
     <newline/>
-    <label string="Please note that orders will only be merged if they are to the same partner and going to the same location, and lines will only be merged if they are exactly the same except for the quantity and unit."/>
+    <label>Please note that:
+      - orders will only be merged if:
+        * their status is draft
+        * they belong to the same partner
+        * are going to the same location
+      - lines will only be merged if:
+        * they are exactly the same except for the quantity and unit</label>
 </form>
-"""
+""" 
 
 merge_fields = {
 }

@@ -193,12 +193,12 @@ class sale_order(osv.osv):
             ('shipping_except','Shipping Exception'),
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
-            ('cancel','Cancel')
+            ('cancel','Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'.", select=True),
         'date_order':fields.date('Date Ordered', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 
         'user_id':fields.many2one('res.users', 'Salesman', states={'draft':[('readonly',False)]}, select=True),
-        'partner_id':fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)]}, change_default=True, select=True),
+        'partner_id':fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
         'partner_order_id':fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft':[('readonly',False)]}, help="The name and address of the contact that requested the order or quotation."),
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
@@ -215,7 +215,7 @@ class sale_order(osv.osv):
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice on Order Ater Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
+  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
   - The 'Invoice from the packing' choice is used to create an invoice during the packing process."""),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'project_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly', False)]}),
@@ -273,7 +273,7 @@ class sale_order(osv.osv):
         sale_orders = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for s in sale_orders:
-            if s['state'] in ['draft','canceled']:
+            if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sale Order(s) which are already confirmed !'))
@@ -359,7 +359,7 @@ class sale_order(osv.osv):
         else:
             pay_term = False
         for preinv in order.invoice_ids:
-            if preinv.state in ('open','paid','proforma'):
+            if preinv.state not in ('cancel',):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id':False, 'price_unit':-preline.price_unit})
                     lines.append(inv_line_id)
@@ -730,7 +730,7 @@ class sale_order_line(osv.osv):
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight' : fields.float('Weight'),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled'),('exception','Exception')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Cancelled'),('exception','Exception')], 'Status', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer')
     }
     _order = 'sequence, id'
@@ -893,10 +893,10 @@ class sale_order_line(osv.osv):
                 ean = pack.ean
                 qty_pack = pack.qty
                 type_ul = pack.ul
-                warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
-                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantity: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
+                warn_msg = warn_msg + "\n\n"+_("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
                 warning={
-                    'title':'Packing Information !',
+                    'title':_('Packing Information !'),
                     'message': warn_msg
                     }
             result['product_uom_qty'] = qty
@@ -913,8 +913,7 @@ class sale_order_line(osv.osv):
                     uos = False
             else:
                 uos = False
-
-        result .update({'type': product_obj.procure_method})
+        result.update({'type': product_obj.procure_method})
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
@@ -994,19 +993,17 @@ class sale_order_line(osv.osv):
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
-
+    
+    def unlink(self, cr, uid, ids, context={}):
+        """Allows to delete sale order lines in draft,cancel states"""
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.state not in ['draft','cancel']:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sale order line which is %s !')%(rec.state,))
+        return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
+    
 sale_order_line()
 
 
-
-_policy_form = '''<?xml version="1.0"?>
-<form string="Select Bank Account">
-    <field name="picking_policy" colspan="4"/>
-</form>'''
-
-_policy_fields = {
-    'picking_policy': {'string': 'Packing Policy', 'type': 'selection','selection': [('direct','Direct Delivery'),('one','All at once')],'required': True,}
-}
 class sale_config_picking_policy(osv.osv_memory):
     _name='sale.config.picking_policy'
     _columns = {

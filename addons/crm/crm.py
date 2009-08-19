@@ -481,7 +481,9 @@ class crm_case(osv.osv):
                             write['priority'] = action.act_priority
                         if action.act_email_cc:
                             if '@' in (case.email_cc or ''):
-                                write['email_cc'] = case.email_cc+','+action.act_email_cc
+                                emails = case.email_cc.split(",")
+                                if  action.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
+                                    write['email_cc'] = case.email_cc+','+action.act_email_cc
                             else:
                                 write['email_cc'] = action.act_email_cc
                         write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -520,6 +522,7 @@ class crm_case(osv.osv):
             'case_id': case.id,
             'case_subject': case.name,
             'case_date': case.date,
+            'case_description': case.description,
 
             'case_user': (case.user_id and case.user_id.name) or '/',
             'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',

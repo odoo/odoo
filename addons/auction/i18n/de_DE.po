@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:23:07+0000\n"
-"PO-Revision-Date: 2009-05-20 10:23:07+0000\n"
+"POT-Creation-Date: 2009-08-06 15:21:50+0000\n"
+"PO-Revision-Date: 2009-08-06 15:21:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -345,12 +345,6 @@ msgstr "Zeitg. Kunst"
 #: field:auction.lots,sel_inv_id:0
 msgid "Seller Invoice"
 msgstr "Einlieferer Rechnung"
-
-#. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "The Buyer \"%s\" has no Invoice Address."
-msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -880,12 +874,6 @@ msgid "comparaison estimate/adjudication "
 msgstr "Vergleich Schätzung/Zuschlag "
 
 #. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "The object \"%s\" has no buyer assigned."
-msgstr ""
-
-#. module: auction
 #: rml:buyer.list:0
 msgid "Adj(EUR)"
 msgstr "Zuschlag (EUR)"
@@ -973,12 +961,6 @@ msgstr "Nicht klassifizierte Objekte"
 #: wizard_view:auction.lots.make_invoice_buyer,init:0
 msgid "(Keep empty for automatic number)"
 msgstr "(frei lassen für automat. Nummernvergabe)"
-
-#. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "No Invoice Address"
-msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -1139,11 +1121,10 @@ msgid "Detailed lots"
 msgstr "Details Auktionslos"
 
 #. module: auction
-#: field:report.object.encoded,obj_margin:0
-#: field:report.object.encoded.manager,obj_margin:0
-#: field:report.seller.auction2,net_margin:0
-msgid "Net margin"
-msgstr "Netto Marge"
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
+msgid "Objects statistics"
+msgstr "Auswertungen Versteigerungsobjekte"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1227,13 +1208,6 @@ msgid "Create Date"
 msgstr "Erzeugt am"
 
 #. module: auction
-#: code:addons/auction/wizard/wizard_aie_send.py:0
-#: code:addons/auction/wizard/wizard_aie_send_result.py:0
-#, python-format
-msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr "Verbindung schlägt fehl !"
-
-#. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
 msgid "Buyer's Summary"
 msgstr "Käufer Zusammenfassung"
@@ -1256,12 +1230,6 @@ msgstr "Name"
 #: field:report.unclassified.objects,bord_vnd_id:0
 msgid "Depositer Inventory"
 msgstr "Inventar des Kreditgebers"
-
-#. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "The Buyer has no Invoice Address."
-msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_deposit_tree_m
@@ -1701,10 +1669,11 @@ msgid "Document Number"
 msgstr "Dokumentennummer"
 
 #. module: auction
-#: view:report.object.encoded:0
-#: view:report.object.encoded.manager:0
-msgid "Objects statistics"
-msgstr "Auswertungen Versteigerungsobjekte"
+#: field:report.object.encoded,obj_margin:0
+#: field:report.object.encoded.manager,obj_margin:0
+#: field:report.seller.auction2,net_margin:0
+msgid "Net margin"
+msgstr "Netto Marge"
 
 #. module: auction
 #: wizard_button:auction.lots.numerotate,search,set_number:0
@@ -1715,12 +1684,6 @@ msgstr "Laufende Nummer"
 #: xsl:report.auction.lots.list.landscape:0
 msgid "Buyer, Price"
 msgstr "Käufer, Preis"
-
-#. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "Missed buyer !"
-msgstr ""
 
 #. module: auction
 #: rml:auction.code_bar_lot:0
@@ -2049,9 +2012,9 @@ msgid "TEL:"
 msgstr "Tel.:"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
-msgstr "Angebot Auktionsobjekte"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
+msgstr "Ertragskonto"
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
@@ -2338,12 +2301,6 @@ msgid "Unplanned Objects"
 msgstr "Ungeplante Objekte"
 
 #. module: auction
-#: code:addons/auction/auction.py:0
-#, python-format
-msgid "Missed Address !"
-msgstr ""
-
-#. module: auction
 #: field:report.buyer.auction2,gross_revenue:0
 msgid "Gross Revenue"
 msgstr "Brutto Einnahmen"
@@ -2378,13 +2335,6 @@ msgstr "Automatische Nummerierung"
 #: rml:auction.total.rml:0
 msgid "Auction Date:"
 msgstr "Ende Auktion"
-
-#. module: auction
-#: code:addons/auction/wizard/wizard_aie_send.py:0
-#: code:addons/auction/wizard/wizard_aie_send_result.py:0
-#, python-format
-msgid "Error"
-msgstr "Fehler"
 
 #. module: auction
 #: field:auction.lots,ach_inv_id:0
@@ -2490,9 +2440,9 @@ msgid "Adjudication price"
 msgstr "Zuschlagspreis"
 
 #. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
-msgstr "Ertragskonto"
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
+msgstr "Angebot Auktionsobjekte"
 
 #. module: auction
 #: xsl:flagey.huissier:0
