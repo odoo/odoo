@@ -1427,10 +1427,10 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(user, self._name, id_new, cr)
-        self.vaccum(cr, user)
         return id_new
 
     def create(self, cr, user, vals, context=None):
+        self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
         default = []
@@ -1454,7 +1454,6 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-        self.vaccum(cr, user)
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
@@ -2533,11 +2532,11 @@ class orm(orm_template):
             if c in vals:
                 avoid_table.append(t)
         for f in self._columns.keys(): # + self._inherit_fields.keys():
-            if not f in vals:
+            if (not f in vals) and (not isinstance(self._columns[f], fields.property)):
                 default.append(f)
 
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table) and (not isinstance(self._columns[f], fields.property)):
                 default.append(f)
 
         if len(default):
@@ -2546,7 +2545,6 @@ class orm(orm_template):
                 if dv in self._columns and self._columns[dv]._type == 'many2many':
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
-
             vals.update(default_values)
 
         tocreate = {}
@@ -2654,8 +2652,8 @@ class orm(orm_template):
         self._validate(cr, user, [id_new], context)
 
         result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
-        for order, object, ids, fields in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+        for order, object, ids, fields2 in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
