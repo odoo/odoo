@@ -328,7 +328,7 @@ CREATE TABLE ir_model_data (
     write_date timestamp without time zone,
     write_uid integer,
     noupdate boolean,
-    name character varying(64) NOT NULL,
+    name character varying(128) NOT NULL,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module character varying(64) NOT NULL,

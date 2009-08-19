@@ -381,8 +381,12 @@ class orm_template(object):
                     vals['select_level']
                 ))
                 if 'module' in context:
+                    name1 = 'field_' + self._table + '_' + k
+                    cr.execute("select name from ir_model_data where name=%s", (name1,))
+                    if cr.fetchone():
+                        name1 = name1 + "_" + str(id)
                     cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                        (('field_'+self._table+'_'+k)[:64], context['module'], 'ir.model.fields', id)
+                        (name1, context['module'], 'ir.model.fields', id)
                     )
             else:
                 for key, val in vals.items():
@@ -658,7 +662,7 @@ class orm_template(object):
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
                         res = line[i] and int(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'boolean':
-                        res = line[i] and eval(line[i])
+                        res = line[i].lower() not in ('0', 'false', 'off')
                     elif fields_def[field[len(prefix)]]['type'] == 'float':
                         res = line[i] and float(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'selection':
@@ -1311,7 +1315,7 @@ class orm_template(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         for lang in langs:
@@ -1334,7 +1338,7 @@ class orm_template(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
         for lang in langs:
             for field in vals:
                 if field in self._columns:
@@ -2035,13 +2039,13 @@ class orm(orm_template):
         self._inherits_reload_src()
 
     def fields_get(self, cr, user, fields=None, context=None):
-        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False)
+        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False, context=context)
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         select = ids
@@ -2256,11 +2260,18 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
+
+        properties = self.pool.get('ir.property')
+        domain = [('res_id', '=', False), 
+                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]), 
+                 ]
+        if properties.search(cr, uid, domain, context=context):
+            raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
 
         wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            wf_service.trg_delete(uid, self._name, id, cr)
+        for oid in ids:
+            wf_service.trg_delete(uid, self._name, oid, cr)
 
         #cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
         #res = cr.dictfetchall()
@@ -2278,7 +2289,7 @@ class orm(orm_template):
             if d1:
                 cr.execute('SELECT id FROM "'+self._table+'" ' \
                         'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
-                if not cr.rowcount == len({}.fromkeys(ids)):
+                if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
@@ -2290,13 +2301,13 @@ class orm(orm_template):
                 cr.execute('delete from "'+self._table+'" ' \
                         'where id in ('+str_d+')', sub_ids)
 
-        for order, object, ids, fields in result_store:
+        for order, object, store_ids, fields in result_store:
             if object<>self._name:
                 obj =  self.pool.get(object)
-                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, ids))+')')
-                ids = map(lambda x: x[0], cr.fetchall())
-                if ids:
-                    obj._store_set_values(cr, uid, ids, fields, context)
+                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, store_ids))+')')
+                rids = map(lambda x: x[0], cr.fetchall())
+                if rids:
+                    obj._store_set_values(cr, uid, rids, fields, context)
         return True
 
     #
@@ -2342,7 +2353,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
 
         upd0 = []
         upd1 = []
@@ -2423,7 +2434,7 @@ class orm(orm_template):
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
-        # default element in context must be remove when call a one2many or many2many
+        # default element in context must be removed when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
@@ -2513,7 +2524,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
 
         default = []
 
@@ -2576,12 +2587,13 @@ class orm(orm_template):
         #End
         
         for field in vals:
-            if self._columns[field]._classic_write:
-                upd0 = upd0 + ',"' + field + '"'
-                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
-                upd2.append(self._columns[field]._symbol_set[1](vals[field]))
-            else:
-                upd_todo.append(field)
+            if field in self._columns:
+                if self._columns[field]._classic_write:
+                    upd0 = upd0 + ',"' + field + '"'
+                    upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
+                    upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+                else:
+                    upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
@@ -2631,12 +2643,12 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
                 
-        # default element in context must be remove when call a one2many or many2many
+        # default element in context must be removed when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
-
+        
         for field in upd_todo:
             self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
         self._validate(cr, user, [id_new], context)
@@ -2835,7 +2847,7 @@ class orm(orm_template):
             if 'state' in self._defaults:
                 default['state'] = self._defaults['state'](self, cr, uid, context)
         data = self.read(cr, uid, [id], context=context)[0]
-        fields = self.fields_get(cr, uid)
+        fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
             ftype = fields[f]['type']
@@ -2894,11 +2906,11 @@ class orm(orm_template):
     def copy(self, cr, uid, id, default=None, context=None):
         trans_obj = self.pool.get('ir.translation')
         data, trans_data = self.copy_data(cr, uid, id, default, context)
-        new_id=self.create(cr, uid, data)
+        new_id = self.create(cr, uid, data, context)
         for record in trans_data:
             del record['id']
-            record['res_id']=new_id
-            trans_obj.create(cr,uid,record)
+            record['res_id'] = new_id
+            trans_obj.create(cr, uid, record, context)
         return new_id
 
     def exists(self, cr, uid, id, context=None):

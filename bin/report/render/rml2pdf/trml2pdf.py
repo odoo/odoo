@@ -216,7 +216,8 @@ class _rml_canvas(object):
             self.canvas.setTitle(self.title)
 
     def _textual(self, node, x=0, y=0):
-        rc = utils._process_text(self, node.text or '')
+        text = node.text and node.text.encode('utf-8') or ''
+        rc = utils._process_text(self, text)
         for n in node:
             if n.tag == 'seq':
                 from reportlab.lib.sequencer import getSequencer

@@ -103,14 +103,23 @@ class expression(object):
             left, operator, right = e
 
             working_table = table
-            if left in table._inherit_fields:
-                working_table = table.pool.get(table._inherit_fields[left][0])
-                if working_table not in self.__tables.values():
-                    self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', table._table, table._inherits[working_table._name]), working_table._table))
-
-            self.__tables[i] = working_table
-
+            main_table = table
             fargs = left.split('.', 1)
+            index = i
+            if left in table._inherit_fields:
+                while True:
+                    field = main_table._columns.get(fargs[0], False)
+                    if field:
+                        working_table = main_table
+                        self.__tables[i] = working_table
+                        break
+                    working_table = main_table.pool.get(main_table._inherit_fields[left][0])
+                    if working_table not in self.__tables.values():
+                        self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
+                        self.__tables[index] = working_table
+                        index += 1
+                    main_table = working_table
+            
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':

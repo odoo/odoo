@@ -41,6 +41,7 @@ import re
 import reportlab
 from lxml import etree
 import copy
+import tools
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -111,7 +112,7 @@ def _process_text(self, txt):
                     pass
                 if type(txt)==type('') or type(txt)==type(u''):
                     txt2 = str2xml(txt)
-                    result += txt2
+                    result += tools.ustr(txt2)
                 elif (txt is not None) and (txt is not False):
                     result += str(txt)
         return result
@@ -119,7 +120,7 @@ def _process_text(self, txt):
 def text_get(node):
     rc = ''
     for node in node.getchildren():
-            rc = rc + node.text
+            rc = rc + tools.ustr(node.text)
     return rc
 
 units = [

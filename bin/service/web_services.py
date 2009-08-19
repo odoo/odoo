@@ -192,7 +192,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append(db_name)
 
         stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
@@ -236,7 +236,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append('--dbname=' + db_name)
         args2 = tuple(cmd)
 
@@ -374,6 +374,7 @@ class common(netsvc.Service):
         self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
         self.exportMethod(self.get_server_environment)
+        self.exportMethod(self.login_message)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -555,6 +556,11 @@ GNU Public Licence.
                     %(platform.release(), platform.version(), platform.architecture()[0],
                       os_lang, platform.python_version(),release.version,rev_id)
         return environment
+    
+
+    def login_message(self):
+        return tools.config.get('login_message', False)
+
 common()
 
 class objects_proxy(netsvc.Service):

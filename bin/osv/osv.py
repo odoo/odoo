@@ -67,8 +67,8 @@ class osv_pool(netsvc.Service):
                         self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
                 self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
             except Exception, e:
-                import traceback
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
+                import traceback, sys
+                tb_s = "".join(traceback.format_exception(*sys.exc_info()))
                 logger = Logger()
                 logger.notifyChannel('web-services', LOG_ERROR, tb_s)
                 raise
