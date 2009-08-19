@@ -189,7 +189,7 @@ class rml_parse(object):
         return newtag, attrs
 
     def format(self, text, oldtag=None):
-        return text
+        return text.strip()
 
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
