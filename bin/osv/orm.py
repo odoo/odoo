@@ -2038,7 +2038,9 @@ class orm(orm_template):
         self._inherits_reload_src()
 
     def fields_get(self, cr, user, fields=None, context=None):
-        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False, context=context)
+        ira = self.pool.get('ir.model.access')
+        read_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
+                      ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
