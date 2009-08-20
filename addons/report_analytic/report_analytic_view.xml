@@ -42,10 +42,10 @@
             <field name="model">report.analytic.account.close</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Expired analytic accounts">
-                    <field group="True" name="partner_id"/>
+                <graph string="Expired analytic accounts" type="bar">
+                    <field name="partner_id"/>
                     <field name="quantity" operator="+"/>
-                    <field name="quantity_max" operator="+"/>
+                    <field name="quantity_max" operator="+"/> 
                 </graph>
             </field>
         </record>
