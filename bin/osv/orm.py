@@ -174,7 +174,7 @@ class browse_record(object):
                 return False
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._classic_write:
+            if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
                 ffields = filter(lambda x: x[1]._classic_write, self._table._columns.items())
                 # gen the list of inherited fields
@@ -2345,6 +2345,7 @@ class orm(orm_template):
                 if not edit:
                     vals.pop(field)
 
+
         if not context:
             context = {}
         if not ids:
@@ -2355,6 +2356,7 @@ class orm(orm_template):
         self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+
 
         upd0 = []
         upd1 = []
@@ -2431,6 +2433,7 @@ class orm(orm_template):
                     if self._columns[f].translate:
                         src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
+
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
@@ -2649,13 +2652,19 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
         
+        result = []
         for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
+            result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
         self._validate(cr, user, [id_new], context)
 
-        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
-        for order, object, ids, fields2 in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
+        if not context.get('no_store_function', False):
+            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result.sort()
+            done = []
+            for order, object, ids, fields2 in result:
+                if not (object, ids, fields2) in done:
+                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
+                    done.append((object, ids, fields2))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
@@ -2665,6 +2674,15 @@ class orm(orm_template):
         result = {}
         fncts = self.pool._store_function.get(self._name, [])
         for fnct in range(len(fncts)):
+            if fncts[fnct][3]:
+                ok = False
+                for f in (fields or []):
+                    if f in fncts[fnct][3]:
+                        ok = True
+                        break
+                if not ok:
+                    continue
+
             result.setdefault(fncts[fnct][0], {})
             ids2 = fncts[fnct][2](self,cr, uid, ids, context)
             for id in filter(None, ids2):
