@@ -188,10 +188,12 @@ class wizard_base_setup(wizard.interface):
                     'city': form['city'],
                     'email': form['email'],
                     'phone': form['phone'],
-                    'country_id': form['country_id'],
                 }
+        # we can do this, or set res.append((False, '')) in _get_all()
+        if form['country_id'] > 0:
+            values['country_id'] = form['country_id']
         if form['state_id'] > 0:
-            values['state_id']=form['state_id']
+            values['state_id'] = form['state_id']
         if company.partner_id.address:
             address=company.partner_id.address[0]
             address_obj.write(cr, uid, [address.id], values)
