@@ -407,7 +407,7 @@ class stock_picking(osv.osv):
         return res
 
     def create(self, cr, user, vals, context=None):
-        if 'name' not in vals:
+        if ('name' not in vals) or (vals.get('name')=='/'):
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
         return super(stock_picking, self).create(cr, user, vals, context)
 

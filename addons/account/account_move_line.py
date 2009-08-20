@@ -857,7 +857,6 @@ class account_move_line(osv.osv):
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 
-#        result = super(osv.osv, self).create(cr, uid, vals, context)
         if 'analytic_account_id' in vals and vals['analytic_account_id']:
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
@@ -943,11 +942,12 @@ class account_move_line(osv.osv):
                     self.create(cr, uid, data, context)
             del vals['account_tax_id']
 
-        if not is_new_move and 'date' in vals:
-            if context and ('__last_update' in context):
-                del context['__last_update']
-            self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
-        if check:
+        # No needed, related to the job
+        #if not is_new_move and 'date' in vals:
+        #    if context and ('__last_update' in context):
+        #        del context['__last_update']
+        #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
+        if check and not context.get('no_store_function'):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)

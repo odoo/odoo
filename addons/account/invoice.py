@@ -232,23 +232,23 @@ class account_invoice(osv.osv):
         'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated account moves."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16,2),string='Untaxed',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'amount_tax': fields.function(_amount_all, method=True, digits=(16,2), string='Tax',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'amount_total': fields.function(_amount_all, method=True, digits=(16,2), string='Total',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -257,7 +257,7 @@ class account_invoice(osv.osv):
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
@@ -266,9 +266,9 @@ class account_invoice(osv.osv):
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
-                'account.invoice.line': (_get_invoice_line, None, 50),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 50),
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             },
@@ -389,14 +389,14 @@ class account_invoice(osv.osv):
     # return the ids of the move lines which has the same account than the invoice
     # whose id is in ids
     def move_line_id_payment_get(self, cr, uid, ids, *args):
-        ml = self.pool.get('account.move.line')
         res = []
-        for inv in self.read(cr, uid, ids, ['move_id','account_id']):
-            if inv['move_id']:
-                move_line_ids = ml.search(cr, uid, [('move_id', '=', inv['move_id'][0])])
-                for line in ml.read(cr, uid, move_line_ids, ['account_id']):
-                    if line['account_id']==inv['account_id']:
-                        res.append(line['id'])
+        if not ids: return res
+        cr.execute('select \
+                l.id \
+            from account_move_line l \
+                left join account_invoice i on (i.move_id=l.move_id) \
+            where i.id in ('+','.join(map(str,ids))+') and l.account_id=i.account_id')
+        res = map(lambda x: x[0], cr.fetchall())
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

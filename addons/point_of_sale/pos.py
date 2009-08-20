@@ -46,7 +46,6 @@ class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "date_order, create_date desc"
-    _order = "date_order desc, name desc"
 
     def unlink(self, cr, uid, ids, context={}):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -231,7 +230,7 @@ class pos_order(osv.osv):
 
     def test_paid(self, cr, uid, ids, context=None):
         def deci(val):
-            return Decimal(str(val))
+            return Decimal("%f" % (val, ))
 
         for order in self.browse(cr, uid, ids, context):
             if order.lines and not order.amount_total:
