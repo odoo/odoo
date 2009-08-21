@@ -53,7 +53,7 @@ def execute(connector, method, *args):
     try:        
         res = getattr(connector,method)(*args)
     except socket.error,e:        
-        if e.errno == 111:
+        if e.args[0] == 111:
             print 'Please wait %d sec to start server....'%(waittime)
             time.sleep(waittime)
             res = execute(connector, method, *args)
