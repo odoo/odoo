@@ -40,7 +40,7 @@ class  report_task_user_pipeline_open (osv.osv):
         cr.execute('''
             create or replace view report_task_user_pipeline_open as (
                 select
-                    u.id as id,
+                    min(t.id) as id,
                     u.id as user_id,
                     u.company_id as company_id,
                     count(t.*) as task_nbr,
