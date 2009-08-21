@@ -30,13 +30,15 @@ import os
 import time
 import pickle
 import base64
+import socket
 
 admin_passwd = 'admin'
+waittime = 10
 
 def start_server(root_path, port, addons_path):
     if root_path:
         root_path += '/'
-    os.system('python '+root_path+'openerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(str(port),addons_path))    
+    os.system('python2.5 '+root_path+'openerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(str(port),addons_path))    
 def clean():
     if os.path.isfile('openerp.pid'):
         ps = open('openerp.pid') 
@@ -46,22 +48,35 @@ def clean():
             if pid:    
                 os.kill(pid,9)
 
+def execute(connector, method, *args):
+    res = False
+    try:        
+        res = getattr(connector,method)(*args)
+    except socket.error,e:        
+        if e.errno == 111:
+            print 'Please wait %d sec to start server....'%(waittime)
+            time.sleep(waittime)
+            res = execute(connector, method, *args)
+        else:
+            raise e
+    return res        
+
 def login(uri, dbname, user, pwd):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
-    uid = conn.login(dbname, user, pwd) 
+    uid = execute(conn,'login',dbname, user, pwd) 
     return uid
 
 def import_translate(uri, user, pwd, dbname, translate_in):      
     uid = login(uri, dbname, user, pwd)    
     if uid:        
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
-        wiz_id = conn.create(dbname, uid, pwd, 'module.lang.import')
+        wiz_id = execute(conn,'create',dbname, uid, pwd, 'module.lang.import')
         for trans_in in translate_in:
             lang,ext = os.path.splitext(trans_in.split('/')[-1])                
             state = 'init'  
             datas = {'form':{}}
             while state!='end':                
-                res = conn.execute(dbname, uid, pwd, wiz_id, datas, state, {})
+                res = execute(conn,'execute',dbname, uid, pwd, wiz_id, datas, state, {})
                 if 'datas' in res:
                     datas['form'].update( res['datas'].get('form',{}) )
                 if res['type']=='form':
@@ -87,7 +102,7 @@ def check_quality(uri, user, pwd, dbname, modules):
         final = {}   
         test_detail = {}
         for module in modules:            
-            quality_result = conn.execute(dbname, uid, pwd,'module.quality.check','check_quality',module)
+            quality_result = execute(conn,'execute', dbname, uid, pwd,'module.quality.check','check_quality',module)
             detail_html = ''
             html = '''<html><html><html><html><body><a name="TOP"></a>'''
             html +="<h1> Module : %s </h1>"%(quality_result['name'])   
@@ -120,7 +135,7 @@ def wait(id,url=''):
     progress=0.0
     sock2 = xmlrpclib.ServerProxy(url+'/db')
     while not progress==1.0:
-        progress,users = sock2.get_progress(admin_passwd, id)
+        progress,users = execute(sock2,'get_progress',admin_passwd, id)
     return True
 
 
@@ -129,19 +144,19 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
     obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
     wiz_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
     login_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
-    db_list = conn.list()
+    db_list = execute(conn, 'list')
     if dbname not in db_list:
-        id = conn.create(admin_passwd, dbname, True, lang) 
+        id = execute(conn,'create',admin_passwd, dbname, True, lang) 
         wait(id,uri)
     uid = login_conn.login(dbname, user, pwd)   
 
-    wiz_id = wiz_conn.create(dbname, uid, user, 'base_setup.base_setup')
+    wiz_id = execute(wiz_conn,'create', dbname, uid, user, 'base_setup.base_setup')
 
     state = 'init'
     datas = {'form':{}}
 
     while state!='config':        
-        res = wiz_conn.execute(dbname, uid, pwd, wiz_id, datas, state, {})
+        res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
         if state=='init':
             datas['form'].update( res['datas'] )
         if res['type']=='form':
@@ -153,15 +168,15 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
             })
         elif res['type']=='state':
             state = res['state']
-    res = wiz_conn.execute(dbname, uid, pwd, wiz_id, datas, state, {})
+    res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
     install_module(uri, dbname, ['base_module_quality'],user,pwd)
     return True
 
 def drop_db(uri, dbname):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/db')
-    db_list = conn.list()
+    db_list = execute(conn,'list')
     if dbname in db_list:
-        conn.drop(admin_passwd, dbname)    
+        execute(conn, 'drop', admin_passwd, dbname)    
     return True
 
 def install_module(uri, dbname, modules, user='admin', pwd='admin'):
@@ -169,14 +184,14 @@ def install_module(uri, dbname, modules, user='admin', pwd='admin'):
     if uid: 
         obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
         wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
-        module_ids = obj_conn.execute(dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
-        obj_conn.execute(dbname, uid, pwd, 'ir.module.module', 'button_install', module_ids)           
-        wiz_id = wizard_conn.create(dbname, uid, pwd, 'module.upgrade.simple')
+        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
+        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_install', module_ids)           
+        wiz_id = execute(wizard_conn, 'create', dbname, uid, pwd, 'module.upgrade.simple')
         state = 'init'
         datas = {}
         #while state!='menu':
         while state!='end':                
-            res = wizard_conn.execute(dbname, uid, pwd, wiz_id, datas, state, {})                
+            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})                
             if state == 'init':
                 state = 'start'
             elif state == 'start':
@@ -188,14 +203,14 @@ def upgrade_module(uri, dbname, modules, user='admin', pwd='admin'):
     if uid: 
         obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
         wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')        
-        module_ids = obj_conn.execute(dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
-        obj_conn.execute(dbname, uid, pwd, 'ir.module.module', 'button_upgrade', module_ids)           
-        wiz_id = wizard_conn.create(dbname, uid, pwd, 'module.upgrade.simple')
+        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
+        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_upgrade', module_ids)           
+        wiz_id = execute(wizard_conn, 'create', dbname, uid, pwd, 'module.upgrade.simple')
         state = 'init'
         datas = {}
         #while state!='menu':
         while state!='end':                
-            res = wizard_conn.execute(dbname, uid, pwd, wiz_id, datas, state, {})                
+            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})                
             if state == 'init':
                 state = 'start'
             elif state == 'start':
@@ -265,9 +280,7 @@ uri = 'http://localhost:' + str(options['port'])
 server_thread = threading.Thread(target=start_server,
                 args=(options['root-path'], options['port'], options['addons-path']))
 try:    
-    server_thread.start()   
-    print 'Please wait 20 sec to start server....',uri
-    time.sleep(20) 
+    server_thread.start()       
     if command == 'create-db': 
         create_db(uri, options['database'], options['login'], options['pwd'])
     if command == 'drop-db': 
@@ -291,6 +304,8 @@ except Exception, e:
     print e
     clean()
     sys.exit(1)
+    
+
 
 
 
