@@ -536,7 +536,9 @@ class report_sxw(report_rml, preprocess.report):
         sxw_io.close()
         return (final_op, report_type)
 
-    def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
+    def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
+        if not context:
+            context = {}
         context = context.copy()
         report_type = 'html'
         context['parents'] = html_parents
