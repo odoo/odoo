@@ -51,7 +51,7 @@ class report_printscreen_list(report_int):
         return result
 
     def _parse_string(self, view):
-        dom = etree.XML(unicode(view, 'utf-8').encode('utf-8'))
+        dom = etree.XML(view)
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
@@ -139,7 +139,7 @@ class report_printscreen_list(report_int):
 
         for f in fields_order:
             field = etree.Element("field")
-            field.text = fields[f]['string'] or ''
+            field.text = tools.ustr(fields[f]['string'] or '')
             header.append(field)
 
         new_doc.append(header)
@@ -148,12 +148,12 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
+            
         for line in results:
             node_line = etree.Element("row")
             count = -1
             for f in fields_order:
-
+                float_flag = 0
                 count += 1
 
                 if fields[f]['type']=='many2one' and line[f]:
@@ -170,7 +170,9 @@ class report_printscreen_list(report_int):
 
                 if fields[f]['type'] == 'float' and line[f]:
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
-                    line[f]='%.2f'%(line[f])
+                    prec ='%.' + str(precision) +'f'
+                    line[f]=prec%(line[f])
+                    float_flag = 1
 
                 if fields[f]['type'] == 'date' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
@@ -195,8 +197,12 @@ class report_printscreen_list(report_int):
                 col.set('tree','no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
+                    if float_flag:
+                       col.set('tree','float') 
                     if temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
+                        
+                        
                 else:
                      col.text = '/'
                 node_line.append(col)
@@ -210,16 +216,18 @@ class report_printscreen_list(report_int):
             col.set('tree','no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
-                  total = '%.2f'%(tsum[f])
-                  txt = str(total or '')
-               else :
-                    txt = str(tsum[f] or '')
+                   prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
+                   total = prec%(tsum[f])
+                   txt = str(total or '')
+                   col.set('tree','float')
+               else:
+                   txt = str(tsum[f] or '')
             else:
                 txt = '/'
             if f == 0:
                 txt ='Total'
 
-            col.text = txt
+            col.text = tools.ustr(txt or '')
             node_line.append(col)
 
         lines.append(node_line)

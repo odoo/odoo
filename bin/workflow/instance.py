@@ -43,7 +43,7 @@ def delete(cr, ident):
 
 def validate(cr, inst_id, ident, signal, force_running=False):
     cr.execute("select * from wkf_workitem where inst_id=%s", (inst_id,))
-    stack = None
+    stack = []
     for witem in cr.dictfetchall():
         stack = []
         workitem.process(cr, witem, ident, signal, force_running, stack=stack)
