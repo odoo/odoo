@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Open Object Maintainers <open-object@lists.debian-maintainers.org>
 Uploaders: Daniel Baumann <daniel@debian.org>
 Build-Depends: debhelper (>= 7), po-debconf, python-dev, quilt
-Build-Depends-Indep: python-libxslt1, python-lxml, python-psycopg2, python-xml,
+Build-Depends-Indep: python-libxslt1, python-lxml, python-psycopg2
 Standards-Version: 3.8.3
 Homepage: http://www.openerp.com/
 Vcs-Browser: http://git.debian-maintainers.org/?p=open-object/openerp-server.git
@@ -15,8 +15,7 @@ Section: net
 Architecture: all
 Depends:
  ${misc:Depends}, adduser, python,  python-libxslt1, python-lxml,
- python-psycopg2, python-pydot, python-pychart, python-reportlab, python-tz,
- python-xml
+ python-psycopg2, python-pydot, python-pychart, python-reportlab, python-tz
 Conflicts: tinyerp-server
 Replaces: tinyerp-server
 Recommends:
