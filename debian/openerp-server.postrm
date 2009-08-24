@@ -2,18 +2,44 @@
 
 set -e
 
-USER="openerp"
+if [ -e /usr/share/debconf/confmodule ]
+then
+	_DEBCONF="true"
+
+	. /usr/share/debconf/confmodule
+fi
 
 case "${1}" in
-	purge)
-		# Removing system user
+	remove)
+		if [ "${_DEBCONF}" = "true"  ]
+		then
+			db_version 2.0
+
+			db_get openerp-server/username
+			_USERNAME="${RET}"
+
+			db_stop
+		fi
+
+		if [ -z "${_USERNAME}" ]
+		then
+			_USERNAME="openerp"
+		fi
+
+		_GROUPNAME="${_USERNAME}"
+
 		if [ -x /usr/sbin/deluser ]
 		then
-			deluser --quiet --system ${USER}
+			deluser --quiet --system ${_USERNAME}
+		fi
+
+		if [ -x /usr/sbin/delgroup ]
+		then
+			delgroup --quiet --system --only-if-empty ${_GROUPNAME} || true
 		fi
 		;;
 
-	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 
 		;;
 
