@@ -30,11 +30,13 @@ case "${1}" in
 		chown ${_USERNAME}:adm ${LOGFILE}
 		chmod 0640 ${LOGFILE}
 
-		# Setting ownership and permissions
-		chown ${_USERNAME} /usr/lib/openerp-server/addons -R
+		# Creating local storage directory
+		mkdir -p /var/lib/openerp-server/filestore
 
+		# Setting ownership and permissions
 		chmod 0640 ${CONFFILE}
 		chown ${_USERNAME}:${_USERNAME} ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} /var/lib/openerp-server -R
 
 		echo
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
