@@ -18,9 +18,9 @@ case "${1}" in
 
 		if ! getent passwd | grep -q "^${_USERNAME}"
 		then
-			adduser --system --no-create-home --quiet --gecos 'OpenERP server' --group ${_USERNAME}
+			adduser --system --no-create-home --quiet --gecos 'Open ERP server' --group ${_USERNAME}
 		else
-			echo "OpenERP user (${_USERNAME}) already exists, doing nothing."
+			echo "Open ERP user (${_USERNAME}) already exists, doing nothing."
 		fi
 
 		sed -i -e "s|^process_user.*$|process_user = ${_USERNAME}|" ${CONFFILE}
@@ -38,7 +38,7 @@ case "${1}" in
 
 		echo
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
-		echo "* OpenERP uses a PostgreSQL database to store its data. With the first *"
+		echo "* Open ERP uses a PostgreSQL database to store its data. With the first *"
 		echo "* generation of packages, you have to setup this database manually.     *"
 		echo "* Please read /usr/share/doc/openerp-server/README.Debian how to do it. *"
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
