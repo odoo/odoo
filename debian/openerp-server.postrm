@@ -22,7 +22,11 @@ case "${1}" in
 		rmdir --ignore-fail-on-non-empty /usr/lib/openerp-server || true
 		;;
 
-	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+	purge)
+		rm -rf /var/lib/openerp-server
+		;;
+
+	upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
 
 		;;
 
