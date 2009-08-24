@@ -37,6 +37,10 @@ case "${1}" in
 		then
 			delgroup --quiet --system --only-if-empty ${_GROUPNAME} || true
 		fi
+
+		rm -f /usr/lib/openerp-server/addons/__init__.pyc
+		rmdir --ignore-fail-on-non-empty /usr/lib/openerp-server/addons
+		rmdir --ignore-fail-on-non-empty /usr/lib/openerp-server
 		;;
 
 	purge|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
