@@ -1,3 +1,9 @@
+openerp-server (5.0.3-0-1ubuntu2) intrepid; urgency=low
+
+  * Merge packaging work from Debian official
+
+ -- Panos Christeas <p_christ@hol.gr>  Mon, 24 Aug 2009 22:10:00 +0300
+
 openerp-server (5.0.3-0-1ubuntu1) intrepid; urgency=low
 
   [ P. Christeas ]
@@ -15,6 +21,43 @@ openerp-server (5.0.3-0-1ubuntu1) intrepid; urgency=low
   * Fix +x permission of openerp-server.py
 
  -- Panos Christeas <p_christ@hol.gr>  Fri, 14 Aug 2009 20:40:29 +0300
+
+openerp-server (5.0.3-0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.3-0.
+  * Removing xmlrpc.patch, went upstream.
+  * Using dedicated storage directory in /var/lib/openerp-server, that
+    way the addons directory can stay read-only for the unprivileged
+    user.
+  * Commenting out db_name in config (Closes: #542391).
+  * Commenting out port in config (Closes: #542406).
+  * Renaming logfile to openerp-server.log for consistency.
+  * Commenting out pidfile in config (Closes: #542427).
+  * Removing debconf handling in postrm, not possible to do that.
+  * Removing local storage directory on purge.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Aug 2009 20:16:55 +0200
+
+openerp-server (5.0.2-0-3) unstable; urgency=low
+
+  * Wrapping and sorting depends.
+  * Correcting spelling of Open ERP.
+  * Updating maintainer field.
+  * Updating vcs fields.
+  * Updating to standards version 3.8.3.
+  * Dropping old depends on python-xml (Closes: #543127).
+  * Adding maintainer homepage field to control.
+  * Marking maintainer homepage field to be also included in binary
+    packages and changelog.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Aug 2009 18:23:54 +0200
+
+openerp-server (5.0.2-0-2) unstable; urgency=high
+
+  * Adding patch from Panos Christeas <p_christ@hol.gr> to forbid RPC
+    calls without credentials. All versions of openerp-server affected.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 13 Aug 2009 14:45:17 +0200
 
 openerp-server (5.0.2-0-1ubuntu2) intrepid; urgency=critical
 
@@ -426,6 +469,20 @@ openerp-server (5.0.2-0-1ubuntu1) intrepid; urgency=low
 
  -- Panos Christeas <p_christ@hol.gr>  Thu, 13 Aug 2009 10:21:28 +0300
 
+openerp-server (5.0.2-0-1) unstable; urgency=low
+
+  * Updating standards to 3.8.1.
+  * Rediffing autobuild.patch (Closes: #538625).
+  * Upgrading package to standards version 3.8.2.
+  * Managing setup of unprivileged user account with debconf.
+  * Using more common directory name to store local debian additions.
+  * Updating README.Debian to reflect that the database has to be
+    initialized through the client (Closes: #518675).
+  * Removing package leftovers in postrm script.
+  * Merging upstream version 5.0.2-0.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 13 Aug 2009 11:24:59 +0200
+
 openerp-server (5.0.1-0-1ubuntu2) karmic; urgency=low
 
   * Minor updates
@@ -437,7 +494,6 @@ openerp-server (5.0.1-0-1ubuntu1) karmic; urgency=low
   * New greek translations added
 
  -- Panagiotis Kranidiotis <kranidiotis@vatica.org>  Wed, 17 Jun 2009 18:45:37 +0300
-
 
 openerp-server (5.0.1-0-1) unstable; urgency=low
 
