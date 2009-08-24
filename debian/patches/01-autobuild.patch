@@ -2,14 +2,14 @@ Author: Daniel Baumann <daniel@debian.org>
 Description: Disable modules check to make it buildable without X11.
 
 diff -Naurp openerp-server.orig/setup.py openerp-server/setup.py
---- openerp-server.orig/setup.py	2008-11-03 21:33:56.000000000 +0000
-+++ openerp-server/setup.py	2008-11-09 09:00:02.000000000 +0000
-@@ -133,7 +133,7 @@ def data_files():
-     files.append(('.', [('bin/import_xml.rng')]))
+--- openerp-server.orig/setup.py	2009-06-08 15:51:20.000000000 +0000
++++ openerp-server/setup.py	2009-07-26 10:27:49.000000000 +0000
+@@ -121,7 +121,7 @@ def data_files():
+ 
      return files
  
 -check_modules()
 +#check_modules()
  
- # create startup script
- start_script = \
+ f = file('openerp-server','w')
+ start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage\n" """
