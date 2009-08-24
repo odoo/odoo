@@ -88,7 +88,7 @@
           <para style="P8">[[o.lot_est1]]-[[o.lot_est2]]</para>
         </td>
         <td>
-          <para style="P7">[[o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or False]]</para>
+          <para style="P7"><font>[[o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or removeParentNode('font')]]</font></para>
         </td>
       </tr>
     </blockTable>

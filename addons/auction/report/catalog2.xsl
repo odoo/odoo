@@ -51,7 +51,7 @@
 	</pageTemplate>
 </template>
 <stylesheet>
-        <paraStyle name="slogan1" fontName="Times-Roman" fontSize="11" alignment="left" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="slogan1" fontName="Helvetica-Bold" fontSize="11" alignment="left" spaceBefore="0.0" spaceAfter="0.0"/>
          <paraStyle name="slogan2" fontName="Times-Roman" fontSize="9" alignment="right" spaceBefore="0.0" spaceAfter="0.0"/>
          <paraStyle name="slogan5"  alignment="right" />
 		<paraStyle name="slogan" fontName="Times New Roman-Italic" fontSize="11" alignment="left" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -123,13 +123,13 @@
                  <tr>
                      <td>
                        <para style="slogan1">
-	                  <xpre><b><xsl:value-of select="infos/lot_num"/> &#160;- &#160;</b>  <xsl:value-of select="infos/info"/>
+	                  <xpre><xsl:value-of select="infos/lot_num"/> &#160;- &#160;<xsl:value-of select="infos/info"/>
 						</xpre></para>
 						  <spacer length="2.0mm"/>
 		     			   <xsl:if test="lot_est1&gt;0">
 				           <para style="slogan2">
 				           <xpre>
-				             Est. <i> <xsl:value-of select="format-number(lot_est1, '#,##0.00')"/>/&#160;<xsl:value-of select="format-number(lot_est2, '#,##0.00')"/> Euro</i></xpre></para>
+				             Est. <xsl:value-of select="format-number(lot_est1, '#,##0.00')"/>/&#160;<xsl:value-of select="format-number(lot_est2, '#,##0.00')"/> Euro</xpre></para>
 				       </xsl:if>
 					</td>
 						<td>
@@ -155,14 +155,14 @@
 		                     <td>
 		                       <para style="slogan1">
 		                       <xpre>
-			                  <b><xsl:value-of select="infos/lot_num"/>&#160;- &#160;</b>  <xsl:value-of select="infos/info"/>
+			                  <xsl:value-of select="infos/lot_num"/>&#160;- &#160; <xsl:value-of select="infos/info"/>
 								</xpre></para>
 								  <spacer length="2.0mm"/>
 				     			   <xsl:if test="lot_est1&gt;0">
 						           <para style="slogan2">
 						           <xpre>
-						            Est. <i><xsl:value-of select="format-number(lot_est1, '#,##0.00')"/>/&#160;<xsl:value-of select="format-number(lot_est2, '#,##0.00')"/> Euro
-						           </i>
+						            Est. <xsl:value-of select="format-number(lot_est1, '#,##0.00')"/>/&#160;<xsl:value-of select="format-number(lot_est2, '#,##0.00')"/> Euro
+
 						           </xpre>
 						            </para>
 						       </xsl:if>
