@@ -2,25 +2,39 @@
 
 set -e
 
-USER="openerp"
+. /usr/share/debconf/confmodule
+
 CONFFILE="/etc/openerp-server.conf"
 LOGFILE="/var/log/openerp.log"
 
 case "${1}" in
 	configure)
-		# Creating system user
-		adduser --no-create-home --quiet --system ${USER}
+		db_version 2.0
+
+		db_get openerp-server/username
+		_USERNAME="${RET:-openerp}"
+
+		db_stop
+
+		if ! getent passwd | grep -q "^${_USERNAME}"
+		then
+			adduser --system --no-create-home --quiet --gecos 'OpenERP server' --group ${_USERNAME}
+		else
+			echo "OpenERP user (${_USERNAME}) already exists, doing nothing."
+		fi
+
+		sed -i -e "s|^process_user.*$|process_user = ${_USERNAME}|" ${CONFFILE}
 
 		# Creating log file
 		touch ${LOGFILE}
-		chown ${USER}:adm ${LOGFILE}
+		chown ${_USERNAME}:adm ${LOGFILE}
 		chmod 0640 ${LOGFILE}
 
-		# Setting ownership
-		chown ${USER} /usr/lib/openerp-server/addons -R
+		# Setting ownership and permissions
+		chown ${_USERNAME} /usr/lib/openerp-server/addons -R
 
 		chmod 0640 ${CONFFILE}
-		chown ${USER} ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} ${CONFFILE}
 
 		echo
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"

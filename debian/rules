@@ -1,6 +1,21 @@
 #!/usr/bin/make -f
 
+SHELL := sh -e
+
 include /usr/share/quilt/quilt.make
+
+update:
+	# Needs: shell-helper
+
+	cd debian; \
+	debconf-create-preseed *.config; \
+
+	for FILE in debian/*.preseed; \
+	do \
+		grep -v preseed $$FILE > $$FILE.tmp; \
+		mv $$FILE.tmp $$FILE; \
+		echo $$FILE >> debian/`basename $$FILE .preseed`.examples; \
+	done
 
 clean: clean-patched unpatch
 clean-patched: patch
@@ -9,9 +24,10 @@ clean-patched: patch
 	rm -f build-stamp
 
 	python setup.py clean
-
 	rm -rf build openerp-server
 	-find $(CURDIR) -type f -name "*.pyc" | xargs rm -f
+
+	debconf-updatepo
 
 	dh_clean
 
@@ -45,8 +61,10 @@ binary-indep: install
 	dh_testroot
 	dh_installchangelogs doc/Changelog
 	dh_installdocs
+	dh_installexamples
 	dh_install
 	dh_installinit --update-rcd-params='defaults 21'
+	dh_installdebconf
 	dh_lintian
 	dh_link
 	dh_compress
