@@ -1,3 +1,19 @@
+openerp-server (5.0.3-0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.3-0.
+  * Removing xmlrpc.patch, went upstream.
+  * Using dedicated storage directory in /var/lib/openerp-server, that
+    way the addons directory can stay read-only for the unprivileged
+    user.
+  * Commenting out db_name in config (Closes: #542391).
+  * Commenting out port in config (Closes: #542406).
+  * Renaming logfile to openerp-server.log for consistency.
+  * Commenting out pidfile in config (Closes: #542427).
+  * Removing debconf handling in postrm, not possible to do that.
+  * Removing local storage directory on purge.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Aug 2009 20:16:55 +0200
+
 openerp-server (5.0.2-0-3) unstable; urgency=low
 
   * Wrapping and sorting depends.
