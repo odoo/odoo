@@ -13,26 +13,22 @@ explanation how to achieve this (you need to execute all commands as root):
      the above syvinit script could also be named postgresql-VERSION (whereas
      'VERSION' needs to be replace with a version number).
 
-  1. Creating the database
+  1. Creating the database user
 
-     # su - postgres -c "createdb -q --encoding=UNICODE openerp"
-
-  2. Creating the database user
-
-     # su - postgres -c "createuser -q --createdb --adduser openerp"
+     # su - postgres -c "createuser -q --createdb --no-createrole --pwprompt openerp"
 
      Note: If you want to run the database as another user than 'openerp', you
      need to replace 'openerp' above with the user you want instead, and you
      need to adjust 'db_user = openerp' in /etc/openerp-server.conf too.
 
-  4. Initializing the database
-
-     # su - postgres -c "/usr/bin/openerp-server --init=all \
-	--config=/etc/openerp-server.conf --stop-after-init"
-
-  5. Restarting openerp-server
+  3. Restarting openerp-server
 
      # /etc/init.d/openerp-server restart
+
+
+  4. Initializing the database
+
+     Now you can connect with OpenERP client to the database and initialize it.
 
 Now, you're finish. Please be aware of the following things:
 
