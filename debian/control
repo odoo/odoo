@@ -2,8 +2,8 @@ Source: openerp-server
 Section: net
 Priority: optional
 Maintainer: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 7), quilt, po-debconf, python-dev
-Build-Depends-Indep: python-lxml, python-xml, python-libxslt1, python-psycopg2
+Build-Depends: debhelper (>= 7), po-debconf, python-dev, quilt
+Build-Depends-Indep: python-libxslt1, python-lxml, python-psycopg2, python-xml,
 Standards-Version: 3.8.2
 Homepage: http://www.openerp.com/
 Vcs-Browser: http://git.debian.net/?p=debian/openerp-server.git
@@ -12,10 +12,15 @@ Vcs-Git: git://git.debian.net/git/debian/openerp-server.git
 Package: openerp-server
 Section: net
 Architecture: all
-Depends: ${misc:Depends}, adduser, python, python-lxml, python-xml, python-libxslt1, python-psycopg2, python-reportlab, python-pychart, python-pydot, python-tz
+Depends:
+ ${misc:Depends}, adduser, python,  python-libxslt1, python-lxml,
+ python-psycopg2, python-pydot, python-pychart, python-reportlab, python-tz,
+ python-xml
 Conflicts: tinyerp-server
 Replaces: tinyerp-server
-Recommends: graphviz, ghostscript, postgresql, postgresql-client, python-imaging, python-matplotlib, python-openssl, python-pyparsing
+Recommends:
+ graphviz, ghostscript, postgresql, postgresql-client, python-imaging,
+ python-matplotlib, python-openssl, python-pyparsing
 Suggests: openerp-client
 Description: Enterprise Resource Management (server)
  OpenERP, previously known as TinyERP, is a complete ERP and CRM. The main
