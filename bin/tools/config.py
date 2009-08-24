@@ -230,7 +230,7 @@ class configmanager(object):
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
                 'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
 
-        if hasSSL:
+        if hasSSL and not  self.options['secure']:
             keys.append('secure')
 
         for arg in keys:

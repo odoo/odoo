@@ -174,7 +174,7 @@ class browse_record(object):
                 return False
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
-            if col._classic_write:
+            if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
                 ffields = filter(lambda x: x[1]._classic_write, self._table._columns.items())
                 # gen the list of inherited fields
@@ -1427,10 +1427,10 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(user, self._name, id_new, cr)
-        self.vaccum(cr, user)
         return id_new
 
     def create(self, cr, user, vals, context=None):
+        self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
         default = []
@@ -1454,7 +1454,6 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-        self.vaccum(cr, user)
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
@@ -2039,7 +2038,9 @@ class orm(orm_template):
         self._inherits_reload_src()
 
     def fields_get(self, cr, user, fields=None, context=None):
-        read_access = self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False, context=context)
+        ira = self.pool.get('ir.model.access')
+        read_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
+                      ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
@@ -2344,6 +2345,7 @@ class orm(orm_template):
                 if not edit:
                     vals.pop(field)
 
+
         if not context:
             context = {}
         if not ids:
@@ -2354,6 +2356,7 @@ class orm(orm_template):
         self._check_concurrency(cr, ids, context)
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+
 
         upd0 = []
         upd1 = []
@@ -2430,6 +2433,7 @@ class orm(orm_template):
                     if self._columns[f].translate:
                         src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
+
 
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
@@ -2532,12 +2536,12 @@ class orm(orm_template):
         for (t, c) in self._inherits.items():
             if c in vals:
                 avoid_table.append(t)
-        for f in self._columns.keys(): # + self._inherit_fields.keys():
-            if not f in vals:
+        for f in self._columns.keys():
+            if (not f in vals) and (not isinstance(self._columns[f], fields.property)):
                 default.append(f)
 
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table) and (not isinstance(self._inherit_fields[f][2], fields.property)):
                 default.append(f)
 
         if len(default):
@@ -2546,7 +2550,6 @@ class orm(orm_template):
                 if dv in self._columns and self._columns[dv]._type == 'many2many':
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
-
             vals.update(default_values)
 
         tocreate = {}
@@ -2649,13 +2652,19 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
         
+        result = []
         for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
+            result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
         self._validate(cr, user, [id_new], context)
 
-        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
-        for order, object, ids, fields in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+        if not context.get('no_store_function', False):
+            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result.sort()
+            done = []
+            for order, object, ids, fields2 in result:
+                if not (object, ids, fields2) in done:
+                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
+                    done.append((object, ids, fields2))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
@@ -2665,6 +2674,15 @@ class orm(orm_template):
         result = {}
         fncts = self.pool._store_function.get(self._name, [])
         for fnct in range(len(fncts)):
+            if fncts[fnct][3]:
+                ok = False
+                for f in (fields or []):
+                    if f in fncts[fnct][3]:
+                        ok = True
+                        break
+                if not ok:
+                    continue
+
             result.setdefault(fncts[fnct][0], {})
             ids2 = fncts[fnct][2](self,cr, uid, ids, context)
             for id in filter(None, ids2):

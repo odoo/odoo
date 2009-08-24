@@ -71,8 +71,6 @@ class ir_sequence(osv.osv):
         }
 
     def get_id(self, cr, uid, sequence_id, test='id=%s', context=None):
-        # as we have to commit, we must create a fresh new cursor
-        cr = pooler.get_db(cr.dbname).cursor()
         try:
             cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+' AND active=%s FOR UPDATE', (sequence_id, True))
             res = cr.dictfetchone()
@@ -84,7 +82,6 @@ class ir_sequence(osv.osv):
                     return self._process(res['prefix']) + self._process(res['suffix'])
         finally:
             cr.commit()
-            cr.close()
         return False
 
     def get(self, cr, uid, code):

@@ -325,7 +325,10 @@ class res_partner_address(osv.osv):
         if context.get('contact_display', 'contact')=='partner':
             ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit, context=context)
         else:
-            ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit, context=context)
+            if not name:
+                ids = self.search(cr, user, args, limit=limit, context=context)
+            else:
+                ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit, context=context)
             if not ids:
                 ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit, context=context)
             if name:

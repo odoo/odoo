@@ -189,7 +189,7 @@ class rml_parse(object):
         return newtag, attrs
 
     def format(self, text, oldtag=None):
-        return text
+        return text.strip()
 
     def removeParentNode(self, tag=None):
         raise Exception('Skip')
@@ -420,12 +420,14 @@ class report_sxw(report_rml, preprocess.report):
                     return s.getvalue(), results[0][1]
         return self.create_single_pdf(cr, uid, ids, data, report_xml, context)
 
-    def create_single_pdf(self, cr, uid, ids, data, report_xml, context={}):
+    def create_single_pdf(self, cr, uid, ids, data, report_xml, context=None):
+        if not context:
+            context={}
         logo = None
         context = context.copy()
         title = report_xml.name
         rml = report_xml.report_rml_content
-        rml_parser = self.parser(cr, uid, self.name2, context)
+        rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
         processed_rml = self.preprocess_rml(etree.XML(rml),report_xml.report_type)
@@ -437,7 +439,9 @@ class report_sxw(report_rml, preprocess.report):
         pdf = create_doc(etree.tostring(processed_rml),rml_parser.localcontext,logo,title.encode('utf8'))
         return (pdf, report_xml.report_type)
 
-    def create_single_odt(self, cr, uid, ids, data, report_xml, context={}):
+    def create_single_odt(self, cr, uid, ids, data, report_xml, context=None):
+        if not context:
+            context={}
         context = context.copy()
         report_type = report_xml.report_type
         context['parents'] = sxw_parents
@@ -447,7 +451,7 @@ class report_sxw(report_rml, preprocess.report):
         meta = sxw_z.read('meta.xml')
         sxw_z.close()
 
-        rml_parser = self.parser(cr, uid, self.name2, context)
+        rml_parser = self.parser(cr, uid, self.name2, context=context)
         rml_parser.parents = sxw_parents
         rml_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)
@@ -514,7 +518,7 @@ class report_sxw(report_rml, preprocess.report):
         if report_xml.header:
             #Add corporate header/footer
             rml = tools.file_open(os.path.join('base', 'report', 'corporate_%s_header.xml' % report_type)).read()
-            rml_parser = self.parser(cr, uid, self.name2, context)
+            rml_parser = self.parser(cr, uid, self.name2, context=context)
             rml_parser.parents = sxw_parents
             rml_parser.tag = sxw_tag
             objs = self.getObjects(cr, uid, ids, context)
@@ -532,13 +536,15 @@ class report_sxw(report_rml, preprocess.report):
         sxw_io.close()
         return (final_op, report_type)
 
-    def create_single_html2html(self, cr, uid, ids, data, report_xml, context={}):
+    def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
+        if not context:
+            context = {}
         context = context.copy()
         report_type = 'html'
         context['parents'] = html_parents
 
         html = report_xml.report_rml_content
-        html_parser = self.parser(cr, uid, self.name2, context)
+        html_parser = self.parser(cr, uid, self.name2, context=context)
         html_parser.parents = html_parents
         html_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)

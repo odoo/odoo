@@ -1,8 +1,85 @@
+2009-08-21: 5.0.2
+=================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * set_alarm: removed unwanted comment
+   * report engine: context argument was passed at a wrong position. Now it's passed as a named argument.
+   * fields_get check access aginst write or create access
+   * Not allowing only white spaces text to be printed
+   * sequences: avoid an sql error when locking table...
+   * report engine: fixed a bug when the xml tag is empty
+   * bin/workflow: 'stack' variable was not initialized when sql query returned an empty set.
+   * security issue: avoid access to inactive users
+   * security issue: avoid access with 'None' password (Thanks to P. Christeas for the bug report)
+   * avoid a bug when look in stack when translate code strings
+
+ * https://launchpad.net/bugs/415257
+   * import of boolean fields in csv files.
+ * https://launchpad.net/bugs/415014
+   * correct translation tgz archive creation
+ * https://launchpad.net/bugs/362280
+ * https://launchpad.net/bugs/416883
+   * Print screen unicode-decode error solved
+ * https://launchpad.net/bugs/400378
+   * partner address search
+ * https://launchpad.net/bugs/415972
+   * do not get next sequence in its own cursor
+ * https://launchpad.net/bugs/413484
+   * Print Screen :  was not considering field names with superscripted,subscripted characters(ex.m²)
+ * https://launchpad.net/bugs/406945
+   * import of boolean fields in csv files.
+ * https://launchpad.net/bugs/413586
+   * bug in cache system that altered some arguments passed to cached function
+ * https://launchpad.net/bugs/413594
+   * logger: convert the message in unicode before concatenate it with server environment
+ * https://launchpad.net/bugs/348217
+   * Secure option on config file
+
+
+Improvements (server)
+---------------------
+
+ * Makefile and quality_integration_server module for Integration server
+ * Speed impprovement: 2x faster for flow: sale -> invoice -> payment
+ * Speed improvement in creation of records (4 time faster on partners)
+
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * Purchase :copy method was not setting stock moves to be null for PO lines
+   * Module:account Fix keyerror in general_ledger report
+   * Access rules stock / worker
+   * mrp: fr_FR.po file had a duplicate message definition
+
+ * https://launchpad.net/bugs/413699
+ * https://launchpad.net/bugs/415014
+   * report_task: regenerate translations files
+ * https://launchpad.net/bugs/397100
+   * improving commit on report
+ * https://launchpad.net/bugs/416296
+   * Base_setup : Country passed in  values only if filled
+ * https://launchpad.net/bugs/415218
+   * report_task : report_task_user_pipeline_open was having no uniqueness
+
+
+Improvements (addons)
+---------------------
+
+ * POS: improved the point_of_sale receipt
+
+
+
 2009-08-12: 5.0.2
 =================
 
 Bugfixes (server)
 -----------------
+
  * Not Linked to a bug report:
    * ensure sys is imported
    * pass the context to check method of 'ir.model.access'
@@ -130,6 +207,7 @@ Bugfixes (server)
 
 Improvements (server)
 ---------------------
+
  * Logger notification improved
  * update po(t) files
  * new method that allow the server to return a message that will be display on login page
@@ -146,6 +224,7 @@ Improvements (server)
 
 Bugfixes (addons)
 -----------------
+
  * Not linked to a bug report:
    * DMS directory not translatable + translations improvement
    * Project : Searching active=no was failing, corrected
@@ -339,6 +418,7 @@ Bugfixes (addons)
 
 Improvements (addons)
 ---------------------
+
  * update po(t) files
  * Module:account Api changes def _refund_cleanup_lines(self, lines): added cr,uid arguments
  * pyflakes test display result improve on base_module_quality
@@ -381,37 +461,46 @@ Improvements (addons)
 
 2009-05-26: 5.0.1
 =================
+
 TODO
 
 2009-02-12: 5.0.0-3
 ===================
+
 TODO
 
 2009-02-08: 5.0.0-2
 ===================
+
 TODO
 
 2009-02-06: 5.0.0
 =================
+
 TODO
 
 2009-01-03: 5.0.0-rc3
 =====================
+
 TODO
 
 2008-12-22: 5.0.0-rc2
 =====================
+
 TODO
 
 2008-12-01: 5.0.0-rc1.1
 =======================
+
 TODO
 
 2008-11-28: 5.0.0-rc1
 =====================
+
 TODO
 
 2008-11-03: 5.0.0-alpha
 =======================
+
 TODO
 
