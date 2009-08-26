@@ -176,7 +176,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('date_order','=', time.strftime('%Y-%m-%d 00:00:00'))]</field>
+            <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-%d')),('date_order','&lt;=',time.strftime('%Y-%m-%d'))]</field>
         </record>
 
         <menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/>
