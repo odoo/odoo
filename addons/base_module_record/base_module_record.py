@@ -205,6 +205,7 @@ class base_module_record(osv.osv):
                     result[key]=data[key][0]
 
             elif mod_fields[key]['type'] in ('one2many',):
+                continue # due to this start stop recording will not record one2many field
                 rel = mod_fields[key]['relation']
                 if len(data[key]):
                     res1=[]

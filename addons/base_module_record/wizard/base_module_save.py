@@ -144,6 +144,8 @@ def _create_module(self, cr, uid, data, context):
         info = zipfile.ZipInfo(dname+'/'+name)
         info.compress_type = zipfile.ZIP_DEFLATED
         info.external_attr = 2175008768
+        if not datastr:
+            datastr = ''
         zip.writestr(info, datastr)
     zip.close()
     return {

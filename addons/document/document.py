@@ -302,7 +302,8 @@ class document_directory(osv.osv):
         model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
         if directory:
             _parent(dir_id,path)
-            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
+            if res_id:
+                path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
             user=self.pool.get('res.users').browse(cr,uid,uid)
             return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
         return False

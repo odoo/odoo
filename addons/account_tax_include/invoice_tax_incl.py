@@ -140,11 +140,11 @@ class account_invoice_line(osv.osv):
         else:
             return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, price_type='tax_excluded', context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
         # note: will call product_id_change_unit_price_inv with context...
         if context is None:
             context = {}
-        context.update({'price_type': price_type})
+        context.update({'price_type': context.get('price_type','tax_excluded')})
         return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context=context)
 account_invoice_line()
 
