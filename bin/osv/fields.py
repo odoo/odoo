@@ -641,6 +641,17 @@ class function(_column):
         else:
             res = self._fnct(cr, obj._table, ids, name, self._arg, context)
 
+        if self._type == "many2one" :
+            # Filtering only integer/long values if passed
+            res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
+            
+            if res_ids:
+                obj_model = obj.pool.get(self._obj)
+                dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
+                for r in res.keys():
+                    if res[r] and res[r] in dict_names:
+                        res[r] = (res[r], dict_names[res[r]])
+            
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
             res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
