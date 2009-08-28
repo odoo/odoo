@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:38:30+0000\n"
-"PO-Revision-Date: 2009-08-06 15:38:30+0000\n"
+"POT-Creation-Date: 2009-08-28 15:56:49+0000\n"
+"PO-Revision-Date: 2009-08-28 15:56:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -626,6 +626,11 @@ msgid "Write-Off amount"
 msgstr ""
 
 #. module: account
+#: help:account.fiscalyear,company_id:0
+msgid "Keep empty if the fiscal year belongs to several companies."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
 msgstr ""
@@ -945,7 +950,7 @@ msgstr ""
 #: wizard_field:account.invoice.pay,init,period_id:0
 #: field:account.journal.period,period_id:0
 #: field:account.move,period_id:0
-#: wizard_field:account.move.journal.multicompany,init,period_id:0
+#: wizard_field:account.move.journal,init,period_id:0
 #: field:account.move.line,period_id:0
 #: wizard_field:account.move.validate,init,period_id:0
 #: view:account.period:0
@@ -1365,7 +1370,7 @@ msgstr ""
 #: field:account.model,journal_id:0
 #: field:account.move,journal_id:0
 #: wizard_field:account.move.bank.reconcile,init,journal_id:0
-#: wizard_field:account.move.journal.multicompany,init,journal_id:0
+#: wizard_field:account.move.journal,init,journal_id:0
 #: field:account.move.line,journal_id:0
 #: wizard_field:account.move.validate,init,journal_id:0
 #: wizard_field:account.print.journal.report,init,journal_id:0
@@ -2374,7 +2379,7 @@ msgid "Applicable Code (if type=code)"
 msgstr ""
 
 #. module: account
-#: wizard_button:account.move.journal.multicompany,init,open:0
+#: wizard_button:account.move.journal,init,open:0
 msgid "Open Journal"
 msgstr ""
 
@@ -2464,7 +2469,7 @@ msgstr ""
 #: wizard_button:account.invoice.refund,init,end:0
 #: view:account.move:0
 #: wizard_button:account.move.bank.reconcile,init,end:0
-#: wizard_button:account.move.journal.multicompany,init,end:0
+#: wizard_button:account.move.journal,init,end:0
 #: wizard_button:account.move.line.reconcile,addendum,end:0
 #: wizard_button:account.move.line.reconcile,init_full,end:0
 #: wizard_button:account.move.line.reconcile,init_partial,end:0
@@ -3580,7 +3585,7 @@ msgid "3 Months"
 msgstr ""
 
 #. module: account
-#: wizard_view:account.move.journal.multicompany,init:0
+#: wizard_view:account.move.journal,init:0
 msgid "Standard entries"
 msgstr ""
 
