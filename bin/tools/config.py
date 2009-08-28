@@ -79,7 +79,10 @@ class configmanager(object):
             'log_level': logging.INFO,
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
             'cache_timeout': 100000,
+            'login_message': False,
         }
+	
+	self.misc = {}
 
         hasSSL = check_ssl()
 
@@ -336,6 +339,18 @@ class configmanager(object):
                 if value=='False' or value=='false':
                     value = False
                 self.options[name] = value
+	    #parse the other sections, as well
+	    for sec in p.sections():
+		if sec == 'options':
+			continue
+		if not self.misc.has_key(sec):
+			self.misc[sec]= {}
+		for (name, value) in p.items(sec):
+			if value=='True' or value=='true':
+				value = True
+			if value=='False' or value=='false':
+				value = False
+			self.misc[sec][name] = value
         except IOError:
             pass
         except ConfigParser.NoSectionError:
@@ -352,6 +367,10 @@ class configmanager(object):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
+	
+	for sec in self.misc.keys():
+		for opt in self.misc[sec].keys():
+			p.set(sec,opt,self.misc[sec][opt])
 
         # try to create the directories and write the file
         try:
@@ -369,6 +388,9 @@ class configmanager(object):
 
     def get(self, key, default=None):
         return self.options.get(key, default)
+
+    def get_misc(self, sect, key, default=None):
+        return self.misc.get(sect,{}).get(key, default)
 
     def __setitem__(self, key, value):
         self.options[key] = value

@@ -25,12 +25,19 @@ import tools
 
 _uid_cache = {}
 
+# When rejecting a password, we need to give as little info as possible
+class ExceptionNoTb(Exception):
+    def __init__(self, msg ):
+        # self.message = msg # No need in Python 2.6
+        self.traceback = ('','','')
+        self.args = (msg, '')
+
 def login(db, login, password):
     cr = pooler.get_db(db).cursor()
     if password:
-        cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), password.encode('utf-8')))
+        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
     else:
-        cr.execute('select id from res_users where login=%s and password is null and active', (login.encode('utf-8'),))
+        cr.execute('select id from res_users where login=%s and password is null and active', (tools.ustr(login),))
     res = cr.fetchone()
     cr.close()
     if res:
@@ -42,20 +49,21 @@ def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
         return True
     else:
-        raise Exception('AccessDenied')
+        raise ExceptionNoTb('AccessDenied')
 
 def check(db, uid, passwd):
-    if _uid_cache.get(db, {}).get(uid) == passwd:
+    cached_pass = _uid_cache.get(db, {}).get(uid)
+    if (cached_pass is not None) and cached_pass == passwd:
         return True
     cr = pooler.get_db(db).cursor()
     if passwd:
-        cr.execute('select count(*) from res_users where id=%s and password=%s', (int(uid), passwd))
+        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
     else:
-        cr.execute('select count(*) from res_users where id=%s and password is null', (int(uid),))    
+        cr.execute('select count(1) from res_users where id=%s and password is null and active=%s', (int(uid), True))    
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
-        raise Exception('AccessDenied')
+        raise ExceptionNoTb('AccessDenied')
     if res:
         if _uid_cache.has_key(db):
             ulist = _uid_cache[db]
@@ -73,7 +81,7 @@ def access(db, uid, passwd, sec_level, ids):
     res = cr.fetchone()
     cr.close()
     if not res:
-        raise Exception('Bad username or password')
+        raise ExceptionNoTb('Bad username or password')
     return res[0]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -35,8 +35,10 @@ import glob
 from distutils.core import setup, Command
 from distutils.command.install import install
 
+has_py2exe = False
 if os.name == 'nt':
     import py2exe
+    has_py2exe = True
 
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
@@ -44,8 +46,8 @@ opj = os.path.join
 
 execfile(opj('bin', 'release.py'))
 
-if sys.argv[1] != 'bdist_rpm':
-    version = version + '-' + release
+if sys.argv[1] == 'bdist_rpm':
+    version = version.split('-')[0]
 
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
@@ -174,6 +176,7 @@ options = {
     "py2exe": {
         "compressed": 1,
         "optimize": 2,
+        "dist_dir": 'dist',
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
                      "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing",
@@ -220,7 +223,30 @@ setup(name             = name,
       options = options,
       )
 
-
-# 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+if has_py2exe:
+  # Sometime between pytz-2008a and pytz-2008i common_timezones started to
+  # include only names of zones with a corresponding data file in zoneinfo.
+  # pytz installs the zoneinfo directory tree in the same directory
+  # as the pytz/__init__.py file. These data files are loaded using
+  # pkg_resources.resource_stream. py2exe does not copy this to library.zip so
+  # resource_stream can't find the files and common_timezones is empty when
+  # read in the py2exe executable.
+  # This manually copies zoneinfo into the zip. See also
+  # http://code.google.com/p/googletransitdatafeed/issues/detail?id=121
+  import pytz
+  import zipfile
+  # Make sure the layout of pytz hasn't changed
+  assert (pytz.__file__.endswith('__init__.pyc') or
+          pytz.__file__.endswith('__init__.py')), pytz.__file__
+  zoneinfo_dir = os.path.join(os.path.dirname(pytz.__file__), 'zoneinfo')
+  # '..\\Lib\\pytz\\__init__.py' -> '..\\Lib'
+  disk_basedir = os.path.dirname(os.path.dirname(pytz.__file__))
+  zipfile_path = os.path.join(options['py2exe']['dist_dir'], 'library.zip')
+  z = zipfile.ZipFile(zipfile_path, 'a')
+  for absdir, directories, filenames in os.walk(zoneinfo_dir):
+    assert absdir.startswith(disk_basedir), (absdir, disk_basedir)
+    zip_dir = absdir[len(disk_basedir):]
+    for f in filenames:
+      z.write(os.path.join(absdir, f), os.path.join(zip_dir, f))
+  z.close()
 

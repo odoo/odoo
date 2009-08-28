@@ -29,7 +29,7 @@ import thread
 import threading
 import time
 import sys
-
+import platform
 from tools.translate import _
 import addons
 import ir
@@ -38,7 +38,7 @@ import pooler
 import release
 import sql_db
 import tools
-
+import locale
 logging.basicConfig()
 
 class db(netsvc.Service):
@@ -59,6 +59,8 @@ class db(netsvc.Service):
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
+
+        self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
     def create(self, password, db_name, demo, lang, user_password='admin'):
         security.check_super(password)
@@ -169,9 +171,20 @@ class db(netsvc.Service):
             sql_db.close_db('template1')
         return True
 
+    def _set_pg_psw_env_var(self):
+        if os.name == 'nt' and not os.environ.get('PGPASSWORD', ''):
+            os.environ['PGPASSWORD'] = tools.config['db_password']
+            self._pg_psw_env_var_is_set = True
+
+    def _unset_pg_psw_env_var(self):
+        if os.name == 'nt' and self._pg_psw_env_var_is_set:
+            os.environ['PGPASSWORD'] = ''
+
     def dump(self, password, db_name):
         security.check_super(password)
         logger = netsvc.Logger()
+
+        self._set_pg_psw_env_var()
 
         cmd = ['pg_dump', '--format=c', '--no-owner']
         if tools.config['db_user']:
@@ -179,7 +192,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append(db_name)
 
         stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
@@ -192,11 +205,16 @@ class db(netsvc.Service):
             raise Exception, "Couldn't dump database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 'DUMP DB: %s' % (db_name))
+
+        self._unset_pg_psw_env_var()
+
         return base64.encodestring(data)
 
     def restore(self, password, db_name, data):
         security.check_super(password)
         logger = netsvc.Logger()
+
+        self._set_pg_psw_env_var()
 
         if self.db_exist(db_name):
             logger.notifyChannel("web-services", netsvc.LOG_WARNING,
@@ -218,7 +236,7 @@ class db(netsvc.Service):
         if tools.config['db_host']:
             cmd.append('--host=' + tools.config['db_host'])
         if tools.config['db_port']:
-            cmd.append('--port=' + tools.config['db_port'])
+            cmd.append('--port=' + str(tools.config['db_port']))
         cmd.append('--dbname=' + db_name)
         args2 = tuple(cmd)
 
@@ -238,6 +256,9 @@ class db(netsvc.Service):
             raise Exception, "Couldn't restore database"
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 'RESTORE DB: %s' % (db_name))
+
+        self._unset_pg_psw_env_var()
+
         return True
 
     def rename(self, password, old_name, new_name):
@@ -353,6 +374,8 @@ class common(netsvc.Service):
         self.exportMethod(self.get_available_updates)
         self.exportMethod(self.get_migration_scripts)
         self.exportMethod(self.get_server_environment)
+        self.exportMethod(self.login_message)
+        self.exportMethod(self.set_loglevel)
 
     def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
         security.check(db, uid, password)
@@ -505,28 +528,40 @@ GNU Public Licence.
             l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
             raise
 
-    def get_server_environment(self,lang=False):
-        try:
-            if '.bzr' in os.listdir((os.getcwd()[0:-3])):
-                fp = open(os.path.join(os.getcwd()[0:-3],'.bzr/branch/last-revision'))
-                rev_no = fp.read()
-                fp.close()
-            else:
-                rev_no = 'Bazaar Not Installed !'
-        except:
-            rev_no = 'Bazaar Not Installed !'
-        if not lang:
-            lang = os.environ.get('LANG', '').split('.')[0]
-        environment = 'Environment_Information : \n' \
-                      'Operating System : %s\n' \
-                      'PlatForm : %s\n' \
-                      'Operating System Version : %s\n' \
-                      'Python Version : %s\n'\
-                      'Locale : %s\n' \
-                      'OpenERP-Server Version : %s\n'\
-                      'OpenERP-Server Last Revision ID : %s' \
-                      %(os.name,sys.platform,str(sys.version.split('\n')[1]),str(sys.version[0:5]), lang, release.version,rev_no)
+    def get_server_environment(self):
+        os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
+        if not os_lang:
+            os_lang = 'NOT SET'
+        environment = '\nEnvironment Information : \n' \
+                     'System : %s\n' \
+                     'OS Name : %s\n' \
+                     %(platform.platform(), platform.os.name)
+        if os.name == 'posix':
+          if platform.system() == 'Linux':
+             lsbinfo = os.popen('lsb_release -a').read()
+             environment += '%s'%(lsbinfo)
+          else:
+             environment += 'Your System is not lsb compliant\n'
+        environment += 'Operating System Release : %s\n' \
+                    'Operating System Version : %s\n' \
+                    'Operating System Architecture : %s\n' \
+                    'Operating System Locale : %s\n'\
+                    'Python Version : %s\n'\
+                    'OpenERP-Server Version : %s'\
+                    %(platform.release(), platform.version(), platform.architecture()[0],
+                      os_lang, platform.python_version(),release.version)
         return environment
+    
+
+    def login_message(self):
+        return tools.config.get('login_message', False)
+
+    def set_loglevel(self, password, loglevel):
+        security.check_super(password)
+        l = netsvc.Logger()
+        l.set_loglevel(int(loglevel))
+        return True
+
 common()
 
 class objects_proxy(netsvc.Service):
@@ -660,7 +695,6 @@ class report_spool(netsvc.Service):
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()
-                logger.notifyChannel('web-services', netsvc.LOG_ERROR,common().get_server_environment(context.get('lang',False)))
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)

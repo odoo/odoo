@@ -24,7 +24,6 @@
 #
 ##############################################################################
 
-
 import SimpleXMLRPCServer
 import SocketServer
 import logging
@@ -79,13 +78,15 @@ def service_exist(name):
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
+LOG_DEBUG2 = 'debug2'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
 # add new log level below DEBUG
-logging.DEBUG_RPC = logging.DEBUG - 1
+logging.DEBUG2 = logging.DEBUG - 1
+logging.DEBUG_RPC = logging.DEBUG2 - 1
 
 def init_logger():
     import os
@@ -121,7 +122,7 @@ def init_logger():
 		handler = logging.handlers.FileHandler(logf)
         except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
-            handler = logging.StreamHandler(sys.stdout) 
+            handler = logging.StreamHandler(sys.stdout)
     else:
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
@@ -145,6 +146,7 @@ def init_logger():
 
         mapping = {
             'DEBUG_RPC': ('blue', 'white'),
+            'DEBUG2': ('green', 'white'),
             'DEBUG': ('blue', 'default'),
             'INFO': ('green', 'default'),
             'WARNING': ('yellow', 'default'),
@@ -158,8 +160,15 @@ def init_logger():
 
 
 class Logger(object):
+
     def notifyChannel(self, name, level, msg):
+        from service.web_services import common
+
         log = logging.getLogger(tools.ustr(name))
+
+        if level == LOG_DEBUG2 and not hasattr(log, level):
+            fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG2, msg, *args, **kwargs)
+            setattr(log, LOG_DEBUG2, fct)
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
@@ -171,7 +180,11 @@ class Logger(object):
             msg = tools.exception_to_unicode(msg)
 
 	try:
-        	result = tools.ustr(msg).strip().split('\n')
+	    msg = tools.ustr(msg).strip()
+            if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',True):
+                msg = common().get_server_environment() + msg
+
+            result = msg.split('\n')
 	except UnicodeDecodeError:
 		result = msg.strip().split('\n')
 	try:
@@ -188,6 +201,12 @@ class Logger(object):
 		# better ignore the exception and carry on..
 		pass
 
+    def set_loglevel(self, level):
+        log = logging.getLogger()
+        log.setLevel(logging.INFO) # make sure next msg is printed
+        log.info("Log level changed to %s" % logging.getLevelName(level))
+        log.setLevel(level)
+
     def shutdown(self):
         logging.shutdown()
 
@@ -201,7 +220,7 @@ class Agent(object):
     def setAlarm(self, fn, dt, db_name, *args, **kwargs):
         wait = dt - time.time()
         if wait > 0:
-            self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %s seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
+            self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %.3g seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
             timer = threading.Timer(wait, fn, args, kwargs)
             timer.start()
             self._timers.setdefault(db_name, []).append(timer)
@@ -210,7 +229,7 @@ class Agent(object):
             for timer in self._timers[db]:
                 if not timer.isAlive():
                     self._timers[db].remove(timer)
-    
+
     @classmethod
     def cancel(cls, db_name):
         """Cancel all timers for a given database. If None passed, all timers are cancelled"""
@@ -218,7 +237,7 @@ class Agent(object):
             if db_name is None or db == db_name:
                 for timer in cls._timers[db]:
                     timer.cancel()
-    
+
     @classmethod
     def quit(cls):
         cls.cancel(None)

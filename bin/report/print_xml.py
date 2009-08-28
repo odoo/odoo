@@ -240,7 +240,7 @@ class document(object):
                                     txt = str(datas[atr['value']])
                                 else:
                                      txt = datas[atr['value']]
-                                el.append(txt)
+                                el.text = txt
                             else:
                                 for el_cld in node:
                                     parse_result_tree(el_cld, el, datas)

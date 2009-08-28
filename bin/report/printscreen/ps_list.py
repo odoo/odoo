@@ -27,8 +27,10 @@ from lxml  import etree
 from report import render
 import libxml2
 import libxslt
+import locale
 
 import time, os
+import mx.DateTime
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
@@ -49,7 +51,7 @@ class report_printscreen_list(report_int):
         return result
 
     def _parse_string(self, view):
-        dom = etree.XML(unicode(view, 'utf-8').encode('utf-8'))
+        dom = etree.XML(view)
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
@@ -70,7 +72,16 @@ class report_printscreen_list(report_int):
 
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
         fields_order = self._parse_string(result['arch'])
-        rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context )
+        rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
+        ids2 = [x['id'] for x in rows] # getting the ids from read result
+        
+        if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+            rows_new = []
+            for id in datas['ids']:
+                element = [elem for elem in rows if elem['id']==id]
+                rows_new.append(element[0])
+            rows = rows_new
+        
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -87,7 +98,8 @@ class report_printscreen_list(report_int):
             n.text = text
             config.append(n)
 
-        _append_node('date', time.strftime('%d/%m/%Y'))
+        #_append_node('date', time.strftime('%d/%m/%Y'))
+        _append_node('date', time.strftime(str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
         _append_node('PageWidth', '%.2f' % (pageSize[0] * 2.8346,))
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
@@ -106,7 +118,7 @@ class report_printscreen_list(report_int):
         for f in fields_order:
             s = 0
             ince += 1
-            if fields[f]['type'] in ('date','time','float','integer'):
+            if fields[f]['type'] in ('date','time','datetime','float','integer'):
                 s = 60
                 strmax -= s
                 if fields[f]['type'] in ('float','integer'):
@@ -127,23 +139,21 @@ class report_printscreen_list(report_int):
 
         for f in fields_order:
             field = etree.Element("field")
-            field.text = fields[f]['string'] or ''
+            field.text = tools.ustr(fields[f]['string'] or '')
             header.append(field)
 
         new_doc.append(header)
         lines = etree.Element("lines")
-
         tsum = []
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
-
+            
         for line in results:
             node_line = etree.Element("row")
             count = -1
             for f in fields_order:
-
+                float_flag = 0
                 count += 1
 
                 if fields[f]['type']=='many2one' and line[f]:
@@ -158,18 +168,41 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+tools.ustr(len(line[f])) + ' )'
 
-                if fields[f]['type'] == 'float':
+                if fields[f]['type'] == 'float' and line[f]:
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
-                    line[f]='%.2f'%(line[f])
+                    prec ='%.' + str(precision) +'f'
+                    line[f]=prec%(line[f])
+                    float_flag = 1
 
+                if fields[f]['type'] == 'date' and line[f]:
+                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
+                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d')
+                    new_d1 = d1.strftime(format)
+                    line[f] = new_d1
+                    
+                if fields[f]['type'] == 'time' and line[f]:
+                    format = str(locale.nl_langinfo(locale.T_FMT))
+                    d1= mx.DateTime.strptime(line[f],'%H:%M:%S')
+                    new_d1 = d1.strftime(format)
+                    line[f] = new_d1
+                    
+                if fields[f]['type'] == 'datetime' and line[f]:
+                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
+                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d %H:%M:%S')
+                    new_d1 = d1.strftime(format)
+                    line[f] = new_d1
+                    
                 col = etree.Element("col")
                 col.set('para','yes')
                 col.set('tree','no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
+                    if float_flag:
+                       col.set('tree','float') 
                     if temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
-
+                        
+                        
                 else:
                      col.text = '/'
                 node_line.append(col)
@@ -183,20 +216,21 @@ class report_printscreen_list(report_int):
             col.set('tree','no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
-                  total = '%.2f'%(tsum[f])
-                  txt = str(total or '')
-               else :
-                    txt = str(tsum[f] or '')
+                   prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
+                   total = prec%(tsum[f])
+                   txt = str(total or '')
+                   col.set('tree','float')
+               else:
+                   txt = str(tsum[f] or '')
             else:
                 txt = '/'
             if f == 0:
                 txt ='Total'
 
-            col.text = txt
+            col.text = tools.ustr(txt or '')
             node_line.append(col)
 
         lines.append(node_line)
-
 
         new_doc.append(lines)
         styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))

@@ -53,6 +53,7 @@ def _symbol_set(symb):
 class _column(object):
     _classic_read = True
     _classic_write = True
+    _prefetch = True
     _properties = False
     _type = 'unknown'
     _obj = None
@@ -196,6 +197,7 @@ class binary(_column):
     _symbol_get = lambda self, x: x and str(x)
 
     _classic_read = False
+    _prefetch = False
 
     def __init__(self, string='unknown', filters=None, **args):
         _column.__init__(self, string=string, **args)
@@ -350,6 +352,7 @@ class many2one(_column):
 class one2many(_column):
     _classic_read = False
     _classic_write = False
+    _prefetch = False
     _type = 'one2many'
 
     def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
@@ -426,11 +429,13 @@ class one2many(_column):
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
+        result = []
         if not context:
             context = {}
         if self._context:
             context = context.copy()
         context.update(self._context)
+        context['no_store_function'] = True
         if not values:
             return
         _table = obj.pool.get(self._obj)._table
@@ -438,7 +443,8 @@ class one2many(_column):
         for act in values:
             if act[0] == 0:
                 act[2][self._fields_id] = id
-                obj.create(cr, user, act[2], context=context)
+                id_new = obj.create(cr, user, act[2], context=context)
+                result += obj._store_get_values(cr, user, [id_new], act[2].keys(), context)
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
             elif act[0] == 2:
@@ -455,6 +461,7 @@ class one2many(_column):
                 cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
                 ids3 = map(lambda x:x[0], cr.fetchall())
                 obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+        return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
@@ -472,6 +479,7 @@ class one2many(_column):
 class many2many(_column):
     _classic_read = False
     _classic_write = False
+    _prefetch = False
     _type = 'many2many'
 
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
@@ -582,6 +590,7 @@ class many2many(_column):
 class function(_column):
     _classic_read = False
     _classic_write = False
+    _prefetch = False
     _type = 'function'
     _properties = True
 
@@ -827,15 +836,18 @@ class property(function):
                     int(prop.value.split(',')[1])) or False
 
         obj = obj.pool.get(self._obj)
-        existing_ids = obj.search(cr, uid, [('id','in',res.values())])
-        deleted_ids = []
 
-        for res_id in res.values():
-            if res_id and (res_id not in existing_ids):
-                if res_id not in deleted_ids:
-                    cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
-                    deleted_ids.append(res_id)
-        names = dict(obj.name_get(cr, uid, filter(None, res.values()), context))
+        to_check = res.values()
+        if default_val and default_val not in to_check:
+            to_check += [default_val]
+        existing_ids = obj.search(cr, uid, [('id', 'in', to_check)])
+        
+        for id, res_id in res.items():
+            if res_id not in existing_ids:
+                cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
+                res[id] = default_val
+
+        names = dict(obj.name_get(cr, uid, existing_ids, context))
         for r in res.keys():
             if res[r] and res[r] in names:
                 res[r] = (res[r], names[res[r]])

@@ -73,7 +73,7 @@ class ir_model(osv.osv):
 
     def write(self, cr, user, ids, vals, context=None):
         if context:
-            del context['__last_update']
+            context.pop('__last_update', None)
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
@@ -229,6 +229,9 @@ class ir_model_fields(osv.osv):
         'field_description': lambda *a: '',
     }
     _order = "id"
+    _sql_constraints = [
+        ('size_gt_zero', 'CHECK (size>0)', 'Size of the field can never be less than 1 !'),
+    ]
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
             if field.state <> 'manual':
@@ -244,17 +247,18 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context and context.get('manual',False):
             vals['state'] = 'manual'
-        res = super(ir_model_fields,self).create(cr, user, vals, context)
+        res = super(ir_model_fields,self).create(cr, user, vals, context)    
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
             
             if 'relation' in vals and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
                  raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
-
+                 
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 self.pool.get(vals['model'])._auto_init(cr, {})
+                
         return res
 ir_model_fields()
 
@@ -312,7 +316,7 @@ class ir_model_access(osv.osv):
         # pass no groups -> no access
         return False
 
-    def check(self, cr, uid, model, mode='read', raise_exception=True):
+    def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
             # TODO: exclude xml-rpc requests
@@ -400,7 +404,7 @@ ir_model_access()
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=64),
+        'name': fields.char('XML Identifier', required=True, size=128),
         'model': fields.char('Object', required=True, size=64),
         'module': fields.char('Module', required=True, size=64),
         'res_id': fields.integer('Resource ID'),

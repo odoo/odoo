@@ -612,9 +612,16 @@ class cache(object):
         """
         
         def to_tuple(d):
-            i = d.items()
-            i.sort(key=lambda (x,y): x)
-            return tuple(i)
+            pairs = d.items()
+            pairs.sort(key=lambda (k,v): k)
+            for i, (k, v) in enumerate(pairs):
+                if isinstance(v, dict):
+                    pairs[i] = (k, to_tuple(v))
+                if isinstance(v, (list, set)):
+                    pairs[i] = (k, tuple(v))
+                elif not is_hashable(v):
+                    pairs[i] = (k, repr(v))
+            return tuple(pairs)
 
         if not self.multi:
             key = (('dbname', dbname),) + to_tuple(kwargs2)
@@ -631,12 +638,6 @@ class cache(object):
         kwargs2 = self.fun_default_values.copy()
         kwargs2.update(kwargs)
         kwargs2.update(dict(zip(self.fun_arg_names, args[self.skiparg-2:])))
-        for k in kwargs2:
-            if isinstance(kwargs2[k], (list, dict, set)):
-                kwargs2[k] = tuple(kwargs2[k])
-            elif not is_hashable(kwargs2[k]):
-                kwargs2[k] = repr(kwargs2[k])
-
         return kwargs2
     
     def clear(self, dbname, *args, **kwargs):
@@ -672,9 +673,9 @@ class cache(object):
             if time.time()-self.timeout > self.lasttime:
                 self.lasttime = time.time()
                 t = time.time()-self.timeout 
-                for key in self.cache.keys():
-                    if self.cache[key][1]<t:
-                        del self.cache[key]
+                old_keys = [key for key in self.cache if self.cache[key][1] < t]
+                for key in old_keys:
+                    del self.cache[key]
 
             kwargs2 = self._unify_args(*args, **kwargs)
 

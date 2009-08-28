@@ -2,29 +2,45 @@
 
 set -e
 
-USER="openerp"
+. /usr/share/debconf/confmodule
+
 CONFFILE="/etc/openerp-server.conf"
-LOGFILE="/var/log/openerp.log"
+LOGFILE="/var/log/openerp-server.log"
 
 case "${1}" in
 	configure)
-		# Creating system user
-		adduser --no-create-home --quiet --system ${USER}
+		db_version 2.0
+
+		db_get openerp-server/username
+		_USERNAME="${RET:-openerp}"
+
+		db_stop
+
+		if ! getent passwd | grep -q "^${_USERNAME}"
+		then
+			adduser --system --no-create-home --quiet --gecos 'Open ERP server' --group ${_USERNAME}
+		else
+			echo "Open ERP user (${_USERNAME}) already exists, doing nothing."
+		fi
+
+		sed -i -e "s|^process_user.*$|process_user = ${_USERNAME}|" ${CONFFILE}
 
 		# Creating log file
 		touch ${LOGFILE}
-		chown ${USER}:adm ${LOGFILE}
+		chown ${_USERNAME}:adm ${LOGFILE}
 		chmod 0640 ${LOGFILE}
 
-		# Setting ownership
-		chown ${USER} /usr/lib/openerp-server/addons -R
+		# Creating local storage directory
+		mkdir -p /var/lib/openerp-server/filestore
 
+		# Setting ownership and permissions
 		chmod 0640 ${CONFFILE}
-		chown ${USER} ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} /var/lib/openerp-server -R
 
 		echo
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
-		echo "* OpenERP uses a PostgreSQL database to store its data. With the first *"
+		echo "* Open ERP uses a PostgreSQL database to store its data. With the first *"
 		echo "* generation of packages, you have to setup this database manually.     *"
 		echo "* Please read /usr/share/doc/openerp-server/README.Debian how to do it. *"
 		echo "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *"
