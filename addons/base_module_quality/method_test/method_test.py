@@ -34,6 +34,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 This test checks if the module classes are raising exception when calling basic methods or not.
 """)
         self.bool_installed_only = True
+        self.min_score = 60
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -72,6 +73,8 @@ This test checks if the module classes are raising exception when calling basic 
                 ex_count += 1
             result_dict[obj] = temp
         self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result(result_dict)
         return None
 

@@ -37,6 +37,7 @@ PEP-8 Test , copyright of py files check, method can not call from loops
         self.bad_standard = 0
         self.good_standard = 0
         self.result_py = {}
+        self.min_score = 40
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -85,6 +86,8 @@ PEP-8 Test , copyright of py files check, method can not call from loops
         self.check_boolean(open_files)
 
         self.score = self.good_standard and float(self.good_standard) / float(self.good_standard + self.bad_standard)
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result({ module_path: [int(self.score * 100)]})
         self.result_details += self.get_result_general(self.result_py)
         return None

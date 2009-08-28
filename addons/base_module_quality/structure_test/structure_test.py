@@ -37,6 +37,7 @@ This test checks if the module satisfy tiny structure
         self.module_score = 0.0
         self.count = 0
         self.recur = True
+        self.min_score = 30
         return None
 
     def run_test_struct(self, cr, uid, module_path):
@@ -139,6 +140,10 @@ This test checks if the module satisfy tiny structure
 
     def run_test(self, cr, uid, module_path):
         self.run_test_struct(cr, uid, module_path)
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
+        else:
+            self.message = ''
         if self.score != 1:
             self.result_details = self.get_result_details(self.result_dict)
         return None
