@@ -209,7 +209,6 @@ class document(object):
                         args = [self.eval(browser, arg) for arg in attrs['args'].split(',')]
                     else:
                         args = []
-
                     # get the object
                     if attrs.has_key('model'):
                         obj = self.pool.get(attrs['model'])
@@ -232,6 +231,7 @@ class document(object):
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)
 
                     def parse_result_tree(node, parent, datas):
+                        if not node.tag == etree.Comment:
                             el = etree.Element(node.tag)
                             parent.append(el)
                             atr = self.node_attrs_get(node)
@@ -251,7 +251,6 @@ class document(object):
 
                 elif attrs['type']=='zoom':
                     value = self.get_value(browser, attrs['name'])
-
                     if value:
                         if not isinstance(value, list):
                             v_list = [value]
@@ -264,12 +263,16 @@ class document(object):
                                 self.parse_node(el_cld, el, v)
             else:
                 # if there is no "type" attribute in the node, copy it to the xml data and parse its childs
-                for el_cld in node:
-                    self.parse_node(el_cld, parent, browser)
-
+                if not node.tag == etree.Comment:
+                    if node.tag == parent.tag:
+                        el = parent
+                    else:
+                        el = etree.Element(node.tag)
+                        parent.append(el)
+                    for el_cld in node:
+                        self.parse_node(el_cld,el, browser)
     def xml_get(self):
-        #return self.doc.toxml('utf-8')
-        return etree.tostring(self.doc,encoding="utf-8",xml_declaration=True)
+        return etree.tostring(self.doc,encoding="utf-8",xml_declaration=True,pretty_print=True)
 
     def parse_tree(self, ids, model, context=None):
         if not context:
@@ -282,7 +285,6 @@ class document(object):
             context={}
         # parses the xml template to memory
         self.dom = etree.XML(xml)
-
         # create the xml data from the xml template
         self.parse_tree(ids, model, context)
 

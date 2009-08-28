@@ -524,7 +524,7 @@ class orm_template(object):
         warning = ''  
         warning_fields = []      
         for field in fields_export:
-            if imp_comp and len(field)>1:                              
+            if imp_comp and len(field)>1:
                 warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
             elif len (field) <=1:
                 if imp_comp and cols.get(field and field[0],False):
@@ -547,12 +547,20 @@ class orm_template(object):
         fields = map(lambda x: x.split('/'), fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
+        
+        def _check_db_id(self, model_name, db_id):
+            obj_model = self.pool.get(model_name)
+            ids = obj_model.search(cr, uid, [('id','=',int(db_id))])
+            if not len(ids):
+                raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, db_id))
+            return True
+            
         def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0):
             line = datas[position]
             row = {}
             translate = {}
             todo = []
-            warning = ''
+            warning = []
             data_id = False
             data_res_id = False
             is_xml_id = False
@@ -566,7 +574,37 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
-                field = fields[i]                
+                field = fields[i]
+                if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
+                        # Database ID
+                        res = False
+                        if line[i]:
+                            field_name = field[0].split(':')[0]
+                            model_rel =  fields_def[field_name]['relation']                            
+                            
+                            if fields_def[field[len(prefix)][:-6]]['type']=='many2many':
+                                res_id = []
+                                for db_id in line[i].split(config.get('csv_internal_sep')):
+                                    try:
+                                        _check_db_id(self, model_rel, db_id)
+                                        res_id.append(db_id)
+                                    except Exception,e:                                    
+                                        warning += [tools.exception_to_unicode(e)]
+                                        logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                                  tools.exception_to_unicode(e))
+                                if len(res_id):
+                                    res = [(6, 0, res_id)]
+                            else:
+                                try:
+                                    _check_db_id(self, model_rel, line[i])
+                                    res = line[i]
+                                except Exception,e:                                    
+                                    warning += [tools.exception_to_unicode(e)]
+                                    logger.notifyChannel("import", netsvc.LOG_ERROR,
+                                              tools.exception_to_unicode(e))                        
+                        row[field_name] = res or False
+                        continue
+
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':id'):
                     res_id = False
                     if line[i]:
@@ -619,30 +657,21 @@ class orm_template(object):
                                ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id}) 
                                db_id = is_db_id 
                         if is_db_id and int(db_id) != int(is_db_id):                        
-                            warning += ("Id is not the same than existing one: " + str(is_db_id) + " !\n")
+                            warning += [_("Id is not the same than existing one: %s")%(is_db_id)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    "Id is not the same than existing one: " + str(is_db_id) + ' !\n')
+                                    _("Id is not the same than existing one: %s")%(is_db_id))
                         continue
 
                     if field[len(prefix)] == "db_id":
                         # Database ID                        
-                        try:                                        
-                            line[i]= int(line[i])                    
-                        except Exception, e:
-                            warning += (str(e) +  "!\n")
+                        try:                            
+                            _check_db_id(self, model_name, line[i])
+                            data_res_id = is_db_id = int(line[i])
+                        except Exception,e:                                    
+                            warning += [tools.exception_to_unicode(e)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    str(e)  + '!\n')
+                                      tools.exception_to_unicode(e))
                             continue
-                        is_db_id = line[i]
-                        obj_model = self.pool.get(model_name)                        
-                        ids = obj_model.search(cr, uid, [('id','=',line[i])])
-                        if not len(ids):
-                            warning += ("Database ID doesn't exist: " + model_name + ": " + str(line[i]) + " !\n")
-                            logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    "Database ID doesn't exist: " + model_name + ": " + str(line[i]) + ' !\n')
-                            continue
-                        else:
-                            data_res_id = ids[0]
                         data_ids = ir_model_data_obj.search(cr, uid, [('model','=',model_name),('res_id','=',line[i])])
                         if len(data_ids):
                             d = ir_model_data_obj.read(cr, uid, data_ids, ['name','module'])[0]                                                
@@ -654,9 +683,9 @@ class orm_template(object):
                         if is_xml_id and not data_id:
                             data_id = is_xml_id                                     
                         if is_xml_id and is_xml_id!=data_id:  
-                            warning += ("Id is not the same than existing one: " + str(line[i]) + " !\n")
+                            warning += [_("Id is not the same than existing one: %s")%(line[i])]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    "Id is not the same than existing one: " + str(line[i]) + ' !\n')  
+                                    _("Id is not the same than existing one: %s")%(line[i]))
                                                            
                         continue
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
@@ -679,10 +708,10 @@ class orm_template(object):
                                 break
                         if line[i] and not res:
                             logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                    "key '%s' not found in selection field '%s'" % \
+                                    _("key '%s' not found in selection field '%s'") % \
                                             (line[i], field[len(prefix)]))
                             
-                            warning += "Key/value '"+ str(line[i]) +"' not found in selection field '"+str(field[len(prefix)])+"'"
+                            warning += [_("Key/value '%s' not found in selection field '%s'")%(line[i],field[len(prefix)])]
                             
                     elif fields_def[field[len(prefix)]]['type']=='many2one':
                         res = False
@@ -692,11 +721,9 @@ class orm_template(object):
                                     line[i], [], operator='=', context=context)
                             res = (res2 and res2[0][0]) or False
                             if not res:
-                                warning += ('Relation not found: ' + line[i] + \
-                                        ' on ' + relation + ' !\n')
+                                warning += [_("Relation not found: %s on '%s'")%(line[i],relation)]
                                 logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                        'Relation not found: ' + line[i] + \
-                                                ' on ' + relation + ' !\n')
+                                        _("Relation not found: %s on '%s'")%(line[i],relation))
                     elif fields_def[field[len(prefix)]]['type']=='many2many':
                         res = []
                         if line[i]:
@@ -706,12 +733,10 @@ class orm_template(object):
                                         uid, word, [], operator='=', context=context)
                                 res3 = (res2 and res2[0][0]) or False
                                 if not res3:
-                                    warning += ('Relation not found: ' + \
-                                            line[i] + ' on '+relation + ' !\n')
+                                    warning += [_("Relation not found: %s on '%s'")%(line[i],relation)]
                                     logger.notifyChannel("import",
                                             netsvc.LOG_WARNING,
-                                            'Relation not found: ' + line[i] + \
-                                                    ' on '+relation + ' !\n')
+                                            _("Relation not found: %s on '%s'")%(line[i],relation))
                                 else:
                                     res.append(res3)
                             if len(res):
@@ -776,9 +801,9 @@ class orm_template(object):
             #try:
             (res, other, warning, translate, data_id, res_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def)
-            if warning:                        
+            if len(warning):                        
                 cr.rollback()
-                return (-1, res, 'Line ' + str(counter) +' : ' + warning, '')
+                return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
             
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
@@ -787,7 +812,7 @@ class orm_template(object):
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
-                    msg= 'Insertion Failed!'
+                    msg= _('Insertion Failed!')
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
