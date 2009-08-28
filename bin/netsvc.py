@@ -235,6 +235,8 @@ class OpenERPDispatcher:
         Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
 
     def dispatch(self, service_name, method, params):
+        if service_name not in GROUPS['web-services']:
+            raise Exception('AccessDenied')
         try:
             self.log('service', service_name)
             self.log('method', method)
@@ -280,7 +282,7 @@ class SSLSocket(object):
         return getattr(self.socket, name)
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, SERVICES.keys())
+    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, GROUPS.get('web-services', {}).keys())
 
 class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
     def setup(self):
