@@ -529,11 +529,6 @@ GNU Public Licence.
             raise
 
     def get_server_environment(self):
-        try:
-            rev_id = os.popen('bzr revision-info').read()
-        except Exception,e:
-             rev_id = 'Exception: %s\n' % (tools.ustr(e))
-
         os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
         if not os_lang:
             os_lang = 'NOT SET'
@@ -552,10 +547,9 @@ GNU Public Licence.
                     'Operating System Architecture : %s\n' \
                     'Operating System Locale : %s\n'\
                     'Python Version : %s\n'\
-                    'OpenERP-Server Version : %s\n'\
-                    'Last revision No. & ID : %s'\
+                    'OpenERP-Server Version : %s'\
                     %(platform.release(), platform.version(), platform.architecture()[0],
-                      os_lang, platform.python_version(),release.version,rev_id)
+                      os_lang, platform.python_version(),release.version)
         return environment
     
 
