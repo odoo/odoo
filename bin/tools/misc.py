@@ -796,6 +796,7 @@ def get_languages():
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
         'et_EE': u'Estonian / Eesti keel',
+        'fi_FI': u'Finland / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
@@ -812,12 +813,14 @@ def get_languages():
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
         'sl_SL': u'Slovenian / slovenščina',
+        'sq_AL': u'Albanian / Shqipëri',
         'sv_SE': u'Swedish / svenska',
         'tr_TR': u'Turkish / Türkçe',
+        'vi_VN': u'Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam',
         'uk_UA': u'Ukrainian / украї́нська мо́ва',
-        'zh_CN': u'Chinese (CN) / 简体中文' ,
+        'zh_CN': u'Chinese (CN) / 简体中文',
         'zh_TW': u'Chinese (TW) / 正體字',
-        "th_TH": u"Thai / ภาษาไทย"
+        'th_TH': u'Thai / ภาษาไทย',
     }
     return languages
 

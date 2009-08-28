@@ -785,12 +785,12 @@ class _rml_template(object):
         r = _rml_flowable(self.doc,self.localcontext, images=self.images, path=self.path, title=self.title)
         story_cnt = 0
         for node_story in node_stories:
+            if story_cnt > 0:
+                fis.append(platypus.PageBreak())
             fis += r.render(node_story)
-            if self.localcontext:
-                story_cnt += 1
-                if story_cnt == len(self.localcontext['objects']):
-                    fis.append(PageCount())
-            fis.append(platypus.PageBreak())
+            story_cnt += 1
+        if self.localcontext:
+            fis.append(PageCount())
         self.doc_tmpl.build(fis)
 
 def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
