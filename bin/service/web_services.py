@@ -41,28 +41,36 @@ import tools
 import locale
 logging.basicConfig()
 
-class db(netsvc.Service):
+class db(netsvc.ExportService):
     def __init__(self, name="db"):
-        netsvc.Service.__init__(self, name)
+        netsvc.ExportService.__init__(self, name)
         self.joinGroup("web-services")
-        self.exportMethod(self.create)
-        self.exportMethod(self.get_progress)
-        self.exportMethod(self.drop)
-        self.exportMethod(self.dump)
-        self.exportMethod(self.restore)
-        self.exportMethod(self.rename)
-        self.exportMethod(self.list)
-        self.exportMethod(self.list_lang)
-        self.exportMethod(self.change_admin_password)
-        self.exportMethod(self.server_version)
-        self.exportMethod(self.migrate_databases)
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
 
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
-    def create(self, password, db_name, demo, lang, user_password='admin'):
+    def dispatch(self, method, auth, params):
+	if method in [ 'create', 'get_progress', 'drop', 'dump', 
+		'restore', 'rename', 
+		'change_admin_password', 'migrate_databases' ]:
+		passwd = params[0]
+		params = params[1:]
+		security.check_super(password)
+	elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
+		# params = params
+		# No security check for these methods
+		pass
+	else:
+		raise KeyError("Method not found: %s" % method)
+	fn = getattr(self, 'exp_'+method)
+	return fn(*params)
+	
+    def new_dispatch(self,method,auth,params):
+	pass
+
+    def exp_create(self, db_name, demo, lang, user_password='admin'):
         security.check_super(password)
         self.id_protect.acquire()
         self.id += 1
@@ -131,8 +139,7 @@ class db(netsvc.Service):
         self.actions[id]['thread'] = create_thread
         return id
 
-    def get_progress(self, password, id):
-        security.check_super(password)
+    def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
 #           return addons.init_progress[db_name]
             return (min(self.actions[id].get('progress', 0),0.95), [])
@@ -147,8 +154,7 @@ class db(netsvc.Service):
                 del self.actions[id]
                 raise Exception, e
 
-    def drop(self, password, db_name):
-        security.check_super(password)
+    def exp_drop(self, db_name):
         sql_db.close_db(db_name)
         logger = netsvc.Logger()
 
@@ -180,8 +186,7 @@ class db(netsvc.Service):
         if os.name == 'nt' and self._pg_psw_env_var_is_set:
             os.environ['PGPASSWORD'] = ''
 
-    def dump(self, password, db_name):
-        security.check_super(password)
+    def exp_dump(self, db_name):
         logger = netsvc.Logger()
 
         self._set_pg_psw_env_var()
@@ -210,7 +215,7 @@ class db(netsvc.Service):
 
         return base64.encodestring(data)
 
-    def restore(self, password, db_name, data):
+    def exp_restore(self, db_name, data):
         security.check_super(password)
         logger = netsvc.Logger()
 
@@ -261,8 +266,7 @@ class db(netsvc.Service):
 
         return True
 
-    def rename(self, password, old_name, new_name):
-        security.check_super(password)
+    def exp_rename(self, old_name, new_name):
         sql_db.close_db(old_name)
         logger = netsvc.Logger()
 
@@ -288,14 +292,14 @@ class db(netsvc.Service):
             sql_db.close_db('template1')
         return True
 
-    def db_exist(self, db_name):
+    def exp_db_exist(self, db_name):
         try:
             db = sql_db.db_connect(db_name)
             return True
         except:
             return False
 
-    def list(self):
+    def exp_list(self):
         db = sql_db.db_connect('template1')
         cr = db.cursor()
         try:
@@ -321,27 +325,25 @@ class db(netsvc.Service):
         res.sort()
         return res
 
-    def change_admin_password(self, old_password, new_password):
-        security.check_super(old_password)
+    def exp_change_admin_password(self, new_password):
         tools.config['admin_passwd'] = new_password
         tools.config.save()
         return True
 
-    def list_lang(self):
+    def exp_list_lang(self):
         return tools.scan_languages()
 
-    def server_version(self):
+    def exp_server_version(self):
         """ Return the version of the server
             Used by the client to verify the compatibility with its own version
         """
         return release.version
 
-    def migrate_databases(self, password, databases):
+    def exp_migrate_databases(self,databases):
 
         from osv.orm import except_orm
         from osv.osv import except_osv
 
-        security.check_super(password)
         l = netsvc.Logger()
         for db in databases:
             try:
@@ -360,64 +362,74 @@ class db(netsvc.Service):
         return True
 db()
 
-class common(netsvc.Service):
+class _ObjectService(netsvc.ExportService):
+     "A common base class for those who have fn(db, uid, password,...) "
+
+     def common_dispatch(self, method, auth, params):
+	(db, uid, passwd ) = params[0:3]
+	params = params[3:]
+	security.check(db,uid,passwd)
+	cr = pooler.get_db(db).cursor()
+	fn = getattr(self, 'exp_'+method)
+	res = fn(cr, uid, *params)
+	cr.commit()
+	cr.close()
+	return res
+
+class common(_ObjectService):
     def __init__(self,name="common"):
-        netsvc.Service.__init__(self,name)
+        _ObjectService.__init__(self,name)
         self.joinGroup("web-services")
-        self.exportMethod(self.ir_get)
-        self.exportMethod(self.ir_set)
-        self.exportMethod(self.ir_del)
-        self.exportMethod(self.about)
-        self.exportMethod(self.login)
-        self.exportMethod(self.logout)
-        self.exportMethod(self.timezone_get)
-        self.exportMethod(self.get_available_updates)
-        self.exportMethod(self.get_migration_scripts)
-        self.exportMethod(self.get_server_environment)
-        self.exportMethod(self.login_message)
-        self.exportMethod(self.set_loglevel)
 
-    def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
-        security.check(db, uid, password)
-        cr = pooler.get_db(db).cursor()
+    def dispatch(self, method, auth, params):
+	logger = netsvc.Logger()
+	if method in [ 'ir_set','ir_del', 'ir_get' ]:
+		return self.common_dispatch(method,auth,params)
+	if method == 'login':
+		# At this old dispatcher, we do NOT update the auth proxy
+		res = security.login(params[0], params[1], params[2])
+		msg = res and 'successful login' or 'bad login or password'
+		# TODO log the client ip address..
+		logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
+		return res or False
+	elif method == 'logout':
+		if auth:
+			auth.logout(params[1])
+		logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
+		return True
+	elif method in ['about', 'timezone_get', 'get_server_environment', 'login_message']:
+		pass
+	elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
+		passwd = params[0]
+		params = params[1:]
+		security.check_super(passwd)
+	else:
+		raise Exception("Method not found: %s" % method)
+	
+	fn = getattr(self, 'exp_'+method)
+	return fn(*params)
+
+
+    def new_dispatch(self,method,auth,params):
+	pass
+
+    def exp_ir_set(self, cr, uid, keys, args, name, value, replace=True, isobject=False):
         res = ir.ir_set(cr,uid, keys, args, name, value, replace, isobject)
-        cr.commit()
-        cr.close()
         return res
 
-    def ir_del(self, db, uid, password, id):
-        security.check(db, uid, password)
-        cr = pooler.get_db(db).cursor()
+    def exp_ir_del(self, cr, uid, id):
         res = ir.ir_del(cr,uid, id)
-        cr.commit()
-        cr.close()
         return res
 
-    def ir_get(self, db, uid, password, keys, args=None, meta=None, context=None):
+    def exp_ir_get(self, cr, uid, keys, args=None, meta=None, context=None):
         if not args:
             args=[]
         if not context:
             context={}
-        security.check(db, uid, password)
-        cr = pooler.get_db(db).cursor()
         res = ir.ir_get(cr,uid, keys, args, meta, context)
-        cr.commit()
-        cr.close()
         return res
 
-    def login(self, db, login, password):
-        res = security.login(db, login, password)
-        logger = netsvc.Logger()
-        msg = res and 'successful login' or 'bad login or password'
-        logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
-        return res or False
-
-    def logout(self, db, login, password):
-        logger = netsvc.Logger()
-        logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
-        return True
-
-    def about(self, extended=False):
+    def exp_about(self, extended=False):
         """Return information about the OpenERP Server.
 
         @param extended: if True then return version info
@@ -437,12 +449,11 @@ GNU Public Licence.
             return info, release.version
         return info
 
-    def timezone_get(self, db, login, password):
+    def exp_timezone_get(self, db, login, password):
         return time.tzname[0]
 
 
-    def get_available_updates(self, password, contract_id, contract_password):
-        security.check_super(password)
+    def exp_get_available_updates(self, contract_id, contract_password):
         import tools.maintenance as tm
         try:
             rc = tm.remote_contract(contract_id, contract_password)
@@ -455,8 +466,7 @@ GNU Public Licence.
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
 
 
-    def get_migration_scripts(self, password, contract_id, contract_password):
-        security.check_super(password)
+    def exp_get_migration_scripts(self, contract_id, contract_password):
         l = netsvc.Logger()
         import tools.maintenance as tm
         try:
@@ -528,7 +538,7 @@ GNU Public Licence.
             l.notifyChannel('migration', netsvc.LOG_ERROR, tb_s)
             raise
 
-    def get_server_environment(self):
+    def exp_get_server_environment(self):
         os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
         if not os_lang:
             os_lang = 'NOT SET'
@@ -553,42 +563,36 @@ GNU Public Licence.
         return environment
     
 
-    def login_message(self):
+    def exp_login_message(self):
         return tools.config.get('login_message', False)
 
-    def set_loglevel(self, password, loglevel):
-        security.check_super(password)
+    def exp_set_loglevel(self,loglevel):
         l = netsvc.Logger()
         l.set_loglevel(int(loglevel))
         return True
 
 common()
 
-class objects_proxy(netsvc.Service):
+class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
-        netsvc.Service.__init__(self,name)
+        netsvc.ExportService.__init__(self,name)
         self.joinGroup('web-services')
-        self.exportMethod(self.execute)
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.obj_list)
 
-    def exec_workflow(self, db, uid, passwd, object, method, id):
-        security.check(db, uid, passwd)
-        service = netsvc.LocalService("object_proxy")
-        res = service.exec_workflow(db, uid, object, method, id)
-        return res
+    def dispatch(self, method, auth, params):
+	(db, uid, passwd ) = params[0:3]
+	params = params[3:]
+	if method not in ['execute','exec_workflow','obj_list']:
+		raise KeyError("Method not supported %s" % method)
+	security.check(db,uid,passwd)
+	ls = netsvc.LocalService('object_proxy')
+	fn = getattr(ls, method)
+	res = fn(db, uid, *params)
+	return res
 
-    def execute(self, db, uid, passwd, object, method, *args):
-        security.check(db, uid, passwd)
-        service = netsvc.LocalService("object_proxy")
-        res = service.execute(db, uid, object, method, *args)
-        return res
+	
+    def new_dispatch(self,method,auth,params):
+	pass
 
-    def obj_list(self, db, uid, passwd):
-        security.check(db, uid, passwd)
-        service = netsvc.LocalService("object_proxy")
-        res = service.obj_list()
-        return res
 objects_proxy()
 
 
@@ -603,26 +607,36 @@ objects_proxy()
 # Wizard datas: {}
 # TODO: change local request to OSE request/reply pattern
 #
-class wizard(netsvc.Service):
+class wizard(netsvc.ExportService):
     def __init__(self, name='wizard'):
-        netsvc.Service.__init__(self,name)
+        netsvc.ExportService.__init__(self,name)
         self.joinGroup('web-services')
-        self.exportMethod(self.execute)
-        self.exportMethod(self.create)
         self.id = 0
         self.wiz_datas = {}
         self.wiz_name = {}
         self.wiz_uid = {}
+
+    def dispatch(self, method, auth, params):
+	(db, uid, passwd ) = params[0:3]
+	params = params[3:]
+	if method not in ['execute','create']:
+		raise KeyError("Method not supported %s" % method)
+	security.check(db,uid,passwd)
+	fn = getattr(self, 'exp_'+method)
+	res = fn(ls, db, uid, *params)
+	return res
+	
+    def new_dispatch(self,method,auth,params):
+	pass
 
     def _execute(self, db, uid, wiz_id, datas, action, context):
         self.wiz_datas[wiz_id].update(datas)
         wiz = netsvc.LocalService('wizard.'+self.wiz_name[wiz_id])
         return wiz.execute(db, uid, self.wiz_datas[wiz_id], action, context)
 
-    def create(self, db, uid, passwd, wiz_name, datas=None):
+    def exp_create(self, db, uid, wiz_name, datas=None):
         if not datas:
             datas={}
-        security.check(db, uid, passwd)
 #FIXME: this is not thread-safe
         self.id += 1
         self.wiz_datas[self.id] = {}
@@ -630,10 +644,9 @@ class wizard(netsvc.Service):
         self.wiz_uid[self.id] = uid
         return self.id
 
-    def execute(self, db, uid, passwd, wiz_id, datas, action='init', context=None):
+    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
         if not context:
             context={}
-        security.check(db, uid, passwd)
 
         if wiz_id in self.wiz_uid:
             if self.wiz_uid[wiz_id] == uid:
@@ -657,22 +670,33 @@ class ExceptionWithTraceback(Exception):
         self.traceback = tb
         self.args = (msg, tb)
 
-class report_spool(netsvc.Service):
+class report_spool(netsvc.ExportService):
     def __init__(self, name='report'):
-        netsvc.Service.__init__(self, name)
+        netsvc.ExportService.__init__(self, name)
         self.joinGroup('web-services')
-        self.exportMethod(self.report)
-        self.exportMethod(self.report_get)
         self._reports = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-    def report(self, db, uid, passwd, object, ids, datas=None, context=None):
+    def dispatch(self, method, auth, params):
+	(db, uid, passwd ) = params[0:3]
+	params = params[3:]
+	if method not in ['report','report_get']:
+		raise KeyError("Method not supported %s" % method)
+	security.check(db,uid,passwd)
+	fn = getattr(self, 'exp_' + method)
+	res = fn(db, uid, *params)
+	return res
+
+	
+    def new_dispatch(self,method,auth,params):
+	pass
+
+    def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if not datas:
             datas={}
         if not context:
             context={}
-        security.check(db, uid, passwd)
 
         self.id_protect.acquire()
         self.id += 1
@@ -728,8 +752,7 @@ class report_spool(netsvc.Service):
             del self._reports[report_id]
         return res
 
-    def report_get(self, db, uid, passwd, report_id):
-        security.check(db, uid, passwd)
+    def exp_report_get(self, db, uid, report_id):
 
         if report_id in self._reports:
             if self._reports[report_id]['uid'] == uid:

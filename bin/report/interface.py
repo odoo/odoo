@@ -49,7 +49,7 @@ def toxml(val):
 
 class report_int(netsvc.Service):
     def __init__(self, name, audience='*'):
-        assert not netsvc.service_exist(name), 'The report "%s" already exist!' % name
+        assert not self.service_exist(name), 'The report "%s" already exist!' % name
         super(report_int, self).__init__(name, audience)
         if name[0:7]<>'report.':
             raise Exception, 'ConceptionError, bad report name, should start with "report."'
@@ -57,7 +57,7 @@ class report_int(netsvc.Service):
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])
         self.title = None
-        self.joinGroup('report')
+        #self.joinGroup('report')
         self.exportMethod(self.create)
 
     def create(self, cr, uid, ids, datas, context=None):
@@ -239,8 +239,9 @@ def register_all(db):
     cr.execute("SELECT * FROM ir_act_report_xml WHERE auto=%s ORDER BY id", (True,))
     result = cr.dictfetchall()
     cr.close()
+    svcs = netsvc.Service._services
     for r in result:
-        if netsvc.service_exist('report.'+r['report_name']):
+        if svcs.has_key('report.'+r['report_name']):
             continue
         if r['report_rml'] or r['report_rml_content_data']:
             report_sxw('report.'+r['report_name'], r['model'],

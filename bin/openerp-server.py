@@ -152,35 +152,22 @@ if tools.config["stop_after_init"]:
 
 
 #----------------------------------------------------------
-# Launch Server
+# Launch Servers
 #----------------------------------------------------------
 
-if tools.config['xmlrpc']:
-    port = int(tools.config['port'])
-    interface = tools.config["interface"]
-    secure = tools.config["secure"]
+import service.http_server
 
-    httpd = netsvc.HttpDaemon(interface, port, secure)
+service.http_server.init_servers()
+service.http_server.init_xmlrpc()
 
-    xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
-    httpd.attach("/xmlrpc", xml_gw)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting XML-RPC%s services, port %s" % 
-                         ((tools.config['secure'] and ' Secure' or ''), port))
 
-#
-#if tools.config["soap"]:
-#   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-#   httpd.attach("/soap", soap_gw )
-#   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-#
-
-if tools.config['netrpc']:
-    netport = int(tools.config['netport'])
-    netinterface = tools.config["netinterface"]
-    tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-    logger.notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting NET-RPC service, port %d" % (netport,))
+# *-* TODO
+#if tools.config['netrpc']:
+    #netport = int(tools.config['netport'])
+    #netinterface = tools.config["netinterface"]
+    #tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
+    #logger.notifyChannel("web-services", netsvc.LOG_INFO, 
+                         #"starting NET-RPC service, port %d" % (netport,))
 
 LST_SIGNALS = ['SIGINT', 'SIGTERM']
 if os.name == 'posix':
@@ -196,11 +183,8 @@ def handler(signum, _):
     :param signum: the signal number
     :param _: 
     """
-    if tools.config['netrpc']:
-        tinySocket.stop()
-    if tools.config['xmlrpc']:
-        httpd.stop()
     netsvc.Agent.quit()
+    netsvc.Server.quitAll()
     if tools.config['pidfile']:
         os.unlink(tools.config['pidfile'])
     logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
@@ -217,16 +201,14 @@ if tools.config['pidfile']:
     fd.write(pidtext)
     fd.close()
 
+
+netsvc.Server.startAll()
+
 logger.notifyChannel("web-services", netsvc.LOG_INFO, 
                      'the server is running, waiting for connections...')
 
-if tools.config['netrpc']:
-    tinySocket.start()
-if tools.config['xmlrpc']:
-    httpd.start()
-
 while True:
-    time.sleep(1)
+    time.sleep(60)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
