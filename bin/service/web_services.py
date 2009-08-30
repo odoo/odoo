@@ -623,7 +623,7 @@ class wizard(netsvc.ExportService):
 		raise KeyError("Method not supported %s" % method)
 	security.check(db,uid,passwd)
 	fn = getattr(self, 'exp_'+method)
-	res = fn(ls, db, uid, *params)
+	res = fn(db, uid, *params)
 	return res
 	
     def new_dispatch(self,method,auth,params):
