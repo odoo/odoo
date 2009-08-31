@@ -88,6 +88,12 @@ class SecureMultiHandler2(SecureMultiHTTPHandler):
     def log_message(self, format, *args):
 	netsvc.Logger().notifyChannel('https',netsvc.LOG_DEBUG,format % args)
 
+    def getcert_fnames(self):
+        tc = tools.config
+        fcert = tc.get_misc('httpsd','sslcert', 'ssl/server.cert')
+	fkey = tc.get_misc('httpsd','sslkey', 'ssl/server.key')
+	return (fcert,fkey)
+
 class HttpDaemon(threading.Thread, netsvc.Server):
     def __init__(self, interface, port):
         threading.Thread.__init__(self)
@@ -141,6 +147,23 @@ class HttpSDaemon(threading.Thread, netsvc.Server):
             netsvc.Logger().notifyChannel('httpd-ssl', netsvc.LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
             raise
 
+    def attach(self, path, gw):
+        pass
+
+    def stop(self):
+        self.running = False
+        if os.name != 'nt':
+            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
+        self.server.socket.close()
+
+    def run(self):
+        #self.server.register_introspection_functions()
+
+        self.running = True
+        while self.running:
+            self.server.handle_request()
+        return True
+
 httpd = None
 httpsd = None
 
@@ -175,7 +198,7 @@ def reg_http_service(hts, secure_only = False):
 	return
 
 import SimpleXMLRPCServer
-class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = [] 
     protocol_version = 'HTTP/1.1'
     def _dispatch(self, method, params):

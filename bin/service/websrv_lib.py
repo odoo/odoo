@@ -146,7 +146,32 @@ class dummyconn:
 	def shutdown(self, tru):
 		pass
 
-class MultiHTTPHandler(BaseHTTPRequestHandler):
+def _quote_html(html):
+    return html.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+class FixSendError:
+    def send_error(self, code, message=None):
+        #overriden from BaseHTTPRequestHandler, we also send the content-length
+        try:
+            short, long = self.responses[code]
+        except KeyError:
+            short, long = '???', '???'
+        if message is None:
+            message = short
+        explain = long
+        self.log_error("code %d, message %s", code, message)
+        # using _quote_html to prevent Cross Site Scripting attacks (see bug #1100201)
+        content = (self.error_message_format %
+                   {'code': code, 'message': _quote_html(message), 'explain': explain})
+        self.send_response(code, message)
+        self.send_header("Content-Type", self.error_content_type)
+        self.send_header('Connection', 'close')
+	self.send_header('Content-Length', len(content) or 0)
+        self.end_headers()
+        if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
+            self.wfile.write(content)
+
+class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
 	
@@ -304,16 +329,31 @@ class MultiHTTPHandler(BaseHTTPRequestHandler):
 
 
 class SecureMultiHTTPHandler(MultiHTTPHandler):
+    def getcert_fnames(self):
+	""" Return a pair with the filenames of ssl cert,key
+	
+	    Override this to direct to other filenames
+	"""
+	return ('server.cert','server.key')
+	
     def setup(self):
 	import ssl
+	certfile, keyfile = self.getcert_fnames()
         self.connection = ssl.wrap_socket(self.request,
 				server_side=True,
-				certfile="server.cert",
-				keyfile="server.key",
+				certfile=certfile,
+				keyfile=keyfile,
 				ssl_version=ssl.PROTOCOL_SSLv23)
         self.rfile = self.connection.makefile('rb', self.rbufsize)
         self.wfile = self.connection.makefile('wb', self.wbufsize)
 	self.log_message("Secure %s connection from %s",self.connection.cipher(),self.client_address)
+
+    def finish(self):
+        # With ssl connections, closing the filehandlers alone may not
+	# work because of ref counting. We explicitly tell the socket
+	# to shutdown.
+	MultiHTTPHandler.finish(self)
+	self.connection.shutdown(socket.SHUT_RDWR)
 
 import threading
 class ConnThreadingMixIn:
