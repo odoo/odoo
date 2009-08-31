@@ -331,7 +331,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         email_bcc = []
 
     if not attach:
-        msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
+        msg = MIMEText(body.encode('utf-8') or '',_subtype=subtype,_charset='utf-8')
     else:
         msg = MIMEMultipart()
 
@@ -362,7 +362,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
 
     if attach:
-        msg.attach( MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
+        msg.attach( MIMEText(body.encode('utf-8') or '', _charset='utf-8', _subtype=subtype) )
 
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
