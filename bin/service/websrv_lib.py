@@ -30,6 +30,11 @@
 
 """
 
+import socket
+import base64
+import SocketServer
+from BaseHTTPServer import *
+from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 class AuthRequiredExc(Exception):
 	def __init__(self,atype,realm):
@@ -73,7 +78,6 @@ class AuthProxy:
 		"""
 		pass
 
-import base64
 class BasicAuthProxy(AuthProxy):
 	""" Require basic authentication..
 	"""
@@ -99,9 +103,6 @@ class BasicAuthProxy(AuthProxy):
 		raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
 
 
-from BaseHTTPServer import *
-
-from SimpleHTTPServer import SimpleHTTPRequestHandler
 class HTTPHandler(SimpleHTTPRequestHandler):
 	def __init__(self,request, client_address, server):
 		SimpleHTTPRequestHandler.__init__(self,request,client_address,server)
@@ -145,7 +146,6 @@ class dummyconn:
 	def shutdown(self, tru):
 		pass
 
-import SocketServer
 class MultiHTTPHandler(BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
