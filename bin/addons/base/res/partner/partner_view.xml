@@ -325,6 +325,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('supplier','=',1)]</field>
+            <field name="context">{'default_customer':0}</field>
         </record>
         <menuitem action="action_partner_supplier_form" id="menu_partner_supplier_form" parent="menu_partner_form"/>
         <record id="action_partner_other_form" model="ir.actions.act_window">
