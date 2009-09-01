@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:28:04+0000\n"
-"PO-Revision-Date: 2009-08-06 15:28:04+0000\n"
+"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
+"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -91,6 +91,20 @@ msgstr ""
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "The Bank type %s of the bank account: %s is not supported"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid "\"\"\n"
+"This test checks if the module classes are raising exception when calling basic methods or not.\n"
+"\"\""
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "Result (/10)"
 msgstr ""
 
 #. module: base
@@ -451,6 +465,12 @@ msgid "Bosnian / bosanski jezik"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "Feed back About Workflow of Module"
+msgstr ""
+
+#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid "If you check this, then the second time the user prints with same attachment name, it returns the previous report."
 msgstr ""
@@ -503,6 +523,12 @@ msgid "''\n"
 "GNU Public Licence.\n"
 "\n"
 "(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
 msgstr ""
 
 #. module: base
@@ -601,8 +627,9 @@ msgid "Jordan"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_ui_view
-msgid "ir.ui.view"
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "Tag Name"
 msgstr ""
 
 #. module: base
@@ -674,6 +701,13 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_INDEX"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid "File Name"
 msgstr ""
 
 #. module: base
@@ -815,6 +849,12 @@ msgid "maintenance contract modules"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Not Efficient"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "TOTAL"
@@ -873,6 +913,12 @@ msgid "STOCK_FILE"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "No enough data"
+msgstr ""
+
+#. module: base
 #: field:ir.report.custom.fields,field_child2:0
 msgid "Field child2"
 msgstr ""
@@ -910,6 +956,16 @@ msgid "You have to define a Default Credit Account for your Financial Journals!\
 msgstr ""
 
 #. module: base
+#: field:ir.actions.act_window.view,act_window_id:0
+#: view:ir.actions.actions:0
+#: field:ir.actions.todo,action_id:0
+#: field:ir.ui.menu,action:0
+#: field:ir.values,action_id:0
+#: selection:ir.values,key:0
+msgid "Action"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.server,state:0
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
@@ -936,6 +992,12 @@ msgstr ""
 #: code:addons/report/custom.py:0
 #, python-format
 msgid "The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "<html>O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n</html>"
 msgstr ""
 
 #. module: base
@@ -1053,9 +1115,10 @@ msgid "Your journal must have a default credit and debit account."
 msgstr ""
 
 #. module: base
-#: code:addons/addons/odms/odms.py:0
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
-msgid "This feature is only available for location type Amazon"
+msgid "Module Name"
 msgstr ""
 
 #. module: base
@@ -1100,6 +1163,12 @@ msgstr ""
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Pie charts need exactly two fields"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Id is not the same than existing one: %s"
 msgstr ""
 
 #. module: base
@@ -1190,6 +1259,11 @@ msgid "Role Name"
 msgstr ""
 
 #. module: base
+#: field:res.partner,user_id:0
+msgid "Dedicated Salesman"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
 #, python-format
 msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
@@ -1248,14 +1322,20 @@ msgid "On Create"
 msgstr ""
 
 #. module: base
+#: wizard_view:base.module.import,init:0
+msgid "Please give your module .ZIP file to import."
+msgstr ""
+
+#. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
 msgstr ""
 
 #. module: base
-#: field:ir.default,value:0
-msgid "Default Value"
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "O(1)"
 msgstr ""
 
 #. module: base
@@ -1339,6 +1419,12 @@ msgid "Simple domain setup"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid "Method Test"
+msgstr ""
+
+#. module: base
 #: field:res.currency,accuracy:0
 msgid "Computational Accuracy"
 msgstr ""
@@ -1409,6 +1495,12 @@ msgid "STOCK_FIND_AND_REPLACE"
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Relation not found: %s on '%s'"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-crm"
 msgstr ""
@@ -1432,6 +1524,14 @@ msgstr ""
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Invalid Region"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "\"\"\n"
+"Test checks for fields, views, security rules, dependancy level\n"
+"\"\""
 msgstr ""
 
 #. module: base
@@ -1462,8 +1562,8 @@ msgid "Report Custom"
 msgstr ""
 
 #. module: base
-#: view:ir.sequence:0
-msgid "Year without century: %(y)s"
+#: model:res.country,name:base.tm
+msgid "Turkmenistan"
 msgstr ""
 
 #. module: base
@@ -1487,11 +1587,6 @@ msgstr ""
 #. module: base
 #: field:ir.attachment,res_model:0
 msgid "Attached Model"
-msgstr ""
-
-#. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "fi_FI"
 msgstr ""
 
 #. module: base
@@ -1696,6 +1791,11 @@ msgstr "Załącznik"
 #. module: base
 #: model:res.country,name:base.ie
 msgid "Ireland"
+msgstr ""
+
+#. module: base
+#: view:ir.sequence:0
+msgid "Year without century: %(y)s"
 msgstr ""
 
 #. module: base
@@ -2090,6 +2190,12 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%p - Equivalent of either AM or PM."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "Terp Test"
 msgstr ""
 
 #. module: base
@@ -2523,6 +2629,12 @@ msgid "Sir"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "Result of dependancy in %"
+msgstr ""
+
+#. module: base
 #: wizard_button:module.upgrade,next,start:0
 msgid "Start Upgrade"
 msgstr ""
@@ -2773,6 +2885,11 @@ msgid "Categories of Modules"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Ukrainian / украї́нська мо́ва"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Not Started"
 msgstr "Nie uruchomiony"
@@ -2867,6 +2984,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.act_values_form_action
 #: model:ir.ui.menu,name:base.menu_values_form_action
 msgid "Connect Actions To Client Events"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "No Workflow define"
 msgstr ""
 
 #. module: base
@@ -3060,6 +3183,12 @@ msgid "Languages"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "The module does not contain the __terp__.py file"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
@@ -3116,8 +3245,9 @@ msgid "Base Field"
 msgstr ""
 
 #. module: base
-#: wizard_view:module.module.update,update:0
-msgid "New modules"
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "N/2"
 msgstr ""
 
 #. module: base
@@ -3220,6 +3350,11 @@ msgid "Holy See (Vatican City State)"
 msgstr ""
 
 #. module: base
+#: wizard_field:base.module.import,init,module_file:0
+msgid "Module .ZIP file"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
@@ -3274,6 +3409,18 @@ msgstr ""
 #: view:res.partner.bank:0
 #: model:res.partner.bank.type,name:base.bank_normal
 msgid "Bank account"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid "PEP-8 Test"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "1"
 msgstr ""
 
 #. module: base
@@ -3349,9 +3496,8 @@ msgid "Equatorial Guinea"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/odms/odms.py:0
-#, python-format
-msgid "Unable to delete an active subdomain"
+#: wizard_view:base.module.import,init:0
+msgid "Module Import"
 msgstr ""
 
 #. module: base
@@ -3379,6 +3525,11 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
+msgstr ""
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Finland / Suomi"
 msgstr ""
 
 #. module: base
@@ -3475,7 +3626,6 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
 #, python-format
 msgid "No Partner Defined !"
 msgstr ""
@@ -3582,9 +3732,9 @@ msgid "Set NULL"
 msgstr ""
 
 #. module: base
-#: field:res.partner.event,som:0
-#: field:res.partner.som,name:0
-msgid "State of Mind"
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "Result of Security in %"
 msgstr ""
 
 #. module: base
@@ -3607,6 +3757,12 @@ msgstr ""
 #: code:addons/addons/proforma_followup/proforma.py:0
 #, python-format
 msgid "You can not create this kind of document"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "Result (/1)"
 msgstr ""
 
 #. module: base
@@ -3768,6 +3924,11 @@ msgid "Rates"
 msgstr ""
 
 #. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Albanian / Shqipëri"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sy
 msgid "Syria"
 msgstr ""
@@ -3902,6 +4063,12 @@ msgid "Decimal Separator"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid "Feedback about structure of module"
+msgstr ""
+
+#. module: base
 #: view:res.partner:0
 #: view:res.request:0
 #: field:res.request,history:0
@@ -4026,6 +4193,19 @@ msgid "No grid matching for this carrier !"
 msgstr ""
 
 #. module: base
+#: help:res.partner,user_id:0
+msgid "The internal user that is in charge of communicating with this partner if any."
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid "\"\"\n"
+"This test checks if the module satisfy tiny structure\n"
+"\"\""
+msgstr ""
+
+#. module: base
 #: view:ir.module.module:0
 msgid "Cancel Upgrade"
 msgstr ""
@@ -4087,7 +4267,6 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
-#: code:addons/addons/stage/wizard/wizard_classend.py:0
 #, python-format
 msgid "Standard Encoding"
 msgstr ""
@@ -4122,6 +4301,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.aq
 msgid "Antarctica"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid "Structure Test"
 msgstr ""
 
 #. module: base
@@ -4584,13 +4769,14 @@ msgid "STOCK_ZOOM_OUT"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.act_window.view,act_window_id:0
-#: view:ir.actions.actions:0
-#: field:ir.actions.todo,action_id:0
-#: field:ir.ui.menu,action:0
-#: field:ir.values,action_id:0
-#: selection:ir.values,key:0
-msgid "Action"
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Given module has no objects.Speed test can work only when new objects are created in the module along with demo data"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_ui_view
+msgid "ir.ui.view"
 msgstr ""
 
 #. module: base
@@ -4632,8 +4818,9 @@ msgid "Fiji"
 msgstr ""
 
 #. module: base
-#: field:ir.model.fields,size:0
-msgid "Size"
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
 
 #. module: base
@@ -4649,8 +4836,8 @@ msgid "This method can be called with multiple ids"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.sd
-msgid "Sudan"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_CLOSE"
 msgstr ""
 
 #. module: base
@@ -4947,6 +5134,12 @@ msgid "Provide the field name where the record id is stored after the create ope
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Warning! Not enough demo data"
+msgstr ""
+
+#. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Couldn't find tag '%s' in parent view !"
@@ -4965,6 +5158,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.lu
 msgid "Luxembourg"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "Object Test"
 msgstr ""
 
 #. module: base
@@ -5096,6 +5295,13 @@ msgid "On delete"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/stock/stock.py:0
+#, python-format
+msgid "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
+msgstr ""
+
+#. module: base
 #: selection:res.lang,direction:0
 msgid "Left-to-Right"
 msgstr ""
@@ -5188,9 +5394,9 @@ msgid "Please provide a partner for the sale."
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_translation_untrans
-#: model:ir.ui.menu,name:base.menu_action_translation_untrans
-msgid "Untranslated terms"
+#: code:addons/addons/base_module_quality/base_module_quality.py:0
+#, python-format
+msgid "Test Is Not Implemented"
 msgstr ""
 
 #. module: base
@@ -5266,6 +5472,7 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
+#: wizard_button:base.module.import,import,open_window:0
 #: wizard_button:module.upgrade,end,end:0
 #: wizard_button:module.upgrade,start,end:0
 #: wizard_button:server.action.create,init,end:0
@@ -5284,6 +5491,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.bt
 msgid "Bhutan"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Efficient"
 msgstr ""
 
 #. module: base
@@ -5315,6 +5528,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DIALOG_AUTHENTICATION"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "Field name"
 msgstr ""
 
 #. module: base
@@ -5518,6 +5737,12 @@ msgstr "Pominięty"
 #. module: base
 #: selection:ir.model.fields,state:0
 msgid "Custom Field"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Speed Test"
 msgstr ""
 
 #. module: base
@@ -5800,9 +6025,8 @@ msgid "ir.server.object.lines"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/stock/stock.py:0
-#, python-format
-msgid "Please put a partner on the picking list if you want to generate invoice."
+#: field:ir.model.fields,size:0
+msgid "Size"
 msgstr ""
 
 #. module: base
@@ -5849,6 +6073,12 @@ msgid "You must define a reply-to address in order to mail the participant. You 
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Insertion Failed!"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_UNDERLINE"
 msgstr ""
@@ -5869,8 +6099,8 @@ msgid "Always Searchable"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CLOSE"
+#: model:res.country,name:base.sd
+msgid "Sudan"
 msgstr ""
 
 #. module: base
@@ -6148,7 +6378,6 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
-#: code:addons/addons/stage/wizard/wizard_classend.py:0
 #, python-format
 msgid "You have to define the bank account\nin the journal definition for reconciliation."
 msgstr ""
@@ -6248,14 +6477,14 @@ msgid "Iteration"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock"
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Warning! Object has no demo data"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
-#, python-format
-msgid "invoice line account company is not match with invoice company."
+#: selection:ir.ui.menu,icon:0
+msgid "terp-stock"
 msgstr ""
 
 #. module: base
@@ -6287,7 +6516,6 @@ msgstr ""
 #: code:addons/addons/hr_timesheet/wizard/sign_in_out.py:0
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
-#: code:addons/addons/multi_company_account/wizard/wizard_journal.py:0
 #: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
 #: code:addons/addons/stock/stock.py:0
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
@@ -6321,11 +6549,6 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
-msgstr ""
-
-#. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "sv_SV"
 msgstr ""
 
 #. module: base
@@ -6519,11 +6742,6 @@ msgid "You have to select a product UOM in the same category than the purchase U
 msgstr ""
 
 #. module: base
-#: help:res.partner,user_id:0
-msgid "Internal user if any."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.fk
 msgid "Falkland Islands"
 msgstr ""
@@ -6579,6 +6797,12 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.dz
 msgid "Algeria"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "This feature is only available for location type Amazon"
 msgstr ""
 
 #. module: base
@@ -6651,6 +6875,7 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
+#: wizard_button:base.module.import,init,end:0
 #: selection:ir.actions.todo,state:0
 #: wizard_button:module.lang.import,init,end:0
 #: wizard_button:module.lang.install,init,end:0
@@ -6686,8 +6911,8 @@ msgid "Provide the quantities of the returned products."
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SPELL_CHECK"
+#: model:res.country,name:base.nt
+msgid "Neutral Zone"
 msgstr ""
 
 #. module: base
@@ -6816,12 +7041,6 @@ msgstr ""
 #. module: base
 #: help:ir.actions.server,model_id:0
 msgid "Select the object on which the action will work (read, write, create)."
-msgstr ""
-
-#. module: base
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
-#, python-format
-msgid "Can not find account chart for this company, Please Create account."
 msgstr ""
 
 #. module: base
@@ -7111,8 +7330,19 @@ msgid "Created Date"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "This test checks where object has workflow or not on it if there is a state field and several buttons on it and also checks validity of workflow xml file"
+msgstr ""
+
+#. module: base
 #: selection:ir.report.custom,type:0
 msgid "Line Plot"
+msgstr ""
+
+#. module: base
+#: field:ir.default,value:0
+msgid "Default Value"
 msgstr ""
 
 #. module: base
@@ -7232,8 +7462,8 @@ msgid "Day of the year: %(doy)s"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.nt
-msgid "Neutral Zone"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_SPELL_CHECK"
 msgstr ""
 
 #. module: base
@@ -7264,6 +7494,12 @@ msgstr ""
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Months"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "N"
 msgstr ""
 
 #. module: base
@@ -7378,11 +7614,6 @@ msgstr ""
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
-msgid "uk_UK"
-msgstr ""
-
-#. module: base
-#: selection:module.lang.install,init,lang:0
 msgid "Portugese / português"
 msgstr ""
 
@@ -7451,12 +7682,6 @@ msgid "Activity"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
-#, python-format
-msgid "Can not find account chart for this company in invoice line account, Please Create account."
-msgstr ""
-
-#. module: base
 #: field:res.company,parent_id:0
 msgid "Parent Company"
 msgstr ""
@@ -7496,6 +7721,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.ir_property_form_all
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "All Properties"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "Feed back About terp file of Module"
 msgstr ""
 
 #. module: base
@@ -7539,6 +7770,15 @@ msgid "Unable to get multiple url"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "\"\"\n"
+"This test checks the speed of the module. Note that at least 5 demo data is needed in order to run it.\n"
+"\n"
+"\"\""
+msgstr ""
+
+#. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "No address defined for the supplier"
@@ -7563,10 +7803,17 @@ msgid "There is no default default debit account defined \n' \\n"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #: field:ir.model,name:0
 #: field:ir.model.fields,model:0
 #: field:ir.model.grid,name:0
 #: field:ir.values,model:0
+#, python-format
 msgid "Object Name"
 msgstr ""
 
@@ -7598,9 +7845,11 @@ msgid "Icon"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #: wizard_button:module.lang.import,init,finish:0
 #: wizard_button:module.lang.install,start,end:0
 #: wizard_button:module.module.update,update,open_window:0
+#, python-format
 msgid "Ok"
 msgstr ""
 
@@ -7681,7 +7930,15 @@ msgid "No Related Models!!"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Reading Complexity"
+msgstr ""
+
+#. module: base
+#: wizard_button:base.module.import,init,import:0
 #: model:ir.actions.wizard,name:base.wizard_base_module_import
+#: model:ir.ui.menu,name:base.menu_wizard_module_import
 msgid "Import module"
 msgstr ""
 
@@ -7768,6 +8025,13 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_PREFERENCES"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "No python file found"
 msgstr ""
 
 #. module: base
@@ -7998,6 +8262,11 @@ msgid "Registration on the monitoring servers"
 msgstr ""
 
 #. module: base
+#: wizard_view:module.module.update,update:0
+msgid "New modules"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_company
 msgid "res.company"
 msgstr ""
@@ -8016,6 +8285,12 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_simple_view_form
 msgid "Configure Simple View"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
 
 #. module: base
@@ -8052,10 +8327,22 @@ msgid "Could not cancel this purchase order !"
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "May"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
 msgstr ""
 
 #. module: base
@@ -8093,10 +8380,10 @@ msgid "Short Description"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/stock/stock.py:0
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
-msgid "There is no stock input account defined ' \\n"
-"                                        'for this product: \"%s\" (id: %d)"
+msgid "Result of views in %"
 msgstr ""
 
 #. module: base
@@ -8155,6 +8442,12 @@ msgid "Number of time the function is called,\n"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "__terp__.py file"
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
 msgstr ""
@@ -8207,6 +8500,12 @@ msgstr ""
 #: view:ir.model:0
 #: view:res.groups:0
 msgid "Access Rules"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid "Module has no objects"
 msgstr ""
 
 #. module: base
@@ -8457,6 +8756,11 @@ msgid "Load an Official Translation"
 msgstr ""
 
 #. module: base
+#: selection:res.partner.address,type:0
+msgid "Delivery"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "The account entries lines are not in valid state."
@@ -8500,6 +8804,12 @@ msgid "No Default Debit Account !"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "No data"
+msgstr ""
+
+#. module: base
 #: help:ir.actions.wizard,multi:0
 msgid "If set to true, the wizard will not be displayed on the right toolbar of a form view."
 msgstr ""
@@ -8539,6 +8849,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.open_repository_tree
 #: view:ir.module.repository:0
+#: model:ir.ui.menu,name:base.menu_module_repository_tree
 msgid "Repository list"
 msgstr ""
 
@@ -8588,7 +8899,6 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
 #, python-format
 msgid "You must first select a partner !"
 msgstr ""
@@ -8662,6 +8972,12 @@ msgid "Uncheck the active field to hide the contact."
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "\"\"This test uses Pylint and checks if the module satisfies the coding standard of Python. See http://www.logilab.org/project/name/pylint for further info.\n \"\""
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dk
 msgid "Denmark"
 msgstr ""
@@ -8701,6 +9017,12 @@ msgstr ""
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not validate a non-balanced entry !"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
+#, python-format
+msgid "Workflow Test"
 msgstr ""
 
 #. module: base
@@ -8819,11 +9141,6 @@ msgid "Company Architecture"
 msgstr ""
 
 #. module: base
-#: field:res.partner,user_id:0
-msgid "Internal User"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_GOTO_BOTTOM"
 msgstr ""
@@ -8930,6 +9247,12 @@ msgid "Menu Action"
 msgstr ""
 
 #. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "Unable to delete this document because it is used as a default property"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Purchase Journal"
@@ -9029,6 +9352,12 @@ msgid "Account Number"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/wizard/module_quality_check.py:0
+#, python-format
+msgid "Quality Check"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "1.  %c              ==> Fri Dec  5 18:25:20 2008"
 msgstr ""
@@ -9065,16 +9394,22 @@ msgid "Category Name"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.server,subject:0
-#: wizard_field:res.partner.spam_send,init,subject:0
-#: field:res.request,name:0
-msgid "Subject"
+#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Sat"
 msgstr ""
 
 #. module: base
 #: field:res.request,act_from:0
 #: field:res.request.history,act_from:0
 msgid "From"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid "Result of pep8_test in %"
 msgstr ""
 
 #. module: base
@@ -9231,9 +9566,8 @@ msgid "No timebox of the type \"%s\" defined !"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/odms/odms.py:0
-#, python-format
-msgid "Demo instance"
+#: field:workflow.activity,split_mode:0
+msgid "Split Mode"
 msgstr ""
 
 #. module: base
@@ -9260,7 +9594,6 @@ msgstr ""
 
 #. module: base
 #: code:addons/addons/account/account_bank_statement.py:0
-#: code:addons/addons/multi_company_account/multi_company_account.py:0
 #, python-format
 msgid "Configration Error !"
 msgstr ""
@@ -9277,6 +9610,12 @@ msgstr ""
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "No Invoice Address"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#, python-format
+msgid "Result of fields in %"
 msgstr ""
 
 #. module: base
@@ -9314,8 +9653,20 @@ msgid "Iraq"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/method_test/method_test.py:0
+#, python-format
+msgid "Exception"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:0
 msgid "Action to Launch"
+msgstr ""
+
+#. module: base
+#: wizard_view:base.module.import,import:0
+#: wizard_view:base.module.import,init:0
+msgid "Module import"
 msgstr ""
 
 #. module: base
@@ -9486,6 +9837,12 @@ msgid "Turkish / Türkçe"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_translation_untrans
+#: model:ir.ui.menu,name:base.menu_action_translation_untrans
+msgid "Untranslated terms"
+msgstr ""
+
+#. module: base
 #: wizard_view:module.lang.import,init:0
 msgid "Import New Language"
 msgstr ""
@@ -9550,6 +9907,12 @@ msgid "High"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid "Line number"
+msgstr ""
+
+#. module: base
 #: field:ir.exports.line,export_id:0
 msgid "Export"
 msgstr ""
@@ -9566,8 +9929,10 @@ msgid "Bank Identifier Code"
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.tm
-msgid "Turkmenistan"
+#: code:addons/addons/base_module_quality/object_test/object_test.py:0
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid "Suggestion"
 msgstr ""
 
 #. module: base
@@ -9603,10 +9968,10 @@ msgstr ""
 #: code:addons/addons/proforma_followup/proforma.py:0
 #: code:addons/addons/project/wizard/close_task.py:0
 #: code:addons/addons/sale/wizard/make_invoice_advance.py:0
-#: code:addons/addons/stage/wizard/wizard_classend.py:0
 #: code:addons/addons/stock/stock.py:0
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #: code:addons/addons/use_control/module.py:0
+#: code:addons/osv/orm.py:0
 #: code:addons/report/custom.py:0
 #, python-format
 msgid "Error"
@@ -9630,6 +9995,7 @@ msgid "You can not remove the field '%s' !"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/base_module_quality.py:0
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Programming Error"
@@ -9687,8 +10053,9 @@ msgid "Technical guide"
 msgstr ""
 
 #. module: base
-#: selection:module.lang.install,init,lang:0
-msgid "cs_CS"
+#: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
+#, python-format
+msgid "This test checks if the module satisfies the current coding standard used by OpenERP."
 msgstr ""
 
 #. module: base
@@ -9797,6 +10164,12 @@ msgid "Start configuration"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "N (Number of Records)"
+msgstr ""
+
+#. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Catalan / Català"
 msgstr ""
@@ -9888,6 +10261,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_title
 #: model:ir.ui.menu,name:base.menu_partner_title
 msgid "Titles"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "Result"
 msgstr ""
 
 #. module: base
@@ -10099,6 +10478,12 @@ msgid "Action Usage"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "Pylint Test"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_workflow_workitem
 msgid "workflow.workitem"
 msgstr ""
@@ -10223,8 +10608,9 @@ msgid "Bahrain"
 msgstr ""
 
 #. module: base
-#: selection:res.partner.address,type:0
-msgid "Delivery"
+#: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
+#, python-format
+msgid "O(n) or worst"
 msgstr ""
 
 #. module: base
@@ -10257,9 +10643,20 @@ msgid "Version"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/wizard/quality_save_report.py:0
+#, python-format
+msgid "No report to save!"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "No BoM defined for this product !"
+msgstr ""
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
 msgstr ""
 
 #. module: base
@@ -10300,6 +10697,7 @@ msgstr ""
 #: code:addons/addons/account/wizard/wizard_state_open.py:0
 #: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
 #: code:addons/addons/base/res/partner/partner.py:0
+#: code:addons/addons/base_module_quality/wizard/quality_save_report.py:0
 #: code:addons/addons/delivery/stock.py:0
 #: code:addons/addons/hr_attendance/hr_attendance.py:0
 #: code:addons/addons/odms/wizard/host_status.py:0
@@ -10390,6 +10788,14 @@ msgid "Day of the week (0:Monday): %(weekday)s"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid "\"\"\n"
+"PEP-8 Test , copyright of py files check, method can not call from loops\n"
+"\"\""
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ck
 msgid "Cook Islands"
 msgstr ""
@@ -10436,6 +10842,11 @@ msgid "Country"
 msgstr ""
 
 #. module: base
+#: wizard_view:base.module.import,import:0
+msgid "Module successfully imported !"
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,complete_name:0
 #: field:ir.ui.menu,complete_name:0
 msgid "Complete Name"
@@ -10460,6 +10871,12 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
+#, python-format
+msgid "Result in %"
 msgstr ""
 
 #. module: base
@@ -10495,15 +10912,14 @@ msgid "Portrait"
 msgstr ""
 
 #. module: base
-#: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "Sat"
+#: field:ir.actions.server,subject:0
+#: wizard_field:res.partner.spam_send,init,subject:0
+#: field:res.request,name:0
+msgid "Subject"
 msgstr ""
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_journal.py:0
-#: code:addons/addons/multi_company_account/wizard/wizard_journal.py:0
 #, python-format
 msgid "This period is already closed !"
 msgstr ""
@@ -10551,14 +10967,21 @@ msgid "Configuration Wizards"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
+#, python-format
+msgid "Unable to parse the result. Check the details."
+msgstr ""
+
+#. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
 msgstr ""
 
 #. module: base
-#: field:workflow.activity,split_mode:0
-msgid "Split Mode"
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Demo instance"
 msgstr ""
 
 #. module: base
@@ -10695,6 +11118,12 @@ msgid "Turks and Caicos Islands"
 msgstr ""
 
 #. module: base
+#: code:addons/addons/odms/odms.py:0
+#, python-format
+msgid "Unable to delete an active subdomain"
+msgstr ""
+
+#. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
@@ -10716,6 +11145,12 @@ msgstr ""
 #: field:res.partner.address,function:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
+msgstr ""
+
+#. module: base
+#: field:res.partner.event,som:0
+#: field:res.partner.som,name:0
+msgid "State of Mind"
 msgstr ""
 
 #. module: base
@@ -10796,6 +11231,12 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Create Object"
+msgstr ""
+
+#. module: base
+#: code:addons/addons/base_module_quality/base_module_quality.py:0
+#, python-format
+msgid "The module has to be installed before running this test."
 msgstr ""
 
 #. module: base

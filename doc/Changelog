@@ -1,4 +1,62 @@
-2009-08-21: 5.0.2
+2009-08-28: 5.0.4
+=================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * no traceback when access denied
+   * Security fix
+   * remove bad translation files (bad name)
+   * Pagecount problem while all objects print on same page and printing special character on xsl report
+ * https://launchpad.net/bugs/415973
+   * import: support "<rel_field>:db_id" , better warning message
+ * https://launchpad.net/bugs/415391
+   * Functional fields with M2O relation can be printed on print screen now
+ * https://launchpad.net/bugs/415334
+   * ir_cron :function and its arguements are now editable
+
+
+Improvements (server)
+---------------------
+
+ * replace partner name and address in demo
+ * add translation names
+ * update translations files
+ * new translations
+
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * Document : error on create if attachment not specified
+   * report_dcoument : changed the misleading name of action
+   * point_of_sale: fixed a wrong domain
+   * sale: bad indentation
+ * https://launchpad.net/bugs/416807
+   * report_document : Dashboard should not display partner with no files
+ * https://launchpad.net/bugs/401110
+   * Audittrail : Logs set in descending order
+ * https://launchpad.net/bugs/418541
+   * Project : Delegated tasks from O2M didnt have project_id
+ * https://launchpad.net/bugs/416767
+   * Account_tax_include : onchange of product on invoice line price type issue
+
+
+Improvements (addons)
+---------------------
+
+ * update translations
+ * base_module_quality: make minimal score for all test, add message if the score is below limit,varible for whether to activate the test or not
+ * process view node now links to parent document directory if no record selected.
+ * purchase: Merge purchases wizard: added keyword='client_action_multi'
+ * Auction : improved code
+ * Auction : improved auction reports
+ * Age Partner Balance report executed 7 queries per partner, reduced this a total of 7 queries in total.
+
+
+2009-08-21: 5.0.3
 =================
 
 Bugfixes (server)
@@ -15,7 +73,6 @@ Bugfixes (server)
    * security issue: avoid access to inactive users
    * security issue: avoid access with 'None' password (Thanks to P. Christeas for the bug report)
    * avoid a bug when look in stack when translate code strings
-
  * https://launchpad.net/bugs/415257
    * import of boolean fields in csv files.
  * https://launchpad.net/bugs/415014
@@ -55,7 +112,6 @@ Bugfixes (addons)
    * Module:account Fix keyerror in general_ledger report
    * Access rules stock / worker
    * mrp: fr_FR.po file had a duplicate message definition
-
  * https://launchpad.net/bugs/413699
  * https://launchpad.net/bugs/415014
    * report_task: regenerate translations files
@@ -123,7 +179,6 @@ Bugfixes (server)
    * expression: correct the generated sql in case of _inherits
    * the <delete> tag doesn't crash if the referenced id does not exists
    * closed file pointer
-
  * https://launchpad.net/bugs/380221
  * https://launchpad.net/bugs/403652
  * https://launchpad.net/bugs/369947
@@ -288,7 +343,6 @@ Bugfixes (addons)
    * account_balance Module : Fix the Total problem and Put Indentation in Reports.C
    * onchange of product_id on stock move corrected
    * correct display of pyflakes result quality module
-
  * https://launchpad.net/bugs/310458
    * Simplify Migrations
  * https://launchpad.net/bugs/382641
