@@ -2139,16 +2139,16 @@ class orm(orm_template):
                 if d1:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]), d1,
-                                self._order), d2)
+                                ','.join(['%s' for x in sub_ids]), d1,
+                                self._order),sub_ids + d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join([str(x) for x in sub_ids]),
-                                self._order))
+                                ','.join(['%s' for x in sub_ids]),
+                                self._order), sub_ids)
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
