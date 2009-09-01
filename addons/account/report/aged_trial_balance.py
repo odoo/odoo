@@ -59,15 +59,15 @@ class aged_trial_report(rml_parse.rml_parse):
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		self.line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
 				context={'fiscalyear': form['fiscalyear']})
-		self.cr.execute("SELECT DISTINCT res_partner.id AS id, " \
-					"res_partner.name AS name " \
-				"FROM res_partner,account_move_line AS line, account_account " \
-				"WHERE (line.account_id=account_account.id) " \
-					"AND ((reconcile_id IS NULL) " \
-					"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-					"AND (line.partner_id=res_partner.id) " \
-					"AND (account_account.company_id = %s) " \
-				"ORDER BY res_partner.name", (form['date1'],form['company_id']))
+		self.cr.execute("""SELECT DISTINCT res_partner.id AS id, 
+					res_partner.name AS name 
+				FROM res_partner,account_move_line AS line, account_account 
+				WHERE (line.account_id=account_account.id) 
+					AND ((reconcile_id IS NULL) 
+					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) 
+					AND (line.partner_id=res_partner.id) 
+					AND (account_account.company_id = %s) 
+				ORDER BY res_partner.name""" % (form['date1'],form['company_id']))
 		partners = self.cr.dictfetchall()
 		## mise a 0 du total
 		for i in range(7):
@@ -79,16 +79,16 @@ class aged_trial_report(rml_parse.rml_parse):
 
 		# This dictionary will store the debit-credit for all partners, using partner_id as key.
 		totals = {}
-		self.cr.execute("SELECT partner_id, SUM(debit-credit) " \
-				"FROM account_move_line AS line, account_account " \
-				"WHERE (line.account_id = account_account.id) " \
-					"AND (account_account.type IN %s) " \
-					"AND (partner_id in %s) " \
-					"AND ((reconcile_id IS NULL) " \
-					"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) " \
-					"AND (account_account.company_id = %s) " \
-					"AND account_account.active " \
-					"GROUP BY partner_id" % (self.ACCOUNT_TYPE, partner_ids,form['date1'],form['company_id']))
+		self.cr.execute("""SELECT partner_id, SUM(debit-credit) 
+					FROM account_move_line AS line, account_account
+				    WHERE (line.account_id = account_account.id) 
+					AND (account_account.type IN %s) 
+					AND (partner_id in %s) 
+					AND ((reconcile_id IS NULL)
+					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) 
+					AND (account_account.company_id = %s) 
+					AND account_account.active 
+					GROUP BY partner_id""" % (self.ACCOUNT_TYPE, partner_ids,form['date1'],form['company_id']))
 		t = self.cr.fetchall()
 		for i in t:
 			totals[i[0]] = i[1]
@@ -96,17 +96,17 @@ class aged_trial_report(rml_parse.rml_parse):
 		# This dictionary will store the future or past of all partners
 		future_past = {}
 		if form['direction_selection'] == 'future':
-			self.cr.execute("SELECT partner_id, SUM(debit-credit) " \
-					"FROM account_move_line AS line, account_account " \
-					"WHERE (line.account_id=account_account.id) " \
-						"AND (account_account.type IN %s) " \
-						"AND (COALESCE(date_maturity,date) < %s) " \
-						"AND (partner_id in %s) " \
-						"AND ((reconcile_id IS NULL) " \
-						"OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s ))) " \
-						"AND (account_account.company_id = %s) " \
-						"AND account_account.active " \
-						"GROUP BY partner_id", (self.ACCOUNT_TYPE, form['date1'], partner_ids,form['date1'], form['company_id']))
+			self.cr.execute("""SELECT partner_id, SUM(debit-credit) 
+						FROM account_move_line AS line, account_account 
+						WHERE (line.account_id=account_account.id) 
+						AND (account_account.type IN %s) 
+						AND (COALESCE(date_maturity,date) < '%s') 
+						AND (partner_id in %s) 
+						AND ((reconcile_id IS NULL)
+						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' ))) 
+						AND (account_account.company_id = %s) 
+						AND account_account.active 
+						GROUP BY partner_id"""% (self.ACCOUNT_TYPE, form['date1'], partner_ids,form['date1'], form['company_id']))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
