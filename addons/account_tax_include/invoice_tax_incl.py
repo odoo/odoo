@@ -122,7 +122,7 @@ class account_invoice_line(osv.osv):
         return {
                 'type':'src',
                 'name':line.name,
-                'price_unit':line.price_subtotal / line.quantity,
+                'price_unit':(line.quantity) and (line.price_subtotal / line.quantity) or line.price_subtotal,
                 'quantity':line.quantity,
                 'price':line.price_subtotal,
                 'account_id':line.account_id.id,
