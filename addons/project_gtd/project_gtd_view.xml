@@ -159,13 +159,13 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <newline/>
-                <separator string="Getting Things Done" colspan="4"/>
-                <field name="context_id" select="2"/>
-                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
-                <newline/>
-            </field>
+	        <notebook>
+                <page string="TimeBox Configuration" position="inside">
+                	<separator string="Getting Things Done" colspan="4"/>
+                	<field name="context_id" select="2"/>
+               	 	<field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
+                </page>
+             </notebook>
         </field>
     </record>
 
