@@ -160,14 +160,8 @@ import service.http_server
 service.http_server.init_servers()
 service.http_server.init_xmlrpc()
 
-
-# *-* TODO
-#if tools.config['netrpc']:
-    #netport = int(tools.config['netport'])
-    #netinterface = tools.config["netinterface"]
-    #tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-    #logger.notifyChannel("web-services", netsvc.LOG_INFO, 
-                         #"starting NET-RPC service, port %d" % (netport,))
+import service.netrpc_server
+service.netrpc_server.init_servers()
 
 LST_SIGNALS = ['SIGINT', 'SIGTERM']
 if os.name == 'posix':
