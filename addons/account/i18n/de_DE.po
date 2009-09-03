@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:21:50+0000\n"
-"PO-Revision-Date: 2009-08-06 15:21:50+0000\n"
+"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
+"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -630,6 +630,11 @@ msgid "Write-Off amount"
 msgstr "Abschreibungsbetrag"
 
 #. module: account
+#: help:account.fiscalyear,company_id:0
+msgid "Keep empty if the fiscal year belongs to several companies."
+msgstr "Leer lassen wenn Wirtschaftsjahr durch mehrere Unternehmen verwendet werden soll"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Auswertungen Analysekonten"
@@ -949,7 +954,7 @@ msgstr "Rechnung (Analyse)"
 #: wizard_field:account.invoice.pay,init,period_id:0
 #: field:account.journal.period,period_id:0
 #: field:account.move,period_id:0
-#: wizard_field:account.move.journal.multicompany,init,period_id:0
+#: wizard_field:account.move.journal,init,period_id:0
 #: field:account.move.line,period_id:0
 #: wizard_field:account.move.validate,init,period_id:0
 #: view:account.period:0
@@ -1369,7 +1374,7 @@ msgstr "Kontoart"
 #: field:account.model,journal_id:0
 #: field:account.move,journal_id:0
 #: wizard_field:account.move.bank.reconcile,init,journal_id:0
-#: wizard_field:account.move.journal.multicompany,init,journal_id:0
+#: wizard_field:account.move.journal,init,journal_id:0
 #: field:account.move.line,journal_id:0
 #: wizard_field:account.move.validate,init,journal_id:0
 #: wizard_field:account.print.journal.report,init,journal_id:0
@@ -2378,9 +2383,9 @@ msgid "Applicable Code (if type=code)"
 msgstr "Anzuwendender Typ (if type=code)"
 
 #. module: account
-#: wizard_button:account.move.journal.multicompany,init,open:0
+#: wizard_button:account.move.journal,init,open:0
 msgid "Open Journal"
-msgstr ""
+msgstr "Öffne Journal"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -2468,7 +2473,7 @@ msgstr "Erzeuge Rechnung aus dem Analysekonto"
 #: wizard_button:account.invoice.refund,init,end:0
 #: view:account.move:0
 #: wizard_button:account.move.bank.reconcile,init,end:0
-#: wizard_button:account.move.journal.multicompany,init,end:0
+#: wizard_button:account.move.journal,init,end:0
 #: wizard_button:account.move.line.reconcile,addendum,end:0
 #: wizard_button:account.move.line.reconcile,init_full,end:0
 #: wizard_button:account.move.line.reconcile,init_partial,end:0
@@ -3584,9 +3589,9 @@ msgid "3 Months"
 msgstr "3 Monate"
 
 #. module: account
-#: wizard_view:account.move.journal.multicompany,init:0
+#: wizard_view:account.move.journal,init:0
 msgid "Standard entries"
-msgstr ""
+msgstr "Standard Buchung"
 
 #. module: account
 #: help:account.account,check_history:0

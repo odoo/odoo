@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
-"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
+"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
+"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgstr "Konto statistika"
 #: model:ir.actions.wizard,name:account.wizard_vat_declaration
 #: model:ir.ui.menu,name:account.menu_wizard_vat_declaration
 msgid "Print Taxes Report"
-msgstr "Trüki maksude aruanne"
+msgstr "Prindi maksuaruanne"
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -626,6 +626,11 @@ msgid "Write-Off amount"
 msgstr "Mahakandmise summa"
 
 #. module: account
+#: help:account.fiscalyear,company_id:0
+msgid "Keep empty if the fiscal year belongs to several companies."
+msgstr "Jäta tühjaks kui majandusaasta kuulub mitmele firmale."
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analüütiline raamatupidamine"
@@ -945,7 +950,7 @@ msgstr "Analüütiline arve"
 #: wizard_field:account.invoice.pay,init,period_id:0
 #: field:account.journal.period,period_id:0
 #: field:account.move,period_id:0
-#: wizard_field:account.move.journal.multicompany,init,period_id:0
+#: wizard_field:account.move.journal,init,period_id:0
 #: field:account.move.line,period_id:0
 #: wizard_field:account.move.validate,init,period_id:0
 #: view:account.period:0
@@ -1120,7 +1125,7 @@ msgstr ""
 #: view:account.fiscal.position.template:0
 #: field:account.fiscal.position.template,name:0
 msgid "Fiscal Position Template"
-msgstr ""
+msgstr "Finantspositsiooni mall"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -1365,7 +1370,7 @@ msgstr "Konto tüübid"
 #: field:account.model,journal_id:0
 #: field:account.move,journal_id:0
 #: wizard_field:account.move.bank.reconcile,init,journal_id:0
-#: wizard_field:account.move.journal.multicompany,init,journal_id:0
+#: wizard_field:account.move.journal,init,journal_id:0
 #: field:account.move.line,journal_id:0
 #: wizard_field:account.move.validate,init,journal_id:0
 #: wizard_field:account.print.journal.report,init,journal_id:0
@@ -2374,7 +2379,7 @@ msgid "Applicable Code (if type=code)"
 msgstr ""
 
 #. module: account
-#: wizard_button:account.move.journal.multicompany,init,open:0
+#: wizard_button:account.move.journal,init,open:0
 msgid "Open Journal"
 msgstr ""
 
@@ -2464,7 +2469,7 @@ msgstr ""
 #: wizard_button:account.invoice.refund,init,end:0
 #: view:account.move:0
 #: wizard_button:account.move.bank.reconcile,init,end:0
-#: wizard_button:account.move.journal.multicompany,init,end:0
+#: wizard_button:account.move.journal,init,end:0
 #: wizard_button:account.move.line.reconcile,addendum,end:0
 #: wizard_button:account.move.line.reconcile,init_full,end:0
 #: wizard_button:account.move.line.reconcile,init_partial,end:0
@@ -2711,7 +2716,7 @@ msgstr ""
 #. module: account
 #: wizard_button:populate_statement_from_inv,init,go:0
 msgid "_Go"
-msgstr ""
+msgstr "_Mine"
 
 #. module: account
 #: field:res.partner,ref_companies:0
@@ -3551,7 +3556,7 @@ msgstr "Järjekord"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Mall finantspositsioonile"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3580,7 +3585,7 @@ msgid "3 Months"
 msgstr "3 kuud"
 
 #. module: account
-#: wizard_view:account.move.journal.multicompany,init:0
+#: wizard_view:account.move.journal,init:0
 msgid "Standard entries"
 msgstr ""
 
@@ -3632,7 +3637,7 @@ msgstr ""
 #: field:account.fiscalyear,date_start:0
 #: field:account.subscription,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Alguskuupäev"
 
 #. module: account
 #: wizard_view:account.general.ledger.report,account_selection:0
@@ -3918,7 +3923,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
 msgid "Subtotal w/o tax"
-msgstr ""
+msgstr "Vahesumma maksuta"
 
 #. module: account
 #: field:account.invoice.line,invoice_id:0
@@ -5133,7 +5138,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.period.close,init:0
 msgid "Are you sure ?"
-msgstr "Oled sa kindel="
+msgstr "Oled sa kindel?"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5741,7 +5746,7 @@ msgstr "Maksetingimus"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr ""
+msgstr "Finantspositsioonid"
 
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0

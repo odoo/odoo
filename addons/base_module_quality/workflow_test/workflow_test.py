@@ -33,6 +33,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.name = _("Workflow Test")
         self.note = _("This test checks where object has workflow or not on it if there is a state field and several buttons on it and also checks validity of workflow xml file")
         self.bool_installed_only = True
+        self.min_score = 40
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -116,7 +117,8 @@ class quality_test(base_module_quality.abstract_quality_check):
                     good_view += 1
         score_avail = good_view and float(good_view) / float(bad_view + good_view)
         self.score = (score_general + score_avail) / 2
-
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         if not wkf_ids and not bad_view:
             self.error = True
             self.result = _("No Workflow define")

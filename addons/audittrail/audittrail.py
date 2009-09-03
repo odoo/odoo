@@ -112,6 +112,7 @@ class audittrail_log(osv.osv):
     _defaults = {
         "timestamp": lambda *a: time.strftime("%Y-%m-%d %H:%M:%S")
     }
+    _order = "timestamp desc"
 
 audittrail_log()
 

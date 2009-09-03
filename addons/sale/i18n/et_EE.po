@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
-"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
+"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
+"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgstr "Kinnita hinnapakkumine"
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Tarnetellimus"
+msgstr "Tarnekorraldus"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -86,7 +86,7 @@ msgstr "Automaatne deklareerimine"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree3
 msgid "Uninvoiced and Delivered Lines"
-msgstr "Arveldamata ja kättetoimetatud read"
+msgstr "Arveldamata ja kohaletoimetatud read"
 
 #. module: sale
 #: view:sale.order:0
@@ -106,7 +106,7 @@ msgstr "See on nimekiri noppelehtedest, mis on genereeritud sellele arvele."
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr "Kättetoimetamine laost kliendile."
+msgstr "Kohaletoimetamine laost kliendile."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
@@ -137,7 +137,7 @@ msgstr "Kui kinnita nuppu vajutatakse siis mustandi olek muudetakse manuaalseks 
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr "Tühista tellimus"
+msgstr "Tühista korraldus"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -160,7 +160,7 @@ msgstr "Märkmed"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
 msgid "Invoice after delivery"
-msgstr "Arvelda pärast kättetoimetamist"
+msgstr "Arvelda pärast kohaletoimetamist"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -187,7 +187,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr "Kättetoimetamise erand"
+msgstr "Kohaletoimetamise erand"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -375,7 +375,7 @@ msgstr "Kui sa valid Tarnepoliitikaks 'Automaatne arve pärast tarnimist' siis a
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr "Täielik kättetoimetamine"
+msgstr "Täielik kohaletoimetamine"
 
 #. module: sale
 #: view:sale.order:0
@@ -392,7 +392,7 @@ msgstr "Kogus (MÜ)"
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Müügitellimuste Read"
+msgstr "Müügikorralduste read"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -402,7 +402,7 @@ msgstr "Tellitud kogused"
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sale Order Procurement"
-msgstr "Müügitellimuste Hanked"
+msgstr "Müügikorralduste hanked"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -417,12 +417,12 @@ msgstr "Kokku :"
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Order"
-msgstr "Kinnita tellimus"
+msgstr "Kinnita korraldus"
 
 #. module: sale
 #: field:sale.order,name:0
 msgid "Order Reference"
-msgstr "Tellimuse viide"
+msgstr "Korralduse viide"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -445,7 +445,7 @@ msgstr "Seadistus"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr "Arve tellimusele pärast kättetoimetamist"
+msgstr "Arve korraldusele pärast kohaletoimetamist"
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -577,7 +577,7 @@ msgstr "Müügihaldus"
 #. module: sale
 #: field:sale.order.line,order_id:0
 msgid "Order Ref"
-msgstr "Tellimuse viide"
+msgstr "Korralduse viide"
 
 #. module: sale
 #: view:sale.order:0
@@ -613,7 +613,7 @@ msgstr "Ettemaksuarve"
 #. module: sale
 #: field:sale.order,state:0
 msgid "Order State"
-msgstr "Tellimuse olek"
+msgstr "Korralduse olek"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
@@ -664,7 +664,7 @@ msgstr "Müügid erandis"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "tellimusel"
+msgstr "korraldusel"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -821,13 +821,13 @@ msgstr "Sinu viide"
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Delivery Order Only"
-msgstr "Ainult kättetoimetamise korraldus"
+msgstr "Ainult kohaletoimetamise korraldus"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Sales order lines"
-msgstr "Müügitellimuse read"
+msgstr "Müügikorralduste read"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -909,7 +909,7 @@ msgstr "Pakkide arv"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
-msgstr "Pakkelehe kinnitamine liigutab need kättetoimetamise korraldusele. Seda saab teha klõpsates 'Valideeri' nuppu."
+msgstr "Pakkelehe kinnitamine liigutab need kohaletoimetamise korraldusele. Seda saab teha klõpsates 'Valideeri' nuppu."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -929,12 +929,12 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
 msgid "Confirm sale order and Create invoice."
-msgstr "Kinnita müügitellimus ja Loo arve."
+msgstr "Kinnita müügikorraldus ja loo arve."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr "Pakkeleht ja kättetoimetamise korraldus"
+msgstr "Pakkeleht ja kohaletoimetamise korraldus"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -944,7 +944,7 @@ msgstr "Erand"
 #. module: sale
 #: view:sale.order:0
 msgid "Sale Order Lines"
-msgstr "Müügitellimuse Read"
+msgstr "Müügikorralduse read"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
@@ -1018,7 +1018,7 @@ msgstr "Hind"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Deliver"
-msgstr "Kätte toimetama"
+msgstr "Kohale toimetama"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1038,7 +1038,7 @@ msgstr "Hinnapakkumine Nr"
 #. module: sale
 #: field:stock.move,sale_line_id:0
 msgid "Sale Order Line"
-msgstr "Müügitellimuse Rida"
+msgstr "Müügikorralduse rida"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
@@ -1059,7 +1059,7 @@ msgstr "Loo arved"
 #. module: sale
 #: help:sale.order,partner_order_id:0
 msgid "The name and address of the contact that requested the order or quotation."
-msgstr "Kontakti nimi ja aadress, kes taotles tellimust või hinnapakkumist."
+msgstr "Kontakti nimi ja aadress, kes taotles korraldust või hinnapakkumist."
 
 #. module: sale
 #: field:sale.order,partner_id:0
@@ -1079,7 +1079,7 @@ msgstr "Ostu hinnakirjad"
 #: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
-msgstr "Müügitellimus"
+msgstr "Müügikorraldus"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1089,7 +1089,7 @@ msgstr "Nimi"
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
-msgstr ""
+msgstr "Arve alus"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1126,7 +1126,7 @@ msgstr "Toote MÜ"
 #. module: sale
 #: help:sale.config.picking_policy,step:0
 msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
-msgstr "Open ERP suudab vaikimisi hallata kompleksmarsruutimist ja toodete radasid sinu loas ja partnerasukohtades. See seadistab kõige tavalisemad ja lihtsamad meetodid toodete kättetoimetamiseks kliendile ühe või kahe operatsioonina töötaja poolt."
+msgstr "Open ERP suudab vaikimisi hallata kompleksmarsruutimist ja toodete radasid sinu loas ja partnerasukohtades. See seadistab kõige tavalisemad ja lihtsamad meetodid toodete kohaletoimetamiseks kliendile ühe või kahe operatsioonina töötaja poolt."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1171,7 +1171,7 @@ msgstr "Maksetingimus"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr "Maksmine enne kättetoimetamist"
+msgstr "Maksmine enne kohaletoimetamist"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1192,7 +1192,7 @@ msgstr "Kaal"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "After confirming order, Create the invoice."
-msgstr "Pärast tellimuse kinnitamist loo arve."
+msgstr "Pärast korralduse kinnitamist loo arve."
 
 #. module: sale
 #: constraint:product.product:0
@@ -1213,7 +1213,7 @@ msgstr "Raamatupidamine"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "Arve kättetoimetamiste põhjal"
+msgstr "Arve kohaletoimetamiste põhjal"
 
 #. module: sale
 #: view:sale.order:0
@@ -1229,5 +1229,5 @@ msgstr "Minu müügikorraldus"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
-msgstr "Müügitellimuse rida"
+msgstr "Müügikorralduse rida"
 

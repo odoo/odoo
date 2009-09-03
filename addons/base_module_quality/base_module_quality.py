@@ -30,12 +30,12 @@ from osv import osv, fields
 
 class abstract_quality_check(object):
     '''
-        This Class provides...
+        This Class is abstract class for all test
     '''
 
     def __init__(self):
         '''
-        this method should initialize the var
+        this method should initialize the variables
         '''
         #This float have to store the rating of the module.
         #Used to compute the final score (average of all scores).
@@ -72,6 +72,15 @@ class abstract_quality_check(object):
 
         #Specify test got an error on module
         self.error = False
+
+        #Specify the minimal score for the test (in percentage(%))
+        self.min_score = 50
+
+        #Specify whether test should be consider for Quality checking of the module
+        self.active = True
+
+        #This variable used to give message if test result is good or not
+        self.message = ''
 
         #The tests have to subscribe itselfs in this list, that contains
         #all the test that have to be performed.
@@ -189,40 +198,41 @@ class module_quality_check(osv.osv):
                 ad = tools.config['root_path']+'/addons'
             module_path = os.path.join(ad, module_name)
             val = test.quality_test()
-            if not val.bool_installed_only or module_state == "installed":
-                val.run_test(cr, uid, str(module_path))
-                if not val.error:
-                    data = {
-                        'name': val.name,
-                        'score': val.score * 100,
-                        'ponderation': val.ponderation,
-                        'summary': val.result,
-                        'detail': val.result_details,
-                        'state': 'done',
-                        'note': val.note,
-                    }
-                    if val.bool_count_score:
-                        score_sum += val.score * val.ponderation
-                        ponderation_sum += val.ponderation
+            if val.active:
+                if not val.bool_installed_only or module_state == "installed":
+                    val.run_test(cr, uid, str(module_path))
+                    if not val.error:
+                        data = {
+                            'name': val.name,
+                            'score': val.score * 100,
+                            'ponderation': val.ponderation,
+                            'summary': val.result,
+                            'detail': val.result_details,
+                            'state': 'done',
+                            'note': val.note,
+                            'message': val.message
+                        }
+                        if val.bool_count_score:
+                            score_sum += val.score * val.ponderation
+                            ponderation_sum += val.ponderation
+                    else:
+                        data = {
+                            'name': val.name,
+                            'score': 0,
+                            'summary': val.result,
+                            'state': 'skipped',
+                            'note': val.note,
+                        }
                 else:
                     data = {
                         'name': val.name,
-                        'score': 0,
-                        'summary': val.result,
-                        'state': 'skipped',
                         'note': val.note,
+                        'score': 0,
+                        'state': 'skipped',
+                        'summary': _("The module has to be installed before running this test.")
                     }
-            else:
-                data = {
-                    'name': val.name,
-                    'note': val.note,
-                    'score': 0,
-                    'state': 'skipped',
-                    'summary': _("The module has to be installed before running this test.")
-                }
-            create_ids.append((0, 0, data))
-
-        final_score = '%.2f' % (score_sum / ponderation_sum * 100)
+                create_ids.append((0, 0, data))
+        final_score = ponderation_sum and '%.2f' % (score_sum / ponderation_sum * 100) or 0
         data = {
             'name': module_name,
             'final_score': final_score,
@@ -236,12 +246,13 @@ class module_quality_detail(osv.osv):
     _name = 'module.quality.detail'
     _columns = {
         'quality_check_id': fields.many2one('module.quality.check', 'Quality'),
-        'name': fields.char('Name',size=128,),
+        'name': fields.char('Name',size=128),
         'score': fields.float('Score (%)'),
         'ponderation': fields.float('Ponderation', help='Some tests are more critical than others, so they have a bigger weight in the computation of final rating'),
-        'note': fields.text('Note',),
+        'note': fields.text('Note'),
         'summary': fields.text('Summary'),
         'detail': fields.text('Details'),
+        'message': fields.char('Message', size=64),
         'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
     }
 

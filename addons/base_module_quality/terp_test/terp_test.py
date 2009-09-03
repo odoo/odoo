@@ -59,7 +59,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         result_dict1 = {}
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
-        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml', 'certificate']
+        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
         for key in terp_keys:
             if key in res:
                 feel_good_factor += 1 # each tag should appear
@@ -123,6 +123,8 @@ class quality_test(base_module_quality.abstract_quality_check):
     def run_test(self, cr, uid, module_path):
         terp_score = self.run_test_terp(cr, uid, module_path)
         self.score = terp_score and terp_score[1] or 0.0
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         if terp_score:
             self.result = self.get_result({'__terp__.py': terp_score})
         return None

@@ -36,6 +36,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 This test checks the speed of the module. Note that at least 5 demo data is needed in order to run it.
 
 """)
+        self.min_score = 30
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -104,6 +105,8 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             result_dict[obj] = speed_list
             result_dict2[obj] = list2
         self.score = obj_counter and score / obj_counter or 0.0
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result_details += self.get_result_details(result_dict)
         self.result += self.get_result(result_dict2)
         return None

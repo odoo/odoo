@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:12:04+0000\n"
-"PO-Revision-Date: 2009-08-06 15:12:04+0000\n"
+"POT-Creation-Date: 2009-08-28 15:29:32+0000\n"
+"PO-Revision-Date: 2009-08-28 15:29:32+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -139,6 +139,11 @@ msgid "Partner Ref."
 msgstr ""
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Tel : + 32 (0) 2 231 04 35"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line Description"
 msgstr ""
@@ -189,14 +194,21 @@ msgid "No. Of Articles"
 msgstr ""
 
 #. module: point_of_sale
+#: field:pos.config.journal,code:0
+#: rml:pos.details:0
+msgid "Code"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,date_validity:0
 #: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
+#: view:pos.order:0
+#: field:pos.order,pickings:0
+msgid "Picking"
 msgstr ""
 
 #. module: point_of_sale
@@ -253,6 +265,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
+#: rml:pos.receipt:0
 msgid "Fax :"
 msgstr ""
 
@@ -273,17 +286,12 @@ msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Tel :"
+msgid "Date :"
 msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Ma_ke Payment"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Sale Date :"
 msgstr ""
 
 #. module: point_of_sale
@@ -331,11 +339,6 @@ msgstr ""
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 msgid "Payment name"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Salesman :"
 msgstr ""
 
 #. module: point_of_sale
@@ -413,11 +416,6 @@ msgstr ""
 #. module: point_of_sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Receipt Printing Date :"
 msgstr ""
 
 #. module: point_of_sale
@@ -604,8 +602,8 @@ msgid "_Add product"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
+#: rml:pos.receipt:0
+msgid ":"
 msgstr ""
 
 #. module: point_of_sale
@@ -630,9 +628,9 @@ msgid "Total:"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,pickings:0
-msgid "Picking"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Summary"
 msgstr ""
 
 #. module: point_of_sale
@@ -665,9 +663,8 @@ msgid "Ma_ke payment"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.config.journal,code:0
-#: rml:pos.details:0
-msgid "Code"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
 msgstr ""
 
 #. module: point_of_sale
@@ -893,12 +890,6 @@ msgid "Supplier Refund"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: point_of_sale
 #: field:pos.config.journal,name:0
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
@@ -957,6 +948,11 @@ msgstr ""
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Print Date"
+msgstr ""
+
+#. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "OPERATION N° :"
 msgstr ""
 
 #. module: point_of_sale
