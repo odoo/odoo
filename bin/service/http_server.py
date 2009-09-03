@@ -259,18 +259,15 @@ class OerpAuthProxy(AuthProxy):
 
 	def checkRequest(self,handler,path = '/'):
 		if self.auth_creds:
-			print "found creds"
 			return True
 		auth_str = handler.headers.get('Authorization',False)
 		try:
-			print "Handler",handler
 			db = handler.get_db_from_path(path)
 			print "Got db:",db
 		except:
 			if path.startswith('/'):
 				path = path[1:]
 			psp= path.split('/')
-			print "Path \"%s\" split:" %path,psp
 			if len(psp)>1:
 				db = psp[0]
 			else:
@@ -281,7 +278,7 @@ class OerpAuthProxy(AuthProxy):
 		if auth_str and auth_str.startswith('Basic '):
 			auth_str=auth_str[len('Basic '):]
 			(user,passwd) = base64.decodestring(auth_str).split(':')
-			self.provider.log("Found user=\"%s\", passwd=\"%s\" for db=\"%s\"" %(user,passwd,db))
+			self.provider.log("Found user=\"%s\", passwd=\"***\" for db=\"%s\"" %(user,db))
 			acd = self.provider.authenticate(db,user,passwd,handler.client_address)
 			if acd != False:
 				self.auth_creds[db] = acd

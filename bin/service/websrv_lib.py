@@ -170,7 +170,6 @@ class FixSendError:
         self.send_header('Connection', 'close')
 	self.send_header('Content-Length', len(content) or 0)
         self.end_headers()
-	print "Error content:", content
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
 
@@ -214,7 +213,6 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 			self._get_ignore_body(fore) # consume any body that came, not loose sync with input
 			self.send_response(401,'Authorization required')
 			self.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
-			print 'sending WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm)
 			self.send_header('Connection', 'keep-alive')
 			self.send_header('Content-Type','text/html')
 			self.send_header('Content-Length',len(self.auth_required_msg))
@@ -222,7 +220,6 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 			self.wfile.write(self.auth_required_msg)
 			return
 		except AuthRejectedExc,e:
-			print "auth rejected!",e.args[0]
 			self.log_error("Rejected auth: %s" % e.args[0])
 			self.send_error(401,e.args[0])
 			self.close_connection = 1
@@ -344,12 +341,9 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 	max_chunk_size = 10*1024*1024
 	size_remaining = int(fore.headers["content-length"])
 	got = ''
-	if size_remaining:
-		print "Must consume %d bytes",size_remaining
 	while size_remaining:
 		chunk_size = min(size_remaining, max_chunk_size)
 		got = fore.rfile.read(chunk_size)
-		print "c:",got
 		size_remaining -= len(got)
 
 
@@ -396,7 +390,6 @@ class ConnThreadingMixIn:
     def _handle_request_noblock(self):
         """Start a new thread to process the request."""
         t = threading.Thread(target = self._handle_request2)
-	print "request came, handling in new thread",t
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
