@@ -130,7 +130,7 @@ class report_custom(report_rml):
 
         while day_diff1>0:
             if month+i<=12:
-                if day_diff1>30:
+                if day_diff1 > lengthmonth(year,i+month)+1: # Not on 30 else you have problems when entering 01-01-2009 for example
                     som1=datetime.date(year,month+i,1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(year,i+month)+1)]
                     i=i+1
