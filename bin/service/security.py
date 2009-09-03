@@ -84,5 +84,6 @@ def access(db, uid, passwd, sec_level, ids):
         raise ExceptionNoTb('Bad username or password')
     return res[0]
 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

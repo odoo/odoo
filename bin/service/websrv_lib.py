@@ -55,10 +55,10 @@ class AuthProvider:
 		pass
 
 	def authenticate(self, user, passwd, client_address):
-		#if user == 'user' and passwd == 'password':
-		#	return (user, passwd)
-		#else:
-			return False
+		return False
+		
+	def log(self, msg):
+		print msg
 
 class BasicAuthProvider(AuthProvider):
 	def setupAuth(self, multi, handler):
@@ -93,11 +93,12 @@ class BasicAuthProxy(AuthProxy):
 		if auth_str and auth_str.startswith('Basic '):
 			auth_str=auth_str[len('Basic '):]
 			(user,passwd) = base64.decodestring(auth_str).split(':')
-			print "Found user=\"%s\", passwd=\"%s\"" %(user,passwd)
+			self.provider.log("Found user=\"%s\", passwd=\"%s\"" %(user,passwd))
 			self.auth_creds = self.provider.authenticate(user,passwd,handler.client_address)
 			if self.auth_creds:
 				return True
 		if self.auth_tries > 5:
+			self.provider.log("Failing authorization after 5 requests w/o password")
 			raise AuthRejectedExc("Authorization failed.")
 		self.auth_tries += 1
 		raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
@@ -150,6 +151,7 @@ def _quote_html(html):
     return html.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 class FixSendError:
+    #error_message_format = """ """
     def send_error(self, code, message=None):
         #overriden from BaseHTTPRequestHandler, we also send the content-length
         try:
@@ -168,6 +170,7 @@ class FixSendError:
         self.send_header('Connection', 'close')
 	self.send_header('Content-Length', len(content) or 0)
         self.end_headers()
+	print "Error content:", content
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
 
@@ -181,6 +184,9 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 
     protocol_version = "HTTP/1.1"
     
+    auth_required_msg = """ <html><head><title>Authorization required</title></head>
+    <body>You must authenticate to use this service</body><html>\r\r"""
+
     def __init__(self, request, client_address, server):
 	self.in_handlers = {}
 	self.sec_realms = {}
@@ -205,14 +211,19 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 				self.log_error("Cannot require auth at %s",self.request_version)
 				self.send_error(401)
 				return
+			self._get_ignore_body(fore) # consume any body that came, not loose sync with input
 			self.send_response(401,'Authorization required')
 			self.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
+			print 'sending WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm)
+			self.send_header('Connection', 'keep-alive')
 			self.send_header('Content-Type','text/html')
-			self.send_header('Content-Length','0')
+			self.send_header('Content-Length',len(self.auth_required_msg))
 			self.end_headers()
-			#self.wfile.write("\r\n")
+			self.wfile.write(self.auth_required_msg)
 			return
 		except AuthRejectedExc,e:
+			print "auth rejected!",e.args[0]
+			self.log_error("Rejected auth: %s" % e.args[0])
 			self.send_error(401,e.args[0])
 			self.close_connection = 1
 			return
@@ -326,6 +337,20 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 	# if no match:
         self.send_error(404, "Path not found: %s" % self.path)
         return
+
+    def _get_ignore_body(self,fore):
+	if not fore.headers.has_key("content-length"):
+		return
+	max_chunk_size = 10*1024*1024
+	size_remaining = int(fore.headers["content-length"])
+	got = ''
+	if size_remaining:
+		print "Must consume %d bytes",size_remaining
+	while size_remaining:
+		chunk_size = min(size_remaining, max_chunk_size)
+		got = fore.rfile.read(chunk_size)
+		print "c:",got
+		size_remaining -= len(got)
 
 
 class SecureMultiHTTPHandler(MultiHTTPHandler):

@@ -83,6 +83,9 @@ class MultiHandler2(MultiHTTPHandler):
     def log_message(self, format, *args):
 	netsvc.Logger().notifyChannel('http',netsvc.LOG_DEBUG,format % args)
 
+    def log_error(self, format, *args):
+	netsvc.Logger().notifyChannel('http',netsvc.LOG_ERROR,format % args)
+
 
 class SecureMultiHandler2(SecureMultiHTTPHandler):
     def log_message(self, format, *args):
@@ -93,6 +96,12 @@ class SecureMultiHandler2(SecureMultiHTTPHandler):
         fcert = tc.get_misc('httpsd','sslcert', 'ssl/server.cert')
 	fkey = tc.get_misc('httpsd','sslkey', 'ssl/server.key')
 	return (fcert,fkey)
+
+    def log_message(self, format, *args):
+	netsvc.Logger().notifyChannel('http',netsvc.LOG_DEBUG,format % args)
+
+    def log_error(self, format, *args):
+	netsvc.Logger().notifyChannel('http',netsvc.LOG_ERROR,format % args)
 
 class HttpDaemon(threading.Thread, netsvc.Server):
     def __init__(self, interface, port):
@@ -196,7 +205,7 @@ def reg_http_service(hts, secure_only = False):
 		httpsd.server.vdirs.append(hts)
 	
 	if (not httpd) and (not httpsd):
-		netsvc.Logger().notifyChannel('httpd',netsvc.LOG_WARNING,"No httpd available to register service %s",hts.path)
+		netsvc.Logger().notifyChannel('httpd',netsvc.LOG_WARNING,"No httpd available to register service %s" % hts.path)
 	return
 
 import SimpleXMLRPCServer
@@ -234,4 +243,77 @@ def init_xmlrpc():
 	# reg_http_service(HTTPDir('/test/',HTTPHandler))
 	netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
 			"Registered XML-RPC over HTTP")
+			
+
+class OerpAuthProxy(AuthProxy):
+	""" Require basic authentication..
+	
+	    This is a copy of the BasicAuthProxy, which however checks/caches the db
+	    as well.
+	"""
+	def __init__(self,provider):
+		AuthProxy.__init__(self,provider)
+		self.auth_creds = {}
+		self.auth_tries = 0
+		self.last_auth = None
+
+	def checkRequest(self,handler,path = '/'):
+		if self.auth_creds:
+			print "found creds"
+			return True
+		auth_str = handler.headers.get('Authorization',False)
+		try:
+			print "Handler",handler
+			db = handler.get_db_from_path(path)
+			print "Got db:",db
+		except:
+			if path.startswith('/'):
+				path = path[1:]
+			psp= path.split('/')
+			print "Path \"%s\" split:" %path,psp
+			if len(psp)>1:
+				db = psp[0]
+			else:
+				#FIXME!
+				self.provider.log("Wrong path: %s, failing auth" %path)
+				raise AuthRejectedExc("Authorization failed. Wrong sub-path.")
+
+		if auth_str and auth_str.startswith('Basic '):
+			auth_str=auth_str[len('Basic '):]
+			(user,passwd) = base64.decodestring(auth_str).split(':')
+			self.provider.log("Found user=\"%s\", passwd=\"%s\" for db=\"%s\"" %(user,passwd,db))
+			acd = self.provider.authenticate(db,user,passwd,handler.client_address)
+			if acd != False:
+				self.auth_creds[db] = acd
+				self.last_auth=db
+				return True
+		if self.auth_tries > 5:
+			self.provider.log("Failing authorization after 5 requests w/o password")
+			raise AuthRejectedExc("Authorization failed.")
+		self.auth_tries += 1
+		raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
+
+import security
+class OpenERPAuthProvider(AuthProvider):
+	def __init__(self,realm = 'OpenERP User'):
+		self.realm = realm
+
+	def setupAuth(self, multi, handler):
+		if not multi.sec_realms.has_key(self.realm):
+			multi.sec_realms[self.realm] = OerpAuthProxy(self)
+		handler.auth_proxy = multi.sec_realms[self.realm]
+
+	def authenticate(self, db, user, passwd, client_address):
+		try:
+			uid = security.login(db,user,passwd)
+			if uid is False:
+				return False
+			return (user, passwd, db, uid)
+		except Exception,e:
+			netsvc.Logger().notifyChannel("auth",netsvc.LOG_DEBUG,"Fail auth:"+ str(e))
+			return False
+		
+	def log(self, msg):
+		netsvc.Logger().notifyChannel("auth",netsvc.LOG_INFO,msg)
+
 #eof
