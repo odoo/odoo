@@ -45,13 +45,13 @@ class expression(object):
                 or (internal and element[1] in INTERNAL_OPS))
 
     def __execute_recursive_in(self, cr, s, f, w, ids):
+        # todo: merge into parent query as sub-query
         res = []
         for i in range(0, len(ids), cr.IN_MAX):
             subids = ids[i:i+cr.IN_MAX]
             cr.execute('SELECT "%s"'    \
                        '  FROM "%s"'    \
-                       ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
-                       subids)
+                       ' WHERE "%s" = ANY (%%s)' % (s, f, w), (subids,))
             res.extend([r[0] for r in cr.fetchall()])
         return res
 

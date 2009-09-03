@@ -1564,7 +1564,7 @@ class orm_memory(orm_template):
             if id in self.datas:
                 del self.datas[id]
         if len(ids):
-            cr.execute('delete from wkf_instance where res_type=%s and res_id in ('+','.join(map(str, ids))+')', (self._name, ))
+            cr.execute('delete from wkf_instance where res_type=%s and res_id = ANY  (%s)', (self._name,ids))
         return True
 
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -2140,18 +2140,16 @@ class orm(orm_template):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join(['%s' for x in sub_ids]), d1,
-                                self._order),sub_ids + d2)
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) AND %s ORDER BY %s' % \
+                            (','.join(fields_pre2 + ['id']), self._table, d1,
+                                self._order),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join(['%s' for x in sub_ids]),
-                                self._order), sub_ids)
+                                self._order), (sub_ids,))
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
@@ -2994,7 +2992,7 @@ class orm(orm_template):
                 sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
                 cr.execute('SELECT distinct "'+parent+'"'+
                     ' FROM "'+self._table+'" ' \
-                    'WHERE id in ('+','.join(map(str, sub_ids_parent))+')')
+                    'WHERE id = ANY(%s)',(sub_ids_parent,))
                 ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
             ids_parent = ids_parent2
             for i in ids_parent:
