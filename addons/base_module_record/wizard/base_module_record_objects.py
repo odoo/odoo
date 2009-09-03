@@ -89,7 +89,7 @@ def _record_objects(self, cr, uid, data, context):
         search_ids=obj_pool.search(cr,uid,search_condition)
         for s_id in search_ids:
              args=(cr.dbname,uid,user,obj_name,'copy',s_id,{},context)
-             mod.recording_data.append(('query',args, {},s_id))
+             mod.recording_data.append(('query',args, {}, s_id))
     return {}
 
 def inter_call(self,cr,uid,data,context):
