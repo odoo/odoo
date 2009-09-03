@@ -202,7 +202,7 @@ project_task_type()
 
 class task(osv.osv):
     _name = "project.task"
-    _description = "Task"
+    _description = "Tasks"
     _date_name = "date_start"
     def _str_get(self, task, level=0, border='***', context={}):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
