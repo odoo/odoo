@@ -59,7 +59,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         result_dict1 = {}
         terp_file = os.path.join(module_path,'__terp__.py')
         res = eval(tools.file_open(terp_file).read())
-        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml', 'certificate']
+        terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
         for key in terp_keys:
             if key in res:
                 feel_good_factor += 1 # each tag should appear
