@@ -105,6 +105,8 @@ class HttpDaemon(threading.Thread, netsvc.Server):
             self.server = ThreadedHTTPServer((interface, port), MultiHandler2)
 	    self.server.vdirs = []
 	    self.server.logRequests = True
+	    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
+			"starting HTTP service at %s port %d" % (interface or '0.0.0.0', port,))
         except Exception, e:
             netsvc.Logger().notifyChannel('httpd', netsvc.LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
             raise
@@ -140,6 +142,8 @@ class HttpSDaemon(threading.Thread, netsvc.Server):
 	    self.server = ThreadedHTTPServer((interface, port), SecureMultiHandler2)
 	    self.server.vdirs = []
 	    self.server.logRequests = True
+	    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
+			"starting HTTPS service at %s port %d" % (interface or '0.0.0.0', port,))
         except SSLError, e:
             netsvc.Logger().notifyChannel('httpd-ssl', netsvc.LOG_CRITICAL, "Can not load the certificate and/or the private key files")
             raise
@@ -170,12 +174,10 @@ httpsd = None
 def init_servers():
 	global httpd, httpsd
 	if tools.config.get_misc('httpd','enable', True):
-		print "creating a httpd"
 		httpd = HttpDaemon(tools.config.get_misc('httpd','interface', ''), \
 			tools.config.get_misc('httpd','port', 8069))
 
 	if tools.config.get_misc('httpsd','enable', False):
-		print "creating a httpsd"
 		httpsd = HttpSDaemon(tools.config.get_misc('httpsd','interface', ''), \
 			tools.config.get_misc('httpsd','port', 8071))
 
@@ -230,5 +232,6 @@ def init_xmlrpc():
 	reg_http_service(HTTPDir('/xmlrpc/',XMLRPCRequestHandler))
 	# Example of http file serving:
 	# reg_http_service(HTTPDir('/test/',HTTPHandler))
-	print "Started XML-RPC"
+	netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
+			"Registered XML-RPC over HTTP")
 #eof

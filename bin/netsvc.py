@@ -316,7 +316,8 @@ class Server:
 	def startAll(cls):
 		if cls.__is_started:
 			return
-		print "Starting %d services" % len(cls.__servers)
+		Logger().notifyChannel("services", LOG_INFO, 
+			"Starting %d services" % len(cls.__servers))
 		for srv in cls.__servers:
 			srv.start()
 		cls.__is_started = True
@@ -325,6 +326,8 @@ class Server:
 	def quitAll(cls):
 		if not cls.__is_started:
 			return
+		Logger().notifyChannel("services", LOG_INFO, 
+			"Stopping %d services" % len(cls.__servers))
 		for srv in cls.__servers:
 			srv.stop()
 		cls.__is_started = False
