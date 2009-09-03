@@ -112,6 +112,14 @@ import addons
 # Load and update databases if requested
 #----------------------------------------------------------
 
+import service.http_server
+
+service.http_server.init_servers()
+service.http_server.init_xmlrpc()
+
+import service.netrpc_server
+service.netrpc_server.init_servers()
+
 if tools.config['db_name']:
     for db in tools.config['db_name'].split(','):
         pooler.get_db_and_pool(db, update_module=tools.config['init'] or tools.config['update'])
@@ -154,14 +162,6 @@ if tools.config["stop_after_init"]:
 #----------------------------------------------------------
 # Launch Servers
 #----------------------------------------------------------
-
-import service.http_server
-
-service.http_server.init_servers()
-service.http_server.init_xmlrpc()
-
-import service.netrpc_server
-service.netrpc_server.init_servers()
 
 LST_SIGNALS = ['SIGINT', 'SIGTERM']
 if os.name == 'posix':
