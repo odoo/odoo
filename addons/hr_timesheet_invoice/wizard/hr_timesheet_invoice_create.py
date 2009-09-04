@@ -184,7 +184,7 @@ class invoice_create(wizard.interface):
 
 
     _create_form = """<?xml version="1.0"?>
-    <form title="Invoice on analytic entries">
+    <form string="Invoice on analytic entries">
         <notebook>
         <page string="Invoicing Data">
             <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
