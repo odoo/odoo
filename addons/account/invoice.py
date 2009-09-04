@@ -108,7 +108,7 @@ class account_invoice(osv.osv):
             to_pay = inv.amount_total
             for lines in inv.move_lines:
                 paid_amt = paid_amt - lines.credit + lines.debit
-            res[inv.id] = to_pay - abs(paid_amt)
+            res[inv.id] = round(to_pay - abs(paid_amt),int(config['price_accuracy']))
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -892,7 +892,7 @@ class account_invoice(osv.osv):
             if l.account_id.id==src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
-        if (not total) or writeoff_acc_id:
+        if (not round(total,int(config['price_accuracy']))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
