@@ -34,6 +34,8 @@ import socket
 
 admin_passwd = 'admin'
 waittime = 10
+wait_count = 0
+wait_limit = 12
 
 def start_server(root_path, port, addons_path):
     if root_path:
@@ -47,19 +49,27 @@ def clean():
             ps.close()  
             if pid:    
                 os.kill(pid,9)
-
+                
 def execute(connector, method, *args):
+    global wait_count
     res = False
     try:        
         res = getattr(connector,method)(*args)
     except socket.error,e:        
-        if e.args[0] == 111:
+        if e.args[0] == 111:                                    
+            if wait_count > wait_limit:
+                print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
+                clean()
+                sys.exit(1)
             print 'Please wait %d sec to start server....'%(waittime)
+            wait_count += 1
             time.sleep(waittime)
             res = execute(connector, method, *args)
         else:
             raise e
-    return res        
+    wait_count = 0
+    return res                  
+
 
 def login(uri, dbname, user, pwd):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
@@ -110,12 +120,13 @@ def check_quality(uri, user, pwd, dbname, modules):
             html += "<oi>"
             for x,y,detail in quality_result['check_detail_ids']:
                 if detail.get('detail') != '':
-                    test = detail.get('name')
+                    msg = detail.get('message')
+                    test = detail.get('name')                    
                     score = round(float(detail.get('score',0)),2)
                     html += "<li><a href=\"#%s\">%s (%.2f)</a></li>"%(test,test,score)
                     detail_html +="<a name=\"%s\"><h3>%s (Score : %s)</h3>%s</a>"%(test,test,score,detail.get('detail'))
                     detail_html +='''<a href="#TOP">Go to Top</a>'''
-                    test_detail[test] = (score,detail.get('detail',''))
+                    test_detail[test] = (score,msg,detail.get('detail',''))
             html += "</oi>%s</body></html></html></html></html></html>"%(detail_html) 
             final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
 
