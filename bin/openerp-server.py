@@ -114,11 +114,14 @@ import addons
 
 import service.http_server
 
-service.http_server.init_servers()
-service.http_server.init_xmlrpc()
+if not ( tools.config["stop_after_init"] or \
+	tools.config["translate_in"] or \
+	tools.config["translate_out"] ):
+	service.http_server.init_servers()
+	service.http_server.init_xmlrpc()
 
-import service.netrpc_server
-service.netrpc_server.init_servers()
+	import service.netrpc_server
+	service.netrpc_server.init_servers()
 
 if tools.config['db_name']:
     for db in tools.config['db_name'].split(','):
