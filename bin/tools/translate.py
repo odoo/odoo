@@ -489,6 +489,9 @@ def trans_generate(lang, modules, dbname=None):
                         }
 
                         # export fields
+			if not result.has_key('fields'):
+				logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
+				continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
                            
