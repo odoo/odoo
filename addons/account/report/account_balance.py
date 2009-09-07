@@ -93,6 +93,7 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
+            ctx['state'] = form['context'].get('state','all')
             ctx['fiscalyear'] = form['fiscalyear']
             if form['state']=='byperiod' :
                 ctx['periods'] = form['periods'][0][2]
