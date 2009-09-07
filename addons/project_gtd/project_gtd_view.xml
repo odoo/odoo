@@ -115,9 +115,9 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_gtd_task_inbox">
-            <field name="name">Inbox Tasks</field>
+            <field name="name">My Inbox</field>
             <field name="res_model">project.task</field>
-            <field name="domain">[('user_id','=',uid),('timebox_id','=',False),('state','in',('open','draft'))]</field>
+            <field name="domain">[('user_id','=',uid),('state','in',('open','draft'))]</field>
             <field name="context">{'gtd_sort':True}</field>
             <field name="view_id" ref="task_inbox_view"/>
         </record>
@@ -148,7 +148,7 @@
         </record>
         
         <menuitem
-            name="All My Timeboxes" 
+            name="My Timeboxes" 
             id="menu_open_time_allinbox" 
             parent="menu_open_time" 
             action="open_gtd_timebox_all"/>
