@@ -497,7 +497,7 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        dt+=rr.name+','
+                                        dt += rr.name or '' + ','
                                     data[fpos] = dt[:-1]
                                     break
                                 lines += lines2[1:]
