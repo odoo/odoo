@@ -117,17 +117,16 @@ def check_quality(uri, user, pwd, dbname, modules):
             html = '''<html><html><html><html><body><a name="TOP"></a>'''
             html +="<h1> Module : %s </h1>"%(quality_result['name'])   
             html += "<h2> Final score : %s</h2>"%(quality_result['final_score'])
-            html += "<oi>"
-            for x,y,detail in quality_result['check_detail_ids']:
-                if detail.get('detail') != '':
-                    msg = detail.get('message')
-                    test = detail.get('name')                    
-                    score = round(float(detail.get('score',0)),2)
-                    html += "<li><a href=\"#%s\">%s (%.2f)</a></li>"%(test,test,score)
-                    detail_html +="<a name=\"%s\"><h3>%s (Score : %s)</h3>%s</a>"%(test,test,score,detail.get('detail'))
-                    detail_html +='''<a href="#TOP">Go to Top</a>'''
-                    test_detail[test] = (score,msg,detail.get('detail',''))
-            html += "</oi>%s</body></html></html></html></html></html>"%(detail_html) 
+            html += "<div id='tabs'>"
+            html += "<ul>"
+            for x,y,detail in quality_result['check_detail_ids']:                
+                test = detail.get('name')
+                score = round(float(detail.get('score',0)),2)
+                html += "<li><a href=\"#%s\">%s</a></li>"%(test.replace(' ','-'),test)
+                detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail'))                
+                test_detail[test] = (score,detail.get('detail',''))
+            html += "</ul>%s</body></html></html></html></html></html>"%(detail_html)
+            html += "</div>"
             final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
 
         fp = open('quality_log.pck','wb')
@@ -138,7 +137,7 @@ def check_quality(uri, user, pwd, dbname, modules):
     else:
         print 'Login Failed...'        
         clean()
-        sys.exit(1)   
+        sys.exit(1)
 
 
 
