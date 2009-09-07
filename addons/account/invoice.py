@@ -107,7 +107,10 @@ class account_invoice(osv.osv):
             paid_amt = 0.0
             to_pay = inv.amount_total
             for lines in inv.move_lines:
-                paid_amt = paid_amt - lines.credit + lines.debit
+                if lines.amount_currency and lines.currency_id:
+                    paid_amt += lines.amount_currency
+                else:
+                    paid_amt += lines.credit + lines.debit
             res[inv.id] = round(to_pay - abs(paid_amt),int(config['price_accuracy']))
         return res
 
