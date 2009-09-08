@@ -44,6 +44,11 @@ try:
     import fcntl
 except ImportError:
     fcntl = None
+    
+try:
+	from ssl import SSLError
+except ImportError:
+	class SSLError(Exception): pass
 
 class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer):
     """ A threaded httpd server, with all the necessary functionality for us.
@@ -144,8 +149,6 @@ class HttpSDaemon(threading.Thread, netsvc.Server):
 	netsvc.Server.__init__(self)
         self.__port = port
         self.__interface = interface
-
-	from ssl import SSLError
 
         try:
 	    self.server = ThreadedHTTPServer((interface, port), SecureMultiHandler2)
