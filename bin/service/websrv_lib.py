@@ -182,6 +182,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
     """
 
     protocol_version = "HTTP/1.1"
+    default_request_version = "HTTP/0.9"	# compatibility with py2.5
     
     auth_required_msg = """ <html><head><title>Authorization required</title></head>
     <body>You must authenticate to use this service</body><html>\r\r"""

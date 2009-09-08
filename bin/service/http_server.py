@@ -67,7 +67,7 @@ class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer)
         self.logRequests = logRequests
 
         SimpleXMLRPCDispatcher.__init__(self, allow_none, encoding)
-        HTTPServer.__init__(self, addr, requestHandler, bind_and_activate)
+        HTTPServer.__init__(self, addr, requestHandler)
 
         # [Bug #1222790] If possible, set close-on-exec flag; if a
         # method spawns a subprocess, the subprocess shouldn't have
