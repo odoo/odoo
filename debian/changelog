@@ -1,3 +1,57 @@
+openerp-server (5.0.4-0-1test3) intrepid; urgency=high
+
+  [ Panos Christeas ]
+  * Testing release, with HTTP/1.1 features
+
+  [ P. Christeas ]
+  * Translating: skip buggy wizard states.
+  * If the server is only translating, don't init the httpd.
+  * Remove debuggint print's
+  * Implement basic-authenticated services. Log messages.
+  * Initialize services before databases.
+  * Don't print messages, log them..
+  * Bring back net-rpc service.
+  * Fix quoting of ids when passed to sql.
+  * Fix merging of 5.0.4 into API-changed netsvc.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Security Loophole corrected
+
+  [ P. Christeas ]
+  * Fix https transports, certificates etc.
+  * [IMP] reorder the imports in websrv_lib.
+  * Fix dispatching of reports after API change.
+  * [MAJOR IMP] Rewrite the http/RPC engine and let HTTP/1.1 features.
+
+  [ Christophe Simonis ]
+  * [REL] 5.0.4
+  * [MERGE]
+  * [MERGE]
+  * [IMP] replace partner name and address in demo
+  * [IMP] add translation names
+  * [IMP] update translations files
+
+  [ Jay (Open ERP) ]
+  * [FIX] Functional fields with M2O relation can be printed on print
+    screen now
+
+  [ HDA (OpenERP) ]
+  * [FIX] Pagecount probelm while all objects print on same page and
+    printing special character on xsl report
+
+  [ Harry (Open ERP) ]
+  * [FIX] import: support "<rel_field>:db_id" , better warning message
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_cron :function and its arguements are now editable
+
+  [ HDA (OpenERP) ]
+  * [Merge]
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Tue, 08 Sep 2009 10:06:51 +0300
+
 openerp-server (5.0.3-0-1ubuntu2) intrepid; urgency=low
 
   * Merge packaging work from Debian official
