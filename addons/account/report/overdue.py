@@ -29,14 +29,14 @@ import pooler
 
 class Overdue(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(Overdue, self).__init__(cr, uid, name, context)
+        super(Overdue, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time' : time,
             'adr_get' : self._adr_get,
             'getLines' : self._lines_get,
             'tel_get' : self._tel_get,
         })
-
+        self.context = context
     def _adr_get(self, partner, type):
         res = []
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
@@ -51,7 +51,7 @@ class Overdue(report_sxw.rml_parse):
                   'country_id' : False,
                  }
         if adr_id:
-            result = res_partner_address.read(self.cr, self.uid, [adr_id])
+            result = res_partner_address.read(self.cr, self.uid, [adr_id],context=self.context.copy())
             result[0]['country_id'] = result[0]['country_id'] and result[0]['country_id'][1] or False
             return result   
          
