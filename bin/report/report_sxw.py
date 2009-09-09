@@ -156,7 +156,7 @@ class rml_parse(object):
         self.cr = cr
         self.uid = uid
         self.pool = pooler.get_pool(cr.dbname)
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         self.localcontext = {
             'user': user,
             'company': user.company_id,
