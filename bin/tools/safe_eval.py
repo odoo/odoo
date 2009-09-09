@@ -26,19 +26,22 @@
 ###############################################################################
 
 __export_bis = {}
+import sys
 
 def __init_ebis():
 	global __export_bis
 	
-	_evars = [ 'abs', 'all', 'any', 'basestring' , 'bin', 'bool', 
+	_evars = [ 'abs', 'all', 'any', 'basestring' , 'bool', 
 		'chr', 'cmp','complex', 'dict', 'divmod', 'enumerate',
-		'float','format', 'frozenset', 'getattr', 'hasattr', 'hash',
+		'float', 'frozenset', 'getattr', 'hasattr', 'hash',
 		'hex', 'id','int', 'iter', 'len', 'list', 'long', 'map', 'max',
-		'min','next', 'oct', 'ord','pow', 'range', 'reduce', 'repr',
+		'min', 'oct', 'ord','pow', 'range', 'reduce', 'repr',
 		'reversed', 'round', 'set', 'setattr', 'slice','sorted', 'str',
 		'sum', 'tuple','type', 'unichr','unicode', 'xrange',
 		'True','False', 'None', 'NotImplemented', 'Ellipsis', ]
 		
+	if sys.version_info[0:2] >= (2,6):
+		_evars.extend(['bin', 'format', 'next'])
 	for v in _evars:
 		__export_bis[v] = __builtins__[v]
 	
