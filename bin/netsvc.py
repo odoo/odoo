@@ -173,7 +173,7 @@ class Logger(object):
         msg = tools.ustr(msg).strip()
         
         if level in (LOG_ERROR,LOG_CRITICAL):
-            msg = common().get_server_environment() + msg
+            msg = common().get_server_environment() + '\n' + msg
 
         result = msg.split('\n')
         if len(result)>1:
