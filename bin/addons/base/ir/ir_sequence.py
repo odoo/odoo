@@ -22,6 +22,7 @@
 
 import time
 from osv import fields,osv
+from tools.safe_eval import safe_eval
 import pooler
 
 class ir_sequence_type(osv.osv):
@@ -47,12 +48,15 @@ class ir_sequence(osv.osv):
         'number_next': fields.integer('Next Number', required=True),
         'number_increment': fields.integer('Increment Number', required=True),
         'padding' : fields.integer('Number padding', required=True),
+	'condition': fields.char('Condition', size=250, help="If set, sequence will only be used in case this python expression matches, and will precede other sequences."),
+	'weight': fields.integer('Weight',required=True, help="If two sequences match, the highest weight will be used.")
     }
     _defaults = {
         'active': lambda *a: True,
         'number_increment': lambda *a: 1,
         'number_next': lambda *a: 1,
         'padding' : lambda *a : 0,
+	'weight' : lambda *a: 10,
     }
 
     def _process(self, s):
@@ -71,10 +75,29 @@ class ir_sequence(osv.osv):
         }
 
     def get_id(self, cr, uid, sequence_id, test='id=%s', context=None):
+	if not context:
+		context = {}
         try:
-            cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+' AND active=%s FOR UPDATE', (sequence_id, True))
-            res = cr.dictfetchone()
-            if res:
+            cr.execute('SELECT id, number_next, prefix, suffix, padding, condition \
+		FROM ir_sequence \
+		WHERE '+test+' AND active=%s ORDER BY weight DESC, length(COALESCE(condition,\'\')) DESC \
+		FOR UPDATE', (sequence_id, True))
+            for res in cr.dictfetchall():
+		if res['condition']:
+			print "ir_seq: %s has condition:" %res['id'], res['condition'], 
+			try:
+			    bo = safe_eval(res['condition'],context)
+			    if not bo:
+				print "not matched"
+				continue
+			except Exception,e:
+				# it would be normal to have exceptions, because
+				# the domain may contain errors
+				print "Exception.\ne:",e
+				print "Context:", context
+				continue
+			print "Matched!"
+
                 cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=%s', (res['id'], True))
                 if res['number_next']:
                     return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
@@ -84,8 +107,8 @@ class ir_sequence(osv.osv):
             cr.commit()
         return False
 
-    def get(self, cr, uid, code):
-        return self.get_id(cr, uid, code, test='code=%s')
+    def get(self, cr, uid, code, context = None):
+        return self.get_id(cr, uid, code, test='code=%s',context=context)
 ir_sequence()
 
 
