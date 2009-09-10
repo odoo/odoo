@@ -133,6 +133,11 @@ def data_files():
                                               opj('bin', 'server.pkey'),
                                               opj('bin', 'server.cert')]))
 
+        if sys.version_info[0:2] == (2,5):
+            files.append((openerp_site_packages, [ opj('python25-compat','BaseHTTPServer.py'),
+                                                   opj('python25-compat','SimpleXMLRPCServer.py'),
+                                                   opj('python25-compat','SocketServer.py')]))
+
         for (addonname, add_path) in find_addons():
             addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
             pathfiles = []
