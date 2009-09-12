@@ -1740,6 +1740,20 @@ class orm(orm_template):
                                "AND c.oid=a.attrelid " \
                                "AND a.atttypid=t.oid", (self._table, k))
                     res = cr.dictfetchall()
+		    if not res and hasattr(f,'oldname'):
+				cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+					"FROM pg_class c,pg_attribute a,pg_type t " \
+					"WHERE c.relname=%s " \
+					"AND a.attname=%s " \
+					"AND c.oid=a.attrelid " \
+					"AND a.atttypid=t.oid", (self._table, f.oldname))
+				res_old = cr.dictfetchall()
+                                logger.notifyChannel('orm', netsvc.LOG_DEBUG, 'trying to rename %s(%s) to %s'% (self._table, f.oldname, k))
+				if res_old and len(res_old)==1:
+					cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % ( self._table,f.oldname, k))
+					res = res_old
+					res[0]['attname'] = k
+				
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -1887,7 +1901,7 @@ class orm(orm_template):
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
                     else:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error !")
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !"%(self._table,k))
             for order,f,k in todo_update_store:
                 todo_end.append((order, self._update_store, (f, k)))
 
