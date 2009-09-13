@@ -115,9 +115,9 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_gtd_task_inbox">
-            <field name="name">Inbox Tasks</field>
+            <field name="name">My Inbox</field>
             <field name="res_model">project.task</field>
-            <field name="domain">[('user_id','=',uid),('timebox_id','=',False),('state','in',('open','draft'))]</field>
+            <field name="domain">[('user_id','=',uid),('state','in',('open','draft'))]</field>
             <field name="context">{'gtd_sort':True}</field>
             <field name="view_id" ref="task_inbox_view"/>
         </record>
@@ -129,6 +129,7 @@
             <field name="name">project.gtd.timebox.treelist</field>
             <field name="model">project.gtd.timebox</field>
             <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
                 <tree string="Timeboxes">
@@ -137,18 +138,17 @@
             </field>
         </record>
 
-
         <record model="ir.actions.act_window" id="open_gtd_timebox_all">
             <field name="name">My Timeboxes</field>
             <field name="res_model">project.gtd.timebox</field>
-            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="domain">[('user_id','=',uid),('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_gtd_timebox_treelist"/>
             <field name="context">{'record_id':False}</field>
         </record>
         
         <menuitem
-            name="All My Timeboxes" 
+            name="My Timeboxes" 
             id="menu_open_time_allinbox" 
             parent="menu_open_time" 
             action="open_gtd_timebox_all"/>
@@ -170,7 +170,7 @@
     </record>
 
     <act_window name="My Inbox"
-        domain="[('user_id', '=', uid),('timebox_id','=',False),('state','in',('draft','open'))]"
+        domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
         res_model="project.task"
         src_model="project.gtd.timebox"
         view_type="form"
@@ -207,7 +207,23 @@
         view_mode="tree,form"
         id="act_timebox_tasks"/>
 
+	<record id="project_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">TimeBox</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('timebox_id','child_of',[active_id])]</field>
+            <field name="context">{'timebox_id':active_id}</field>
+        </record>
 
+        <record id="ir_project_category_open" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'project.gtd.timebox'" name="model"/>
+            <field name="name">Tasks by Timebox</field>
+            <field eval="'ir.actions.act_window,%d'%project_normal_action_tree" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
 
     </data>
 </openerp>

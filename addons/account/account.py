@@ -1308,7 +1308,7 @@ class account_tax(osv.osv):
             # we compute the amount for the current tax object and append it to the result
 
             data = {'id':tax.id,
-                            'name':tax.name,
+                            'name':tax.description and tax.description + " - " + tax.name or tax.name,
                             'account_collected_id':tax.account_collected_id.id,
                             'account_paid_id':tax.account_paid_id.id,
                             'base_code_id': tax.base_code_id.id,

@@ -130,7 +130,7 @@ def _check_state(self, cr, uid, data, context):
 
 
 class wizard_report(wizard.interface):
-    def _get_defaults(self, cr, uid, data, context):
+    def _get_defaults(self, cr, uid, data, context={}):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
             company_id = user.company_id.id
@@ -147,6 +147,7 @@ class wizard_report(wizard.interface):
         data['form']['landscape']=True
         data['form']['fiscalyear'] = False
         data['form']['amount_currency'] = True
+        data['form']['context'] = context
         return data['form']
 
     states = {

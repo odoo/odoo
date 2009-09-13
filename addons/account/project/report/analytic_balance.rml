@@ -45,7 +45,7 @@
       <blockValign value="TOP"/>
        <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
        <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="-1,1"/>
-       <lineStyle kind="LINEBELOW" colorName="#777777" start="0,2" stop="1,2"/>
+       <lineStyle kind="LINEBELOW" colorName="#b3b3b3" start="0,2" stop="1,2"/>
        <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,3" stop="-1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
@@ -130,45 +130,45 @@
           </td>
           <td></td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_all(get_objects(data['form']['empty_acc']),data['form']['date1'],data['form']['date2'],'debit')) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_all(get_objects(data['form']['empty_acc']),data['form']['date1'],data['form']['date2'],'credit')) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_balance(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_balance(get_objects(data['form']['empty_acc']),data['form']['date1'],data['form']['date2'])) ]]</u></para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_quantity(objects,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+            <para style="terp_tblheader_General_Right"><u>[[ formatLang(sum_all(get_objects(data['form']['empty_acc']),data['form']['date1'],data['form']['date2'],'quantity')) ]]</u></para>
           </td>
         </tr>
         </blockTable>
         <section>
-        <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
+        <para style="terp_default_8">[[ repeatIn(get_objects(data['form']['empty_acc']),'o') ]]</para>
         <blockTable colWidths="57.0,280.0,50.0,50.0,50.0,50.0" style="tbl_data">
         <tr>
         <td>
-                  <para style="terp_default_8_bold">[[ o.code ]]</para>
+                  <para style="terp_default_8_bold">[[ o['code'] ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_8_bold">[[ o.complete_name ]]</para>
+                  <para style="terp_default_8_bold">[[ o['complete_name'] ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum(o['id'],data['form']['date1'],data['form']['date2'], 'debit')) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum(o['id'],data['form']['date1'],data['form']['date2'], 'credit')) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_balance(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_balance(o['id'],data['form']['date1'],data['form']['date2'])) ]]</u></para>
                 </td>
                 <td>
-                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum_quantity(o.id,data['form']['date1'],data['form']['date2'])) ]]</u></para>
+                  <para style="terp_default_8_right_bold"><u>[[  formatLang(move_sum(o['id'],data['form']['date1'],data['form']['date2'], 'quantity')) ]]</u></para>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <para style="terp_default_8">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
+                  <para style="terp_default_8">[[ repeatIn(lines_g(o['id'],data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
                   <para style="terp_default_8">[[ move_g['code'] ]]</para>
                 </td>
                 <td>

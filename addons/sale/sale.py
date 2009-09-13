@@ -492,7 +492,7 @@ class sale_order(osv.osv):
                 if line.procurement_id:
                     res.append(line.procurement_id.id)
         return res
-
+        
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
     # if mode == 'canceled':
@@ -504,9 +504,22 @@ class sale_order(osv.osv):
         notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
+        stock_move_obj = self.pool.get('stock.move')
+
         for order in self.browse(cr, uid, ids, context={}):
-            for line in order.order_line:
-                if (not line.procurement_id) or (line.procurement_id.state=='done'):
+            
+            #check for pending deliveries 
+            pending_deliveries = False
+            
+            for line in order.order_line:    
+                move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
+                for move in stock_move_obj.browse( cr, uid, move_ids ):
+                    #if one of the related order lines is in state draft, auto or confirmed
+                    #this order line is not yet delivered
+                    if move.state in ('draft', 'auto', 'confirmed'):
+                        pending_deliveries = True
+                
+                if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
                     finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)

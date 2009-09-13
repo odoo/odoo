@@ -69,7 +69,7 @@ class res_partner_bank(osv.osv):
 				if address['type'] == 'default':
 					return address.get(field,False)
 				elif not address['type']:
-					value = address[field]
+					value = address.get(field,False)
 			else :
 				value = False
 		return value
