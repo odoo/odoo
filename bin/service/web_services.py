@@ -57,7 +57,7 @@ class db(netsvc.ExportService):
 		'change_admin_password', 'migrate_databases' ]:
 		passwd = params[0]
 		params = params[1:]
-		security.check_super(password)
+		security.check_super(passwd)
 	elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
 		# params = params
 		# No security check for these methods
@@ -71,7 +71,6 @@ class db(netsvc.ExportService):
 	pass
 
     def exp_create(self, db_name, demo, lang, user_password='admin'):
-        security.check_super(password)
         self.id_protect.acquire()
         self.id += 1
         id = self.id
@@ -216,7 +215,6 @@ class db(netsvc.ExportService):
         return base64.encodestring(data)
 
     def exp_restore(self, db_name, data):
-        security.check_super(password)
         logger = netsvc.Logger()
 
         self._set_pg_psw_env_var()
