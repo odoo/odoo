@@ -1801,7 +1801,7 @@ class orm(orm_template):
                         f_pg_type = f_pg_def['typname']
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
-                        if isinstance(f, fields.function) and not f.store:
+                        if isinstance(f, fields.function) and not f.store and (not hasattr(f,'nodrop') or not f.nodrop):
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
                             cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
                             cr.commit()
