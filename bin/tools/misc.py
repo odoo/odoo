@@ -331,7 +331,10 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         email_bcc = []
 
     if not attach:
-        msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
+        try:
+            msg = MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
+        except:
+            msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
     else:
         msg = MIMEMultipart()
 
@@ -362,8 +365,10 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
 
     if attach:
-        msg.attach( MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
-
+        try:
+            msg.attach(MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8'))
+        except:
+            msg.attach(MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )
@@ -783,6 +788,7 @@ def get_languages():
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
         'et_EE': u'Estonian / Eesti keel',
+        'fi_FI': u'Finland / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
@@ -799,12 +805,14 @@ def get_languages():
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
         'sl_SL': u'Slovenian / slovenščina',
+        'sq_AL': u'Albanian / Shqipëri',
         'sv_SE': u'Swedish / svenska',
         'tr_TR': u'Turkish / Türkçe',
+        'vi_VN': u'Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam',
         'uk_UA': u'Ukrainian / украї́нська мо́ва',
-        'zh_CN': u'Chinese (CN) / 简体中文' ,
+        'zh_CN': u'Chinese (CN) / 简体中文',
         'zh_TW': u'Chinese (TW) / 正體字',
-        "th_TH": u"Thai / ภาษาไทย"
+        'th_TH': u'Thai / ภาษาไทย',
     }
     return languages
 

@@ -97,7 +97,7 @@ def _child_get(node, self=None, tagname=None):
 
 def _process_text(self, txt):
         if not self.localcontext:
-            return txt
+            return str2xml(txt)
         if not txt:
             return ''
         result = ''

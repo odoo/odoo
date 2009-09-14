@@ -141,10 +141,10 @@
             <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
         </record>
         <record id="res_partner_9" model="res.partner">
-            <field name="website">http://opensides.be</field>
-            <field name="name">Opensides sprl</field>
+            <field name="website">http://www.openroad.be</field>
+            <field name="name">OpenRoad</field>
             <field eval="12000.00" name="credit_limit"/>
-            <field name="ref">os</field>
+            <field name="ref">or</field>
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
         </record>
@@ -181,12 +181,12 @@
         
         <record id="res_partner_address_1" model="res.partner.address">
             <field name="city">Bruxelles</field>
-            <field name="name">Benoit Mortier</field>
-            <field name="zip">1030</field>
+            <field name="name">Michel Schumacher</field>
+            <field name="zip">1000</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="email">info@opensides.be</field>
-            <field name="phone">(+32)2 211 34 83</field>
-            <field name="street">Rue des Palais 44, bte 33</field>
+            <field name="email">info@openroad.be</field>
+            <field name="phone">(+32) 2 123 456</field>
+            <field name="street">Rue du flash 50</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_9"/>
         </record>
