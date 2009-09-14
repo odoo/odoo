@@ -214,13 +214,16 @@ class report_creator(osv.osv):
                     reference_model_dict[v.get('relation')] = relation_count+1
                 else:
                     reference_model_dict[v.get('relation')]=1
-                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id' 
-                where_list.append(str_where)
+                   
+                if isinstance(self.pool.get(model)._columns.get(k), fields.many2one):
+                    str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
+                    where_list.append(str_where)
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
             raise osv.except_osv(_('No Related Models!!'),_('These is/are model(s) (%s) in selection which is/are not related to any other model') % ','.join(model_list))
         
+        print 'where_list : ', where_list
         if filter_ids and where_list<>[]:
             filter_list.append(' and ')
             filter_list.append(' ')
