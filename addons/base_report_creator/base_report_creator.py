@@ -199,7 +199,8 @@ class report_creator(osv.osv):
             fields_get = model_pool.fields_get(cr,uid)
             fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
                                         and x[1].get('relation') in rest_list 
-                                        and x[1].get('type')=='many2one',fields_get.items()))
+                                        and x[1].get('type')=='many2one' 
+                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)
@@ -215,15 +216,13 @@ class report_creator(osv.osv):
                 else:
                     reference_model_dict[v.get('relation')]=1
                    
-                if isinstance(self.pool.get(model)._columns.get(k), fields.many2one):
-                    str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
-                    where_list.append(str_where)
+                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
+                where_list.append(str_where)
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
             raise osv.except_osv(_('No Related Models!!'),_('These is/are model(s) (%s) in selection which is/are not related to any other model') % ','.join(model_list))
         
-        print 'where_list : ', where_list
         if filter_ids and where_list<>[]:
             filter_list.append(' and ')
             filter_list.append(' ')
@@ -323,7 +322,7 @@ class report_creator(osv.osv):
         for obj in this_objs:
             for fld in obj.field_ids:
                 model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
-                if isinstance(model_column,fields.function) and not model_column.store:
+                if (isinstance(model_column,fields.function) or isinstance(model_column,fields.related)) and not model_column.store:
                     return False 
         return True
     
