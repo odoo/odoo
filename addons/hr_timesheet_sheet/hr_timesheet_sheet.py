@@ -576,7 +576,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                 sheet_id,
                 total_timesheet,
                 total_attendance,
-                (total_attendance - total_timesheet) AS total_difference
+                round(cast((total_attendance - total_timesheet) as Numeric),2) AS total_difference
             FROM
                 ((
                     SELECT
