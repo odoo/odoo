@@ -60,8 +60,9 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
         </page>
         <page string="Email Settings">
             <field name="email_conf" colspan="4"/>
+            <field name="partner_lang" colspan="4"/>
             <field name="email_subject" colspan="4"/>
-            <separator string="Email body" colspan="4"/>
+            <separator string="Email body" colspan="4" attrs="{'readonly':[('partner_lang','=',True)]}"/>
             <field name="email_body" colspan="4" nolabel="1"/>
             <separator string="Legend" colspan="4"/>
 
@@ -94,6 +95,12 @@ _followup_wizard_all_fields = {
         'size': 64,
         'default': 'Invoices Reminder'
         },
+    'partner_lang':{
+        'string': "Send Email in Partner Language",
+        'type': 'boolean',
+        'default':True,
+        'help':'Do not change message text, if you want to send email in partner language, or configre from company'
+    },
     'email_body': {
         'string': "Email body",
         'type': 'text',
@@ -156,8 +163,13 @@ class followup_all_print(wizard.interface):
                             if adr.email:
                                 dest = [adr.email]
                 src = tools.config.options['smtp_user']
-                #TODO : fix me to get message according to the partner language
-                body=data['form']['email_body']
+                if not data['form']['partner_lang']:
+                    body = data['form']['email_body']
+                else:
+                    cxt = context.copy()
+                    cxt['lang'] = partner.lang
+                    body = pool.get('res.users').browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
+                    
                 total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
