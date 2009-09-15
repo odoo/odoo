@@ -2469,9 +2469,10 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        result = []
         for field in upd_todo:
             for id in ids:
-                self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context)
+                result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -2533,7 +2534,7 @@ class orm(orm_template):
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
-        result = self._store_get_values(cr, user, ids, vals.keys(), context)
+        result += self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
             self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
 
