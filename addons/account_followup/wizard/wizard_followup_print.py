@@ -256,8 +256,10 @@ class followup_all_print(wizard.interface):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
-
-        return {'partner_ids': partner_list, 'to_update': to_update}
+        
+        message = pool.get('res.users').browse(cr, uid, uid).company_id.follow_up_msg
+        
+        return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
 
     def _get_screen1_values(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
