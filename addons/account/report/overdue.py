@@ -35,6 +35,7 @@ class Overdue(report_sxw.rml_parse):
             'adr_get' : self._adr_get,
             'getLines' : self._lines_get,
             'tel_get' : self._tel_get,
+            'message' : self._message,
         })
         self.context = context
     def _adr_get(self, partner, type):
@@ -80,7 +81,12 @@ class Overdue(report_sxw.rml_parse):
                     ('state', '<>', 'draft'), ('reconcile_id', '=', False)])
         movelines = moveline_obj.browse(self.cr, self.uid, movelines)
         return movelines
-
+        
+    def _message(self, obj, company):
+        company_pool = pooler.get_pool(self.cr.dbname).get('res.company')
+        message = company_pool.browse(self.cr, self.uid, company.id, {'lang':obj.lang}).overdue_msg 
+        return message
+        
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
         'addons/account/report/overdue.rml', parser=Overdue)
 
