@@ -435,7 +435,7 @@ class account_invoice(osv.osv):
             for taxe in ait_obj.compute(cr, uid, id, context=context).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)    
+        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)    
 #        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
