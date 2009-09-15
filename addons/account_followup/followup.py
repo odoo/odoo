@@ -55,6 +55,29 @@ class account_move_line(osv.osv):
     }
 account_move_line()
 
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'follow_up_msg' : fields.text('Follow-up Message', translate=True),
+    }
+
+    _defaults = {
+        'overdue_msg': lambda *a: '''
+Date : %(date)s
+
+Dear %(partner_name)s,
+
+Please find in attachment a reminder of all your unpaid invoices, for a total amount due of:
+
+%(followup_amount).2f %(company_currency)s
+
+Thanks,
+--
+%(user_signature)s
+%(company_name)s
+        '''
+    }
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
