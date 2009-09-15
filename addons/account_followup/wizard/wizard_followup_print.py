@@ -156,6 +156,7 @@ class followup_all_print(wizard.interface):
                             if adr.email:
                                 dest = [adr.email]
                 src = tools.config.options['smtp_user']
+                #TODO : fix me to get message according to the partner language
                 body=data['form']['email_body']
                 total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
@@ -257,7 +258,7 @@ class followup_all_print(wizard.interface):
                     partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
         
-        message = pool.get('res.users').browse(cr, uid, uid).company_id.follow_up_msg
+        message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
         
         return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
 
