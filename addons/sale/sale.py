@@ -829,7 +829,7 @@ class sale_order_line(osv.osv):
                     'product_id': line.product_id.id or False,
                     'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                     'note': line.notes,
-                    'account_analytic_id': line.order_id.project_id.id,
+                    'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
                 })
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced': True})
