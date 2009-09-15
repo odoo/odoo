@@ -113,8 +113,7 @@ def check_quality(uri, user, pwd, dbname, modules):
         test_detail = {}
         for module in modules:            
             quality_result = execute(conn,'execute', dbname, uid, pwd,'module.quality.check','check_quality',module)
-            detail_html = ''
-            msg = detail.get('message','')
+            detail_html = ''            
             html = '''<html><html><html><html><body><a name="TOP"></a>'''
             html +="<h1> Module : %s </h1>"%(quality_result['name'])   
             html += "<h2> Final score : %s</h2>"%(quality_result['final_score'])
@@ -122,6 +121,7 @@ def check_quality(uri, user, pwd, dbname, modules):
             html += "<ul>"
             for x,y,detail in quality_result['check_detail_ids']:                
                 test = detail.get('name')
+                msg = detail.get('message','')
                 score = round(float(detail.get('score',0)),2)
                 html += "<li><a href=\"#%s\">%s</a></li>"%(test.replace(' ','-'),test)
                 detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail'))                
