@@ -53,6 +53,7 @@
         'wizard/wizard_view.xml',
         'followup_report_view.xml',
         'followup_view.xml',
+        'followup_data.xml'
     ],
     'demo_xml': ['followup_demo.xml'],
     'installable': True,
