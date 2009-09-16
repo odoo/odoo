@@ -180,7 +180,7 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
         elif res['type']=='state':
             state = res['state']
     res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
-    install_module(uri, dbname, ['base_module_quality'],user,pwd)
+    install_module(uri, dbname, ['base_module_quality'],user=user,pwd=pwd)
     return True
 
 def drop_db(uri, dbname):
@@ -190,12 +190,37 @@ def drop_db(uri, dbname):
         execute(conn, 'drop', admin_passwd, dbname)    
     return True
 
-def install_module(uri, dbname, modules, user='admin', pwd='admin'):
+def make_links(uri, uid, dbname, source, destination, module, user, pwd):
+    if module in ('base','quality_integration_server'):
+        return True  
+    if not os.path.islink(destination + module): 
+        if not os.path.isdir(destination + module):    
+            for path in source:
+                if os.path.isdir(path + '/' + module):
+                    os.symlink(path + '/' + module, destination + '/' + module)
+                    obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
+                    execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
+                    module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
+                    if len(module_ids):    
+                        data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
+                        dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
+                        for dep_data in dep_datas:    
+                            make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
+                    return True    
+    return False
+
+def install_module(uri, dbname, modules, addons='', extra_addons='',  user='admin', pwd='admin'):
     uid = login(uri, dbname, user, pwd)
+    if extra_addons:
+        extra_addons = extra_addons.split(',')
     if uid: 
+        if addons and extra_addons:
+            for module in modules:  
+                make_links(uri, uid, dbname, extra_addons, addons, module, user, pwd) 
+
         obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
         wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
-        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
+        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])
         execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_install', module_ids)           
         wiz_id = execute(wizard_conn, 'create', dbname, uid, pwd, 'module.upgrade.simple')
         state = 'init'
@@ -255,6 +280,9 @@ parser.add_option("--login", dest="login", help="specify the User Login")
 parser.add_option("--password", dest="pwd", help="specify the User Password")  
 parser.add_option("--translate-in", dest="translate_in",
                      help="specify .po files to import translation terms")
+parser.add_option("--extra-addons", dest="extra_addons",
+                     help="specify extra_addons and trunkCommunity modules path ")
+
 (opt, args) = parser.parse_args()
 if len(args) != 1:
     parser.error("incorrect number of arguments")
@@ -282,6 +310,7 @@ options = {
     'modules' : opt.modules or [],
     'login' : opt.login or 'admin',
     'pwd' : opt.pwd or '',
+    'extra-addons':opt.extra_addons or []
 }
 
 options['modules'] = opt.modules and map(lambda m: m.strip(), opt.modules.split(',')) or []
@@ -297,7 +326,7 @@ try:
     if command == 'drop-db': 
         drop_db(uri, options['database'])
     if command == 'install-module': 
-        install_module(uri, options['database'], options['modules'], options['login'], options['pwd'])
+        install_module(uri, options['database'], options['modules'],options['addons-path'],options['extra-addons'],options['login'], options['pwd'])
     if command == 'upgrade-module': 
         upgrade_module(uri, options['database'], options['modules'], options['login'], options['pwd'])
     if command == 'check-quality':
