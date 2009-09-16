@@ -110,7 +110,7 @@
                             <field domain="[('type','=','sale')]" name="pricelist_id"/>
                             <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"/>
                             <newline/>
-                            <field colspan="4" mode="tree,graph" name="order_line" nolabel="1" widget="one2many_list">
+                            <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
                                     <notebook>
                                         <page string="Order Line">
