@@ -51,7 +51,10 @@ class report_printscreen_list(report_int):
         return result
 
     def _parse_string(self, view):
-        dom = etree.XML(view)
+        try:
+            dom = etree.XML(view.encode('utf-8'))
+        except:
+            dom = etree.XML(view)   
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
