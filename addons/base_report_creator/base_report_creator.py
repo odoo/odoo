@@ -51,7 +51,7 @@ from tools.translate import _
 class report_creator(osv.osv):
     _name = "base_report_creator.report"
     _description = "Report"
-
+    model_set_id = False
     #
     # Should request only used fields
     #
@@ -131,7 +131,9 @@ class report_creator(osv.osv):
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).read(cr, user, ids, fields, context, load)
         ctx = context or {}
-        wp = [self._id_get(cr, user, context['report_id'], context)+(' in (%s)' % (','.join(map(lambda x: "'"+str(x)+"'",ids))))]
+        wp = ''
+        if self.model_set_id:
+            wp = [self._id_get(cr, user, context['report_id'], context)+(' in (%s)' % (','.join(map(lambda x: "'"+str(x)+"'",ids))))]
         report = self._sql_query_get(cr, user, [context['report_id']], 'sql_query', None, ctx, where_plus = wp)
         sql_query = report[context['report_id']]
         cr.execute(sql_query)
