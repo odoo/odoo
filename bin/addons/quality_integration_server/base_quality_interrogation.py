@@ -37,10 +37,8 @@ waittime = 10
 wait_count = 0
 wait_limit = 12
 
-def start_server(root_path, port, addons_path):
-    if root_path:
-        root_path += '/'
-    os.system('python2.5 '+root_path+'openerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(str(port),addons_path))    
+def start_server(root_path, port, addons_path):    
+    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))    
 def clean():
     if os.path.isfile('openerp.pid'):
         ps = open('openerp.pid') 
@@ -306,7 +304,7 @@ die(opt.translate_in and (not opt.db_name),
 options = {
     'addons-path' : opt.addons_path or 'addons',
     'root-path' : opt.root_path or '',
-    'translate-in': opt.translate_in,
+    'translate-in': [],
     'port' : opt.port or 8069,        
     'database': opt.db_name or 'terp',
     'modules' : opt.modules or [],
@@ -316,7 +314,14 @@ options = {
 }
 
 options['modules'] = opt.modules and map(lambda m: m.strip(), opt.modules.split(',')) or []
-options['translate_in'] = opt.translate_in and map(lambda m: m.strip(), opt.translate_in.split(',')) or []
+# Hint:i18n-import=purchase:ar_AR.po+sale:fr_FR.po,nl_BE.po
+if opt.translate_in:
+    translate = opt.translate_in     
+    for module_name,po_files in map(lambda x:tuple(x.split(':')),translate.split('+')):                          
+        for po_file in po_files.split(','):                   
+            po_link = '%s/%s/i18n/%s'%(options['addons-path'], module_name, po_file)
+            options['translate-in'].append(po_link) 
+           
 uri = 'http://localhost:' + str(options['port'])
 
 server_thread = threading.Thread(target=start_server,
@@ -334,7 +339,7 @@ try:
     if command == 'check-quality':
         check_quality(uri, options['login'], options['pwd'], options['database'], options['modules'])
     if command == 'install-translation':        
-        import_translate(uri, options['login'], options['pwd'], options['database'], options['translate_in'])
+        import_translate(uri, options['login'], options['pwd'], options['database'], options['translate-in'])
     clean()
     sys.exit(0)
     
