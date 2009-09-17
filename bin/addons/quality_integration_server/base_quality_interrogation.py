@@ -49,14 +49,14 @@ def clean():
             ps.close()  
             if pid:    
                 os.kill(pid,9)
-                
+
 def execute(connector, method, *args):
-    global wait_count
+    global wait_count 
     res = False
     try:        
         res = getattr(connector,method)(*args)
     except socket.error,e:        
-        if e.args[0] == 111:                                    
+        if e.args[0] == 111:                                   
             if wait_count > wait_limit:
                 print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
                 clean()
@@ -68,8 +68,7 @@ def execute(connector, method, *args):
         else:
             raise e
     wait_count = 0
-    return res                  
-
+    return res                    
 
 def login(uri, dbname, user, pwd):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
@@ -108,12 +107,12 @@ def check_quality(uri, user, pwd, dbname, modules):
     uid = login(uri, dbname, user, pwd)
     if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
-        qualityresult = {}  
         final = {}   
-        test_detail = {}
-        for module in modules:            
+        for module in modules:   
+            qualityresult = {}
+            test_detail = {}              
             quality_result = execute(conn,'execute', dbname, uid, pwd,'module.quality.check','check_quality',module)
-            detail_html = ''            
+            detail_html = ''
             html = '''<html><html><html><html><body><a name="TOP"></a>'''
             html +="<h1> Module : %s </h1>"%(quality_result['name'])   
             html += "<h2> Final score : %s</h2>"%(quality_result['final_score'])
@@ -124,7 +123,10 @@ def check_quality(uri, user, pwd, dbname, modules):
                 msg = detail.get('message','')
                 score = round(float(detail.get('score',0)),2)
                 html += "<li><a href=\"#%s\">%s</a></li>"%(test.replace(' ','-'),test)
-                detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail'))                
+                if test == 'Unit Test':
+                    if not detail.get('detail',''):
+                        detail['detail'] = '''<html><body><b>%s</b></body></html>'''%(detail.get('summary',''))
+                detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail',''))                
                 test_detail[test] = (score,msg,detail.get('detail',''))
             html += "</ul>%s</body></html></html></html></html></html>"%(detail_html)
             html += "</div>"
@@ -138,7 +140,7 @@ def check_quality(uri, user, pwd, dbname, modules):
     else:
         print 'Login Failed...'        
         clean()
-        sys.exit(1)
+        sys.exit(1)     
 
 
 
@@ -189,7 +191,7 @@ def drop_db(uri, dbname):
     if dbname in db_list:
         execute(conn, 'drop', admin_passwd, dbname)    
     return True
-
+    
 def make_links(uri, uid, dbname, source, destination, module, user, pwd):
     if module in ('base','quality_integration_server'):
         return True  
@@ -207,7 +209,7 @@ def make_links(uri, uid, dbname, source, destination, module, user, pwd):
                         for dep_data in dep_datas:    
                             make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
                     return True    
-    return False
+    return False    
 
 def install_module(uri, dbname, modules, addons='', extra_addons='',  user='admin', pwd='admin'):
     uid = login(uri, dbname, user, pwd)
