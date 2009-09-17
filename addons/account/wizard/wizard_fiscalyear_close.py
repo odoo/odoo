@@ -192,21 +192,24 @@ def _data_save(self, cr, uid, data, context):
                     })
                     pool.get('account.move.line').create(cr, uid, move)
                 offset += limit
-
     ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
-        ('period_id.fiscalyear_id','=',old_fyear.id)])
+        ('period_id.fiscalyear_id','=',new_fyear.id)])
     context['fy_closing'] = True
-    if not ids:
-        raise wizard.except_wizard(_('UserError'),
-                _('The old fiscal year does not have any entry to reconcile!'))
 
-    pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
+    if ids:
+        pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
     new_period = data['form']['period_id']
     ids = pool.get('account.journal.period').search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])
-    if ids:
-        cr.execute('UPDATE account_fiscalyear ' \
+    if not ids:
+        ids = [pool.get('account.journal.period').create(cr, uid, {
+               'name': (new_journal.name or '')+':'+(period.code or ''),
+               'journal_id': new_journal.id,
+               'period_id': period.id
+           })]
+    cr.execute('UPDATE account_fiscalyear ' \
                 'SET end_journal_period_id = %s ' \
-                'WHERE id = %s', (ids[0], new_fyear.id))
+                'WHERE id = %s', (ids[0], old_fyear.id))
+
     return {}
 
 class wiz_journal_close(wizard.interface):
