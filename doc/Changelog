@@ -1,3 +1,136 @@
+
+2009-09-17: 5.0.5
+=================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * quality_integration_server: fixe problem on make link of extra-module in addons
+   * quality_integration_server : quality log : reduce overwrite last test log in other test logs
+   * base : ir_cron : take minimun next_call from database for job waiting. if database does not has any job, it will take 1 day for job waiting
+   * quality_integration_server: get message from base_quality_module if module can not success to reach minimun score
+   * regression in fields.function computation
+   * better log error, new line
+   * Report: context was missing while printing any report with header in a non-English Language
+ * https://launchpad.net/bugs/425131
+   * Better translation exportation.
+ * https://launchpad.net/bugs/379645
+   * Print screen : Correction when text for report is already encoded
+ * https://launchpad.net/bugs/421162
+   * Send Mail : Unicode error handled
+   * Send mail : Non-English characters were throwing error.
+ * https://launchpad.net/bugs/421137
+   * Base : 'Supplier Partners' menu will open new record with supplier=1,customer=0
+ * https://launchpad.net/bugs/425430
+   * Export : Error solved while Exporting O2M records with None value of any field
+ * https://launchpad.net/bugs/399208
+   * Translation issue with cache: it needed to restart server,SOLVED
+ * https://launchpad.net/bugs/422563
+   * Security Loophole corrected
+
+
+Improvements (server)
+---------------------
+
+ * quality_integration_server: make link of extra-addons module in addons module automatic on install-module command
+ * quality_integration_server: get message from base_quality_module if module can not success to reach minimun score
+ * Rng : Accepting Groups under/after/replacing Buttons
+ * quality_integration_server : quality html log
+ * quality_integration_server: put max_limit in server connection
+ * Base : Rate for ARS Added
+ * cchange version number
+
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * Purchase_manual : certificate on terp displayed wrong value
+   * fix the problem of message depending on the partner language
+   * fix a problem for the overdue payment message
+   * fix problem to get the detault message
+   * #416908 computation of invoice lines
+   * Project : Taks hours computed accurately.
+   * base_module_record: avoid duplications
+   * document: do not try to index binary documents
+   * +1 on the lengthmonth returns was too much, removed it
+   * Problem when using hr_holidays Summary Report when entering date 1 jan 2009 for example.
+   * multi currency reconciliations on bank statements weren't properly displayed
+   * multi currency payments weren't correctly computed on invoice's residual amount
+   * Project_gtd : Demo data defined for tasks(inboxes)
+   * Module:product Added report tag for product pricelist reportso that it can be modified using OODesigner
+   * Document : error on create if attachment not specified
+ * https://launchpad.net/bugs/422401
+   * project_gtd : timebox field re-arranged
+ * https://launchpad.net/bugs/421907
+   * Account : Aged Partner Balance report for Future analysis corrected
+ * https://launchpad.net/bugs/427388
+   * Project : task work behavior towards task hours corrected
+ * https://launchpad.net/bugs/422408
+   * Project_gtd : Hierarchical timeboxes allowed to open
+ * https://launchpad.net/bugs/403972
+   * Account : Reports from Chart of Accounts were not considering contextual value of MOVE(draft,posted)
+ * https://launchpad.net/bugs/430577
+   * Sale : Order Lines switches view from tree,form and view
+ * https://launchpad.net/bugs/425257
+   * Project_gtd : improved menuitems names to avoid user confusion,domain improved
+ * https://launchpad.net/bugs/422078
+   * Account_tax_include : floatdivision error corrected
+ * https://launchpad.net/bugs/423585
+ * https://launchpad.net/bugs/423581
+ * https://launchpad.net/bugs/416807
+   * report_document : Dashboard should not display partner with no files
+ * https://launchpad.net/bugs/430522
+ * https://launchpad.net/bugs/424214
+   * Account :Residual amount unclear when used with partial payments.
+ * https://launchpad.net/bugs/424177
+   * hr_timesheet_sheet : Rounding value problem in float_time widget
+ * https://launchpad.net/bugs/415056
+ * https://launchpad.net/bugs/421636
+   * added tooltip on tax and payment term
+ * https://launchpad.net/bugs/407290
+ * https://launchpad.net/bugs/407293
+   * Account : Making account.invoice.tax field language-depenant from account.tax
+ * https://launchpad.net/bugs/430043
+   * Hr_timesheet_invoice : Query calculation corrected
+ * https://launchpad.net/bugs/379645
+   * Base_report_creator : Print screen report is now available for custom reports
+ * https://launchpad.net/bugs/423260
+   * Account : Title of of Move Line widnows renamed
+ * https://launchpad.net/bugs/427982
+   * hr_timesheet_invoice : Invoicing analytic entries wizard corrected for product
+ * https://launchpad.net/bugs/426243
+   * Account : Context was missing in report
+ * https://launchpad.net/bugs/426831
+   * l10n_ch : default_value() of res.partner.bank corrected
+ * https://launchpad.net/bugs/430098
+   * Hr_holidays : Workflow actions validations corrected
+ * https://launchpad.net/bugs/430516
+ * https://launchpad.net/bugs/379191
+   * its better to aply the patch
+   * fix the problem for related fields, related fields act as a many2one fields
+ * https://launchpad.net/bugs/429203
+   * CRM : Mailgate script used default uid=3 instead of 1
+ * https://launchpad.net/bugs/399817
+   * Fixed Partial deliveries problem
+
+
+Improvements (addons)
+---------------------
+
+ * Invoice Supplier Control per line/manual
+ * add missing file for the followup date
+ * changed interval CRM calls to 4 hours instead of one -> efficient connection pooling with cron
+ * add inherited view for company
+ * add new filed to company object which will store the mesages
+ * add new data file which will add over due payment message to company
+ * Account : Analytic Account report following parental relationship approach(account with all its children
+ * hr_timesheet_invoice : Misleading string on invoice analytic entries' wizard
+ * base_module_quality: remove certificate tag from terp test
+ * report_dcoument : changed the misleading name of action
+
+
 2009-08-28: 5.0.4
 =================
 
