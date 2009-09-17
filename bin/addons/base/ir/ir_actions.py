@@ -27,6 +27,15 @@ from tools.config import config
 from tools.translate import _
 import netsvc
 import re
+import copy
+import sys
+
+try:
+    from xml import dom, xpath
+except ImportError:
+    sys.stderr.write("ERROR: Import xpath module\n")
+    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
+    sys.exit(2)
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -153,6 +162,16 @@ class act_window(osv.osv):
         (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
     ]
 
+    def get_filters(self, cr, uid, model):
+        cr.execute('select id from ir_act_window a where a.id not in (select act_id from ir_act_window_user_rel) and a.res_model=\''+model+'\' and a.filter=\'1\';')
+        all_ids = cr.fetchall()
+        filter_ids =  map(lambda x:x[0],all_ids)
+        act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
+        act_ids += filter_ids
+        act_ids = list(set(act_ids))
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain'])
+        return my_acts
+
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
         for act in self.browse(cr, uid, ids):
@@ -167,6 +186,46 @@ class act_window(osv.osv):
                         find = True
                         continue
                     res[act.id].append((False, t))
+        return res
+
+    def _search_view(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+        for act in self.browse(cr, uid, ids):
+            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid)
+            if act.search_view_id:
+                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, act.search_view_id.id, 'search', context)
+                fields_from_fields_get.update(field_get['fields'])
+                field_get['fields'] = fields_from_fields_get
+                res[act.id] = str(field_get)
+            else:
+                def process_child(node, new_node, doc):
+                    for child in node.childNodes:
+                        if child.localName=='field' and child.hasAttribute('select') and child.getAttribute('select')=='1':
+                            if child.childNodes:
+                                fld = doc.createElement('field')
+                                for attr in child.attributes.keys():
+                                    fld.setAttribute(attr, child.getAttribute(attr))
+                                new_node.appendChild(fld)
+                            else:
+                                new_node.appendChild(child)
+                        elif child.localName in ('page','group','notebook'):
+                            process_child(child, new_node, doc)
+
+                form_arch = self.pool.get(act.res_model).fields_view_get(cr, uid, False, 'form', context)
+                dom_arc = dom.minidom.parseString(encode(form_arch['arch']))
+                new_node = copy.deepcopy(dom_arc)
+                for child_node in new_node.childNodes[0].childNodes:
+                    if child_node.nodeType == child_node.ELEMENT_NODE:
+                        new_node.childNodes[0].removeChild(child_node)
+                process_child(dom_arc.childNodes[0],new_node.childNodes[0],dom_arc)
+
+                form_arch['arch'] = new_node.toxml()
+                form_arch['fields'].update(fields_from_fields_get)
+                res[act.id] = str(form_arch)
         return res
 
     _columns = {
@@ -188,6 +247,11 @@ class act_window(osv.osv):
             help='Add an auto-refresh on the view'),
         'groups_id': fields.many2many('res.groups', 'ir_act_window_group_rel',
             'act_id', 'gid', 'Groups'),
+        'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
+        'filter': fields.boolean('Filter'),
+        'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
+        'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
+        'menus': fields.char('Menus', size=4096)            
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
@@ -519,7 +583,7 @@ class actions_server(osv.osv):
                 result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
                 return result
 
-            if action.state=='code':
+            if action.state == 'code':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
                     'context': context,
@@ -542,7 +606,8 @@ class actions_server(osv.osv):
                     pass
                 
                 if not address:
-                    raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
+                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Partner Email address not Specified!')
+                    continue
                 if not user:
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
                 

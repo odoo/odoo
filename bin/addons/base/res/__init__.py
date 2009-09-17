@@ -30,7 +30,7 @@ import res_currency
 import res_company
 import res_user
 import res_request
-
+import res_lang 
 
 import ir_property
 

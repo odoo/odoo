@@ -37,7 +37,7 @@ class expression(object):
         return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
-        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
         INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
@@ -303,7 +303,7 @@ class expression(object):
                 else:
                     like = operator in ('like', 'ilike', 'not like', 'not ilike')
 
-                    op = operator == '=like' and 'like' or operator
+                    op = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if left in table._columns:
                         format = like and '%s' or table._columns[left]._symbol_set[0]
                         query = '(%s.%s %s %s)' % (table._table, left, op, format)

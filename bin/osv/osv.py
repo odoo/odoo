@@ -193,7 +193,19 @@ class osv_memory(orm.orm_memory):
         name = hasattr(cls, '_name') and cls._name or cls._inherit
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
-            raise 'Inherit not supported in osv_memory object !'
+            parent_class = pool.get(parent_name).__class__
+            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+            nattr = {}
+            for s in ('_columns', '_defaults'):
+                new = copy.copy(getattr(pool.get(parent_name), s))
+                if hasattr(new, 'update'):
+                    new.update(cls.__dict__.get(s, {}))
+                else:
+                    new.extend(cls.__dict__.get(s, []))
+                nattr[s] = new
+            name = hasattr(cls, '_name') and cls._name or cls._inherit
+            cls = type(name, (cls, parent_class), nattr)
+
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj

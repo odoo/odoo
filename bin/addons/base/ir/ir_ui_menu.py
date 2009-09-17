@@ -87,6 +87,8 @@ class ir_ui_menu(osv.osv):
             if key in self._cache:
                 if self._cache[key]:
                     result.append(menu.id)
+                elif not menu.groups_id and not menu.action:
+                    result.append(menu.id)
                 continue
 
             self._cache[key] = False

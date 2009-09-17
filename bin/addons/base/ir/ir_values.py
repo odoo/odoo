@@ -197,8 +197,9 @@ class ir_values(osv.osv):
                 for rec in cr.fetchall():
                     if rec[0] in result_ids:
                         continue
-                    result.append(rec)
-                    result_ids[rec[0]] = True
+                    if rec[2]:                    
+                        result.append(rec)
+                        result_ids[rec[0]] = True
                 if len(where_opt):
                     where_opt.pop()
                 else:

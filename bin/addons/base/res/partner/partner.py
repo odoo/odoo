@@ -307,7 +307,7 @@ class res_partner_address(osv.osv):
             return []
         res = []
         for r in self.read(cr, user, ids, ['name','zip','city','partner_id', 'street']):
-            if context.get('contact_display', 'contact')=='partner':
+            if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 addr = r['name'] or ''

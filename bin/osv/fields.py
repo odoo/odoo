@@ -80,6 +80,7 @@ class _column(object):
         self.read = False
         self.view_load = 0
         self.select = select
+        self.selectable = True
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
@@ -613,6 +614,10 @@ class function(_column):
         self._type = type
         self._fnct_search = fnct_search
         self.store = store
+
+        if not fnct_search and not store:
+            self.selectable = False
+        
         if store:
             self._classic_read = True
             self._classic_write = True
@@ -773,6 +778,25 @@ class related(function):
             if f.get('relation',False):
                 obj_name = f['relation']
                 self._relations[-1]['relation'] = f['relation']
+
+# ---------------------------------------------------------
+# Dummy fields
+# ---------------------------------------------------------
+
+class dummy(function):
+    def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context={}):
+        return []
+
+    def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+        return False
+
+    def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
+        return {}
+    
+    def __init__(self, *arg, **args):
+        self.arg = arg
+        self._relations = []
+        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=None, **args)
 
 # ---------------------------------------------------------
 # Serialized fields

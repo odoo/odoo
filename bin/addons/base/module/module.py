@@ -155,7 +155,7 @@ class module(osv.osv):
         'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
         
-        'url': fields.char('URL', size=128),
+        'url': fields.char('URL', size=128, readonly=True),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
         'state': fields.selection([
@@ -211,7 +211,7 @@ class module(osv.osv):
             mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise orm.except_orm(_('Error'), _('You try to install a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                    raise orm.except_orm(_('Error'), _("You try to install the module '%s' that depends on the module:'%s'.\nBut this module is not available in your system.") % (module.name, dep.name,))
                 ids2 = self.search(cr, uid, [('name','=',dep.name)])
                 if dep.state != newstate:
                     mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) or mdemo

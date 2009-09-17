@@ -33,7 +33,12 @@ import pooler
 
 def _get_fields_type(self, cr, uid, context=None):
     cr.execute('select distinct ttype,ttype from ir_model_fields')
-    return cr.fetchall()
+    field_types = cr.fetchall()
+    field_types_copy = field_types
+    for types in field_types_copy:
+        if not hasattr(fields,types[0]):
+            field_types.remove(types)
+    return field_types
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -174,8 +179,8 @@ class ir_model_grid(osv.osv):
             result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
         return result
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
-        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar)
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
+        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         groups = self.pool.get('res.groups').search(cr, uid, [])
         groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
         cols = ['model', 'name']
@@ -215,6 +220,7 @@ class ir_model_fields(osv.osv):
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
+        'selectable': fields.boolean('Selectable'),        
     }
     _rec_name='field_description'
     _defaults = {
@@ -227,6 +233,7 @@ class ir_model_fields(osv.osv):
         'select_level': lambda *a: '0',
         'size': lambda *a: 64,
         'field_description': lambda *a: '',
+        'selectable': lambda *a: 1,
     }
     _order = "id"
     _sql_constraints = [

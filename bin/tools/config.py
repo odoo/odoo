@@ -70,6 +70,7 @@ class configmanager(object):
             'smtp_server': 'localhost',
             'smtp_user': False,
             'smtp_port':25,
+            'smtp_ssl':False,
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,

@@ -40,6 +40,10 @@ class groups(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
     ]
+    def copy(self, cr, uid, id, default=None, context={}):
+        group_name = self.read(cr, uid, [id], ['name'])[0]['name']
+        default.update({'name': group_name +' (copy)'})
+        return super(groups, self).copy(cr, uid, id, default, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
@@ -99,10 +103,23 @@ def _lang_get(self, cr, uid, context={}):
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
+def _companies_get(self,cr, uid, context={}):
+    res=[]
+    ids = self.pool.get('res.users').browse(cr, uid, uid, context).company_ids
+    res = [(i.id,i.name) for i in ids]
+    return res
+
 class users(osv.osv):
     __admin_ids = {}
     _name = "res.users"
     #_log_access = False
+    
+    def get_current_company(self, cr, uid):
+        res=[]
+        cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
+        res = cr.fetchall()
+        return res     
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),
@@ -116,8 +133,10 @@ class users(osv.osv):
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
         'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),        
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
+        'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
+        'context_company': fields.selection(_companies_get,  'Company', size=64),        
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -135,7 +154,7 @@ class users(osv.osv):
         return result
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
     ]
 
     def _get_admin_id(self, cr):
@@ -182,6 +201,9 @@ class users(osv.osv):
                     ok=False
             if ok:
                 uid = 1
+        context_company=values.get('context_company',False)
+        if context_company:
+            values.update({'company_id':context_company})                
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method

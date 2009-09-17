@@ -40,6 +40,7 @@
 #
 
 import time
+import datetime
 import calendar
 import types
 import string
@@ -50,16 +51,16 @@ import pickle
 
 import fields
 import tools
+from tools.translate import _
 
 import sys
 
 try:
-    from xml import dom, xpath
+    from lxml import etree
 except ImportError:
-    sys.stderr.write("ERROR: Import xpath module\n")
-    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.stderr.write('On Ubuntu Jaunty, try this: sudo cp /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils\n')
-    raise
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
+    sys.exit(2)
 
 from tools.config import config
 
@@ -190,15 +191,13 @@ class browse_record(object):
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
-                lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
-                if not lang_obj_ids:
-                    raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
-                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
+                
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
-                            if (d[n] is not None) and (d[n] is not False):
+                            if d[n]:
                                 d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
@@ -365,6 +364,7 @@ class orm_template(object):
                 'select_level': str(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
+                'selectable' : (f.selectable and 1) or 0,
             }
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
@@ -395,12 +395,12 @@ class orm_template(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']),bool(vals['required']), vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']),bool(vals['required']),bool(vals['selectable']),vals['model'], vals['name']
                             ))
                         continue
         cr.commit()
@@ -756,7 +756,7 @@ class orm_template(object):
                 newfd = relation_obj.fields_get(
                         cr, uid, context=context)
                 res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)                              
-                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res                  
+                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res  
                 nbrmax = max(nbrmax, max2)
                 warning = warning + w2         
                 reduce(lambda x, y: x and y, newrow)       
@@ -801,7 +801,7 @@ class orm_template(object):
             #try:
             (res, other, warning, translate, data_id, res_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def)
-            if len(warning):                        
+            if warning:                        
                 cr.rollback()
                 return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
             
@@ -907,7 +907,7 @@ class orm_template(object):
                     continue
                 res[f] = {'type': self._columns[f]._type}
                 for arg in ('string', 'readonly', 'states', 'size', 'required',
-                        'change_default', 'translate', 'help', 'select'):
+                        'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
                 if not read_access:
@@ -969,14 +969,14 @@ class orm_template(object):
         fields = {}
         childs = True
 
-        if node.nodeType == node.ELEMENT_NODE and node.localName == 'field':
-            if node.hasAttribute('name'):
+        if node.tag == 'field':
+            if node.get('name'):
                 attrs = {}
                 try:
-                    if node.getAttribute('name') in self._columns:
-                        column = self._columns[node.getAttribute('name')]
+                    if node.get('name') in self._columns:
+                        column = self._columns[node.get('name')]
                     else:
-                        column = self._inherit_fields[node.getAttribute('name')][2]
+                        column = self._inherit_fields[node.get('name')][2]
                 except:
                     column = False
 
@@ -984,64 +984,63 @@ class orm_template(object):
                     relation = column._obj
                     childs = False
                     views = {}
-                    for f in node.childNodes:
-                        if f.nodeType == f.ELEMENT_NODE and f.localName in ('form', 'tree', 'graph'):
-                            node.removeChild(f)
+                    for f in node:
+                        if f.tag in ('form', 'tree', 'graph'):
+                            node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
                             xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
-                            views[str(f.localName)] = {
+                            views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
                             }
                     attrs = {'views': views}
-                    if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
+                    if node.get('widget') and node.get('widget') == 'selection':
                         # We can not use the 'string' domain has it is defined according to the record !
                         dom = None
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
-                        if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
+                        if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
-                fields[node.getAttribute('name')] = attrs
+                fields[node.get('name')] = attrs
 
-        elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.localName, context)
+        elif node.tag in ('form', 'tree'):
+            result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
-                node.setAttribute('string', result)
+                node.set('string', result)
 
-        elif node.nodeType==node.ELEMENT_NODE and node.localName == 'calendar':
+        elif node.tag == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
-                if node.hasAttribute(additional_field) and node.getAttribute(additional_field):
-                    fields[node.getAttribute(additional_field)] = {}
+                if node.get(additional_field):
+                    fields[node.get(additional_field)] = {}
 
-        if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
-            if node.getAttribute('groups'):
-                groups = node.getAttribute('groups').split(',')
+        if 'groups' in node.attrib:
+            if node.get('groups'):
+                groups = node.get('groups').split(',')
                 readonly = False
                 access_pool = self.pool.get('ir.model.access')
                 for group in groups:
                     readonly = readonly or access_pool.check_groups(cr, user, group)
                 if not readonly:
-                    node.setAttribute('invisible', '1')
-            node.removeAttribute('groups')
+                    node.set('invisible', '1')
+            del(node.attrib['groups'])
 
-        if node.nodeType == node.ELEMENT_NODE:
-            # translate view
-            if ('lang' in context) and not result:
-                if node.hasAttribute('string') and node.getAttribute('string'):
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
-                    if not trans and ('base_model_name' in context):
-                        trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
-                    if trans:
-                        node.setAttribute('string', trans)
-                if node.hasAttribute('sum') and node.getAttribute('sum'):
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
-                    if trans:
-                        node.setAttribute('sum', trans)
+        # translate view
+        if ('lang' in context) and not result:
+            if node.get('string'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string').encode('utf8'))
+                if not trans and ('base_model_name' in context):
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string').encode('utf8'))
+                if trans:
+                    node.set('string', trans)
+            if node.get('sum'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum').encode('utf8'))
+                if trans:
+                    node.set('sum', trans)
 
         if childs:
-            for f in node.childNodes:
+            for f in node:
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
         return fields
@@ -1052,23 +1051,23 @@ class orm_template(object):
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
+        buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
         for button in buttons:
             ok = True
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                cr.execute("select role_id from wkf_transition where signal=%s", (button.get('name'),))
                 roles = cr.fetchall()
                 for role in roles:
                     if role[0]:
                         ok = ok and rolesobj.check(cr, user, user_roles, role[0])
 
             if not ok:
-                button.setAttribute('readonly', '1')
+                button.set('readonly', '1')
             else:
-                button.setAttribute('readonly', '0')
+                button.set('readonly', '0')
 
-        arch = node.toxml(encoding="utf-8").replace('\t', '')
+        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             if field == 'id':
@@ -1093,25 +1092,40 @@ class orm_template(object):
         """
 
         arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
-                '<calendar string="%s" date_start="%s"') % (self._description, self._date_name)
+                '<calendar string="%s"') % (self._description)
 
-        if 'user_id' in self._columns:
-            arch += ' color="user_id"'
+        if (self._date_name not in self._columns):
+                date_found = False
+                for dt in ['date','date_start','x_date','x_date_start']:
+                    if dt in self._columns:
+                        self._date_name = dt
+                        date_found = True
+                        break
 
-        elif 'partner_id' in self._columns:
-            arch += ' color="partner_id"'
+                if not date_found:
+                    raise except_orm(_('Invalid Object Architecture!'),_("Insufficient fields for Calendar View!"))
 
-        if 'date_stop' in self._columns:
-            arch += ' date_stop="date_stop"'
+        if self._date_name:
+            arch +=' date_start="%s"' % (self._date_name)
 
-        elif 'date_end' in self._columns:
-            arch += ' date_stop="date_end"'
+        for color in ["user_id","partner_id","x_user_id","x_partner_id"]:
+            if color in self._columns:
+                arch += ' color="' + color + '"'
+                break
 
-        elif 'date_delay' in self._columns:
-            arch += ' date_delay="date_delay"'
+        dt_stop_flag = False
 
-        elif 'planned_hours' in self._columns:
-            arch += ' date_delay="planned_hours"'
+        for dt_stop in ["date_stop","date_end","x_date_stop","x_date_end"]:
+            if dt_stop in self._columns:
+                arch += ' date_stop="' + dt_stop + '"'
+                dt_stop_flag = True
+                break
+
+        if not dt_stop_flag:
+            for dt_delay in ["date_delay","planned_hours","x_date_delay","x_planned_hours"]:
+               if dt_delay in self._columns:
+                   arch += ' date_delay="' + dt_delay + '"'
+                   break
 
         arch += ('>\n'
                  '  <field name="%s"/>\n'
@@ -1122,7 +1136,7 @@ class orm_template(object):
     #
     # if view_id, view_type is not required
     #
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if not context:
             context = {}
 
@@ -1133,70 +1147,66 @@ class orm_template(object):
 
         def _inherit_apply(src, inherit):
             def _find(node, node2):
-                if node2.nodeType == node2.ELEMENT_NODE and node2.localName == 'xpath':
-                    res = xpath.Evaluate(node2.getAttribute('expr'), node)
+                if node2.tag == 'xpath':
+                    res = node.xpath(node2.get('expr'))
                     return res and res[0]
                 else:
-                    if node.nodeType == node.ELEMENT_NODE and node.localName == node2.localName:
+                    for n in node.getiterator(node2.tag):
                         res = True
-                        for attr in node2.attributes.keys():
+                        for attr in node2.attrib:
                             if attr == 'position':
                                 continue
-                            if node.hasAttribute(attr):
-                                if node.getAttribute(attr)==node2.getAttribute(attr):
+                            if n.get(attr):
+                                if n.get(attr) == node2.get(attr):
                                     continue
                             res = False
                         if res:
-                            return node
-                    for child in node.childNodes:
-                        res = _find(child, node2)
-                        if res:
-                            return res
+                            return n
                 return None
 
+            # End: _find(node, node2)
 
-            doc_src = dom.minidom.parseString(encode(src))
-            doc_dest = dom.minidom.parseString(encode(inherit))
-            toparse = doc_dest.childNodes
+            doc_dest = etree.fromstring(encode(inherit))
+            toparse = [ doc_dest ]
+
             while len(toparse):
                 node2 = toparse.pop(0)
-                if not node2.nodeType == node2.ELEMENT_NODE:
+                if node2.tag == 'data':
+                    toparse += [ c for c in doc_dest ]
                     continue
-                if node2.localName == 'data':
-                    toparse += node2.childNodes
-                    continue
-                node = _find(doc_src, node2)
-                if node:
+                node = _find(src, node2)
+                if node is not None:
                     pos = 'inside'
-                    if node2.hasAttribute('position'):
-                        pos = node2.getAttribute('position')
+                    if node2.get('position'):
+                        pos = node2.get('position')
                     if pos == 'replace':
-                        parent = node.parentNode
-                        for child in node2.childNodes:
-                            if child.nodeType == child.ELEMENT_NODE:
-                                parent.insertBefore(child, node)
-                        parent.removeChild(node)
+                        for child in node2:
+                            node.addprevious(child)
+                        node.getparent().remove(node)
                     else:
-                        sib = node.nextSibling
-                        for child in node2.childNodes:
-                            if child.nodeType == child.ELEMENT_NODE:
-                                if pos == 'inside':
-                                    node.appendChild(child)
-                                elif pos == 'after':
-                                    node.parentNode.insertBefore(child, sib)
-                                elif pos=='before':
-                                    node.parentNode.insertBefore(child, node)
+                        sib = node.getnext()
+                        for child in node2:
+                            if pos == 'inside':
+                                node.append(child)
+                            elif pos == 'after':
+                                if sib is None:
+                                    node.addnext(child)
                                 else:
-                                    raise AttributeError(_('Unknown position in inherited view %s !') % pos)
+                                    sib.addprevious(child)
+                            elif pos == 'before':
+                                node.addprevious(child)
+                            else:
+                                raise AttributeError(_('Unknown position in inherited view %s !') % pos)
                 else:
                     attrs = ''.join([
-                        ' %s="%s"' % (attr, node2.getAttribute(attr))
-                        for attr in node2.attributes.keys()
+                        ' %s="%s"' % (attr, node2.get(attr))
+                        for attr in node2.attrib
                         if attr != 'position'
                     ])
-                    tag = "<%s%s>" % (node2.localName, attrs)
+                    tag = "<%s%s>" % (node2.tag, attrs)
                     raise AttributeError(_("Couldn't find tag '%s' in parent view !") % tag)
-            return doc_src.toxml(encoding="utf-8").replace('\t', '')
+            return src
+        # End: _inherit_apply(src, inherit)
 
         result = {'type': view_type, 'model': self._name}
 
@@ -1218,6 +1228,17 @@ class orm_template(object):
                         inherit_id IS NULL
                     ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
+            if not sql_res and view_type == 'search':
+                cr.execute('''SELECT
+                        arch,name,field_parent,id,type,inherit_id
+                    FROM
+                        ir_ui_view
+                    WHERE
+                        model=%s AND
+                        type=%s AND
+                        inherit_id IS NULL
+                    ORDER BY priority''', (self._name, 'form'))
+                sql_res = cr.fetchone()
             if not sql_res:
                 break
             ok = sql_res[5]
@@ -1239,7 +1260,8 @@ class orm_template(object):
                     result = _inherit_apply_rec(result, id)
                 return result
 
-            result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
+            inherit_result = etree.fromstring(encode(result['arch']))
+            result['arch'] = _inherit_apply_rec(inherit_result, sql_res[3])
 
             result['name'] = sql_res[1]
             result['field_parent'] = sql_res[2] or False
@@ -1265,16 +1287,24 @@ class orm_template(object):
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
             else:
-                xml = ''
-            result['arch'] = xml
+                raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
+            result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
 
-        doc = dom.minidom.parseString(encode(result['arch']))
-        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
+        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
+
+        if submenu:
+            if context and context.get('active_id',False):
+                data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
+                if data_menu:
+                    act_id = int(data_menu.split(',')[1])
+                    if act_id:
+                        data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
+                        result['submenu'] = hasattr(data_action,'menus') and data_action.menus or False        
         if toolbar:
             def clean(x):
                 x = x[2]
@@ -1415,6 +1445,7 @@ class orm_memory(orm_template):
             fields_to_read = self._columns.keys()
         result = []
         if self.datas:
+            ids_orig = ids
             if isinstance(ids, (int, long)):
                 ids = [ids]
             for id in ids:
@@ -1432,7 +1463,7 @@ class orm_memory(orm_template):
                 res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
                 for record in result:
                     record[f] = res2[record['id']]
-            if isinstance(ids, (int, long)):
+            if isinstance(ids_orig, (int, long)):
                 return result[0]
         return result
 
@@ -1535,9 +1566,69 @@ class orm_memory(orm_template):
                 value[key[8:]] = context[key]
         return value
 
+    def _where_calc(self, cr, user, args, active_test=True, context=None):
+        if not context:
+            context = {}
+        args = args[:]
+        res=[]
+        # if the object has a field named 'active', filter out all inactive
+        # records unless they were explicitely asked for
+        if 'active' in self._columns and (active_test and context.get('active_test', True)):
+            if args:
+                active_in_args = False
+                for a in args:
+                    if a[0] == 'active':
+                        active_in_args = True
+                if not active_in_args:
+                    args.insert(0, ('active', '=', 1))
+            else:
+                args = [('active', '=', 1)]
+        if args:
+            import expression
+            e = expression.expression(args)
+            e.parse(cr, user, self, context)
+            res=e.__dict__['_expression__exp']
+        return res or []
+
+
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        return self.datas.keys()
+        if not context:
+            context = {}
+        result = self._where_calc(cr, user, args, context=context)
+        if result==[]:
+            return self.datas.keys()
+
+        res=[]
+        counter=0
+        #Find the value of dict
+        f=False
+        if result:
+            for id, data in self.datas.items():
+                counter=counter+1
+                if limit and (counter >int(limit)):
+                    break
+                f = True
+                for arg in result:
+                     if arg[1] =='=':
+                         val =eval('data[arg[0]]'+'==' +' arg[2]')
+                     elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
+                         val =eval('data[arg[0]]'+arg[1] +' arg[2]')
+                     elif arg[1] in ['ilike']:
+                         if str(data[arg[0]]).find(str(arg[2]))!=-1:
+                             val= True
+                         else:
+                             val=False
+
+                     if f and val:
+                         f = True
+                     else:
+                         f = False
+                if f:
+                    res.append(id)
+        if count:
+            return len(res)
+        return res or []
 
     def unlink(self, cr, uid, ids, context=None):
         for id in ids:
@@ -1911,22 +2002,25 @@ class orm(orm_template):
             if not f.store:
                 continue
             if self._columns[store_field].store is True:
-                sm = {self._name:(lambda self,cr, uid, ids, c={}: ids, None, 10)}
+                sm = {self._name:(lambda self,cr, uid, ids, c={}: ids, None, 10, None)}
             else:
                 sm = self._columns[store_field].store
             for object, aa in sm.items():
-                if len(aa)==3:
+                if len(aa)==4:
+                    (fnct,fields2,order,length)=aa
+                elif len(aa)==3:
                     (fnct,fields2,order)=aa
+                    length = None
                 else:
                     raise except_orm('Error',
-                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority)}.' % (store_field, self._name)))
+                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
                 ok = True
-                for x,y,z,e,f in self.pool._store_function[object]:
+                for x,y,z,e,f,l in self.pool._store_function[object]:
                     if (x==self._name) and (y==store_field) and (e==fields2):
                         ok = False
                 if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order))
+                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
                     self.pool._store_function[object].sort(lambda x,y: cmp(x[4],y[4]))
 
         for (key, _, msg) in self._sql_constraints:
@@ -2190,7 +2284,10 @@ class orm(orm_template):
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
                     for record in res:
-                        record[f] = res2[record['id']]
+                        if res2:
+                            record[f] = res2[record['id']]
+                        else:
+                            record[f] = []
 
 #for f in fields_post:
 #    # get the value of that field for all records/ids
@@ -2369,7 +2466,6 @@ class orm(orm_template):
 
                 if not edit:
                     vals.pop(field)
-
 
         if not context:
             context = {}
@@ -2553,7 +2649,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
         default = []
 
@@ -2561,12 +2657,12 @@ class orm(orm_template):
         for (t, c) in self._inherits.items():
             if c in vals:
                 avoid_table.append(t)
-        for f in self._columns.keys():
-            if (not f in vals) and (not isinstance(self._columns[f], fields.property)):
+        for f in self._columns.keys(): # + self._inherit_fields.keys():
+            if not f in vals:
                 default.append(f)
 
         for f in self._inherit_fields.keys():
-            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table) and (not isinstance(self._inherit_fields[f][2], fields.property)):
+            if (not f in vals) and (self._inherit_fields[f][0] not in avoid_table):
                 default.append(f)
 
         if len(default):
@@ -2575,21 +2671,25 @@ class orm(orm_template):
                 if dv in self._columns and self._columns[dv]._type == 'many2many':
                     if default_values[dv] and isinstance(default_values[dv][0], (int, long)):
                         default_values[dv] = [(6, 0, default_values[dv])]
+
             vals.update(default_values)
 
         tocreate = {}
         for v in self._inherits:
             if self._inherits[v] not in vals:
                 tocreate[v] = {}
-
+            else:
+                tocreate[v] = {self._inherits[v]:vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
-
         for v in vals.keys():
             if v in self._inherit_fields:
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
+            else:
+                if (v not in self._inherit_fields) and (v not in self._columns):
+                    del vals[v]
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
@@ -2601,11 +2701,13 @@ class orm(orm_template):
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
+            if self._inherits[table] in vals:
+                del vals[self._inherits[table]]
             id = self.pool.get(table).create(cr, user, tocreate[table])
             upd0 += ','+self._inherits[table]
             upd1 += ',%s'
             upd2.append(id)
-        
+
         #Start : Set bool fields to be False if they are not touched(to make search more powerful) 
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
         
@@ -2613,15 +2715,40 @@ class orm(orm_template):
             if bool_field not in vals:
                 vals[bool_field] = False
         #End
-        
-        for field in vals:
+        for field in vals.copy():
+            fobj = None
             if field in self._columns:
-                if self._columns[field]._classic_write:
-                    upd0 = upd0 + ',"' + field + '"'
-                    upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
-                    upd2.append(self._columns[field]._symbol_set[1](vals[field]))
-                else:
-                    upd_todo.append(field)
+                fobj = self._columns[field]
+            else:
+                fobj = self._inherit_fields[field][2]
+            if not fobj:
+                continue
+            groups = fobj.write
+            if groups:
+                edit = False
+                for group in groups:
+                    module = group.split(".")[0]
+                    grp = group.split(".")[1]
+                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                               (grp, module, 'res.groups', user))
+                    readonly = cr.fetchall()
+                    if readonly[0][0] >= 1:
+                        edit = True
+                        break
+                    elif readonly[0][0] == 0:
+                        edit = False
+                    else:
+                        edit = False
+
+                if not edit:
+                    vals.pop(field)
+        for field in vals:
+            if self._columns[field]._classic_write:
+                upd0 = upd0 + ',"' + field + '"'
+                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
+                upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+            else:
+                upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
@@ -2671,25 +2798,20 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
                 
-        # default element in context must be removed when call a one2many or many2many
+        # default element in context must be remove when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
-        
-        result = []
+
         for field in upd_todo:
-            result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
+            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
         self._validate(cr, user, [id_new], context)
 
-        if not context.get('no_store_function', False):
-            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
-            result.sort()
-            done = []
-            for order, object, ids, fields2 in result:
-                if not (object, ids, fields2) in done:
-                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
-                    done.append((object, ids, fields2))
+
+        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
+        for order, object, ids, fields in result:
+            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
@@ -2730,6 +2852,24 @@ class orm(orm_template):
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
+        field_flag = False
+        field_dict = {}
+        if self._log_access:
+            cr.execute('select id,write_date from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+            res = cr.fetchall()
+            for r in res:
+                if r[1]:
+                    field_dict.setdefault(r[0], [])
+                    res_date = time.strptime((r[1])[:19], '%Y-%m-%d %H:%M:%S')
+                    write_date = datetime.datetime.fromtimestamp(time.mktime(res_date))
+                    for i in self.pool._store_function.get(self._name, []):
+                        if i[5]:
+                            up_write_date = write_date + datetime.timedelta(hours=i[5])
+                            if datetime.datetime.now() < up_write_date:
+                                if i[1] in fields:
+                                    field_dict[r[0]].append(i[1])
+                                    if not field_flag:
+                                        field_flag = True        
         todo = {}
         keys = []
         for f in fields:
@@ -2742,6 +2882,10 @@ class orm(orm_template):
             if key:
                 result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
                 for id,value in result.items():
+                    if field_flag:
+                        for f in value.keys():
+                            if f in field_dict[id]:
+                                value.pop(f)                    
                     upd0 = []
                     upd1 = []
                     for v in value:
@@ -2761,6 +2905,11 @@ class orm(orm_template):
             else:
                 for f in val:
                     result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    for r in result.keys():
+                        if field_flag:
+                            if r in field_dict.keys():
+                                if f in field_dict[r]:
+                                    result.pop(r)                    
                     for id,value in result.items():
                         if self._columns[f]._type in ('many2one', 'one2one'):
                             try:

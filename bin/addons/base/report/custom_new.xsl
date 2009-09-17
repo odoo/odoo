@@ -15,6 +15,7 @@
 	<xsl:template name="stylesheet">
 		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
 
+        <paraStyle name="float_right" alignment="right"/>
 		<blockTableStyle id="products">
 			<!--<blockBackground colorName="grey" start="0,0" stop="-1,0"/> -->
 			<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
@@ -86,6 +87,12 @@
 								</font>
 							</para>
 						</xsl:when>
+                       <xsl:when test="@tree='float'">
+                           <para style="float_right"><font fontName="Helvetica" fontSize="9">
+                               <xsl:value-of select="."/>
+                               </font></para>
+                       </xsl:when>
+						
 						<xsl:otherwise>
 							<para>
 								<font fontName="Helvetica" fontSize="9">
