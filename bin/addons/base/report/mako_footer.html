@@ -1,0 +1,13 @@
+<hr width="100%" height="27.7">
+<address>
+	% if company['rml_footer1']:
+		<p align = "center"><small><b>${company.rml_footer1}</b></small></br></p>
+	%endif
+	% if company['rml_footer2']:
+		<p><small><b>${company.rml_footer2}</b></small></br></p>
+	%endif
+	% if user['name']:
+		<p align="center"><small><b>Contact : ${user.name}</b></small></p>
+	%endif
+</address>
+

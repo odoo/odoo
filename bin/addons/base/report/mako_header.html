@@ -1,0 +1,34 @@
+## -*- coding: utf-8 -*-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="${css_path}/mako_template.css" media="print,screen"></link>
+	</head>
+<body>
+	% if company.logo:
+		<img src ="data:image/gif;base64,${company.logo}" border="0"/>
+	%endif
+	<address>
+	% if company['partner_id']['name']:
+		<small>${company.partner_id.name}</small></br>
+	%endif
+	% if company['partner_id']['address'] and company['partner_id']['address'][0]['street']:
+		<small>${company.partner_id.address[0].street}</small></br>
+	%endif
+	% if company['partner_id']['address'] and company['partner_id']['address'][0]['zip']:
+		<small>${company.partner_id.address[0].zip}
+		${company.partner_id.address[0].city}-${company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name}</small></br>
+	%endif
+	% if company['partner_id']['address'] and company['partner_id']['address'][0]['phone']:
+		<small><b>Phone:</b>${company.partner_id.address and company.partner_id.address[0].phone}</small></br>
+	%endif
+	% if company['partner_id']['address'] and company['partner_id']['address'][0]['email']:
+		<small><b>Mail:</b>${company.partner_id.address and company.partner_id.address[0].email}</small></br></<address>
+	%endif
+	% if company['rml_header1']:
+		<p align="right"><small>${company.rml_header1}</small></br></p>
+	%endif
+	<hr width="100%" height="27.7">
+</body>
+</html>
