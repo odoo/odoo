@@ -195,8 +195,8 @@ def drop_db(uri, dbname):
 def make_links(uri, uid, dbname, source, destination, module, user, pwd):
     if module in ('base','quality_integration_server'):
         return True  
-    if not os.path.islink(destination + module): 
-        if not os.path.isdir(destination + module):    
+    if not os.path.islink(destination + '/' + module): 
+        if not os.path.isdir(destination + '/' + module):    
             for path in source:
                 if os.path.isdir(path + '/' + module):
                     os.symlink(path + '/' + module, destination + '/' + module)
