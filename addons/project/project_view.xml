@@ -307,7 +307,7 @@
                         </page>
                         <page groups="base.group_extended" string="Delegations">
                             <field colspan="4" name="history" nolabel="1"/>
-                            <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                            <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}" context="{'project_id': project_id}">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>

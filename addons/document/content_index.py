@@ -63,8 +63,8 @@ def content_index(content, filename=None, content_type=None):
         s.close()
     elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
         result = content
-    else:
-        result = content
+    #else:
+    #    result = content
     return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

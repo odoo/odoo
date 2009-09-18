@@ -42,7 +42,7 @@ class wiz_timebox_open(wizard.interface):
             domain = "[('user_id', '=', uid)]"
         value = {
             'domain': domain,
-            'name': 'Timebox',
+            'name': 'My Daily Timebox',
             'view_type': 'form',
             'view_mode': view_type,
             'res_model': 'project.gtd.timebox',

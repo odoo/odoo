@@ -187,8 +187,11 @@ class hr_holidays(osv.osv):
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        
         if ids2:
             vals['manager_id'] = ids2[0]
+        else:
+            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))    
         self.write(cr, uid, ids, vals)
         self._create_holiday(cr, uid, ids)
         return True
@@ -207,6 +210,8 @@ class hr_holidays(osv.osv):
 
     def holidays_refuse(self, cr, uid, ids, *args):
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        if not ids2:
+            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))
         self.write(cr, uid, ids, {
             'state':'refuse',
             'manager_id':ids2[0]

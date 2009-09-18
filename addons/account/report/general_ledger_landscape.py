@@ -188,6 +188,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         ## We will make the test for period or date
         ## We will now make the test
         #
+        ctx['state'] = form['context'].get('state','all')
         if form.has_key('fiscalyear'):
             ctx['fiscalyear'] = form['fiscalyear']
             ctx['periods'] = form['periods'][0][2]
@@ -344,7 +345,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
                 "FROM account_move_line l "\
                 "WHERE l.account_id = %s AND %s"%(account.id,self.query))
         sum_solde = self.cr.fetchone()[0] or 0.0
-        if form['soldeinit']:
+        if form.get('soldeinit',False):
             sum_solde += account.init_debit - account.init_credit
 
         return sum_solde

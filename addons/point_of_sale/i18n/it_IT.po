@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:25:35+0000\n"
-"PO-Revision-Date: 2009-08-06 15:25:35+0000\n"
+"POT-Creation-Date: 2009-08-28 15:44:14+0000\n"
+"PO-Revision-Date: 2009-08-28 15:44:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -139,6 +139,11 @@ msgid "Partner Ref."
 msgstr ""
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Tel : + 32 (0) 2 231 04 35"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line Description"
 msgstr "Descrizione Riga"
@@ -189,15 +194,22 @@ msgid "No. Of Articles"
 msgstr ""
 
 #. module: point_of_sale
+#: field:pos.config.journal,code:0
+#: rml:pos.details:0
+msgid "Code"
+msgstr "Codice"
+
+#. module: point_of_sale
 #: field:pos.order,date_validity:0
 #: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
 msgstr "Data Validità"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
-msgstr "Operazione N°:"
+#: view:pos.order:0
+#: field:pos.order,pickings:0
+msgid "Picking"
+msgstr "Presa"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -253,6 +265,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
+#: rml:pos.receipt:0
 msgid "Fax :"
 msgstr "Fax :"
 
@@ -273,18 +286,13 @@ msgstr "Pagamenti Ordine"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Tel :"
-msgstr "Tel :"
+msgid "Date :"
+msgstr "Data:"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Ma_ke Payment"
 msgstr "Produci Pagamento"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Sale Date :"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
@@ -331,11 +339,6 @@ msgstr "Data Pagamento"
 #. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 msgid "Payment name"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Salesman :"
 msgstr ""
 
 #. module: point_of_sale
@@ -414,11 +417,6 @@ msgstr "Prezzo unitario"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML non valido per Visualizzazione Architettura!"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Receipt Printing Date :"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
@@ -604,9 +602,9 @@ msgid "_Add product"
 msgstr "Aggiungi Prodotto"
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
-msgstr "Applica Sconto"
+#: rml:pos.receipt:0
+msgid ":"
+msgstr ":"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -630,10 +628,10 @@ msgid "Total:"
 msgstr "Totale:"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,pickings:0
-msgid "Picking"
-msgstr "Presa"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Summary"
+msgstr "Riepilogo"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -665,10 +663,9 @@ msgid "Ma_ke payment"
 msgstr "Produci Pagamento"
 
 #. module: point_of_sale
-#: field:pos.config.journal,code:0
-#: rml:pos.details:0
-msgid "Code"
-msgstr "Codice"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
+msgstr "Applica Sconto"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -893,12 +890,6 @@ msgid "Supplier Refund"
 msgstr "Rimborso Fornitore"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Summary"
-msgstr "Riepilogo"
-
-#. module: point_of_sale
 #: field:pos.config.journal,name:0
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
@@ -957,6 +948,11 @@ msgstr "Azienda:"
 #. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Print Date"
+msgstr ""
+
+#. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "OPERATION N° :"
 msgstr ""
 
 #. module: point_of_sale

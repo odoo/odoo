@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-06 15:19:24+0000\n"
-"PO-Revision-Date: 2009-08-06 15:19:24+0000\n"
+"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
+"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -139,6 +139,11 @@ msgid "Partner Ref."
 msgstr "Partneri viide."
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Tel : + 32 (0) 2 231 04 35"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line Description"
 msgstr "Rea kirjeldus"
@@ -189,15 +194,22 @@ msgid "No. Of Articles"
 msgstr "Artiklite arv"
 
 #. module: point_of_sale
+#: field:pos.config.journal,code:0
+#: rml:pos.details:0
+msgid "Code"
+msgstr "Tootekood"
+
+#. module: point_of_sale
 #: field:pos.order,date_validity:0
 #: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
 msgstr "Kehtivuse kuupäev"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
-msgstr "Toimingu N° :"
+#: view:pos.order:0
+#: field:pos.order,pickings:0
+msgid "Picking"
+msgstr "Noppimine"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -253,6 +265,7 @@ msgstr "Disk"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
+#: rml:pos.receipt:0
 msgid "Fax :"
 msgstr "Faks :"
 
@@ -273,18 +286,13 @@ msgstr "Korralduse maksed"
 
 #. module: point_of_sale
 #: rml:pos.receipt:0
-msgid "Tel :"
-msgstr "Tel :"
+msgid "Date :"
+msgstr "Kuupäev :"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Ma_ke Payment"
 msgstr "_Loo makse"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Sale Date :"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
@@ -332,11 +340,6 @@ msgstr "Makse kuupäev"
 #: wizard_field:pos.payment,ask_pay,payment_name:0
 msgid "Payment name"
 msgstr "Makse nimetus"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Salesman :"
-msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,lines:0
@@ -414,11 +417,6 @@ msgstr "Ühiku hind"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Receipt Printing Date :"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
@@ -604,9 +602,9 @@ msgid "_Add product"
 msgstr "_Lisa toode"
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
-msgstr "Rakenda allahindlus"
+#: rml:pos.receipt:0
+msgid ":"
+msgstr ":"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -630,10 +628,10 @@ msgid "Total:"
 msgstr "Kokku:"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,pickings:0
-msgid "Picking"
-msgstr "Noppimine"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Summary"
+msgstr "Üldistus"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -665,10 +663,9 @@ msgid "Ma_ke payment"
 msgstr "_Loo makse"
 
 #. module: point_of_sale
-#: field:pos.config.journal,code:0
-#: rml:pos.details:0
-msgid "Code"
-msgstr "Tootekood"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
+msgstr "Rakenda allahindlus"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -893,12 +890,6 @@ msgid "Supplier Refund"
 msgstr "Tarnija tagasimakse"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Summary"
-msgstr "Üldistus"
-
-#. module: point_of_sale
 #: field:pos.config.journal,name:0
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
@@ -958,6 +949,11 @@ msgstr "Firma:"
 #: rml:pos.lines:0
 msgid "Print Date"
 msgstr "Trükkimise kuupäev"
+
+#. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "OPERATION N° :"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.lines:0

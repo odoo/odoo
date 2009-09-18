@@ -125,16 +125,7 @@ class node_class(object):
     
     def get_translation(self,value,lang):
         result = value
-        pool = pooler.get_pool(self.cr.dbname)        
-        translation_ids = pool.get('ir.translation').search(self.cr, self.uid, [('value','=',value),('lang','=',lang),('type','=','model')])
-        if len(translation_ids):
-            tran_id = translation_ids[0]
-            translation = pool.get('ir.translation').read(self.cr, self.uid, tran_id, ['res_id','name'])
-            res_model,field_name = tuple(translation['name'].split(','))  
-            res_id = translation['res_id']        
-            res = pool.get(res_model).read(self.cr, self.uid, res_id, [field_name])
-            if res:
-                result = res[field_name]
+        #TODO : to get translation term        
         return result 
     
     def directory_list_for_child(self,nodename,parent=False):
@@ -302,7 +293,8 @@ class document_directory(osv.osv):
         model_ids=self.pool.get('ir.model').search(cr,uid,[('model','=',res_model)])
         if directory:
             _parent(dir_id,path)
-            path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
+            if res_id:
+                path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
             user=self.pool.get('res.users').browse(cr,uid,uid)
             return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
         return False
@@ -345,12 +337,8 @@ class document_directory(osv.osv):
             object: the object.directory or object.directory.content
             object2: the other object linked (if object.directory.content)
     """
-    def get_object(self, cr, uid, uri, context={}):
-        lang = context.get('lang',False)
-        if not lang:
-            user = self.pool.get('res.users').browse(cr, uid, uid)
-            lang = user.context_lang 
-        context['lang'] = lang
+    def get_object(self, cr, uid, uri, context={}):        
+        #TODO : set user's context_lang in context        
         if not uri:
             return node_class(cr, uid, '', False, context=context, type='database')
         turi = tuple(uri)
@@ -694,8 +682,9 @@ class document_file(osv.osv):
             import urllib
             datas=base64.encodestring(urllib.urlopen(vals['link']).read())
         else:
-            datas=vals.get('datas',False)
-        vals['file_size']= len(datas)
+            datas = vals.get('datas',False)
+        
+        vals['file_size']= datas and len(datas) or 0
         if not self._check_duplication(cr,uid,vals):
             raise except_orm(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file,self).create(cr, uid, vals, context)

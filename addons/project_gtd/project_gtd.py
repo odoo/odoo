@@ -49,6 +49,7 @@ class one2many_mod(fields.one2many):
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
+    _description = "Contexts"
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence'),

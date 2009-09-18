@@ -213,6 +213,11 @@ class account_bank_statement(osv.osv):
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
                         company_currency_id, move.amount, context=context,
                         account=acc_cur)
+                if st.currency.id <> company_currency_id:
+                    amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
+                                st.currency.id, amount, context=context,
+                                account=acc_cur)
+                    val['amount_currency'] = -amount_cur
 
                 if move.account_id and move.account_id.currency_id and move.account_id.currency_id.id <> company_currency_id:
                     val['currency_id'] = move.account_id.currency_id.id
@@ -430,7 +435,17 @@ class account_bank_statement_reconcile(osv.osv):
     def name_get(self, cursor, user, ids, context=None):
         res= []
         for o in self.browse(cursor, user, ids, context=context):
-            res.append((o.id, '[%.2f]' % (o.total_entry - o.total_new,)))
+            result = 0.0
+            res_currency = ''
+            for line in o.line_ids:
+                if line.amount_currency and line.currency_id:
+                    result += line.amount_currency
+                    res_currency = line.currency_id.code
+                else:
+                    result += line.debit - line.credit
+            if res_currency:
+                res_currency = ' ' + res_currency
+            res.append((o.id, '[%.2f'% (result - o.total_new,) + res_currency + ']' ))
         return res
 
     _columns = {

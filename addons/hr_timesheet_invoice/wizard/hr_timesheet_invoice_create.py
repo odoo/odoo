@@ -92,19 +92,25 @@ class invoice_create(wizard.interface):
                         "AND id IN (" + ','.join([str(x) for x in data['ids']]) + ") " \
                         "AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id,to_invoice", (account.id,))
+
             for product_id,factor_id,qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
                 if not product:
                     raise wizard.except_wizard(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
-                if factor.customer_name:
-                    factor_name = product.name+' - '+factor.customer_name
+                
+                if not data['form']['product']:
+                    if factor.customer_name:
+                        factor_name = product.name+' - '+factor.customer_name
+                    else:
+                        factor_name = product.name
                 else:
-                    factor_name = product.name
+                    factor_name = pool.get('product.product').name_get(cr, uid, [data['form']['product']], context=context)[0][1]
+                            
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], data['form']['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
                 else:
                     price = 0.0
 
@@ -125,7 +131,7 @@ class invoice_create(wizard.interface):
                     'account_id': account_id,
                     'account_analytic_id': account.id,
                 }
-
+                
                 #
                 # Compute for lines
                 #
@@ -184,7 +190,7 @@ class invoice_create(wizard.interface):
 
 
     _create_form = """<?xml version="1.0"?>
-    <form title="Invoice on analytic entries">
+    <form string="Invoice on analytic entries">
         <notebook>
         <page string="Invoicing Data">
             <separator string="Do you want to show details of work in invoice ?" colspan="4"/>

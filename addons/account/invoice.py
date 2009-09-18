@@ -107,8 +107,11 @@ class account_invoice(osv.osv):
             paid_amt = 0.0
             to_pay = inv.amount_total
             for lines in inv.move_lines:
-                paid_amt = paid_amt - lines.credit + lines.debit
-            res[inv.id] = to_pay - abs(paid_amt)
+                if lines.amount_currency and lines.currency_id:
+                    paid_amt += lines.amount_currency
+                else:
+                    paid_amt += lines.credit + lines.debit
+            res[inv.id] = round(to_pay - abs(paid_amt),int(config['price_accuracy']))
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -232,23 +235,23 @@ class account_invoice(osv.osv):
         'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated account moves."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16,2),string='Untaxed',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'amount_tax': fields.function(_amount_all, method=True, digits=(16,2), string='Tax',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'amount_total': fields.function(_amount_all, method=True, digits=(16,2), string='Total',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 20),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, None, 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
             },
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -257,7 +260,7 @@ class account_invoice(osv.osv):
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
@@ -266,9 +269,9 @@ class account_invoice(osv.osv):
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
-                'account.invoice.line': (_get_invoice_line, None, 50),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 50),
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             },
@@ -389,14 +392,14 @@ class account_invoice(osv.osv):
     # return the ids of the move lines which has the same account than the invoice
     # whose id is in ids
     def move_line_id_payment_get(self, cr, uid, ids, *args):
-        ml = self.pool.get('account.move.line')
         res = []
-        for inv in self.read(cr, uid, ids, ['move_id','account_id']):
-            if inv['move_id']:
-                move_line_ids = ml.search(cr, uid, [('move_id', '=', inv['move_id'][0])])
-                for line in ml.read(cr, uid, move_line_ids, ['account_id']):
-                    if line['account_id']==inv['account_id']:
-                        res.append(line['id'])
+        if not ids: return res
+        cr.execute('select \
+                l.id \
+            from account_move_line l \
+                left join account_invoice i on (i.move_id=l.move_id) \
+            where i.id in ('+','.join(map(str,ids))+') and l.account_id=i.account_id')
+        res = map(lambda x: x[0], cr.fetchall())
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -426,12 +429,13 @@ class account_invoice(osv.osv):
         ait_obj = self.pool.get('account.invoice.tax')
         for id in ids:
             cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s", (id,))
-            partner = self.browse(cr, uid, id).partner_id
-            context.update({'lang': partner.lang})
+            partner = self.browse(cr, uid, id,context=context).partner_id
+            if partner.lang:
+                context.update({'lang': partner.lang})
             for taxe in ait_obj.compute(cr, uid, id, context=context).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)    
+        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)    
 #        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
@@ -892,7 +896,7 @@ class account_invoice(osv.osv):
             if l.account_id.id==src_account_id:
                 line_ids.append(l.id)
                 total += (l.debit or 0.0) - (l.credit or 0.0)
-        if (not total) or writeoff_acc_id:
+        if (not round(total,int(config['price_accuracy']))) or writeoff_acc_id:
             self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
         else:
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)

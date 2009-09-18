@@ -44,7 +44,7 @@ class account_analytic_account(osv.osv):
         res = {}
         for account in self.browse(cr, uid, ids):
             invoiced = {}
-            cr.execute('select distinct l.invoice_id from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=1', (account.id,))
+            cr.execute('select distinct(l.invoice_id) from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id) where account_id=%s', (account.id,))
             invoice_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             for invoice in self.pool.get('account.invoice').browse(cr, uid, invoice_ids, context):
                 res.setdefault(account.id, 0.0)

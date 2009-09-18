@@ -309,7 +309,7 @@ if __name__ == '__main__':
         "with the Open ERP server for case management in the CRM module.")
     parser.add_option_group(group)
 
-    parser.add_option("-u", "--user", dest="userid", help="ID of the user in Open ERP", default=3, type='int')
+    parser.add_option("-u", "--user", dest="userid", help="ID of the user in Open ERP", default=1, type='int')
     parser.add_option("-p", "--password", dest="password", help="Password of the user in Open ERP", default='admin')
     parser.add_option("-e", "--email", dest="email", help="Email address used in the From field of outgoing messages")
     parser.add_option("-s", "--section", dest="section", help="ID or code of the case section", default="support")

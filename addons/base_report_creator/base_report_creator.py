@@ -51,7 +51,7 @@ from tools.translate import _
 class report_creator(osv.osv):
     _name = "base_report_creator.report"
     _description = "Report"
-
+    model_set_id = False
     #
     # Should request only used fields
     #
@@ -131,7 +131,9 @@ class report_creator(osv.osv):
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).read(cr, user, ids, fields, context, load)
         ctx = context or {}
-        wp = [self._id_get(cr, user, context['report_id'], context)+(' in (%s)' % (','.join(map(lambda x: "'"+str(x)+"'",ids))))]
+        wp = ''
+        if self.model_set_id:
+            wp = [self._id_get(cr, user, context['report_id'], context)+(' in (%s)' % (','.join(map(lambda x: "'"+str(x)+"'",ids))))]
         report = self._sql_query_get(cr, user, [context['report_id']], 'sql_query', None, ctx, where_plus = wp)
         sql_query = report[context['report_id']]
         cr.execute(sql_query)
@@ -199,7 +201,8 @@ class report_creator(osv.osv):
             fields_get = model_pool.fields_get(cr,uid)
             fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
                                         and x[1].get('relation') in rest_list 
-                                        and x[1].get('type')=='many2one',fields_get.items()))
+                                        and x[1].get('type')=='many2one' 
+                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)
@@ -214,7 +217,8 @@ class report_creator(osv.osv):
                     reference_model_dict[v.get('relation')] = relation_count+1
                 else:
                     reference_model_dict[v.get('relation')]=1
-                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id' 
+                   
+                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
                 where_list.append(str_where)
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
@@ -320,7 +324,7 @@ class report_creator(osv.osv):
         for obj in this_objs:
             for fld in obj.field_ids:
                 model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
-                if isinstance(model_column,fields.function) and not model_column.store:
+                if (isinstance(model_column,fields.function) or isinstance(model_column,fields.related)) and not model_column.store:
                     return False 
         return True
     

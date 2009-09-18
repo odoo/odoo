@@ -455,7 +455,7 @@ class purchase_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
-        default.update({'state':'draft', 'move_id':[]})
+        default.update({'state':'draft', 'move_ids':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,

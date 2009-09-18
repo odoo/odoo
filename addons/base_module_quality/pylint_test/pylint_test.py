@@ -32,6 +32,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.name = _("Pylint Test")
         self.note = _("""This test uses Pylint and checks if the module satisfies the coding standard of Python. See http://www.logilab.org/project/name/pylint for further info.\n """)
         self.bool_installed_only = False
+        self.min_score = 30
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -92,6 +93,8 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.result_details += '</body></html>'
         average_score = count and score / count or score
         self.score = (max(average_score, 0)) / 10
+        if self.score*100 < self.min_score:
+            self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result(dict_py)
         return None
 

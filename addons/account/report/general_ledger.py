@@ -188,6 +188,7 @@ class general_ledger(rml_parse.rml_parse):
         ## We will make the test for period or date
         ## We will now make the test
         #
+        ctx['state'] = form['context'].get('state','all')
         if form.has_key('fiscalyear'):
             ctx['fiscalyear'] = form['fiscalyear']
             ctx['periods'] = form['periods'][0][2]
@@ -195,7 +196,6 @@ class general_ledger(rml_parse.rml_parse):
             ctx['date_from'] = form['date_from']
             ctx['date_to'] = form['date_to']
         ##
-
         #
         self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         if account and account.child_consol_ids: # add ids of consolidated childs also of selected account

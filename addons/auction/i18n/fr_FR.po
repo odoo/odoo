@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.1\n"
+"Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-07 13:38:25+0000\n"
-"PO-Revision-Date: 2009-08-07 13:38:25+0000\n"
+"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
+"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Vendeur"
 #. module: auction
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle invalide pour la définition de l'action"
+msgstr ""
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,numerotation:0
@@ -286,7 +286,7 @@ msgstr "Dates"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erreur: l'unité de vente doit appartenir à une catégorie différente que l'unité de mesure"
+msgstr "Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que l'Unité de Mesure."
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -492,7 +492,6 @@ msgstr "Objets aux enchères"
 #. module: auction
 #: field:auction.lots,gross_revenue:0
 #: field:report.auction.view2,gross_revenue:0
-#: field:report.object.encoded,gross_revenue:0
 #: field:report.object.encoded.manager,gross_revenue:0
 #: field:report.seller.auction2,gross_revenue:0
 msgid "Gross revenue"
@@ -976,7 +975,6 @@ msgstr "Antiquités/Tapis et Textiles"
 
 #. module: auction
 #: xsl:report.auction.seller.list:0
-#: field:report.object.encoded,adj:0
 #: field:report.object.encoded.manager,adj:0
 msgid "Adj."
 msgstr "Adj."
@@ -1574,7 +1572,7 @@ msgstr "Créer les factures"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erreur: l'unité de mesure par défaut et l'unité de mesure d'achat doivent faire partie de la même catégorie"
+msgstr "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même catégorie."
 
 #. module: auction
 #: xsl:report.auction.vnd_bordereau:0
@@ -1665,7 +1663,6 @@ msgid "Document Number"
 msgstr "Numéro du Document"
 
 #. module: auction
-#: field:report.object.encoded,obj_margin:0
 #: field:report.object.encoded.manager,obj_margin:0
 #: field:report.seller.auction2,net_margin:0
 msgid "Net margin"
@@ -2015,7 +2012,6 @@ msgstr "Compte des entrées"
 #. module: auction
 #: field:auction.lots,net_revenue:0
 #: field:report.auction.view2,net_revenue:0
-#: field:report.object.encoded,net_revenue:0
 #: field:report.object.encoded.manager,net_revenue:0
 #: field:report.seller.auction2,net_revenue:0
 msgid "Net revenue"
@@ -2429,7 +2425,6 @@ msgstr ""
 
 #. module: auction
 #: field:auction.lots,obj_price:0
-#: field:report.auction.estimation.adj.category,obj_price:0
 #: field:report.auction.view,adj_price:0
 #: field:report.unclassified.objects,obj_price:0
 msgid "Adjudication price"

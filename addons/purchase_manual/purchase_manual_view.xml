@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        #
+        # Define PO Line Views
+        #
+        <record id="purchase_order_line_form" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order Line">
+                    <group colspan="4" col="6">
+                        <field name="order_id" select="1"/>
+                        <field name="partner_id" select="1"/>
+                        <field name="date_order" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Order Line">
+                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)" select="1"/>
+                            <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)"/>
+                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
+                            <field colspan="4" name="name"/>
+                            <field name="date_planned" select="2"/>
+                            <field name="price_unit"/>
+                            <field name="account_analytic_id"/>
+                            <field name="price_subtotal" readonly="1"/>
+                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" name="notes" nolabel="1"/>
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                               <separator colspan="4" string="Stock Moves"/>
+                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
+                               <separator colspan="4" string="Manual Invoices"/>
+                               <field name="invoiced"/>
+                               <field name="state"/><newline/>
+                               <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="purchase_order_line_tree" model="ir.ui.view">
+            <field name="name">purchase.order.line.tree</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Line">
+                    <field name="date_order"/>
+                    <field name="order_id"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
+                    <field name="price_unit"/>
+                    <field name="price_subtotal"/>
+                    <field name="invoiced"/>
+                    <field name="date_planned"/>
+                </tree>
+            </field>
+        </record>
+
+ 
+        #
+        # Inherit PO view to get buttons
+        #
+
+        <record id="purchase_line_form_action" model="ir.actions.act_window">
+            <field name="name">Purchase Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="purchase_line_form_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+            <field name="act_window_id" ref="purchase_line_form_action"/>
+        </record>
+        <record id="purchase_line_form_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_line_form"/>
+            <field name="act_window_id" ref="purchase_line_form_action"/>
+        </record>
+        <menuitem action="purchase_line_form_action" id="menu_purchase_line_form_action" parent="purchase.menu_purchase_root"/>
+
+        <record id="purchase_line_form_action2" model="ir.actions.act_window">
+            <field name="name">Uninvoiced Purchase Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+        <record id="purchase_line_form_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_line_form"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>
+
+    </data>
+</openerp>

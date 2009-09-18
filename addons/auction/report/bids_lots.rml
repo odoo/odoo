@@ -74,10 +74,10 @@
           <para style="P4">[[ o.ach_uid and o.ach_uid.name or False]]</para>
         </td>
         <td>
-          <para style="P5">[[o.bid_lines[0] and o.bid_lines[0].bid_id.name or False]]</para>
+          <para style="P5"><font>[[o.bid_lines[0] and o.bid_lines[0].bid_id.name or removeParentNode('font')]]</font></para>
         </td>
         <td>
-          <para style="P6">[[o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or False]]</para>
+          <para style="P6"><font>[[o.bid_lines[0] and o.bid_lines[0].bid_id.contact_tel or removeParentNode('font')]]</font></para>
         </td>
       </tr>
     </blockTable>

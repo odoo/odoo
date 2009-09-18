@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -770,7 +770,7 @@ class auction_lots(osv.osv):
                     'journal_id': lot.auction_id.journal_id.id,
                     'partner_id': lot.ach_uid.id,
                     'type': 'out_invoice',
-                    
+
                 }
                 if invoice_number:
                     inv['number'] = invoice_number
@@ -1166,7 +1166,7 @@ class report_auction_estimation_adj_category(osv.osv):
     _columns = {
             'lot_est1': fields.float('Minimum Estimation',select=2),
             'lot_est2': fields.float('Maximum Estimation',select=2),
-            'obj_price': fields.float('Adjudication price'),
+#            'obj_price': fields.float('Adjudication price'),
             'date': fields.date('Date', readonly=True,select=1),
             'lot_type': fields.selection(_type_get, 'Object Type', size=64),
             'adj_total': fields.float('Total Adjudication',select=2),
@@ -1310,11 +1310,11 @@ class report_object_encoded(osv.osv):
         'user_id':fields.many2one('res.users', 'User', select=1),
         'estimation': fields.float('Estimation',select=2),
         'date': fields.date('Create Date',  required=True),
-        'gross_revenue':fields.float('Gross revenue',readonly=True, select=2),
-        'net_revenue':fields.float('Net revenue',readonly=True, select=2),
-        'obj_margin':fields.float('Net margin', readonly=True, select=2),
+#        'gross_revenue':fields.float('Gross revenue',readonly=True, select=2),
+#        'net_revenue':fields.float('Net revenue',readonly=True, select=2),
+#        'obj_margin':fields.float('Net margin', readonly=True, select=2),
         'obj_ret':fields.integer('# obj ret', readonly=True, select=2),
-        'adj':fields.integer('Adj.', readonly=True, select=2),
+#        'adj':fields.integer('Adj.', readonly=True, select=2),
         'obj_num':fields.integer('# of Encoded obj.', readonly=True, select=2),
     }
     def init(self, cr):

@@ -101,7 +101,8 @@ class report_files_partner(osv.osv):
                        p.name as partner 
                 from ir_attachment f 
                 inner join res_partner p 
-                on (f.partner_id=p.id) 
+                on (f.partner_id=p.id)
+                where f.datas_fname is not null
                 group by p.name
              )
          """)

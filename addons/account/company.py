@@ -25,7 +25,7 @@ from osv import fields, osv
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'overdue_msg' : fields.text('Overdue Payments Message'),
+        'overdue_msg' : fields.text('Overdue Payments Message', translate=True),
     }
 
     _defaults = {
