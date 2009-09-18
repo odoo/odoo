@@ -520,7 +520,7 @@ class sale_order(osv.osv):
                         pending_deliveries = True
                 
                 if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
-                    finished = True
+#                    finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
