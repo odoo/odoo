@@ -30,35 +30,35 @@ class shipping(report_sxw.rml_parse):
         super(shipping, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'time': time,
-            'get_address': self._get_address,
-            'get_address_ship':self._get_address_ship
+#            'get_address': self._get_address,
+#            'get_address_ship':self._get_address_ship
         })
 
-    def _get_address(self,data):
-
-         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_invoice_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
-                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
-                         "where sp.origin=so.name " \
-                         "and so.partner_id=rp.id " \
-                         "and so.partner_invoice_id=rpa.id  " \
-                         "and rpa.country_id=rc.id " \
-                         "and sp.id=%s", (data.id,))
-
-         add=self.cr.dictfetchall()
-         return add
-
-    def _get_address_ship(self,data):
-
-         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_shipping_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
-                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
-                         "where sp.origin=so.name " \
-                         "and so.partner_id=rp.id " \
-                         "and so.partner_shipping_id=rpa.id  " \
-                         "and rpa.country_id=rc.id " \
-                         "and sp.id=%s", (data.id,))
-
-         ship=self.cr.dictfetchall()
-         return ship
+#    def _get_address(self,data):
+#
+#         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_invoice_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
+#                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
+#                         "where sp.origin=so.name " \
+#                         "and so.partner_id=rp.id " \
+#                         "and so.partner_invoice_id=rpa.id  " \
+#                         "and rpa.country_id=rc.id " \
+#                         "and sp.id=%s", (data.id,))
+#
+#         add=self.cr.dictfetchall()
+#         return add
+#
+#    def _get_address_ship(self,data):
+#
+#         self.cr.execute("select sp.id,sp.origin,sp.address_id,so.partner_id,rp.name as name2,so.partner_shipping_id,rpa.name,rpa.street as Street,rpa.city ,rpa.zip,rc.name as country " \
+#                         "from sale_order as so, stock_picking as sp,res_partner rp,res_partner_address as rpa,res_country as rc " \
+#                         "where sp.origin=so.name " \
+#                         "and so.partner_id=rp.id " \
+#                         "and so.partner_shipping_id=rpa.id  " \
+#                         "and rpa.country_id=rc.id " \
+#                         "and sp.id=%s", (data.id,))
+#
+#         ship=self.cr.dictfetchall()
+#         return ship
 
 #    def _sum_total(self,data):
 #        print "======data=======",data
