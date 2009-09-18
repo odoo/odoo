@@ -299,7 +299,10 @@ def get_pg_type(f):
         t = eval('fields.'+(f._type))
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
-        f_type = ('float8', 'DOUBLE PRECISION')
+        if f.digits:
+            f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0], f.digits[1]))
+        else:
+            f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
     elif isinstance(f, fields.function) and f._type == 'char':
@@ -997,9 +1000,10 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = None
+                        dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
+                        
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
