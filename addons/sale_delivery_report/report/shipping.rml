@@ -123,12 +123,12 @@
           <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.country_id and o.sale_id.partner_invoice_id.country_id.name or '']]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.partner_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.street or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.zip or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.city or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.country_id and o.sale_id.partner_shipping_id.country_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.partner_id and o.address_id.partner_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.street or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.zip or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.city or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id.country_id and o.address_id.country_id.name or '']]</para>
         </td>
       </tr>
     </blockTable>

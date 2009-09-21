@@ -179,7 +179,7 @@ class followup_all_print(wizard.interface):
                 l = '--------------------------------------------------------------------------------------------------------------------------'
                 head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
                 for i in data_lines:
-                    maturity = ''
+                    maturity = 0.00
                     if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
                         maturity = i.debit - i.credit
                     subtotal_due = subtotal_due + i.debit
@@ -200,7 +200,7 @@ class followup_all_print(wizard.interface):
                     'date':time.strftime('%Y-%m-%d'),
                 }
                 body = body%val
-                sub = str(data['form']['email_subject'])
+                sub = tools.ustr(data['form']['email_subject'])
                 msg = ''
                 if dest:
                     tools.email_send(src,dest,sub,body)
@@ -209,15 +209,15 @@ class followup_all_print(wizard.interface):
                     msg += partner.name + '\n'
                     msg_unsent += msg
             if not msg_unsent:
-                summary = _("All emails have been successfully sent to Partners:.\n\n") + msg_sent
+                summary = _("All E-mails have been successfully sent to Partners:.\n\n") + msg_sent
             else:
-                msg_unsent = _("Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
-                msg_sent = msg_sent and _("\n\nMail sent to following Partners successfully, !\n\n") + msg_sent
+                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
+                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n") + msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
             return {'summary' : summary}
         else:
-            return {'summary' : '\n\n\nMail not sent to any partner if you want to sent it please tick send email confirmation on wizard'}
+            return {'summary' : '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'}
 
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)

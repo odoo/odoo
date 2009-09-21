@@ -51,7 +51,18 @@
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
                             <field name="partner_ref" select="2"/>
                             <newline/>
-                            <field colspan="4" name="order_line" nolabel="1"/>
+                            <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
+                                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                                    <field name="date_planned"/>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                </tree>
+                                <!-- default form view -->
+                            </field>
                             <group col="7" colspan="4">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
@@ -71,7 +82,7 @@
                                 <button name="invoice_ok" states="except_invoice" string="Manually Corrected" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="Delivery &amp; Invoices">
+                        <page string="Delivery &amp; Invoices" groups="account.group_account_user">
                             <group colspan="2" col="2">
                                 <separator string="Delivery" colspan="2"/>
                                 <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
@@ -170,7 +181,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order Line">
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Order Line">
                             <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)"/>
                             <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)"/>
@@ -178,17 +189,21 @@
                             <field colspan="4" name="name"/>
                             <field name="date_planned"/>
                             <field name="price_unit"/>
-                            <field name="account_analytic_id"/>
+                            <label colspan="2"/>
                             <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History" groups="base.group_extended,stock.group_stock_user">
                                <separator colspan="4" string="Stock Moves"/>
                                <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
-                        </page>                        
+                        </page>
+                        <page string="Invoicing" groups="account.group_account_user">
+                            <field name="account_analytic_id" colspan="4"/>
+                            <separator colspan="4" string="Taxes"/>
+                            <field colspan="4" nolabel="1" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -199,9 +214,11 @@
             <field name="model">purchase.order.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Line">
+                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                    <field name="order_id"/>
+                    <field name="date_order"/>
                     <field name="date_planned"/>
-                    <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>

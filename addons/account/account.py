@@ -30,6 +30,7 @@ import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
+from tools import config
 
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
@@ -53,11 +54,11 @@ class account_payment_term(osv.osv):
         result = []
         for line in pt.line_ids:
             if line.value == 'fixed':
-                amt = round(line.value_amount, 2)
+                amt = round(line.value_amount, int(config['price_accuracy']))
             elif line.value == 'procent':
-                amt = round(value * line.value_amount, 2)
+                amt = round(value * line.value_amount, int(config['price_accuracy']))
             elif line.value == 'balance':
-                amt = round(amount, 2)
+                amt = round(amount, int(config['price_accuracy']))
             if amt:
                 next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
                 if line.days2 < 0:
@@ -267,9 +268,9 @@ class account_account(osv.osv):
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
-        'balance': fields.function(__compute, digits=(16, 2), method=True, string='Balance', multi='balance'),
-        'credit': fields.function(__compute, digits=(16, 2), method=True, string='Credit', multi='balance'),
-        'debit': fields.function(__compute, digits=(16, 2), method=True, string='Debit', multi='balance'),
+        'balance': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Balance', multi='balance'),
+        'credit': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Credit', multi='balance'),
+        'debit': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this if the user is allowed to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
@@ -743,7 +744,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,2)),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy']))),
         'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
@@ -1109,7 +1110,7 @@ class account_tax_code(osv.osv):
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res[record.id] = round(_rec_get(record), 2)
+            res[record.id] = round(_rec_get(record), int(config['price_accuracy']))
         return res
 
     def _sum_year(self, cr, uid, ids, name, args, context):
@@ -1380,9 +1381,9 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, 2) - total
+                r['amount'] = round(r['balance'] * quantity, int(config['price_accuracy'])) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, 2)
+                r['amount'] = round(r['amount'] * quantity, int(config['price_accuracy']))
                 total += r['amount']
 
         return res
@@ -1477,9 +1478,9 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, 2) - total
+                r['amount'] = round(r['balance'] * quantity, int(config['price_accuracy'])) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, 2)
+                r['amount'] = round(r['amount'] * quantity, int(config['price_accuracy']))
                 total += r['amount']
         return res
 account_tax()
@@ -1545,9 +1546,9 @@ class account_model_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones"),
-        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity on entries"),
-        'debit': fields.float('Debit', digits=(16,2)),
-        'credit': fields.float('Credit', digits=(16,2)),
+        'quantity': fields.float('Quantity', digits=(16, int(config['price_accuracy'])), help="The optional quantity on entries"),
+        'debit': fields.float('Debit', digits=(16, int(config['price_accuracy']))),
+        'credit': fields.float('Credit', digits=(16, int(config['price_accuracy']))),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
 
