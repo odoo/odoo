@@ -338,7 +338,8 @@ class document_directory(osv.osv):
             object2: the other object linked (if object.directory.content)
     """
     def get_object(self, cr, uid, uri, context={}):        
-        #TODO : set user's context_lang in context        
+        #TODO : set user's context_lang in context  
+        context.update({'lang':False})      
         if not uri:
             return node_class(cr, uid, '', False, context=context, type='database')
         turi = tuple(uri)
