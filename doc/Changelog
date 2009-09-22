@@ -1,4 +1,46 @@
 
+2009-09-22: 5.0.6
+=================
+
+Bugfixes (server)
+-----------------
+
+ * https://launchpad.net/bugs/421904
+   * Fields.function : Store value computation corrected
+ * https://launchpad.net/bugs/407332
+   * Price Accuracy : rounding made to be based on --price_accuracy option
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * fixed an "unsupported operand type(s) for +: 'bool' and 'str'" error.
+   * Sale_delivery_report : Delivery order report should take shipping address from picking itself
+   * account: bugfixed the fiscalyear closing wizard:
+   * Purchase_manual : certificate on terp displayed wrong value
+ * https://launchpad.net/bugs/431864
+   * hr_timesheet_sheet : casting correction for a view
+ * https://launchpad.net/bugs/431871
+   * Account : Move line creation was giving encoding error while automated entries were inserted,corrected
+ * https://launchpad.net/bugs/433979
+   * [CRITICAL]document: crash list of directory after rev:hmo@tinyerp.com-20090916110722-4kl5t5q71im6c76i
+ * https://launchpad.net/bugs/407332
+   * Account : Rounding problem based on price_accuracy
+ * https://launchpad.net/bugs/419720
+   * Sale : Delivery Date delay computation made corrected when days are passed with fractions
+ * https://launchpad.net/bugs/423726
+   * Sale : SO Boolean field picked behavior corrected
+ * https://launchpad.net/bugs/431821
+   * Account_followup : Sending email while sending follow up corrected.
+
+
+Improvements (addons)
+---------------------
+
+ * purchase_manual: do not redefine view: add fields by inheritance...
+ * purchase: improve views to be directly usable in portals...
+
+
 2009-09-17: 5.0.5
 =================
 
