@@ -583,6 +583,16 @@ class many2many(_column):
                 obj.datas[id][name] = act[2]
 
 
+def get_nice_size(a):
+	(x,y) = a
+	if isinstance(y, (int,long)):
+		size = y
+	elif y:
+		y = len(y)
+	else:
+		y = 0
+	return (x, tools.human_size(size))
+
 # ---------------------------------------------------------
 # Function fields
 # ---------------------------------------------------------
@@ -653,7 +663,7 @@ class function(_column):
             
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
-            res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
+            res = dict(map( get_nice_size, res.items()))
         return res
     get_memory = get
 
