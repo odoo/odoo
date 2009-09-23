@@ -101,8 +101,9 @@ def import_translate(uri, user, pwd, dbname, translate_in):
                     state = res['state']                    
                 
         
-def check_quality(uri, user, pwd, dbname, modules):       
+def check_quality(uri, user, pwd, dbname, modules, quality_logs):       
     uid = login(uri, dbname, user, pwd)
+    quality_logs += 'quality-logs'
     if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
         final = {}   
@@ -111,7 +112,7 @@ def check_quality(uri, user, pwd, dbname, modules):
             test_detail = {}              
             quality_result = execute(conn,'execute', dbname, uid, pwd,'module.quality.check','check_quality',module)
             detail_html = ''
-            html = '''<html><html><html><html><body><a name="TOP"></a>'''
+            html = '''<html><body><a name="TOP"></a>'''
             html +="<h1> Module : %s </h1>"%(quality_result['name'])   
             html += "<h2> Final score : %s</h2>"%(quality_result['final_score'])
             html += "<div id='tabs'>"
@@ -126,15 +127,21 @@ def check_quality(uri, user, pwd, dbname, modules):
                         detail['detail'] = '''<html><body><b>%s</b></body></html>'''%(detail.get('summary',''))
                 detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail',''))                
                 test_detail[test] = (score,msg,detail.get('detail',''))
-            html += "</ul>%s</body></html></html></html></html></html>"%(detail_html)
-            html += "</div>"
-            final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
+            html += "</ul>"
+            html += "%s"%(detail_html)
+            html += "</div></body></html>"
+            if not os.path.isdir(quality_logs):
+                os.mkdir(quality_logs)
+            fp = open('%s/%s.html'%(quality_logs,module),'wb')
+            fp.write(str(html))
+            fp.close()
+            #final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
 
-        fp = open('quality_log.pck','wb')
-        pck_obj = pickle.dump(final,fp)
-        fp.close()
-        print "LOG PATH%s"%(os.path.realpath('quality_log.pck'))
-        return final
+        #fp = open('quality_log.pck','wb')
+        #pck_obj = pickle.dump(final,fp)
+        #fp.close()
+        #print "LOG PATH%s"%(os.path.realpath('quality_log.pck'))
+        return True
     else:
         print 'Login Failed...'        
         clean()
@@ -273,6 +280,7 @@ parser = optparse.OptionParser(usage)
 parser.add_option("--modules", dest="modules",
                      help="specify modules to install or check quality")
 parser.add_option("--addons-path", dest="addons_path", help="specify the addons path")
+parser.add_option("--quality-logs", dest="quality_logs", help="specify the path of quality logs files which has to stores")
 parser.add_option("--root-path", dest="root_path", help="specify the root path")
 parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
 parser.add_option("-d", "--database", dest="db_name", help="specify the database name")  
@@ -303,6 +311,7 @@ die(opt.translate_in and (not opt.db_name),
 
 options = {
     'addons-path' : opt.addons_path or 'addons',
+    'quality-logs' : opt.quality_logs or '',
     'root-path' : opt.root_path or '',
     'translate-in': [],
     'port' : opt.port or 8069,        
@@ -337,7 +346,7 @@ try:
     if command == 'upgrade-module': 
         upgrade_module(uri, options['database'], options['modules'], options['login'], options['pwd'])
     if command == 'check-quality':
-        check_quality(uri, options['login'], options['pwd'], options['database'], options['modules'])
+        check_quality(uri, options['login'], options['pwd'], options['database'], options['modules'], options['quality-logs'])
     if command == 'install-translation':        
         import_translate(uri, options['login'], options['pwd'], options['database'], options['translate-in'])
     clean()
