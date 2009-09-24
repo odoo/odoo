@@ -170,10 +170,26 @@ This test checks if the module satisfy tiny structure
         return score
 
     def get_result_details(self, dict_struct):
-        str_html = '''<html><head></head><body><table>'''
-        header = ('<tr><th>%s</th><th>%s</th></tr>', [_('File Name'), _('Feedback about structure of module')])
+        str_html = '''<html><head>
+        <style>
+            .bstyle
+            {
+            border-width:2px;
+            border-style:dashed;
+            border-color: gray;
+            }
+            .btstyle
+            {
+            border-width:2px;
+            border-style:solid;
+            border-color: gray;
+            }
+            }
+          </style></head><body><table class="bstyle">'''
+        header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('File Name'), _('Feedback about structure of module')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_struct) + '</table></body></html>'
+            res = res.replace('''<td''', '''<td class="btstyle" ''')
             return res
         return ""
 
