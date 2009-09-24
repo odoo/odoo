@@ -1786,6 +1786,8 @@ class orm(orm_template):
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
                             # !!! Avoid reduction of varchar field !!!
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
@@ -1798,13 +1800,15 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                    ok = True
-                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                    cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                    cr.commit()
+                                    if f_pg_type != f_obj_type:
+                                        logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        ok = True
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.commit()
+                                    break
 
                             if f_pg_type != f_obj_type:
                                 if not ok:
