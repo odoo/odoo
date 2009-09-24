@@ -64,7 +64,11 @@ def _values(self,cr,uid, datas,context={}):
 
 def _makeInvoices(self, cr, uid, data, context):
 
-    order_obj = pooler.get_pool(cr.dbname).get('auction.lots')
+    pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('auction.lots')
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     newinv = []
     ids = order_obj.seller_trans_create(cr, uid, data['ids'],context)
     cr.commit()
@@ -76,7 +80,8 @@ def _makeInvoices(self, cr, uid, data, context):
         'res_model': 'account.invoice',
         'view_id': False,
         'context': "{'type':'out_refund'}",
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']        
     }
     return {}
 

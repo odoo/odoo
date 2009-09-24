@@ -56,11 +56,11 @@
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total" sum="Total amount"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
                             <group col="11" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-execute"/>
+                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" icon="gtk-ok"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
@@ -97,11 +97,32 @@
             </field>
         </record>
 
+       <record id="view_purchase_order_filter" model="ir.ui.view">
+            <field name="name">purchase.order.list.select</field>
+            <field name="model">purchase.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Order">
+                 <group col='6' colspan='4'>
+                   <filter icon="gtk-execute" string="Exception Purchases" domain="[('state','in',('except_picking','except_invoice'))]" separator="1" help="Purchases Related to Exception"/>
+                   <field name="state">
+                       <filter icon="terp-purchase" domain="[('state','=','wait')]" help="Waiting Purchases"/>
+                       <filter icon="terp-purchase" domain="[('state','=','confirmed')]" help="Confirmed Purchases"/>
+                       <filter icon="terp-purchase" domain="[('state','=','approved')]" help="Approved Purchases"/>
+                    </field>
+                   <separator orientation="vertical"/>
+                   <field name="name" select="1"/>
+                </group>
+              </search>
+            </field>
+        </record>
+       
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -112,8 +133,10 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action"/>
+        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action3" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -122,8 +145,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','confirmed')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action"/>
+        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -132,8 +157,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action"/>
+        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action_new" model="ir.actions.act_window">
             <field name="name">New Purchase Order</field>

@@ -27,6 +27,7 @@
 import sale
 import stock
 import product
+import mrp
 
 import wizard
 import report

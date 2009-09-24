@@ -11,6 +11,8 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_claims_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_claims_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim0">
         <field name="sequence" eval="1"/>
@@ -39,6 +41,9 @@
         <field name="view_mode">tree,form,calendar</field>
         <field name="view_id" ref="crm_case_claims_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+'),(\'user_id\',\'=\',uid)]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_claims_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_claim_my1">
         <field name="sequence" eval="1"/>
@@ -58,7 +63,7 @@
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_claim_my1"/>
     </record>
-    <menuitem name="My Claims" id="menu_crm_case_category_act_claim_my1" action="crm_case_category_act_claim_my1"  parent="menu_crm_case_claims"/>
+    <menuitem name="My Claims" id="menu_crm_case_category_act_claim_my1" action="crm_case_category_act_claim_my1"  parent="menu_crm_case_claims" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_claim1">
         <field name="name">Claims</field>
@@ -66,6 +71,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_claim1">
         <field name="sequence" eval="1"/>
@@ -73,7 +79,7 @@
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_claim1"/>
     </record>
-    <menuitem name="New Claim" id="menu_crm_case_categ0_act_claim" action="crm_case_category_act_claim1" parent="menu_crm_case_claims"/>
+    <menuitem name="New Claim" id="menu_crm_case_categ0_act_claim" action="crm_case_category_act_claim1" parent="menu_crm_case_claims" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_claim_my2">
         <field name="name">My Unclosed Claims</field>
@@ -81,6 +87,9 @@
         <field name="view_mode">tree,calendar,form</field>
         <field name="view_id" ref="crm_case_claims_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+'),(\'user_id\',\'=\',uid),(\'state\',\'&lt;&gt;\',\'done\'),(\'state\',\'&lt;&gt;\',\'cancel\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_claims_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_claim_my2">
         <field name="sequence" eval="1"/>
@@ -100,13 +109,15 @@
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_claim_my2"/>
     </record>
-    <menuitem name="My Unclosed Claims" id="menu_crm_case_categ0_act_claim_my2" action="crm_case_category_act_claim_my2" parent="menu_crm_case_category_act_claim_my1"/>
+    <menuitem name="My Unclosed Claims" id="menu_crm_case_categ0_act_claim_my2" action="crm_case_category_act_claim_my2" parent="menu_crm_case_category_act_claim_my1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_claim_my2_open">
         <field name="name">My Open Claims</field>
         <field name="res_model">crm.case</field>
         <field name="view_mode">tree,calendar,form</field>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_claims_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_claim_my2_open">
         <field name="sequence" eval="1"/>
@@ -126,10 +137,10 @@
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_claim_my2_open"/>
     </record>
-    <menuitem name="My Open Claims" id="menu_crm_case_categ0_act_claim_my2_open" action="crm_case_category_act_claim_my2" parent="menu_crm_case_categ0_act_claim_my2"/>
+    <menuitem name="My Open Claims" id="menu_crm_case_categ0_act_claim_my2_open" action="crm_case_category_act_claim_my2_open" parent="menu_crm_case_categ0_act_claim_my2" groups="base.group_extended_menu"/>
 
     <!-- All Claims -->
-    <menuitem  name="All Claims" id="menu_crm_case_categ_claim0" action="crm_case_categ_claim0" parent="menu_crm_case_claims"/>
+    <menuitem  name="All Claims" id="menu_crm_case_categ_claim0" action="crm_case_categ_claim0" parent="menu_crm_case_claims" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_claim_all2">
         <field name="name">All Unclosed Claims</field>
@@ -137,6 +148,9 @@
         <field name="view_mode">tree,calendar,form</field>
         <field name="view_id" ref="crm_case_claims_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+'),(\'state\',\'&lt;&gt;\',\'done\'),(\'state\',\'&lt;&gt;\',\'cancel\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_claims_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_claim_all2">
         <field name="sequence" eval="1"/>
@@ -156,7 +170,7 @@
         <field name="view_id" ref="crm_case_claims_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_claim_all2"/>
     </record>
-    <menuitem name="All Unclosed Claims" id="menu_crm_case_categ0_act_claim_all2" action="crm_case_category_act_claim_all2" parent="menu_crm_case_categ_claim0"/>
+    <menuitem name="All Unclosed Claims" id="menu_crm_case_categ0_act_claim_all2" action="crm_case_category_act_claim_all2" parent="menu_crm_case_categ_claim0" groups="base.group_extended_menu"/>
 
 </data>
 </openerp>

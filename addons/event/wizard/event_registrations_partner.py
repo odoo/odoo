@@ -40,6 +40,9 @@ def _list_partners(self, cr, uid, data, context):
 class event_partners(wizard.interface):
     def _reg_partners(self, cr, uid, data, context):
         pool_obj = pooler.get_pool(cr.dbname)
+        mod_obj = pool_obj.get('ir.model.data') 
+        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])        
         model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_partner_form')])
         resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
         return {
@@ -49,7 +52,8 @@ class event_partners(wizard.interface):
             'view_mode': 'tree,form',
             'res_model': 'res.partner',
             'views': [(False,'tree'),(resource_id,'form')],
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id'] 
         }
         return {}
 

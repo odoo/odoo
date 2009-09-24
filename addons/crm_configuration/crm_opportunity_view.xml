@@ -16,14 +16,16 @@
                     <field name="name" select="1" string="Opportunity" colspan="2"/>
                     <field name="section_id" colspan="1"/>
                     <field name="user_id" select="2" string="Responsible"/>
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />                    
                         <newline/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
                         <field name="stage_id" select="1" nolabel="1"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                    <field name="date" string="Next Meeting"/>
-                    <field name="duration"/>
+                    <field name="date" string="Deadline"/>
+                    <field name="id" select="1"/>
                     <button string="Schedule Meeting" icon="terp-crm" name="%(wizard_crm_meeting)d" type="action"/>
                 </group>
                 <notebook colspan="4">
@@ -39,65 +41,34 @@
                     <field name="planned_cost"/>
                     <field name="probability"/>
                     <separator colspan="4" string="Description Information"/>
-                        <field name="note" nolabel="1" colspan="4"/>
+                        <field name="description" nolabel="1" colspan="4"/>
 
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
                         <field name="state" select="2"/> 
-                         <button name="case_close" string="Done" states="open,draft,pending" type="object"/>
-                        <button name="case_open" string="Open" states="draft,pending" type="object"/>
-                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"/>
-                        <button name="case_pending" string="Pending" states="draft,open" type="object"/>
-                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
+                        <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
+                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                     </group>
                 </page>
 
-                <page string="Extra Info" groups="base.group_extended">
-                    <field name="id" select="2"/>
+                <page string="History">
                     <field name="active"/>
-                    <field name="email_cc" colspan="4"/>
+                    <field name="canal_id"/>
+                    <field name="som"/>
                     
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
                     <field name="date_action_last"/>
                     <field name="date_action_next"/>
-                    <separator colspan="4"/>
-                    <field name="history_line" colspan="2" nolabel="1" mode="tree,form">
-                        <form string="Communication history">
-                            <group col="6" colspan="4">
-                                <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <group col="2" colspan="2" expand="1">
-                        <field name="canal_id"/>
-                        <field name="som"/>
-                        <button name="add_reply" string="Add Last Mail for Replying"
-                            states="open" type="object" colspan="2"/>
-                        <field name="description" colspan="2" nolabel="1"/>
-                        <button name="case_log_reply"
-                            string="Send Partner &amp; Historize" states="open"
-                            type="object"/>
-                        <button name="case_log" string="Historize" states="open"
-                            type="object"/>
-                    </group>
-
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
-                </page>
-                <page string="History">
+                
                     <field name="log_ids" nolabel="1" colspan="4">
                         <form string="Actions">
                             <separator string="Action Information" colspan="4"/>
@@ -109,6 +80,42 @@
                         </form>
                     </field>
                 </page>
+                 <page string="Events">
+                   <field name="child_ids" colspan="4" nolabel="1">
+                       <tree string="Related Cases">
+                           <field name="id"/>
+                           <field name="date"/>
+                           <field name="name"/>
+                           <field name="partner_id"/>
+                           <field name="user_id"/>
+                           <field name="section_id"/>
+                           <field name="state"/>
+                       </tree>
+                    </field>
+                 </page>
+                 <page string="Emails">
+                   <group colspan="4">
+                       <field colspan="4" name="email_cc" string="CC"/>
+                   </group>
+                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                        <form string="Communication history">
+                            <group col="6" colspan="4">
+                                <field name="date"/>
+                                <field name="email"/>
+                                <field name="canal_id"/>
+                            </group>
+                            <newline/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                        </form>
+                        <tree string="Communication history">
+                            <field name="description"/>
+                            <field name="email"/>
+                            <field name="date"/>
+                        </tree>
+                    </field>
+                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                 </page>
                 </notebook>
             </form>
         </field>
@@ -125,22 +132,40 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="planned_revenue"/>
                 <field name="probability"/>
-                <field name="date" string="Next Meeting"/>
+                <field name="date" string="Deadline"/>
                 <field name="user_id"/>
                 <field name="state"/>
+                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>                
             </tree>
         </field>
     </record>
-    <record model="ir.ui.view" id="crm_case_calendar_view_oppor">
-        <field name="name">CRM - Opportunities Calendar</field>
+    <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
+        <field name="name">crm.case.opportunities.select</field>
         <field name="model">crm.case</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
+        <field name="type">search</field>
         <field name="arch" type="xml">
-            <calendar string="Opportunities" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_id"/>
-            </calendar>
+            <search string="Search Opportunities">
+               <group col="5" colspan="1">
+                   <filter icon="gtk-execute" string="My Opportunities" domain="[('user_id','=',uid)]" separator="1" help="Opportunities Related to Current User"/>
+                   <filter icon="gtk-execute" string="Prospecting" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Prospecting')]" separator="1" help="All Prospecting Prospects"/>
+                   <filter icon="gtk-execute" string="Proposition" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Value Proposition')]" separator="1" help="Value Proposition Prospects"/>
+                   <filter icon="gtk-execute" string="Analysis" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Needs Analysis')]" separator="1" help="Needs Analysis Prospects"/>
+                   </group>
+               <group col="4" colspan="4">
+                   <field name="state" select="1">
+                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Opportunities"/>
+                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Opportunities"/>
+                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Opportunities"/>
+                   </field>
+                   <field name="name" select='1'/>
+                   <field name="user_id" select="1" widget="selection"/>
+                   </group>
+           </search>
         </field>
     </record>
 </data>

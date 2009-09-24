@@ -649,16 +649,16 @@
     <xsl:otherwise>
       <xsl:choose>
         <xsl:when test="($fontWeight='bold') and ($fontStyle='italic')">
-          <xsl:text>Times-BoldItalic</xsl:text>
+          <xsl:text>Helvetica-BoldOblique</xsl:text>
         </xsl:when>
         <xsl:when test="($fontWeight='bold') and not ($fontStyle='italic')">
-          <xsl:text>Times-Bold</xsl:text>
+          <xsl:text>Helvetica-Bold</xsl:text>
         </xsl:when>
         <xsl:when test="not($fontWeight='bold') and ($fontStyle='italic')">
-          <xsl:text>Times-Italic</xsl:text>
+          <xsl:text>Helvetica-Oblique</xsl:text>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>Times-Roman</xsl:text>
+          <xsl:text>Helvetica</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:otherwise>
@@ -666,7 +666,7 @@
 </xsl:when>
 <xsl:otherwise>
   <!--Use this as default -->
-  <xsl:text>Times-Roman</xsl:text>
+  <xsl:text>Helvetica</xsl:text>
 </xsl:otherwise>
 </xsl:choose>
 </xsl:template>

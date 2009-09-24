@@ -5,11 +5,11 @@
          Board for statistical view of the sections
          -->
         <record model="ir.ui.view" id="view_crm_lead_stage_graph1">
-            <field name="name">Leads By Stage - Graph</field>
+            <field name="name">Prospects By Stage - Graph</field>
             <field name="model">report.crm.case.section.stage</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Leads By Stage" type="pie">
+                <graph string="Prospects By Stage" type="pie">
                     <field name="stage_id"/>
                     <field name="nbr" operator="+"/>
                     <field name="state" group="True"/>
@@ -43,7 +43,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_lead_stage_graph1"/>
-            <field name="domain">[('section_id', '=', 'Leads'),('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('section_id', '=', 'Prospects'),('state','!=','done'),('state','!=','cancel')]</field>
         </record>    
         
         <act_window name="Jobs Requests Of The Month by Applied Job"
@@ -54,8 +54,8 @@
             view_id="view_crm_case_categ_graph"
             id="act_jobs_categ"/>
             
-        <act_window name="Leads Of The Month By User"
-            domain="[('section_id', '=', 'Leads'),('name','=',time.strftime('%Y-%m-01')),('state','!=','cancel')]"
+        <act_window name="Prospects Of The Month By User"
+            domain="[('section_id', '=', 'Prospects'),('name','=',time.strftime('%Y-%m-01')),('state','!=','cancel')]"
             res_model="report.crm.case.user"
             view_type="form"
             view_mode="graph,tree,form"
@@ -77,7 +77,7 @@
                                 width="250"/>
 
                             <action
-                                string="Leads By Stage"
+                                string="Prospects By Stage"
                                 name="%(act_leads_state)d"
                                 height="200"
                                 colspan="4"/>
@@ -91,7 +91,7 @@
 
 
                             <action
-                                string="Leads Of The Month By User"
+                                string="Prospects Of The Month By User"
                                 name="%(act_leads_month_user)d"
                                 colspan="4"/>
 

@@ -93,8 +93,8 @@
             <field name="arch" type="xml">
                 <field name="parent_id" position="after">
                     <field name="state"/>
-                    <button name="sign_in" states="absent" string="Sign In" type="object"/>
-                    <button name="sign_out" states="present" string="Sign Out" type="object"/>
+                    <button name="sign_in" states="absent" string="Sign In" type="object" icon="gtk-go-back"/>
+                    <button name="sign_out" states="present" string="Sign Out" type="object" icon="gtk-go-forward"/>
                 </field>
             </field>
         </record>

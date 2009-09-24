@@ -59,8 +59,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('date', '=',time.strftime('%Y-%m-%d'))]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="act_hr_timesheet_line_evry1_today_form_my" id="menu_act_hr_timesheet_line_evry1_today_form_my" parent="menu_act_hr_timesheet_line_me_all_form"/>
+        <menuitem action="act_hr_timesheet_line_evry1_today_form_my" id="menu_act_hr_timesheet_line_evry1_today_form_my" parent="menu_act_hr_timesheet_line_me_all_form" groups="base.group_extended_menu"/>
  
         
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
@@ -82,9 +83,10 @@
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('date', '=',    time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date', '=', time.strftime('%Y-%m-%d'))]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="act_hr_timesheet_line_evry1_today_form" id="menu_act_hr_timesheet_line_evry1_today_form" parent="menu_act_hr_timesheet_line_evry1_all_form"/>
+        <menuitem action="act_hr_timesheet_line_evry1_today_form" id="menu_act_hr_timesheet_line_evry1_today_form" parent="menu_act_hr_timesheet_line_evry1_all_form" groups="base.group_extended_menu"/>
        
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>

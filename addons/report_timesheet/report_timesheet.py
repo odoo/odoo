@@ -172,14 +172,14 @@ class report_random_timsheet(osv.osv):
         super(report_random_timsheet, self).__init__(pool, cr)
         self.called = False
     
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
         
-        res = super(report_random_timsheet, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        res = super(report_random_timsheet, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
     
     def init(self, cr, uid=1):

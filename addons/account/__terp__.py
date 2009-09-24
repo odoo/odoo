@@ -35,9 +35,7 @@
     Customer and Supplier Invoices
     Bank statements
     """,
-    'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'base', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/account_security.xml',

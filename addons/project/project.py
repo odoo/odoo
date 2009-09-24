@@ -170,9 +170,21 @@ class project(osv.osv):
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
-        default = {'parent_id': context.get('parent_id',False)}
-        for id in ids:
-            self.copy(cr, uid, id, default=default)
+        for proj in self.browse(cr, uid, ids):
+            parent_id=context.get('parent_id',False)
+            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
+            cr.execute('select id from project_task where project_id=%s', (proj.id,))
+            res = cr.fetchall()
+            for (tasks_id,) in res:
+                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
+            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
+            res = cr.fetchall()
+            project_ids = [x[0] for x in res]
+            for child in project_ids:
+                self.duplicate_template(cr, uid, [child],context={'parent_id':new_id})
+
+        # TODO : Improve this to open the new project (using a wizard)
+
         cr.commit()
         raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
@@ -305,14 +317,13 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode
-        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode'], context)
-        word = dict(f['project_time_mode']['selection'])[tm]
-
-        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if tm=='hours':
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        if not tm:
             return res
+        tm = tm.name
+        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode_id'], context)        
         eview = etree.fromstring(res['arch'])
         def _check_rec(eview, tm):
             if eview.attrib.get('widget',False) == 'float_time':
@@ -324,7 +335,7 @@ class task(osv.osv):
         res['arch'] = etree.tostring(eview)
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',word)
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
     def do_close(self, cr, uid, ids, *args):

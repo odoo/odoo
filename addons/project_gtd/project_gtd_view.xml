@@ -102,6 +102,8 @@
                 <tree string="Tasks" editable="bottom" colors="blue:timebox_id">
                     <field name="name"/>
                     <field name="timebox_id" required="1" domain="[('user_id','=',uid)]"/>
+                    <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
+                    <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>                    
                     <field name="context_id" required="1"/>
                     <field name="date_start"/>
                     <field name="priority"/>
@@ -114,12 +116,38 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="view_project_gtd_inbox_filter" model="ir.ui.view">
+            <field name="name">project.task.gtd.inbox.select</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search timebox">
+                   <group col='6' colspan='4'>
+                       <field name="timebox_id" select="1" widget="selection">
+                           <filter string="Daily Timebox" domain="[('timebox_id.type','=','daily')]" help="Daily Timebox"/>
+                           <filter string="Inbox" domain="[('user_id','=',uid)]" help="Inbox"/>
+                       </field>
+                       <field name="context_id" select="1" widget="selection">
+                           <filter icon="terp-project" domain="[('context_id.name','=','Office')]" help="Office Context"/>
+                           <filter icon="terp-project" domain="[('context_id.name','=','Car')]" help="Car Context"/>
+                           <filter icon="terp-project" domain="[('context_id.name','=','Travel')]" help="Travel Context"/>
+                           <filter icon="terp-project" domain="[('context_id.name','=','Home')]" help="Home Context"/>
+                       </field>
+                       <separator orientation="vertical"/>
+                       <field name="name" select='1'/>
+                   </group>
+               </search>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="open_gtd_task_inbox">
             <field name="name">My Inbox</field>
             <field name="res_model">project.task</field>
             <field name="domain">[('user_id','=',uid),('state','in',('open','draft'))]</field>
             <field name="context">{'gtd_sort':True}</field>
             <field name="view_id" ref="task_inbox_view"/>
+            <field name="search_view_id" ref="view_project_gtd_inbox_filter"/>            
         </record>
         
         <menuitem name="Time Management" id="menu_open_time" parent="project.menu_main"/>
@@ -159,13 +187,14 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-	        <notebook>
-                <page string="TimeBox Configuration" position="inside">
-                	<separator string="Getting Things Done" colspan="4"/>
-                	<field name="context_id" select="2"/>
-               	 	<field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
-                </page>
-             </notebook>
+            <field name="progress" position="after">
+                <newline/>
+                <separator string="Getting Things Done" colspan="6"/>
+                <newline/>
+                <field name="context_id" select="2" />
+                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
+                <newline/>
+            </field>
         </field>
     </record>
 

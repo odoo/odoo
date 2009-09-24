@@ -53,8 +53,12 @@ ack_form = """<?xml version="1.0"?>
 ack_fields = {}
 
 
-def _merge_orders(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('purchase.order')
+def _mergeOrders(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('purchase.order')
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'purchase', 'view_purchase_order_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])
 
     def make_key(br, fields):
         list_key = []
@@ -148,7 +152,8 @@ def _merge_orders(self, cr, uid, data, context):
         'view_mode': 'tree,form',
         'res_model': 'purchase.order',
         'view_id': False,
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']
     }
 
 

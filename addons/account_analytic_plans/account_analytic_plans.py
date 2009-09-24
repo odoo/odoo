@@ -133,9 +133,9 @@ class account_analytic_plan_instance(osv.osv):
             ids = self.search(cr, uid, args, limit=limit, context=context or {})
         return self.name_get(cr, uid, ids, context or {})
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         wiz_id = self.pool.get('ir.actions.wizard').search(cr, uid, [("wiz_name","=","create.model")])
-        res = super(account_analytic_plan_instance,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+        res = super(account_analytic_plan_instance,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
 
         if (res['type']=='form'):
             plan_id = False

@@ -13,13 +13,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="department">
-                    <notebook>
-                        <page string="Department">
-                            <field colspan="4" name="name" select="1"/>
-                            <field name="company_id" select="1"/>
-                            <field name="parent_id" select="2"/>
-                            <field colspan="4" name="manager_id" select="1"/>
-                            <field colspan="4" name="member_ids"/>
+					<field colspan="4" name="name" select="1"/>
+					<field name="company_id" select="1"/>
+					<field name="parent_id" select="2"/>
+					<field colspan="4" name="manager_id" select="1"/>
+                    <notebook colspan="4" >
+                        <page string="Members">
+                            <field colspan="4" name="member_ids" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -65,8 +65,11 @@
 			<field name="inherit_id" ref="base.view_users_form"/>
 			<field name="arch" type="xml">
 				<notebook position="inside">
-					<page string="Parents">
-						<field name="parent_id" nolabel="1"/>
+					<page string="Departements Informations">
+						<separator string="Managers" colspan="4"/>
+						<field name="parent_id" nolabel="1" colspan="4"/>
+						<separator string="Subordinates" colspan="4"/>
+						<field name="child_ids" nolabel="1" colspan="4"/>
 					</page>
 				</notebook>
 			</field>

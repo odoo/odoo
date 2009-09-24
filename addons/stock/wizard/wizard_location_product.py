@@ -24,7 +24,11 @@ import wizard
 import pooler
 import time
 
-def _action_open_window(self, cr, uid, data, context):      
+def _action_open_window(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname) 
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
+    id = mod_obj.read(cr, uid, result, ['res_id'])          
     return {
         'name': False,
         'view_type': 'form',
@@ -32,7 +36,8 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model': 'product.product',
         'type': 'ir.actions.act_window',
         'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
-        'domain':[('type','<>','service')]
+        'domain':[('type','<>','service')],
+        'search_view_id': id['res_id'] 
     }
 
 

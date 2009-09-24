@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'Module Recorder',
+    'name': 'Module Record',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
@@ -39,10 +39,8 @@ This should help you to easily create reusable and publishable modules
 for custom configurations and demo/testing data.
 
 How to use it:
-1. Start the recording
-2. Do stuff in your Open ERP client
-3. Stop the recording session
-4. Export to a reusable module
+Run Administration/Customization/Module Creation/Export Customizations As a Module wizard.
+Select datetime critearea of recording and objects to be recorded and Record module.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',

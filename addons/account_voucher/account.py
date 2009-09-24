@@ -256,4 +256,4 @@ class account_account_template(osv.osv):
 
 account_account_template()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -89,14 +89,14 @@ class report_aged_receivable(osv.osv):
         super(report_aged_receivable, self).__init__(pool, cr)
         self.called = False
         
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
         
-        res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
     
     def _calc_bal(self, cr, uid, ids, name, args, context):
@@ -121,12 +121,12 @@ class report_aged_receivable(osv.osv):
     
     def init(self, cr, uid=1):
         """ This view will be used in dashboard
+        The reason writing this code here is, we need to check date range from today to first date of fiscal year.        
         """
 #        ranges = _get_ranges(cr) # Gets the ranges for the x axis of the graph (name column values)
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        today = mx.DateTime.strptime(time.strftime('%Y-%m-%d'), '%Y-%m-%d') - mx.DateTime.RelativeDateTime(days=1)
-        today = today.strftime('%Y-%m-%d')
-        fy_id  = pool_obj_fy.find(cr,uid, exception=False)
+        today = time.strftime('%Y-%m-%d')
+        fy_id = pool_obj_fy.find(cr, uid, exception=False)
         LIST_RANGES = []
         if fy_id:
             fy_start_date = pool_obj_fy.read(cr, uid, fy_id, ['date_start'])['date_start']

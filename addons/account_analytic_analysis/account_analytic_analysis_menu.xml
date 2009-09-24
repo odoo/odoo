@@ -43,9 +43,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
+            <field name="filter" eval="True"/>            
         </record>
 
-        <menuitem action="action_account_analytic_managed_open" id="menu_analytic_account_to_valid_open" parent="account_analytic_analysis.menu_analytic_account_managed"/>
+        <menuitem action="action_account_analytic_managed_open" id="menu_analytic_account_to_valid_open" parent="account_analytic_analysis.menu_analytic_account_managed" groups="base.group_extended_menu"/>
 
         <record id="action_account_analytic_managed_pending" model="ir.actions.act_window">
             <field name="name">My Pending Accounts</field>
@@ -53,9 +54,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
+            <field name="filter" eval="True"/>            
         </record>
 
-        <menuitem action="action_account_analytic_managed_pending" id="menu_analytic_account_to_valid_pending" parent="account_analytic_analysis.menu_analytic_account_managed"/>
+        <menuitem action="action_account_analytic_managed_pending" id="menu_analytic_account_to_valid_pending" parent="account_analytic_analysis.menu_analytic_account_managed" groups="base.group_extended_menu"/>
 
         <record id="action_account_analytic_new" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
@@ -101,8 +103,9 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="account.view_account_analytic_account_list"/>
             <field name="domain">[('state','=','open')]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_account_analytic_all_open" id="menu_action_account_analytic_all_open" parent="menu_action_account_analytic_all"/>
+        <menuitem action="action_account_analytic_all_open" id="menu_action_account_analytic_all_open" parent="menu_action_account_analytic_all" groups="base.group_extended_menu"/>
 
         <record id="action_account_analytic_all_pending" model="ir.actions.act_window">
             <field name="name">Pending Analytic Accounts</field>
@@ -111,8 +114,9 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="account.view_account_analytic_account_list"/>
             <field name="domain">[('state','=','pending')]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_account_analytic_all_pending" id="menu_action_account_analytic_all_pending" parent="menu_action_account_analytic_all"/>
+        <menuitem action="action_account_analytic_all_pending" id="menu_action_account_analytic_all_pending" parent="menu_action_account_analytic_all" groups="base.group_extended_menu"/>
 
     </data>
 </openerp>

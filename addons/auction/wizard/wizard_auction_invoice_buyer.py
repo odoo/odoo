@@ -66,9 +66,12 @@ def _values(self,cr,uid, datas,context={}):
 
 
 def _makeInvoices(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('auction.lots')
     newinv = []
     pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('auction.lots')
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     lots= order_obj.browse(cr,uid,data['ids'])
     invoice_number=data['form']['number']
     for lot in lots:
@@ -84,7 +87,8 @@ def _makeInvoices(self, cr, uid, data, context):
         'res_model': 'account.invoice',
         'view_id': False,
         'context': "{'type':'in_refund'}",
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']         
     }
     return {}
 

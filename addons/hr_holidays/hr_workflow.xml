@@ -5,7 +5,7 @@
 	<!-- Roles definition -->
 
 	<record model="res.roles" id="HR_holidays">
-		<field name="name">holidays</field>
+		<field name="name">Leaves Manager</field>
 	</record>
 
 	<!-- Workflow definition -->
@@ -53,6 +53,10 @@
 		<field name="action">holidays_cancel()</field>
 		<field name="join_mode">XOR</field>
 	</record>
+	
+	<!-- 	
+		workflow transition
+	-->
 
 	<record model="workflow.transition" id="t1">
 		<field name="act_from" ref="act_draft" />
@@ -91,6 +95,8 @@
 	<record model="workflow.transition" id="t7">
 		<field name="act_from" ref="act_cancel" />
 		<field name="act_to" ref="act_draft" />
+		<field name="signal">set_to_draft</field>
 	</record>
+	
 </data>
 </openerp>

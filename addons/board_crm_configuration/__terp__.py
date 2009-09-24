@@ -27,8 +27,8 @@
     'category': 'Board/CRM',
     'description': """
 This module implements a dashboard for CRM that includes:
-    * My Leads (list)
-    * Leads by Stage (graph)
+    * My Prospects (list)
+    * Prospects by Stage (graph)
     * My Meetings (list)
     * Sales Pipeline by Stage (graph)
     * My Cases (list)

@@ -19,6 +19,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
+                    <field name="sequence"/>                
                     <field name="code"/>
                     <field name="name"/>
                 </tree>
@@ -67,12 +68,13 @@
 				<form string="Budgetary Position">
 					<field name="name" select="1"/>
 					<field name="code" select="1"/>
+                    <field name="sequence" select="2"/>					
 					<notebook colspan="4">
 						<page string="Accounts">
 							<field name="account_ids" colspan="4" nolabel="1"/>
 						</page>
 						<page string="Dotations">
-							<button string="Spread" name="%(wizard_budget_spread)d" type="action"/>
+							<button string="Spread" name="%(wizard_budget_spread)d" type="action" icon="gtk-fullscreen"/>
 							<field name="dotation_ids" colspan="4" nolabel="1"/>
 						</page>
 
@@ -148,10 +150,10 @@
 							</field>
 							<field name="state" select="1"/>
 							<group col="4" colspan="2">
-								<button string="Confirm" name="confirm" states="draft" type="workflow" />
-								<button string="Validate" name="validate" states="confirm" type="workflow"/>
-								<button string="Done" name="done" states="validate" type="workflow"/>
-								<button string="Cancel" name="cancel" states="confirm,validate" type="workflow" />
+                                <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
+                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
+                                <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
+                                <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
 								<!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
 							</group>
 

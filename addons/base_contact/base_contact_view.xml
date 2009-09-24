@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
 
@@ -32,29 +32,36 @@
                     <page string="General">
                         <newline/>
                         <separator string="General Information" colspan="4"/>
-                        <field name="mobile" select="2"/>
-                        <field name="title" select="1" />
-                        <field name="website"/>
-                        <field name="email"/>
-                        <field name="lang_id"/>
-                        <field name="active"/>
-                        <field name="partner_id" invisible="1" select="2"/>
-                        <field name="function_id" invisible="1" select="2"/>
-                        <field name="job_id" invisible="1" select="2" />
-                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
+                       <group string="Partner" colspan="2" col="2">
+                           <field name="partner_id" invisible="1" select="2"/>
+                           <field name="title" select="1" />
+                           <field name="function_id" invisible="1" select="2"/>
+                           <field name="lang_id"/>
+                           <field name="active"/>
+                       </group>
+                       <group string="Communication" colspan="2" col="2">
+                           <field name="mobile" select="2"/>
+                           <field name="email"  widget="email"/>
+                           <field name="website"/>
+                       </group>
+                       <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
-                                <field name="function_id"/>
-                                <field name="address_id"/>
-                                <field name="name"/>
-                                <field name="sequence_contact"/>
-                                <field name="phone"/>
-                                <field name="fax"/>
-                                <field name="extension"/>
-                                <field name="other"/>
-                                <field name="email" widget="email"/>
-                                <field name="date_start" />
-                                <field name="date_stop" />
-                                <field name="state" />
+                               <group string="Partner" colspan="2" col="4">
+                                   <field name="name"  colspan="4"/>
+                                   <field name="address_id" colspan="4"/>
+                                   <field name="function_id" colspan="4"/>
+                                   <field name="date_start" />
+                                   <field name="date_stop" />
+                                   <field name="state" />
+                                   <field name="sequence_contact" />
+                               </group>
+                               <group string="Communication" colspan="2" col="2">
+                                   <field name="phone"/>
+                                   <field name="fax"/>
+                                   <field name="email" widget="email"/>
+                                   <field name="extension"/>
+                                   <field name="other"/>
+                               </group>                                    
                             </form>
                             <tree string="Functions and Addresses">
                                 <field name="sequence_contact" string="Seq."/>
@@ -74,6 +81,12 @@
                         <field name="country_id"/>
                         <field name="birthdate" select="1" />
                     </page>
+                    <page string="Notes">
+                        <field name="comment" nolabel="1"/>
+                    </page>
+                    <page string="Picture">
+                        <field name="photo" nolabel="1" colspan="2" widget="image"/>
+                    </page>                    
                 </notebook>
             </form>
         </field>
@@ -101,21 +114,20 @@
             <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1" position="replace">
                 <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
                     <form string="Address">
-                        <field name="type" select="2" colspan="4"/>
-                        <newline/>
-                        <field name="street" select="2"/>
-                        <field name="street2"/>
-                        <newline/>
-                        <field name="zip" select="2"/>
-                        <field name="city" select="2"/>
-                        <newline/>
-                        <field name="country_id" select="2" completion="1"/>
-                        <field name="state_id" select="2"/>
-                        <newline/>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="email" widget="email"/>
-                        <newline/>
+                       <group string="Postal Address" colspan="2" col="2">
+                           <field name="type" select="2" />
+                           <field name="street" select="2"/>
+                           <field name="street2"/>
+                           <field name="zip" select="2"/>
+                           <field name="city" select="2"/>
+                           <field name="country_id" select="2" completion="1"/>
+                           <field name="state_id" select="2"/>
+                        </group>
+                        <group string="Communication" colspan="2" col="2"> 
+                           <field name="phone"/>
+                           <field name="fax"/>
+                           <field name="email" widget="email"/>
+                        </group>
                         <field name="job_ids" mode="tree,form" nolabel="1" colspan="4">
                             <tree string="Contacts" editable="top">
                                 <field name="sequence_partner"/>
@@ -128,15 +140,19 @@
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
+                            <group string="Partner" colspan="2" col="2">
+                                <field name="sequence_partner"/>                            
                                 <field name="name"/>
-                                <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
+                            </group>
+                            <group string="Communication" colspan="2" col="2">    
                                 <field name="phone"/>
                                 <field name="fax"/>
+                                <field name="email" widget="email"/>                                
                                 <field name="extension"/>
                                 <field name="other"/>
-                                <field name="email" widget="email"/>
+                            </group>
                             </form>
                         </field>
                     </form>

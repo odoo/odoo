@@ -41,7 +41,7 @@
                     <field name="model_ids" colspan="4" context="{'model_ids':model_ids}"/>
                     <separator string="State"  colspan="4"/>
                     <field name="state"/>
-                    <button string="Create Menu" name="%(wizard_menu_create)d" type="action" colspan="2"/>
+                    <button string="Create Menu" name="%(wizard_menu_create)d" type="action" colspan="2" icon="gtk-justify-fill"/>
                 </page><page string="View parameters">
                     <separator string="Used View" colspan="4"/>
                     <field name="view_type1"/>
@@ -74,7 +74,7 @@
                         </tree>
                     </field>
                 </page><page string="Filters on Fields">
-                    <button string="Add filter" name="%(wizard_set_filter_fields)d" type="action"/>
+                    <button string="Add filter" name="%(wizard_set_filter_fields)d" type="action" icon="gtk-add"/>
                     <field name="filter_ids" nolabel="1" colspan="4">
                         <tree string="Filters">
                             <field name="name"/>

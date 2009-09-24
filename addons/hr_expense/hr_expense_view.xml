@@ -69,12 +69,12 @@
                             </field>
                             <field name="state" select="2"/>
                             <group col="6" colspan="2">
-                                <button name="confirm" states="draft" string="Confirm" type="workflow"/>
-                                <button name="cancel" states="cancel" string="Cancel" type="workflow"/>
-                                <button name="validate" states="confirm" string="Accept" type="workflow"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="workflow"/>
-                                <button name="draft" states="confirm" string="Set to Draft" type="workflow"/>
-                                <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow"/>
+                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                                <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
+                                <button name="validate" states="confirm" string="Accept" type="workflow" icon="gtk-ok"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-print"/>
+                                <button name="draft" states="confirm" string="Set to Draft" type="workflow" icon="gtk-convert"/>
+                                <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no"/>
                             </group>
                         </page>
                         <page string="Other Info">
@@ -92,10 +92,33 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_hr_expense_filter" model="ir.ui.view">
+            <field name="name">hr.expense.expense.filter</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Expense">
+	               	<group col='6' colspan='4'>
+	               		<filter icon="gtk-execute" string="My Expense" domain="[('user_id','=',uid)]" separator="1" help="Expenses Related to Current User"/>
+	              		<field name="state" select="1">
+	              			<filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Expense"/>
+	              			<filter icon="terp-hr" domain="[('state','=','accepted')]" help="Accepted Expense"/>
+	              			<filter icon="terp-hr" domain="[('state','=','invoiced')]" help="Invoiced Expense"/>
+	              		</field>
+	              		<separator orientation="vertical"/>
+	              		<field name="name" select='1'/>
+	              		<field name="user_id" select="1" widget="selection"/>
+	              	</group>
+             	</search>
+            </field>
+        </record>
+        
         <record id="expense_all" model="ir.actions.act_window">
             <field name="name">All expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
         <menuitem
             id="next_id_49"
@@ -112,32 +135,40 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_all_draft" id="menu_expense_all_draft" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_draft" id="menu_expense_all_draft" parent="hr_expense.menu_expense_all" groups="base.group_extended_menu"/>
         <record id="expense_all_confirm" model="ir.actions.act_window">
             <field name="name">Expenses waiting validation</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirm')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_all_confirm" id="menu_expense_all_confirm" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_confirm" id="menu_expense_all_confirm" parent="hr_expense.menu_expense_all" groups="base.group_extended_menu"/>
         <record id="expense_all_valid" model="ir.actions.act_window">
             <field name="name">Expenses waiting invoice</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','accepted')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_all_valid" id="menu_expense_all_valid" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_valid" id="menu_expense_all_valid" parent="hr_expense.menu_expense_all" groups="base.group_extended_menu"/>
         <record id="expense_all_invoiced" model="ir.actions.act_window">
             <field name="name">Expenses waiting payment</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','invoiced')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_all_invoiced" id="menu_expense_all_invoiced" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_invoiced" id="menu_expense_all_invoiced" parent="hr_expense.menu_expense_all" groups="base.group_extended_menu"/>
         
         <!--
 		My expenses menu
@@ -148,8 +179,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_my" id="menu_expense_my" parent="hr_expense.next_id_49"/>
+        <menuitem action="expense_my" id="menu_expense_my" parent="hr_expense.next_id_49" groups="base.group_extended_menu"/>
 
         <record id="expense_my_new" model="ir.actions.act_window">
             <field name="name">New Expenses Sheet</field>
@@ -167,16 +200,20 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','draft')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_my_draft" id="menu_expense_my_draft" parent="hr_expense.menu_expense_my"/>
+        <menuitem action="expense_my_draft" id="menu_expense_my_draft" parent="hr_expense.menu_expense_my" groups="base.group_extended_menu"/>
         <record id="expense_my_confirm" model="ir.actions.act_window">
             <field name="name">My expenses waiting validation</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','confirm')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        <menuitem action="expense_my_confirm" id="menu_expense_my_confirm" parent="hr_expense.menu_expense_my"/>
+        <menuitem action="expense_my_confirm" id="menu_expense_my_confirm" parent="hr_expense.menu_expense_my" groups="base.group_extended_menu"/>
         
         <record id="view_product_hr_expense_form" model="ir.ui.view">
 			<field name="name">product.product.expense.form</field>

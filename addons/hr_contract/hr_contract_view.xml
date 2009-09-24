@@ -83,7 +83,7 @@
                                 <field name="function"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="working_hours_per_day"/>
+                                <field name="working_hours_per_day_id"/>
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
                             </tree>
@@ -94,7 +94,7 @@
                                 <newline/>
                                 <separator colspan="4" string="Contract Duration"/>
                                 <field name="function"/>
-                                <field name="working_hours_per_day"/>
+                                <field name="working_hours_per_day_id"/>
                                 <field name="date_start" select="1"/>
                                 <field name="date_end" select="1"/>
                                 
@@ -155,7 +155,7 @@
                     <separator colspan="4" string="Contract Duration"/>
                     <field name="date_start" select="1"/>
                     <field name="date_end" select="1"/>
-                    <field name="working_hours_per_day"/>
+                    <field name="working_hours_per_day_id"/>
                     <newline/>
                     
                     <separator colspan="4" string="Remuneration"/>
@@ -189,7 +189,7 @@
                     <field name="function"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="working_hours_per_day"/>
+                    <field name="working_hours_per_day_id"/>
                     <field name="wage_type_id"/>
                     <field name="wage"/>
                 </tree>
@@ -200,11 +200,12 @@
             <field name="name">Contract</field>
             <field name="res_model">hr.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
         
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root"/>
+        <menuitem name="Contract" id="menu_hr_contract" parent="hr.menu_hr_root"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="menu_hr_contract"/>
         
     </data>
 </openerp>

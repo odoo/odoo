@@ -73,10 +73,10 @@
 						<separator string="Status" colspan="4"/>
 						<field name="state" select="1"/>
 						<group col="4" colspan="2">
-							<button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
-							<button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
-							<button string="Event Done" name="button_done" states="confirm" type="object"/>
-							<button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object"/>
+                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
+                           <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+                           <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
+                           <button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object" icon="gtk-convert"/>
 						</group>
 					</page>
 					<page string="Mailing">
@@ -119,44 +119,47 @@
 		</record>
 
 	<!-- Events Organisation/CONFIGURATION/EVENTS  -->
-		<record model="ir.actions.act_window" id="action_new_event_form">
+       <record model="ir.actions.act_window" id="action_event_view">
+           <field name="name">Events</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">event.event</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+       </record>
+       
+       <menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />	
+	    
+	    <record model="ir.actions.act_window" id="action_new_event_form">
 			<field name="name">New event</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">event.event</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
 		</record>
-		<menuitem parent="menu_event_main" id="menu_event_new_event" action="action_new_event_form" />
 
-
-		<record model="ir.actions.act_window" id="action_event_view">
-			<field name="name">Events</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">event.event</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main"/>
+        <menuitem parent="menu_event_event" id="menu_event_new_event" action="action_new_event_form" />
 
 		<record model="ir.actions.act_window" id="action_event_view_draft">
 			<field name="name">Draft Events</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">event.event</field>
 			<field name="domain">[('state','=','draft')]</field>
+            <field name="filter" eval="True"/>			
 		</record>
 		<menuitem
 			parent="menu_event_event"
 			id="menu_event_event_draft"
-			action="action_event_view_draft" />
+            action="action_event_view_draft" groups="base.group_extended_menu"/>
 		<record model="ir.actions.act_window" id="action_event_view_confirm">
 			<field name="name">Confirmed Events</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">event.event</field>
 			<field name="domain">[('state','=','confirm')]</field>
+            <field name="filter" eval="True"/>			
 		</record>
 		<menuitem parent="menu_event_event"
 			id="menu_event_event_confirm"
-			action="action_event_view_confirm" />
+            action="action_event_view_confirm" groups="base.group_extended_menu"/>
 
 
 	<!-- EVENTS/REGISTRATIONS/EVENTS  -->
@@ -189,7 +192,7 @@
 						<field name="nb_register"/>
 						<group colspan="2">
 							<field name="user_id" select="1"/>
-							<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+                            <button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
 						</group>
 						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id)" />
 						<field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
@@ -199,7 +202,7 @@
 					<page string="General">
 						<field name="contact_id" select="2" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
 						<field name="email_from" select="2"/>
-						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+                        <button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
 						<newline/>
 						<separator string="Badge" colspan="4"/>
 						<field name="badge_title" select="2"/>
@@ -209,9 +212,9 @@
 						<separator string="Status" colspan="4"/>
 						<group col="8" colspan="4">
 							<field name="state" select="1" colspan="2"/>
-							<button name="button_reg_close" string="Registration Invoiced" states="open" type="object"/>
-							<button name="%(event_confirm_registration)d" string="Confirm Registration" states="draft" type="action"/>
-							<button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+                            <button name="button_reg_close" string="Registration Invoiced" states="open" type="object" icon="gtk-print"/>
+                            <button name="%(event_confirm_registration)d" string="Confirm Registration" states="draft" type="action" icon="gtk-apply"/>
+                            <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
 						</group>
 					</page>
 					<page string="Extra Info">
@@ -230,7 +233,8 @@
 						<field name="ref2" colspan="4"/>
 					</page>
 					<page string="History">
-						<field name="history_line" colspan="4" nolabel="1" mode="tree,form">						<form string="Communication history">
+                        <field name="history_line" colspan="4" nolabel="1" mode="tree,form">                        
+                            <form string="Communication history">
 								<field name="date"/>
 								<field name="som"/>
 								<newline/>
@@ -283,27 +287,38 @@
 			name="All Registrations"
 			id="menu_action_registration" parent="menu_event_main"
 			action="action_registration"/>
+        <record model="ir.actions.act_window" id="action_registration_new">
+            <field name="name">New Registration</field>
+            <field name="res_model">event.registration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+       
+        <menuitem parent="menu_action_registration" id="menu_action_registration_new" action="action_registration_new"/>			
+		
 		<record model="ir.actions.act_window" id="action_registration_draft">
 		  <field name="name">Unconfirmed Registrations</field>
 		  <field name="res_model">event.registration</field>
 		  <field name="view_type">form</field>
 		  <field name="domain">[('state','=','draft')]</field>
 		  <field name="view_mode">tree,form</field>
+          <field name="filter" eval="True"/>		  
 		</record>
 		<menuitem
 			parent="menu_action_registration"
 			id="menu_action_registration_draft"
-			action="action_registration_draft"/>
+            action="action_registration_draft" groups="base.group_extended_menu"/>
 		<record model="ir.actions.act_window" id="action_registration_confirm">
 		  <field name="name">Confirmed Registrations</field>
 		  <field name="res_model">event.registration</field>
 		  <field name="view_type">form</field>
 		  <field name="domain">[('state','in',('open','done'))]</field>
+          <field name="filter" eval="True"/>		  
 		</record>
 		<menuitem
 			parent="menu_action_registration"
 			id="menu_action_registration_confirm"
-			action="action_registration_confirm"/>
+            action="action_registration_confirm" groups="base.group_extended_menu"/>
 
 
 	<!-- report , event on registration... start -->

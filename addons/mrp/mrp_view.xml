@@ -453,7 +453,7 @@
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
-                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
+                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>
                         <newline/>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
@@ -470,13 +470,13 @@
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
-                                <button name="action_compute" states="draft" string="Compute Data" type="object"/>
-                                <button name="button_confirm" states="draft" string="Confirm Production"/>
-                                <button name="button_produce" states="ready" string="Start Production"/>
-                                <button name="button_produce_done" states="in_production" string="Production done"/>
-                                <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel"/>
-                                <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
+                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
+                                <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
+                                <button name="button_produce" states="ready" string="Start Production" icon="gtk-media-play"/>
+                                <button name="button_produce_done" states="in_production" string="Production done" icon="gtk-ok"/>
+                                <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
+                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
+                                <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Scheduled Products">
@@ -518,6 +518,26 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_mrp_production_filter" model="ir.ui.view">
+            <field name="name">mrp.production.select</field>
+            <field name="model">mrp.production</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Production">
+                   <group col='6' colspan='4'>
+                       <field name="state" select="1">
+                           <filter icon="terp-mrp" domain="[('state','=','confirmed')]" help="Confirmed Production Orders"/>
+                           <filter icon="terp-mrp" domain="[('state','=','ready')]" help="Production orders which are ready to produce"/>
+                           <filter icon="terp-mrp" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
+                       </field>
+                       <separator orientation="vertical"/>
+                       <field name="name" select='1'/>
+                   </group>
+               </search>
+            </field>
+        </record>
+        
         <record id="mrp_production_action" model="ir.actions.act_window">
             <field name="name">Production Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -525,6 +545,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>            
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
 
@@ -540,7 +561,7 @@
             action="mrp_production_action2_gantt"
             id="menu_production_orders_start_gantt"
             parent="menu_mrp_production_action"
-            sequence="20"/>
+            sequence="20" icon="terp-calendar"/>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
             <field name="name">Production Orders To Start</field>
@@ -549,8 +570,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','ready')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>            
         </record>
-        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action"/>
+        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_extended_menu" />
         <record id="mrp_production_action3" model="ir.actions.act_window">
             <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -558,8 +581,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','in_production')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>            
         </record>
-        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action"/>
+        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_extended_menu"/>
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -567,8 +592,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','confirmed')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>            
         </record>
-        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action"/>
+        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_extended_menu"/>
 
          <record id="mrp_production_new" model="ir.actions.act_window">
             <field name="name">New Production Order</field>
@@ -696,11 +723,11 @@
                         <field colspan="4" name="message" readonly="1"/>
                         <field name="state" readonly="1" select="2"/>
                         <group col="7" colspan="2">
-                            <button name="button_confirm" states="draft" string="Confirm"/>
-                            <button name="button_restart" states="exception" string="Retry"/>
-                            <button name="button_cancel" states="exception,waiting" string="Cancel"/>
-                            <button name="button_check" states="confirmed" string="Run procurement"/>
-                            <button name="button_cancel" states="draft,running" string="Cancel"/>
+                            <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
+                            <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
+                            <button name="button_cancel" states="exception,waiting" string="Cancel" icon="gtk-cancel"/>
+                            <button name="button_check" states="confirmed" string="Run procurement" icon="gtk-media-play"/>
+                            <button name="button_cancel" states="draft,running" string="Cancel" icon="gtk-cancel"/>
                         </group>
                     </page>
                     <page string="Extra Information">
@@ -738,7 +765,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
-        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action"/>
+        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action" groups="base.group_extended_menu"/>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements</field>
@@ -748,7 +775,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering"/>
+        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering" groups="base.group_extended_menu"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements to Fix</field>
@@ -758,7 +785,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
         </record>
-        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5"/>
+        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended_menu"/>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
             <field name="name">Temporary Procurement Exceptions</field>
@@ -768,7 +795,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
-        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5"/>
+        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended_menu"/>
 
          <record id="mrp_procurement_new" model="ir.actions.act_window">
             <field name="name">New Procurement</field>

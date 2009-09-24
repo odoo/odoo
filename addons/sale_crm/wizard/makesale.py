@@ -63,6 +63,9 @@ class make_sale(wizard.interface):
 
     def _makeOrder(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        mod_obj = pool.get('ir.model.data') 
+        result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])        
         case_obj = pool.get('crm.case')
         sale_obj = pool.get('sale.order')
         partner_obj = pool.get('res.partner')
@@ -129,6 +132,7 @@ class make_sale(wizard.interface):
             'res_model': 'sale.order',
             'view_id': False,
             'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']            
         }
         return value
 

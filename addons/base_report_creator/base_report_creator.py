@@ -72,9 +72,9 @@ class report_creator(osv.osv):
     #
     # Should Call self.fields_get !
     #
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+            return super(report_creator, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         report = self.browse(cr, user, context['report_id'])
         models = {}
         for model in report.model_ids:

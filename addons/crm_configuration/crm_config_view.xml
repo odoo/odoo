@@ -63,6 +63,20 @@
             </field>
         </record>
 
+        <!-- calendar view -->
+        <record id="crm_case_calendar_section-view" model="ir.ui.view">
+            <field name="name">crm.case.calendar.section</field>
+            <field name="model">crm.case</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar color="section_id" date_start="date" date_stop="date_deadline" day_length="12" string="Cases">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
     # ------------------------------------------------------ 
     # Stage
     # ------------------------------------------------------ 

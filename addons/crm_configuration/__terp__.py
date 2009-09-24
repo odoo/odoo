@@ -31,7 +31,7 @@ people to intelligently and efficiently manage tasks, issues,
 and requests. It manages key tasks such as communication, 
 identification, prioritization, assignment, resolution and notification.
 
-This module provide screens like: jobs hiring process, leads, business
+This module provide screens like: jobs hiring process, prospects, business
 opportunities, fund raising tracking, support & helpdesk, calendar of
 meetings, eso.
 """,

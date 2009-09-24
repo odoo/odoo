@@ -86,14 +86,13 @@ class hr_contract(osv.osv):
         'function' : fields.many2one('res.partner.function', 'Function'),
         'date_start' : fields.date('Start Date', required=True),
         'date_end' : fields.date('End Date'),
-        'working_hours_per_day' : fields.integer('Working hours per day'),
+        'working_hours_per_day_id' : fields.many2one('hr.timesheet.group','Working hours per day'),
         'wage_type_id' : fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'wage' : fields.float('Wage', required=True),
         'notes' : fields.text('Notes'),
     }
     _defaults = {
         'date_start' : lambda *a : time.strftime("%Y-%m-%d"),
-        'working_hours_per_day' : lambda *a : 8,
     }
 hr_contract()
 

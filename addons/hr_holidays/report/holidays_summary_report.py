@@ -15,26 +15,29 @@ def lengthmonth(year, month):
     return [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month]
 
 def strToDate(dt):
-    dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
-    return dt_date
+    if dt:
+        dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
+        return dt_date
+    else:
+        return 
+    
 
 def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
-
     display={}
 
     if dept==0:
         count=0
-        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False])])
-        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status','state'])
-
+        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status_id','state'])
+        
         for index in range(1,61):
             diff=index-1
             current=som+datetime.timedelta(diff)
-
+            
             for item in ids_date:
                 if current >= strToDate(item['date_from']) and current <= strToDate(item['date_to']):
                     if item['state'] in holiday_type:
-                        display[index]=item['holiday_status'][0]
+                        display[index]=item['holiday_status_id'][0]
                         count=count +1
                     else:
                         display[index]=' '
@@ -68,7 +71,7 @@ class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, data, context):
         depts=[]
         emp_id={}
-        done={}
+#        done={}
 
         cr.execute("select name from res_company")
         res=cr.fetchone()[0]
@@ -78,7 +81,6 @@ class report_custom(report_rml):
 
         cr.execute("select id,name,color_name from hr_holidays_status order by id")
         legend=cr.fetchall()
-
         today=datetime.datetime.today()
 
         first_date=data['form']['date_from']
@@ -130,7 +132,7 @@ class report_custom(report_rml):
 
         while day_diff1>0:
             if month+i<=12:
-                if day_diff1 > lengthmonth(year,i+month): # Not on 30 else you have problems when entering 01-01-2009 for example
+                if day_diff1>30:
                     som1=datetime.date(year,month+i,1)
                     date_xml += ['<dayy number="%d" name="%s" cell="%d"/>' % (x, som1.replace(day=x).strftime('%a'),cell+x) for x in range(1, lengthmonth(year,i+month)+1)]
                     i=i+1
@@ -195,34 +197,37 @@ class report_custom(report_rml):
 
                  emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
                  row_id = row_id +1
-
+                 
         elif data['model']=='ir.ui.menu':
-
             for id in data['form']['depts'][0][2]:
                 dept = pooler.get_pool(cr.dbname).get('hr.department').browse(cr, uid, id, context.copy())
                 depts.append(dept)
+                dept_ids = tuple(data['form']['depts'][0][2])
+                
+                cr.execute("""select dept_user.user_id \
+                from hr_department_user_rel dept_user \
+                where dept_user.department_id = %s\
+                union\
+                select dept.manager_id from hr_department dept\
+                where dept.id = %s""", (id, id))
 
-                cr.execute('select user_id from hr_department_user_rel where department_id=%s', (dept.id,))
                 result=cr.fetchall()
-
                 if result==[]:
                     continue
                 dept_done=0
                 for d in range(0,len(result)):
                     emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr,uid,[('user_id','=',result[d][0])])
                     items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,emp_id[d],['id','name'])
-
                     for item in items:
-                        if item['id'] in done:
-                            continue
-                        else:
-                            if dept_done==0:
-                                emp_xml += emp_create_xml(self,cr,uid,1,holiday_type,row_id,dept.id,dept.name,som, eom)
-                                row_id = row_id +1
-                            dept_done=1
+#                        if item['id'] in done:
+#                            continue
+#                        else:
+                        if dept_done==0:
+                            emp_xml += emp_create_xml(self,cr,uid,1,holiday_type,row_id,dept.id,dept.name,som, eom)
+                            row_id = row_id +1
+                        dept_done=1
 
-                        done[item['id']] = 1
-
+#                        done[item['id']] = 1
                         emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,item['id'],item['name'],som, eom)
                         row_id = row_id +1
 
@@ -234,7 +239,7 @@ class report_custom(report_rml):
         %s
         </report>
         ''' % (months_xml,date_xml, emp_xml)
-
+        
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')

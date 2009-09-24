@@ -65,9 +65,11 @@
 		  <form string="Questionnaires">
 			<field name="name" select="1" />
 			<newline/>
-			<field name="description" select="1" />
+			<separator string="Questions List" colspan="4"/>
+			<field name="questions_ids" colspan="4" nolabel="1"/>
 			<newline/>
-			<field name="questions_ids" colspan="4"/>
+			<separator string="Description" colspan="4"/>
+			<field name="description" colspan="4" select="1" nolabel="1"/>
 		  </form>
 		</field>
 	</record>
@@ -139,7 +141,7 @@
 		<field name="arch" type="xml">
 			<notebook position="inside">
 				<page string="Profiling">
-				  <button string="Use a questionnaire" name="%(wizard_open_questionnaire)d" type="action" colspan="1"/>
+				  <button string="Use a questionnaire" name="%(wizard_open_questionnaire)d" type="action" colspan="1" icon="gtk-justify-fill"/>
 				  <newline/>
 				  <field name="answers_ids" colspan="4" nolabel="1"/>
 				</page>
@@ -164,9 +166,9 @@
 					<field name="description" select="2" colspan="4"/>
 					<field name="state"/>
 					<group col="3" colspan="2">
-						<button name="process_start" states="not running" string="Compute Segmentation" type="object"/>
-						<button name="process_stop" states="running" string="Stop Process" type="object"/>
-						<button name="process_continue" states="running" string="Continue Process" type="object"/>
+						<button name="process_start" states="not running" string="Compute Segmentation" type="object" icon="gtk-apply"/>
+						<button name="process_stop" states="running" string="Stop Process" type="object" icon="gtk-stop"/>
+						<button name="process_continue" states="running" string="Continue Process" type="object" icon="gtk-go-forward"/>
 					</group>
 				</page>
 				<page string="Sales Purchase">

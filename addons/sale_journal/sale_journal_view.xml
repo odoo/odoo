@@ -51,14 +51,14 @@
                     <separator string="States" colspan="4"/>
                     <field name="state"/>
                     <group col="3" colspan="2">
-                        <button name="button_open" string="Open Journal" states="draft" type="object"/>
-                        <button name="button_close" string="Close Journal" states="open" type="object"/>
-                        <button name="button_draft" string="Set to Draft" states="close,open" type="object"/>
+                        <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
+                        <button name="button_close" string="Close Journal" states="open" type="object" icon="gtk-close"/>
+                        <button name="button_draft" string="Set to Draft" states="close,open" type="object" icon="gtk-convert"/>
                     </group>
                 </page>
                 <page string="Sales">
-                    <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object"/>
-                    <button string="Cancel Sales" name="button_sale_cancel" states="draft,open" type="object"/>
+                    <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object" icon="gtk-execute"/>
+                    <button string="Cancel Sales" name="button_sale_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
                     <newline/>
                     <field name="sale_stats_ids" colspan="4" nolabel="1">
                         <tree string="Sales">
@@ -114,9 +114,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
+        <field name="filter" eval="True"/>        
     </record>
     
-    <menuitem name="My Open Journals" id="menu_definition_journal_sales_my_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_my"/>
+    <menuitem name="My Open Journals" id="menu_definition_journal_sales_my_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_my" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="action_definition_journal_tree_all">
         <field name="name">Open journals</field>
@@ -124,9 +125,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','open')]</field>
+        <field name="filter" eval="True"/>        
     </record>
     
-    <menuitem name="All Open Journals" id="menu_definition_journal_sales_all_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_all"/>
+    <menuitem name="All Open Journals" id="menu_definition_journal_sales_all_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_all" groups="base.group_extended_menu"/>
 
     <record model="ir.ui.view" id="sale_journal_sale_order">
         <field name="name">sale.order.journal.view.form</field>

@@ -22,6 +22,7 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+')]'"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone0">
         <field name="sequence" eval="1"/>
@@ -50,6 +51,8 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_inbound_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
         <field name="sequence" eval="1"/>
@@ -78,6 +81,7 @@
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming1">
         <field name="sequence" eval="2"/>
@@ -91,7 +95,7 @@
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming1"/>
     </record>
-    <menuitem name="New Incoming Call" id="menu_crm_case_categ_phone_incoming1"  parent="menu_crm_case_categ_phone_incoming0" action="crm_case_categ_phone_incoming1"/>
+    <menuitem name="New Incoming Call" id="menu_crm_case_categ_phone_incoming1"  parent="menu_crm_case_categ_phone_incoming0" action="crm_case_categ_phone_incoming1" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming2">
         <field name="name">Planned Calls</field>
@@ -99,7 +103,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+'), (\'state\',\'=\',\'\open\')]'"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+'), (\'state\',\'=\',\'open\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_inbound_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming2">
         <field name="sequence" eval="1"/>
@@ -119,7 +126,7 @@
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming2"/>
     </record>
-    <menuitem name="Planned Calls" id="menu_crm_case_categ_phone_incoming2"  parent="menu_crm_case_categ_phone_incoming0" action="crm_case_categ_phone_incoming2"/>
+    <menuitem name="Planned Calls" id="menu_crm_case_categ_phone_incoming2"  parent="menu_crm_case_categ_phone_incoming0" action="crm_case_categ_phone_incoming2" groups="base.group_extended_menu"/>
 
 ################################################################
     <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing0">
@@ -129,6 +136,7 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_outbound_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">
         <field name="sequence" eval="1"/>
@@ -170,7 +178,7 @@
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_outgoing1"/>
     </record>
-    <menuitem name="New Outgoing Call" id="menu_crm_case_categ_phone_outgoing1"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing1"/>
+    <menuitem name="New Outgoing Call" id="menu_crm_case_categ_phone_outgoing1"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing1" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing2">
         <field name="name">Planned Calls</field>
@@ -178,7 +186,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone2'))+'), (\'state\',\'=\',\'open\')]'"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone2'))+'), (\'state\',\'=\',\'draft\')]'"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_outbound_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing2">
         <field name="sequence" eval="1"/>
@@ -198,7 +208,7 @@
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_outgoing2"/>
     </record>
-    <menuitem name="Planned Calls" id="menu_crm_case_categ_phone_outgoing2"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing2"/>
+    <menuitem name="Planned Calls" id="menu_crm_case_categ_phone_outgoing2"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing2" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing4">
         <field name="name">Calls Not Held</field>
@@ -207,6 +217,8 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone2'))+'), (\'state\',\'=\',\'pending\')]'"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_outbound_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing4">
         <field name="sequence" eval="1"/>
@@ -226,7 +238,7 @@
         <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_outgoing4"/>
     </record>
-    <menuitem name="Calls Not Held" id="menu_crm_case_categ_phone_outgoing4"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing4"/>
+    <menuitem name="Calls Not Held" id="menu_crm_case_categ_phone_outgoing4"  parent="menu_crm_case_categ_phone_outgoing0" action="crm_case_categ_phone_outgoing4" groups="base.group_extended_menu"/>
 
 </data>
 </openerp>

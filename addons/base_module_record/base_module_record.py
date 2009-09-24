@@ -39,7 +39,7 @@ class recording_objects_proxy(objects_proxy):
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
-            if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
+            if args[4] in ('copy','write','unlink','create'):
                 if _old_args is not None:
                     args[5].update(_old_args)
                     if args[5]:
@@ -198,6 +198,8 @@ class base_module_record(osv.osv):
             if mod_fields[key]['type'] == 'many2one':
                 if type(data[key])==type(True) or type(data[key])==type(1):
                     result[key]=data[key]
+                elif not data[key]:
+                    result[key] = False                    
                 else:
                     result[key]=data[key][0]
 

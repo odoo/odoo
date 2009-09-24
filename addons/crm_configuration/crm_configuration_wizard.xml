@@ -2,6 +2,12 @@
 <openerp>
     <data>
 
+       <wizard 
+           string="History of Events" 
+           name="crm.case.history.events" 
+           model="crm.case" 
+           id="wizard_case_history_event" />
+
         <wizard
             id="wizard_crm_partner_create"
             keyword="client_action_multi"
@@ -26,6 +32,13 @@
             multi="True"
             string="Convert To Opportunity"/>
 
+        <wizard
+            id="wizard_crm_reschedule_phone_call"
+            keyword="client_action_multi"
+            model="crm.case"
+            name="crm.case.reschedule_phone_call"
+            multi="True"
+            string="Schedule Phone Call" />
 
     </data>
 </openerp>

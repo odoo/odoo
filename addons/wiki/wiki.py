@@ -41,14 +41,16 @@ class WikiGroup(osv.osv):
     _order = 'name'
     _columns={
        'name':fields.char('Wiki Group', size=256, select=True, required=True),
-       'parent_id':fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
-       'child_ids':fields.one2many('wiki.groups', 'parent_id', 'Child Groups'),
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description", select=True),
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
-       'home':fields.many2one('wiki.wiki', 'Pages')
+       'method':fields.selection([('list','List'),('page','Home Page'),('tree','Tree')],'Display Method'),
+       'home':fields.many2one('wiki.wiki', 'Pages'),
+    }
+    _defaults = {
+        'method': lambda *a: 'page',
     }
 WikiGroup()
 
@@ -77,11 +79,14 @@ class Wiki(osv.osv):
         'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
         'summary':fields.char('Summary',size=256, select=True),
-        'section': fields.char('Section', size=32, help="Use page section code like 1.2.1"),
+        'section': fields.char('Sequence', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
         'toc':fields.boolean('Table of Contents'),
-        'review': fields.boolean('Need Review')
+        'review': fields.boolean('Need Review'),
+        'parent_id':fields.many2one('wiki.wiki', 'Parent Page'),
+        'child_ids':fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
+    
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
         if (not group_id) or content:
             return {}

@@ -8,7 +8,7 @@
             <field name="model">report.sale.order.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales by Product">
+                <form string="Sale Orders by Product">
                     <field name="name" select="1"/>
                     <field name="product_id" select="1"/>
                     <field name="count"/>
@@ -20,13 +20,12 @@
             </field>
         </record>
         
-        
         <record id="view_order_product_tree" model="ir.ui.view">
             <field name="name">report.sale.order.product.tree</field>
             <field name="model">report.sale.order.product</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales by Product">
+                <tree string="Sale Orders by Product">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="count"/>
@@ -43,7 +42,7 @@
              <field name="model">report.sale.order.product</field>
              <field name="type">graph</field>
              <field name="arch" type="xml">
-                 <graph string="Sales by Product" type="pie">
+                 <graph string="Average Sales by Product" type="pie">
                      <field name="product_id"/>
                      <field name="price_average"/>
                  </graph>
@@ -51,7 +50,7 @@
         </record>
         
         <record id="action_order_product_tree" model="ir.actions.act_window">
-            <field name="name">Sales by Product (this month)</field>
+            <field name="name">Sale Orders by Product (this month)</field>
             <field name="res_model">report.sale.order.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -59,7 +58,7 @@
         </record>
         <menuitem id="next_id_80" name="Reporting" parent="sale.menu_sale_root"/><menuitem id="next_id_81" name="This Month" parent="next_id_80"/><menuitem action="action_order_product_tree" id="menu_report_order_product" parent="next_id_81"/>
         <record id="action_order_product_tree_all" model="ir.actions.act_window">
-            <field name="name">Sales by Product</field>
+            <field name="name">Sale Orders by Product</field>
             <field name="res_model">report.sale.order.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -73,7 +72,7 @@
             <field name="model">report.sale.order.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Orders by category">
+                <form string="Sale Orders by category">
                     <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
                     <field name="count"/>
@@ -90,7 +89,7 @@
             <field name="model">report.sale.order.category</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales by Category of Products">
+                <tree string="Sale Orders by Category of Products">
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="count"/>
@@ -107,22 +106,22 @@
             <field name="model">report.sale.order.category</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Sales by Category of Products" type="pie">
+                <graph string="Average Sales by Category of Products" type="pie">
                     <field name="category_id"/>
                     <field name="price_average"/>
                 </graph>
             </field>
         </record>
         <record id="action_order_category_tree" model="ir.actions.act_window">
-            <field name="name">Sales by Category of Product (this month)</field>
+            <field name="name">Sale Orders by Category of Product (this month)</field>
             <field name="res_model">report.sale.order.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+            <field name="domain">[('name','=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_category_tree" id="menu_report_order_category" parent="report_sale.next_id_81"/>
         <record id="action_order_category_tree_all" model="ir.actions.act_window">
-            <field name="name">Sales by Category of Products</field>
+            <field name="name">Sale Orders by Category of Products</field>
             <field name="res_model">report.sale.order.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -135,14 +134,14 @@
              <field name="model">sale.order</field>
              <field name="type">graph</field>
              <field name="arch" type="xml">
-                 <graph string="Sales orders" type="pie">
+                 <graph string="Sale orders" type="pie">
                      <field name="partner_id"/>
                      <field name="amount_untaxed"/>
                  </graph>
              </field>
         </record>
         <record id="action_order_sale_list" model="ir.actions.act_window">
-            <field name="name">Sales of the Month</field>
+            <field name="name">Sale Orders of the Month</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
@@ -155,7 +154,7 @@
              <field name="model">sale.order</field>
              <field name="type">graph</field>
              <field name="arch" type="xml">
-                 <graph string="Sales by State" type="bar">
+             <field name="name">Sale Orders by State</field>
                      <field name="state"/>
                      <field name="amount_total"/>
                  </graph>
@@ -248,7 +247,7 @@
             <field name="model">report.sale.order.created</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Created Sales orders">
+                <tree string="Created Sale orders">
                 	<field name="create_date" select="1"/>
                     <field name="date_order"/>
                     <field name="name" string="Reference" select="1"/>

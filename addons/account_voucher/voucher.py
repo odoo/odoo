@@ -248,7 +248,8 @@ class account_voucher(osv.osv):
                 ref = inv.reference
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
-                
+
+            acc_id = None                    
             date = inv.date
             total_currency = 0
             acc_id = None

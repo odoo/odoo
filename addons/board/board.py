@@ -86,9 +86,9 @@ class board_board(osv.osv):
 
         return id
     
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = {}
-        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         
         vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
         if vids:

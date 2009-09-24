@@ -22,7 +22,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm_configuration.crm_case_tree_view_leads"/>
-			<field name="domain">[('section_id.name', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+            <field name="domain">[('section_id.name', '=', 'Prospects'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_my_meetings">
@@ -45,7 +45,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_lead_stage_graph1"/>
-			<field name="domain">[('section_id.name', '=', 'Leads'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+            <field name="domain">[('section_id.name', '=', 'Prospects'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 					
 		<record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -75,7 +75,7 @@
 						<child1>
 
 							<action
-								string="My Leads"
+                                string="My Prospects"
 								name="%(act_my_leads)d"
 								colspan="4"
 								height="150"
@@ -97,7 +97,7 @@
 
 						<child2>
 							<action
-								string="My Leads By Stage"
+                                string="My Prospects By Stage"
 								name="%(act_my_leads_stage)d"
 								colspan="4"/>
 

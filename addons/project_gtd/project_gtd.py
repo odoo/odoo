@@ -21,7 +21,7 @@
 ##############################################################################
 
 from xml import dom
-
+from lxml import etree
 
 from mx import DateTime
 from mx.DateTime import now
@@ -90,8 +90,8 @@ class project_gtd_timebox(osv.osv):
         'col_planned_hours': fields.boolean('Planned Hours'),
         'col_effective_hours': fields.boolean('Effective Hours'),
     }
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
-        res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if (res['type']=='form') and ('record_id' in context):
             if context['record_id']:
                 rec = self.browse(cr, uid, int(context['record_id']), context)
@@ -137,7 +137,7 @@ class project_gtd_timebox(osv.osv):
         </notebook>
     </form>
             """
-        doc = dom.minidom.parseString(res['arch'])
+        doc = etree.XML(res['arch'])
         xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
         res['arch'] = xarch
         res['fields'] = xfields
@@ -171,6 +171,39 @@ class project_task(osv.osv):
     _defaults = {
         'context_id': _get_context
     }
+    
+    def next_timebox(self, cr, uid, ids, *args):
+        for timebox in self.browse(cr, uid , ids):
+            if timebox.timebox_id.type=='daily':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','weekly')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id' : timebox_ids[0]})
+            if timebox.timebox_id.type=='weekly':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','monthly')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id' : timebox_ids[0]})
+            if timebox.timebox_id.type=='monthly':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','other')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id':timebox_ids[0]})
+        return True
+
+    def prev_timebox(self, cr, uid, ids, *args):
+        for timebox in self.browse(cr, uid , ids):
+            if timebox.timebox_id.type=='other':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','monthly')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id' : timebox_ids[0]})
+            if timebox.timebox_id.type=='monthly':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','weekly')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id' : timebox_ids[0]})
+            if timebox.timebox_id.type=='weekly':
+                timebox_ids = self.pool.get('project.gtd.timebox').search(cr, uid, [('type','=','daily')])
+                if timebox_ids:
+                    self.write(cr, uid, ids, {'timebox_id':timebox_ids[0]})
+        return True
+    
     # Override read for using this method if context set !!!
     #_order = "((55-ascii(coalesce(priority,'2')))*2 +  coalesce((date_start::date-current_date)/2,8))"
 project_task()

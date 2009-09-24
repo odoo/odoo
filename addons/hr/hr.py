@@ -131,7 +131,7 @@ class hr_employee(osv.osv):
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
         'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
-        'marital': fields.selection([('maried','Maried'),('unmaried','Unmaried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
+        'marital': fields.selection([('married','Married'),('unmarried','Unmarried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
 
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),

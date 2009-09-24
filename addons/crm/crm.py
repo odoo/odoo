@@ -21,12 +21,18 @@
 ##############################################################################
 
 import time
-import tools
-from osv import fields,osv,orm
+import re
+import os
 
 import mx.DateTime
 import base64
+
 from tools.translate import _
+
+import tools
+from osv import fields,osv,orm
+from osv.orm import except_orm
+
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -64,6 +70,7 @@ class crm_case_section(osv.osv):
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
+        "gateway_ids" : fields.one2many("crm.email.gateway",'section_id',"Email Gateway")        
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -197,6 +204,101 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
+class crm_email_gateway(osv.osv):
+    _name = "crm.email.gateway"
+    _description = "Email Gateway"
+    _rec_name="login"
+    _columns = {
+        'pop': fields.char('POP Server Name',size=64,required=True ,help="POP Server Name Of Email gateway"),
+        'login': fields.char('User',size=64,required=True,help="User Login Id of Email gateway"),
+        'password': fields.char('Password',size=64,required=True,help="User Password Of Email gateway"),
+        'email': fields.char('Email Id',size=64,help="Default eMail in case of any trouble."),
+        'mailgateway':fields.selection([("fetchmail","Using Fetchmail"),("postfix","Using Postfix")],"EMail gateway", readonly=True),
+        'section_id':fields.many2one('crm.case.section',"Section"),
+        'path':fields.char("Path ",size=255,required= True,help ="Path of script file of Email gateway"),          
+        'port':fields.integer("Port" , help="Port Number "),
+        'ssl':fields.boolean('Use Secure Authentication',help ="Use Secure Authentication"),        
+    }
+    _defaults = {
+        'path': lambda *a: tools.config['addons_path']+"/crm/scripts/openerp-mailgate/openerp-mailgate.py",
+        'port':lambda * a:110,
+        'mailgateway':lambda * a:'fetchmail',
+        }
+
+    def _get_fetchmail_path(self, cr):
+        return os.path.join(tools.config['root_path'], '.fetchmail', cr.dbname)
+
+    def fetch_mail(self, cr, uid, section_ids=[], context={}):        
+        path = self._get_fetchmail_path(cr)
+        sect_obj = self.pool.get("crm.case.section")        
+        if not len(section_ids):
+            section_ids = sect_obj.search(cr, uid, [])
+        for section in sect_obj.browse(cr, uid, section_ids):
+            fetch_file = path + "/" +section.name            
+            if os.path.isfile(fetch_file):                   
+                try :                                                            
+                    os.system("fetchmail -f %s" %(fetch_file))
+                except Exception, e:
+                    import netsvc
+                    netsvc.Logger().notifyChannel('fetchmail', netsvc.LOG_ERROR, "%s" % e)
+        return True
+
+    def make_fetchmail(self, cr, uid, section_ids=[], context={}):
+        sect_obj = self.pool.get("crm.case.section")
+        user_obj = self.pool.get("res.users")        
+        for section in sect_obj.browse(cr, uid, section_ids, context):
+            user = user_obj.browse(cr,uid,uid)
+            path = self._get_fetchmail_path(cr)
+            if not os.path.isdir(path):            
+                try:
+                    os.makedirs(path)                    
+                except:
+                    raise except_orm(_('Permission Denied !'), _('You do not permissions to write on the server side.'))
+                         
+            fmail_path =  path + "/" +section.name
+            fmail = open(fmail_path , 'w')
+            os.chmod(fmail_path,0710)
+            for mailgateway in section.gateway_ids: 
+                mdatext = '%s  -u %d -p %s -s %d  -d %s '%(mailgateway.path,uid,user.password,mailgateway.section_id.id,cr.dbname)        
+                if mailgateway.email:
+                    mdatext += ' -m %s'%(mailgateway.email)
+                if section.reply_to:
+                    mdatext += ' -e %s'%(section.reply_to) 
+                text = "\npoll %s  user '%s' password '%s'"%(mailgateway.pop,mailgateway.login,mailgateway.password)
+                if mailgateway.port:
+                    text += ' port %d' % (mailgateway.port)
+                if mailgateway.ssl:
+                    text += ' ssl'   
+                text += " mda '%s'"%(mdatext)
+                fmail.write(text)
+            fmail.close() 
+    
+    def create(self, cr, uid, vals, context=None):
+        res = super(crm_email_gateway, self).create(cr, uid, vals, context=context)        
+        self.make_fetchmail(cr, uid, [vals['section_id']])
+        return res
+    
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        res = super(crm_email_gateway, self).write(cr, uid, ids, vals, context)
+        section_ids = [] 
+        for gateway in self.browse(cr, uid, ids, context):  
+           if gateway.section_id.id not in section_ids:
+                section_ids.append(gateway.section_id.id)
+        self.make_fetchmail(cr, uid, section_ids)
+        return res
+    
+    def unlink(self, cr, uid, ids, context={}, check=True):
+        section_ids = []
+        for gateway in self.browse(cr, uid, ids, context):  
+           if gateway.section_id.id not in section_ids:
+                section_ids.append(gateway.section_id.id)
+        res = super(crm_email_gateway, self).unlink(cr, uid,ids, context=context)
+        
+        self.make_fetchmail(cr, uid, section_ids)        
+        return res
+
+crm_email_gateway()
+
 class crm_case_categ(osv.osv):
     _name = "crm.case.categ"
     _description = "Category of case"
@@ -228,7 +330,8 @@ class crm_case_rule(osv.osv):
             ('deadline','Deadline'),
             ('date','Date'),
             ], 'Trigger Date', size=16),
-        'trg_date_range': fields.integer('Delay after trigger date'),
+        'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date, specifies you can put a negative number " \
+                                                             "if you need a delay before the trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
 
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
@@ -247,17 +350,21 @@ class crm_case_rule(osv.osv):
         'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
         'act_user_id': fields.many2one('res.users', 'Set responsible to'),
         'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people will receive a copy of the futur communication between partner and users by email"),
+        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people will receive a copy of the future communication between partner and users by email"),
 
         'act_remind_partner': fields.boolean('Remind Partner', help="Check this if you want the rule to send a reminder by email to the partner."),
         'act_remind_user': fields.boolean('Remind responsible', help="Check this if you want the rule to send a reminder by email to the user."),
         'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the case be attached to the reminder email sent."),
 
-        'act_mail_to_user': fields.boolean('Mail to responsible'),
-        'act_mail_to_partner': fields.boolean('Mail to partner'),
-        'act_mail_to_watchers': fields.boolean('Mail to watchers (Cc)'),
-        'act_mail_to_email': fields.char('Mail to these emails', size=128),
-        'act_mail_body': fields.text('Mail body')
+        'act_mail_to_user': fields.boolean('Mail to responsible',help="Check this if you want the rule to send an email to the responsible person."),
+        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this if you want the rule to send an email to the partner."),
+        'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)',help="Check this if you want the rule to mark CC(mail to any other person defined in actions)."),
+        'act_mail_to_email': fields.char('Mail to these emails', size=128,help="Email-id of the persons whom mail is to be sent"),
+        'act_mail_body': fields.text('Mail body',help="Content of mail"),
+        'regex_name' : fields.char('Regular Expression on Case Name', size=128),
+        'regex_history' : fields.char('Regular Expression on Case History', size=128),
+        'server_action_id' : fields.many2one('ir.actions.server','Server Action',help="Describes the action name." \
+                                                    "eg:on which object which ation to be taken on basis of which condition"),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -334,23 +441,27 @@ class crm_case(osv.osv):
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active'),
         'description': fields.text('Your action'),
-        'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
+        'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),
         'probability': fields.float('Probability (%)'),
-        'email_from': fields.char('Partner Email', size=128),
-        'email_cc': fields.char('Watchers Emails', size=252),
+        'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
+        'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
+                                                                    " communication between partner and users by email"),
         'email_last': fields.function(_email_last, method=True,
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-        'som': fields.many2one('res.partner.som', 'State of Mind'),
+        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
+                                                                       "the partner mentality in relation to our services.The scale has" \
+                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'date': fields.datetime('Date'),
         'create_date': fields.datetime('Created' ,readonly=True),
         'date_deadline': fields.datetime('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel'),
+        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."), 
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication', readonly=1),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History', readonly=1),
@@ -429,6 +540,28 @@ class crm_case(osv.osv):
                     )
                     ok = ok and (not action.trg_priority_from or action.trg_priority_from>=case.priority)
                     ok = ok and (not action.trg_priority_to or action.trg_priority_to<=case.priority)
+
+                    reg_name = action.regex_name
+                    result_name = True
+                    if reg_name:
+                        ptrn = re.compile(str(reg_name))
+                        _result = ptrn.search(str(case.name))
+                        if not _result:
+                            result_name = False
+                    regex_n = not reg_name or result_name     
+                    ok = ok and regex_n
+                    
+                    reg_history = action.regex_history
+                    result_history = True
+                    if reg_history:
+                        ptrn = re.compile(str(reg_history))
+                        if case.history_line:
+                            _result = ptrn.search(str(case.history_line[0].description))
+                            if not _result:
+                                result_history = False
+                    regex_h = not reg_history or result_history        
+                    ok = ok and regex_h
+                                            
                     if not ok:
                         continue
 
@@ -466,6 +599,9 @@ class crm_case(osv.osv):
                         ok = action.trg_date_type=='none'
 
                     if ok:
+                        if action.server_action_id:
+                            context.update({'active_id':case.id,'active_ids':[case.id]})
+                            self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)                        
                         write = {}
                         if action.act_state:
                             case.state = action.act_state
@@ -515,7 +651,7 @@ class crm_case(osv.osv):
         return True
 
     def format_body(self, body):
-        return (body or u'').encode('utf8', 'replace')
+        return body and tools.ustr(body.encode('ascii', 'replace')) or ''
 
     def format_mail(self, case, body):
         data = {
@@ -610,13 +746,13 @@ class crm_case(osv.osv):
     def remind_user(self, cr, uid, ids, context={}, attach=False,
             destination=True):
         for case in self.browse(cr, uid, ids):
+            if not case.section_id.reply_to:
+                raise osv.except_osv(_('Error!'),("Reply TO is not specified in Section"))
+            if not case.email_from:
+                raise osv.except_osv(_('Error!'),("Partner Email is not specified in Case"))            
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 
-                if not src:
-                    raise osv.except_osv(_('Error!'),
-                        _("No E-Mail ID Found for the Responsible Partner or missing reply address in section!"))
-                    
                 dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:
@@ -633,7 +769,7 @@ class crm_case(osv.osv):
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
                 
                 # Send an email
-                tools.email_send(
+                flag = tools.email_send(
                     src,
                     dest,
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
@@ -642,7 +778,10 @@ class crm_case(osv.osv):
                     tinycrm=str(case.id),
                     attach=attach_to_send
                 )
-
+                if flag:
+                    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))   
+                else:                    
+                    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
         return True
 
     def add_reply(self, cursor, user, ids, context=None):
@@ -802,7 +941,7 @@ class crm_case_log(osv.osv):
     _description = "Case Communication History"
     _order = "id desc"
     _columns = {
-        'name': fields.char('Action', size=64),
+        'name': fields.char('Status', size=64),
         'som': fields.many2one('res.partner.som', 'State of Mind'),
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),

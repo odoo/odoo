@@ -30,7 +30,7 @@ section_form = '''<?xml version="1.0"?>
     <separator string="Menu Information" colspan="4"/>
     <field name="menu_name"/>
     <field name="menu_parent_id"/>
-    <field name="page" colspan="4" domain="[('group_id','=', active_id)]"/>
+    <field name="page" colspan="4"/>
 </form>'''
 
 section_fields = {

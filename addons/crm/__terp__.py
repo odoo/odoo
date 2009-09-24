@@ -27,7 +27,7 @@
     'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
+prospects, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 

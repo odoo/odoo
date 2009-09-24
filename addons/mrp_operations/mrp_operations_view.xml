@@ -19,8 +19,8 @@
                 <field name="cycle"/>
                 <field name="hour"/>
                 <field name="state" />
-                <button name="button_start_working" string="Start working" states="draft,pause"/>
-                <button name="button_done" string="Finished" states="startworking"/>
+                <button name="button_start_working" string="Start working" states="draft,pause" icon="gtk-go-forward"/>
+                <button name="button_done" string="Finished" states="startworking" icon="gtk-jump-to"/>
             </tree>
         </field>
     </record>
@@ -151,6 +151,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph,gantt,calendar</field>
         <field name="domain">[('production_state','=','ready')]</field>
+        <field name="filter" eval="True"/>        
     </record>
 
     <!-- Action for Draft Operations   -->
@@ -162,6 +163,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="domain">[('state','=','draft')]</field>
+        <field name="filter" eval="True"/>        
     </record>
 
     <record model="ir.values" id="mrp_production_wc_action_open">

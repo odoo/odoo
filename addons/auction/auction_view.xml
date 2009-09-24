@@ -76,7 +76,7 @@
 	</record>
 	<menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" id="menu_auction_object_cat"/>
 	=======================================================
-Auction Management/Auction Dates/New Auction Dates
+    Auction Management/Auction Dates/New Auction Dates
 	=======================================================
 	<record model="ir.ui.view" id="view_auction_dates_tree">
 		<field name="name">Auction dates</field>
@@ -114,7 +114,7 @@ Auction Management/Auction Dates/New Auction Dates
 				<field name="account_analytic_id"/>
 				<separator string="State" colspan="4"/>
 				<field name="state"/>
-				<button name="close" states="draft" string="Close + Create all invoices" type="object" colspan="2"/>
+				<button name="close" states="draft" string="Close + Create all invoices" type="object" colspan="2" icon="gtk-print"/>
 			</form>
 		</field>
 	</record>
@@ -150,8 +150,8 @@ Auction Management/Auction Dates/New Auction Dates
 
 
 
-=======================================================
-Auction Management/Auction Dates/Reporting
+    =======================================================
+    Auction Management/Auction Dates/Reporting
 	=======================================================
 	<!-- tree1 form1 for NEW object in the deposit border -->
 	<record model="ir.ui.view" id="v5">
@@ -287,11 +287,11 @@ Auction Management/Auction Dates/Reporting
 					<field name="obj_desc" colspan="4" nolabel="1" select="2"/>
 					<field name="state" colspan="1" select="2"/>
 				 	<group col="4" colspan="2">
-						<button name="button_bought" string="Sold" states="draft" type="object"/>
-						<button name="button_not_bought" string="Not sold" states="draft" type="object"/>
-						<button name="button_taken_away" string="Taken away" states="sold" type="object"/>
-						<button name="button_draft" string="Set to draft" states="sold,unsold" type="object"/>
-						<button name="button_unpaid" string="Set to draft" states="paid" type="object"/>
+				 	   <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
+                       <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+                       <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                       <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
+                       <button name="button_unpaid" string="Set to draft" states="paid" type="object" icon="gtk-convert"/>
 					</group>
 				</page>
 
@@ -369,28 +369,31 @@ Auction Management/Auction Dates/Reporting
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','sold')]</field>
+        <field name="filter" eval="True"/>		
 	</record>
 
 	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu"/>
 	<menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
 
-	<menuitem name="Sold Objects" parent="auction_all_objects_menu" action="action_all_objects_sold" id="menu_all_objects_sold1"/>
+	<menuitem name="Sold Objects" parent="auction_all_objects_menu" action="action_all_objects_sold" id="menu_all_objects_sold1" groups="base.group_extended_menu"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_to_sell">
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','&lt;&gt;','sold')]</field>
+        <field name="filter" eval="True"/>		
 	</record>
-	<menuitem name="Objects to sell" parent="auction_all_objects_menu" action="action_all_objects_to_sell" id="menu_all_objects_to_sell"/>
+	<menuitem name="Objects to sell" parent="auction_all_objects_menu" action="action_all_objects_to_sell" id="menu_all_objects_to_sell" groups="base.group_extended_menu"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_unplanned">
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
+        <field name="filter" eval="True"/>		
 	</record>
-	<menuitem name="Unplanned objects" parent="auction_all_objects_menu" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1"/>
+	<menuitem name="Unplanned objects" parent="auction_all_objects_menu" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1" groups="base.group_extended_menu"/>
 
 
 	<!--		for the sold object  start-->
@@ -400,12 +403,14 @@ Auction Management/Auction Dates/Reporting
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','unsold')]</field>
+        <field name="filter" eval="True"/>		
 	</record>
 	<menuitem
 		name="Unsold Objects"
 		parent="auction_all_objects_menu"
 		action="action_all_objects_unsold"
-		id="menu_all_objects_unsold"/>
+		id="menu_all_objects_unsold"
+		groups="base.group_extended_menu"/>
 
 
 
@@ -449,11 +454,11 @@ Auction Management/Auction Dates/Reporting
 					</field>
 					<field name="state" readonly="1"/>
 					<group colspan="2" col="4">
-					<button name="button_bought" string="Sold" states="draft" type="object"/>
-					<button name="button_not_bought" string="Not sold" states="draft" type="object"/>
-					<button name="button_draft" string="Set to draft" states="sold,unsold" type="object"/>
-					<button name="button_taken_away" string="Taken away" states="sold" type="object"/>
-					</group>
+	                    <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to" />
+	                    <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+	                    <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
+	                    <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                    </group> 
 				</page>
 				<page string="Statements">
 					<field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
@@ -479,8 +484,9 @@ Auction Management/Auction Dates/Reporting
 		<field name="res_model">report.unclassified.objects</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
+        <field name="filter" eval="True"/>		
 	 </record>
-	<menuitem name="Unclassified objects" parent="auction_all_objects_menu" action="action_unclassified_objects" id="menu_all_objects_unclassified"/>
+	 <menuitem name="Unclassified objects" parent="auction_all_objects_menu" action="action_unclassified_objects" id="menu_all_objects_unclassified" groups="base.group_extended_menu"/>
 
 	<record model="ir.ui.view" id="v12">
 		<field name="name">Auction.deposit.tree</field>

@@ -44,9 +44,12 @@ class account_budget_post(osv.osv):
         'dotation_ids': fields.one2many('account.budget.post.dotation', 'post_id', 'Spreading'),
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
+        'sequence': fields.integer('Sequence'),        
     }
     _defaults = {
+        'sequence': lambda *a: 1,                 
     }
+    _order = "sequence, name"    
 
     def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
         dobj = self.pool.get('account.budget.post.dotation')
@@ -228,7 +231,7 @@ class crossovered_budget_lines(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids):
             if line.theoritical_amount<>0.00:
-                res[line.id]=float(line.practical_amount / line.theoritical_amount)*100
+                res[line.id]=float(line.practical_amount or 0.0 / line.theoritical_amount)*100
             else:
                 res[line.id]=0.00
         return res

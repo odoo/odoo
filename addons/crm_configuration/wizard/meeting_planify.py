@@ -50,14 +50,48 @@ class make_meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-
         case_obj = pool.get('crm.case')
-        new_id = case_obj.write(cr, uid, data['id'], {
+        sec_obj = pool.get('crm.case.section')
+        meeting_id = sec_obj.search(cr, uid, [('code','=','Mtngs')])
+        if not meeting_id:
+            raise wizard.except_wizard(_('Error !'),
+                _('You did not installed the Meetings when you configured the crm_configuration module.' \
+                  '\nyou must create a section with the code \'Mtngs\'.'
+                  ))
+        for case in case_obj.browse(cr, uid, data['ids']):
+            new_id=case_obj.copy(cr, uid, case.id)
+            modif = {
             'date': data['form']['date'],
-            'duration': data['form']['duration']
-        }, context=context)
-        case_obj._history(cr, uid, case_obj.browse(cr, uid, [data['id']]), _('meeting'))
-        return {}
+            'duration': data['form']['duration'],
+            'case_id': case.id,
+            }
+            if meeting_id:
+                modif['section_id']=meeting_id[0]
+            new_id = case_obj.write(cr, uid, [new_id], modif, context=context)
+#        case_obj._history(cr, uid, case_obj.browse(cr, uid, data['ids']), _('meeting'))
+        data_obj = pool.get('ir.model.data')
+        result = data_obj._get_id(cr, uid, 'crm_configuration', 'view_crm_case_meetings_filter')
+        id = data_obj.read(cr, uid, result, ['res_id'])
+        id1 = data_obj._get_id(cr, uid, 'crm_configuration', 'crm_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'crm_configuration', 'crm_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'crm_configuration', 'crm_case_tree_view_meet')
+        if id1:
+            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        return {
+            'domain':"[('section_id','=','Meetings')]",
+            'name': _('Meetings'),
+            'view_type': 'form',
+            'view_mode': 'calendar,form,tree',
+            'res_model': 'crm.case',
+            'view_id': False,
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
+            }
 
     states = {
         'init': {

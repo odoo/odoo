@@ -121,6 +121,9 @@ def _createInvoices(self, cr, uid, data, context={}):
 class sale_advance_payment(wizard.interface):
     def _open_invoice(self, cr, uid, data, context):
         pool_obj = pooler.get_pool(cr.dbname)
+        mod_obj = pool_obj.get('ir.model.data') 
+        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])        
         model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','invoice_form')])
         resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
         return {
@@ -131,7 +134,8 @@ class sale_advance_payment(wizard.interface):
             'res_model': 'account.invoice',
             'views': [(False,'tree'),(resource_id,'form')],
             'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
         }
 
     states = {

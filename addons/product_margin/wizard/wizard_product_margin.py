@@ -27,6 +27,10 @@ import time
 from tools.translate import _
 
 def _action_open_window(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname) 
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
+    id = mod_obj.read(cr, uid, result, ['res_id'])    
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.graph', 'graph'))
     view_res3 = cr.fetchone()[0]
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.form.inherit', 'form'))
@@ -41,7 +45,8 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model':'product.product',
         'type': 'ir.actions.act_window',
         'views': [(view_res,'tree'), (view_res2,'form'), (view_res3,'graph')],
-        'view_id': False
+        'view_id': False,
+        'search_view_id': id['res_id'] 
     }
 
 

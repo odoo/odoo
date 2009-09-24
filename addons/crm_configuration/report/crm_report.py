@@ -26,7 +26,7 @@ import tools.sql
 AVAILABLE_STATES = [
     ('draft','Draft'),
     ('open','Open'),
-    ('cancel', 'Canceled'),
+    ('cancel', 'Cancelled'),
     ('done', 'Closed'),
     ('pending','Pending')
 ]

@@ -1,57 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <wizard
-            id="wizard_base_module_record"
-            string="Record module"
-            model="ir.module.module"
-            multi="True"
-            name="base_module_record.module_record"/>
 
         <menuitem
             parent="base.menu_custom"
             name="Module Creation"
             id="menu_wizard_base_mod_rec"/>
-        <menuitem
-            parent="menu_wizard_base_mod_rec"
-            name="Module Recorder"
-            id="menu_wizard_base_mod_rec_rec"/>
-
-        <menuitem
-            parent="menu_wizard_base_mod_rec_rec"
-            name="Start Recording"
-            type="wizard"
-            action="wizard_base_module_record"
-            id="menu_wizard_base_module_record"/>
-
-        <menuitem
-            parent="menu_wizard_base_mod_rec_rec"
-            name="Stop Recording"
-            type="wizard"
-            action="wizard_base_module_record"
-            id="menu_wizard_base_module_record_stop"/>
-
-
-        <wizard
-            id="wizard_base_module_save"
-            string="Save Recorded Module"
-            model="ir.module.module"
-            multi="True"
-            name="base_module_record.module_save"/>
-
-        <menuitem
-            parent="menu_wizard_base_mod_rec_rec"
-            name="Save Recorded Module"
-            type="wizard"
-            action="wizard_base_module_save"
-            id="menu_wizard_base_module_save"/>
-
+        
         <wizard
             id="wizard_base_module_record_objects"
             string="Export Customizations As a Module"
             model="ir.module.module"
             multi="True"
             name="base_module_record.module_record_objects"/>
+        
         <menuitem
             parent="menu_wizard_base_mod_rec"
             name="Export Customizations As a Module"

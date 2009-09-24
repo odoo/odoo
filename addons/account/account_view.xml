@@ -30,8 +30,8 @@
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1" readonly="1"/>
                     <group col="2" colspan="2">
-                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object"/>
-                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object"/>
+                        <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="gtk-dnd"/>
+                        <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="gtk-dnd"/>
                     </group>
                 </form>
             </field>
@@ -78,7 +78,7 @@
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
-                    <button name="action_draft" states="done" string="Set to Draft" type="object"/>
+                    <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
                 </form>
             </field>
         </record>
@@ -323,7 +323,7 @@
                     <field name="period_id" select="2"/>
                     <group colspan="2" col="3">
                         <button name="%(wizard_populate_statement_from_inv)d"
-                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}"/>
+                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}" icon="gtk-open"/>
                     </group>
                     <newline/>
                     <field name="balance_start"/>
@@ -332,6 +332,7 @@
                         <page string="Entry encoding">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
+                                    <field name="sequence"/>                                
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
@@ -351,6 +352,7 @@
                                     <field name="amount"/>
                                     <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>
+                                    <field name="sequence"/>                                    
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
                                 </form>
@@ -363,9 +365,9 @@
                     <group col="7" colspan="4">
                         <field name="state" select="2"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="gtk-apply"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -384,8 +386,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree"/>
+        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree" groups="base.group_extended_menu"/>
 
         <record id="action_bank_statement_tree2" model="ir.actions.act_window">
             <field name="name">New Statement</field>
@@ -422,7 +425,7 @@
                         <field name="total_entry"/>
                         <field name="total_new"/>
                         <field name="total_balance"/>
-                        <button colspan="2" name="dummy" string="Compute"/>
+                        <button colspan="2" name="dummy" string="Compute" icon="gtk-execute"/>
                     </group>
                 </form>
             </field>
@@ -884,8 +887,8 @@
                     <separator colspan="4" string="State"/>
                     <field name="state" select="1"/>
                     <group col="2" colspan="2">
-                        <button name="button_validate" states="draft" string="Validate" type="object"/>
-                        <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                        <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
+                        <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -984,8 +987,8 @@
                     <group col="7" colspan="4">
                         <field name="state" select="2"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-execute"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
@@ -1110,7 +1113,7 @@
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
                     <group col="1" colspan="4">
-                        <button name="%(wizard_account_use_model)d" string="Create entries" type="action" />
+                        <button name="%(wizard_account_use_model)d" string="Create entries" type="action" icon="gtk-execute"/>
                     </group>
                 </form>
             </field>
@@ -1255,8 +1258,8 @@
                     <field name="period_type"/>
                     <field name="model_id"/>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object"/>
-                        <button name="remove_line" states="running" string="Remove Lines" type="object"/>
+                        <button name="compute" states="draft,running" string="Compute" type="object" icon="gtk-execute"/>
+                        <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
                     <field colspan="4" name="lines_id" widget="one2many_list"/>
@@ -1264,7 +1267,7 @@
                     <separator colspan="4" string="State"/>
                     <field name="state" select="2"/>
                     <group col="1" colspan="2">
-                        <button name="state_draft" states="done" string="Set to Draft" type="object"/>
+                        <button name="state_draft" states="done" string="Set to Draft" type="object"  icon="gtk-convert" />
                     </group>
                 </form>
             </field>
@@ -1283,8 +1286,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','running')]</field>
+            <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form"/>
+        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form" groups="base.group_extended_menu"/>
 
         <record id="action_subscription_form_new" model="ir.actions.act_window">
             <field name="name">New Subscription</field>

@@ -58,7 +58,7 @@ class mrp_procurement(osv.osv):
         report_except = 0
         report_later = 0
         while True:
-            cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
+            cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
                 if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned)  or (proc.procure_method=='make_to_order'):

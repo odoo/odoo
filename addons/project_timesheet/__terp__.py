@@ -34,7 +34,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'project', 'hr_timesheet'],
     'init_xml': [],
-    'update_xml': [],
+    'update_xml': ["process/project_timesheet_process.xml"],
     'demo_xml': [],
     'installable': True,
     'active': False,

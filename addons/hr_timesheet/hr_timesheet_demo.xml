@@ -2,26 +2,12 @@
 <openerp>
     <data noupdate="1">
         
-        <record id="uom_categ_wtime" model="product.uom.categ">
-            <field name="name">Working Time</field>
-        </record>
-        <record id="uom_hour" model="product.uom">
-            <field name="name">Hour</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
-            <field name="factor">8.0</field>
-        </record>
-        <record id="uom_day" model="product.uom">
-            <field name="name">Day</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
-            <field name="factor">1.0</field>
-        </record>
-        
         <record id="product_consultant" model="product.product">
             <field name="default_code">DEV</field>
             <field name="list_price">75.0</field>
             <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="uom_hour"/>
-            <field name="uom_po_id" ref="uom_hour"/>
+            <field name="uom_id" ref="product.uom_hour"/>
+            <field name="uom_po_id" ref="product.uom_hour"/>
             <field name="name">Consultancy - Senior Developer</field>
             <field name="categ_id" ref="product.product_category_10"/>
             <field name="type">service</field>

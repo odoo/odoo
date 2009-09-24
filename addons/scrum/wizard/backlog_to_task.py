@@ -36,7 +36,11 @@ btt_fields = {
 }
 
 def _do_create(self, cr, uid, data, context):
-    backlogs = pooler.get_pool(cr.dbname).get('scrum.product.backlog').browse(cr, uid, data['ids'])
+    pool = pooler.get_pool(cr.dbname)
+    backlogs = pool.get('scrum.product.backlog').browse(cr, uid, data['ids'])
+    mod_obj = pool.get('ir.model.data') 
+    result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     ids = []
     for backlog in backlogs:
         task = pooler.get_pool(cr.dbname).get('scrum.task')
@@ -57,7 +61,8 @@ def _do_create(self, cr, uid, data, context):
         'view_mode': 'tree,form',
         'res_model': 'scrum.task',
         'view_id': False,
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']
     }
     return value
 

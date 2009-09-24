@@ -2,6 +2,18 @@
 <openerp>
     <data>
 
+	    <record id="product_search_form_view_stock" model="ir.ui.view">
+            <field name="name">product.search.stock.form</field>
+            <field name="model">product.product</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+               	<field name="categ_id" select="1" widget="selection" position="after">
+               		<field name="warehouse_id" select="1" widget="selection" context="{'warehouse': self}" />
+               	</field>
+            </field>
+        </record>
+        
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>

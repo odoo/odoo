@@ -2,12 +2,28 @@
 <openerp>
     <data>
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
+        <menuitem id="menu_products_products" name="Products" parent="product.menu_main_product" sequence="18" />        
         <menuitem
             id="menu_config_product"
             name="Configuration"
             parent="product.menu_main_product"
             sequence="1"
             groups="group_product_manager"/>
+
+        <record id="product_search_form_view" model="ir.ui.view">
+            <field name="name">product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Product">
+                   <field name="name" select="1"/>
+                   <field name="default_code" select="1"/>
+                   <field name="categ_id" select="1" widget="selection"/>
+                   <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
+                </search>
+            </field>
+        </record>
+            
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
             <field name="model">product.product</field>
@@ -114,7 +130,7 @@
                         </page>
                         <page string="Prices &amp; Suppliers">
                             <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price"/>
+                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <field name="price_margin" select="1"/>
                             <field name="price_extra" select="1"/>
@@ -162,9 +178,10 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view"/>
+            <field name="search_view_id" ref="product_search_form_view"/>            
         </record>
         
-        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="18"/>
+        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_products_products" sequence="1"/>
         
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
@@ -196,7 +213,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Product Categories">
+                <tree toolbar="True" string="Product Categories">
                     <field name="name"/>
                 </tree>
             </field>
@@ -209,7 +226,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
         </record>
-        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="1"/>
+        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="3"/>
         
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>
@@ -533,7 +550,7 @@
                         </page>
                         <page string="Prices &amp; Suppliers">
                             <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price"/>
+                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
@@ -552,6 +569,15 @@
             </field>
         </record>
         
+        <record id="product_template_action_tree" model="ir.actions.act_window">
+            <field name="name">Product Templates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_template_tree_view"/>
+        </record>
+        
+        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products_products" sequence="2"/>
         
     </data>
 </openerp>

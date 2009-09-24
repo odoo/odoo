@@ -34,7 +34,7 @@ class product_category(osv.osv):
             string="Income Account",
             method=True,
             view_load=True,
-            help="This account will be used to value incoming stock for the current product category"),
+            help="This account will be used to value incoming stock(i.e. credit of incoming goods) for the current product category"),
         'property_account_expense_categ': fields.property(
             'account.account',
             type='many2one',
@@ -42,7 +42,7 @@ class product_category(osv.osv):
             string="Expense Account",
             method=True,
             view_load=True,
-            help="This account will be used to value outgoing stock for the current product category"),
+            help="This account will be used to value outgoing stock(i.e. debit of outgoing goods) for the current product category"),
     }
 product_category()
 

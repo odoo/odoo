@@ -2,7 +2,7 @@
 <openerp>
 	<data>		
 		<record id="crm_configuration.menu_crm_case_categ0_act_leads" model="ir.ui.menu">
-			<field eval="&quot;Leads Tracking&quot;" name="name"/>
+			<field eval="&quot;Prospects Tracking&quot;" name="name"/>
 			<field eval="&quot;terp-account&quot;" name="icon"/>
 			<field eval="False" name="parent_id"/>
 		</record>
@@ -10,7 +10,7 @@
 	<record id="ir_ui_view_sc_myleads0" model="ir.ui.view_sc">
 			<field ref="crm_configuration.menu_crm_case_categ0_act_leads_my" name="res_id"/>
 			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
-			<field eval="&quot;My Leads&quot;" name="name"/>
+			<field eval="&quot;My Prospects&quot;" name="name"/>
 			<field name="user_id" ref="base.user_root"/>
 	</record>
 		

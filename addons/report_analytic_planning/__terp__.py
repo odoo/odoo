@@ -22,20 +22,38 @@
 
 
 {
-    'name': 'Analytic planning - Reporting',
+    'name': 'Planning Management Module',
     'version': '1.0',
-    'category': 'Generic Modules/Accounting',
-    'description': """Planning on analytic accounts.""",
+    'category': 'Generic Modules/Human Ressources',
+    'description': """
+This module helps you to manage your plannings.
+
+This module is based on the analytic accounting and is totally integrated with 
+* the timesheets encoding
+* the holidays management
+* the project management
+
+So that, each department manager can know if someone in his team has still unaloccated time for a given planning (taking in consideration the validated leaves) or if he still needs to encode tasks. 
+
+At the end of the month, the planning manager can also check if the encoded timesheets are respecting the planned time on each analytic account.
+""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['account', 'hr_timesheet_invoice', 'project', 'report_analytic_line'],
+    'depends': [
+        'project', 
+        'hr_timesheet',
+        'hr_holidays',
+    ],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
         'report_analytic_planning_view.xml',
         'report_analytic_planning_report.xml'
     ],
-    'demo_xml': ['report_account_analytic.planning.csv'],
+    'demo_xml': [
+        #'report_account_analytic.planning.csv', 
+        'report_analytic_planning_demo.xml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0034901836973',

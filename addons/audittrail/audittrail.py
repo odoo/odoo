@@ -22,11 +22,11 @@
 
 
 import ir
-from osv import fields,osv
+from osv import fields, osv
 import netsvc
 import pooler
 import string
-import time,copy
+import time, copy
 from tools.translate import _
 
 class audittrail_rule(osv.osv):

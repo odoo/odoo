@@ -38,6 +38,9 @@ class final_invoice_create(wizard.interface):
 
     def _do_create(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        mod_obj = pool.get('ir.model.data') 
+        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+        res = mod_obj.read(cr, uid, result, ['res_id'])
         analytic_account_obj = pool.get('account.analytic.account')
         res_partner_obj = pool.get('res.partner')
         account_payment_term_obj = pool.get('account.payment.term')
@@ -158,7 +161,8 @@ class final_invoice_create(wizard.interface):
             'res_model': 'account.invoice',
             'view_id': False,
             'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window'
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id'] 
         }
 
 

@@ -21,88 +21,82 @@
                     <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
                 </group>
                 <notebook colspan="4">
-                <page string="Meeting">
-                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
-                    <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
-                    <field name="email_from"/>
-                    <newline/>
-                    <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
-                    <field name="category2_id" select="1" string="Location"/>
-                    <separator string="Description" colspan="4"/>
-                    <field name="note"  nolabel="1" colspan="4" />
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state" select="2"/> 
-                        <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object"/>
-                        <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object"/>
-                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object"/>
-                    </group>
-                </page>
-                <page string="Extra Info">
-                    <group colspan="4">
-                        <field name="id" select="2"/>
-                        <field name="active" select="2"/>
-                        <newline/>
-                        <field name="email_cc" colspan="1"/>
-                        <field name="date_deadline" select="2" string="Deadlines"/>
-                        <field name="priority" select="2"/>
-                        <newline/>
-
-                        <field name="planned_revenue"/>
-                        <field name="planned_cost"/>
-                        <field name="probability"/>
-                        <separator colspan="4" string="Dates"/>
-                        <field name="create_date"/>
-                        <field name="date_closed"/>
-                        <field name="date_action_last"/>
-                        <field name="date_action_next"/>
-                    </group>
-                    <separator colspan="4"/>
-                    <field name="history_line" colspan="2" nolabel="1" mode="tree,form">
-                        <form string="Communication history">
-                            <group col="6" colspan="4">
-                                <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <group col="2" colspan="2" expand="1">
-                        <field name="canal_id"/>
-                        <field name="som"/>
-                        <button name="add_reply" string="Add Last Mail for Replying"
-                            states="open" type="object" colspan="2"/>
-                        <field name="description" colspan="2" nolabel="1"/>
-                        <button name="case_log_reply"
-                            string="Send Partner &amp; Historize" states="open"
-                            type="object"/>
-                        <button name="case_log" string="Historize" states="open"
-                            type="object"/>
-                    </group>
-                    
-                    <separator colspan="4" string="References"/>
-                    <field name="ref" colspan="4"/>
-                    <field name="ref2" colspan="4"/>
-                </page>
-                <page string="History">
-                    <field name="log_ids" nolabel="1" colspan="4">
-                        <form string="Actions">
-                            <separator string="Action Information" colspan="4"/>
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="som"/>
-                            <field name="canal_id"/>
-                        </form>
-                    </field>
-                </page>
+	                <page string="Meeting">
+	                    <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+	                    <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+	                    <field name="email_from"/>
+	                    <newline/>
+	                    <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
+	                    <field name="category2_id" select="1" string="Location"/>
+	                    <separator string="Description" colspan="4"/>
+	                    <field name="description" nolabel="1" colspan="4"/>
+	                    <separator colspan="4"/>
+	                    <group col="8" colspan="4">
+	                        <field name="state" select="2"/> 
+	                        <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
+	                        <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+	                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
+	                    </group>
+	                </page>
+	                <page string="History">
+	                    <group colspan="4">
+	                        <field name="id" select="1"/>
+	                        <field name="active" select="2"/>
+	                        <newline/>
+	                        <field name="date_deadline" select="2" string="Deadlines"/>
+	                        <field name="priority" select="2"/>
+	                        <newline/>
+	
+	                        <field name="planned_revenue"/>
+	                        <field name="planned_cost"/>
+	                        <field name="probability"/>
+	                        <newline/>                        
+	                        <field name="canal_id"/>
+	                        <field name="som"/>                        
+	                        <separator colspan="4" string="Dates"/>
+	                        <field name="create_date"/>
+	                        <field name="date_closed"/>
+	                        <field name="date_action_last"/>
+	                        <field name="date_action_next"/>
+	                        <separator colspan="4" string="References"/>
+	                        <field name="ref" colspan="4"/>
+	                        <field name="ref2" colspan="4"/>
+	                    </group>                
+	
+	                    <field name="log_ids" nolabel="1" colspan="4">
+	                        <form string="Actions">
+	                            <separator string="Action Information" colspan="4"/>
+	                            <field name="name" colspan="4"/>
+	                            <field name="date"/>
+	                            <field name="user_id"/>
+	                            <field name="som"/>
+	                            <field name="canal_id"/>
+	                        </form>
+	                    </field>
+	                </page>
+	                <page string="Emails" groups="base.group_extended">
+	                    <group colspan="4">
+	                        <field colspan="4" name="email_cc" string="CC"/>
+	                    </group>
+	                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+	                       <form string="Communication history">
+	                           <group col="6" colspan="4">
+	                               <field name="date"/>
+	                               <field name="email"/>
+	                               <field name="canal_id"/>
+	                           </group>
+	                           <newline/>
+	                           <field name="description" colspan="4" nolabel="1"/>
+	                           <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
+	                        </form>
+	                        <tree string="Communication history">
+	                            <field name="description"/>
+	                            <field name="email"/>
+	                            <field name="date"/>
+	                        </tree>
+	                    </field>
+	                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+	                </page>                
                 </notebook>
             </form>
         </field>
@@ -122,6 +116,9 @@
                 <field name="category2_id" string="Type"/>
                 <field name="user_id"/>
                 <field name="state"/>
+                <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
+                <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>                
             </tree>
         </field>
     </record>
@@ -138,5 +135,40 @@
             </calendar>
         </field>
     </record>
-    </data>
+
+    <record id="crm_case_gantt_view_meet" model="ir.ui.view">
+        <field name="name">CRM - Meetings Gantt</field>
+        <field name="model">crm.case</field>
+        <field name="type">gantt</field>
+        <field name="arch" type="xml">
+            <gantt color="user_id" date_delay="duration" date_start="date" string="Meetings">
+               <level object="crm.case" link="id" domain="[]">
+                   <field name="name"/>
+                   <field name="partner_id"/>
+                </level>
+            </gantt>
+        </field>
+    </record>
+    <record id="view_crm_case_meetings_filter" model="ir.ui.view">
+        <field name="name">crm.case.meetings.select</field>
+        <field name="model">crm.case</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Meetings">
+               <group col="5" colspan="1">
+                   <filter icon="gtk-execute" string="My Meetings" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
+               </group>
+               <group col="4" colspan="4">
+                   <field name="state" select="1">
+                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Meetings"/>
+                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Meetings"/>
+                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Meetings"/>
+                   </field>
+                   <field name="name" select='1'/>
+                   <field name="user_id" select="1" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+     </data>
 </openerp>

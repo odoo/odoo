@@ -37,7 +37,7 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             help="Display margins on the sale order form."),
         'sale_crm':fields.boolean('CRM and Calendars',
             help="This installs the customer relationship features like: "\
-            "leads and opportunities tracking, shared calendar, jobs "\
+            "prospects and opportunities tracking, shared calendar, jobs "\
             "tracking, bug tracker, and so on."),
         'sale_journal':fields.boolean('Manage by Journals',
             help="This module  allows you to manage your " \

@@ -27,7 +27,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
     _name='profile.service.config.install_modules_wizard'
     _rec_name = 'crm_configuration'
     _columns = {
-        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
+        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: prospects and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
         'project_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
         'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shipping, ... Install this module if you plan to invoice your customers based on time spent on projects."),
         'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),

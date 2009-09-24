@@ -101,7 +101,8 @@ class email_parser(object):
             'email_cc': self._decode_header(msg['Cc'] or ''),
             'canal_id': self.canal_id,
             'user_id': False,
-            'history_line': [(0, 0, {'name': 'Create','section_id': self.section_id,'canal_id': self.canal_id,'description': message['body'], 'email': msg['From'] })],
+            'description': message['body'],
+            'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })],
         }
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -154,7 +155,7 @@ class email_parser(object):
             if part.get_content_maintype() == 'multipart':
                 continue
 
-            if part.get_content_maintype()=='text' and part.get_content_subtype() == 'plain':
+            if part.get_content_maintype()=='text' and part.get_content_subtype() in ('plain','html'):
                 buf = part.get_payload(decode=True)
                 if buf:
                     txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
@@ -191,7 +192,8 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-            'history_line': [(0, 0, {'name': 'Close','section_id': self.section_id,'canal_id': self.canal_id,'description': body['body'], 'email': msg['From']})],
+            'description': body['body'],
+            'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
         }
         act = 'case_close'
         if 'state' in actions:
@@ -246,7 +248,8 @@ class email_parser(object):
         self.rpc('crm.case', act, [id])
         body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
         data = {
-                'history_line': [(0, 0, {'name': 'Open','section_id': self.section_id,'canal_id': self.canal_id,'description': body, 'email': msg['From'][:84]})],
+            'description':body,
+            'history_line': [(0, 0, {'description': body, 'email': msg['From'][:84]})],
         }
         self.rpc('crm.case', 'write', [id], data)
         return id

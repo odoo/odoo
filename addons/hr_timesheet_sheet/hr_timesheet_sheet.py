@@ -98,23 +98,34 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
 
     def _total_day(self, cr, uid, ids, name, args, context):
-        field_name = name.strip('_day')
-        cr.execute('SELECT sheet.id, day.' + field_name +' \
+        res = {}
+        cr.execute('SELECT sheet.id, day.total_attendance, day.total_timesheet, day.total_difference\
                 FROM hr_timesheet_sheet_sheet AS sheet \
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
                     ON (sheet.id = day.sheet_id \
                         AND day.name = sheet.date_current) \
                 WHERE sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
-        return dict(cr.fetchall())
+        for record in cr.fetchall():
+            res[record[0]] = {}
+            res[record[0]]['total_attendance_day'] = record[1]
+            res[record[0]]['total_timesheet_day'] = record[2]
+            res[record[0]]['total_difference_day'] = record[3]
+        return res
 
     def _total(self, cr, uid, ids, name, args, context):
-        cr.execute('SELECT s.id, COALESCE(SUM(d.' + name + '),0) \
+        res = {}
+        cr.execute('SELECT s.id, COALESCE(SUM(d.total_attendance),0), COALESCE(SUM(d.total_timesheet),0), COALESCE(SUM(d.total_difference),0) \
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN hr_timesheet_sheet_sheet_day d \
                         ON (s.id = d.sheet_id) \
                 WHERE s.id in ('+ ','.join(map(str, ids)) + ') \
                 GROUP BY s.id')
-        return dict(cr.fetchall())
+        for record in cr.fetchall():
+            res[record[0]] = {}
+            res[record[0]]['total_attendance'] = record[1]
+            res[record[0]]['total_timesheet'] = record[2]
+            res[record[0]]['total_difference'] = record[3]
+        return res
 
     def _state_attendance(self, cr, uid, ids, name, args, context):
         result = {}
@@ -221,12 +232,12 @@ class hr_timesheet_sheet(osv.osv):
         'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
         'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'Status', select=True, required=True, readonly=True),
         'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
-        'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance'),
-        'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet'),
-        'total_difference_day': fields.function(_total_day, method=True, string='Difference'),
-        'total_attendance': fields.function(_total, method=True, string='Total Attendance'),
-        'total_timesheet': fields.function(_total, method=True, string='Total Timesheet'),
-        'total_difference': fields.function(_total, method=True, string='Difference'),
+        'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance', multi="_total_day"),
+        'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet', multi="_total_day"),
+        'total_difference_day': fields.function(_total_day, method=True, string='Difference', multi="_total_day"),
+        'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total_sheet"),
+        'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total_sheet"),
+        'total_difference': fields.function(_total, method=True, string='Difference', multi="_total_sheet"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
     }

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -48,11 +48,11 @@ class idea_idea(osv.osv):
         if not len(ids):
             return {}
 
-        sql = """select i.id, avg(v.score::integer) 
+        sql = """select i.id, avg(v.score::integer)
                    from idea_idea i left outer join idea_vote v on i.id = v.idea_id
                     where i.id in (%s)
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """ % ','.join(['%s']*len(ids))
 
         cr.execute(sql, ids)
         return dict(cr.fetchall())
@@ -61,11 +61,11 @@ class idea_idea(osv.osv):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1) 
+        sql = """select i.id, count(1)
                    from idea_idea i left outer join idea_vote v on i.id = v.idea_id
                     where i.id in (%s)
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """ % ','.join(['%s']*len(ids))
 
         cr.execute(sql, ids)
         return dict(cr.fetchall())
@@ -74,11 +74,11 @@ class idea_idea(osv.osv):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1) 
+        sql = """select i.id, count(1)
                    from idea_idea i left outer join idea_comment c on i.id = c.idea_id
                     where i.id in (%s)
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """ % ','.join(['%s']*len(ids))
 
 
         cr.execute(sql,ids)
@@ -120,13 +120,13 @@ class idea_idea(osv.osv):
         'count_votes' : fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True ),
-        'state': fields.selection([('draft','Draft'),('open','Opened'),('close','Accepted'),('cancel','Canceled')], 'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Opened'),('close','Accepted'),('cancel','Cancelled')], 'Status', readonly=True),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
     }
 
     _defaults = {
         'user_id': lambda self,cr,uid,context: uid,
-        'my_vote': lambda *a: '-1', 
+        'my_vote': lambda *a: '-1',
         'state': lambda *a: 'draft'
     }
     _order = 'id desc'
@@ -190,7 +190,7 @@ class idea_vote_stat(osv.osv):
     def init(self, cr):
         """
         initialize the sql view for the stats
-        
+
         cr -- the cursor
         """
         cr.execute("""
@@ -202,7 +202,7 @@ class idea_vote_stat(osv.osv):
                     count(1) as nbr
                 from
                     idea_vote v
-                    left join 
+                    left join
                     idea_idea i on (v.idea_id=i.id)
                 group by
                     i.id, v.score, i.id

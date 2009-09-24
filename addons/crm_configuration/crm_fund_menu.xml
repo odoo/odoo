@@ -8,6 +8,8 @@
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_all1">
         <field name="sequence" eval="1"/>
@@ -37,6 +39,9 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+'),(\'user_id\',\'=\',uid)]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_my1">
         <field name="sequence" eval="1"/>
@@ -56,7 +61,7 @@
         <field name="view_id" ref="crm_configuration.crm_case_form_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund_my1"/>
     </record>
-    <menuitem name="My Funds" id="menu_crm_case_category_act_fund_my1" action="crm_case_category_act_fund_my1"  parent="menu_crm_case_fund_raise"/>
+    <menuitem name="My Funds" id="menu_crm_case_category_act_fund_my1" action="crm_case_category_act_fund_my1"  parent="menu_crm_case_fund_raise" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_fund1">
         <field name="name">Funds</field>
@@ -64,6 +69,7 @@
         <field name="view_mode">form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_form_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund1">
         <field name="sequence" eval="2"/>
@@ -77,7 +83,7 @@
         <field name="view_id" ref="crm_configuration.crm_case_form_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund1"/>
     </record>
-    <menuitem name="New Fund Opportunity" id="menu_crm_case_categ0_act_fund" action="crm_case_category_act_fund1" parent="menu_crm_case_category_act_fund_my1"/>
+    <menuitem name="New Fund Opportunity" id="menu_crm_case_categ0_act_fund" action="crm_case_category_act_fund1" parent="menu_crm_case_fund_raise" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_fund_my2">
         <field name="name">My Funds Waiting Validation</field>
@@ -85,6 +91,9 @@
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'draft\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_my2">
         <field name="sequence" eval="1"/>
@@ -104,7 +113,7 @@
         <field name="view_id" ref="crm_configuration.crm_case_graph_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund_my2"/>
     </record>
-    <menuitem name="My Funds Waiting Validation" id="menu_crm_case_categ0_act_fund_my2" action="crm_case_category_act_fund_my2" parent="menu_crm_case_category_act_fund_my1"/>
+    <menuitem name="My Funds Waiting Validation" id="menu_crm_case_categ0_act_fund_my2" action="crm_case_category_act_fund_my2" parent="menu_crm_case_category_act_fund_my1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_fund_my3">
         <field name="name">My Funds To Be Processed</field>
@@ -112,6 +121,9 @@
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+'),(\'user_id\',\'=\',uid),(\'state\',\'=\',\'open\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_my3">
         <field name="sequence" eval="1"/>
@@ -131,10 +143,10 @@
         <field name="view_id" ref="crm_configuration.crm_case_graph_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund_my3"/>
     </record>
-    <menuitem name="My Funds To Be Processed" id="menu_crm_case_categ0_act_fund_my3" action="crm_case_category_act_fund_my3" parent="menu_crm_case_category_act_fund_my1"/>
+    <menuitem name="My Funds To Be Processed" id="menu_crm_case_categ0_act_fund_my3" action="crm_case_category_act_fund_my3" parent="menu_crm_case_category_act_fund_my1" groups="base.group_extended_menu"/>
 
     <!-- All Funds -->
-    <menuitem name="All Funds" id="menu_crm_case_categ0_act_fund_all1" action="crm_case_category_act_fund_all1" parent="menu_crm_case_fund_raise"/>
+    <menuitem name="All Funds" id="menu_crm_case_categ0_act_fund_all1" action="crm_case_category_act_fund_all1" parent="menu_crm_case_fund_raise" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_fund_all2">
         <field name="name">All Funds Waiting Validation</field>
@@ -142,6 +154,9 @@
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+'),(\'state\',\'=\',\'draft\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_all2">
         <field name="sequence" eval="1"/>
@@ -161,7 +176,7 @@
         <field name="view_id" ref="crm_configuration.crm_case_graph_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund_all2"/>
     </record>
-    <menuitem name="All Funds Waiting Validation" id="menu_crm_case_categ0_act_fund_all2" action="crm_case_category_act_fund_all2" parent="menu_crm_case_categ0_act_fund_all1"/>
+    <menuitem name="All Funds Waiting Validation" id="menu_crm_case_categ0_act_fund_all2" action="crm_case_category_act_fund_all2" parent="menu_crm_case_categ0_act_fund_all1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_fund_all3">
         <field name="name">All Funds To Be Processed</field>
@@ -169,6 +184,9 @@
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm_configuration.crm_case_tree_view_fund"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support4)+'),(\'state\',\'=\',\'open\')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="filter" eval="True"/>
+        <field name="search_view_id" ref="crm_configuration.view_crm_case_fund_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_fund_all3">
         <field name="sequence" eval="1"/>
@@ -188,7 +206,7 @@
         <field name="view_id" ref="crm_configuration.crm_case_graph_view_fund"/>
         <field name="act_window_id" ref="crm_case_category_act_fund_all3"/>
     </record>
-    <menuitem name="All Funds To Be Processed" id="menu_crm_case_categ0_act_fund_all3" action="crm_case_category_act_fund_all3" parent="menu_crm_case_categ0_act_fund_all1"/>
+    <menuitem name="All Funds To Be Processed" id="menu_crm_case_categ0_act_fund_all3" action="crm_case_category_act_fund_all3" parent="menu_crm_case_categ0_act_fund_all1" groups="base.group_extended_menu"/>
 
 </data>
 </openerp>

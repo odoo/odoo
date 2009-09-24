@@ -102,6 +102,11 @@ class product_uom(osv.osv):
         'rounding': lambda *a: 0.01,
     }
 
+    _sql_constraints = [
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'Value of the factor can never be 0 !'),
+        ('factor_inv_data_gt_zero', 'CHECK (factor_inv_data!=0)', 'Value of the factor_inv_data can never be 0 !'),
+    ]
+
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
@@ -246,7 +251,7 @@ class product_template(osv.osv):
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
-        'rental': fields.boolean('Rentable Product'),
+        'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."),
@@ -390,8 +395,8 @@ class product_product(osv.osv):
         product = self.browse(cr, uid, [product_id], context)[0]
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
-                return {'code': supinfo.product_code, 'name': supinfo.product_name}
-        return {'code' : product.default_code, 'name' : product.name}
+                return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}                
+        return {'code' : product.default_code, 'name' : product.name, 'variants': product.variants}                
 
     def _product_code(self, cr, uid, ids, name, arg, context={}):
         res = {}
@@ -403,12 +408,14 @@ class product_product(osv.osv):
         res = {}
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
+            if not data['variants']:
+                data['variants'] = p.variants            
             if not data['code']:
                 data['code'] = p.code
             if not data['name']:
                 data['name'] = p.name
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
-                    (data['name'] or '')
+                    (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
 
     _defaults = {
@@ -438,6 +445,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
+        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),        
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -530,7 +538,13 @@ class product_product(osv.osv):
         if not context:
             context={}
 
-        if ('variant' in context) and context['variant']:
+        product = self.read(cr, uid, id, ['name'], context=context)
+        if not default:
+            default = {}
+        default = default.copy()
+        default['name'] = product['name'] + _(' (copy)')
+        
+        if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
             data = self.read(cr, uid, id, fields=fields, context=context)
@@ -572,6 +586,18 @@ class product_packaging(osv.osv):
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
     }
+
+    _order = 'sequence'
+    
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        res = []
+        for pckg in self.browse(cr, uid, ids,context=context):
+            p_name = pckg.ean and '[' + pckg.ean + '] ' or ''
+            p_name += pckg.ul.name
+            res.append((pckg.id,p_name))
+        return res
 
     def _get_1st_ul(self, cr, uid, context={}):
         cr.execute('select id from product_ul order by id asc limit 1')

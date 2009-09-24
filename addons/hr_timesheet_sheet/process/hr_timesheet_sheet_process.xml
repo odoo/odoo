@@ -71,7 +71,6 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-    
             
         <record id="process_node_attendance0" model="process.node">
             <field name="model_id" ref="hr.model_hr_employee"/>
@@ -137,6 +136,17 @@
             <field name="process_id" ref="process_process_hrtimesheetprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
+        </record>
+
+        <record id="process_node_workontask0" model="process.node">
+            <field name="menu_id" ref="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current"/>
+            <field name="model_id" ref="hr_timesheet_sheet.model_hr_timesheet_sheet_sheet"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Work on Task&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Defines the work summary of task&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="hr_timesheet_sheet.process_process_hrtimesheetprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('open', pending', 'done', 'cancelled')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="1" name="flow_start"/>
         </record>
         
         <!-- 
@@ -232,6 +242,15 @@
             <field model="process.node" name="target_node_id" ref="process_node_timesheetconfirming0"/>
             <field model="process.node" name="source_node_id" ref="process_node_review0"/>
         </record>
+        
+        <record id="process_transition_tasktimesheet0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Task timesheet&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Moves task entry into the timesheet line&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_timesheet0"/>
+            <field model="process.node" name="source_node_id" ref="process_node_workontask0"/>
+         </record>        
         
         <!-- 
             Process Action

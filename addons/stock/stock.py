@@ -36,8 +36,8 @@ class stock_incoterms(osv.osv):
     _name = "stock.incoterms"
     _description = "Incoterms"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('Code', size=3, required=True),
+        'name': fields.char('Name', size=64, required=True,help="Incoterms are series of sales terms.They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices."),
+        'code': fields.char('Code', size=3, required=True,help="code for Incoterms"),
         'active': fields.boolean('Active'),
     }
     _defaults = {
@@ -57,6 +57,21 @@ class stock_location(osv.osv):
     _parent_store = True
     _parent_order = 'id'
     _order = 'parent_left'
+
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','location_id'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if context.get('full',False):
+                if record['location_id']:
+                    name = record['location_id'][1]+' / '+name
+                res.append((record['id'], name))
+            else:
+                res.append((record['id'], name))
+        return res
 
     def _complete_name(self, cr, uid, ids, name, args, context):
         def _get_one_full_name(location, level=4):
@@ -423,30 +438,32 @@ class stock_picking(osv.osv):
         'name': fields.char('Reference', size=64, select=True),
         'origin': fields.char('Origin Reference', size=64),
         'backorder_id': fields.many2one('stock.picking', 'Back Order'),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
 
-        'location_id': fields.many2one('stock.location', 'Location'),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),
-        'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True),
+        'location_id': fields.many2one('stock.location', 'Location', help="Keep empty if you produce at the location where the finished products are needed." \
+                "Set a location if you produce at a fixed location. This can be a partner location " \
+                "if you subcontract the manufacturing operations."),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products."),
+        'move_type': fields.selection([('direct', 'Direct Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
             ('confirmed', 'Confirmed'),
             ('assigned', 'Available'),
             ('done', 'Done'),
-            ('cancel', 'Canceled'),
+            ('cancel', 'Cancelled'),
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Planned Date', select=1),
-        'date': fields.datetime('Date Order'),
-        'date_done': fields.datetime('Date Done'),
+                 method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Packing. Default it takes current date"),
+        'date': fields.datetime('Date Order', help="Date of Order"),
+        'date_done': fields.datetime('Date Done', help="Date of completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Packing'),
-        'address_id': fields.many2one('res.partner.address', 'Partner'),
+        'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
@@ -467,7 +484,8 @@ class stock_picking(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
+        if not default.get('name',False):
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
@@ -690,6 +708,7 @@ class stock_picking(osv.osv):
                     'name': (invoice.name or '') + ', ' + (picking.name or ''),
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
+                    'date_invoice':context.get('date_inv',False)                    
                 }
                 invoice_obj.write(cursor, user, [invoice_id], invoice_vals, context=context)
             else:
@@ -703,7 +722,8 @@ class stock_picking(osv.osv):
                     'address_contact_id': address_contact_id,
                     'comment': comment,
                     'payment_term': payment_term_id,
-                    'fiscal_position': partner.property_account_position.id
+                    'fiscal_position': partner.property_account_position.id,
+                    'date_invoice':context.get('date_inv',False)
                     }
                 cur_id = self.get_currency_id(cursor, user, picking)
                 if cur_id:
@@ -744,6 +764,12 @@ class stock_picking(osv.osv):
                         user, picking, move_line)
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
+                notes = False
+                if move_line.sale_line_id:
+                    notes = move_line.sale_line_id.notes
+                elif move_line.purchase_line_id:
+                    notes = move_line.purchase_line_id.notes
+                
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'origin': origin,
@@ -756,6 +782,7 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
+                    'note': notes,                    
                     }, context=context)
                 self._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
@@ -934,11 +961,11 @@ class stock_move(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_uos_qty': fields.float('Quantity (UOS)'),
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
-        'product_packaging': fields.many2one('product.packaging', 'Packaging'),
+        'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
-        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
-        'address_id': fields.many2one('res.partner.address', 'Dest. Address'),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, help="Set a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True, help="Location where the system will stock the finished products."),
+        'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Adress where goods are to be delivered"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
         'tracking_id': fields.many2one('stock.tracking', 'Tracking Lot', select=True, help="Tracking lot is the code that will be put on the logistical unit/pallet"),
@@ -953,7 +980,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Canceled')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -1312,7 +1339,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft': [('readonly', False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done')), 'Status', readonly=True),
+        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'Status', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1364,6 +1391,12 @@ class stock_inventory(osv.osv):
         for inv in self.browse(cr, uid, ids):
             self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
             self.write(cr, uid, [inv.id], {'state': 'draft'})
+        return True
+
+    def action_cancel_inventary(self, cr, uid, ids, context={}):
+        for inv in self.browse(cr,uid,ids):
+            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
+            self.write(cr, uid, [inv.id], {'state':'cancel'})
         return True
 
 stock_inventory()
@@ -1460,31 +1493,4 @@ class stock_picking_move_wizard(osv.osv_memory):
 
 stock_picking_move_wizard()
 
-
-class report_stock_lines_date(osv.osv):
-    _name = "report.stock.lines.date"
-    _description = "Dates of Inventories"
-    _auto = False
-    _columns = {
-        'id': fields.integer('Inventory Line Id', readonly=True),
-        'product_id': fields.integer('Product Id', readonly=True),
-        'create_date': fields.datetime('Latest Date of Inventory'),
-        }
-
-    def init(self, cr):
-        cr.execute("""
-            create or replace view report_stock_lines_date as (
-                select
-                l.id as id,
-                p.id as product_id,
-                max(l.create_date) as create_date
-                from
-                product_product p
-                left outer join
-                stock_inventory_line l on (p.id=l.product_id)
-                where l.create_date is not null
-                group by p.id,l.id
-            )""")
-
-report_stock_lines_date()
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

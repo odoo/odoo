@@ -19,7 +19,7 @@
 		<record id="process_node_leads0" model="process.node">
 			<field name="model_id" ref="crm.model_crm_case"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Leads&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Prospects&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Very first contact with new prospect&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_contractprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
@@ -63,8 +63,8 @@
 		<record id="process_transition_leadopportunity0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Lead Opportunity&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Creating business opportunities from leads&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Prospect Opportunity&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Creating business opportunities from prospects&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_opportunities0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_leads0"/>
 		</record>
@@ -72,7 +72,7 @@
 		<record id="process_transition_leadpartner0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Lead Partner&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Prospect Partner&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Prospect is converting to business partner&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_partner0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_leads0"/>

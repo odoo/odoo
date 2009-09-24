@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="hr.dep_administration" model="hr.department">
+            <field name="name">Administration</field>
+            <field name="parent_id" ref="hr.dep_management"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="manager_id" ref="base.user_root"/>
+            <field name="member_ids" eval="[(6,0,[ref('base.user_demo')])]"/>
+        </record>
+    </data>
+</openerp>
