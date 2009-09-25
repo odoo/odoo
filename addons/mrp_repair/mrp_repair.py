@@ -300,7 +300,7 @@ class mrp_repair(osv.osv):
                             'invoice_id': inv_id,
                             'name': name,
                             'origin':repair.name,
-                            'account_id': a,
+                            'account_id': operation.product_id and operation.product_id.property_account_income and operation.produc        t_id.property_account_income.id,
                             'quantity' : operation.product_uom_qty,
                             'invoice_line_tax_id': [(6,0,[x.id for x in operation.tax_id])],
                             'uos_id' : operation.product_uom.id,
