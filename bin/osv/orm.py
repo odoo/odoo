@@ -2108,9 +2108,10 @@ class orm(orm_template):
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
-        select = ids
         if isinstance(ids, (int, long)):
             select = [ids]
+        else:
+            select = map(int,ids)
         result = self._read_flat(cr, user, select, fields, context, load)
         for r in result:
             for key, v in r.items():
