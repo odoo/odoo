@@ -37,6 +37,18 @@ waittime = 10
 wait_count = 0
 wait_limit = 12
 
+def to_decode(s):
+    try:
+        return s.encode('utf-8')
+    except UnicodeError:
+        try:
+            return s.encode('latin')
+        except UnicodeError:
+            try:
+                return s.decode('ascii')
+            except UnicodeError:
+                return s
+
 def start_server(root_path, port, addons_path):    
     os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))    
 def clean():
@@ -133,7 +145,7 @@ def check_quality(uri, user, pwd, dbname, modules, quality_logs):
             if not os.path.isdir(quality_logs):
                 os.mkdir(quality_logs)
             fp = open('%s/%s.html'%(quality_logs,module),'wb')
-            fp.write(str(html))
+            fp.write(to_decode(html))
             fp.close()
             #final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
 
