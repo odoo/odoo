@@ -129,7 +129,7 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ('odt', 'odt'),
-            ('html2html','Html from html'),
+            ('mako2html','Mako from HTML'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -151,6 +151,7 @@ class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
     _sequence = 'ir_actions_id_seq'
+    
     def _check_model(self, cr, uid, ids, context={}):
         for action in self.browse(cr, uid, ids, context):
             if not self.pool.get(action.res_model):

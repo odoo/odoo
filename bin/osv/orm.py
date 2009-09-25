@@ -191,8 +191,11 @@ class browse_record(object):
             datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
-                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])[0])
-                
+                lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid,[('code','=',lang)])
+                if not lang_obj_ids:
+                    raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
+                lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
+                                
                 for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
@@ -756,7 +759,7 @@ class orm_template(object):
                 newfd = relation_obj.fields_get(
                         cr, uid, context=context)
                 res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)                              
-                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res  
+                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res                  
                 nbrmax = max(nbrmax, max2)
                 warning = warning + w2         
                 reduce(lambda x, y: x and y, newrow)       
@@ -801,7 +804,7 @@ class orm_template(object):
             #try:
             (res, other, warning, translate, data_id, res_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def)
-            if warning:                        
+            if len(warning):                        
                 cr.rollback()
                 return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
             
@@ -2804,14 +2807,19 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        result = []
         for field in upd_todo:
-            self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context)
+            result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
         self._validate(cr, user, [id_new], context)
 
-
-        result = self._store_get_values(cr, user, [id_new], vals.keys(), context)
-        for order, object, ids, fields in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+        if not context.get('no_store_function', False):
+            result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
+            result.sort()
+            done = []
+            for order, object, ids, fields2 in result:
+                if not (object, ids, fields2) in done:
+                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
+                    done.append((object, ids, fields2))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
