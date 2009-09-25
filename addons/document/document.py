@@ -651,10 +651,11 @@ class document_file(osv.osv):
     def create(self, cr, uid, vals, context={}):
         vals['title']=vals['name']
         vals['parent_id'] = context.get('parent_id',False) or vals.get('parent_id',False)
-        if not vals.get('res_id', False) and context.get('default_res_id',False):
-            vals['res_id']=context.get('default_res_id',False)
-        if not vals.get('res_model', False) and context.get('default_res_model',False):
-            vals['res_model']=context.get('default_res_model',False)
+#        if not vals.get('res_id', False) and context.get('default_res_id',False):
+#            vals['res_id']=context.get('default_res_id',False)
+#        if not vals.get('res_model', False) and context.get('default_res_model',False):
+#            vals['res_model']=context.get('default_res_model',False)
+        vals['res_model'] = "report.document.user"
         if vals.get('res_id', False) and vals.get('res_model',False):
             obj_model=self.pool.get(vals['res_model'])
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
@@ -693,7 +694,8 @@ class document_file(osv.osv):
         try:
             res = content_index(base64.decodestring(datas), vals['datas_fname'], vals.get('content_type', None))
             super(document_file,self).write(cr, uid, [result], {
-                'index_content': res,
+                'index_content' : res,
+                'res_id' : result
             })
             cr.commit()
         except:
