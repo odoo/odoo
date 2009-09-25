@@ -40,7 +40,7 @@ merge_form = """<?xml version="1.0"?>
       - lines will only be merged if:
         * they are exactly the same except for the quantity and unit</label>
 </form>
-""" 
+"""
 
 merge_fields = {
 }
@@ -53,10 +53,10 @@ ack_form = """<?xml version="1.0"?>
 ack_fields = {}
 
 
-def _mergeOrders(self, cr, uid, data, context):
+def _merge_orders(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('purchase.order')
-    mod_obj = pool.get('ir.model.data') 
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'purchase', 'view_purchase_order_filter')
     id = mod_obj.read(cr, uid, result, ['res_id'])
 
