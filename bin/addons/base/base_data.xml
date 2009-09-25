@@ -1212,6 +1212,12 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
         </record>
+        
+		<record id="rateARS" model="res.currency.rate">
+			<field name="rate">5.6</field>
+			<field name="currency_id" ref="ARS"/>
+			<field eval="time.strftime('%Y-01-01')" name="name"/>
+		</record>        
  
         <record id="INR" model="res.currency">
             <field name="name">INR</field>
