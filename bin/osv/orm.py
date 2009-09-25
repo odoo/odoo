@@ -2736,6 +2736,8 @@ class orm(orm_template):
         for fnct in range(len(fncts)):
             if fncts[fnct][3]:
                 ok = False
+                if not fields:
+                    ok = True
                 for f in (fields or []):
                     if f in fncts[fnct][3]:
                         ok = True
