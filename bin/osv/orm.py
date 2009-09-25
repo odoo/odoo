@@ -308,7 +308,10 @@ def get_pg_type(f):
         t = eval('fields.'+(f._type))
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
-        f_type = ('float8', 'DOUBLE PRECISION')
+        if f.digits:
+            f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0], f.digits[1]))
+        else:
+            f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
     elif isinstance(f, fields.function) and f._type == 'char':
@@ -506,7 +509,7 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        dt+=rr.name+','
+                                        dt += rr.name or '' + ','
                                     data[fpos] = dt[:-1]
                                     break
                                 lines += lines2[1:]
@@ -1009,9 +1012,10 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = None
+                        dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
+                        
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1816,6 +1820,8 @@ class orm(orm_template):
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
                             # !!! Avoid reduction of varchar field !!!
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
@@ -1828,13 +1834,15 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                    ok = True
-                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                    cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                    cr.commit()
+                                    if f_pg_type != f_obj_type:
+                                        logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        ok = True
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.commit()
+                                    break
 
                             if f_pg_type != f_obj_type:
                                 if not ok:
@@ -2504,9 +2512,10 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        result = []
         for field in upd_todo:
             for id in ids:
-                self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context)
+                result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -2568,7 +2577,7 @@ class orm(orm_template):
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
-        result = self._store_get_values(cr, user, ids, vals.keys(), context)
+        result += self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
             self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
 

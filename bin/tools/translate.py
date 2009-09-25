@@ -607,10 +607,12 @@ def trans_generate(lang, modules, dbname=None):
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
     
-    if tools.config['root_path'] in tools.config['addons_path'] :
-        path_list = [tools.config['root_path']]
+    root_path = os.path.join(tools.config['root_path'], 'addons')
+
+    if root_path in tools.config['addons_path'] :
+        path_list = [root_path]
     else :
-        path_list = [tools.config['root_path'],tools.config['addons_path']]
+        path_list = [root_path,tools.config['addons_path']]
 
     for path in path_list: 
         for root, dirs, files in tools.osutil.walksymlinks(path):

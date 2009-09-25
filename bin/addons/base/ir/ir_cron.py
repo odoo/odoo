@@ -27,8 +27,6 @@ import tools
 import pooler
 from osv import fields,osv
 
-next_wait = 60
-
 _intervalTypes = {
     'work_days': lambda interval: DateTime.RelativeDateTime(days=interval),
     'days': lambda interval: DateTime.RelativeDateTime(days=interval),
@@ -74,20 +72,18 @@ class ir_cron(osv.osv, netsvc.Agent):
             f = getattr(m, func)
             f(cr, uid, *args)
 
-    def _poolJobs(self, db_name, check=False):
+    def _poolJobs(self, db_name, check=False):        
         try:
             db, pool = pooler.get_db_and_pool(db_name)
         except:
-            return False
-
+            return False        
         if pool._init:
             # retry in a few minutes
-            next_call = 600 
+            next_call = 600
         else:
-            next_call = next_wait
-            cr = db.cursor()
             now = DateTime.now()
             try:
+                cr = db.cursor()
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
                     nextcall = DateTime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
@@ -119,10 +115,32 @@ class ir_cron(osv.osv, netsvc.Agent):
         # Can be improved to do at the min(min(nextcalls), time()+next_call)
         # But is this an improvement ?
         # 
+        cr = db.cursor()
+        cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and nextcall>=now()')
+        next_call = cr.dictfetchone()['min_next_call']  
+        cr.close()                 
+        if next_call:                
+            next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
+        else:
+            next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
         if not check:
-            self.setAlarm(self._poolJobs, int(time.time()) + next_call, db_name, db_name)
-	return None
-
+            self.setAlarm(self._poolJobs, next_call, db_name, db_name)
+            
+    def create(self, cr, uid, vals, context=None):
+        res = super(ir_cron, self).create(cr, uid, vals, context=context)        
+        cr.commit()
+        self._poolJobs(cr.dbname)
+        return res
+    def write(self, cr, user, ids, vals, context=None):
+        res = super(ir_cron, self).write(cr, user, ids, vals, context=context)
+        cr.commit()
+        self._poolJobs(cr.dbname)
+        return res
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
+        cr.commit()
+        self._poolJobs(cr.dbname)
+        return res
 ir_cron()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
