@@ -101,7 +101,7 @@ class report_custom(report_int):
         colors = choice_colors(len(ids))
         ids_str = ','.join(map(str, ids))
         cr.execute(
-            "SELECT MAX(date_planned) AS stop "\
+            "SELECT MAX(mrp_production.date_planned) AS stop "\
             "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "\
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
