@@ -125,10 +125,26 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         return ""
 
     def get_result_details(self, dict_speed):
-        str_html = '''<html><head></head><body><table border="1">'''
-        header = ('<tr><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th><th>%s</th></tr>', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
+        str_html = '''<html><head>
+        <style>
+            .bstyle
+            {
+            border-width:2px;
+            border-style:dashed;
+            border-color: gray;
+            }
+            .btstyle
+            {
+            border-width:2px;
+            border-style:solid;
+            border-color: gray;
+            }
+            }
+       </style></head><body><table class="bstyle">'''
+        header = ('<tr><th class="btstyle" >%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_speed) + '</table></body></html>'
+            res = res.replace('''<td''', '''<td class="btstyle" ''')
             return res
         return ""
 

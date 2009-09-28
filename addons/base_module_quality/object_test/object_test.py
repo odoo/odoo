@@ -184,9 +184,24 @@ Test checks for fields, views, security rules, dependancy level
     def get_result_details(self, dict_obj):
         res = ""
         if dict_obj != {}:
-            str_html = '''<html><strong> Fields Result</strong><head></head><body>'''
+            str_html = '''<html><strong> Fields Result</strong><head>
+            <style>
+                .bstyle
+                {
+                border-width:2px;
+                border-style:dashed;
+                border-color: gray;
+                }
+                .btstyle
+                {
+                border-width:2px;
+                border-style:solid;
+                border-color: gray;
+                }
+                }
+           </style></head><body>'''
             res += str_html
-            header = ('<tr><th width="200">%s</th><th width="200">%s</th><th width="300">%s</th></tr>', [_('Object Name'), _('Field name'), _('Suggestion')])
+            header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('Field name'), _('Suggestion')])
             if not self.error:
                 for key in dict_obj.keys():
                     data_list = []
@@ -196,15 +211,32 @@ Test checks for fields, views, security rules, dependancy level
                     for i in data_list:
                         count = count + 1
                         final_dict[key + str(count)] = i
-                    res += '<table>' + self.format_html_table(header, data_list=final_dict) + '</table><br>'
+                    res_str = '<table class="bstyle">' + self.format_html_table(header, data_list=final_dict) + '</table><br>'
+                    res += res_str.replace('''<td''', '''<td class="btstyle" ''')
             return res + '</body></html>'
         return ""
 
     def get_result_general(self, dict_obj, name=''):
-        str_html = '''<html><strong> %s Result</strong><head></head><body><table>'''% (name)
-        header = ('<tr><th>%s</th><th>%s</th></tr>', [_('Object Name'), _('Suggestion')])
+        str_html = '''<html><strong> %s Result</strong><head>
+            <style>
+                .bstyle
+                {
+                border-width:2px;
+                border-style:dashed;
+                border-color: gray;
+                }
+                .btstyle
+                {
+                border-width:2px;
+                border-style:solid;
+                border-color: gray;
+                }
+                }
+           </style></head><body><table class="bstyle">'''% (name)
+        header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('Suggestion')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_obj) + '</table></body></html>'
+            res = res.replace('''<td''', '''<td class="btstyle" ''')
             return res
         return ""
 
