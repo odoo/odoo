@@ -129,6 +129,7 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ('odt', 'odt'),
+            ('html2html','HTML from HTML'),
             ('mako2html','Mako from HTML'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
