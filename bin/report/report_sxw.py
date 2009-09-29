@@ -19,8 +19,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from lxml import etree
+from mako.template import Template
+from mako.lookup import TemplateLookup
+from mako import  exceptions
+
 import StringIO
 import cStringIO
 import base64
@@ -359,6 +362,8 @@ class report_sxw(report_rml, preprocess.report):
             fnct = self.create_source_pdf
         elif report_type=='html2html':
             fnct = self.create_source_html2html
+        elif report_type=='mako2html':
+            fnct = self.create_source_mako2html
         else:
             raise 'Unknown Report Type'
         return fnct(cr, uid, ids, data, report_xml, context)
@@ -368,6 +373,9 @@ class report_sxw(report_rml, preprocess.report):
 
     def create_source_html2html(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_html2html(cr, uid, ids, data, report_xml, context or {})
+
+    def create_source_mako2html(self, cr, uid, ids, data, report_xml, context=None):
+        return self.create_single_mako2html(cr, uid, ids, data, report_xml, context or {})
 
     def create_source_pdf(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
@@ -558,4 +566,19 @@ class report_sxw(report_rml, preprocess.report):
 
         return (html.replace('&amp;','&').replace('&lt;', '<').replace('&gt;', '>').replace('</br>',''), report_type)
 
+    def create_single_mako2html(self, cr, uid, ids, data, report_xml, context=None):
+        mako_html = report_xml.report_rml_content
+        path = os.path.realpath('addons/base/report')
+        report_type = report_xml.report_type
+        html_parser = self.parser(cr, uid, self.name2, context)
+        objs = self.getObjects(cr, uid, ids, context)
+        html_parser.set_context(objs, data, ids, report_type)
+        temp_lookup = TemplateLookup(directories=[path],output_encoding='utf-8', encoding_errors='replace')
+        template = Template(tools.ustr(mako_html), lookup=temp_lookup)
+        html_parser.localcontext.update({'css_path':path})
+        try:
+            html = template.render_unicode(**html_parser.localcontext)
+        except:
+            return(exceptions.html_error_template().render(),'html')
+        return (html,'html')
 
