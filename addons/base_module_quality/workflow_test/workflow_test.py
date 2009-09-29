@@ -134,26 +134,11 @@ class quality_test(base_module_quality.abstract_quality_check):
         return ""
 
     def get_result_details(self, dict_wf):
-        str_html = '''<html><head>
-        <style>
-            .bstyle
-            {
-            border-width:2px;
-            border-style:dashed;
-            border-color: gray;
-            }
-            .btstyle
-            {
-            border-width:2px;
-            border-style:solid;
-            border-color: gray;
-            }
-            }
-           </style></head><body><table class="bstyle">'''
-        header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('Feed back About Workflow of Module')])
+        str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Feed back About Workflow of Module')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_wf) + '</table><newline/></body></html>'
-            res = res.replace('''<td''', '''<td class="btstyle" ''')
+            res = res.replace('''<td''', '''<td class="tdatastyle" ''')
             return res
         return ""
 
