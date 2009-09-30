@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -108,7 +108,7 @@ class ir_ui_menu(osv.osv):
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
                                     'ir.actions.report.custom': 'model',
-                                    'ir.actions.report.xml':    'model', 
+                                    'ir.actions.report.xml':    'model',
                                     'ir.actions.wizard':        'model',
                                     'ir.actions.server':        'model_id',
                                   }
@@ -120,7 +120,7 @@ class ir_ui_menu(osv.osv):
             else:
                 # if there is no action, it's a 'folder' menu
                 if not menu.child_id:
-                    # not displayed if there is no children 
+                    # not displayed if there is no children
                     continue
 
             result.append(menu.id)
@@ -200,9 +200,9 @@ class ir_ui_menu(osv.osv):
             ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
             context=context)
         if values_ids:
-            values_obj.write(cursor, user, values_ids[0], {'value': value},
+            values_obj.write(cursor, user, values_ids, {'value': value},
                     context=ctx)
-        elif ctx:
+        else:
             values_obj.create(cursor, user, {
                 'name': 'Menuitem',
                 'model': self._name,
