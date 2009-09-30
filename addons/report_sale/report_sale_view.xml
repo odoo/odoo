@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        
+  <data>
         <!--  Sales by products by month -->
         <record id="view_order_product_form" model="ir.ui.view">
             <field name="name">report.sale.order.product.form</field>
@@ -19,7 +18,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_order_product_tree" model="ir.ui.view">
             <field name="name">report.sale.order.product.tree</field>
             <field name="model">report.sale.order.product</field>
@@ -48,7 +47,7 @@
                  </graph>
              </field>
         </record>
-        
+
         <record id="action_order_product_tree" model="ir.actions.act_window">
             <field name="name">Sale Orders by Product (this month)</field>
             <field name="res_model">report.sale.order.product</field>
@@ -64,9 +63,9 @@
             <field name="view_mode">graph,tree</field>
         </record>
         <menuitem id="next_id_82" name="All Months" parent="report_sale.next_id_80"/><menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_82"/>
-        
+
         <!-- Sales by category by month -->
-        
+
         <record id="view_order_category_form" model="ir.ui.view">
             <field name="name">report.sale.order.category.form</field>
             <field name="model">report.sale.order.category</field>
@@ -83,7 +82,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_order_category_tree" model="ir.ui.view">
             <field name="name">report.sale.order.category.tree</field>
             <field name="model">report.sale.order.category</field>
@@ -100,7 +99,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_order_category_graph" model="ir.ui.view">
             <field name="name">report.sale.order.category.graph</field>
             <field name="model">report.sale.order.category</field>
@@ -127,7 +126,7 @@
             <field name="view_mode">graph,tree</field>
         </record>
         <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_sale.next_id_82"/>
-        
+
         <!-- Sales of the month -->
         <record id="view_order_graph" model="ir.ui.view">
              <field name="name">sale.order.graph</field>
@@ -148,19 +147,19 @@
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_81"/>
-		
+
 		<record id="view_so_pipeline_graph" model="ir.ui.view">
              <field name="name">sale.order.dashboard.graph</field>
              <field name="model">sale.order</field>
              <field name="type">graph</field>
              <field name="arch" type="xml">
-             <field name="name">Sale Orders by State</field>
+             	<graph string="Sales by State" type="bar">
                      <field name="state"/>
                      <field name="amount_total"/>
                  </graph>
              </field>
         </record>
-        
+
         <record id="action_so_pipeline" model="ir.actions.act_window">
             <field name="name">Sales by State</field>
             <field name="res_model">sale.order</field>
@@ -169,9 +168,9 @@
             <field name="view_id" ref="view_so_pipeline_graph"/>
             <field name="domain">[('state','&lt;&gt;','done')]</field>
         </record>
-		
+
 		<!-- Turnover Per Month -->
-		
+
 		<record model="ir.ui.view" id="view_turnover_month_tree">
             <field name="name">report.turnover.per.month.tree</field>
             <field name="model">report.turnover.per.month</field>
@@ -183,7 +182,7 @@
                 </tree>
             </field>
     	</record>
-    	
+
     	<record id="view_turnover_month_graph" model="ir.ui.view">
              <field name="name">report.turnover.per.month.graph</field>
              <field name="model">report.turnover.per.month</field>
@@ -195,7 +194,7 @@
                  </graph>
              </field>
         </record>
-	
+
 		<record model="ir.actions.act_window" id="action_turnover_month_tree">
             <field name="type">ir.actions.act_window</field>
             <field name="name">Turnover Per Month</field>
@@ -204,9 +203,9 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_turnover_month_tree"/>
         </record>
-        
+
         <!-- Turnover Per Product -->
-		
+
 		<record model="ir.ui.view" id="view_turnover_product_tree">
             <field name="name">report.turnover.per.product.tree</field>
             <field name="model">report.turnover.per.product</field>
@@ -218,7 +217,7 @@
                 </tree>
             </field>
     	</record>
-    	
+
     	<record id="view_turnover_product_graph" model="ir.ui.view">
              <field name="name">report.turnover.per.product.graph</field>
              <field name="model">report.turnover.per.product</field>
@@ -230,7 +229,7 @@
                  </graph>
              </field>
         </record>
-	
+
 		<record model="ir.actions.act_window" id="action_turnover_product_tree">
             <field name="type">ir.actions.act_window</field>
             <field name="name">Turnover Per Product</field>
@@ -239,9 +238,9 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_turnover_product_tree"/>
         </record>
-		
+
 		<!-- Created Sale orders for random activities dashboard -->
-		
+
 		<record id="board_view_created_sale_order" model="ir.ui.view">
             <field name="name">report.sale.order.created.tree</field>
             <field name="model">report.sale.order.created</field>
@@ -257,14 +256,14 @@
                     <field name="state" select="1"/>
                 </tree>
             </field>
-        </record>  
-        
+        </record>
+
         <record id="action_view_created_sale_order_dashboard" model="ir.actions.act_window">
             <field name="name">Created Sale Orders</field>
             <field name="res_model">report.sale.order.created</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="board_view_created_sale_order"/>
-        </record>                
+        </record>
     </data>
 </openerp>
