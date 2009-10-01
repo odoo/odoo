@@ -1773,7 +1773,7 @@ class orm(orm_template):
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
                         else:
@@ -1821,7 +1821,7 @@ class orm(orm_template):
                                     default = self._defaults[k](self, cr, 1, {})
                                     if (default is not None):
                                         ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE %s is NULL' % (self._table, k, ss[0], k)
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
                                 # add the NOT NULL constraint
                                 cr.commit()
