@@ -161,6 +161,38 @@ class abstract_quality_check(object):
     def add_quatation(self, x_no, y_no):
         return x_no/y_no
 
+    def get_style(self):
+        # This function return style tag with specified styles for html pages
+        style = '''
+            <style>
+                .divstyle {
+                border:1px solid #aaaaaa;
+                background-color:#f9f9f9;
+                padding:5px;
+                }
+                .tablestyle
+                {
+                border:1px dashed gray;
+                }
+                .tdatastyle
+                {
+                border:0.5px solid gray;
+                }
+                .head
+                {
+                color: black;
+                background: none;
+                font-weight: normal;
+                margin: 0;
+                padding-top: .5em;
+                padding-bottom: .17em;
+                border-bottom: 1px solid #aaa;
+                }
+                }
+          </style> '''
+        return style
+
+
 class module_quality_check(osv.osv):
     _name = 'module.quality.check'
     _columns = {

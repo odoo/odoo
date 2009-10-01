@@ -102,9 +102,9 @@ def _merge_orders(self, cr, uid, data, context):
         else:
             #order_infos['name'] += ', %s' % porder.name
             if porder.notes:
-                order_infos['notes'] += ('\n%s' % (porder.notes,))
+                order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
             if porder.origin:
-                order_infos['origin'] = order_infos['origin'] + ' ' + porder.origin
+                order_infos['origin'] = (order_infos['origin'] or '') + ' ' + porder.origin
 
         for order_line in porder.order_line:
             line_key = make_key(order_line, ('name', 'date_planned', 'taxes_id', 'price_unit', 'notes', 'product_id', 'move_dest_id', 'account_analytic_id'))
@@ -161,7 +161,7 @@ class merge_orders(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch' : merge_form, 'fields' : merge_fields, 'state' : [('end', 'Cancel'), ('merge', 'Merge orders') ]}
+            'result': {'type': 'form', 'arch': merge_form, 'fields' : merge_fields, 'state' : [('end', 'Cancel'), ('merge', 'Merge orders') ]}
         },
         'merge': {
             'actions': [],

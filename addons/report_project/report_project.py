@@ -47,7 +47,7 @@ class report_project_task_user(osv.osv):
                     t.user_id,
                     t.project_id,
                     sum(planned_hours) as hours_planned,
-                    to_char(avg(date_close::abstime-t.create_date::timestamp), 'DD"d" HH12:MI:SS') as closing_days,
+                    to_char(avg(date_close::abstime-t.create_date::timestamp), 'DD"d" HH24:MI:SS') as closing_days,
                     sum(w.hours) as hours_effective,
                     ((sum(planned_hours)-sum(w.hours))/count(distinct t.id))::decimal(16,2) as hours_delay
                 from project_task t

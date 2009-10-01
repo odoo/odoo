@@ -98,6 +98,8 @@ class subscription_subscription(osv.osv):
 
     def model_copy(self, cr, uid, ids, context={}):
         for row in self.read(cr, uid, ids):
+            if not row.get('cron_id',False):
+                continue
             cron_ids = [row['cron_id'][0]]
             remaining = self.pool.get('ir.cron').read(cr, uid, cron_ids, ['numbercall'])[0]['numbercall']
             try:

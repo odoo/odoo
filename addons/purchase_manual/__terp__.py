@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
+#    OpenERP, Open Source Management Solution	
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -20,7 +20,23 @@
 #
 ##############################################################################
 
-import module_quality_check
-import quality_save_report
 
+{
+    'name': 'Purchase Management - Manual Control of Invoice',
+    'version': '1.1',
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """Module for purchase management, manual control of invoice""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['purchase'],
+    'init_xml': [],
+    'update_xml': [
+        'purchase_manual_view.xml',
+        'purchase_manual_wizard.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+#    'certificate': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

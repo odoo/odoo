@@ -60,8 +60,9 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
         </page>
         <page string="Email Settings">
             <field name="email_conf" colspan="4"/>
+            <field name="partner_lang" colspan="4"/>
             <field name="email_subject" colspan="4"/>
-            <separator string="Email body" colspan="4"/>
+            <separator string="Email body" colspan="4" attrs="{'readonly':[('partner_lang','=',True)]}"/>
             <field name="email_body" colspan="4" nolabel="1"/>
             <separator string="Legend" colspan="4"/>
 
@@ -94,6 +95,12 @@ _followup_wizard_all_fields = {
         'size': 64,
         'default': 'Invoices Reminder'
         },
+    'partner_lang':{
+        'string': "Send Email in Partner Language",
+        'type': 'boolean',
+        'default':True,
+        'help':'Do not change message text, if you want to send email in partner language, or configre from company'
+    },
     'email_body': {
         'string': "Email body",
         'type': 'text',
@@ -156,7 +163,13 @@ class followup_all_print(wizard.interface):
                             if adr.email:
                                 dest = [adr.email]
                 src = tools.config.options['smtp_user']
-                body=data['form']['email_body']
+                if not data['form']['partner_lang']:
+                    body = data['form']['email_body']
+                else:
+                    cxt = context.copy()
+                    cxt['lang'] = partner.lang
+                    body = pool.get('res.users').browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
+                    
                 total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
@@ -166,7 +179,7 @@ class followup_all_print(wizard.interface):
                 l = '--------------------------------------------------------------------------------------------------------------------------'
                 head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
                 for i in data_lines:
-                    maturity = ''
+                    maturity = 0.00
                     if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
                         maturity = i.debit - i.credit
                     subtotal_due = subtotal_due + i.debit
@@ -187,7 +200,7 @@ class followup_all_print(wizard.interface):
                     'date':time.strftime('%Y-%m-%d'),
                 }
                 body = body%val
-                sub = str(data['form']['email_subject'])
+                sub = tools.ustr(data['form']['email_subject'])
                 msg = ''
                 if dest:
                     tools.email_send(src,dest,sub,body)
@@ -196,15 +209,15 @@ class followup_all_print(wizard.interface):
                     msg += partner.name + '\n'
                     msg_unsent += msg
             if not msg_unsent:
-                summary = _("All emails have been successfully sent to Partners:.\n\n") + msg_sent
+                summary = _("All E-mails have been successfully sent to Partners:.\n\n") + msg_sent
             else:
-                msg_unsent = _("Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
-                msg_sent = msg_sent and _("\n\nMail sent to following Partners successfully, !\n\n") + msg_sent
+                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
+                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n") + msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
             return {'summary' : summary}
         else:
-            return {'summary' : '\n\n\nMail not sent to any partner if you want to sent it please tick send email confirmation on wizard'}
+            return {'summary' : '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'}
 
     def _get_partners(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -256,8 +269,10 @@ class followup_all_print(wizard.interface):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
-
-        return {'partner_ids': partner_list, 'to_update': to_update}
+        
+        message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
+        
+        return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
 
     def _get_screen1_values(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)

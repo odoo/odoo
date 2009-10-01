@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        #
+        # Define PO Line Views
+        #
+        
+        <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                    <xpath expr="/form/notebook/page[@string='Purchase Order']/field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                        <field name="invoiced"/>
+                        <field name="state"/>
+                    </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_order_line_form" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+            <field name="priority">17</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/notebook/page[@string='Invoicing']" position="inside">
+                        <separator colspan="4" string="Manual Invoices"/>
+                        <field name="invoiced"/>
+                        <newline/>
+                        <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
+                    </xpath>
+                    <xpath expr="/form/notebook" position="after">
+                        <group>
+                            <field name="state" />
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="purchase_order_line_tree" model="ir.ui.view">
+            <field name="name">purchase.order.line.tree</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="price_subtotal" position="after">
+                    <field name="invoiced"/>
+                </field>
+            </field>
+        </record>
+
+ 
+        #
+        # Inherit PO view to get buttons
+        #
+
+        <record id="purchase_line_form_action" model="ir.actions.act_window">
+            <field name="name">Purchase Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="purchase_line_form_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+            <field name="act_window_id" ref="purchase_line_form_action"/>
+        </record>
+        <record id="purchase_line_form_action_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_line_form"/>
+            <field name="act_window_id" ref="purchase_line_form_action"/>
+        </record>
+        <menuitem action="purchase_line_form_action" id="menu_purchase_line_form_action" parent="purchase.menu_purchase_root"/>
+
+        <record id="purchase_line_form_action2" model="ir.actions.act_window">
+            <field name="name">Uninvoiced Purchase Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+        <record id="purchase_line_form_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_line_form"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="res.company" id="base.main_company">
+            <field name="follow_up_msg">Date : %(date)s
+
+Dear %(partner_name)s,
+
+Please find in attachment a reminder of all your unpaid invoices, for a total amount due of:
+
+%(followup_amount).2f %(company_currency)s
+
+Thanks,
+--
+%(user_signature)s
+%(company_name)s</field>
+        </record>
+    </data>
+</openerp>

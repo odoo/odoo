@@ -374,7 +374,7 @@ class sale_order(osv.osv):
             'account_id': a,
             'partner_id': order.partner_id.id,
             'address_invoice_id': order.partner_invoice_id.id,
-            'address_contact_id': order.partner_invoice_id.id,
+            'address_contact_id': order.partner_order_id.id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
@@ -526,7 +526,7 @@ class sale_order(osv.osv):
                         pending_deliveries = True
                 
                 if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
-                    finished = True
+#                    finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
@@ -560,8 +560,8 @@ class sale_order(osv.osv):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
-                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = DateTime.now() + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
+                date_planned = (date_planned - DateTime.DateTimeDeltaFromDays(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -835,7 +835,7 @@ class sale_order_line(osv.osv):
                     'product_id': line.product_id.id or False,
                     'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
                     'note': line.notes,
-                    'account_analytic_id': line.order_id.project_id.id,
+                    'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
                 })
                 cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
                 self.write(cr, uid, [line.id], {'invoiced': True})

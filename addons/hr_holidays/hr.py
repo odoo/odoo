@@ -207,8 +207,11 @@ class hr_holidays(osv.osv):
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        
         if ids2:
             vals['manager_id'] = ids2[0]
+        else:
+            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))    
         self.write(cr, uid, ids, vals)
         return True
 
