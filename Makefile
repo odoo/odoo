@@ -1,6 +1,7 @@
 # -*- makefile -*-
 
 addons-path := bin/addons/ 
+extra-addons:= ''
 root-path := bin/  
 port := 8069
 net_port := 8070 
@@ -22,7 +23,7 @@ drop-db:
 	python $(interrogation_file) drop-db --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port)
 
 install-module:	
-	python $(interrogation_file) install-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --login=$(login) --password=$(password)
+	python $(interrogation_file) install-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --extra-addons=$(extra-addons) --port=$(port) --login=$(login) --password=$(password)
 
 upgrade-module:	
 	python $(interrogation_file) upgrade-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --login=$(login) --password=$(password)

@@ -426,14 +426,14 @@ def trans_generate(lang, modules, dbname=None):
         xml_name = "%s.%s" % (module, encode(xml_name))
 
         if not pool.get(model):
-            logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r" % (model,))
+            logger.notifyChannel("db", netsvc.LOG_ERROR, "Unable to find object %r" % (model,))
             continue
         
-        try:
-            obj = pool.get(model).browse(cr, uid, res_id)
-        except BrowseRecordError:
-            logger.notifyChannel("db", netsvc.LOG_ERROR, "unable to find object %r with id %d" % (model, res_id))
+        exists = pool.get(model).exists(cr, uid, res_id)
+        if not exists:
+            logger.notifyChannel("db", netsvc.LOG_WARNING, "Unable to find object %r with id %d" % (model, res_id))
             continue
+        obj = pool.get(model).browse(cr, uid, res_id)
 
         if model=='ir.ui.view':
             d = etree.XML(encode(obj.arch))
