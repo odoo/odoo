@@ -32,7 +32,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'project', 'hr_timesheet'],
+    'depends': ['base', 'project', 'hr_timesheet_sheet'],
     'init_xml': [],
     'update_xml': ["process/project_timesheet_process.xml"],
     'demo_xml': [],
