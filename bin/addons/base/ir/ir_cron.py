@@ -27,6 +27,9 @@ import tools
 import pooler
 from osv import fields,osv
 
+def str2tuple(s):
+    return eval('tuple(%s)' % s)
+
 _intervalTypes = {
     'work_days': lambda interval: DateTime.RelativeDateTime(days=interval),
     'days': lambda interval: DateTime.RelativeDateTime(days=interval),
@@ -65,25 +68,39 @@ class ir_cron(osv.osv, netsvc.Agent):
         'doall' : lambda *a: 1
     }
 
+    def _check_args(self, cr, uid, ids, context=None):
+        try:
+            for this in self.browse(cr, uid, ids, context):
+                str2tuple(this.args)
+        except:
+            return False
+        return True
+    
+    _constraints= [
+        (_check_args, 'Invalid arguments', ['args']),
+    ]
+
     def _callback(self, cr, uid, model, func, args):
-        args = (args or []) and eval(args)
-        m=self.pool.get(model)
+        args = str2tuple(args)
+        m = self.pool.get(model)
         if m and hasattr(m, func):
             f = getattr(m, func)
-            f(cr, uid, *args)
+            try:
+                f(cr, uid, *args)
+            except Exception, e:
+                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, "Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
+                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, tools.exception_to_unicode(e))
+
 
     def _poolJobs(self, db_name, check=False):        
         try:
             db, pool = pooler.get_db_and_pool(db_name)
         except:
             return False        
-        if pool._init:
-            # retry in a few minutes
-            next_call = 600
-        else:
-            now = DateTime.now()
-            try:
-                cr = db.cursor()
+        try:
+            cr = db.cursor()
+            if not pool._init:
+                now = DateTime.now()
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
                     nextcall = DateTime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
@@ -103,24 +120,22 @@ class ir_cron(osv.osv, netsvc.Agent):
                         addsql = ', active=False'
                     cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
                     cr.commit()
-            finally:
-                cr.commit()
-                cr.close()
 
-        #
-        # Can be improved to do at the min(min(nextcalls), time()+next_call)
-        # But is this an improvement ?
-        # 
-        cr = db.cursor()
-        cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and nextcall>=now()')
-        next_call = cr.dictfetchone()['min_next_call']  
-        cr.close()                 
-        if next_call:                
-            next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
-        else:
-            next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
-        if not check:
-            self.setAlarm(self._poolJobs, next_call, db_name, db_name)
+
+            cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and nextcall>=now()')
+            next_call = cr.dictfetchone()['min_next_call']  
+            if next_call:                
+                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
+            else:
+                next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
+        
+            if not check:
+                self.setAlarm(self._poolJobs, next_call, db_name, db_name)
+        
+        finally:
+            cr.commit()
+            cr.close()
+
             
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)        
