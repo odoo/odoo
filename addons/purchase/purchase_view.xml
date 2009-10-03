@@ -215,10 +215,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
-                    <field name="order_id"/>
-                    <field name="date_order"/>
+                    <field name="name"/>
                     <field name="date_planned"/>
-                    <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
