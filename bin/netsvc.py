@@ -109,10 +109,10 @@ class ExportService(object):
         return cls._services[name]
 
     def dispatch(self, method, auth, params):
-	pass
-	
+        raise Exception("stub dispatch at %s" % self.__name)
+        
     def new_dispatch(self,method,auth,params):
-	pass
+        raise Exception("stub dispatch at %s" % self.__name)
 
     def abortResponse(self, error, description, origin, details):
         if not tools.config['debug_mode']:
@@ -354,6 +354,9 @@ class OpenERPDispatcher:
 	        auth = None
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result)
+            # We shouldn't marshall None,
+            if result == None:
+                result = False
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
