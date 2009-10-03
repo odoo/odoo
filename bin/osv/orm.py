@@ -1332,7 +1332,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -2880,7 +2880,7 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
         if not context:
