@@ -1535,7 +1535,7 @@ class orm_memory(orm_template):
 
         # get the default values from the context
         for key in context or {}:
-            if key.startswith('default_'):
+            if key.startswith('default_') and (key[8:] in fieds_list):
                 value[key[8:]] = context[key]
         return value
 
