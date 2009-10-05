@@ -577,6 +577,7 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
+                    
                 field = fields[i]
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
@@ -811,7 +812,7 @@ class orm_template(object):
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
-                     noupdate=noupdate, res_id=res_id)
+                     noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
