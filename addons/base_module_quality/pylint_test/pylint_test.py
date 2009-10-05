@@ -48,29 +48,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 0.0
         dict_py = {}
         flag = False
-        self.result_details += '''<html><body><head>
-        <style>
-            .bstyle
-            {
-            border-width:2px;
-            border-style:dashed;
-            border-color: gray;
-            }
-            .btstyle
-            {
-            border-width:2px;
-            border-style:solid;
-            border-color: gray;
-            }
-            .head
-            {
-            color: black;background: none;font-weight: normal;margin: 0;padding-top: .5em;
-            padding-bottom: .17em; border-bottom: 1px solid #aaa;
-            }
-            }
-      </style>
-
-        '''
+        self.result_details += '''<html><body><head>%s</head>'''%(self.get_style())
         for file_py in list_files:
             if file_py.split('.')[-1] == 'py' and not file_py.endswith('__init__.py') and not file_py.endswith('__terp__.py'):
                 if not flag:
@@ -104,17 +82,18 @@ class quality_test(base_module_quality.abstract_quality_check):
                     dict_py[file_py] = [file_py, _("Unable to parse the result. Check the details.")]
                 replace_string = ''
                 replace_string += res
-                replace_string = replace_string.replace('''<div''', '''<div style="border:1px solid #aaaaaa;background-color:#f9f9f9;padding:5px;"''')
+                replace_string = replace_string.replace('''<div''', '''<div class="divstyle" ''')
                 replace_string = replace_string.replace('''<h1''', '''<h1 style="font-size:188%" class="head" ''')
                 replace_string = replace_string.replace('''<h2''', '''<h2 style="font-size:150%" class="head" ''')
                 replace_string = replace_string.replace('''<h3''', '''<h3 style="font-size:132%" class="head" ''')
                 replace_string = replace_string.replace('''<h4''', '''<h4 style="font-size:116%" class="head" ''')
                 replace_string = replace_string.replace('''<h5''', '''<h5 style="font-size:100%" class="head" ''')
                 replace_string = replace_string.replace('''<h6''', '''<h6 style="font-size:80%" class="head" ''')
-                replace_string = replace_string.replace('''<table''', '''<table class="bstyle" ''')
-                replace_string = replace_string.replace('''<th''', '''<th class="btstyle" ''')
-                replace_string = replace_string.replace('''<td''', '''<td class="btstyle" ''')
+                replace_string = replace_string.replace('''<table''', '''<table class="tablestyle" ''')
+                replace_string = replace_string.replace('''<th''', '''<th class="tdatastyle" ''')
+                replace_string = replace_string.replace('''<td''', '''<td class="tdatastyle" ''')
                 self.result_details += replace_string
+
         if not flag:
             self.error = True
             self.result = _("No python file found")
@@ -134,4 +113,3 @@ class quality_test(base_module_quality.abstract_quality_check):
         return ""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

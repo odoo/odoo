@@ -40,7 +40,6 @@ Test checks for fields, views, security rules, dependancy level
         return None
 
     def run_test(self, cr, uid, module_path):
-
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
         obj_list = self.get_objects(cr, uid, module_name)
@@ -184,24 +183,9 @@ Test checks for fields, views, security rules, dependancy level
     def get_result_details(self, dict_obj):
         res = ""
         if dict_obj != {}:
-            str_html = '''<html><strong> Fields Result</strong><head>
-            <style>
-                .bstyle
-                {
-                border-width:2px;
-                border-style:dashed;
-                border-color: gray;
-                }
-                .btstyle
-                {
-                border-width:2px;
-                border-style:solid;
-                border-color: gray;
-                }
-                }
-           </style></head><body>'''
+            str_html = '''<html><strong> Fields Result</strong><head>%s</head><body>'''%(self.get_style())
             res += str_html
-            header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('Field name'), _('Suggestion')])
+            header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Field name'), _('Suggestion')])
             if not self.error:
                 for key in dict_obj.keys():
                     data_list = []
@@ -211,34 +195,18 @@ Test checks for fields, views, security rules, dependancy level
                     for i in data_list:
                         count = count + 1
                         final_dict[key + str(count)] = i
-                    res_str = '<table class="bstyle">' + self.format_html_table(header, data_list=final_dict) + '</table><br>'
-                    res += res_str.replace('''<td''', '''<td class="btstyle" ''')
+                    res_str = '<table class="tablestyle">' + self.format_html_table(header, data_list=final_dict) + '</table><br>'
+                    res += res_str.replace('''<td''', '''<td class="tdatastyle" ''')
             return res + '</body></html>'
         return ""
 
     def get_result_general(self, dict_obj, name=''):
-        str_html = '''<html><strong> %s Result</strong><head>
-            <style>
-                .bstyle
-                {
-                border-width:2px;
-                border-style:dashed;
-                border-color: gray;
-                }
-                .btstyle
-                {
-                border-width:2px;
-                border-style:solid;
-                border-color: gray;
-                }
-                }
-           </style></head><body><table class="bstyle">'''% (name)
-        header = ('<tr><th class="btstyle">%s</th><th class="btstyle">%s</th></tr>', [_('Object Name'), _('Suggestion')])
+        str_html = '''<html><strong> %s Result</strong><head>%s</head><body><table class="tablestyle">'''% (name, self.get_style())
+        header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Suggestion')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_obj) + '</table></body></html>'
-            res = res.replace('''<td''', '''<td class="btstyle" ''')
+            res = res.replace('''<td''', '''<td class="tdatastyle" ''')
             return res
         return ""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
