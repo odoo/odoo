@@ -28,9 +28,9 @@ _uid_cache = {}
 def login(db, login, password):
     cr = pooler.get_db(db).cursor()
     if password:
-        cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), password.encode('utf-8')))
+        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
     else:
-        cr.execute('select id from res_users where login=%s and password is null and active', (login.encode('utf-8'),))
+        cr.execute('select id from res_users where login=%s and password is null and active', (tools.ustr(login),))
     res = cr.fetchone()
     cr.close()
     if res:

@@ -86,7 +86,7 @@ class db(netsvc.Service):
                     serv.actions[id]['progress'] = 0
                     clean = False
                     cr = sql_db.db_connect(db_name).cursor()
-#                    tools.init_db(cr)
+                    tools.init_db(cr)
                     cr.commit()
                     cr.close()
                     cr = None
