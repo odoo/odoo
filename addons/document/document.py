@@ -338,7 +338,8 @@ class document_directory(osv.osv):
             object2: the other object linked (if object.directory.content)
     """
     def get_object(self, cr, uid, uri, context={}):        
-        #TODO : set user's context_lang in context        
+        #TODO : set user's context_lang in context  
+        context.update({'lang':False})      
         if not uri:
             return node_class(cr, uid, '', False, context=context, type='database')
         turi = tuple(uri)
@@ -654,6 +655,7 @@ class document_file(osv.osv):
             vals['res_id']=context.get('default_res_id',False)
         if not vals.get('res_model', False) and context.get('default_res_model',False):
             vals['res_model']=context.get('default_res_model',False)
+
         if vals.get('res_id', False) and vals.get('res_model',False):
             obj_model=self.pool.get(vals['res_model'])
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
@@ -692,7 +694,7 @@ class document_file(osv.osv):
         try:
             res = content_index(base64.decodestring(datas), vals['datas_fname'], vals.get('content_type', None))
             super(document_file,self).write(cr, uid, [result], {
-                'index_content': res,
+                'index_content' : res,
             })
             cr.commit()
         except:

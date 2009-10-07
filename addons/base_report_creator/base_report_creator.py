@@ -107,7 +107,16 @@ class report_creator(osv.osv):
                 else:
                     temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'field'+str(i)})
                     i+=1
-            arch += '''<%(view_type)s string="%(string)s" date_start="%(date_start)s" date_delay="%(date_delay)s" color="%(color)s">''' %set_dict
+            arch += '''<%(view_type)s string="%(string)s" date_start="%(date_start)s" ''' %set_dict
+            if set_dict.get('date_delay',False):
+                arch +=''' date_delay="%(date_delay)s"  '''%set_dict
+            
+            if set_dict.get('date_stop',False):
+                arch +=''' date_stop="%(date_stop)s" '''%set_dict      
+            
+            if set_dict.get('color',False):
+                arch +=''' color="%(color)s"'''%set_dict
+            arch += '''>'''
             arch += ''.join(temp_list)
         else:
             arch += '<%s string="%s">\n' % (view_type, report.name)
@@ -375,7 +384,7 @@ class report_creator_field(osv.osv):
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
         'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('count','Count'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),
         'graph_mode': fields.selection([('','/'),('x','X Axis'),('y','Y Axis')], 'Graph Mode'),
-        'calendar_mode': fields.selection([('','/'),('date_start','Starting Date'),('date_end','Ending Date'),('date_delay','Delay'),('color','Uniq Colors')], 'Calendar Mode'),
+        'calendar_mode': fields.selection([('','/'),('date_start','Starting Date'),('date_end','Ending Date'),('date_delay','Delay'),('date_stop','End Date'),('color','Unique Colors')], 'Calendar Mode'),
     }
     _defaults = {
         'group_method': lambda *args: 'group',

@@ -5,43 +5,40 @@
         #
         # Define PO Line Views
         #
+        
+        <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                    <xpath expr="/form/notebook/page[@string='Purchase Order']/field[@name='order_line']/tree/field[@name='price_subtotal']" position="after">
+                        <field name="invoiced"/>
+                        <field name="state"/>
+                    </xpath>
+            </field>
+        </record>
+
         <record id="purchase_order_line_form" model="ir.ui.view">
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
             <field name="type">form</field>
-            <field name="priority">20</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+            <field name="priority">17</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line">
-                    <group colspan="4" col="6">
-                        <field name="order_id" select="1"/>
-                        <field name="partner_id" select="1"/>
-                        <field name="date_order" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Order Line">
-                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)" select="1"/>
-                            <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order, parent.fiscal_position)"/>
-                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
-                            <field colspan="4" name="name"/>
-                            <field name="date_planned" select="2"/>
-                            <field name="price_unit"/>
-                            <field name="account_analytic_id"/>
-                            <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
-                        </page>
-                        <page string="History" groups="base.group_extended">
-                               <separator colspan="4" string="Stock Moves"/>
-                               <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
-                               <separator colspan="4" string="Manual Invoices"/>
-                               <field name="invoiced"/>
-                               <field name="state"/><newline/>
-                               <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
-                        </page>
-                    </notebook>
-                </form>
+                <data>
+                    <xpath expr="/form/notebook/page[@string='Invoicing']" position="inside">
+                        <separator colspan="4" string="Manual Invoices"/>
+                        <field name="invoiced"/>
+                        <newline/>
+                        <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
+                    </xpath>
+                    <xpath expr="/form/notebook" position="after">
+                        <group>
+                            <field name="state" />
+                        </group>
+                    </xpath>
+                </data>
             </field>
         </record>
 
@@ -49,20 +46,11 @@
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
             <field name="type">tree</field>
-            <field name="priority">20</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Line">
-                    <field name="date_order"/>
-                    <field name="order_id"/>
-                    <field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
-                    <field name="price_unit"/>
-                    <field name="price_subtotal"/>
+                <field name="price_subtotal" position="after">
                     <field name="invoiced"/>
-                    <field name="date_planned"/>
-                </tree>
+                </field>
             </field>
         </record>
 

@@ -374,7 +374,7 @@ class sale_order(osv.osv):
             'account_id': a,
             'partner_id': order.partner_id.id,
             'address_invoice_id': order.partner_invoice_id.id,
-            'address_contact_id': order.partner_invoice_id.id,
+            'address_contact_id': order.partner_order_id.id,
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
@@ -520,7 +520,7 @@ class sale_order(osv.osv):
                         pending_deliveries = True
                 
                 if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
-                    finished = True
+#                    finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
@@ -554,8 +554,8 @@ class sale_order(osv.osv):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
-                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = DateTime.now() + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
+                date_planned = (date_planned - DateTime.DateTimeDeltaFromDays(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -736,7 +736,7 @@ class sale_order_line(osv.osv):
         'order_id': fields.many2one('sale.order', 'Order Ref', required=True, ondelete='cascade', select=True),
         'name': fields.char('Description', size=256, required=True, select=True),
         'sequence': fields.integer('Sequence'),
-        'delay': fields.float('Delivery Delay', required=True),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),

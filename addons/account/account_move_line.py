@@ -28,6 +28,8 @@ from tools.translate import _
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
+import tools
+
 class account_move_line(osv.osv):
     _name = "account.move.line"
     _description = "Entry lines"
@@ -908,7 +910,7 @@ class account_move_line(osv.osv):
                         'move_id': vals['move_id'],
                         'journal_id': vals['journal_id'],
                         'period_id': vals['period_id'],
-                        'name': vals['name']+' '+tax['name'],
+                        'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                         'date': vals['date'],
                         'partner_id': vals.get('partner_id',False),
                         'ref': vals.get('ref',False),
@@ -927,7 +929,7 @@ class account_move_line(osv.osv):
                     'move_id': vals['move_id'],
                     'journal_id': vals['journal_id'],
                     'period_id': vals['period_id'],
-                    'name': vals['name']+' '+tax['name'],
+                    'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
                     'date': vals['date'],
                     'partner_id': vals.get('partner_id',False),
                     'ref': vals.get('ref',False),
