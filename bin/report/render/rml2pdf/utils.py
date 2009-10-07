@@ -42,6 +42,7 @@ import reportlab
 from lxml import etree
 import copy
 import tools
+import locale
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -133,6 +134,15 @@ units = [
 def unit_get(size):
     global units
     if size:
+        if size.find('.') == -1:
+            decimal_point = '.'
+            try:
+                decimal_point = locale.RADIXCHAR
+            except:
+                decimal_point = locale.localeconv()['decimal_point']
+
+            size = size.replace(decimal_point, '.')
+
         for unit in units:
             res = unit[0].search(size, 0)
             if res:
