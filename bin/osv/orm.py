@@ -1230,6 +1230,15 @@ class orm_template(object):
         model = True
         sql_res = False
         while ok:
+            view_ref = context.get(view_type + '_view_ref', False)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+
             if view_id:
                 where = (model and (" and model='%s'" % (self._name,))) or ''
                 cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
