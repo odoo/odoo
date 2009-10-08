@@ -579,6 +579,9 @@ class orm_template(object):
                     continue
                     
                 field = fields[i]
+                if prefix and not prefix[0] in field:
+                    continue
+                
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
                         res = False
@@ -635,7 +638,7 @@ class orm_template(object):
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
                             res_id = ir_model_data_obj.read(cr, uid, [id],
                                     ['res_id'])[0]['res_id']
-                    row[field[0][:-3]] = res_id or False
+                    row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
                         len(field[len(prefix)].split(':lang=')) == 2:
@@ -671,7 +674,7 @@ class orm_template(object):
                         try:                            
                             _check_db_id(self, model_name, line[i])
                             data_res_id = is_db_id = int(line[i])
-                        except Exception,e:                                    
+                        except Exception,e:
                             warning += [tools.exception_to_unicode(e)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                       tools.exception_to_unicode(e))
