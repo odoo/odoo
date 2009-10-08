@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -37,24 +37,36 @@ waittime = 10
 wait_count = 0
 wait_limit = 12
 
-def start_server(root_path, port, addons_path):    
-    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))    
+def to_decode(s):
+    try:
+        return s.encode('utf-8')
+    except UnicodeError:
+        try:
+            return s.encode('latin')
+        except UnicodeError:
+            try:
+                return s.decode('ascii')
+            except UnicodeError:
+                return s
+
+def start_server(root_path, port, addons_path):
+    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))
 def clean():
     if os.path.isfile('openerp.pid'):
-        ps = open('openerp.pid') 
+        ps = open('openerp.pid')
         if ps:
             pid = int(ps.read())
-            ps.close()  
-            if pid:    
+            ps.close()
+            if pid:
                 os.kill(pid,9)
 
 def execute(connector, method, *args):
-    global wait_count 
+    global wait_count
     res = False
-    try:        
+    try:
         res = getattr(connector,method)(*args)
-    except socket.error,e:        
-        if e.args[0] == 111:                                   
+    except socket.error,e:
+        if e.args[0] == 111:
             if wait_count > wait_limit:
                 print "Server is taking too long to start, it has exceeded the maximum limit of %d seconds."%(wait_limit)
                 clean()
@@ -66,23 +78,23 @@ def execute(connector, method, *args):
         else:
             raise e
     wait_count = 0
-    return res                    
+    return res
 
 def login(uri, dbname, user, pwd):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
-    uid = execute(conn,'login',dbname, user, pwd) 
+    uid = execute(conn,'login',dbname, user, pwd)
     return uid
 
-def import_translate(uri, user, pwd, dbname, translate_in):      
-    uid = login(uri, dbname, user, pwd)    
-    if uid:        
+def import_translate(uri, user, pwd, dbname, translate_in):
+    uid = login(uri, dbname, user, pwd)
+    if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
         wiz_id = execute(conn,'create',dbname, uid, pwd, 'module.lang.import')
         for trans_in in translate_in:
-            lang,ext = os.path.splitext(trans_in.split('/')[-1])                
-            state = 'init'  
+            lang,ext = os.path.splitext(trans_in.split('/')[-1])
+            state = 'init'
             datas = {'form':{}}
-            while state!='end':                
+            while state!='end':
                 res = execute(conn,'execute',dbname, uid, pwd, wiz_id, datas, state, {})
                 if 'datas' in res:
                     datas['form'].update( res['datas'].get('form',{}) )
@@ -98,34 +110,31 @@ def import_translate(uri, user, pwd, dbname, translate_in):
                     })
                     trans_obj.close()
                 elif res['type']=='action':
-                    state = res['state']                    
-                
-        
-def check_quality(uri, user, pwd, dbname, modules, quality_logs):       
+                    state = res['state']
+
+
+def check_quality(uri, user, pwd, dbname, modules, quality_logs):
     uid = login(uri, dbname, user, pwd)
     quality_logs += 'quality-logs'
     if uid:
         conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
-        final = {}   
-        for module in modules:   
+        final = {}
+        for module in modules:
             qualityresult = {}
-            test_detail = {}              
+            test_detail = {}
             quality_result = execute(conn,'execute', dbname, uid, pwd,'module.quality.check','check_quality',module)
             detail_html = ''
             html = '''<html><body><a name="TOP"></a>'''
-            html +="<h1> Module : %s </h1>"%(quality_result['name'])   
-            html += "<h2> Final score : %s</h2>"%(quality_result['final_score'])
+            html +="<h1> Module: %s </h1>"%(quality_result['name'])
+            html += "<h2> Final score: %s</h2>"%(quality_result['final_score'])
             html += "<div id='tabs'>"
             html += "<ul>"
-            for x,y,detail in quality_result['check_detail_ids']:                
+            for x,y,detail in quality_result['check_detail_ids']:
                 test = detail.get('name')
                 msg = detail.get('message','')
                 score = round(float(detail.get('score',0)),2)
                 html += "<li><a href=\"#%s\">%s</a></li>"%(test.replace(' ','-'),test)
-                if test == 'Unit Test':
-                    if not detail.get('detail',''):
-                        detail['detail'] = '''<html><body><b>%s</b></body></html>'''%(detail.get('summary',''))
-                detail_html +="<div id=\"%s\"><h3>%s (Score : %s)</h3>%s</div>"%(test.replace(' ','-'),test,score,detail.get('detail',''))                
+                detail_html +='''<div id=\"%s\"><h3>%s (Score : %s)</h3><font color=red><h5>%s</h5></font>%s</div>'''%(test.replace(' ', '-'), test, score, msg, detail.get('detail', ''))
                 test_detail[test] = (score,msg,detail.get('detail',''))
             html += "</ul>"
             html += "%s"%(detail_html)
@@ -133,7 +142,7 @@ def check_quality(uri, user, pwd, dbname, modules, quality_logs):
             if not os.path.isdir(quality_logs):
                 os.mkdir(quality_logs)
             fp = open('%s/%s.html'%(quality_logs,module),'wb')
-            fp.write(str(html))
+            fp.write(to_decode(html))
             fp.close()
             #final[quality_result['name']] = (quality_result['final_score'],html,test_detail)
 
@@ -143,9 +152,9 @@ def check_quality(uri, user, pwd, dbname, modules, quality_logs):
         #print "LOG PATH%s"%(os.path.realpath('quality_log.pck'))
         return True
     else:
-        print 'Login Failed...'        
+        print 'Login Failed...'
         clean()
-        sys.exit(1)     
+        sys.exit(1)
 
 
 
@@ -164,25 +173,25 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
     login_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
     db_list = execute(conn, 'list')
     if dbname not in db_list:
-        id = execute(conn,'create',admin_passwd, dbname, True, lang) 
+        id = execute(conn,'create',admin_passwd, dbname, True, lang)
         wait(id,uri)
-    uid = login_conn.login(dbname, user, pwd)   
+    uid = login_conn.login(dbname, user, pwd)
 
     wiz_id = execute(wiz_conn,'create', dbname, uid, user, 'base_setup.base_setup')
 
     state = 'init'
     datas = {'form':{}}
 
-    while state!='config':        
+    while state!='config':
         res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
         if state=='init':
             datas['form'].update( res['datas'] )
         if res['type']=='form':
-            for field in res['fields'].keys():               
+            for field in res['fields'].keys():
                 datas['form'][field] = datas['form'].get(field,False)
             state = res['state'][-1][0]
             datas['form'].update({
-                'profile': -1                
+                'profile': -1
             })
         elif res['type']=='state':
             state = res['state']
@@ -194,71 +203,71 @@ def drop_db(uri, dbname):
     conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/db')
     db_list = execute(conn,'list')
     if dbname in db_list:
-        execute(conn, 'drop', admin_passwd, dbname)    
+        execute(conn, 'drop', admin_passwd, dbname)
     return True
-    
+
 def make_links(uri, uid, dbname, source, destination, module, user, pwd):
     if module in ('base','quality_integration_server'):
-        return True  
-    if not os.path.islink(destination + '/' + module): 
-        if not os.path.isdir(destination + '/' + module):    
+        return True
+    if not os.path.islink(destination + '/' + module):
+        if not os.path.isdir(destination + '/' + module):
             for path in source:
                 if os.path.isdir(path + '/' + module):
                     os.symlink(path + '/' + module, destination + '/' + module)
                     obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
                     execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
                     module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
-                    if len(module_ids):    
+                    if len(module_ids):
                         data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
                         dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
-                        for dep_data in dep_datas:    
+                        for dep_data in dep_datas:
                             make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
-                    return True    
-    return False    
+                    return True
+    return False
 
 def install_module(uri, dbname, modules, addons='', extra_addons='',  user='admin', pwd='admin'):
     uid = login(uri, dbname, user, pwd)
     if extra_addons:
         extra_addons = extra_addons.split(',')
-    if uid: 
+    if uid:
         if addons and extra_addons:
-            for module in modules:  
-                make_links(uri, uid, dbname, extra_addons, addons, module, user, pwd) 
+            for module in modules:
+                make_links(uri, uid, dbname, extra_addons, addons, module, user, pwd)
 
         obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
         wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
         module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])
-        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_install', module_ids)           
+        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_install', module_ids)
         wiz_id = execute(wizard_conn, 'create', dbname, uid, pwd, 'module.upgrade.simple')
         state = 'init'
         datas = {}
         #while state!='menu':
-        while state!='end':                
-            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})                
+        while state!='end':
+            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
             if state == 'init':
                 state = 'start'
             elif state == 'start':
-                state = 'end'                                  
+                state = 'end'
     return True
 
 def upgrade_module(uri, dbname, modules, user='admin', pwd='admin'):
     uid = login(uri, dbname, user, pwd)
-    if uid: 
+    if uid:
         obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
-        wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')        
-        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])  
-        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_upgrade', module_ids)           
+        wizard_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
+        module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','in',modules)])
+        execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'button_upgrade', module_ids)
         wiz_id = execute(wizard_conn, 'create', dbname, uid, pwd, 'module.upgrade.simple')
         state = 'init'
         datas = {}
         #while state!='menu':
-        while state!='end':                
-            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})                
+        while state!='end':
+            res = execute(wizard_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
             if state == 'init':
                 state = 'start'
             elif state == 'start':
-                state = 'end'                                  
-                            
+                state = 'end'
+
     return True
 
 
@@ -271,21 +280,21 @@ Basic Commands:
     start-server         Start Server
     create-db            Create new database
     drop-db              Drop database
-    install-module       Install module 
+    install-module       Install module
     upgrade-module       Upgrade module
     install-translation  Install translation file
     check-quality        Calculate quality and dump quality result into quality_log.pck using pickle
 """
-parser = optparse.OptionParser(usage)            
+parser = optparse.OptionParser(usage)
 parser.add_option("--modules", dest="modules",
                      help="specify modules to install or check quality")
 parser.add_option("--addons-path", dest="addons_path", help="specify the addons path")
 parser.add_option("--quality-logs", dest="quality_logs", help="specify the path of quality logs files which has to stores")
 parser.add_option("--root-path", dest="root_path", help="specify the root path")
 parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
-parser.add_option("-d", "--database", dest="db_name", help="specify the database name")  
-parser.add_option("--login", dest="login", help="specify the User Login") 
-parser.add_option("--password", dest="pwd", help="specify the User Password")  
+parser.add_option("-d", "--database", dest="db_name", help="specify the database name")
+parser.add_option("--login", dest="login", help="specify the User Login")
+parser.add_option("--password", dest="pwd", help="specify the User Password")
 parser.add_option("--translate-in", dest="translate_in",
                      help="specify .po files to import translation terms")
 parser.add_option("--extra-addons", dest="extra_addons",
@@ -296,7 +305,7 @@ if len(args) != 1:
     parser.error("incorrect number of arguments")
 command = args[0]
 if command not in ('start-server','create-db','drop-db','install-module','upgrade-module','check-quality','install-translation'):
-    parser.error("incorrect command")    
+    parser.error("incorrect command")
 
 def die(cond, msg):
     if cond:
@@ -314,7 +323,7 @@ options = {
     'quality-logs' : opt.quality_logs or '',
     'root-path' : opt.root_path or '',
     'translate-in': [],
-    'port' : opt.port or 8069,        
+    'port' : opt.port or 8069,
     'database': opt.db_name or 'terp',
     'modules' : opt.modules or [],
     'login' : opt.login or 'admin',
@@ -325,33 +334,33 @@ options = {
 options['modules'] = opt.modules and map(lambda m: m.strip(), opt.modules.split(',')) or []
 # Hint:i18n-import=purchase:ar_AR.po+sale:fr_FR.po,nl_BE.po
 if opt.translate_in:
-    translate = opt.translate_in     
-    for module_name,po_files in map(lambda x:tuple(x.split(':')),translate.split('+')):                          
-        for po_file in po_files.split(','):                   
+    translate = opt.translate_in
+    for module_name,po_files in map(lambda x:tuple(x.split(':')),translate.split('+')):
+        for po_file in po_files.split(','):
             po_link = '%s/%s/i18n/%s'%(options['addons-path'], module_name, po_file)
-            options['translate-in'].append(po_link) 
-           
+            options['translate-in'].append(po_link)
+
 uri = 'http://localhost:' + str(options['port'])
 
 server_thread = threading.Thread(target=start_server,
                 args=(options['root-path'], options['port'], options['addons-path']))
-try:    
-    server_thread.start()       
-    if command == 'create-db': 
+try:
+    server_thread.start()
+    if command == 'create-db':
         create_db(uri, options['database'], options['login'], options['pwd'])
-    if command == 'drop-db': 
+    if command == 'drop-db':
         drop_db(uri, options['database'])
-    if command == 'install-module': 
+    if command == 'install-module':
         install_module(uri, options['database'], options['modules'],options['addons-path'],options['extra-addons'],options['login'], options['pwd'])
-    if command == 'upgrade-module': 
+    if command == 'upgrade-module':
         upgrade_module(uri, options['database'], options['modules'], options['login'], options['pwd'])
     if command == 'check-quality':
         check_quality(uri, options['login'], options['pwd'], options['database'], options['modules'], options['quality-logs'])
-    if command == 'install-translation':        
+    if command == 'install-translation':
         import_translate(uri, options['login'], options['pwd'], options['database'], options['translate-in'])
     clean()
     sys.exit(0)
-    
+
 except xmlrpclib.Fault, e:
     print e.faultString
     clean()
@@ -360,7 +369,7 @@ except Exception, e:
     print e
     clean()
     sys.exit(1)
-    
+
 
 
 
