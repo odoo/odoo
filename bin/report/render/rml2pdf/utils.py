@@ -137,7 +137,7 @@ def unit_get(size):
         if size.find('.') == -1:
             decimal_point = '.'
             try:
-                decimal_point = locale.RADIXCHAR
+                decimal_point = locale.nl_langinfo(locale.RADIXCHAR)
             except:
                 decimal_point = locale.localeconv()['decimal_point']
 
