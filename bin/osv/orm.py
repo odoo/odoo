@@ -586,6 +586,7 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
+                    
                 field = fields[i]
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
@@ -822,7 +823,7 @@ class orm_template(object):
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
-                     noupdate=noupdate, res_id=res_id)
+                     noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
@@ -1349,7 +1350,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1790,7 +1791,7 @@ class orm(orm_template):
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
                         else:
@@ -1838,7 +1839,7 @@ class orm(orm_template):
                                     default = self._defaults[k](self, cr, 1, {})
                                     if (default is not None):
                                         ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE %s is NULL' % (self._table, k, ss[0], k)
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
                                 # add the NOT NULL constraint
                                 cr.commit()
@@ -2897,7 +2898,7 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
         if not context:
