@@ -189,6 +189,8 @@ class expression(object):
                 if operator == 'child_of':
                     if isinstance(right, basestring):
                         ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                    elif isinstance(right, (int, long)):
+                        ids2 = list([right])
                     else:
                         ids2 = list(right)
 
