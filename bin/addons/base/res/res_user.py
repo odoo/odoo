@@ -136,7 +136,7 @@ class users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),        
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
-        'context_company': fields.selection(_companies_get,  'Company', size=64),        
+        'company': fields.selection(_companies_get,  'Company', size=64),        
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -201,7 +201,7 @@ class users(osv.osv):
                     ok=False
             if ok:
                 uid = 1
-        context_company=values.get('context_company',False)
+        context_company=values.get('company',False)
         if context_company:
             values.update({'company_id':context_company})                
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
