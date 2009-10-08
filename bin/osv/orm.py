@@ -1062,19 +1062,37 @@ class orm_template(object):
 
         buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
         for button in buttons:
-            ok = True
+            can_click = True
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                # TODO handle the case of more than one workflow for a model
+                cr.execute("""SELECT DISTINCT t.role_id 
+                                FROM wkf 
+                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id 
+                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                               WHERE wkf.osv = %s
+                                 AND t.signal = %s
+                           """, (self._name, button.getAttribute('name'),))
                 roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
+                
+                # draft -> valid = signal_next (role X)
+                # draft -> cancel = signal_cancel (no role)
+                #
+                # valid -> running = signal_next (role Y)
+                # valid -> cancel = signal_cancel (role Z)
+                #
+                # running -> done = signal_next (role Z)
+                # running -> cancel = signal_cancel (role Z)
+                
 
-            if not ok:
-                button.setAttribute('readonly', '1')
-            else:
-                button.setAttribute('readonly', '0')
+                # As we don't know the object state, in this scenario, 
+                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
+                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
+                # The verification will be made later in workflow process...
+                if roles:
+                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
+            
+            button.setAttribute('readonly', str(int(not can_click)))
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
