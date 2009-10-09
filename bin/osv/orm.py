@@ -1074,7 +1074,7 @@ class orm_template(object):
                           INNER JOIN wkf_transition t ON (t.act_to = a.id)
                                WHERE wkf.osv = %s
                                  AND t.signal = %s
-                           """, (self._name, button.getAttribute('name'),))
+                           """, (self._name, button.get('name'),))
                 roles = cr.fetchall()
                 
                 # draft -> valid = signal_next (role X)
@@ -1094,7 +1094,7 @@ class orm_template(object):
                 if roles:
                     can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
             
-            button.setAttribute('readonly', str(int(not can_click)))
+            button.set('readonly', str(int(not can_click)))
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
