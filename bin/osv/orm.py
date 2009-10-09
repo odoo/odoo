@@ -580,7 +580,11 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
+                    
                 field = fields[i]
+                if prefix and not prefix[0] in field:
+                    continue
+                
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
                         res = False
@@ -637,7 +641,7 @@ class orm_template(object):
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
                             res_id = ir_model_data_obj.read(cr, uid, [id],
                                     ['res_id'])[0]['res_id']
-                    row[field[0][:-3]] = res_id or False
+                    row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
                         len(field[len(prefix)].split(':lang=')) == 2:
@@ -673,7 +677,7 @@ class orm_template(object):
                         try:                            
                             _check_db_id(self, model_name, line[i])
                             data_res_id = is_db_id = int(line[i])
-                        except Exception,e:                                    
+                        except Exception,e:
                             warning += [tools.exception_to_unicode(e)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                       tools.exception_to_unicode(e))
@@ -814,7 +818,7 @@ class orm_template(object):
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
-                     noupdate=noupdate, res_id=res_id)
+                     noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
@@ -1060,19 +1064,37 @@ class orm_template(object):
 
         buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
         for button in buttons:
-            ok = True
+            can_click = True
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal=%s", (button.get('name'),))
+                # TODO handle the case of more than one workflow for a model
+                cr.execute("""SELECT DISTINCT t.role_id 
+                                FROM wkf 
+                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id 
+                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                               WHERE wkf.osv = %s
+                                 AND t.signal = %s
+                           """, (self._name, button.getAttribute('name'),))
                 roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
+                
+                # draft -> valid = signal_next (role X)
+                # draft -> cancel = signal_cancel (no role)
+                #
+                # valid -> running = signal_next (role Y)
+                # valid -> cancel = signal_cancel (role Z)
+                #
+                # running -> done = signal_next (role Z)
+                # running -> cancel = signal_cancel (role Z)
+                
 
-            if not ok:
-                button.set('readonly', '1')
-            else:
-                button.set('readonly', '0')
+                # As we don't know the object state, in this scenario, 
+                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
+                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
+                # The verification will be made later in workflow process...
+                if roles:
+                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
+            
+            button.setAttribute('readonly', str(int(not can_click)))
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
@@ -1221,6 +1243,15 @@ class orm_template(object):
         model = True
         sql_res = False
         while ok:
+            view_ref = context.get(view_type + '_view_ref', False)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+
             if view_id:
                 where = (model and (" and model='%s'" % (self._name,))) or ''
                 cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
@@ -1365,7 +1396,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1867,7 +1898,7 @@ class orm(orm_template):
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
                         else:
@@ -1915,7 +1946,7 @@ class orm(orm_template):
                                     default = self._defaults[k](self, cr, 1, {})
                                     if (default is not None):
                                         ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE %s is NULL' % (self._table, k, ss[0], k)
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
                                 # add the NOT NULL constraint
                                 cr.commit()
@@ -3037,7 +3068,7 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
         if not context:
