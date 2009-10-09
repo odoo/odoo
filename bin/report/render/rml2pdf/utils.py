@@ -114,9 +114,7 @@ def _process_text(self, txt):
                     txt = eval(expr,self.localcontext)
                 except Exception,e:
                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-                    netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,
-                            'report :\n%s\n%s\nexpr: %s' % (tb_s, str(e),
-                                expr.encode('utf-8')))
+                    netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,'report :\n%s\n%s\nexpr: %s' % (tb_s, str(e),expr.encode('utf-8')))
                 if type(txt)==type('') or type(txt)==type(u''):
                     txt2 = str2xml(txt)
                     result += tools.ustr(txt2)
