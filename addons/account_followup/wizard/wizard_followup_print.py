@@ -162,7 +162,7 @@ class followup_all_print(wizard.interface):
                         if (not dest) and adr.type=='default':
                             if adr.email:
                                 dest = [adr.email]
-                src = tools.config.options['smtp_user']
+                src = tools.config.options['email_from']
                 if not data['form']['partner_lang']:
                     body = data['form']['email_body']
                 else:

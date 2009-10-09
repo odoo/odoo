@@ -37,6 +37,7 @@ merge_form = """<?xml version="1.0"?>
         * their status is draft
         * they belong to the same partner
         * are going to the same location
+        * have the same pricelist
       - lines will only be merged if:
         * they are exactly the same except for the quantity and unit</label>
 </form>
@@ -80,7 +81,7 @@ def _merge_orders(self, cr, uid, data, context):
     # compute what the new orders should contain
     new_orders = {}
     for porder in [order for order in order_obj.browse(cr, uid, data['ids']) if order.state == 'draft']:
-        order_key = make_key(porder, ('partner_id', 'location_id'))
+        order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
 
         new_order = new_orders.setdefault(order_key, ({}, []))
         new_order[1].append(porder.id)

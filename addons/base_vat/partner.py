@@ -378,10 +378,10 @@ class res_partner(osv.osv):
             22: 'K',
             23: 'E',
         }
-
-        if vat[0] in ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'):
+        #Legal persons with profit aim
+        if vat[0] in ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'U', 'V'):
             try:
-                int(vat[1:])
+                int(vat[1:8])
             except:
                 return False
             sum = mult_add(2, int(vat[1])) + int(vat[2]) + \
@@ -391,10 +391,11 @@ class res_partner(osv.osv):
             check = 10 - (sum % 10)
             if check == 10:
                 check = 0
-            if check != int(vat[8]):
-                return False
+#            if check != int(vat[8]):
+#                return False
             return True
-        elif vat[0] in ('N', 'P', 'Q', 'S'):
+        #Legal persons with non-profit aim
+        elif vat[0] in ('N', 'P', 'Q', 'R', 'S', 'W'):
             try:
                 int(vat[1:8])
             except:
@@ -408,17 +409,26 @@ class res_partner(osv.osv):
             if check != vat[8]:
                 return False
             return True
-        elif vat[0] in ('K', 'L', 'M', 'X'):
+        #Foreign natural persons, under age 14 or non-residents
+        elif vat[0] in ('K', 'L', 'M', 'X', 'Y', 'Z'):
+            if vat[0] == 'Y':
+                check_value = '1' + vat[1:8]
+            elif vat[0] == 'Z':
+                check_value = '2' + vat[1:8]
+            else:
+                check_value = vat[1:8]
+
             try:
-                int(vat[1:8])
+                int(check_value)
             except:
                 return False
-            check = 1 + (int(vat[1:8]) % 23)
+            check = 1 + (int(check_value) % 23)
 
             check = conv[check]
             if check != vat[8]:
                 return False
             return True
+        #Spanish natural persons
         else:
             try:
                 int(vat[:8])

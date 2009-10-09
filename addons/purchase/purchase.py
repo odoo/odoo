@@ -329,7 +329,8 @@ class purchase_order(osv.osv):
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'origin': o.name,
                 'invoice_line': il,
-                'fiscal_position': o.partner_id.property_account_position.id
+                'fiscal_position': o.partner_id.property_account_position.id,
+                'payment_term':o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)

@@ -625,6 +625,7 @@
                 <form string="Packing list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="1"/>
+                        <field name="type"/>
                         <field name="name" select="1" readonly="1"/>
                         <field name="min_date" select="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
@@ -839,6 +840,7 @@
                 <form string="Packing list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="2"/>
+                        <field name="type"/>
                         <field name="min_date" select="2"/>
                         <field name="name" select="1" readonly="1"/>
                         <field name="invoice_state"/>
@@ -1025,6 +1027,7 @@
                 <form string="Input Packing List">
                     <group colspan="4" col="6">
                         <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'contact_display':'partner'}"/>
+                        <field name="type"/>
                         <field name="origin" select="2"/>
                         <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="name" readonly="1" select="1"/>
