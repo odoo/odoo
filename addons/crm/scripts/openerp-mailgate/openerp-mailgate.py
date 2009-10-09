@@ -315,7 +315,7 @@ if __name__ == '__main__':
     parser.add_option("-s", "--section", dest="section", help="ID or code of the case section", default="support")
     parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
     parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: terp)", default='terp')
-    parser.add_option("-h", "--host", dest="host", help="Hostname of the Open ERP Server", default="localhost")
+    parser.add_option("--host", dest="host", help="Hostname of the Open ERP Server", default="localhost")
 
 
     (options, args) = parser.parse_args()
