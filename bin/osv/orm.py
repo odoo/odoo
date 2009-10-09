@@ -299,7 +299,10 @@ def get_pg_type(f):
         t = eval('fields.'+(f._type))
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
-        f_type = ('float8', 'DOUBLE PRECISION')
+        if f.digits:
+            f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0], f.digits[1]))
+        else:
+            f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
     elif isinstance(f, fields.function) and f._type == 'char':
@@ -574,7 +577,11 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
+                    
                 field = fields[i]
+                if prefix and not prefix[0] in field:
+                    continue
+                
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
                         res = False
@@ -631,7 +638,7 @@ class orm_template(object):
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
                             res_id = ir_model_data_obj.read(cr, uid, [id],
                                     ['res_id'])[0]['res_id']
-                    row[field[0][:-3]] = res_id or False
+                    row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
                         len(field[len(prefix)].split(':lang=')) == 2:
@@ -667,7 +674,7 @@ class orm_template(object):
                         try:                            
                             _check_db_id(self, model_name, line[i])
                             data_res_id = is_db_id = int(line[i])
-                        except Exception,e:                                    
+                        except Exception,e:
                             warning += [tools.exception_to_unicode(e)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                       tools.exception_to_unicode(e))
@@ -808,7 +815,7 @@ class orm_template(object):
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
-                     noupdate=noupdate, res_id=res_id)
+                     noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
                 if isinstance(e,psycopg2.IntegrityError):
@@ -997,9 +1004,10 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = None
+                        dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
+                        
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1054,19 +1062,37 @@ class orm_template(object):
 
         buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
         for button in buttons:
-            ok = True
+            can_click = True
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                # TODO handle the case of more than one workflow for a model
+                cr.execute("""SELECT DISTINCT t.role_id 
+                                FROM wkf 
+                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id 
+                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                               WHERE wkf.osv = %s
+                                 AND t.signal = %s
+                           """, (self._name, button.getAttribute('name'),))
                 roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
+                
+                # draft -> valid = signal_next (role X)
+                # draft -> cancel = signal_cancel (no role)
+                #
+                # valid -> running = signal_next (role Y)
+                # valid -> cancel = signal_cancel (role Z)
+                #
+                # running -> done = signal_next (role Z)
+                # running -> cancel = signal_cancel (role Z)
+                
 
-            if not ok:
-                button.setAttribute('readonly', '1')
-            else:
-                button.setAttribute('readonly', '0')
+                # As we don't know the object state, in this scenario, 
+                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
+                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
+                # The verification will be made later in workflow process...
+                if roles:
+                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
+            
+            button.setAttribute('readonly', str(int(not can_click)))
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
@@ -1204,6 +1230,15 @@ class orm_template(object):
         model = True
         sql_res = False
         while ok:
+            view_ref = context.get(view_type + '_view_ref', False)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+
             if view_id:
                 where = (model and (" and model='%s'" % (self._name,))) or ''
                 cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
@@ -1328,7 +1363,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1769,7 +1804,7 @@ class orm(orm_template):
                         f_pg_notnull = f_pg_def['attnotnull']
                         if isinstance(f, fields.function) and not f.store:
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE %s DROP COLUMN %s'% (self._table, k))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
                         else:
@@ -1782,6 +1817,8 @@ class orm(orm_template):
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
                             # !!! Avoid reduction of varchar field !!!
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
@@ -1794,13 +1831,15 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                    ok = True
-                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                    cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                    cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                    cr.commit()
+                                    if f_pg_type != f_obj_type:
+                                        logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        ok = True
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.commit()
+                                    break
 
                             if f_pg_type != f_obj_type:
                                 if not ok:
@@ -1813,7 +1852,7 @@ class orm(orm_template):
                                     default = self._defaults[k](self, cr, 1, {})
                                     if (default is not None):
                                         ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE %s is NULL' % (self._table, k, ss[0], k)
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
                                         cr.execute(query, (ss[1](default),))
                                 # add the NOT NULL constraint
                                 cr.commit()
@@ -2469,9 +2508,10 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
+        result = []
         for field in upd_todo:
             for id in ids:
-                self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context)
+                result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
         for table in self._inherits:
             col = self._inherits[table]
@@ -2533,7 +2573,7 @@ class orm(orm_template):
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
-        result = self._store_get_values(cr, user, ids, vals.keys(), context)
+        result += self._store_get_values(cr, user, ids, vals.keys(), context)
         for order, object, ids, fields in result:
             self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
 
@@ -2701,6 +2741,8 @@ class orm(orm_template):
         for fnct in range(len(fncts)):
             if fncts[fnct][3]:
                 ok = False
+                if not fields:
+                    ok = True
                 for f in (fields or []):
                     if f in fncts[fnct][3]:
                         ok = True
@@ -2869,7 +2911,7 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
         if not args:
             args = []
         if not context:

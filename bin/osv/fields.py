@@ -607,6 +607,12 @@ class function(_column):
         self._multi = multi
         if 'relation' in args:
             self._obj = args['relation']
+            
+        if 'digits' in args:
+            self.digits = args['digits']
+        else:
+            self.digits = (16,2)    
+                
         self._fnct_inv_arg = fnct_inv_arg
         if not fnct_inv:
             self.readonly = 1
