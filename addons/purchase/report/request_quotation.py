@@ -27,7 +27,7 @@ import pooler
 
 class request_quotation(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(request_quotation, self).__init__(cr, uid, name, context)
+        super(request_quotation, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'user': self.pool.get('res.users').browse(cr, uid, uid, context)

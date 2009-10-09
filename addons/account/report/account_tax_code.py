@@ -30,7 +30,7 @@ class account_tax_code_report(rml_parse.rml_parse):
     #_name = 'report.account.tax.code.entries'
     
     def __init__(self, cr, uid, name, context):
-        super(account_tax_code_report, self).__init__(cr, uid, name, context)
+        super(account_tax_code_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_line':self.get_line,

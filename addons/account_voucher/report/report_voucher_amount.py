@@ -32,7 +32,7 @@ from tools import amount_to_text_en
 
 class report_voucher_amount(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(report_voucher_amount, self).__init__(cr, uid, name, context)
+        super(report_voucher_amount, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'convert':self.convert

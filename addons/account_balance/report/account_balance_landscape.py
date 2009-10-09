@@ -36,7 +36,7 @@ parents = {
 
 class account_balance_landscape(rml_parse.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_balance_landscape, self).__init__(cr, uid, name, context)
+        super(account_balance_landscape, self).__init__(cr, uid, name, context=context)
         self.flag=1
         self.dr_total= 0.00
         self.cr_total= 0.00

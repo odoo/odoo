@@ -30,7 +30,7 @@ from report import report_sxw
 class account_balance(report_sxw.rml_parse):
         _name = 'report.account.account.balance'
         def __init__(self, cr, uid, name, context):
-            super(account_balance, self).__init__(cr, uid, name, context)
+            super(account_balance, self).__init__(cr, uid, name, context=context)
             self.sum_debit = 0.00
             self.sum_credit = 0.00
             self.date_lst = []

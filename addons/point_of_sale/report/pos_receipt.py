@@ -29,7 +29,7 @@ import pooler
 class order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(order, self).__init__(cr, uid, name, context)
+        super(order, self).__init__(cr, uid, name, context=context)
 
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
         partner = user.company_id.partner_id

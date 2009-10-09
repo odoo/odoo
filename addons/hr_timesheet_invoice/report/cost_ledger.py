@@ -27,7 +27,7 @@ from report import report_sxw
 
 class account_analytic_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context)
+        super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context=context)
         self.sum_revenue={}
         self.account_sum_revenue={}
         self.localcontext.update( {
