@@ -813,6 +813,7 @@ def get_languages():
         'zh_CN': u'Chinese (CN) / 简体中文',
         'zh_TW': u'Chinese (TW) / 正體字',
         'th_TH': u'Thai / ภาษาไทย',
+        'tlh_TLH': 'Klingon',
     }
     return languages
 

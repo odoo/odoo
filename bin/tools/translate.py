@@ -101,6 +101,8 @@ _LOCALE2WIN32 = {
     'tr_TR': 'Turkish_Turkey',
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
+    'tlh_TLH': 'Klingon',
+    
 }
 
 
