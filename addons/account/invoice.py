@@ -103,15 +103,23 @@ class account_invoice(osv.osv):
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         res = {}
         data_inv = self.browse(cr, uid, ids)
+        cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
-            paid_amt = 0.0
-            to_pay = inv.amount_total
+            debit = credit = 0.0
             for lines in inv.move_lines:
-                if lines.amount_currency and lines.currency_id:
-                    paid_amt += lines.amount_currency
+                if lines.account_id.company_currency_id.id <> inv.currency_id.id:
+                    if lines.debit:
+                        debit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.debit)
+                    if lines.credit:
+                        credit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.credit)
                 else:
-                    paid_amt += lines.credit + lines.debit
-            res[inv.id] = round(to_pay - abs(paid_amt),int(config['price_accuracy']))
+                    debit += lines.debit
+                    credit += lines.credit
+            if inv.type in ('out_invoice','in_refund'):
+                result = inv.amount_total * (1.0 - credit / (debit + inv.amount_total))
+            else:
+                result = inv.amount_total * (1.0 - debit / (credit + inv.amount_total))
+            res[inv.id] = round(result,int(config['price_accuracy']))
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
