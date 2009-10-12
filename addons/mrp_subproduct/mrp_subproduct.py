@@ -68,9 +68,9 @@ class mrp_production(osv.osv):
                  qty2 = production.product_uos and production.product_uos_qty or False
                  if sub_product.subproduct_type=='variable':
                     if production.product_qty:
-                        qty1 *= production.product_qty / (sub_product.product_qty or 1.0)
+                        qty1 *= production.product_qty / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
-                        qty2 *= production.product_uos_qty / (sub_product.product_qty or 1.0)
+                        qty2 *= production.product_uos_qty / (production.bom_id.product_uos_qty or 1.0)
                  data = {
                     'name':'PROD:'+production.name,
                     'date_planned': production.date_planned,

@@ -492,7 +492,7 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="domain">[('state', '=', 'progress')]</field>
+            <field name="domain">[('state','=','open')]</field>
         </record>
         <menuitem action="action_view_task6_prog" id="menu_action_view_task6_prog" parent="project.menu_action_view_task"/>
 

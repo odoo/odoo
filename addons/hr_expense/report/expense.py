@@ -26,7 +26,7 @@ import datetime
 
 class expense(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(expense, self).__init__(cr, uid, name, context)
+        super(expense, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
         })

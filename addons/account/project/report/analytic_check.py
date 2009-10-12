@@ -26,7 +26,7 @@ from report import report_sxw
 
 class account_analytic_analytic_check(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_analytic_analytic_check, self).__init__(cr, uid, name, context)
+        super(account_analytic_analytic_check, self).__init__(cr, uid, name, context=context)
         self.sum_gen_deb = 0.0
         self.sum_gen_cred = 0.0
         self.sum_ana_deb = 0.0

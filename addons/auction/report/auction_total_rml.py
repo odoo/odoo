@@ -29,7 +29,7 @@ from report import report_sxw
 class auction_total_rml(report_sxw.rml_parse):
     total_obj=[]
     def __init__(self, cr, uid, name, context):
-        super(auction_total_rml, self).__init__(cr, uid, name, context)
+        super(auction_total_rml, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'sum_taxes':self.sum_taxes,

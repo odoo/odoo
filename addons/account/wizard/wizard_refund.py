@@ -152,10 +152,10 @@ class wiz_refund(wizard.interface):
                     invoice = invoice[0]
                     del invoice['id']
                     invoice_lines = pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-                    invoice_lines = pool.get('account.invoice')._refund_cleanup_lines(invoice_lines)
+                    invoice_lines = pool.get('account.invoice')._refund_cleanup_lines(cr, uid, invoice_lines)
                     tax_lines = pool.get('account.invoice.tax').read(
                         cr, uid, invoice['tax_line'])
-                    tax_lines = pool.get('account.invoice')._refund_cleanup_lines(tax_lines)
+                    tax_lines = pool.get('account.invoice')._refund_cleanup_lines(cr, uid, tax_lines)
 
                     invoice.update({
                         'type': inv.type,

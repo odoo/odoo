@@ -39,7 +39,7 @@ from mx.DateTime import *
 class account_invoice_bvr(report_sxw.rml_parse):
 	"""Report class that Allows to print BVR payement vector"""
 	def __init__(self, cr, uid, name, context):
-		super(account_invoice_bvr, self).__init__(cr, uid, name, context)
+		super(account_invoice_bvr, self).__init__(cr, uid, name, context=context)
 		self.localcontext.update({
 			'time': time,
 			'user':self.pool.get("res.users").browse(cr,uid,uid),

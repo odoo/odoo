@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -54,7 +54,7 @@ def _track_lines(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     prodlot_obj = pool.get('stock.production.lot')
     move_obj = pool.get('stock.move')
-#    production_obj = pool.get('mrp.production')
+    production_obj = pool.get('mrp.production')
     ir_sequence_obj = pool.get('ir.sequence')
 
     sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
@@ -77,25 +77,24 @@ def _track_lines(self, cr, uid, data, context):
         'product_uos_qty': uos_qty,
     }
     new_move = []
-#    production_ids = []
+    production_ids = []
     for idx in range(int(move.product_qty//quantity)):
         if idx:
-#            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
-            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state})
+            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
             new_move.append(current_move)
         else:
             current_move = move.id
         new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
         update_val['prodlot_id'] = new_prodlot
         move_obj.write(cr, uid, [current_move], update_val)
-#        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
     
     if quantity_rest > 0:
         idx = int(move.product_qty//quantity)
         update_val['product_qty']=quantity_rest
         update_val['product_uos_qty']=uos_qty_rest
         if idx:
-#            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
             current_move = move_obj.copy(cr, uid, move.id, {'state': move.state})
             new_move.append(current_move)
         else:
@@ -104,12 +103,12 @@ def _track_lines(self, cr, uid, data, context):
         update_val['prodlot_id'] = new_prodlot
         move_obj.write(cr, uid, [current_move], update_val)
 
-#    products = production_obj.read(cr, uid, production_ids, ['move_lines'])
-#    for p in products:
-#        for new in new_move:
-#            if new not in p['move_lines']:
-#                p['move_lines'].append(new)
-#        production_obj.write(cr, uid, [p['id']], {'move_lines': [(6, 0, p['move_lines'])]})
+    products = production_obj.read(cr, uid, production_ids, ['move_lines'])
+    for p in products:
+        for new in new_move:
+            if new not in p['move_lines']:
+                p['move_lines'].append(new)
+        production_obj.write(cr, uid, [p['id']], {'move_lines': [(6, 0, p['move_lines'])]})
 
     return {}
 
@@ -125,7 +124,7 @@ class wizard_track_move(wizard.interface):
         }
     }
 
-wizard_track_move('stock.move.track')
+wizard_track_move('mrp.stock.move.track')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

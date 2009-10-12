@@ -25,7 +25,7 @@ from report import report_sxw
 
 class sale_prepare(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(sale_prepare, self).__init__(cr, uid, name, context)
+        super(sale_prepare, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'allotment': self._allotment,
         })
