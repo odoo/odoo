@@ -115,7 +115,10 @@ class account_invoice(osv.osv):
                 else:
                     debit += lines.debit
                     credit += lines.credit
-            if inv.type in ('out_invoice','in_refund'):
+
+            if not inv.amount_total:
+                result = 0.0
+            elif inv.type in ('out_invoice','in_refund'):
                 result = inv.amount_total * (1.0 - credit / (debit + inv.amount_total))
             else:
                 result = inv.amount_total * (1.0 - debit / (credit + inv.amount_total))
