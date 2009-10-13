@@ -655,7 +655,6 @@ class document_file(osv.osv):
             vals['res_id']=context.get('default_res_id',False)
         if not vals.get('res_model', False) and context.get('default_res_model',False):
             vals['res_model']=context.get('default_res_model',False)
-
         if vals.get('res_id', False) and vals.get('res_model',False):
             obj_model=self.pool.get(vals['res_model'])
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
@@ -694,7 +693,7 @@ class document_file(osv.osv):
         try:
             res = content_index(base64.decodestring(datas), vals['datas_fname'], vals.get('content_type', None))
             super(document_file,self).write(cr, uid, [result], {
-                'index_content' : res,
+                'index_content': res,
             })
             cr.commit()
         except:
