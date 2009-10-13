@@ -1476,7 +1476,7 @@ class orm_memory(orm_template):
             self.unlink(cr, uid, ids)
         return True
 
-    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
+    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):        
         if not context:
             context = {}
         if not fields_to_read:
@@ -2213,12 +2213,13 @@ class orm(orm_template):
         select = ids
         if isinstance(ids, (int, long)):
             select = [ids]
+        select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
         for r in result:
             for key, v in r.items():
                 if v == None:
                     r[key] = False
-        if isinstance(ids, (int, long)):
+        if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
 
