@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # ftpserver.py
 #
 #  pyftpdlib is released under the MIT license, reproduced below:
