@@ -2740,7 +2740,7 @@ class orm(orm_template):
             cr.execute("SELECT nextval('"+self._sequence+"')")
         except:
             raise except_orm(_('UserError'),
-                        _('You cannot perform this operation.'))
+                        _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
