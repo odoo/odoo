@@ -415,7 +415,8 @@ class ir_model_data(osv.osv):
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'noupdate': lambda *a: False
+        'noupdate': lambda *a: False,
+        'module': lambda *a: ''
     }
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)', 'You can not have multiple records with the same id for the same module'),
