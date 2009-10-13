@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##################################################################################
 #
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com) All Rights Reserved.

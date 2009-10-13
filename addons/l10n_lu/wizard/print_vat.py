@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #Copyright (c) Vincent Cardon <vincent.cardon@tranquil-it-systems.fr>
 # Denis Cardon <denis.cardon@tranquilitsystems.com> and Emmanuel RICHARD.
 #Ingenieur fondateur

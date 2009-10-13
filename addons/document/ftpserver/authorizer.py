@@ -1,4 +1,7 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+
+import pooler
+from service import security
 
 class authorizer:
     read_perms = "elr"
@@ -47,7 +50,7 @@ class authorizer:
         paths = path.split('/')
         if not len(paths)>2:
             return True
-        db_name = paths[1]
+        db_name = paths[1]        
         db,pool = pooler.get_db_and_pool(db_name)
         res = security.login(db_name, username, self.password)
         return bool(res)

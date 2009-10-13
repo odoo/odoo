@@ -106,7 +106,7 @@ class res_users(osv.osv):
         child_ids = self._child_compute(cr, uid, parent,name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids)]
+        return [('id', 'in', child_ids.get(uid,[]))]
 
     def _child_compute(self, cr, uid, ids, name, args, context={}):
         obj_dept = self.pool.get('hr.department')
@@ -121,6 +121,7 @@ class res_users(osv.osv):
                 childs = tools.flatten(childs)
                 if manager_id in childs:
                     childs.remove(manager_id)
+                
                 child_ids.extend(tools.flatten(childs))
                 set = {}
                 map(set.__setitem__, child_ids, [])
@@ -138,7 +139,7 @@ class res_users(osv.osv):
         child_ids = self._child_compute(cr, uid, parent,name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids)]
+        return [('id', 'in', child_ids.get(uid,[]))]
 
     _columns = {
         'parent_id': fields.function(_parent_compute, relation='res.users',fnct_search=_parent_search, method=True, string="Managers", type='many2many'),

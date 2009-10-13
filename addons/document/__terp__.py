@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
@@ -23,7 +23,7 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * FTP Interface
