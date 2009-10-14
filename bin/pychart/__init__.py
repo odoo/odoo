@@ -1,4 +1,6 @@
-#
+# -*- encoding: utf-8 -*-
+##############################################################################
+#    
 # Copyright (C) 2000-2005 by Yasushi Saito (yasushi.saito@gmail.com)
 # 
 # Jockey is free software; you can redistribute it and/or modify it
@@ -11,6 +13,7 @@
 # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 #
+##############################################################################
 __all__ = [ "axis", "area", "basecanvas", "canvas",
             "line_plot", "pie_plot", "rose_plot", "tick_mark",
 	    "bar_plot", "chart_data", "arrow", "text_box", "color", "font",

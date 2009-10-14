@@ -54,6 +54,7 @@ import tools
 from tools.translate import _
 
 import sys
+import copy
 
 try:
     from lxml import etree
@@ -1178,7 +1179,10 @@ class orm_template(object):
             def _find(node, node2):
                 if node2.tag == 'xpath':
                     res = node.xpath(node2.get('expr'))
-                    return res and res[0]
+                    if res:
+                        return res[0]
+                    else:
+                        return None
                 else:
                     for n in node.getiterator(node2.tag):
                         res = True
@@ -1201,7 +1205,7 @@ class orm_template(object):
             while len(toparse):
                 node2 = toparse.pop(0)
                 if node2.tag == 'data':
-                    toparse += [ c for c in doc_dest ]
+                    toparse += node2.getchildren()
                     continue
                 node = _find(src, node2)
                 if node is not None:
@@ -1209,9 +1213,13 @@ class orm_template(object):
                     if node2.get('position'):
                         pos = node2.get('position')
                     if pos == 'replace':
-                        for child in node2:
-                            node.addprevious(child)
-                        node.getparent().remove(node)
+                        parent = node.getparent()
+                        if parent is None:
+                            src = copy.deepcopy(node2.getchildren()[0])
+                        else:
+                            for child in node2:
+                                node.addprevious(child)
+                            node.getparent().remove(node)
                     else:
                         sib = node.getnext()
                         for child in node2:
