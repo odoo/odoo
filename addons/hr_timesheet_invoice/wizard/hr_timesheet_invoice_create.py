@@ -173,7 +173,7 @@ class invoice_create(wizard.interface):
         mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
         res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
         act_win = act_obj.read(cr, uid, res_id, [])
-        act_win['domain'] = [('id','in',[(','.join(map(str,invoices)))]),('type','=','out_invoice')]
+        act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
         
