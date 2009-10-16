@@ -1472,6 +1472,8 @@ class orm_memory(orm_template):
         return result
 
     def write(self, cr, user, ids, vals, context=None):
+        if not ids:
+            return True
         vals2 = {}
         upd_todo = []
         for field in vals:
