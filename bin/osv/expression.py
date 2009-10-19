@@ -52,8 +52,8 @@ class expression(object):
                        '  FROM "%s"'    \
                        ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
                        subids)
-            res.extend([r[0] for r in cr.fetchall()])
-        return res
+            res += [r[0] for r in cr.fetchall() if r[0]]
+        return res + (res and self.__execute_recursive_in(cr, s, f, w, res) or [])
 
 
     def __init__(self, exp):
