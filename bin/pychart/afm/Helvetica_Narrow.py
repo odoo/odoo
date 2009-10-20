@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # AFM font Helvetica-Narrow (path: /usr/share/fonts/afms/adobe/phvr8an.afm).
 # Derived from Ghostscript distribution.
 # Go to www.cs.wisc.edu/~ghost to get the Ghostcript source code.

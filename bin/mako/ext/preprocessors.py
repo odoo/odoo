@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """preprocessing functions, used with the 'preprocessor' argument on Template, TemplateLookup"""
 
 import re

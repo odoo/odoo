@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ast.py
 # Copyright (C) Mako developers
 #

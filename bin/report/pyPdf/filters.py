@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak

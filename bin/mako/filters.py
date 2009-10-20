@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # filters.py
 # Copyright (C) 2006, 2007, 2008 Geoffrey T. Dairiki <dairiki@dairiki.org> and Michael Bayer <mike_mp@zzzcomputing.com>
 #

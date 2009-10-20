@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # AFM font AvantGarde-Book (path: /usr/share/fonts/afms/adobe/pagk8a.afm).
 # Derived from Ghostscript distribution.
 # Go to www.cs.wisc.edu/~ghost to get the Ghostcript source code.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -309,7 +309,7 @@ class expression(object):
         if leaf == self.__DUMMY_LEAF:
             return ('(1=1)', [])
         left, operator, right = leaf
-
+        
         if operator == 'inselect':
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
             params = right[1]

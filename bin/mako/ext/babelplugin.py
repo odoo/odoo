@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """gettext message extraction via Babel: http://babel.edgewall.org/"""
 from StringIO import StringIO
 

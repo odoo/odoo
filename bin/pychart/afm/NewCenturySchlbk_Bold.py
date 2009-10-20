@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # AFM font NewCenturySchlbk-Bold (path: /usr/share/fonts/afms/adobe/pncb8a.afm).
 # Derived from Ghostscript distribution.
 # Go to www.cs.wisc.edu/~ghost to get the Ghostcript source code.

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #Copyright (c) 2004-2005, CherryPy Team (team@cherrypy.org)
 #All rights reserved.
 #

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # AFM font Times-BoldItalic (path: /usr/share/fonts/afms/adobe/ptmbi8a.afm).
 # Derived from Ghostscript distribution.
 # Go to www.cs.wisc.edu/~ghost to get the Ghostcript source code.

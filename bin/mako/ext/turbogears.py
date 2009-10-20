@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re, inspect
 from mako.lookup import TemplateLookup
 from mako.template import Template

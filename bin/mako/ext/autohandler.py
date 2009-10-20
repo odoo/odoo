@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """adds autohandler functionality to Mako templates.
 
 requires that the TemplateLookup class is used with templates.

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # AFM font Palatino-BoldItalic (path: /usr/share/fonts/afms/adobe/pplbi8a.afm).
 # Derived from Ghostscript distribution.
 # Go to www.cs.wisc.edu/~ghost to get the Ghostcript source code.
