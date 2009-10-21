@@ -77,7 +77,10 @@ class account_payment_term_line(osv.osv):
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value',required=True),
+        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value', required=True, help="""Example: 14 days 2%, 30 days net
+1. Line 1: percent 0.02 14 days
+2. Line 2: balance 30 days"""),
+
         'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
@@ -90,6 +93,17 @@ class account_payment_term_line(osv.osv):
         'days2': lambda *a: 0,
     }
     _order = "sequence"
+
+    def _check_percent(self, cr, uid, ids, context={}):
+        obj = self.browse(cr, uid, ids[0])
+        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
+            return False
+        return True
+
+    _constraints = [
+        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+    ]
+    
 account_payment_term_line()
 
 
