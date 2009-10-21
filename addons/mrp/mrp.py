@@ -362,6 +362,8 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
+                    #TODO: fix me sale module can not be used here, 
+                    #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name=='client_order_ref':
