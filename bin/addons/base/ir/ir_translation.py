@@ -106,7 +106,7 @@ class ir_translation(osv.osv):
                 'where lang=%s ' \
                     'and type=%s ' \
                     'and name=%s ' \
-                    'and res_id in ('+','.join(map(str,ids))+')',
+                    'and res_id in ('+','.join(map(str, ids))+')',
                 (lang,tt,name))
         cr.commit()
         for id in ids:
