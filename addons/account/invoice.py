@@ -397,7 +397,7 @@ class account_invoice(osv.osv):
                 l.id \
             from account_move_line l \
                 left join account_invoice i on (i.move_id=l.move_id) \
-            where i.id in ('+','.join(map(str,ids))+') and l.account_id=i.account_id')
+            where i.id in ('+','.join(map(str,map(int, ids)))+') and l.account_id=i.account_id')
         res = map(lambda x: x[0], cr.fetchall())
         return res
 
@@ -680,7 +680,7 @@ class account_invoice(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_invoice ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
+                'WHERE id IN ('+','.join(map(str, ids))+')')
         obj_inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:

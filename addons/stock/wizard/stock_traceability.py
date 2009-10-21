@@ -33,7 +33,7 @@ def action_traceability(type='move_history_ids', field='tracking_id'):
         cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type, 'tree'))
         view_id = cr.fetchone()[0]
         value = {
-            'domain': "[('id','in',["+','.join(map(str,ids))+"])]",
+            'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
             'name': ((type=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
             'view_type': 'tree',
             'res_model': 'stock.move',

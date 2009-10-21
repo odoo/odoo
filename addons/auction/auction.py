@@ -94,12 +94,12 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
-        cr.execute('select count(*) as c from auction_lots where auction_id in ('+','.join(map(str,ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select count(*) as c from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
         r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and obj_price>0')
+        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and obj_price>0')
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
         c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})

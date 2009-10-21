@@ -1,4 +1,4 @@
-#
+# -*- coding: utf-8 -*-
 #  bank.py
 #  l10n_ch
 #

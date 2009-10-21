@@ -36,7 +36,7 @@ class wiz_timebox_open(wizard.interface):
             raise wizard.except_wizard(_('Error !'), _('No timebox of the type "%s" defined !') % (tbtype,))
         view_type = 'form,tree'
         if len(ids) >= 1:
-            domain = "[('id','in',["+','.join(map(str,ids))+"])]"
+            domain = "[('id','in',["+','.join(map(str, ids))+"])]"
         else:
             domain = "[('user_id', '=', uid)]"
         value = {

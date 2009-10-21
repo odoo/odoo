@@ -79,7 +79,7 @@ def _makeInvoices(self, cr, uid, data, context):
 #   ids = order_obj.lots_invoice(cr, uid, data['ids'],context,invoice_number)
     cr.commit()
     return {
-        'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
+        'domain': "[('id','in', ["+','.join(map(str, ids))+"])]",
         'name': 'Buyer invoices',
         'view_type': 'form',
         'view_mode': 'tree,form',

@@ -404,7 +404,7 @@ class account_voucher(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_voucher ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
+                'WHERE id IN ('+','.join(map(str, ids))+')')
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 number = self.pool.get('ir.sequence').get(cr, uid, invtype)

@@ -729,7 +729,7 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,map(int, ids)))+') group by move_id')
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
@@ -807,7 +807,7 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
+            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('posted',))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
         return True
@@ -820,7 +820,7 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
+            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('draft',))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -1177,7 +1177,7 @@ class account_tax_code(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1797,7 +1797,7 @@ class account_account_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1856,7 +1856,7 @@ class account_tax_code_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

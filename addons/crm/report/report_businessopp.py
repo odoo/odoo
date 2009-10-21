@@ -55,7 +55,7 @@ class report_custom(report_int):
         minbenef = 999999999999999999999
         maxbenef = 0
 
-        cr.execute('select probability, planned_revenue, planned_cost, user_id, res_users.name as name from crm_case left join res_users on (crm_case.user_id=res_users.id) where crm_case.id in ('+','.join(map(str,ids))+') order by user_id')
+        cr.execute('select probability, planned_revenue, planned_cost, user_id, res_users.name as name from crm_case left join res_users on (crm_case.user_id=res_users.id) where crm_case.id in ('+','.join(map(str, ids))+') order by user_id')
         res = cr.dictfetchall()
 
         for row in res:

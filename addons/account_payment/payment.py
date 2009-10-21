@@ -225,7 +225,7 @@ class payment_line(osv.osv):
                 inner join payment_line pl
                 on (ml.id = pl.move_line_id)
             where pl.id in (%s)"""%
-            (self.translate(name), ','.join(map(str,ids))) )
+            (self.translate(name), ','.join(map(str, ids))))
         res = dict(cr.fetchall())
 
         if name == 'partner_id':

@@ -162,7 +162,7 @@ class third_party_ledger(rml_parse.rml_parse):
 
 		self.date_lst_string = ''
 		if self.date_lst:
-			self.date_lst_string = '\'' + '\',\''.join(map(str,self.date_lst)) + '\''
+			self.date_lst_string = '\'' + '\',\''.join(map(str, self.date_lst)) + '\''
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':

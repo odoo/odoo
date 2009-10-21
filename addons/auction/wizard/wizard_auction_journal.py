@@ -72,7 +72,7 @@ def _makeInvoices(self, cr, uid, data, context):
     ids = order_obj.seller_trans_create(cr, uid, data['ids'],context)
     cr.commit()
     return {
-        'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
+        'domain': "[('id','in', ["+','.join(map(str, ids))+"])]",
         'name': 'Seller invoices',
         'view_type': 'form',
         'view_mode': 'tree,form',

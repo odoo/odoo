@@ -1,6 +1,3 @@
-
-
-#!/usr/bin/python
 #coding: latin-1
 
 ##############################################################################
@@ -32,7 +29,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
+#!/usr/bin/python
 """
 Tiny SXW2RML - The Tiny ERP's report engine
 

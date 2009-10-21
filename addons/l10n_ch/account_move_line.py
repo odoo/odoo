@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #  account_move_line.py
 #  l10n_ch

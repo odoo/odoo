@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -21,7 +20,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+#!/usr/bin/python
 """
 Tiny SXW2RML - The Open ERP's report engine
 
