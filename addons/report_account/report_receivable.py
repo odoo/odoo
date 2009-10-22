@@ -202,5 +202,80 @@ class report_invoice_created(osv.osv):
             )""")
 report_invoice_created()
 
+class report_account_type_sales(osv.osv):
+    _name = "report.account_type.sales"
+    _description = "Report of the Sales by Account Type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Month', size=64, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
+        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
+        'amount_total': fields.float('Total', readonly=True),  
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+    }
+    _order = 'name desc,amount_total desc'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_account_type_sales as (
+            select
+               min(inv_line.id) as id,
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
+               sum(inv_line.price_subtotal) as amount_total, 
+               inv.currency_id as currency_id,               
+               inv.period_id,
+               inv_line.product_id, 
+               sum(inv_line.quantity) as quantity, 
+               account.user_type
+            from
+                account_invoice_line inv_line 
+            inner join account_invoice inv on inv.id = inv_line.invoice_id
+            inner join account_account account on account.id = inv_line.account_id
+            where
+                inv.state in ('open','paid')
+            group by
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type  
+            )""")
+report_account_type_sales()
+
+
+class report_account_sales(osv.osv):
+    _name = "report.account.sales"
+    _description = "Report of the Sales by Account"
+    _auto = False
+    _columns = {
+        'name': fields.char('Month', size=64, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
+        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True),
+        'amount_total': fields.float('Total', readonly=True),  
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+    }
+    _order = 'name desc,amount_total desc'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_account_sales as (
+            select
+               min(inv_line.id) as id,
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
+               sum(inv_line.price_subtotal) as amount_total, 
+               inv.currency_id as currency_id,               
+               inv.period_id,
+               inv_line.product_id, 
+               sum(inv_line.quantity) as quantity, 
+               account.id as account_id
+            from
+                account_invoice_line inv_line 
+            inner join account_invoice inv on inv.id = inv_line.invoice_id
+            inner join account_account account on account.id = inv_line.account_id
+            where
+                inv.state in ('open','paid')
+            group by
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.id  
+            )""")
+report_account_sales()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

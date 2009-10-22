@@ -114,5 +114,107 @@
 		    <field name="view_mode">tree,form</field>
 		    <field name="view_id" ref="board_view_created_invoice"/>
 	    </record>
+	    
+	    <menuitem id="menu_report_this_month" name="This Month" parent="account.menu_finance_reporting"/>
+	    <menuitem id="menu_report_all_months" name="All Months" parent="account.menu_finance_reporting"/>
+	    <!-- Report of the sales by product and account -->
+	    <record id="view_report_account_sales_tree" model="ir.ui.view">
+            <field name="name">report.account.sales.tree</field>
+            <field name="model">report.account.sales</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales by Account">
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <field name="product_id"/>
+                    <field name="account_id"/>
+                    <field name="quantity"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_report_account_sales_graph" model="ir.ui.view">
+             <field name="name">report.account.sales.graph</field>
+             <field name="model">report.account.sales</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by Account" type="pie">                    
+                     <field name="account_id"/>
+                     <field name="amount_total"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="action_report_account_sales_tree" model="ir.actions.act_window">
+            <field name="name">Sales by Account (this month)</field>
+            <field name="res_model">report.account.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        
+        <menuitem action="action_report_account_sales_tree" id="menu_report_account_sales" parent="menu_report_this_month"/>
+        
+        <record id="action_report_account_sales_tree_all" model="ir.actions.act_window">
+            <field name="name">Sales by Account</field>
+            <field name="res_model">report.account.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+        </record>        
+        <menuitem action="action_report_account_sales_tree_all" id="menu_report_account_sales_all" parent="menu_report_all_months"/>
+
+        
+        
+        <!-- Report of the sales by product and account type -->
+	    <record id="view_report_account_type_sales_tree" model="ir.ui.view">
+            <field name="name">report.account_type.sales.tree</field>
+            <field name="model">report.account_type.sales</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales by Account type">
+                    <field name="name"/>
+                    <field name="period_id"/>
+                    <field name="product_id"/>
+                    <field name="user_type"/>
+                    <field name="quantity"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id="view_report_account_type_sales_graph" model="ir.ui.view">
+             <field name="name">report.account_type.sales.graph</field>
+             <field name="model">report.account_type.sales</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by Account" type="pie">                     
+                     <field name="user_type"/>
+                     <field name="amount_total"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="action_report_account_type_sales_tree" model="ir.actions.act_window">
+            <field name="name">Sales by Account Type (this month)</field>
+            <field name="res_model">report.account_type.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        
+        <menuitem action="action_report_account_type_sales_tree" id="menu_report_account_type_sales" parent="menu_report_this_month"/>
+        
+        <record id="action_report_account_type_sales_tree_all" model="ir.actions.act_window">
+            <field name="name">Sales by Account Type</field>
+            <field name="res_model">report.account_type.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+        </record>        
+        <menuitem action="action_report_account_type_sales_tree_all" id="menu_report_account_type_sales_all" parent="menu_report_all_months"/>
+
     </data>
 </openerp>
