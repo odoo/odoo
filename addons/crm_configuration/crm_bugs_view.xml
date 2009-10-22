@@ -134,21 +134,16 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bugs">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Bugs" domain="[('user_id','=',uid)]" separator="1" help="Bugs Related to Current User"/>
-                   <filter icon="gtk-execute" string="Fixed Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Bugs"/>
-                   <filter icon="gtk-execute" string="Waiting Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Bugs"/>
-                   <filter icon="gtk-execute" string="Future Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]" separator="1" help="All Future Bugs"/>
-               </group>
-               <group col="4" colspan="4">
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Bugs"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Bugs"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Bugs"/>
-                   </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
-               </group>
+                <group col="10" colspan="4">
+               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-crm" string="Open" domain="[('state','=','open')]"/>
+                    <filter icon="terp-crm" string="Pending" domain="[('state','=','pending')]"/>
+               		<separator orientation="vertical"/>
+               		<field name="id" select='1' widget="char" size="16"/>
+               		<field name="section_id" select='1'/>
+               		<field name="category2_id" string="Version" select='1'/>
+               		<field name="user_id" select='1'/>
+               	</group>
             </search>
          </field>
     </record>

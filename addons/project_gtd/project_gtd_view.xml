@@ -180,6 +180,24 @@
             id="menu_open_time_allinbox" 
             parent="menu_open_time" 
             action="open_gtd_timebox_all"/>
+		
+		<record id="view_task_search_form" model="ir.ui.view">
+            <field name="name">project.task.search.form</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+               <search string="Task Edition">
+                    <group col="6" colspan="4">
+                    	<field name="timebox_id" select="1" widget="selection">
+                           <filter string="Daily Timebox" domain="[('timebox_id.type','=','daily')]" help="Daily Timebox"/>
+                           <filter string="Inbox" domain="[('user_id','=',uid)]" help="Inbox"/>
+                       	</field>
+                    	<field name="context_id" select="1" widget="selection"/>
+                    </group>
+                </search>
+            </field>
+     	</record>
 
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>

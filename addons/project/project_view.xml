@@ -114,13 +114,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                   <group col='6' colspan='4'>
-                       <field name="state" select="1">
-                           <filter icon="terp-project" domain="[('state','=','open')]" help="Open Projects"/>
-                           <filter icon="terp-project" domain="[('state','=','pending')]" help="Pending Projects"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
+                   <group col='8' colspan='4'>
+                   		<filter icon="terp-project" string="My Projects" domain="[('manager', '=', uid)]" help="My Projects"/>
+                   		<filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
+                       	<separator orientation="vertical"/>
+                       	<field name="name" select='1'/>
+                       	<field name="partner_id" select='1'/>
+                       	<field name="state" select="1"/>
                    </group>
                </search>
             </field>
@@ -510,19 +510,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <search string="Task Edition">
-                    <group col="4" colspan="1">
-                       <filter domain="[('user_id','=',uid)]" help="Tasks Related to Current User" icon="gtk-execute" string="My Task"/>
-                        <filter domain="[('user_id', 'child_of', [uid])]" help="Tasks Related to Department" icon="gtk-execute" separator="1" string="My Departments Task"/>
-                        <filter domain="[('user_id','=',uid),('parent_id','!=',False)]" help="Delegated Tasks Related to Current User" icon="gtk-execute" separator="1" string="My Delegated Task"/>
-                    </group>
-                    <group col="6" colspan="4">
-                        <field name="state" select="1">
-                             <filter domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
-                             <filter domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
-                        </field>
+                    <group col="8" colspan="4">
+                    	<filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
+                        <filter string="Open" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
+                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
+                        <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="user_id" select="1" widget="selection"/>
-                        <field name="project_id" select="1" widget="selection"/>
+                        <field name="project_id" select="1" widget="selection">
+                        	 <filter domain="[('parent_id','=',False)]" help="Unassigned Tasks" icon="terp-project"/>
+                        </field>
+                    </group>
+                    <group col="4" colspan="1">
+	                    <field name="user_id" select="1" widget="selection">
+	                        <filter domain="[('user_id','=',uid)]" help="Tasks Related to Current User" icon="gtk-execute"/>
+	                        <filter domain="[('user_id', 'child_of', [uid])]" help="Tasks Related to Department" icon="gtk-execute" separator="1"/>
+	                        <filter domain="[('user_id','=',uid),('parent_id','!=',False)]" help="Delegated Tasks Related to Current User" icon="gtk-execute" separator="1"/>
+	                    </field>
                     </group>
                 </search>
             </field>
@@ -657,7 +660,17 @@
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <menuitem action="action_view_task5_departments_prog_draft" id="menu_tasks_yours_departments_prog_draft" groups="base.group_extended_menu" parent="menu_tasks_yours_departments_prog"/>
-
+		
+		<record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
+            <field name="name">Overpassed Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_task_search_form"/>
+        </record>
+	
         <record id="action_view_task_new" model="ir.actions.act_window">
             <field name="name">New Task</field>
             <field name="res_model">project.task</field>

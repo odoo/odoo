@@ -114,15 +114,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group col='6' colspan='4'>
-                   <filter icon="gtk-execute" string="Exception Purchases" domain="[('state','in',('except_picking','except_invoice'))]" separator="1" help="Purchases Related to Exception"/>
-                   <field name="state">
-                       <filter icon="terp-purchase" domain="[('state','=','wait')]" help="Waiting Purchases"/>
-                       <filter icon="terp-purchase" domain="[('state','=','confirmed')]" help="Confirmed Purchases"/>
-                       <filter icon="terp-purchase" domain="[('state','=','approved')]" help="Approved Purchases"/>
-                    </field>
-                   <separator orientation="vertical"/>
-                   <field name="name" select="1"/>
+                 <group col='8' colspan='4'>
+                    <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
+                	<filter icon="terp-purchase" string="Unapproved" domain="[('state','in',('wait','confirmed'))]" separator="1"/>
+					<separator orientation="vertical"/>
+					<filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
+					<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="partner_id" select="1"/>
                 </group>
               </search>
             </field>

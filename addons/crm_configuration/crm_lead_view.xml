@@ -169,20 +169,16 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Prospects">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Prospects" domain="[('user_id','=',uid)]" separator="1" help="Prospects Related to Current User"/>
-                   <filter icon="gtk-execute" string="Assigned Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','Assigned')]" separator="1" help="All Assigned Prospects"/>
-                   <filter icon="gtk-execute" string="In Process Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','In Process')]" separator="1" help="In Process Prospects"/>
-                   <filter icon="gtk-execute" string="Converted Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','Converted')]" separator="1" help="Converted Prospects"/>
-               </group>
-               <group col="4" colspan="4">
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Prospects"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Prospects"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Prospects"/>
-                   </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
+               <group col="10" colspan="4">
+               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" help="Draft Prospects"/>
+                    <filter icon="terp-crm" string="Open" domain="[('state','=','open')]" help="Open Prospects"/>
+                    <filter icon="terp-crm" string="Pending" domain="[('state','=','pending')]" help="Pending Prospects"/>
+               		<separator orientation="vertical"/>
+               		<field name="id" select='1' widget="char" size="16"/>
+               		<field name="section_id" select='1'/>
+               		<field name="partner_id" select='1'/>
+               		<field name="email_from" select='1'/>
+               		<field name="user_id" select='1'/>
                </group>
            </search>
         </field>

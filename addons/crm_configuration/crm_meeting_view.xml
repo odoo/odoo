@@ -154,21 +154,17 @@
         <field name="model">crm.case</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Search Meetings">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Meetings" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
-               </group>
-               <group col="4" colspan="4">
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Meetings"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Meetings"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Meetings"/>
-                   </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-     </data>
+            	<search string="Search Meetings">
+               		<group col="10" colspan="4">
+	               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" />
+	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" />
+	               		<separator orientation="vertical"/>
+	               		<field name="section_id" select='1'/>
+	               		<field name="partner_id" select='1'/>
+	               		<field name="user_id" select='1'/>
+	               	</group>
+                </search>
+        	</field>
+    	</record>
+	</data>
 </openerp>

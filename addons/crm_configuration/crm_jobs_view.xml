@@ -157,21 +157,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Jobs">
-                   <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Jobs" domain="[('user_id','=',uid)]" separator="1" help="Jobs Related to Current User"/>
-                       <filter icon="gtk-execute" string="Initial Jobs" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]" separator="1" help="All Initial Jobs"/>
-                       <filter icon="gtk-execute" string="First Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','First Interview')]" separator="1" help="First Interview"/>
-                       <filter icon="gtk-execute" string="Second Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Second Interview')]" separator="1" help="Second Interview"/>
-                   </group>
-                   <group col="4" colspan="4">
-                       <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Jobs"/>
-                       </field>
-                       <field name="name" select='1'/>
-                       <field name="user_id" select="1" widget="selection"/>
-                   </group>
+                    <group col="12" colspan="4">
+	               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" />
+	                    <filter icon="terp-crm" string="Open" domain="[('state','=','open')]" />
+	                    <filter icon="terp-crm" string="Pending" domain="[('state','=','pending')]" />
+	               		<separator orientation="vertical"/>
+	               		<field name="id" select='1' widget="char" size="16"/>
+	               		<field name="section_id" select='1'/>
+	               		<field name="partner_id" string="Candidate Name" select='1'/>
+	               		<field name="email_from" select='1'/>
+	               		<field name="user_id" select='1'/>
+	               		<field name="categ_id" string="Applied Job" select="1"/>
+					</group>
                </search>
             </field>
         </record>
