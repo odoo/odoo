@@ -450,6 +450,15 @@ class orm_template(object):
                 return False                                
             return ''
         
+        def selection_field(in_field):
+            col_obj = self.pool.get(in_field.keys()[0])
+            if f[i] in col_obj._columns.keys():
+                return  col_obj._columns[f[i]]
+            elif f[i] in col_obj._inherits.keys():
+                selection_field(col_obj._inherits)
+            else:
+                return False    
+           
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -473,7 +482,19 @@ class orm_template(object):
                         else:
                             break
                     else:
-                        r = r[f[i]]                   
+                        r = r[f[i]]
+                        # To display external name of selection field when its exported
+                        if not context.get('import_comp',False):# Allow external name only if its not import compatible 
+                            cols = False
+                            if f[i] in self._columns.keys():
+                                cols = self._columns[f[i]]
+                            elif f[i] in self._inherit_fields.keys():
+                                cols = selection_field(self._inherits)
+                            if cols and cols._type == 'selection':
+                                sel_list = cols.selection
+                                if type(sel_list) == type([]):
+                                    r = [x[1] for x in sel_list if r==x[0]][0]
+
                     if not r:
                         if f[i] in self._columns: 
                             r = check_type(self._columns[f[i]]._type)
@@ -2119,10 +2140,12 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             select = [ids]
         result = self._read_flat(cr, user, select, fields, context, load)
+        
         for r in result:
             for key, v in r.items():
                 if v == None:
                     r[key] = False
+        
         if isinstance(ids, (int, long)):
             return result and result[0] or False
         return result
