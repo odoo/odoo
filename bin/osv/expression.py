@@ -46,18 +46,25 @@ class expression(object):
 
     def __execute_recursive_in(self, cr, s, f, w, ids, op, type):
         res = []
-        if not ids:
-            return []
-        if op not in ('<','>','=','>=','<=','not in'):
-            op = 'in'
-        for i in range(0, len(ids), cr.IN_MAX):
-            subids = ids[i:i+cr.IN_MAX]
-            cr.execute('SELECT "%s"'    \
-                       ' FROM "%s"'    \
-                       ' WHERE "%s" %s (%s)' % (s, f, w, op, ','.join(['%s']*len(subids))),
-                       subids)
-            res += [r[0] for r in cr.fetchall() if r[0]]
-        return res + (res and self.__execute_recursive_in(cr, s, f, w, res, op, type) or [])
+        if ids:
+            if op in ['<','>','>=','<=']:
+                cr.execute('SELECT "%s"'    \
+                               '  FROM "%s"'    \
+                               ' WHERE "%s" %s %s' % (s, f, w, op, ids[0]))
+                res.extend([r[0] for r in cr.fetchall()])
+            else:
+                for i in range(0, len(ids), cr.IN_MAX):
+                    subids = ids[i:i+cr.IN_MAX]
+                    cr.execute('SELECT "%s"'    \
+                               '  FROM "%s"'    \
+                               ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
+                               subids)
+                    res.extend([r[0] for r in cr.fetchall()])
+        else:
+            cr.execute('SELECT distinct("%s")'    \
+                           '  FROM "%s" where "%s" is not null'  % (s, f, s)),
+            res.extend([r[0] for r in cr.fetchall()])
+        return res
 
     def __init__(self, exp):
         # check if the expression is valid
