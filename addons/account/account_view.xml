@@ -120,7 +120,7 @@
                     <field name="name" select="1" colspan="4"/>
                     <field name="code" select="1"/>
                     <field name="parent_id"/>
-                    <field name="company_id" select="2"/>
+                    <field name="company_id" select="2" widget="selection"/>
                     <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -534,7 +534,7 @@
                 <form string="Account Tax Code">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="company_id"/>
+                    <field name="company_id" widget="selection"/>
                     <field name="notprintable"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
@@ -581,7 +581,7 @@
                 <form string="Account Tax">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="company_id"/>
+                        <field name="company_id" widget="selection"/>
                         <field name="description" select="1"/>
                         <field name="active" select="2"/>
                         <field name="tax_group" select="1"/>
@@ -1657,7 +1657,7 @@
                 <form string="Generate Chart of Accounts from a Chart Template">
                     <separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
                     <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
-                    <field name="company_id" />
+                    <field name="company_id"  widget="selection"/>
                     <field name ="code_digits" />
                     <field name="chart_template_id"/>
                     <field name ="seq_journal" />

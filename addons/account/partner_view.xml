@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <field name="name" select="1"/>
-                    <field name="company_id"/>
+                    <field name="company_id" widget="selection"/>
                     <newline/>
                     <field name="note" colspan="4"/>
                     <field name="tax_ids" colspan="4" widget="one2many_list">
@@ -75,8 +75,8 @@
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
                         <field name="property_account_receivable"/>
-                        <field name="property_account_position"/>
-                        <field name="property_payment_term"/>
+                        <field name="property_account_position" widget="selection"/>
+                        <field name="property_payment_term" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Accounting Properties" colspan="2"/>

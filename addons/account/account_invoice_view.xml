@@ -196,10 +196,10 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id"/>
-                            <field name="fiscal_position" groups="base.group_extended"/>
+                            <field name="company_id" widget="selection"/>
+                            <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
-                            <field name="payment_term"/>
+                            <field name="payment_term" widget="selection"/>
                             <field name="name" select="2"/>
                             <newline/>
                             <field name="number" select="2"/>
@@ -213,7 +213,7 @@
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-                            <field name="payment_ids" colspan="4" nolabel="1">
+                            <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date"/>
                                     <field name="ref"/>
@@ -255,7 +255,7 @@
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
                             <field name="name" select="2"/>
-                            <field name="payment_term"/>
+                            <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
@@ -287,8 +287,8 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id"/>
-                            <field name="fiscal_position" groups="base.group_extended,base.group_user"/>
+                            <field name="company_id" widget="selection"/>
+                            <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due" select="1"/>
                             <newline/>

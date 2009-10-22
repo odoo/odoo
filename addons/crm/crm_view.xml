@@ -36,7 +36,7 @@
                             <field name="sequence"/>
                             <field name="active" select="2"/>
                             <field name="user_id" select="2"/>
-                            <field name="parent_id" select="2"/>
+                            <field name="parent_id" select="2" widget="selection"/>
                             <field name="allow_unlink" select="2"/>
                             <field name="reply_to" select="2"/>
                             <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
@@ -110,7 +110,7 @@
             <field name="arch" type="xml">
                 <form string="Case Category">
                     <field name="name" select="1"/>
-                    <field name="section_id" select="1"/>
+                    <field name="section_id" select="1" widget="selection"/>
                     <field name="probability"/>
                 </form>
             </field>
@@ -153,7 +153,7 @@
 
                             <separator colspan="4" string="Conditions on Case Fields"/>
                             <field name="regex_name" string="Regex on Case Name" colspan="2"/>                            
-                            <field name="trg_section_id" select="1"/>
+                            <field name="trg_section_id" select="1" widget="selection"/>
                             <field name="trg_categ_id"/>
                             <field name="trg_user_id" select="2"/>
                             <separator colspan="4" string="Conditions on Case Partner"/>
@@ -316,7 +316,7 @@
             <field name="arch" type="xml">
                 <form string="Cases">
                     <field colspan="4" name="name" select="1"/>
-                    <field colspan="2" name="section_id"/>
+                    <field colspan="2" name="section_id" widget="selection"/>
                     <field name="date" select="1"/>
                     <field name="date_deadline" select="2"/>
                     <field name="priority"/>
@@ -628,7 +628,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Gateway">                  
-                     <field name="section_id"/>
+                     <field name="section_id" widget="selection"/>
                       <field name="mailgateway"/>  
                      <notebook colspan="4">
                         <page string="Server Setting">                            

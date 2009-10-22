@@ -36,7 +36,7 @@
             <form string="Claims">
                 <group colspan="4" col="7">
                     <field name="name" string="Subject"/>
-                    <field name="section_id" colspan="1"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Assigned to" select="2"/>
                     <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>                    
                     <newline/>

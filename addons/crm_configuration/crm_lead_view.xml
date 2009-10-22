@@ -14,7 +14,7 @@
             <form string="Prospects Form">
                 <group colspan="4" col="7">
                     <field name="name" select="1" string="Prospect Subject"/>
-                    <field name="section_id" colspan="1"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
                     <label string="Stage: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="stage_id" select="1" nolabel="1"/>
@@ -93,7 +93,7 @@
                            <field name="name"/>
                            <field name="partner_id"/>
                            <field name="user_id"/>
-                           <field name="section_id"/>
+                           <field name="section_id" widget="selection"/>
                            <field name="state"/>
                        </tree>
                     </field>
