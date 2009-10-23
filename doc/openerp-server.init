@@ -50,6 +50,14 @@ fi
 RETVAL=0
 
 start() {
+    if [ -d /etc/openerp/start.d ] ; then
+        echo -n $"Preparing $desc: "
+        run-parts --exit-on-error /etc/openerp/start.d
+        RETVAL=$?
+        echo
+        [ $RETVAL -ne 0 ] && return $RETVAL
+    fi
+    
     echo -n $"Starting $desc ($prog): "
     daemon --user openerp --check openerp-server \
     "/usr/bin/setsid /usr/bin/openerp-server \
@@ -66,18 +74,23 @@ start() {
 stop() {
     echo -n $"Stopping $desc ($prog): "
     kill -TERM `cat $PIDFILE` > /dev/null 2>&1
-        RETVAL=$?
-	    if [ $RETVAL -eq 0 ] ; then
-	        rm -f $LOCKFILE
+    RETVAL=$?
+    if [ $RETVAL -eq 0 ] ; then
+        rm -f $LOCKFILE
 
-		echo_success
-		echo
-		    else
-		echo_failure
-		echo
-		    fi
-		return $RETVAL
-}    
+        echo_success
+        echo
+    else
+        echo_failure
+        echo
+    fi
+    if [ -d /etc/openerp/stop.d ] ; then
+        echo -n $"Clearing $desc: "
+        run-parts /etc/openerp/stop.d
+        echo
+    fi
+    return $RETVAL
+}
 
 restart() {
     stop
@@ -91,14 +104,14 @@ condrestart() {
 status() { 
     if [ -f $PIDFILE ] ; then
         checkpid `cat $PIDFILE`
-	RETVAL=$?
+        RETVAL=$?
         if [ $RETVAL -eq 0 ] ; then
-	    echo  $"$prog is running..."
-	else
-	    echo  $"$prog is stopped"
-	fi
+            echo  $"$prog is running..."
+        else
+            echo  $"$prog is stopped"
+        fi
     else
-    	echo  $"$prog is stopped"
+        echo  $"$prog is stopped"
     fi
     return $RETVAL
 }
