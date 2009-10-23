@@ -142,7 +142,10 @@
                		<field name="id" select='1' widget="char" size="16"/>
                		<field name="section_id" select='1'/>
                		<field name="category2_id" string="Version" select='1'/>
-               		<field name="user_id" select='1'/>
+               		<field name="user_id" select="1" widget="selection">
+                       	<filter icon="terp-crm" domain="[('user_id','=',uid)]" help="Bugs assigned to me"/>
+                       	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="Bugs assigned to my department"/>
+                    </field>
                	</group>
             </search>
          </field>

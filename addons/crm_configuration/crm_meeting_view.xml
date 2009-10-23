@@ -161,7 +161,10 @@
 	               		<separator orientation="vertical"/>
 	               		<field name="section_id" select='1'/>
 	               		<field name="partner_id" select='1'/>
-	               		<field name="user_id" select='1'/>
+	               		<field name="user_id" select="1" widget="selection">
+                        	<filter icon="terp-crm" domain="[('user_id','=',uid)]" help="My Meetings"/>
+                        	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My Departments Meetings"/>
+                        </field>
 	               	</group>
                 </search>
         	</field>

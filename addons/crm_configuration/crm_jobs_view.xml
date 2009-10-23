@@ -166,7 +166,10 @@
 	               		<field name="section_id" select='1'/>
 	               		<field name="partner_id" string="Candidate Name" select='1'/>
 	               		<field name="email_from" select='1'/>
-	               		<field name="user_id" select='1'/>
+	               		<field name="user_id" select="1" widget="selection">
+                        	<filter icon="terp-crm" domain="[('user_id','=',uid)]" help="My Jobs"/>
+                        	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My Departments Jobs"/>
+                        </field>
 	               		<field name="categ_id" string="Applied Job" select="1"/>
 					</group>
                </search>

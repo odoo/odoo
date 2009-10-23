@@ -802,6 +802,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
+            <field name="filter" eval="True"/>
         </record>
         <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended_menu"/>
 
