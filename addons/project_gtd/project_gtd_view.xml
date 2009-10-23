@@ -199,20 +199,33 @@
             </field>
      	</record>
 
+	<record model="ir.ui.view" id="project_task_tree">
+        <field name="name">project.task.tree.timebox</field>
+        <field name="model">project.task</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="project.view_task_tree2" />
+        <field name="arch" type="xml">
+        	<field name="project_id" position="after">
+        		<field name="timebox_id"/>
+        		<button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
+                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>
+        	</field>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>
         <field name="model">project.task</field>
         <field name="type">form</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
-            <field name="progress" position="after">
-                <newline/>
-                <separator string="Getting Things Done" colspan="6"/>
-                <newline/>
-                <field name="context_id" select="2" />
-                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
-                <newline/>
-            </field>
+            <notebook>
+                <page string="TimeBox Configuration" position="inside">
+                	<separator string="Getting Things Done" colspan="4"/>
+                	<field name="context_id" select="2"/>
+               	 	<field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
+                </page>
+             </notebook>
         </field>
     </record>
 
