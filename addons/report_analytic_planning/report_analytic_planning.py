@@ -141,7 +141,8 @@ class report_account_analytic_planning_line(osv.osv):
         reads = self.read(cr, uid, ids, ['user_id','planning_id','note'], context)
         res = []
         for record in reads:
-            name = '['+record['planning_id'][1] + " - " +record['user_id'][1]+'] '
+            name = '['+record['planning_id'][1] + \
+                    " - " + ((record['user_id'] and record['user_id'][1]) or 'Unassigned' ) +  ']'
             if record['note']:
                 name += record['note']
             res.append((record['id'], name))
