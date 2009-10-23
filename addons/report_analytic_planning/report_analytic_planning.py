@@ -70,8 +70,16 @@ class report_account_analytic_planning(osv.osv):
         for obj_plan in self.browse(cr,uid,ids):
             cr.execute("""
                 SELECT id FROM report_account_analytic_planning plan 
-                WHERE ( user_id = %(uid)s
-                                 AND id <> %(id)s )""" % ({"uid": obj_plan.user_id.id,"id" : obj_plan.id}))
+                WHERE (   (%(date_from)s BETWEEN date_from AND date_to)
+                                OR (%(date_to)s BETWEEN date_from AND date_to)
+                                OR (%(date_from)s < date_from AND %(date_to)s > date_to)
+                               )  AND user_id = %(uid)s AND id <> %(id)s""", 
+                        {"date_from": obj_plan.date_from,
+                         "date_to": obj_plan.date_to,
+                         "uid": obj_plan.user_id.id,
+                         "id" : obj_plan.id}
+                               )
+
             res = cr.fetchone()
             if res:
                 return False
@@ -101,7 +109,7 @@ class report_account_analytic_planning(osv.osv):
     _order = 'date_from desc'
     
     _constraints = [
-        (_check_planning_responsible, 'Invalid planning ! Planning can\'t overlap for the same responsible. ', ['user_id'])
+        (_check_planning_responsible, 'Invalid planning ! Planning dates can\'t overlap for the same responsible. ', ['user_id'])
     ]
 
     def action_open(self, cr, uid, id, context={}):
