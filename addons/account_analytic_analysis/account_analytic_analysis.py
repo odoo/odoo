@@ -614,7 +614,7 @@ class account_analytic_account_summary_month(osv.osv):
             for child_id in account_obj.search(cr, uid,
                     [('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
                 if child_id != int(str(int(obj_id))[:-6]):
-                    res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
+                    res[obj_id] += res.get(int(child_id * 1000000 + int(str(int(obj_id))[-6:])), 0.0)
         for id in ids:
             res[id] = round(res.get(id, 0.0), 2)
         return res
