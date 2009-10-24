@@ -62,18 +62,18 @@ class audittrail_rule(osv.osv):
                         _('WARNING:audittrail is not part of the pool'),
                         _('Change audittrail depends -- Setting rule as DRAFT'))
                 self.write(cr, uid, [thisrule.id], {"state": "draft"})
-        val={
-             "name":'View Log',
-             "res_model":'audittrail.log',
-             "src_model":thisrule.object_id.model,
-             "domain":"[('res_id', '=', active_id)]"
-
-        }
-        id=self.pool.get('ir.actions.act_window').create(cr, uid, val)
-        self.write(cr, uid, ids, {"state": "subscribed","action_id":id})
-        keyword = 'client_action_relate'
-        value = 'ir.actions.act_window,'+str(id)
-        res=self.pool.get('ir.model.data').ir_set(cr, uid, 'action', keyword,'View_log_'+thisrule.object_id.model, [thisrule.object_id.model], value, replace=True, isobject=True, xml_id=False)
+            val={
+                 "name":'View Log',
+                 "res_model":'audittrail.log',
+                 "src_model":thisrule.object_id.model,
+                 "domain":"[('object_id','=',"+str(thisrule.object_id.id)+"),('res_id', '=', active_id)]"
+    
+            }
+            id=self.pool.get('ir.actions.act_window').create(cr, uid, val)
+            self.write(cr, uid, [thisrule.id], {"state": "subscribed","action_id":id})
+            keyword = 'client_action_relate'
+            value = 'ir.actions.act_window,'+str(id)
+            res=self.pool.get('ir.model.data').ir_set(cr, uid, 'action', keyword,'View_log_'+thisrule.object_id.model, [thisrule.object_id.model], value, replace=True, isobject=True, xml_id=False)
         return True
 
 
@@ -83,14 +83,14 @@ class audittrail_rule(osv.osv):
             if thisrule.id in self.__functions :
                 for function in self.__functions[thisrule.id]:
                     setattr(function[0], function[1], function[2])
-        w_id=self.pool.get('ir.actions.act_window').search(cr, uid, [('name','=','View Log'),('res_model','=','audittrail.log'),('src_model','=',thisrule.object_id.model)])
-        self.pool.get('ir.actions.act_window').unlink(cr, uid,w_id )
-        val_obj=self.pool.get('ir.values')
-        value="ir.actions.act_window"+','+str(w_id[0])
-        val_id=val_obj.search(cr, uid, [('model','=',thisrule.object_id.model),('value','=',value)])
-        if val_id:
-            res = ir.ir_del(cr, uid, val_id[0])
-        self.write(cr, uid, ids, {"state": "draft"})
+            w_id=self.pool.get('ir.actions.act_window').search(cr, uid, [('name','=','View Log'),('res_model','=','audittrail.log'),('src_model','=',thisrule.object_id.model)])
+            self.pool.get('ir.actions.act_window').unlink(cr, uid,w_id )
+            val_obj=self.pool.get('ir.values')
+            value="ir.actions.act_window"+','+str(w_id[0])
+            val_id=val_obj.search(cr, uid, [('model','=',thisrule.object_id.model),('value','=',value)])
+            if val_id:
+                res = ir.ir_del(cr, uid, val_id[0])
+            self.write(cr, uid, [thisrule.id], {"state": "draft"})
         return True
 
 audittrail_rule()
@@ -98,6 +98,7 @@ audittrail_rule()
 
 class audittrail_log(osv.osv):
     _name = 'audittrail.log'
+    
     _columns = {
         "name": fields.char("Name", size=32),
         "object_id": fields.many2one('ir.model', 'Object'),
@@ -105,8 +106,7 @@ class audittrail_log(osv.osv):
         "method": fields.selection((('read', 'Read'), ('write', 'Write'), ('unlink', 'Delete'), ('create', 'Create')), "Method"),
         "timestamp": fields.datetime("Date"),
         "res_id":fields.integer('Resource Id'),
-        "line_ids":fields.one2many('audittrail.log.line','log_id','Log lines')
-
+        "line_ids":fields.one2many('audittrail.log.line','log_id','Log lines'),
     }
     _defaults = {
         "timestamp": lambda *a: time.strftime("%Y-%m-%d %H:%M:%S")
@@ -213,7 +213,9 @@ class audittrail_objects_proxy(objects_proxy):
                 if 'id' in new_value:
                     del new_value['id']
                 if not len(logged_uids) or uid in logged_uids:
-                    id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": "%s %s %s" % (method , model_object.id, time.strftime("%Y-%m-%d %H:%M:%S"))})
+                    resource_name = pool.get(model_object.model).name_get(cr,uid,[res_id])
+                    resource_name = resource_name and resource_name[0][1] or ''
+                    id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name})
                     lines=[]
                     for field in new_value:
                         if new_value[field]:
@@ -240,7 +242,9 @@ class audittrail_objects_proxy(objects_proxy):
                     if res:
                         new_values=pool.get(model_object.model).read(cr,uid,res_ids,args[1].keys())[0]
                         if not len(logged_uids) or uid in logged_uids:
-                            id=pool.get('audittrail.log').create(cr, uid, {"method": method, "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": "%s %s %s" % (method , model_object.id, time.strftime("%Y-%m-%d %H:%M:%S"))})
+                            resource_name = pool.get(model_object.model).name_get(cr,uid,[res_id])
+                            resource_name = resource_name and resource_name[0][1] or ''
+                            id=pool.get('audittrail.log').create(cr, uid, {"method": method, "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": resource_name})
                             lines=[]
                             for field in args[1].keys():
                                 if args[1].keys():
@@ -269,7 +273,9 @@ class audittrail_objects_proxy(objects_proxy):
                     old_values[res['id']]=res
                 for res_id in old_values:
                     if not len(logged_uids) or uid in logged_uids:
-                        id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": "%s %s %s" % (method , model_object.id, time.strftime("%Y-%m-%d %H:%M:%S"))})
+                        resource_name = pool.get(model_object.model).name_get(cr,uid,[res_id])
+                        resource_name = resource_name and resource_name[0][1] or ''
+                        id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": resource_name})
                         lines=[]
                         for field in old_values[res_id]:
                             if old_values[res_id][field]:
@@ -292,7 +298,9 @@ class audittrail_objects_proxy(objects_proxy):
 
                 for res_id in res_ids:
                     if not len(logged_uids) or uid in logged_uids:
-                        id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": "%s %s %s" % (method, model_object,  time.strftime("%Y-%m-%d %H:%M:%S"))})
+                        resource_name = pool.get(model_object.model).name_get(cr,uid,[res_id])
+                        resource_name = resource_name and resource_name[0][1] or ''
+                        id=pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id,"name": resource_name})
                         lines=[]
                         for field in old_values[res_id]:
                             if old_values[res_id][field]:

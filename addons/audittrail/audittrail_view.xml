@@ -41,6 +41,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_audittrail_rule_tree">
+			<field name="name">Rules</field>
 			<field name="res_model">audittrail.rule</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="view_type">form</field>
@@ -52,6 +53,7 @@
 
 
 		<record model="ir.actions.act_window" id="action_audittrail_rule_tree_sub">
+			<field name="name">Rules</field>
 			<field name="res_model">audittrail.rule</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -69,7 +71,8 @@
 					<field name="object_id" select="1" readonly="1"/>
 					<field name="method" select="1" readonly="1"/>
 					<field name="user_id" select="1" readonly="1"/>
-					<field name="res_id" readonly="1" colspan="4"/>
+					<field name="res_id" readonly="1"/>
+					<field name="name" readonly="1" select="1"/>
 					<field name="line_ids"  colspan="4" mode="tree,form" widget="one2many_list" readonly="1">
 						<form string="Log Lines">
 							<field name="field_id" colspan="4" readonly="1"/>
@@ -106,6 +109,7 @@
 			<field name="arch" type="xml">
 				<tree string="AuditTrail Logs">
 					<field name="timestamp" />
+					<field name="name" />
 					<field name="object_id" />
 					<field name="method" />
 					<field name="user_id" />
@@ -114,6 +118,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_audittrail_log_tree">
+			<field name="name">Logs</field>
 			<field name="res_model">audittrail.log</field>
 			<field name="view_type">form</field>
 		</record>
