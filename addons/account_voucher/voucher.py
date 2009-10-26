@@ -214,7 +214,7 @@ class account_voucher(osv.osv):
         
         for il in iml:
             if il['account_analytic_id']:
-                if inv.type in ('pay_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_voucher','journal_pur_voucher'):
+                if inv.type in ('pay_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_vou','journal_pur_voucher'):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
@@ -244,7 +244,7 @@ class account_voucher(osv.osv):
             diff_currency_p = inv.currency_id.id <> company_currency
 
             total = 0
-            if inv.type in ('pay_voucher', 'journal_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_voucher','journal_pur_voucher'):
+            if inv.type in ('pay_voucher', 'journal_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_vou','journal_pur_voucher'):
                 ref = inv.reference
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
@@ -508,12 +508,11 @@ class VoucherLine(osv.osv):
             res.append(self.move_line_get_item(cr, uid, line, context))
         return res
     
-    def onchange_partner(self, cr, uid, ids, partner_id, ttype,type1):
+    def onchange_partner(self, cr, uid, ids, partner_id, ttype ,type1):
         if not partner_id:
             return {'value' : {'account_id' : False, 'type' : False ,'amount':False}}
         obj = self.pool.get('res.partner')
         account_id = False
-        
         if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
             account_id = obj.browse(cr, uid, partner_id).property_account_receivable
             balance = obj.browse(cr,uid,partner_id).credit
