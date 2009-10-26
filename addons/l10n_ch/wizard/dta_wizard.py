@@ -529,7 +529,7 @@ def _create_dta(obj, cr, uid, data, context):
                 if not v['reference'] \
                     or (mod10r(v['reference'][:-1]) != v['reference'] and \
                     not len(v['reference']) == 15):
-                raise wizard.except_wizard(_('Error'), _('You must provide ' \
+                    raise wizard.except_wizard(_('Error'), _('You must provide ' \
                         'a valid BVR reference number \n' \
                         'for the line: %s') % pline.name)
             if not v['partner_bvr']:
