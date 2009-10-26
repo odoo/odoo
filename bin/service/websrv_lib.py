@@ -357,23 +357,30 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
 	return ('server.cert','server.key')
 	
     def setup(self):
-	import ssl
-	certfile, keyfile = self.getcert_fnames()
-        self.connection = ssl.wrap_socket(self.request,
-				server_side=True,
-				certfile=certfile,
-				keyfile=keyfile,
-				ssl_version=ssl.PROTOCOL_SSLv23)
-        self.rfile = self.connection.makefile('rb', self.rbufsize)
-        self.wfile = self.connection.makefile('wb', self.wbufsize)
-	self.log_message("Secure %s connection from %s",self.connection.cipher(),self.client_address)
+        import ssl
+        certfile, keyfile = self.getcert_fnames()
+        try:
+            self.connection = ssl.wrap_socket(self.request,
+                                server_side=True,
+                                certfile=certfile,
+                                keyfile=keyfile,
+                                ssl_version=ssl.PROTOCOL_SSLv23)
+            self.rfile = self.connection.makefile('rb', self.rbufsize)
+            self.wfile = self.connection.makefile('wb', self.wbufsize)
+            self.log_message("Secure %s connection from %s",self.connection.cipher(),self.client_address)
+        except:
+            self.request.shutdown(socket.SHUT_RDWR)
+            raise
 
     def finish(self):
         # With ssl connections, closing the filehandlers alone may not
-	# work because of ref counting. We explicitly tell the socket
-	# to shutdown.
-	MultiHTTPHandler.finish(self)
-	self.connection.shutdown(socket.SHUT_RDWR)
+        # work because of ref counting. We explicitly tell the socket
+        # to shutdown.
+        MultiHTTPHandler.finish(self)
+        try:
+            self.connection.shutdown(socket.SHUT_RDWR)
+        except:
+            pass
 
 import threading
 class ConnThreadingMixIn:
