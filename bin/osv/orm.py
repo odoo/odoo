@@ -459,6 +459,15 @@ class orm_template(object):
                 return False                                
             return ''
         
+        def selection_field(in_field):
+            col_obj = self.pool.get(in_field.keys()[0])
+            if f[i] in col_obj._columns.keys():
+                return  col_obj._columns[f[i]]
+            elif f[i] in col_obj._inherits.keys():
+                selection_field(col_obj._inherits)
+            else:
+                return False    
+           
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
@@ -482,7 +491,19 @@ class orm_template(object):
                         else:
                             break
                     else:
-                        r = r[f[i]]                   
+                        r = r[f[i]]
+                        # To display external name of selection field when its exported
+                        if not context.get('import_comp',False):# Allow external name only if its not import compatible 
+                            cols = False
+                            if f[i] in self._columns.keys():
+                                cols = self._columns[f[i]]
+                            elif f[i] in self._inherit_fields.keys():
+                                cols = selection_field(self._inherits)
+                            if cols and cols._type == 'selection':
+                                sel_list = cols.selection
+                                if type(sel_list) == type([]):
+                                    r = [x[1] for x in sel_list if r==x[0]][0]
+
                     if not r:
                         if f[i] in self._columns: 
                             r = check_type(self._columns[f[i]]._type)
@@ -588,6 +609,9 @@ class orm_template(object):
                     continue
                     
                 field = fields[i]
+                if prefix and not prefix[0] in field:
+                    continue
+                
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
                         res = False
@@ -646,7 +670,7 @@ class orm_template(object):
                                     ['res_id'])
 			    if res_res_id:
 				    res_id = res_res_id[0]['res_id']
-                    row[field[0][:-3]] = res_id or False
+                    row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
                         len(field[len(prefix)].split(':lang=')) == 2:
@@ -682,7 +706,7 @@ class orm_template(object):
                         try:                            
                             _check_db_id(self, model_name, line[i])
                             data_res_id = is_db_id = int(line[i])
-                        except Exception,e:                                    
+                        except Exception,e:
                             warning += [tools.exception_to_unicode(e)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                       tools.exception_to_unicode(e))
@@ -1071,19 +1095,37 @@ class orm_template(object):
 
         buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
         for button in buttons:
-            ok = True
+            can_click = True
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
-                cr.execute("select role_id from wkf_transition where signal=%s", (button.getAttribute('name'),))
+                # TODO handle the case of more than one workflow for a model
+                cr.execute("""SELECT DISTINCT t.role_id 
+                                FROM wkf 
+                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id 
+                          INNER JOIN wkf_transition t ON (t.act_to = a.id)
+                               WHERE wkf.osv = %s
+                                 AND t.signal = %s
+                           """, (self._name, button.getAttribute('name'),))
                 roles = cr.fetchall()
-                for role in roles:
-                    if role[0]:
-                        ok = ok and rolesobj.check(cr, user, user_roles, role[0])
+                
+                # draft -> valid = signal_next (role X)
+                # draft -> cancel = signal_cancel (no role)
+                #
+                # valid -> running = signal_next (role Y)
+                # valid -> cancel = signal_cancel (role Z)
+                #
+                # running -> done = signal_next (role Z)
+                # running -> cancel = signal_cancel (role Z)
+                
 
-            if not ok:
-                button.setAttribute('readonly', '1')
-            else:
-                button.setAttribute('readonly', '0')
+                # As we don't know the object state, in this scenario, 
+                #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
+                #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
+                # The verification will be made later in workflow process...
+                if roles:
+                    can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
+            
+            button.setAttribute('readonly', str(int(not can_click)))
 
         arch = node.toxml(encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
@@ -1221,6 +1263,15 @@ class orm_template(object):
         model = True
         sql_res = False
         while ok:
+            view_ref = context.get(view_type + '_view_ref', False)
+            if view_ref:
+                if '.' in view_ref:
+                    module, view_ref = view_ref.split('.', 1)
+                    cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                    view_ref_res = cr.fetchone()
+                    if view_ref_res:
+                        view_id = view_ref_res[0]
+
             if view_id:
                 where = (model and (" and model='%s'" % (self._name,))) or ''
                 cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
@@ -1462,6 +1513,8 @@ class orm_memory(orm_template):
         return result
 
     def write(self, cr, user, ids, vals, context=None):
+        if not ids:
+            return True
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -1556,7 +1609,7 @@ class orm_memory(orm_template):
 
         # get the default values from the context
         for key in context or {}:
-            if key.startswith('default_'):
+            if key.startswith('default_') and (key[8:] in fieds_list):
                 value[key[8:]] = context[key]
         return value
 
@@ -2122,10 +2175,12 @@ class orm(orm_template):
         else:
             select = map(int,ids)
         result = self._read_flat(cr, user, select, fields, context, load)
+        
         for r in result:
             for key, v in r.items():
                 if v == None:
                     r[key] = False
+        
         if isinstance(ids, (int, long)):
             return result and result[0] or False
         return result
