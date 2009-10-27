@@ -188,5 +188,20 @@
         </field>
     </record>
 
+		<!--  PARTNER VIEW -->
+		<record id="view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.crm.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<field name="parent_id" position="after">
+					<button string="Create Opportunity"
+						name="%(crm_configuration.wizard_partner_create_opportunity)d" icon="gtk-index"
+						type="action"
+					/>
+				</field>
+			</field>
+		</record>
 </data>
 </openerp>

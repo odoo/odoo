@@ -62,7 +62,7 @@
         <field name="act_window_id" ref="crm_case_categ_help_act"/>
     </record>
     
-    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_my_act" action="crm_case_categ_help_act" groups="base.group_extended_menu"/>
+<!--    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_my_act" action="crm_case_categ_help_act" groups="base.group_extended_menu"/>-->
     
     <record model="ir.actions.act_window" id="crm_case_categ_help_new_act">
         <field name="name">New Helpdesk</field>
@@ -85,7 +85,7 @@
         <field name="act_window_id" ref="crm_case_categ_help_new_act"/>
     </record>
     
-    <menuitem parent="menu_help_support_main" id="menu_crm_case_categ_help_new_act" action="crm_case_categ_help_new_act" sequence="50"/>
+<!--    <menuitem parent="menu_help_support_main" id="menu_crm_case_categ_help_new_act" action="crm_case_categ_help_new_act" sequence="50"/>-->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
         <field name="name">My Unclosed Requests</field>
@@ -119,7 +119,7 @@
         <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
     </record>
     
-    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_my_helpdesk" action="crm_case_helpdesk_act_my1" groups="base.group_extended_menu"/>        
+<!--    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_my_helpdesk" action="crm_case_helpdesk_act_my1" groups="base.group_extended_menu"/>        -->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my2">
         <field name="name">My helpdesk Propositions to Review</field>
@@ -149,7 +149,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_my2"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk2" action="crm_case_helpdesk_act_my2" groups="base.group_extended_menu"/>        
+<!--    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk2" action="crm_case_helpdesk_act_my2" groups="base.group_extended_menu"/>        -->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my1">
         <field name="name">My Pending helpdesk Requests</field>
@@ -179,7 +179,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_my1"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk1" action="crm_case_helpdesk_act_my1" groups="base.group_extended_menu"/>                
+<!--    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk1" action="crm_case_helpdesk_act_my1" groups="base.group_extended_menu"/>                -->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_my0">
         <field name="name">My Open Helpdesk Requests</field>
@@ -209,7 +209,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_my0"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk0" action="crm_case_helpdesk_act_my0" groups="base.group_extended_menu"/>    
+<!--    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk0" action="crm_case_helpdesk_act_my0" groups="base.group_extended_menu"/>    -->
         
     
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_myhelpdesk">
@@ -238,13 +238,13 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_myhelpdesk"/>
     </record>    
-    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk" action="crm_case_helpdesk_act_myhelpdesk" groups="base.group_extended_menu"/>
+<!--    <menuitem parent="menu_crm_case_helpdesk_my_act" id="menu_crm_case_helpdesk_act_myhelpdesk" action="crm_case_helpdesk_act_myhelpdesk" groups="base.group_extended_menu"/>-->
     
     <!-- 
         ALL Helpdesk REQUESTS 
     -->
 
-    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_act_all" action="crm_case_helpdesk_act111" groups="base.group_extended_menu"/>        
+<!--    <menuitem parent="menu_help_support_main" id="menu_crm_case_helpdesk_act_all" action="crm_case_helpdesk_act111" groups="base.group_extended_menu"/>        -->
     
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all3">
@@ -275,7 +275,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_all3"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all3" action="crm_case_helpdesk_act_all3" groups="base.group_extended_menu"/>
+<!--    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all3" action="crm_case_helpdesk_act_all3" groups="base.group_extended_menu"/>-->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all2">
         <field name="name">All Helpdesk Propositions</field>
@@ -305,7 +305,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_all2"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all2" action="crm_case_helpdesk_act_all2" groups="base.group_extended_menu"/>        
+<!--    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all2" action="crm_case_helpdesk_act_all2" groups="base.group_extended_menu"/>        -->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all1">
         <field name="name">All Pending Helpdesk Requests</field>
@@ -335,7 +335,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_all1"/>
     </record>
-    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all1" action="crm_case_helpdesk_act_all1" groups="base.group_extended_menu"/>        
+<!--    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all1" action="crm_case_helpdesk_act_all1" groups="base.group_extended_menu"/>        -->
 
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_all0">
@@ -366,7 +366,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_all0"/>
     </record>
-    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all0" action="crm_case_helpdesk_act_all0" groups="base.group_extended_menu"/>        
+<!--    <menuitem  parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_all0" action="crm_case_helpdesk_act_all0" groups="base.group_extended_menu"/>        -->
 
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act_allhelpdesk">
         <field name="name">Calendar of Helpdesk</field>
@@ -394,7 +394,7 @@
         <field name="view_id" ref="crm.crm_case-view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act_allhelpdesk"/>
     </record>
-    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_allhelpdesk" action="crm_case_helpdesk_act_allhelpdesk" groups="base.group_extended_menu"/>
+<!--    <menuitem parent="menu_crm_case_helpdesk_act_all" id="menu_crm_case_helpdesk_act_myhelpdesk_allhelpdesk" action="crm_case_helpdesk_act_allhelpdesk" groups="base.group_extended_menu"/>-->
     
     
 </data>
