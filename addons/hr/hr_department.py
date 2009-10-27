@@ -109,6 +109,7 @@ class res_users(osv.osv):
 
     def _child_compute(self, cr, uid, ids, name, args, context={}):
         obj_dept = self.pool.get('hr.department')
+        obj_user = self.pool.get('res.users')
         result = {}
         for manager_id in ids:
             child_ids = []
@@ -116,8 +117,9 @@ class res_users(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)])
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
-                childs = map(lambda x: x['member_ids'], data_dept)
+                childs = map(lambda x: x['member_ids'], data_dept)                
                 childs = tools.flatten(childs)
+                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])                
                 if manager_id in childs:
                     childs.remove(manager_id)
                 
