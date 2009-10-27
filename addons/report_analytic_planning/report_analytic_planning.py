@@ -323,7 +323,10 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
         FROM report_account_analytic_planning planning
         LEFT JOIN report_account_analytic_planning_line line ON (line.planning_id = planning.id), res_users users
  
+        WHERE users.active = True
         GROUP BY planning.id, planning.business_days, users.id, planning.date_from, planning.date_to
+        
+        
 
         UNION
 
@@ -347,6 +350,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
         INNER JOIN report_account_analytic_planning_line line ON line.planning_id = planning.id 
             AND line.user_id IS NULL
         GROUP BY planning.id, planning.business_days, line.user_id, planning.date_from, planning.date_to
+        
         )
         """)
 
