@@ -13,7 +13,7 @@
             <form string="Meetings Form">
                 <group colspan="4" col="6">
                     <field name="name" select="1" string="Title"/>
-                    <field name="section_id"/>
+                    <field name="section_id" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible" required="1"/>
                     <newline/>
                     <field name="date" string="Meeting Date" required="1"/>
@@ -110,7 +110,7 @@
                 <field name="id"/>
                 <field name="name" string="Title"/>
                 <field name="date" string="Next Meeting"/>
-                <field name="section_id"/>
+                <field name="section_id" widget="selection"/>
                 <field name="priority"/>
                 <field name="categ_id"/>
                 <field name="category2_id" string="Type"/>
@@ -131,7 +131,7 @@
             <calendar string="Meetings" date_start="date" color="user_id" date_delay="duration">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="section_id"/>
+                <field name="section_id" widget="selection"/>
             </calendar>
         </field>
     </record>

@@ -29,6 +29,7 @@
 				<form string="Planning by Account">
 					<group col="6" colspan="4">
 						<field name="name" select="1" />
+						<field name="code" select="1" />
 						<field name="user_id" select="1" />
 						<field name="business_days" />
 						<field name="date_from" />
@@ -398,6 +399,20 @@
 			id="act_task_of_lines" name="Planning tasks" res_model="project.task"
 			src_model="report_account_analytic.planning"
 		/>
+		
+		<!-- company form --> 
+        <record id="planning_company" model="ir.ui.view">
+            <field name="name">res.company.planning.config</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="priority">25</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="project_time_mode_id" position="after">
+                <field name="planning_time_mode_id"/>
+            </field>
+            </field>
+        </record>
 
 	</data>
 </openerp>

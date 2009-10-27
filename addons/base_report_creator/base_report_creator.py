@@ -210,7 +210,7 @@ class report_creator(osv.osv):
             fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
                                         and x[1].get('relation') in rest_list 
                                         and x[1].get('type')=='many2one' 
-                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related)), fields_get.items()))
+                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related) or isinstance(model_pool._columns[x[0]],fields.dummy)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)

@@ -40,7 +40,7 @@
                         <field name="date_order" select="2"/>
                         <field name="invoiced" select="2"/>
                         <newline/>
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
+                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
                         <field name="origin" select="2"/>
                         <field name="shipped" select="2"/>
                     </group>
@@ -87,13 +87,13 @@
                                 <separator string="Delivery" colspan="2"/>
                                 <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
                                 <field name="minimum_planned_date"/>
-                                <field name="location_id"/>
+                                <field name="location_id" widget="selection"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Invoice Control" colspan="2"/>
                                 <field name="invoice_method"/>
                                 <field name="invoice_id" readonly="1"/>
-                                <field name="fiscal_position" groups="base.group_extended"/>
+                                <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             </group>
                             <newline/>
                             <separator string="Purchase Control" colspan="4"/>

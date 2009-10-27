@@ -14,7 +14,7 @@
             <form string="Opportunities">
                 <group colspan="4" col="7">
                     <field name="name" select="1" string="Opportunity" colspan="2"/>
-                    <field name="section_id" colspan="1"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible"/>
                     <button string="Schedule a Phone Call"
                         name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />                    
@@ -88,7 +88,7 @@
                            <field name="name"/>
                            <field name="partner_id"/>
                            <field name="user_id"/>
-                           <field name="section_id"/>
+                           <field name="section_id" widget="selection"/>
                            <field name="state"/>
                        </tree>
                     </field>

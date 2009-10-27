@@ -36,7 +36,7 @@
             <form string="Funds Form">
                 <group colspan="4" col="6">
                     <field name="name" select="1" string="Name" colspan="2"/>
-                    <field name="section_id" colspan="1"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
                     <newline/>
                     <field name="date" string="Next Meeting"/>
