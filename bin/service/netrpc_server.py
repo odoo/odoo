@@ -37,13 +37,16 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         self.sock = sock
         self.threads = threads
 
+    def __del__(self):
+        if self.sock:
+            self.sock.close()
+
     def run(self):
         import select
         self.running = True
         try:
             ts = tiny_socket.mysocket(self.sock)
         except:
-            self.sock.close()
             self.threads.remove(self)
             return False
         while self.running:
@@ -51,18 +54,27 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                 msg = ts.myreceive()
             except:
                 self.sock.close()
+                self.sock = None
                 self.threads.remove(self)
                 return False
             try:
                 result = self.dispatch(msg[0], msg[1], msg[2:])
                 ts.mysend(result)
             except netsvc.OpenERPDispatcherException, e:
-                new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
-                ts.mysend(new_e, exception=True, traceback=e.traceback)
+                try:
+                    new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
+                    ts.mysend(new_e, exception=True, traceback=e.traceback)
+                except:
+                    pass
+            except Exception, e:
+                # this code should not be reachable, therefore we warn
+                netsvc.Logger().notifyChannel("net-rpc", netsvc.LOG_WARNING, "exception: %" % str(e))
+                break
 
-            self.sock.close()
-            self.threads.remove(self)
-            return True
+        self.sock.close()
+        self.sock = None
+        self.threads.remove(self)
+        return True
 
     def stop(self):
         self.running = False
@@ -71,7 +83,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
 class TinySocketServerThread(threading.Thread,netsvc.Server):
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self)
-	netsvc.Server.__init__(self)
+        netsvc.Server.__init__(self)
         self.__port = port
         self.__interface = interface
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -79,7 +91,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.socket.bind((self.__interface, self.__port))
         self.socket.listen(5)
         self.threads = []
-	netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
+        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
                          "starting NET-RPC service at %s port %d" % (interface or '0.0.0.0', port,))
 
     def run(self):
@@ -91,8 +103,16 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                 ct = TinySocketClientThread(clientsocket, self.threads)
                 self.threads.append(ct)
                 ct.start()
+                lt = len(self.threads)
+                if (lt > 10) and (lt % 10 == 0):
+                     # Not many threads should be serving at the same time, so log
+                     # their abuse.
+                     netsvc.Logger().notifyChannel("web-services", netsvc.LOG_DEBUG,
+                        "Netrpc: %d threads" % len(self.threads))
             self.socket.close()
         except Exception, e:
+            netsvc.Logger().notifyChannel("web-services", netsvc.LOG_WARNING,
+                        "Netrpc: closing because of exception %s" % str(e))
             self.socket.close()
             return False
 
