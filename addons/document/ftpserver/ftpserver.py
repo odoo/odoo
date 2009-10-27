@@ -1412,10 +1412,7 @@ class FTPHandler(asynchat.async_chat):
             established connection.
          - (instance) server: the ftp server class instance.
         """
-        try:
-            asynchat.async_chat.__init__(self, conn=conn) # python2.5
-        except TypeError, e:
-            asynchat.async_chat.__init__(self, sock=conn) # python2.6
+        asynchat.async_chat.__init__(self, conn)
         self.server = server
         self.remote_ip, self.remote_port = self.socket.getpeername()[:2]
         self.in_buffer = []
