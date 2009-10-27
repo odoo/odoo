@@ -32,6 +32,11 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
+from scripts.openerp_mailgate import openerp_mailgate
+import email
+import netsvc
+from poplib import POP3, POP3_SSL
+from imaplib import IMAP4, IMAP4_SSL
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -203,100 +208,125 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
+class crm_email_gateway_server(osv.osv):
+    _name = "crm.email.gateway.server"
+    _description = "Email Gateway Server"    
+    _columns = {
+        'name': fields.char('Server Address',size=64,required=True ,help="IMAP/POP Address Of Email gateway Server"),
+        'login': fields.char('User',size=64,required=True,help="User Login Id of Email gateway"),
+        'password': fields.char('Password',size=64,required=True,help="User Password Of Email gateway"),        
+        'server_type': fields.selection([("pop","POP"),("imap","Imap")],"Type of Server", required=True, help="Type of Email gateway Server"),                
+        'port': fields.integer("Port" , help="Port Of Email gateway Server. If port is omitted, the standard POP3 port (110) is used for POP EMail Server and the standard IMAP4 port (143) is used for IMAP Sever."),
+        'ssl': fields.boolean('SSL',help ="Use Secure Authentication"),
+        'active': fields.boolean('Active'),                
+    }
+    _defaults = {                
+        'server_type':lambda * a:'pop', 
+        'active':lambda * a:True,               
+    }    
+crm_email_gateway_server()
+
+
+    
 class crm_email_gateway(osv.osv):
     _name = "crm.email.gateway"
     _description = "Email Gateway"
-    _rec_name="login"
-    _columns = {
-        'pop': fields.char('POP Server Name',size=64,required=True ,help="POP Server Name Of Email gateway"),
-        'login': fields.char('User',size=64,required=True,help="User Login Id of Email gateway"),
-        'password': fields.char('Password',size=64,required=True,help="User Password Of Email gateway"),
-        'email': fields.char('Email Id',size=64,help="Default eMail in case of any trouble."),
-        'mailgateway':fields.selection([("fetchmail","Using Fetchmail"),("postfix","Using Postfix")],"EMail gateway", readonly=True),
-        'section_id':fields.many2one('crm.case.section',"Section"),
-        'path':fields.char("Path ",size=255,required= True,help ="Path of script file of Email gateway"),          
-        'port':fields.integer("Port" , help="Port Number "),
-        'ssl':fields.boolean('Use Secure Authentication',help ="Use Secure Authentication"),        
-    }
-    _defaults = {
-        'path': lambda *a: tools.config['addons_path']+"/crm/scripts/openerp-mailgate/openerp-mailgate.py",
-        'port':lambda * a:110,
-        'mailgateway':lambda * a:'fetchmail',
-        }
-
-    def _get_fetchmail_path(self, cr):
-        return os.path.join(tools.config['root_path'], '.fetchmail', cr.dbname)
-
-    def fetch_mail(self, cr, uid, section_ids=[], context={}):        
-        path = self._get_fetchmail_path(cr)
-        sect_obj = self.pool.get("crm.case.section")        
-        if not len(section_ids):
-            section_ids = sect_obj.search(cr, uid, [])
-        for section in sect_obj.browse(cr, uid, section_ids):
-            fetch_file = path + "/" +section.name            
-            if os.path.isfile(fetch_file):                   
-                try :                                                            
-                    os.system("fetchmail -f %s" %(fetch_file))
-                except Exception, e:
-                    import netsvc
-                    netsvc.Logger().notifyChannel('fetchmail', netsvc.LOG_ERROR, "%s" % e)
-        return True
-
-    def make_fetchmail(self, cr, uid, section_ids=[], context={}):
-        sect_obj = self.pool.get("crm.case.section")
-        user_obj = self.pool.get("res.users")        
-        for section in sect_obj.browse(cr, uid, section_ids, context):
-            user = user_obj.browse(cr,uid,uid)
-            path = self._get_fetchmail_path(cr)
-            if not os.path.isdir(path):            
-                try:
-                    os.makedirs(path)                    
-                except:
-                    raise except_orm(_('Permission Denied !'), _('You do not permissions to write on the server side.'))
-                         
-            fmail_path =  path + "/" +section.name
-            fmail = open(fmail_path , 'w')
-            os.chmod(fmail_path,0710)
-            for mailgateway in section.gateway_ids: 
-                mdatext = '%s  -u %d -p %s -s %d  -d %s '%(mailgateway.path,uid,user.password,mailgateway.section_id.id,cr.dbname)        
-                if mailgateway.email:
-                    mdatext += ' -m %s'%(mailgateway.email)
-                if section.reply_to:
-                    mdatext += ' -e %s'%(section.reply_to) 
-                text = "\npoll %s  user '%s' password '%s'"%(mailgateway.pop,mailgateway.login,mailgateway.password)
-                if mailgateway.port:
-                    text += ' port %d' % (mailgateway.port)
-                if mailgateway.ssl:
-                    text += ' ssl'   
-                text += " mda '%s'"%(mdatext)
-                fmail.write(text)
-            fmail.close() 
-    
-    def create(self, cr, uid, vals, context=None):
-        res = super(crm_email_gateway, self).create(cr, uid, vals, context=context)        
-        self.make_fetchmail(cr, uid, [vals['section_id']])
-        return res
-    
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        res = super(crm_email_gateway, self).write(cr, uid, ids, vals, context)
-        section_ids = [] 
-        for gateway in self.browse(cr, uid, ids, context):  
-           if gateway.section_id.id not in section_ids:
-                section_ids.append(gateway.section_id.id)
-        self.make_fetchmail(cr, uid, section_ids)
-        return res
-    
-    def unlink(self, cr, uid, ids, context={}, check=True):
-        section_ids = []
-        for gateway in self.browse(cr, uid, ids, context):  
-           if gateway.section_id.id not in section_ids:
-                section_ids.append(gateway.section_id.id)
-        res = super(crm_email_gateway, self).unlink(cr, uid,ids, context=context)
         
-        self.make_fetchmail(cr, uid, section_ids)        
-        return res
+    _columns = {
+        'name': fields.many2one('crm.email.gateway.server',"Gateway Server", required=True),
+        'to_email_id': fields.char('TO', size=64, help="Email address used in the From field of outgoing messages"),
+        'cc_email_id': fields.char('CC',size=64,help="Default eMail in case of any trouble."),        
+        'section_id': fields.many2one('crm.case.section',"Section",required=True),                         
+        'mail_history': fields.one2many("crm.email.history","gateway_id","History", readonly=True)
+    }  
+    
+    def _fetch_mails(self, cr, uid, ids=False, context={}):
+        '''
+        Function called by the scheduler to fetch mails
+        '''
+        cr.execute('select * from crm_email_gateway gateway \
+                inner join crm_email_gateway_server server \
+                on server.id = gateway.name where server.active = True')
+        ids2 = map(lambda x: x[0], cr.fetchall() or [])        
+        return self.fetch_mails(cr, uid, ids=ids2, context=context)  
+        
+    def fetch_mails(self, cr, uid, ids=[], section_ids=[], context={}):  
+        if len(section_ids):
+            casesection_obj = self.pool.get('crm.case.section')                  
+            for section in casesection_obj.read(cr, uid, section_ids, ['gateway_ids']):                  
+                ids += section['gateway_ids']
+        log_messages = []    
+        user_obj = self.pool.get('res.users')    
+        mail_history_obj = self.pool.get('crm.email.history')                
+        for mailgateway in self.browse(cr, uid, ids):
+            try :
+                mailgate_server = mailgateway.name
+                if not mailgate_server.active:
+                    continue
+                log_messages.append("Mail Server : %s:%d" % (mailgate_server.name, mailgate_server.port))
+                log_messages.append("-"*20)
+                email_messages = []
+                read_messages =  mailgateway.mail_history and map(lambda x:x.name, mailgateway.mail_history) or []
+                new_messages = []                
+                if mailgate_server.server_type == 'pop':
+                    if mailgate_server.ssl:
+                        pop_server = POP3_SSL(mailgate_server.name or 'localhost', mailgate_server.port or 110)
+                    else:
+                        pop_server = POP3(mailgate_server.name or 'localhost', mailgate_server.port or 110)                             
+                    pop_server.user(mailgate_server.login)
+                    pop_server.pass_(mailgate_server.password)
+                    pop_server.list()
+                    (numMsgs, totalSize) = pop_server.stat()                                       
+                    for i in range(1, numMsgs + 1):
+                        if i not in read_messages:
+                            (header, msges, octets) = pop_server.retr(i)
+                            for msg in msges:                    
+                                email_messages.append((i,msg))
+                            new_messages.append(i)
+                    pop_server.quit()  
+                      
+                elif mailgate_server.server_type == 'imap':
+                    if mailgate_server.ssl:
+                        imap_server = IMAP4_SSL(mailgate_server.name or 'localhost', mailgate_server.port or 143)
+                    else:
+                        imap_server = IMAP4(mailgate_server.name or 'localhost', mailgate_server.port or 143)                
+                    imap_server.login(mailgate_server.login, mailgate_server.password)
+                    imap_server.select()
+                    typ, data = imap_server.search(None, '(UNSEEN)')
+                    for num in data[0].split():                        
+                        typ, data = imap_server.fetch(num, '(RFC822)')
+                        email_messages.append((num, data[0][1]))
+                        new_messages.append(num)
+                    imap_server.close()
+                    imap_server.logout()
+                    
+            except Exception, e:                  
+                 log_messages.append("Error in Fetching Mail: %s " %(str(e)))                   
+                 netsvc.Logger().notifyChannel('Emailgate:Fetching mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
+            
+            if len(email_messages):
+                users = user_obj.read(cr, uid, uid, ['password'])
+                parser = openerp_mailgate.email_parser(uid, users['password'], mailgateway.section_id.id, 
+                                mailgateway.to_email_id or '', mailgateway.cc_email_id or '', dbname=cr.dbname, 
+                                host=tools.config['interface'] or 'localhost', port=tools.config['port'] or '8069')     
+                for msg_id, message in email_messages:                
+                    try :
+                        msg_txt = email.message_from_string(message)                    
+                        res = parser.parse(msg_txt)
+                        mail_history_obj.create(cr, uid, {'name':msg_id, 'case_id': res[0], 'gateway_id':mailgateway.id})
+                        log_messages.append('Case Successfull created : %d' % res[0])
+                        
+                    except Exception, e:
+                        log_messages.append("Error in Parsing Mail: %s " %(str(e)))                                         
+                        netsvc.Logger().notifyChannel('Emailgate:Parsing mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
+            
+            log_messages.append("="*20)    
+            log_messages.append("Total Read Mail: %d" %(len(new_messages)))        
+        return log_messages
 
 crm_email_gateway()
+
+
 
 class crm_case_categ(osv.osv):
     _name = "crm.case.categ"
@@ -980,6 +1010,16 @@ class crm_case_history(osv.osv):
     }
 crm_case_history()
 
+class crm_email_history(osv.osv):
+    _name = "crm.email.history"
+    _description = "Email History"
+    _columns = {
+        'name': fields.char('Message Id', size=64, help="Message Id in Email Server."),
+        'case_id': fields.many2one('crm.case',"Case", required=True),
+        'gateway_id': fields.many2one('crm.email.gateway',"Email Gateway", required=True),
+    }
+    _order = 'case_id desc'
+crm_email_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
