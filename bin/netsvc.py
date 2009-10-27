@@ -290,47 +290,47 @@ class Agent(object):
 import traceback
 
 class Server:
-	""" Generic interface for all servers with an event loop etc.
-	    Override this to impement http, net-rpc etc. servers.
-	    
-	    Servers here must have threaded behaviour. start() must not block,
-	    there is no run().
-	"""
-	__is_started = False
-	__servers = []
-	
-	def __init__(self):
-		if Server.__is_started:
-			raise Exception('All instances of servers must be inited before the startAll()')
-		Server.__servers.append(self)
+    """ Generic interface for all servers with an event loop etc.
+        Override this to impement http, net-rpc etc. servers.
+        
+        Servers here must have threaded behaviour. start() must not block,
+        there is no run().
+    """
+    __is_started = False
+    __servers = []
+    
+    def __init__(self):
+        if Server.__is_started:
+            raise Exception('All instances of servers must be inited before the startAll()')
+        Server.__servers.append(self)
 
-	def start(self):
-		print "called stub Server.start"
-		pass
-		
-	def stop(self):
-		print "called stub Server.stop"
-		pass
+    def start(self):
+        print "called stub Server.start"
+        pass
+        
+    def stop(self):
+        print "called stub Server.stop"
+        pass
 
-	@classmethod
-	def startAll(cls):
-		if cls.__is_started:
-			return
-		Logger().notifyChannel("services", LOG_INFO, 
-			"Starting %d services" % len(cls.__servers))
-		for srv in cls.__servers:
-			srv.start()
-		cls.__is_started = True
-	
-	@classmethod
-	def quitAll(cls):
-		if not cls.__is_started:
-			return
-		Logger().notifyChannel("services", LOG_INFO, 
-			"Stopping %d services" % len(cls.__servers))
-		for srv in cls.__servers:
-			srv.stop()
-		cls.__is_started = False
+    @classmethod
+    def startAll(cls):
+        if cls.__is_started:
+            return
+        Logger().notifyChannel("services", LOG_INFO, 
+            "Starting %d services" % len(cls.__servers))
+        for srv in cls.__servers:
+            srv.start()
+        cls.__is_started = True
+    
+    @classmethod
+    def quitAll(cls):
+        if not cls.__is_started:
+            return
+        Logger().notifyChannel("services", LOG_INFO, 
+            "Stopping %d services" % len(cls.__servers))
+        for srv in cls.__servers:
+            srv.stop()
+        cls.__is_started = False
 
 
 class OpenERPDispatcherException(Exception):
