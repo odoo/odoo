@@ -312,6 +312,10 @@ class Server:
         print "called stub Server.stop"
         pass
 
+    def stats(self):
+        """ This function should return statistics about the server """
+        return "%s: No statistics" % str(self.__class__)
+
     @classmethod
     def startAll(cls):
         if cls.__is_started:
@@ -332,6 +336,19 @@ class Server:
             srv.stop()
         cls.__is_started = False
 
+    @classmethod
+    def allStats(cls):
+        res = ''
+        if cls.__is_started:
+            res += "Servers started\n"
+        else:
+            res += "Servers stopped\n"
+        for srv in cls.__servers:
+            try:
+                res += srv.stats() + "\n"
+            except:
+                pass
+        return res
 
 class OpenERPDispatcherException(Exception):
     def __init__(self, exception, traceback):
