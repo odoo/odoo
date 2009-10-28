@@ -233,7 +233,8 @@ class crm_email_gateway(osv.osv):
     _description = "Email Gateway"
         
     _columns = {
-        'name': fields.many2one('crm.email.gateway.server',"Gateway Server", required=True),
+        'name': fields.char('Name',size=64,help="Name of Mail Gateway."),
+        'server_id': fields.many2one('crm.email.gateway.server',"Gateway Server", required=True),
         'to_email_id': fields.char('TO', size=64, help="Email address used in the From field of outgoing messages"),
         'cc_email_id': fields.char('CC',size=64,help="Default eMail in case of any trouble."),        
         'section_id': fields.many2one('crm.case.section',"Section",required=True),                         
@@ -246,7 +247,7 @@ class crm_email_gateway(osv.osv):
         '''
         cr.execute('select * from crm_email_gateway gateway \
                 inner join crm_email_gateway_server server \
-                on server.id = gateway.name where server.active = True')
+                on server.id = gateway.server_id where server.active = True')
         ids2 = map(lambda x: x[0], cr.fetchall() or [])        
         return self.fetch_mails(cr, uid, ids=ids2, context=context)  
         
@@ -260,11 +261,12 @@ class crm_email_gateway(osv.osv):
         mail_history_obj = self.pool.get('crm.email.history')                
         for mailgateway in self.browse(cr, uid, ids):
             try :
-                mailgate_server = mailgateway.name
+                mailgate_server = mailgateway.server_id
                 if not mailgate_server.active:
                     continue
-                log_messages.append("Mail Server : %s:%d" % (mailgate_server.name, mailgate_server.port))
-                log_messages.append("-"*20)
+                mailgate_name =  mailgateway.name or "%s (%s)" % (mailgate_server.userid, mailgate_server.name)   
+                log_messages.append("Mail Server : %s" % mailgate_name)
+                log_messages.append("="*40)
                 email_messages = []
                 read_messages =  mailgateway.mail_history and map(lambda x:x.name, mailgateway.mail_history) or []
                 new_messages = []                
@@ -318,8 +320,8 @@ class crm_email_gateway(osv.osv):
                         log_messages.append("Error in Parsing Mail: %s " %(str(e)))                                         
                         netsvc.Logger().notifyChannel('Emailgate:Parsing mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
             
-            log_messages.append("="*20)    
-            log_messages.append("Total Read Mail: %d" %(len(new_messages)))        
+            log_messages.append("-"*25)    
+            log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))        
         return log_messages
 
 crm_email_gateway()

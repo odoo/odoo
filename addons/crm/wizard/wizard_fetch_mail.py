@@ -52,8 +52,8 @@ def _default(self , cr, uid, data, context):
     server = []
     for section in sections:
         for gateway in section.gateway_ids:
-            if gateway.name.active:
-                server.append('%s:%d'%(gateway.name.name, gateway.name.port) )
+            if gateway.server_id.active:
+                server.append(gateway.name or '%s (%s)'%(gateway.server_id.userid, gateway.server_id.name) )
     data['form']['server'] = '\n'.join(server)    
     return data['form']
     
