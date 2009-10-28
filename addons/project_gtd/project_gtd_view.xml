@@ -1,12 +1,10 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-
-
         <record model="ir.ui.view" id="view_gtd_context_tree">
             <field name="name">project.gtd.context.tree</field>
             <field name="model">project.gtd.context</field>
-            <field name="type">tree</field>
+            <field name="type">tree</field>            
             <field name="arch" type="xml">
                 <tree string="Context">
                     <field name="name"/>
@@ -31,20 +29,18 @@
             <field name="res_model">project.gtd.context</field>
         </record>
 
-        <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions"/>
-        <menuitem name="Contexts" id="menu_open_gtd_time_contexts" parent="menu_open_gtd_time" action="open_gtd_context_tree"/>        
+        <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions" groups="group_project_getting"/>
+        <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting" parent="menu_open_gtd_time" action="open_gtd_context_tree"/>        
 
         <record model="ir.ui.view" id="view_gtd_timebox_tree">
             <field name="name">project.gtd.timebox.tree</field>
             <field name="model">project.gtd.timebox</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Timebox">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="user_id"/>
-                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                    <field name="name"/>                    
+                    <field name="icon"/>
                 </tree>
             </field>
         </record>
@@ -57,23 +53,8 @@
                 <form string="Timeboxes">
                     <separator string="Timebox Definition" colspan="4"/>
                     <field name="name"/>
-                    <field name="type"/>
-                    <field name="user_id"/>
-                    <field name="parent_id"/>
-                    <separator string="Contexts" colspan="4"/>
-                    <field name="context1_id"/><newline/>
-                    <field name="context2_id"/><newline/>
-                    <field name="context3_id"/><newline/>
-                    <field name="context4_id"/><newline/>
-                    <field name="context5_id"/><newline/>
-                    <field name="context6_id"/>
-                    <separator string="Visible Columns" colspan="4"/>
-                    <field name="col_project"/>
-                    <field name="col_date_start"/>
-                    <field name="col_priority"/>
-                    <field name="col_deadline"/>
-                    <field name="col_planned_hours"/>
-                    <field name="col_effective_hours"/>
+                    <field name="sequence"/>
+                    <field name="icon"/>
                 </form>
             </field>
         </record>
@@ -81,105 +62,12 @@
         <record model="ir.actions.act_window" id="open_gtd_timebox_tree">
             <field name="name">Timeboxes</field>
             <field name="res_model">project.gtd.timebox</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_gtd_timebox_tree"/>
         </record>
-        <record model="ir.actions.act_window" id="open_gtd_timebox_tree_my">
-            <field name="name">My Timeboxes</field>
-            <field name="res_model">project.gtd.timebox</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        
-        <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="menu_open_gtd_time" action="open_gtd_timebox_tree"/>        
-        <menuitem name="My Timeboxes" id="menu_open_gtd_time_my_timeboxes" parent="menu_open_gtd_time_timeboxes" action="open_gtd_timebox_tree_my"/>    
-
-        <record model="ir.ui.view" id="task_inbox_view">
-            <field name="name">project.task.gtd.inbox.tree</field>
-            <field name="model">project.task</field>
-            <field name="type">tree</field>
-            <field name="priority" eval="20"/>
-            <field name="arch" type="xml">
-                <tree string="Tasks" editable="bottom" colors="blue:timebox_id">
-                    <field name="name"/>
-                    <field name="timebox_id" required="1" domain="[('user_id','=',uid)]"/>
-                    <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
-                    <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>                    
-                    <field name="context_id" required="1"/>
-                    <field name="date_start"/>
-                    <field name="priority"/>
-                    <field name="date_deadline"/>
-                    <field name="planned_hours"  widget="float_time" sum="Planned"
-                                on_change="onchange_planned(planned_hours,effective_hours)"/>
-                    <field name="remaining_hours" invisible="1"/>
-                    <field name="effective_hours" invisible="1"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        
-        <record id="view_project_gtd_inbox_filter" model="ir.ui.view">
-            <field name="name">project.task.gtd.inbox.select</field>
-            <field name="model">project.task</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search timebox">
-                   <group col='6' colspan='4'>
-                       <field name="timebox_id" select="1" widget="selection">
-                           <filter string="Daily Timebox" domain="[('timebox_id.type','=','daily')]" help="Daily Timebox"/>
-                           <filter string="Inbox" domain="[('user_id','=',uid)]" help="Inbox"/>
-                       </field>
-                       <field name="context_id" select="1" widget="selection">
-                           <filter icon="terp-project" domain="[('context_id.name','=','Office')]" help="Office Context"/>
-                           <filter icon="terp-project" domain="[('context_id.name','=','Car')]" help="Car Context"/>
-                           <filter icon="terp-project" domain="[('context_id.name','=','Travel')]" help="Travel Context"/>
-                           <filter icon="terp-project" domain="[('context_id.name','=','Home')]" help="Home Context"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
-                   </group>
-               </search>
-            </field>
-        </record>
-        
-        <record model="ir.actions.act_window" id="open_gtd_task_inbox">
-            <field name="name">My Inbox</field>
-            <field name="res_model">project.task</field>
-            <field name="domain">[('user_id','=',uid),('state','in',('open','draft'))]</field>
-            <field name="context">{'gtd_sort':True}</field>
-            <field name="view_id" ref="task_inbox_view"/>
-            <field name="search_view_id" ref="view_project_gtd_inbox_filter"/>            
-        </record>
-        
-        <menuitem name="Time Management" id="menu_open_time" parent="project.menu_main"/>
-        <menuitem name="My Inbox" id="menu_open_time_myinbox" parent="menu_open_time" action="open_gtd_task_inbox"/>
-
-        <record model="ir.ui.view" id="view_gtd_timebox_treelist">
-            <field name="name">project.gtd.timebox.treelist</field>
-            <field name="model">project.gtd.timebox</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
-            <field name="priority">50</field>
-            <field name="arch" type="xml">
-                <tree string="Timeboxes">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="open_gtd_timebox_all">
-            <field name="name">My Timeboxes</field>
-            <field name="res_model">project.gtd.timebox</field>
-            <field name="domain">[('user_id','=',uid),('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_gtd_timebox_treelist"/>
-            <field name="context">{'record_id':False}</field>
-        </record>
-        
-        <menuitem
-            name="My Timeboxes" 
-            id="menu_open_time_allinbox" 
-            parent="menu_open_time" 
-            action="open_gtd_timebox_all"/>
+       
+        <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="menu_open_gtd_time" action="open_gtd_timebox_tree" groups="group_project_getting"/>        
 
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>
@@ -191,12 +79,55 @@
                 <newline/>
                 <separator string="Getting Things Done" colspan="6"/>
                 <newline/>
-                <field name="context_id" select="2" />
-                <field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
+                <field name="context_id" select="2" widget="selection"/>
+                <field name="timebox_id" select="1"/>
                 <newline/>
             </field>
         </field>
     </record>
+    
+    <record id="view_project_task_tree2" model="ir.ui.view">
+        <field name="name">project.task.tree</field>
+        <field name="model">project.task</field>
+        <field name="type">tree</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <tree editable="top" colors="grey:state in ('cancel','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                <field name="sequence" string="Seq."/>
+                <field name="name"/>
+                <field name="project_id" icon="gtk-indent"/>
+                <field name="user_id"/>
+                <field name="date_deadline"/>
+                <field name="remaining_hours" widget="float_time"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="context_id" select="2" />
+          		<field name="timebox_id" select="1"/>
+                <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-print" />
+                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent"/>                    
+                <field name="priority"/>
+                <field name="state"/>
+                <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent" help="For changing to draft state"/>
+                <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state"/>
+                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks"/>
+                <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause" help="For changing to pending state"/>
+                <button groups="base.group_extended" name="%(project.wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
+                <button name="%(project.wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
+                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
+            </tree>
+        </field>
+    </record>
+        
+
+    <record model="ir.actions.act_window" id="action_prject_task_tree">
+        <field name="name">project.task</field>
+        <field name="res_model">project.task</field>
+        <field name="view_type">form</field>
+	 	<field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_project_task_tree2"/>
+        <field name="search_view_id" ref="project.view_task_search_form"/>     
+    </record>
+
+    <menuitem name="Tasks Inbox" groups="group_project_getting" id="menu_task_inbox" parent="project.menu_main" action="action_prject_task_tree"/>
 
     <act_window name="My Inbox"
         domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
@@ -235,24 +166,6 @@
         view_type="form"
         view_mode="tree,form"
         id="act_timebox_tasks"/>
-
-	<record id="project_normal_action_tree" model="ir.actions.act_window">
-            <field name="name">TimeBox</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('timebox_id','child_of',[active_id])]</field>
-            <field name="context">{'timebox_id':active_id}</field>
-        </record>
-
-        <record id="ir_project_category_open" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'project.gtd.timebox'" name="model"/>
-            <field name="name">Tasks by Timebox</field>
-            <field eval="'ir.actions.act_window,%d'%project_normal_action_tree" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
 
     </data>
 </openerp>

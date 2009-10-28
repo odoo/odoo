@@ -25,51 +25,19 @@
 
 	<record model="project.gtd.timebox" id="timebox_daily">
 		<field name="name">Daily</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="type">daily</field>
-		<field name="context1_id" ref="context_office"/>
-		<field name="context2_id" ref="context_car"/>
-		<field name="context3_id" ref="context_travel"/>
-		<field name="context4_id" ref="context_home"/>
-		<field name="col_project" eval="False"/>
-		<field name="col_effective_hours" eval="True"/>
-		<field name="col_date_start" eval="False"/>
+		<field name="icon">terp-hr</field>
 	</record>
 	<record model="project.gtd.timebox" id="timebox_weekly">
 		<field name="name">Weekly</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="parent_id" ref="timebox_daily"/>
-		<field name="type">weekly</field>
-		<field name="context1_id" ref="context_office"/>
-		<field name="context2_id" ref="context_car"/>
-		<field name="context3_id" ref="context_travel"/>
-		<field name="context4_id" ref="context_home"/>
-		<field name="col_deadline" eval="True"/>
-		<field name="col_effective_hours" eval="True"/>
+		<field name="icon">terp-partner</field>
 	</record>
 	<record model="project.gtd.timebox" id="timebox_monthly">
 		<field name="name">Monthly</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="type">other</field>
-		<field name="parent_id" ref="timebox_weekly"/>
-		<field name="context1_id" ref="context_office"/>
-		<field name="context2_id" ref="context_car"/>
-		<field name="context3_id" ref="context_travel"/>
-		<field name="context4_id" ref="context_home"/>
-		<field name="col_deadline" eval="True"/>
-		<field name="col_effective_hours" eval="True"/>
+		<field name="icon">terp-product</field>
 	</record>
 	<record model="project.gtd.timebox" id="timebox_lt">
 		<field name="name">Long Term</field>
-		<field name="user_id" ref="base.user_root"/>
-		<field name="type">other</field>
-		<field name="parent_id" ref="timebox_monthly"/>
-		<field name="context1_id" ref="context_office"/>
-		<field name="context2_id" ref="context_car"/>
-		<field name="context3_id" ref="context_travel"/>
-		<field name="context4_id" ref="context_home"/>
-		<field name="col_deadline" eval="True"/>
-		<field name="col_effective_hours" eval="True"/>
+		<field name="icon">terp-project</field>
 	</record>
 	
 	<record id="project.project_task_116" model="project.task">
@@ -104,6 +72,6 @@
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Validation + latest modifications.</field>
       </record> 
-    
+
 	</data>
 </openerp>

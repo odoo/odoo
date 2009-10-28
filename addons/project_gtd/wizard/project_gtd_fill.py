@@ -41,7 +41,7 @@ _gtd_arch = """
 class wiz_timebox_fill(wizard.interface):
     def _fill(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [('parent_id','=',data['id']),('user_id','=',uid)], context=context)
+        ids = pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
         return {
             'timebox_id': ids and ids[0] or False,
             'timebox_to_id': data['id']
