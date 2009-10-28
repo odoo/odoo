@@ -47,9 +47,9 @@ between mails and Open ERP.""",
     'depends': ['base'],
     'init_xml': ['crm_data.xml'],
     'update_xml': [
+       'crm_wizard.xml',
         'crm_view.xml',
         'crm_report.xml',
-        'crm_wizard.xml',
         'security/crm_security.xml',
         'security/ir.model.access.csv'
     ],
