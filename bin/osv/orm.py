@@ -196,8 +196,8 @@ class browse_record(object):
                 if not lang_obj_ids:
                     raise Exception(_('Language with code "%s" is not defined in your system !\nDefine it through the Administration menu.') % (lang,))
                 lang_obj = self.pool.get('res.lang').browse(self._cr, self._uid,lang_obj_ids[0])
-                                
-                for n, f in ffields:    
+
+                for n, f in ffields:
                     if f._type in self._fields_process:
                         for d in datas:
                             d[n] = self._fields_process[f._type](d[n])
@@ -444,28 +444,28 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
-        
+
         def check_type(field_type):
             if field_type == 'float':
                 return 0.0
             elif field_type == 'integer':
                 return 0
-            elif field_type == 'boolean':   
-                return False                                
+            elif field_type == 'boolean':
+                return False
             return ''
-        
+
         lines = []
         data = map(lambda x: '', range(len(fields)))
         done = []
         for fpos in range(len(fields)):
-            f = fields[fpos]            
+            f = fields[fpos]
             if f:
                 r = row
                 i = 0
                 while i < len(f):
                     if f[i] == 'db_id':
-                        r = r['id']                        
-                    elif f[i] == 'id':                        
+                        r = r['id']
+                    elif f[i] == 'id':
                         model_data = self.pool.get('ir.model.data')
                         data_ids = model_data.search(cr, uid, [('model','=',r._table_name),('res_id','=',r['id'])])
                         if len(data_ids):
@@ -477,13 +477,13 @@ class orm_template(object):
                         else:
                             break
                     else:
-                        r = r[f[i]]                   
+                        r = r[f[i]]
                     if not r:
-                        if f[i] in self._columns: 
+                        if f[i] in self._columns:
                             r = check_type(self._columns[f[i]]._type)
                         elif f[i] in self._inherit_fields:
-                            r = check_type(self._inherit_fields[f[i]][2]._type)                        
-                        data[fpos] = r                        
+                            r = check_type(self._inherit_fields[f[i]][2]._type)
+                        data[fpos] = r
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -491,10 +491,10 @@ class orm_template(object):
                                 or [], fields)
                         if fields2 in done:
                             break
-                        done.append(fields2)                        
+                        done.append(fields2)
                         for row2 in r:
                             lines2 = self.__export_row(cr, uid, row2, fields2,
-                                    context)                            
+                                    context)
                             if first:
                                 for fpos2 in range(len(fields)):
                                     if lines2 and lines2[0][fpos2]:
@@ -510,7 +510,7 @@ class orm_template(object):
                                 lines += lines2[1:]
                                 first = False
                             else:
-                                lines += lines2                            
+                                lines += lines2
                         break
                     i += 1
                 if i == len(f):
@@ -522,14 +522,14 @@ class orm_template(object):
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
         if not context:
             context = {}
-        imp_comp = context.get('import_comp',False)        
+        imp_comp = context.get('import_comp',False)
         cols = self._columns.copy()
         for f in self._inherit_fields:
-            cols.update({f: self._inherit_fields[f][2]})        
+            cols.update({f: self._inherit_fields[f][2]})
         fields_to_export = map(lambda x: x.split('/'), fields_to_export)
-        fields_export = fields_to_export+[]        
-        warning = ''  
-        warning_fields = []      
+        fields_export = fields_to_export+[]
+        warning = ''
+        warning_fields = []
         for field in fields_export:
             if imp_comp and len(field)>1:
                 warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
@@ -537,11 +537,11 @@ class orm_template(object):
                 if imp_comp and cols.get(field and field[0],False):
                     if ((isinstance(cols[field[0]], fields.function) and not cols[field[0]].store) \
                                      or isinstance(cols[field[0]], fields.related)\
-                                     or isinstance(cols[field[0]], fields.one2many)):                        
+                                     or isinstance(cols[field[0]], fields.one2many)):
                         warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
         datas = []
         if imp_comp and len(warning_fields):
-            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' %('\n'.join(warning_fields))        
+            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' %('\n'.join(warning_fields))
             cr.rollback()
             return {'warning' : warning}
         for row in self.browse(cr, uid, ids, context):
@@ -554,14 +554,14 @@ class orm_template(object):
         fields = map(lambda x: x.split('/'), fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
-        
+
         def _check_db_id(self, model_name, db_id):
             obj_model = self.pool.get(model_name)
             ids = obj_model.search(cr, uid, [('id','=',int(db_id))])
             if not len(ids):
                 raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, db_id))
             return True
-            
+
         def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0):
             line = datas[position]
             row = {}
@@ -581,25 +581,25 @@ class orm_template(object):
                     raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
                 if not line[i]:
                     continue
-                    
+
                 field = fields[i]
                 if prefix and not prefix[0] in field:
                     continue
-                
+
                 if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
                         # Database ID
                         res = False
                         if line[i]:
                             field_name = field[0].split(':')[0]
-                            model_rel =  fields_def[field_name]['relation']                            
-                            
+                            model_rel =  fields_def[field_name]['relation']
+
                             if fields_def[field[len(prefix)][:-6]]['type']=='many2many':
                                 res_id = []
                                 for db_id in line[i].split(config.get('csv_internal_sep')):
                                     try:
                                         _check_db_id(self, model_rel, db_id)
                                         res_id.append(db_id)
-                                    except Exception,e:                                    
+                                    except Exception,e:
                                         warning += [tools.exception_to_unicode(e)]
                                         logger.notifyChannel("import", netsvc.LOG_ERROR,
                                                   tools.exception_to_unicode(e))
@@ -609,10 +609,10 @@ class orm_template(object):
                                 try:
                                     _check_db_id(self, model_rel, line[i])
                                     res = line[i]
-                                except Exception,e:                                    
+                                except Exception,e:
                                     warning += [tools.exception_to_unicode(e)]
                                     logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                              tools.exception_to_unicode(e))                        
+                                              tools.exception_to_unicode(e))
                         row[field_name] = res or False
                         continue
 
@@ -625,7 +625,7 @@ class orm_template(object):
                                 if '.' in word:
                                     module, xml_id = word.rsplit('.', 1)
                                 else:
-                                    module, xml_id = current_module, word                                
+                                    module, xml_id = current_module, word
                                 id = ir_model_data_obj._get_id(cr, uid, module,
                                         xml_id)
                                 res_id2 = ir_model_data_obj.read(cr, uid, [id],
@@ -638,7 +638,7 @@ class orm_template(object):
                             if '.' in line[i]:
                                 module, xml_id = line[i].rsplit('.', 1)
                             else:
-                                module, xml_id = current_module, line[i]                            
+                                module, xml_id = current_module, line[i]
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
                             res_id = ir_model_data_obj.read(cr, uid, [id],
                                     ['res_id'])[0]['res_id']
@@ -651,31 +651,31 @@ class orm_template(object):
                     continue
                 if (len(field) == len(prefix)+1) and \
                         (prefix == field[0:len(prefix)]):
-                    if field[len(prefix)] == "id":  
-                        # XML ID                         
-                        db_id = False                 
-                        is_xml_id = data_id = line[i] 
+                    if field[len(prefix)] == "id":
+                        # XML ID
+                        db_id = False
+                        is_xml_id = data_id = line[i]
                         d =  data_id.split('.')
                         module = len(d)>1 and d[0] or ''
-                        name = len(d)>1 and d[1] or d[0] 
-                        data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('name','=',name)])                    
+                        name = len(d)>1 and d[1] or d[0]
+                        data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('name','=',name)])
                         if len(data_ids):
-                            d = ir_model_data_obj.read(cr, uid, data_ids, ['res_id'])[0]                                                
-                            db_id = d['res_id']                       
+                            d = ir_model_data_obj.read(cr, uid, data_ids, ['res_id'])[0]
+                            db_id = d['res_id']
                         if is_db_id and not db_id:
-                           data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('res_id','=',is_db_id)])                     
+                           data_ids = ir_model_data_obj.search(cr, uid, [('module','=',module),('model','=',model_name),('res_id','=',is_db_id)])
                            if not len(data_ids):
-                               ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id}) 
-                               db_id = is_db_id 
-                        if is_db_id and int(db_id) != int(is_db_id):                        
+                               ir_model_data_obj.create(cr, uid, {'module':module, 'model':model_name, 'name':name, 'res_id':is_db_id})
+                               db_id = is_db_id
+                        if is_db_id and int(db_id) != int(is_db_id):
                             warning += [_("Id is not the same than existing one: %s")%(is_db_id)]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                     _("Id is not the same than existing one: %s")%(is_db_id))
                         continue
 
                     if field[len(prefix)] == "db_id":
-                        # Database ID                        
-                        try:                            
+                        # Database ID
+                        try:
                             _check_db_id(self, model_name, line[i])
                             data_res_id = is_db_id = int(line[i])
                         except Exception,e:
@@ -685,19 +685,19 @@ class orm_template(object):
                             continue
                         data_ids = ir_model_data_obj.search(cr, uid, [('model','=',model_name),('res_id','=',line[i])])
                         if len(data_ids):
-                            d = ir_model_data_obj.read(cr, uid, data_ids, ['name','module'])[0]                                                
-                            data_id = d['name']       
+                            d = ir_model_data_obj.read(cr, uid, data_ids, ['name','module'])[0]
+                            data_id = d['name']
                             if d['module']:
                                 data_id = '%s.%s'%(d['module'],d['name'])
                             else:
                                 data_id = d['name']
                         if is_xml_id and not data_id:
-                            data_id = is_xml_id                                     
-                        if is_xml_id and is_xml_id!=data_id:  
+                            data_id = is_xml_id
+                        if is_xml_id and is_xml_id!=data_id:
                             warning += [_("Id is not the same than existing one: %s")%(line[i])]
                             logger.notifyChannel("import", netsvc.LOG_ERROR,
                                     _("Id is not the same than existing one: %s")%(line[i]))
-                                                           
+
                         continue
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
                         res = line[i] and int(line[i])
@@ -721,9 +721,9 @@ class orm_template(object):
                             logger.notifyChannel("import", netsvc.LOG_WARNING,
                                     _("key '%s' not found in selection field '%s'") % \
                                             (line[i], field[len(prefix)]))
-                            
+
                             warning += [_("Key/value '%s' not found in selection field '%s'")%(line[i],field[len(prefix)])]
-                            
+
                     elif fields_def[field[len(prefix)]]['type']=='many2one':
                         res = False
                         if line[i]:
@@ -766,13 +766,13 @@ class orm_template(object):
                 relation_obj = self.pool.get(fields_def[field]['relation'])
                 newfd = relation_obj.fields_get(
                         cr, uid, context=context)
-                res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)                              
-                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res                  
+                res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)
+                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res
                 nbrmax = max(nbrmax, max2)
-                warning = warning + w2         
-                reduce(lambda x, y: x and y, newrow)       
+                warning = warning + w2
+                reduce(lambda x, y: x and y, newrow)
                 row[field] = (reduce(lambda x, y: x or y, newrow.values()) and \
-                        [(0, 0, newrow)]) or []                
+                        [(0, 0, newrow)]) or []
                 i = max2
                 while (position+i)<len(datas):
                     ok = True
@@ -787,7 +787,7 @@ class orm_template(object):
                             self, datas, prefix+[field], current_module, relation_obj._name, newfd, position+i)
                     warning = warning+w2
                     if reduce(lambda x, y: x or y, newrow.values()):
-                        row[field].append((0, 0, newrow))                    
+                        row[field].append((0, 0, newrow))
                     i += max2
                     nbrmax = max(nbrmax, i)
 
@@ -812,10 +812,10 @@ class orm_template(object):
             #try:
             (res, other, warning, translate, data_id, res_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def)
-            if len(warning):                        
+            if len(warning):
                 cr.rollback()
                 return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
-            
+
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
@@ -829,7 +829,7 @@ class orm_template(object):
                             msg = self.pool._sql_error[key]
                             break
                     return (-1, res,'Line ' + str(counter) +' : ' + msg,'' )
-                
+
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1011,7 +1011,7 @@ class orm_template(object):
                         dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
-                        
+
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1069,15 +1069,15 @@ class orm_template(object):
             if user != 1:   # admin user has all roles
                 user_roles = usersobj.read(cr, user, [user], ['roles_id'])[0]['roles_id']
                 # TODO handle the case of more than one workflow for a model
-                cr.execute("""SELECT DISTINCT t.role_id 
-                                FROM wkf 
-                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id 
+                cr.execute("""SELECT DISTINCT t.role_id
+                                FROM wkf
+                          INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
                           INNER JOIN wkf_transition t ON (t.act_to = a.id)
                                WHERE wkf.osv = %s
                                  AND t.signal = %s
                            """, (self._name, button.get('name'),))
                 roles = cr.fetchall()
-                
+
                 # draft -> valid = signal_next (role X)
                 # draft -> cancel = signal_cancel (no role)
                 #
@@ -1086,15 +1086,15 @@ class orm_template(object):
                 #
                 # running -> done = signal_next (role Z)
                 # running -> cancel = signal_cancel (role Z)
-                
 
-                # As we don't know the object state, in this scenario, 
+
+                # As we don't know the object state, in this scenario,
                 #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
                 #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
                 # The verification will be made later in workflow process...
                 if roles:
                     can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
-            
+
             button.set('readonly', str(int(not can_click)))
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
@@ -1350,7 +1350,7 @@ class orm_template(object):
                     act_id = int(data_menu.split(',')[1])
                     if act_id:
                         data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = hasattr(data_action,'menus') and data_action.menus or False        
+                        result['submenu'] = hasattr(data_action,'menus') and data_action.menus or False
         if toolbar:
             def clean(x):
                 x = x[2]
@@ -1484,7 +1484,7 @@ class orm_memory(orm_template):
             self.unlink(cr, uid, ids)
         return True
 
-    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):        
+    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
         if not context:
             context = {}
         if not fields_to_read:
@@ -1652,6 +1652,7 @@ class orm_memory(orm_template):
         if result:
             for id, data in self.datas.items():
                 counter=counter+1
+                data['id']  = id
                 if limit and (counter >int(limit)):
                     break
                 f = True
@@ -1699,7 +1700,7 @@ class orm_memory(orm_template):
     def _check_removed_columns(self, cr, log=False):
         # nothing to check in memory...
         pass
-    
+
     def exists(self, cr, uid, id, context=None):
         return id in self.datas
 
@@ -2437,8 +2438,8 @@ class orm(orm_template):
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
 
         properties = self.pool.get('ir.property')
-        domain = [('res_id', '=', False), 
-                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]), 
+        domain = [('res_id', '=', False),
+                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
         if properties.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
@@ -2599,7 +2600,7 @@ class orm(orm_template):
                 else:
                     cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
                             'where id in ('+ids_str+')', upd1)
-            
+
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
@@ -2760,9 +2761,9 @@ class orm(orm_template):
             upd1 += ',%s'
             upd2.append(id)
 
-        #Start : Set bool fields to be False if they are not touched(to make search more powerful) 
+        #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
-        
+
         for bool_field in bool_fields:
             if bool_field not in vals:
                 vals[bool_field] = False
@@ -2849,7 +2850,7 @@ class orm(orm_template):
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1,pleft+2,id_new))
-                
+
         # default element in context must be remove when call a one2many or many2many
         rel_context = context.copy()
         for c in context.items():
@@ -2928,7 +2929,7 @@ class orm(orm_template):
                                 if i[1] in fields:
                                     field_dict[r[0]].append(i[1])
                                     if not field_flag:
-                                        field_flag = True        
+                                        field_flag = True
         todo = {}
         keys = []
         for f in fields:
@@ -2944,7 +2945,7 @@ class orm(orm_template):
                     if field_flag:
                         for f in value.keys():
                             if f in field_dict[id]:
-                                value.pop(f)                    
+                                value.pop(f)
                     upd0 = []
                     upd1 = []
                     for v in value:
@@ -2968,7 +2969,7 @@ class orm(orm_template):
                         if field_flag:
                             if r in field_dict.keys():
                                 if f in field_dict[r]:
-                                    result.pop(r)                    
+                                    result.pop(r)
                     for id,value in result.items():
                         if self._columns[f]._type in ('many2one', 'one2one'):
                             try:
