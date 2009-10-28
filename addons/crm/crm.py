@@ -249,16 +249,37 @@ class crm_email_gateway(osv.osv):
                 inner join crm_email_gateway_server server \
                 on server.id = gateway.server_id where server.active = True')
         ids2 = map(lambda x: x[0], cr.fetchall() or [])        
-        return self.fetch_mails(cr, uid, ids=ids2, context=context)  
+        return self.fetch_mails(cr, uid, ids=ids2, context=context)
+        
+    def parse_mail(self, cr, uid, gateway_id, email_message, email_parser=None, context={}):                     
+        msg_id = case_id = note = False 
+        user_obj = self.pool.get('res.users')    
+        mail_history_obj = self.pool.get('crm.email.history') 
+        users = user_obj.read(cr, uid, uid, ['password'])
+        mailgateway = self.browse(cr, uid, gateway_id, context=context)
+        try :
+            if not email_parser:
+                email_parser = openerp_mailgate.email_parser(uid, users['password'], mailgateway.section_id.id, 
+                                mailgateway.to_email_id or '', mailgateway.cc_email_id or '', dbname=cr.dbname, 
+                                host=tools.config['interface'] or 'localhost', port=tools.config['port'] or '8069')                                             
+        
+            msg_txt = email.message_from_string(email_message)  
+            msg_id =  msg_txt['Message-ID']                                        
+            case_id = email_parser.parse(msg_txt)[0]                                                   
+        except Exception, e:
+            note = "Error in Parsing Mail: %s " %(str(e))                                          
+            netsvc.Logger().notifyChannel('Emailgate:Parsing mail:%s' % (mailgateway.name or 
+                         '%s (%s)'%(mailgateway.server_id.login, mailgateway.server_id.name)), netsvc.LOG_ERROR, str(e))
+            
+        mail_history_obj.create(cr, uid, {'name':msg_id, 'case_id': case_id, 'gateway_id':mailgateway.id, 'note':note})      
+        return case_id,note
         
     def fetch_mails(self, cr, uid, ids=[], section_ids=[], context={}):  
         if len(section_ids):
             casesection_obj = self.pool.get('crm.case.section')                  
             for section in casesection_obj.read(cr, uid, section_ids, ['gateway_ids']):                  
                 ids += section['gateway_ids']
-        log_messages = []    
-        user_obj = self.pool.get('res.users')    
-        mail_history_obj = self.pool.get('crm.email.history')                
+        log_messages = []
         for mailgateway in self.browse(cr, uid, ids):
             try :
                 mailgate_server = mailgateway.server_id
@@ -266,10 +287,8 @@ class crm_email_gateway(osv.osv):
                     continue
                 mailgate_name =  mailgateway.name or "%s (%s)" % (mailgate_server.login, mailgate_server.name)   
                 log_messages.append("Mail Server : %s" % mailgate_name)
-                log_messages.append("="*40)
-                email_messages = []
-                read_messages =  mailgateway.mail_history and map(lambda x:x.name, mailgateway.mail_history) or []
-                new_messages = []                
+                log_messages.append("="*40)                                
+                new_messages = []                                
                 if mailgate_server.server_type == 'pop':
                     if mailgate_server.ssl:
                         pop_server = POP3_SSL(mailgate_server.name or 'localhost', mailgate_server.port or 110)
@@ -280,8 +299,14 @@ class crm_email_gateway(osv.osv):
                     pop_server.list()
                     (numMsgs, totalSize) = pop_server.stat()                     
                     for i in range(1, numMsgs + 1):                                            
-                        (header, msges, octets) = pop_server.retr(i)                            
-                        email_messages.append((i,'\n'.join(msges)))
+                        (header, msges, octets) = pop_server.retr(i)                                                    
+                        case_id, note = self.parse_mail(cr, uid, mailgateway.id, '\n'.join(msges))
+                        log = ''                        
+                        if case_id:
+                            log = _('Case Successfull Created : %d'% case_id)
+                        if note:  
+                            log = note   
+                        log_messages.append(log)
                         new_messages.append(i)
                     pop_server.quit()  
                       
@@ -294,8 +319,14 @@ class crm_email_gateway(osv.osv):
                     imap_server.select()
                     typ, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():                        
-                        typ, data = imap_server.fetch(num, '(RFC822)')
-                        email_messages.append((num, data[0][1]))
+                        typ, data = imap_server.fetch(num, '(RFC822)')                        
+                        case_id, note = self.parse_mail(cr, uid, mailgateway.id, data[0][1])
+                        log = ''                        
+                        if case_id:
+                            log = 'Case Successfully Created : %d'% case_id
+                        if note:  
+                            log = note   
+                        log_messages.append(log)
                         new_messages.append(num)
                     imap_server.close()
                     imap_server.logout()
@@ -303,25 +334,7 @@ class crm_email_gateway(osv.osv):
             except Exception, e:                  
                  log_messages.append("Error in Fetching Mail: %s " %(str(e)))                   
                  netsvc.Logger().notifyChannel('Emailgate:Fetching mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
-            
-            if len(email_messages):
-                users = user_obj.read(cr, uid, uid, ['password'])
-                parser = openerp_mailgate.email_parser(uid, users['password'], mailgateway.section_id.id, 
-                                mailgateway.to_email_id or '', mailgateway.cc_email_id or '', dbname=cr.dbname, 
-                                host=tools.config['interface'] or 'localhost', port=tools.config['port'] or '8069')     
-                for msg, message in email_messages:
-                    msg_id = case_id = note = False                                
-                    try :
-                        msg_txt = email.message_from_string(message)  
-                        msg_id =  msg_txt['Message-ID']                                        
-                        case_id = parser.parse(msg_txt)[0]                        
-                        log_messages.append('Case Successfull created : %d' % case_id)
-                        
-                    except Exception, e:
-                        note = "Error in Parsing Mail: %s " %(str(e))
-                        log_messages.append(note)               
-                        netsvc.Logger().notifyChannel('Emailgate:Parsing mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
-                    mail_history_obj.create(cr, uid, {'name':msg_id, 'case_id': case_id, 'gateway_id':mailgateway.id, 'note':note})
+                
             log_messages.append("-"*25)    
             log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))        
         return log_messages

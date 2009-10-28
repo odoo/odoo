@@ -185,7 +185,7 @@ class email_parser(object):
 
         try:
             id = self.rpc('crm.case', 'create', data)
-
+            self.rpc('crm.case','case_open', [id])    
         except Exception,e:
             if getattr(e,'faultCode','') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the CRM case.'
@@ -272,7 +272,7 @@ class email_parser(object):
             'description': body['body'],
             'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
         }
-        act = 'case_close'
+        act = 'case_pending'
         if 'state' in actions:
             if actions['state'] in ['draft','close','cancel','open','pending']:
                 act = 'case_' + actions['state']
