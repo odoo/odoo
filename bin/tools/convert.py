@@ -205,12 +205,12 @@ class xml_import(object):
         if not val:
             return default
         return val.lower() not in ('0', 'false', 'off')
-    
+
     def isnoupdate(self, data_node=None):
-        return self.noupdate or (data_node and self.nodeattr2bool(data_node, 'noupdate', False)) 
+        return self.noupdate or (len(data_node) and self.nodeattr2bool(data_node, 'noupdate', False))
 
     def get_context(self, data_node, node, eval_dict):
-        data_node_context = (data_node and data_node.get('context','').encode('utf8'))
+        data_node_context = (len(data_node) and data_node.get('context','').encode('utf8'))
         if data_node_context:
             context = eval(data_node_context, eval_dict)
         else:
@@ -223,7 +223,7 @@ class xml_import(object):
         return context
 
     def get_uid(self, cr, uid, data_node, node):
-        node_uid = node.get('uid','') or (data_node and data_node.get('uid',''))
+        node_uid = node.get('uid','') or (len(data_node) and data_node.get('uid',''))
         if len(node_uid):
             return self.id_get(cr, None, node_uid)
         return uid
@@ -294,8 +294,8 @@ form: module.record_id""" % (xml_id,)
 
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
-        
-        
+
+
         if not rec.get('menu') or eval(rec.get('menu','')):
             keyword = str(rec.get('keyword','') or 'client_print_multi')
             keys = [('action',keyword),('res_model',res['model'])]
@@ -688,7 +688,7 @@ form: module.record_id""" % (xml_id,)
                         # we don't want to create it, so we skip it
                         return None
                     # else, we let the record to be created
-                
+
             else:
                 # otherwise it is skipped
                 return None
