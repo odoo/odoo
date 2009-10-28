@@ -154,7 +154,7 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Opportunities" domain="[('user_id','=',uid)]" separator="1" help="Opportunities Related to Current User"/>
+                   <filter icon="gtk-execute" string="My Opportunities" default="1" domain="[('user_id','=',uid)]" separator="1" help="Opportunities Related to Current User"/>
                    <filter icon="gtk-execute" string="Prospecting" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Prospecting')]" separator="1" help="All Prospecting Prospects"/>
                    <filter icon="gtk-execute" string="Proposition" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Value Proposition')]" separator="1" help="Value Proposition Prospects"/>
                    <filter icon="gtk-execute" string="Analysis" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Needs Analysis')]" separator="1" help="Needs Analysis Prospects"/>

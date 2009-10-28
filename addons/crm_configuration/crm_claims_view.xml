@@ -159,7 +159,7 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                    <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" help="Claims Related to Current User"/>
+                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" default="1" help="Claims Related to Current User"/>
                        <filter icon="gtk-execute" string="Fixed Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Claims"/>
                        <filter icon="gtk-execute" string="Waiting Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Claims"/>
                        <filter icon="gtk-execute" string="Accepted Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Accepted as Claim')]" separator="1" help="All Accepted Claims"/>

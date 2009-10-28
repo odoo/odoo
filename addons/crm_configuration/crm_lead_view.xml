@@ -15,13 +15,13 @@
                 <group colspan="4" col="7">
                     <field name="name" select="1" string="Prospect Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="user_id" select="2"/>
+                    <newline/>
                     <label string="Stage: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="stage_id" select="1" nolabel="1"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <button string="Convert to Partner" icon="terp-partner" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                    <field name="user_id" select="2"/>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Prospect Source"/>
                     <field name="category2_id" string="Campaign Type" select="1"/>
                     <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-index" type="action"/>
@@ -35,7 +35,14 @@
                     <field name="partner_mobile"/>
                     <field name="email_from" string="Prospect Email"/>
                     <newline/>
-                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)"/>
+                     <label string="Partner:" align="1.0"/>
+					 <group colspan="1" col="2">
+						 <field name="partner_id" nolabel="1"/>
+						  <button string="Convert to Partner"
+						  	icon="terp-partner" name="%(wizard_crm_partner_create)d"
+						  	type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
+						  />
+					 </group>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
 
                     <field name="priority" string="Priority"/>
@@ -85,7 +92,7 @@
                         </form>
                     </field>
                  </page>
-                 <page string="Events">
+                 <page string="Events" groups="base.group_extended">
                    <field name="child_ids" colspan="4" nolabel="1">
                        <tree string="Related Cases">
                            <field name="id"/>
@@ -98,7 +105,7 @@
                        </tree>
                     </field>
                  </page>
-                 <page string="Emails">
+                 <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
@@ -163,30 +170,47 @@
         </field>
     </record>
 
-    <record id="view_crm_case_leads_filter" model="ir.ui.view">
+
+	<record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">crm.case.leads.select</field>
         <field name="model">crm.case</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Prospects">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Prospects" domain="[('user_id','=',uid)]" separator="1" help="Prospects Related to Current User"/>
-                   <filter icon="gtk-execute" string="Assigned Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','Assigned')]" separator="1" help="All Assigned Prospects"/>
-                   <filter icon="gtk-execute" string="In Process Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','In Process')]" separator="1" help="In Process Prospects"/>
-                   <filter icon="gtk-execute" string="Converted Prospects" domain="[('section_id.name','=','Prospects'),('stage_id.name','=','Converted')]" separator="1" help="Converted Prospects"/>
+               <group col="3" colspan="1">
+                <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Prospects"/>
+<!--                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[('create_date::date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Prospects during last 7 days"/> -->
                </group>
                <group col="4" colspan="4">
+                   <field name="name" select="1"/>
                    <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Prospects"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Prospects"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Prospects"/>
+                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Prospects"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Prospects"/>
                    </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
+                   <field name="user_id" select="1" widget="selection">
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+                   </field>
                </group>
            </search>
         </field>
     </record>
 
+
+		<!--  PARTNER VIEW -->
+		<record id="view_partner_property_form" model="ir.ui.view">
+			<field name="name">res.partner.crm.form.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="arch" type="xml">
+				<field name="parent_id" position="after">
+					<button string="Create Opportunity"
+						name="%(crm_configuration.wizard_partner_create_opportunity)d" icon="gtk-index"
+						type="action"
+					/>
+				</field>
+			</field>
+		</record>
 </data>
 </openerp>

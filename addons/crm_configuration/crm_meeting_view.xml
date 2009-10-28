@@ -101,7 +101,7 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Meetings" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
+                   <filter icon="gtk-execute" string="My Meetings" default="1" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
                </group>
                <group col="4" colspan="4">
                    <field name="state" select="1">

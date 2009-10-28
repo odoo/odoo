@@ -150,8 +150,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bugs">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Bugs" domain="[('user_id','=',uid)]" separator="1" help="Bugs Related to Current User"/>
+               <group col="4" colspan="1">
                    <filter icon="gtk-execute" string="Fixed Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Bugs"/>
                    <filter icon="gtk-execute" string="Waiting Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Bugs"/>
                    <filter icon="gtk-execute" string="Future Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]" separator="1" help="All Future Bugs"/>

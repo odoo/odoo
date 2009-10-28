@@ -101,7 +101,7 @@
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
                <group col="4" colspan="1">
-                   <filter icon="gtk-execute" string="My Phonecalls" domain="[('user_id','=',uid)]" separator="1" help="Phonecalls Related to Current User"/>
+                   <filter icon="gtk-execute" string="My Phonecalls" default="1" domain="[('user_id','=',uid)]" separator="1" help="Phonecalls Related to Current User"/>
                    <filter icon="gtk-execute" string="Inbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]" separator="1" help="All Inbound Phonecalls"/>
                    <filter icon="gtk-execute" string="Outbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]" separator="1" help="All Outbound Phonecalls"/>
                    </group>
