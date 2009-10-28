@@ -235,7 +235,7 @@ class OpenERPDispatcher:
 
     def dispatch(self, service_name, method, params):
         if service_name not in GROUPS['web-services']:
-            raise Exception('AccessDenied')
+            raise Exception('Access Denied for Service :'+service_name)
         try:
             self.log('service', service_name)
             self.log('method', method)
