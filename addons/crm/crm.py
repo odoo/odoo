@@ -276,12 +276,17 @@ class crm_email_gateway(osv.osv):
                     pop_server.user(mailgate_server.login)
                     pop_server.pass_(mailgate_server.password)
                     pop_server.list()
-                    (numMsgs, totalSize) = pop_server.stat()                                       
-                    for i in range(1, numMsgs + 1):
+                    (numMsgs, totalSize) = pop_server.stat()  
+                                                         
+                    for i in range(1, numMsgs + 1):                    
                         if i not in read_messages:
                             (header, msges, octets) = pop_server.retr(i)
-                            for msg in msges:                    
-                                email_messages.append((i,msg))
+                            numElements = len(msges)
+                            outString = ""
+                            for k in range(numElements):
+                                outString += msges[k]
+                                outString += '\n' 
+                            email_messages.append((i,outString))
                             new_messages.append(i)
                     pop_server.quit()  
                       
