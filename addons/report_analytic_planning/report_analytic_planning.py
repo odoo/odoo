@@ -284,7 +284,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
         cr.execute(""" CREATE OR REPLACE VIEW report_account_analytic_planning_user AS (
         SELECT 
             planning.id AS planning_id,
-            max(planning.id)+COALESCE(users.id,1) AS id,
+            planning.id::varchar(32) || '-' || COALESCE(users.id,0)::varchar(32) AS id,
             planning.business_days,
             users.id AS user_id,
             (SELECT sum(line1.amount_in_base_uom) 
@@ -322,14 +322,13 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
 
         FROM report_account_analytic_planning planning
         LEFT JOIN report_account_analytic_planning_line line ON (line.planning_id = planning.id), res_users users
- 
         GROUP BY planning.id, planning.business_days, users.id, planning.date_from, planning.date_to
 
         UNION
 
         SELECT
             planning.id AS planning_id,
-            max(planning.id) AS id,
+            planning.id::varchar(32) || '-' || '0' AS id,
             planning.business_days,
             line.user_id,
             (SELECT SUM(line1.amount_in_base_uom) 
@@ -411,25 +410,36 @@ class report_account_analytic_planning_account(osv.osv):
     }
     
     def init(self, cr):
-        cr.execute(""" create or replace view report_account_analytic_planning_account as (
-          select 
-            min(l.id) as id,
-            l.account_id as account_id,
-            sum(l.amount) as quantity,
-            l.planning_id as planning_id,
-            (Select sum(line1.amount_in_base_uom) from report_account_analytic_planning_line line1
-        where (select count(1) from project_task task where task.planning_line_id = line1.id) > 0 
-                and l.account_id = line1.account_id
-                    and l.planning_id = line1.planning_id
-        ) as plan_tasks,
-            (Select sum(line1.amount_in_base_uom) from report_account_analytic_planning_line line1
-            where (select count(1) from project_task task where task.planning_line_id = line1.id) = 0  and l.account_id = line1.account_id
-                    and planning.id=l.planning_id
-            )  as plan_open
-        from report_account_analytic_planning_line l
-        inner join report_account_analytic_planning planning on planning.id=l.planning_id
-        group by l.account_id, l.planning_id, planning.date_from, planning.date_to, planning.id
-            )
+        cr.execute(""" CREATE OR REPLACE VIEW report_account_analytic_planning_account AS (
+          SELECT 
+            MIN(l.id) AS id,
+            l.account_id AS account_id,
+            SUM(l.amount) AS quantity,
+            l.planning_id AS planning_id,
+            ( SELECT SUM(line1.amount_in_base_uom) 
+              FROM report_account_analytic_planning_line line1
+              WHERE 
+                ( SELECT COUNT(1) 
+                  FROM project_task task 
+                  WHERE task.planning_line_id = line1.id
+                ) > 0 
+                AND l.account_id = line1.account_id
+                AND l.planning_id = line1.planning_id
+            ) AS plan_tasks,
+            ( SELECT SUM(line1.amount_in_base_uom) 
+              FROM report_account_analytic_planning_line line1
+              WHERE 
+                ( SELECT COUNT(1) 
+                  FROM project_task task 
+                  WHERE task.planning_line_id = line1.id
+                ) = 0  
+                AND l.account_id = line1.account_id
+                AND planning.id = line1.planning_id
+            ) AS plan_open
+          FROM report_account_analytic_planning_line l
+          INNER JOIN report_account_analytic_planning planning ON planning.id=l.planning_id
+          GROUP BY l.account_id, l.planning_id, planning.date_from, planning.date_to, planning.id
+        )
         """)
     
     

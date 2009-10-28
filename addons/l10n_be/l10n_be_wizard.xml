@@ -55,5 +55,40 @@ This is the same wizard that runs from Financial Management/Configuration/Financ
         <field name="action_id" ref="account.action_wizard_multi_chart"/>
     </record>
 
+	<!-- osv_memory for vat listing of clients -->
+	     <record id="view_vat_listing" model="ir.ui.view">
+            <field name="name">step.vat.listing</field>
+            <field name="model">vat.listing.clients</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="VAT listing">
+	                <field name="name"/>
+                    <field name="vat"/>
+                    <newline/>
+                    <field name="country"/>
+                    <newline/>
+                    <field name="amount"/>
+                    <field name="turnover"/>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_vat_listing" model="ir.ui.view">
+            <field name="name">step.vat.listing</field>
+            <field name="model">vat.listing.clients</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="VAT listing">
+	                <field name="name"/>
+                    <field name="vat"/>
+                    <newline/>
+                    <field name="country"/>
+                    <newline/>
+                    <field name="amount"/>
+                    <field name="turnover"/>
+                </tree>
+            </field>
+        </record>
+
     </data>
 </openerp>
