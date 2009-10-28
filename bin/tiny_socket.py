@@ -33,11 +33,13 @@ class Myexception(Exception):
 class mysocket:
     def __init__(self, sock=None):
         if sock is None:
-            self.sock = socket.socket(
-            socket.AF_INET, socket.SOCK_STREAM)
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         else:
             self.sock = sock
-        self.sock.settimeout(120)
+        # self.sock.settimeout(120)
+        # prepare this socket for long operations: it may block for infinite
+        # time, but should exit as soon as the net is down
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
     def connect(self, host, port=False):
         if not port:
             protocol, buf = host.split('//')
@@ -61,8 +63,8 @@ class mysocket:
         buf=''
         while len(buf) < 8:
             chunk = self.sock.recv(8 - len(buf))
-            if chunk == '':
-                raise RuntimeError, "socket connection broken"
+            if not chunk:
+                raise socket.timeout
             buf += chunk
         size = int(buf)
         buf = self.sock.recv(1)
@@ -73,8 +75,8 @@ class mysocket:
         msg = ''
         while len(msg) < size:
             chunk = self.sock.recv(size-len(msg))
-            if chunk == '':
-                raise RuntimeError, "socket connection broken"
+            if not chunk:
+                raise socket.timeout
             msg = msg + chunk
         msgio = cStringIO.StringIO(msg)
         unpickler = cPickle.Unpickler(msgio)
