@@ -21,7 +21,7 @@
 ##############################################################################
 import re
 import cStringIO
-import xml.dom.minidom
+from lxml import etree
 import osv
 import ir
 import pooler
@@ -62,16 +62,13 @@ def _obj(pool, cr, uid, model_str, context=None):
 def _eval_xml(self,node, pool, cr, uid, idref, context=None):
     if context is None:
         context = {}
-    if node.nodeType == node.TEXT_NODE:
-        return node.data.encode("utf8")
-    elif node.nodeType == node.ELEMENT_NODE:
-        if node.nodeName in ('field','value'):
-            t = node.getAttribute('type') or 'char'
-            f_model = node.getAttribute("model").encode('ascii')
-            if len(node.getAttribute('search')):
-                f_search = node.getAttribute("search").encode('utf-8')
-                f_use = node.getAttribute("use").encode('ascii')
-                f_name = node.getAttribute("name").encode('utf-8')
+    if node.tag in ('field','value'):
+            t = node.get('type','') or 'char'
+            f_model = node.get("model", '').encode('ascii')
+            if len(node.get('search','')):
+                f_search = node.get("search",'').encode('utf-8')
+                f_use = node.get("use",'').encode('ascii')
+                f_name = node.get("name",'').encode('utf-8')
                 if len(f_use)==0:
                     f_use = "id"
                 q = eval(f_search, idref)
@@ -87,7 +84,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     if isinstance(f_val, tuple):
                         f_val = f_val[0]
                 return f_val
-            a_eval = node.getAttribute('eval')
+            a_eval = node.get('eval','')
             if len(a_eval):
                 import time
                 from mx import DateTime
@@ -116,14 +113,11 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                         if not id in idref:
                             idref[id]=self.id_get(cr, False, id)
                     return s % idref
-                txt = '<?xml version="1.0"?>\n'+_process("".join([i.toxml().encode("utf8") for i in node.childNodes]), idref)
-#               txt = '<?xml version="1.0"?>\n'+"".join([i.toxml().encode("utf8") for i in node.childNodes]) % idref
-
+                txt = '<?xml version="1.0"?>\n'+_process("".join([etree.tostring(i).encode("utf8") for i in node.getchildren()]), idref)
                 return txt
             if t in ('char', 'int', 'float'):
                 d = ""
-                for n in [i for i in node.childNodes]:
-                    d+=str(_eval_xml(self,n,pool,cr,uid,idref))
+                d = node.text
                 if t == 'int':
                     d = d.strip()
                     if d=='None':
@@ -135,37 +129,37 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 return d
             elif t in ('list','tuple'):
                 res=[]
-                for n in [i for i in node.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=='value')]:
+                for n in [i for i in node.getchildren() if (i.tag=='value')]:
                     res.append(_eval_xml(self,n,pool,cr,uid,idref))
                 if t=='tuple':
                     return tuple(res)
                 return res
-        elif node.nodeName=="getitem":
-            for n in [i for i in node.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
-                res=_eval_xml(self,n,pool,cr,uid,idref)
-            if not res:
-                raise LookupError
-            elif node.getAttribute('type') in ("int", "list"):
-                return res[int(node.getAttribute('index'))]
-            else:
-                return res[node.getAttribute('index').encode("utf8")]
-        elif node.nodeName=="function":
-            args = []
-            a_eval = node.getAttribute('eval')
-            if len(a_eval):
-                idref['ref'] = lambda x: self.id_get(cr, False, x)
-                args = eval(a_eval, idref)
-            for n in [i for i in node.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
-                args.append(_eval_xml(self,n, pool, cr, uid, idref, context))
-            model = pool.get(node.getAttribute('model'))
-            method = node.getAttribute('name')
-            res = getattr(model, method)(cr, uid, *args)
-            return res
-        elif node.nodeName=="test":
-            d = ""
-            for n in [i for i in node.childNodes]:
-                d+=str(_eval_xml(self,n,pool,cr,uid,idref, context=context))
-            return d
+    elif node.tag == "getitem":
+        for n in [i for i in node.getchildren()]:
+            res=_eval_xml(self,n,pool,cr,uid,idref)
+        if not res:
+            raise LookupError
+        elif node.get('type','') in ("int", "list"):
+            return res[int(node.get('index',''))]
+        else:
+            return res[node.get('index','').encode("utf8")]
+    elif node.tag == "function":
+        args = []
+        a_eval = node.get('eval','')
+        if len(a_eval):
+            idref['ref'] = lambda x: self.id_get(cr, False, x)
+            args = eval(a_eval, idref)
+        for n in [i for i in node.getchildren()]:
+            return_val = _eval_xml(self,n, pool, cr, uid, idref, context)
+            if return_val != None:
+                args.append(return_val)
+        model = pool.get(node.get('model',''))
+        method = node.get('name','')
+        res = getattr(model, method)(cr, uid, *args)
+        return res
+    elif node.tag == "test":
+        d = node.text
+        return d
 
 
 escape_re = re.compile(r'(?<!\\)/')
@@ -205,9 +199,9 @@ class xml_import(object):
 
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
-        if not node.hasAttribute(attr):
+        if not node.get(attr):
             return default
-        val = node.getAttribute(attr).strip()
+        val = node.get(attr).strip()
         if not val:
             return default
         return val.lower() not in ('0', 'false', 'off')
@@ -216,20 +210,20 @@ class xml_import(object):
         return self.noupdate or (data_node and self.nodeattr2bool(data_node, 'noupdate', False)) 
 
     def get_context(self, data_node, node, eval_dict):
-        data_node_context = (data_node and data_node.getAttribute('context').encode('utf8'))
+        data_node_context = (data_node and data_node.get('context','').encode('utf8'))
         if data_node_context:
             context = eval(data_node_context, eval_dict)
         else:
             context = {}
 
-        node_context = node.getAttribute("context").encode('utf8')
+        node_context = node.get("context",'').encode('utf8')
         if len(node_context):
             context.update(eval(node_context, eval_dict))
 
         return context
 
     def get_uid(self, cr, uid, data_node, node):
-        node_uid = node.getAttribute('uid') or (data_node and data_node.getAttribute('uid'))
+        node_uid = node.get('uid','') or (data_node and data_node.get('uid',''))
         if len(node_uid):
             return self.id_get(cr, None, node_uid)
         return uid
@@ -249,9 +243,9 @@ form: module.record_id""" % (xml_id,)
             self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'% (id,))
 
     def _tag_delete(self, cr, rec, data_node=None):
-        d_model = rec.getAttribute("model")
-        d_search = rec.getAttribute("search")
-        d_id = rec.getAttribute("id")
+        d_model = rec.get("model",'')
+        d_search = rec.get("search",'')
+        d_id = rec.get("id",'')
         ids = []
         if len(d_search):
             ids = self.pool.get(d_model).search(cr,self.uid,eval(d_search))
@@ -269,24 +263,24 @@ form: module.record_id""" % (xml_id,)
     def _tag_report(self, cr, rec, data_node=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
-            res[dest] = rec.getAttribute(f).encode('utf8')
+            res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
         for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
-            if rec.hasAttribute(field):
-                res[dest] = rec.getAttribute(field).encode('utf8')
-        if rec.hasAttribute('auto'):
-            res['auto'] = eval(rec.getAttribute('auto'))
-        if rec.hasAttribute('sxw'):
-            sxw_content = misc.file_open(rec.getAttribute('sxw')).read()
+            if rec.get(field):
+                res[dest] = rec.get(field,'').encode('utf8')
+        if rec.get('auto'):
+            res['auto'] = eval(rec.get('auto',''))
+        if rec.get('sxw'):
+            sxw_content = misc.file_open(rec.get('sxw','')).read()
             res['report_sxw_content'] = sxw_content
-        if rec.hasAttribute('header'):
-            res['header'] = eval(rec.getAttribute('header'))
-        res['multi'] = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
-        xml_id = rec.getAttribute('id').encode('utf8')
+        if rec.get('header'):
+            res['header'] = eval(rec.get('header',''))
+        res['multi'] = rec.get('multi','') and eval(rec.get('multi',''))
+        xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
 
-        if rec.hasAttribute('groups'):
-            g_names = rec.getAttribute('groups').split(',')
+        if rec.get('groups'):
+            g_names = rec.get('groups','').split(',')
             groups_value = []
             groups_obj = self.pool.get('res.groups')
             for group in g_names:
@@ -302,11 +296,11 @@ form: module.record_id""" % (xml_id,)
         self.idref[xml_id] = int(id)
         
         
-        if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
-            keyword = str(rec.getAttribute('keyword') or 'client_print_multi')
+        if not rec.get('menu') or eval(rec.get('menu','')):
+            keyword = str(rec.get('keyword','') or 'client_print_multi')
             keys = [('action',keyword),('res_model',res['model'])]
             value = 'ir.actions.report.xml,'+str(id)
-            replace = rec.hasAttribute('replace') and rec.getAttribute("replace") or True
+            replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
         return False
 
@@ -319,16 +313,16 @@ form: module.record_id""" % (xml_id,)
         return False
 
     def _tag_wizard(self, cr, rec, data_node=None):
-        string = rec.getAttribute("string").encode('utf8')
-        model = rec.getAttribute("model").encode('utf8')
-        name = rec.getAttribute("name").encode('utf8')
-        xml_id = rec.getAttribute('id').encode('utf8')
+        string = rec.get("string",'').encode('utf8')
+        model = rec.get("model",'').encode('utf8')
+        name = rec.get("name",'').encode('utf8')
+        xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
-        multi = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
+        multi = rec.get('multi','') and eval(rec.get('multi',''))
         res = {'name': string, 'wiz_name': name, 'multi': multi, 'model': model}
 
-        if rec.hasAttribute('groups'):
-            g_names = rec.getAttribute('groups').split(',')
+        if rec.get('groups'):
+            g_names = rec.get('groups','').split(',')
             groups_value = []
             groups_obj = self.pool.get('res.groups')
             for group in g_names:
@@ -343,20 +337,19 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
-            keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
+        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+            keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword),('res_model',model)]
             value = 'ir.actions.wizard,'+str(id)
-            replace = rec.hasAttribute('replace') and \
-                    rec.getAttribute("replace") or True
+            replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
         return False
 
     def _tag_url(self, cr, rec, data_node=None):
-        url = rec.getAttribute("string").encode('utf8')
-        target = rec.getAttribute("target").encode('utf8')
-        name = rec.getAttribute("name").encode('utf8')
-        xml_id = rec.getAttribute('id').encode('utf8')
+        url = rec.get("string",'').encode('utf8')
+        target = rec.get("target",'').encode('utf8')
+        name = rec.get("name",'').encode('utf8')
+        xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
 
         res = {'name': name, 'url': url, 'target':target}
@@ -364,34 +357,31 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
-            keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
+        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+            keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword)]
             value = 'ir.actions.url,'+str(id)
-            replace = rec.hasAttribute('replace') and \
-                    rec.getAttribute("replace") or True
+            replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
         return False
 
     def _tag_act_window(self, cr, rec, data_node=None):
-        name = rec.hasAttribute('name') and rec.getAttribute('name').encode('utf-8')
-        xml_id = rec.getAttribute('id').encode('utf8')
+        name = rec.get('name','').encode('utf-8')
+        xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
-        type = rec.hasAttribute('type') and rec.getAttribute('type').encode('utf-8') or 'ir.actions.act_window'
+        type = rec.get('type','').encode('utf-8') or 'ir.actions.act_window'
         view_id = False
-        if rec.hasAttribute('view'):
-            view_id = self.id_get(cr, 'ir.actions.act_window', rec.getAttribute('view').encode('utf-8'))
-        domain = rec.hasAttribute('domain') and rec.getAttribute('domain').encode('utf-8')
-        context = rec.hasAttribute('context') and rec.getAttribute('context').encode('utf-8') or '{}'
-        res_model = rec.getAttribute('res_model').encode('utf-8')
-        src_model = rec.hasAttribute('src_model') and rec.getAttribute('src_model').encode('utf-8')
-        view_type = rec.hasAttribute('view_type') and rec.getAttribute('view_type').encode('utf-8') or 'form'
-        view_mode = rec.hasAttribute('view_mode') and rec.getAttribute('view_mode').encode('utf-8') or 'tree,form'
-        usage = rec.hasAttribute('usage') and rec.getAttribute('usage').encode('utf-8')
-        limit = rec.hasAttribute('limit') and rec.getAttribute('limit').encode('utf-8')
-        auto_refresh = rec.hasAttribute('auto_refresh') \
-                and rec.getAttribute('auto_refresh').encode('utf-8')
-#        groups_id = rec.hasAttribute('groups') and rec.getAttribute('groups').encode('utf-8')
+        if rec.get('view'):
+            view_id = self.id_get(cr, 'ir.actions.act_window', rec.get('view','').encode('utf-8'))
+        domain = rec.get('domain','').encode('utf-8')
+        context = rec.get('context','').encode('utf-8') or '{}'
+        res_model = rec.get('res_model','').encode('utf-8')
+        src_model = rec.get('src_model','').encode('utf-8')
+        view_type = rec.get('view_type','').encode('utf-8') or 'form'
+        view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
+        usage = rec.get('usage','').encode('utf-8')
+        limit = rec.get('limit','').encode('utf-8')
+        auto_refresh = rec.get('auto_refresh','').encode('utf-8')
 
         # def ref() added because , if context has ref('id') eval wil use this ref
 
@@ -417,8 +407,8 @@ form: module.record_id""" % (xml_id,)
 #            'groups_id':groups_id,
         }
 
-        if rec.hasAttribute('groups'):
-            g_names = rec.getAttribute('groups').split(',')
+        if rec.get('groups'):
+            g_names = rec.get('groups','').split(',')
             groups_value = []
             groups_obj = self.pool.get('res.groups')
             for group in g_names:
@@ -430,8 +420,8 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             res['groups_id'] = groups_value
 
-        if rec.hasAttribute('target'):
-            res['target'] = rec.getAttribute('target')
+        if rec.get('target'):
+            res['target'] = rec.get('target','')
         id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
@@ -439,7 +429,7 @@ form: module.record_id""" % (xml_id,)
             keyword = 'client_action_relate'
             keys = [('action', keyword), ('res_model', res_model)]
             value = 'ir.actions.act_window,'+str(id)
-            replace = rec.hasAttribute('replace') and rec.getAttribute('replace') or True
+            replace = rec.get('replace','') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
         # TODO add remove ir.model.data
         return False
@@ -448,8 +438,8 @@ form: module.record_id""" % (xml_id,)
         if not self.mode=='init':
             return False
         res = {}
-        for field in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="field")]:
-            f_name = field.getAttribute("name").encode('utf-8')
+        for field in [i for i in rec.getchildren() if (i.tag=="field")]:
+            f_name = field.get("name",'').encode('utf-8')
             f_val = _eval_xml(self,field,self.pool, cr, self.uid, self.idref)
             res[f_name] = f_val
         self.pool.get('ir.model.data').ir_set(cr, self.uid, res['key'], res['key2'], res['name'], res['models'], res['value'], replace=res.get('replace',True), isobject=res.get('isobject', False), meta=res.get('meta',None))
@@ -458,21 +448,21 @@ form: module.record_id""" % (xml_id,)
     def _tag_workflow(self, cr, rec, data_node=None):
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
-        model = str(rec.getAttribute('model'))
-        w_ref = rec.getAttribute('ref')
+        model = str(rec.get('model',''))
+        w_ref = rec.get('ref','')
         if len(w_ref):
             id = self.id_get(cr, model, w_ref)
         else:
-            assert rec.childNodes, 'You must define a child node if you dont give a ref'
-            element_childs = [i for i in rec.childNodes if i.nodeType == i.ELEMENT_NODE]
-            assert len(element_childs) == 1, 'Only one child node is accepted (%d given)' % len(rec.childNodes)
+            assert rec.getchildren(), 'You must define a child node if you dont give a ref'
+            element_childs = [i for i in rec.getchildren()]
+            assert len(element_childs) == 1, 'Only one child node is accepted (%d given)' % len(rec.getchildren())
             id = _eval_xml(self, element_childs[0], self.pool, cr, self.uid, self.idref)
 
         uid = self.get_uid(cr, self.uid, data_node, rec)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, model,
             id,
-            str(rec.getAttribute('action')), cr)
+            str(rec.get('action','')), cr)
         return False
 
     #
@@ -483,12 +473,12 @@ form: module.record_id""" % (xml_id,)
     #   parent="parent_id"
     #
     def _tag_menuitem(self, cr, rec, data_node=None):
-        rec_id = rec.getAttribute("id").encode('ascii')
+        rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
-        m_l = map(escape, escape_re.split(rec.getAttribute("name").encode('utf8')))
+        m_l = map(escape, escape_re.split(rec.get("name",'').encode('utf8')))
 
         values = {'parent_id': False}
-        if not rec.hasAttribute('parent'):
+        if not rec.get('parent'):
             pid = False
             for idx, menu_elem in enumerate(m_l):
                 if pid:
@@ -500,7 +490,7 @@ form: module.record_id""" % (xml_id,)
                     values = {'parent_id': pid,'name':menu_elem}
                 elif res:
                     pid = res[0]
-                    xml_id = idx==len(m_l)-1 and rec.getAttribute('id').encode('utf8')
+                    xml_id = idx==len(m_l)-1 and rec.get('id','').encode('utf8')
                     try:
                         npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
                     except:
@@ -510,18 +500,18 @@ form: module.record_id""" % (xml_id,)
                     self.logger.notifyChannel("init", netsvc.LOG_WARNING, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
                     pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
         else:
-            menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.getAttribute('parent'))
+            menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.get('parent',''))
             values = {'parent_id': menu_parent_id}
-            if rec.hasAttribute('name'):
-                values['name'] = rec.getAttribute('name')
+            if rec.get('name'):
+                values['name'] = rec.get('name','')
             try:
-                res = [ self.id_get(cr, 'ir.ui.menu', rec.getAttribute('id')) ]
+                res = [ self.id_get(cr, 'ir.ui.menu', rec.get('id','')) ]
             except:
                 res = None
 
-        if rec.hasAttribute('action'):
-            a_action = rec.getAttribute('action').encode('utf8')
-            a_type = rec.getAttribute('type').encode('utf8') or 'act_window'
+        if rec.get('action'):
+            a_action = rec.get('action','').encode('utf8')
+            a_type = rec.get('type','').encode('utf8') or 'act_window'
             icons = {
                 "act_window": 'STOCK_NEW',
                 "report.xml": 'STOCK_PASTE',
@@ -560,13 +550,13 @@ form: module.record_id""" % (xml_id,)
                 resw = cr.fetchone()
                 if (not values.get('name', False)) and resw:
                     values['name'] = resw[0]
-        if rec.hasAttribute('sequence'):
-            values['sequence'] = int(rec.getAttribute('sequence'))
-        if rec.hasAttribute('icon'):
-            values['icon'] = str(rec.getAttribute('icon'))
+        if rec.get('sequence'):
+            values['sequence'] = int(rec.get('sequence',''))
+        if rec.get('icon'):
+            values['icon'] = str(rec.get('icon',''))
 
-        if rec.hasAttribute('groups'):
-            g_names = rec.getAttribute('groups').split(',')
+        if rec.get('groups'):
+            g_names = rec.get('groups','').split(',')
             groups_value = []
             groups_obj = self.pool.get('res.groups')
             for group in g_names:
@@ -578,16 +568,16 @@ form: module.record_id""" % (xml_id,)
                     groups_value.append((4, group_id))
             values['groups_id'] = groups_value
 
-        xml_id = rec.getAttribute('id').encode('utf8')
+        xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
         pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode, res_id=res and res[0] or False)
 
         if rec_id and pid:
             self.idref[rec_id] = int(pid)
 
-        if rec.hasAttribute('action') and pid:
-            a_action = rec.getAttribute('action').encode('utf8')
-            a_type = rec.getAttribute('type').encode('utf8') or 'act_window'
+        if rec.get('action') and pid:
+            a_action = rec.get('action','').encode('utf8')
+            a_type = rec.get('type','').encode('utf8') or 'act_window'
             a_id = self.id_get(cr, 'ir.actions.%s' % a_type, a_action)
             action = "ir.actions.%s,%d" % (a_type, a_id)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
@@ -600,17 +590,17 @@ form: module.record_id""" % (xml_id,)
         if self.isnoupdate(data_node) and self.mode != 'init':
             return
 
-        rec_model = rec.getAttribute("model").encode('ascii')
+        rec_model = rec.get("model",'').encode('ascii')
         model = self.pool.get(rec_model)
         assert model, "The model %s does not exist !" % (rec_model,)
-        rec_id = rec.getAttribute("id").encode('ascii')
+        rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
-        rec_src = rec.getAttribute("search").encode('utf8')
-        rec_src_count = rec.getAttribute("count")
+        rec_src = rec.get("search",'').encode('utf8')
+        rec_src_count = rec.get("count",'')
 
-        severity = rec.getAttribute("severity").encode('ascii') or netsvc.LOG_ERROR
+        severity = rec.get("severity",'').encode('ascii') or netsvc.LOG_ERROR
 
-        rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
+        rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
         ids = None
         eval_dict = {'ref': _ref(self, cr)}
@@ -651,8 +641,8 @@ form: module.record_id""" % (xml_id,)
             globals['floatEqual'] = self._assert_equals
             globals['ref'] = ref
             globals['_ref'] = ref
-            for test in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="test")]:
-                f_expr = test.getAttribute("expr").encode('utf-8')
+            for test in [i for i in rec.getchildren() if (i.tag=="test")]:
+                f_expr = test.get("expr",'').encode('utf-8')
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
                 expression_value = eval(f_expr, globals)
                 if expression_value != expected_value: # assertion failed
@@ -661,7 +651,7 @@ form: module.record_id""" % (xml_id,)
                           ' xmltag: %s\n'               \
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
-                          % (rec_string, test.toxml(), expected_value, expression_value)
+                          % (rec_string, etree.tostring(test), expected_value, expression_value)
                     self.logger.notifyChannel('init', severity, msg)
                     sevval = getattr(logging, severity.upper())
                     if sevval >= config['assert_exit_level']:
@@ -672,12 +662,11 @@ form: module.record_id""" % (xml_id,)
             self.assert_report.record_assertion(True, severity)
 
     def _tag_record(self, cr, rec, data_node=None):
-        rec_model = rec.getAttribute("model").encode('ascii')
+        rec_model = rec.get("model").encode('ascii')
         model = self.pool.get(rec_model)
         assert model, "The model %s does not exist !" % (rec_model,)
-        rec_id = rec.getAttribute("id").encode('ascii')
+        rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
-
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:
@@ -703,17 +692,16 @@ form: module.record_id""" % (xml_id,)
             else:
                 # otherwise it is skipped
                 return None
-
         res = {}
-        for field in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="field")]:
+        for field in [i for i in rec.getchildren() if (i.tag == "field")]:
 #TODO: most of this code is duplicated above (in _eval_xml)...
-            f_name = field.getAttribute("name").encode('utf-8')
-            f_ref = field.getAttribute("ref").encode('ascii')
-            f_search = field.getAttribute("search").encode('utf-8')
-            f_model = field.getAttribute("model").encode('ascii')
+            f_name = field.get("name",'').encode('utf-8')
+            f_ref = field.get("ref",'').encode('ascii')
+            f_search = field.get("search",'').encode('utf-8')
+            f_model = field.get("model",'').encode('ascii')
             if not f_model and model._columns.get(f_name,False):
                 f_model = model._columns[f_name]._obj
-            f_use = field.getAttribute("use").encode('ascii') or 'id'
+            f_use = field.get("use",'').encode('ascii') or 'id'
             f_val = False
 
             if len(f_search):
@@ -761,24 +749,22 @@ form: module.record_id""" % (xml_id,)
         return int(self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])[0]['res_id'])
 
     def parse(self, xmlstr):
-        d = xml.dom.minidom.parseString(xmlstr)
-        de = d.documentElement
+        de = etree.XML(xmlstr)
 
-        if not de.nodeName in ['terp', 'openerp']:
+        if not de.tag in ['terp', 'openerp']:
             self.logger.notifyChannel("init", netsvc.LOG_ERROR, "Mismatch xml format" )
             raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
 
-        if de.nodeName == 'terp':
+        if de.tag == 'terp':
             self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp/> is deprecated, use <openerp/>")
 
-        for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="data")]:
-            for rec in n.childNodes:
-                if rec.nodeType == rec.ELEMENT_NODE:
-                    if rec.nodeName in self._tags:
+        for n in [i for i in de.getchildren() if (i.tag=="data")]:
+            for rec in n.getchildren():
+                    if rec.tag in self._tags:
                         try:
-                            self._tags[rec.nodeName](self.cr, rec, n)
+                            self._tags[rec.tag](self.cr, rec, n)
                         except:
-                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+rec.toxml())
+                            self.logger.notifyChannel("init", netsvc.LOG_ERROR, '\n'+etree.tostring(rec))
                             self.cr.rollback()
                             raise
         return True
@@ -891,11 +877,13 @@ def convert_xml_export(res):
     pool=pooler.get_pool(cr.dbname)
     cr=pooler.db.cursor()
     idref = {}
-    d = xml.dom.minidom.getDOMImplementation().createDocument(None, "terp", None)
-    de = d.documentElement
-    data=d.createElement("data")
-    de.appendChild(data)
-    de.appendChild(d.createTextNode('Some textual content.'))
+
+    page = etree.Element ( 'terp' )
+    doc = etree.ElementTree ( page )
+    data = etree.SubElement ( page, 'data' )
+    text_node = etree.SubElement ( page, 'text' )
+    text_node.text = 'Some textual content.'
+    
     cr.commit()
     cr.close()
 
