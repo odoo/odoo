@@ -25,7 +25,10 @@
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                     <field name="date" string="Deadline"/>
-                    <field name="id" select="1"/>
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>
                     <button string="Schedule Meeting" icon="terp-crm" name="%(wizard_crm_meeting)d" type="action"/>
                 </group>
                 <notebook colspan="4">

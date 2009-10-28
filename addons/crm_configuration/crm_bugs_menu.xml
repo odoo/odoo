@@ -34,7 +34,7 @@
         ALL BUGS
     -->
     <record model="ir.actions.act_window" id="crm_case_categ_act0">
-        <field name="name">Bugs</field>
+        <field name="name">All Bugs</field>
         <field name="res_model">crm.case</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
@@ -62,7 +62,7 @@
         <field name="act_window_id" ref="crm_case_categ_act0"/>
     </record>
     <menuitem name="Bug Tracking" id="menu_crm_case_bug_track"  parent="menu_aftersale" action="crm_case_categ_act0"/>
-<!--    <menuitem  id="menu_crm_case_categ_act0" action="crm_case_categ_act0" parent="menu_crm_case_bug_track"/>-->
+    <menuitem  id="menu_crm_case_categ_act0" action="crm_case_categ_act0" parent="menu_crm_case_bug_track"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all1">
         <field name="name">Bugs Waiting Approval</field>
@@ -93,7 +93,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all1"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all1" action="crm_case_category_act_all1" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all1" action="crm_case_category_act_all1" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all2">
         <field name="name">Open Bugs</field>
@@ -124,7 +124,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all2"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all2" action="crm_case_category_act_all2" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all2" action="crm_case_category_act_all2" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all3">
         <field name="name">Bugs With Patches Waiting Approval</field>
@@ -155,7 +155,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all3"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all3" action="crm_case_category_act_all3" parent="menu_crm_case_categ0_act_all2" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all3" action="crm_case_category_act_all3" parent="menu_crm_case_categ0_act_all2" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all4">
         <field name="name">Bugs Not Fixed</field>
@@ -186,7 +186,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all4"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all4" action="crm_case_category_act_all4" parent="menu_crm_case_categ0_act_all2" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all4" action="crm_case_category_act_all4" parent="menu_crm_case_categ0_act_all2" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all5">
         <field name="name">Pending Bugs</field>
@@ -217,7 +217,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all5"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all5" action="crm_case_category_act_all5" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all5" action="crm_case_category_act_all5" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all6">
         <field name="name">Planned For Future Release</field>
@@ -248,7 +248,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all6"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all6" action="crm_case_category_act_all6" parent="menu_crm_case_categ0_act_all5" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all6" action="crm_case_category_act_all6" parent="menu_crm_case_categ0_act_all5" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all7">
         <field name="name">Waiting For Reporter Response</field>
@@ -279,7 +279,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all7"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all7" action="crm_case_category_act_all7" parent="menu_crm_case_categ0_act_all5" groups="base.group_extended_menu"/>-->
+    <menuitem  id="menu_crm_case_categ0_act_all7" action="crm_case_category_act_all7" parent="menu_crm_case_categ0_act_all5" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_all8">
         <field name="name">Old Bugs</field>
@@ -310,8 +310,9 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_all8"/>
     </record>
-<!--    <menuitem  id="menu_crm_case_categ0_act_all8" action="crm_case_category_act_all8" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>     -->
-<!--        MY BUGS-->
+    <menuitem  id="menu_crm_case_categ0_act_all8" action="crm_case_category_act_all8" parent="menu_crm_case_categ_act0" groups="base.group_extended_menu"/>    <!-- 
+        MY BUGS
+    -->
     <record model="ir.actions.act_window" id="crm_case_category_act_my0">
         <field name="name">My Bugs</field>
         <field name="res_model">crm.case</field>
@@ -341,7 +342,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_my0"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_categ0_act_my0" action="crm_case_category_act_my0" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_categ0_act_my0" action="crm_case_category_act_my0" groups="base.group_extended_menu"/>
     
     <record model="ir.actions.act_window" id="crm_case_categ_act_new">
         <field name="name">New Bug</field>
@@ -364,7 +365,7 @@
         <field name="view_id" ref="crm_case_tree_view"/>
         <field name="act_window_id" ref="crm_case_categ_act_new"/>
     </record>    
-<!--    <menuitem  id="menu_crm_case_categ_act_new" action="crm_case_categ_act_new" parent="menu_crm_case_bug_track" sequence="50"/>-->
+    <menuitem  id="menu_crm_case_categ_act_new" action="crm_case_categ_act_new" parent="menu_crm_case_bug_track" sequence="50"/>
     
     <record model="ir.actions.act_window" id="crm_case_category_act_my1">
         <field name="name">My Open Bugs</field>
@@ -395,7 +396,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_my1"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_my0" id="menu_crm_case_categ0_act_my1" action="crm_case_category_act_my1" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_my0" id="menu_crm_case_categ0_act_my1" action="crm_case_category_act_my1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_my2">
         <field name="name">My Bugs With Patches</field>
@@ -426,7 +427,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_my2"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my2" action="crm_case_category_act_my2" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my2" action="crm_case_category_act_my2" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_my3">
         <field name="name">My Bugs Not Fixed</field>
@@ -457,7 +458,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_my3"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my3" action="crm_case_category_act_my3" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_my1" id="menu_crm_case_categ0_act_my3" action="crm_case_category_act_my3" groups="base.group_extended_menu"/>
 
     <!-- 
         ALL FEATURE REQUESTS 
@@ -490,7 +491,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f0"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_category_act_f0" action="crm_case_category_act_f0"/>-->
+    <menuitem parent="menu_crm_case_bug_track" id="menu_crm_case_category_act_f0" action="crm_case_category_act_f0"/>
     
     <record model="ir.actions.act_window" id="crm_case_category_act_f1">
         <field name="name">New Feature Request</field>
@@ -513,7 +514,7 @@
         <field name="view_id" ref="crm_case_tree_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f1"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_category_act_f1" action="crm_case_category_act_f1" sequence="50"/>-->
+    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_category_act_f1" action="crm_case_category_act_f1" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_f2">
         <field name="name">Feature Requests Waiting Approval</field>
@@ -544,7 +545,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f2"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f2" action="crm_case_category_act_f2" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f2" action="crm_case_category_act_f2" groups="base.group_extended_menu"/>
     <record model="ir.actions.act_window" id="crm_case_category_act_f3">
         <field name="name">Open Feature Requests</field>
         <field name="res_model">crm.case</field>
@@ -574,7 +575,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f3"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f3" action="crm_case_category_act_f3" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f3" action="crm_case_category_act_f3" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_f4">
         <field name="name">Pending Feature Requests</field>
@@ -605,7 +606,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f4"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f4" action="crm_case_category_act_f4" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f4" action="crm_case_category_act_f4" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_f5">
         <field name="name">Planned For Future Release</field>
@@ -636,7 +637,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f5"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f5" action="crm_case_category_act_f5" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f5" action="crm_case_category_act_f5" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_f6">
         <field name="name">Waiting For Reporter Response</field>
@@ -667,7 +668,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f6"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f6" action="crm_case_category_act_f6" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_f4" id="menu_crm_case_categ0_act_f6" action="crm_case_category_act_f6" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_f7">
         <field name="name">Old Feature Requests</field>
@@ -698,7 +699,7 @@
         <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="crm_case_category_act_f7"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f7" action="crm_case_category_act_f7" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_category_act_f0" id="menu_crm_case_categ0_act_f7" action="crm_case_category_act_f7" groups="base.group_extended_menu"/>
     
 </data>
 </openerp>

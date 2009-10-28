@@ -23,14 +23,17 @@
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                     <field name="date"/>
-                    <field name="email_from" colspan="2"/>
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>    
                     <field name="user_id" />
                 </group>
                 <notebook colspan="4">
                 <page string="General">
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <newline/>
+                    <field name="email_from" colspan="2"/>
                     <separator colspan="4"/>
                     <field name="category2_id" string="Version"/>
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
@@ -76,6 +79,19 @@
                         </form>
                     </field>
                 </page>
+                <page string="Events">
+                   <field name="child_ids" colspan="4" nolabel="1">
+                       <tree string="Related Cases">
+                           <field name="id"/>
+                           <field name="date"/>
+                           <field name="name"/>
+                           <field name="partner_id"/>
+                           <field name="user_id"/>
+                           <field name="section_id" widget="selection"/>
+                           <field name="state"/>
+                       </tree>
+                    </field>
+                 </page>
                 <page string="Emails">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>

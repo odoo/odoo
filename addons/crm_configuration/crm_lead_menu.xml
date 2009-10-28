@@ -27,7 +27,7 @@
         <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
     </record>
     <menuitem parent="menu_presale" name="Prospects" id="menu_crm_case_categ0_act_leads" action="crm_case_category_act_leads_all"/>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_all" action="crm_case_category_act_leads_all" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_all" action="crm_case_category_act_leads_all" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all1">
         <field name="name">Current Prospects</field>
@@ -51,7 +51,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_all1"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_all" id="menu_crm_case_categ0_act_leads_all1" action="crm_case_category_act_leads_all1" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_all" id="menu_crm_case_categ0_act_leads_all1" action="crm_case_category_act_leads_all1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_unassigned">
         <field name="name">Unassigned Prospects</field>
@@ -75,11 +75,11 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_unassigned"/>
     </record>
-<!--    <menuitem-->
-<!--        parent="menu_crm_case_categ0_act_leads_all"-->
-<!--        id="menu_crm_case_categ0_act_leads_unassigned"-->
-<!--        action="crm_case_category_act_leads_unassigned"-->
-<!--        groups="base.group_extended_menu"/>-->
+    <menuitem
+        parent="menu_crm_case_categ0_act_leads_all"
+        id="menu_crm_case_categ0_act_leads_unassigned"
+        action="crm_case_category_act_leads_unassigned"
+        groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all2">
         <field name="name">All Draft Prospects</field>
@@ -103,7 +103,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_all2"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all2" action="crm_case_category_act_leads_all2" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all2" action="crm_case_category_act_leads_all2" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all3">
         <field name="name">All Prospects to Qualify</field>
@@ -127,7 +127,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_all3"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all3" action="crm_case_category_act_leads_all3" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all3" action="crm_case_category_act_leads_all3" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all4">
         <field name="name">All Pending Prospects</field>
@@ -151,7 +151,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_all4"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all4" action="crm_case_category_act_leads_all4" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_all1" id="menu_crm_case_categ0_act_leads_all4" action="crm_case_category_act_leads_all4" groups="base.group_extended_menu"/>
 
 <!-- =================================================================== -->
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_my">
@@ -176,7 +176,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_my"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_my" action="crm_case_category_act_leads_my" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_categ0_act_leads_my" action="crm_case_category_act_leads_my" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_my_new">
         <field name="name">New Prospect</field>
@@ -199,7 +199,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_my_new"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_category_act_leads_my_new" action="crm_case_category_act_leads_my_new" sequence="50"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads" id="menu_crm_case_category_act_leads_my_new" action="crm_case_category_act_leads_my_new" sequence="50"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_my1">
         <field name="name">My Current Prospects</field>
@@ -223,7 +223,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_my1"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_my" id="menu_crm_case_categ0_act_leads_my1" action="crm_case_category_act_leads_my1" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_my" id="menu_crm_case_categ0_act_leads_my1" action="crm_case_category_act_leads_my1" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_my3">
         <field name="name">My Prospects to Qualify</field>
@@ -247,7 +247,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_my3"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my3" action="crm_case_category_act_leads_my3" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my3" action="crm_case_category_act_leads_my3" groups="base.group_extended_menu"/>
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_my4">
         <field name="name">My Pending Prospects</field>
@@ -271,7 +271,7 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_my4"/>
     </record>
-<!--    <menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my4" action="crm_case_category_act_leads_my4" groups="base.group_extended_menu"/>-->
+    <menuitem parent="menu_crm_case_categ0_act_leads_my1" id="menu_crm_case_categ0_act_leads_my4" action="crm_case_category_act_leads_my4" groups="base.group_extended_menu"/>
 
 <!--        REPORTS        -->
     <menuitem name="Prospects"  id="menu_action_report_crm_case_lead" parent="report_crm.next_id_64"/>    

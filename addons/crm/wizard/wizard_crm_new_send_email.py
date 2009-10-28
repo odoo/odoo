@@ -28,7 +28,7 @@ import ir
 import pooler
 import tools
 from tools.translate import _
-import base64
+
 
 email_send_form = '''<?xml version="1.0"?>
 <form string="Mass Mailing">
@@ -39,30 +39,17 @@ email_send_form = '''<?xml version="1.0"?>
     <field name="subject"/>
     <newline/>
     <field name="text" />
-    <newline/>
-    <field name="doc1" />
-    <newline/>
-    <field name="doc2" />
-    <newline/>
-    <field name="doc3" />
 </form>'''
 
 email_send_fields = {
     'to': {'string':"To", 'type':'char', 'size':64, 'required':True},
     'cc': {'string':"CC", 'type':'char', 'size':128,},
     'subject': {'string':'Subject', 'type':'char', 'size':128, 'required':True},
-    'text': {'string':'Message', 'type':'text_tag', 'required':True},
-    'doc1' :  {'string':"Attachment1", 'type':'binary'},
-    'doc2' :  {'string':"Attachment2", 'type':'binary'},
-    'doc3' :  {'string':"Attachment3", 'type':'binary'},
+    'text': {'string':'Message', 'type':'text_tag', 'required':True}
 }
 
 # this sends an email to ALL the addresses of the selected partners.
 def _mass_mail_send(self, cr, uid, data, context):
-    
-    attach = filter(lambda x: x, [data['form']['doc1'],  data['form']['doc2'],  data['form']['doc3']])
-    attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
-
     pool = pooler.get_pool(cr.dbname)
     case_pool=pool.get('crm.case')
 
@@ -77,19 +64,14 @@ def _mass_mail_send(self, cr, uid, data, context):
     body = data['form']['text']
     if case.user_id.signature:
         body += '\n\n%s' % (case.user_id.signature)
-    flag = tools.email_send(
+    tools.email_send(
         case.user_id.address_id.email,
         emails,
         data['form']['subject'],
-        body,
-        attach=attach,
+        case_pool.format_body(body),
         reply_to=case.section_id.reply_to,
         tinycrm=str(case.id)
     )
-    if flag:
-        raise wizard.except_wizard(_('Message!'),("Email Successfully Sent..!!"))   
-    else:
-        raise wizard.except_wizard(_('Warning!'),("Email is not sent Successfully"))   
     return {}
 
 def _get_info(self, cr, uid, data, context):

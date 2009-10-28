@@ -42,8 +42,8 @@ MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft','Draft'),
     ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
+    ('cancel', 'Cancel'),
+    ('done', 'Close'),
     ('pending','Pending')
 ]
 
