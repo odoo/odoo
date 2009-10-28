@@ -1090,7 +1090,7 @@ class orm_template(object):
                           INNER JOIN wkf_transition t ON (t.act_to = a.id)
                                WHERE wkf.osv = %s
                                  AND t.signal = %s
-                           """, (self._name, button.getAttribute('name'),))
+                           """, (self._name, button.get('name'),))
                 roles = cr.fetchall()
                 
                 # draft -> valid = signal_next (role X)
