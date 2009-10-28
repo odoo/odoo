@@ -260,7 +260,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order" groups="base.group_extended_menu"/>
@@ -271,7 +270,6 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order" groups="base.group_extended_menu"/>
@@ -317,7 +315,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.menu_action_order_tree_all" sequence="2" groups="base.group_extended_menu"/>
@@ -330,7 +327,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.menu_action_order_tree_all" sequence="1" groups="base.group_extended_menu"/>
@@ -342,7 +338,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="menu_action_order_tree" groups="base.group_extended_menu"/>
@@ -354,7 +349,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.menu_action_order_tree" groups="base.group_extended_menu"/>
@@ -366,7 +360,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.menu_action_order_tree" sequence="2" groups="base.group_extended_menu"/>
@@ -378,7 +371,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
         <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.menu_action_order_tree" sequence="1" groups="base.group_extended_menu"/>
@@ -486,6 +478,10 @@
 						<field name="order_id" select="1"/>
                         <field name="order_partner_id" select="1"/>
                         <field name="product_id" select="1"/>
+                        <field name="salesman_id" select="1" widget="selection">
+                        	<filter icon="terp-sale" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        	<filter icon="terp-sale" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
+                        </field>
 					</group>
 				</search>
 			</field>

@@ -8,8 +8,9 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-               	<field name="categ_id" select="1" widget="selection" position="after">
+               	<field name="pricelist_id" select="1" widget="selection" position="before">
                		<field name="warehouse_id" select="1" widget="selection" context="{'warehouse': self}" />
+               		<separator orientation="vertical"/>
                	</field>
             </field>
         </record>

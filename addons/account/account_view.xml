@@ -800,10 +800,10 @@
                         <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
 						<separator orientation="vertical"/>
 						<field name="date" select='1'/>
+						<field name="invoice" select='1'/>
 						<field name="account_id" select='1'/>
 						<field name="partner_id" select='1'/>
-						<field name="debit" select='1'/>
-						<field name="credit" select='1'/>
+						<field name="balance" string="Debit/Credit" select='1'/>
                 	</group>
                 </search>
             </field>

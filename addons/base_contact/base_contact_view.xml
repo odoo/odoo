@@ -176,11 +176,9 @@
 	    <field name="inherit_id" ref="base.view_res_partner_filter"/>
 	    <field name="arch" type="xml">
 	        <search string="Search Partner">
-	        	<group col='6' colspan='4'>
-		        	<field name="address" mode="tree,form" select="1">
-		                <field name="job_ids" select="1"/>
-			        </field>
-			    </group>
+	        	<field name="address" mode="tree,form" select="1" colspan="4">
+	                <field name="job_ids" select="1" colspan="4"/>
+		        </field>
 	       </search>
 	    </field>
     </record>

@@ -21,11 +21,10 @@
 		               	<filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
 	                  	<field name="name" select="1"/>
 	                  	<field name="default_code" select="1"/>
+	                  	<field name="categ_id" select="1" widget="selection"/>
 	               </group>
 	               <newline/>
 	               <group col='8' colspan='4'>
-	               		<field name="categ_id" select="1" widget="selection"/>
-	                  	<separator orientation="vertical"/>
 	                  	<field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
 	                </group>
                 </search>
