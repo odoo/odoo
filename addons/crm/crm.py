@@ -276,18 +276,11 @@ class crm_email_gateway(osv.osv):
                     pop_server.user(mailgate_server.login)
                     pop_server.pass_(mailgate_server.password)
                     pop_server.list()
-                    (numMsgs, totalSize) = pop_server.stat()  
-                                                         
-                    for i in range(1, numMsgs + 1):                    
-                        if i not in read_messages:
-                            (header, msges, octets) = pop_server.retr(i)
-                            numElements = len(msges)
-                            outString = ""
-                            for k in range(numElements):
-                                outString += msges[k]
-                                outString += '\n' 
-                            email_messages.append((i,outString))
-                            new_messages.append(i)
+                    (numMsgs, totalSize) = pop_server.stat()                     
+                    for i in range(1, numMsgs + 1):                                            
+                        (header, msges, octets) = pop_server.retr(i)                            
+                        email_messages.append((i,'\n'.join(msges)))
+                        new_messages.append(i)
                     pop_server.quit()  
                       
                 elif mailgate_server.server_type == 'imap':
@@ -316,9 +309,9 @@ class crm_email_gateway(osv.osv):
                                 host=tools.config['interface'] or 'localhost', port=tools.config['port'] or '8069')     
                 for msg_id, message in email_messages:                
                     try :
-                        msg_txt = email.message_from_string(message)                    
+                        msg_txt = email.message_from_string(message)                                           
                         res = parser.parse(msg_txt)
-                        mail_history_obj.create(cr, uid, {'name':msg_id, 'case_id': res[0], 'gateway_id':mailgateway.id})
+                        mail_history_obj.create(cr, uid, {'name':msg_txt['Message-ID'], 'case_id': res[0], 'gateway_id':mailgateway.id})
                         log_messages.append('Case Successfull created : %d' % res[0])
                         
                     except Exception, e:
