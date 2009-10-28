@@ -94,21 +94,20 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
             res = detail + html + '</table></body></html>'
             return res
         else:
-            detail_lst = []
-            cnt = 0
+            detail_dict = {}
             detail += '''<th class="tdatastyle">Details</th></tr>'''
             data = data_list[1].split("======================================================================")
             test = data[0].split('\n')
             for err in (data_list[0].failures,data_list[0].errors):
                 for value in err:
-                    detail_lst.append(value[1])
-
+                    detail_dict[value[0]._testMethodName] = value[1]
             for case in map(lambda x:x.split('...'), test):
                 if len(case[0]) < 2:
                     continue
                 test_name = case[0].split(' (')[0]
-                html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><td class="tdatastyle">%s</td></tr>'%(test_name,case[1],detail_lst[cnt])
-                cnt += 1
+                if not detail_dict.has_key(test_name):
+                    detail_dict[test_name] = ''
+                html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><td class="tdatastyle">%s</td></tr>'%(test_name, case[1], detail_dict[test_name])
             return detail + html +'</tr></table></body></html>'
         return ''
 
