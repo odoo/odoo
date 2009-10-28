@@ -298,6 +298,9 @@ class db(netsvc.Service):
         db = sql_db.db_connect('template1')
         cr = db.cursor()
         try:
+            list_db = tools.config["list_db"]
+            if list_db == 'False':
+                return []
             try:
                 db_user = tools.config["db_user"]
                 if not db_user and os.name == 'posix':

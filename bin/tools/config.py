@@ -79,6 +79,7 @@ class configmanager(object):
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
             'cache_timeout': 100000,
             'login_message': False,
+            'list_db' : True,
         }
 
         hasSSL = check_ssl()
@@ -156,6 +157,7 @@ class configmanager(object):
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", default='64',
                          help="specify the the maximum number of physical connections to posgresql")
+        group.add_option("--list_db", dest="list_db", default=False, help="This option hides Database list for security purpose:\n \'False\' value disables listing of Databases")
         group.add_option("-P", "--import-partial", dest="import_partial",
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
@@ -216,7 +218,7 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
