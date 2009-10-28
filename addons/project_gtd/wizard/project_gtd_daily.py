@@ -29,16 +29,13 @@ from tools.translate import _
 
 class wiz_timebox_open(wizard.interface):
     def _open_timebox(self, cr, uid, data, context):
-        tbtype = 'daily'
         pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [('user_id','=',uid),('type','=',tbtype)])
+        ids = pool.get('project.gtd.timebox').search(cr, uid, [])
         if not len(ids):
             raise wizard.except_wizard(_('Error !'), _('No timebox of the type "%s" defined !') % (tbtype,))
         view_type = 'form,tree'
         if len(ids) >= 1:
             domain = "[('id','in',["+','.join(map(str, ids))+"])]"
-        else:
-            domain = "[('user_id', '=', uid)]"
         value = {
             'domain': domain,
             'name': 'My Daily Timebox',
