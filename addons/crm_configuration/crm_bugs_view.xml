@@ -150,19 +150,25 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bugs">
-               <group col="4" colspan="1">
+               <group col="7" colspan="1">
                    <filter icon="gtk-execute" string="Fixed Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Bugs"/>
                    <filter icon="gtk-execute" string="Waiting Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Bugs"/>
                    <filter icon="gtk-execute" string="Future Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]" separator="1" help="All Future Bugs"/>
+                   <separator orientation="vertical"/>
+                   <filter icon="gtk-execute" string="Inbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]" separator="1" help="All Inbound Phonecalls"/>
+                   <filter icon="gtk-execute" string="Outbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]" separator="1" help="All Outbound Phonecalls"/>
                </group>
-               <group col="4" colspan="4">
+               <group col="4" colspan="2">
+               		<field name="name" select='1'/>
+                   <field name="user_id" select="1" widget="selection">
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+                   </field>
                    <field name="state" select="1">
                        <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Bugs"/>
                        <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Bugs"/>
                        <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Bugs"/>
                    </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
                </group>
             </search>
          </field>

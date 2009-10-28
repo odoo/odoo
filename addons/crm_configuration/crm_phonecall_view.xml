@@ -100,19 +100,23 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <group col="4" colspan="1">
-                   <filter icon="gtk-execute" string="My Phonecalls" default="1" domain="[('user_id','=',uid)]" separator="1" help="Phonecalls Related to Current User"/>
+               <group col="6" colspan="1">
+					<filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Opportunities"/>
+					<filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Opportunities during last 7 days"/>
+                   <separator orientation="vertical"/>
                    <filter icon="gtk-execute" string="Inbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]" separator="1" help="All Inbound Phonecalls"/>
                    <filter icon="gtk-execute" string="Outbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]" separator="1" help="All Outbound Phonecalls"/>
                    </group>
-               <group col="4" colspan="4">
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Phonecalls"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Phonecalls"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Phonecalls"/>
+                 <separator orientation="vertical"/>
+               <group col="4" colspan="2">
+             		<field name="name" select='1'/>
+               		<field name="user_id" select="1" widget="selection">
+	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
+	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
                    </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
+                   <field name="state" select="1">
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                   </field>
                    </group>
            </search>
         </field>

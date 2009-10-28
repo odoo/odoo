@@ -147,27 +147,29 @@
             </tree>
         </field>
     </record>
+    
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">crm.case.opportunities.select</field>
         <field name="model">crm.case</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
-               <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Opportunities" default="1" domain="[('user_id','=',uid)]" separator="1" help="Opportunities Related to Current User"/>
-                   <filter icon="gtk-execute" string="Prospecting" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Prospecting')]" separator="1" help="All Prospecting Prospects"/>
-                   <filter icon="gtk-execute" string="Proposition" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Value Proposition')]" separator="1" help="Value Proposition Prospects"/>
-                   <filter icon="gtk-execute" string="Analysis" domain="[('section_id.name','=','Opportunities'),('stage_id.name','=','Needs Analysis')]" separator="1" help="Needs Analysis Prospects"/>
-                   </group>
-               <group col="4" colspan="4">
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Opportunities"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Opportunities"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Opportunities"/>
+           		<group col="3" colspan="1">
+                <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Opportunities"/>
+                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Opportunities during last 7 days"/> 
+               </group>
+               <separator orientation="vertical"/>
+               <group col="5" colspan="2">
+                   <field name="name" select="1"/>
+                   <field name="user_id" select="1" widget="selection">
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
                    </field>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
-                   </group>
+                   <field name="partner_id" select="1"/>
+                   <field name="state" select="1">
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                   </field>
+               </group>
            </search>
         </field>
     </record>

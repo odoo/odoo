@@ -179,9 +179,10 @@
             <search string="Search Prospects">
                <group col="3" colspan="1">
                 <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Prospects"/>
-<!--                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[('create_date::date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Prospects during last 7 days"/> -->
+                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Prospects during last 7 days"/> 
                </group>
-               <group col="4" colspan="4">
+               <separator orientation="vertical"/>
+               <group col="4" colspan="2">
                    <field name="name" select="1"/>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Prospects"/>

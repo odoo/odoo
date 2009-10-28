@@ -157,19 +157,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Jobs">
-                   <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Jobs" domain="[('user_id','=',uid)]" separator="1" help="Jobs Related to Current User"/>
-                       <filter icon="gtk-execute" string="Initial Jobs" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]" separator="1" help="All Initial Jobs"/>
-                       <filter icon="gtk-execute" string="First Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','First Interview')]" separator="1" help="First Interview"/>
-                       <filter icon="gtk-execute" string="Second Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Second Interview')]" separator="1" help="Second Interview"/>
+                   <group col="7" colspan="1">
+	                   <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Opportunities"/>
+	                	<filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Opportunities during last 7 days"/>
+<!--                       <filter icon="gtk-execute" string="My Jobs" domain="[('user_id','=',uid)]" separator="1" help="Jobs Related to Current User"/>-->
+						<separator orientation="vertical"/>
+                       <filter icon="gtk-execute" string="New Jobs" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]" separator="1" help="All Initial Jobs"/>
+                       <filter icon="gtk-execute" string="Open Jobs" domain="[('section_id.name','=','Jobs'),('state','=','open')]" separator="1" help="Open Jobs"/>
+                       <filter icon="gtk-execute" string="Pending Jobs" domain="[('section_id.name','=','Jobs'),('state','=','pending')]" separator="1" help="Pending Jobs"/>
                    </group>
-                   <group col="4" colspan="4">
-                       <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Jobs"/>
-                       </field>
-                       <field name="name" select='1'/>
+                   <separator orientation="vertical"/>
+                   <group col="4" colspan="2">
+                   		<field name="name" select='1'/>
+                   		<field name="email_from" select='1' string="Email"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
                </search>

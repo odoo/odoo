@@ -159,18 +159,14 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                    <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" default="1" help="Claims Related to Current User"/>
-                       <filter icon="gtk-execute" string="Fixed Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Claims"/>
-                       <filter icon="gtk-execute" string="Waiting Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Claims"/>
-                       <filter icon="gtk-execute" string="Accepted Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Accepted as Claim')]" separator="1" help="All Accepted Claims"/>
+<!--                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" default="1" help="Claims Related to Current User"/>-->
+                       <filter icon="gtk-execute" string="New Claims" domain="[('section_id.name','=','Claims'),('state','=','draft')]" separator="1" help="New Claims"/>
+                       <filter icon="gtk-execute" string="In Progress Claims" domain="[('section_id.name','=','Claims'),('state','=','open')]" separator="1" help="In Progress Claims"/>
+                       <filter icon="gtk-execute" string="Pending Claims" domain="[('section_id.name','=','Claims'),('state','=','pending')]" separator="1" help="All pending Claims"/>
                    </group>
                    <group col="4" colspan="4">
-                       <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Claims"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Claims"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Claims"/>
-                       </field>
                        <field name="name" select='1'/>
+                       <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
                </search>
