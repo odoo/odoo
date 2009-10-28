@@ -264,7 +264,7 @@ class crm_email_gateway(osv.osv):
                 mailgate_server = mailgateway.server_id
                 if not mailgate_server.active:
                     continue
-                mailgate_name =  mailgateway.name or "%s (%s)" % (mailgate_server.userid, mailgate_server.name)   
+                mailgate_name =  mailgateway.name or "%s (%s)" % (mailgate_server.login, mailgate_server.name)   
                 log_messages.append("Mail Server : %s" % mailgate_name)
                 log_messages.append("="*40)
                 email_messages = []
@@ -309,17 +309,19 @@ class crm_email_gateway(osv.osv):
                 parser = openerp_mailgate.email_parser(uid, users['password'], mailgateway.section_id.id, 
                                 mailgateway.to_email_id or '', mailgateway.cc_email_id or '', dbname=cr.dbname, 
                                 host=tools.config['interface'] or 'localhost', port=tools.config['port'] or '8069')     
-                for msg_id, message in email_messages:                
+                for msg, message in email_messages:
+                    msg_id = case_id = note = False                                
                     try :
-                        msg_txt = email.message_from_string(message)                                           
-                        res = parser.parse(msg_txt)
-                        mail_history_obj.create(cr, uid, {'name':msg_txt['Message-ID'], 'case_id': res[0], 'gateway_id':mailgateway.id})
-                        log_messages.append('Case Successfull created : %d' % res[0])
+                        msg_txt = email.message_from_string(message)  
+                        msg_id =  msg_txt['Message-ID']                                        
+                        case_id = parser.parse(msg_txt)[0]                        
+                        log_messages.append('Case Successfull created : %d' % case_id)
                         
                     except Exception, e:
-                        log_messages.append("Error in Parsing Mail: %s " %(str(e)))                                         
+                        note = "Error in Parsing Mail: %s " %(str(e))
+                        log_messages.append(note)               
                         netsvc.Logger().notifyChannel('Emailgate:Parsing mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
-            
+                    mail_history_obj.create(cr, uid, {'name':msg_id, 'case_id': case_id, 'gateway_id':mailgateway.id, 'note':note})
             log_messages.append("-"*25)    
             log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))        
         return log_messages
@@ -1015,10 +1017,11 @@ class crm_email_history(osv.osv):
     _description = "Email History"
     _columns = {
         'name': fields.char('Message Id', size=64, help="Message Id in Email Server."),
-        'case_id': fields.many2one('crm.case',"Case", required=True),
+        'case_id': fields.many2one('crm.case',"Case"),
         'gateway_id': fields.many2one('crm.email.gateway',"Email Gateway", required=True),
+        'note': fields.text('Notes'),
     }
-    _order = 'case_id desc'
+    _order = 'id desc'
 crm_email_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
