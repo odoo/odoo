@@ -300,6 +300,7 @@ class task(osv.osv):
         'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
+        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager')
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,

@@ -119,6 +119,7 @@
         <field name="view_mode">form,tree</field>
         <field name="context" eval="{'default_state':'open','default_section_id':ref('section_support1')}"/>
         <field name="view_id" ref="crm_case_form_view_meet"/>
+        <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_meetings">
         <field name="sequence" eval="1"/>

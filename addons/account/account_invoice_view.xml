@@ -324,18 +324,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                   <group col='6' colspan='4'>
-                       <field name="type">
-                           <filter icon="terp-account" domain="[('type','=','out_invoice')]" help="Customer Invoices"/>
-                           <filter icon="terp-account" domain="[('type','=','in_invoice')]" help="Supplier Invoices"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="state">
-                           <filter icon="terp-account" domain="[('state','=','open')]" help="Open Invoices"/>
-                           <filter icon="terp-account" domain="[('state','=','paid')]" help="Paid Invoices"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
+                   <group col="10" colspan="4">
+                   		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                        <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Invoices"/>
+                        <filter icon="terp-account" string="Unpaid" domain="[('state','in',('open','cancel'))]" help="Unpaid Invoices"/>
+						<separator orientation="vertical"/>
+						<field name="number" select='1'/>
+						<field name="partner_id" select='1'/>
+						<field name="amount_total" string="Price" select='1'/>
+						<field name="origin" select='1'/>
                    </group>
                </search>
             </field>

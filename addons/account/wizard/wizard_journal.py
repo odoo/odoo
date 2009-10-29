@@ -64,6 +64,10 @@ def _action_open_window(self, cr, uid, data, context):
     ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
     jp = jp.browse(cr, uid, ids, context=context)[0]
     name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
+
+    mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+    result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])    
     return {
         'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
         'name': name,
@@ -72,7 +76,8 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model': 'account.move.line',
         'view_id': view_res,
         'context': "{'journal_id':%d, 'period_id':%d}" % (form['journal_id'],form['period_id']),
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']        
     }
 
 class wiz_journal(wizard.interface):

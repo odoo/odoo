@@ -169,7 +169,7 @@ class product_product(osv.osv):
         'track_production': fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
         'track_outgoing': fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
-        'warehouse_id': fields.dummy(string='Warehouse',relation='stock.warehouse',type='many2one'),
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
