@@ -94,12 +94,12 @@
             <field name="arch" type="xml">
                 <form string="Users">
                     <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="active"/>
                     <field name="login" select="1"/>
                     <field name="password" password="True"/>
                     <notebook colspan="4">
                         <page string="User">
-                            <field name="address_id"/>
+                            <field name="address_id" select="1"/>
                             <field name="company_id" required="1"/>
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
@@ -114,7 +114,7 @@
                             <field colspan="4" nolabel="1" name="roles_id"/>
                         </page>
                         <page string="Accepted Companies">
-                            <field colspan="4" nolabel="1" name="company_ids"/>
+                            <field colspan="4" nolabel="1" name="company_ids" select="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -132,6 +132,19 @@
             </field>
         </record>
 
+        <record id="view_users_search" model="ir.ui.view">
+            <field name="name">res.users.search</field>
+            <field name="model">res.users</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Users">
+                    <field name="name" select="1"/>
+                    <field name="login" select="1"/>
+                    <field name="address_id" select="1" string="Partner"/>
+                    <field name="company_ids" select="1" string="Company"/>
+                </search>
+            </field>
+        </record>
         <!--
     ======================
     Company
