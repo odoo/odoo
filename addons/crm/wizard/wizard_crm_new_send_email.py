@@ -53,7 +53,7 @@ email_send_fields = {
     'cc': {'string':"CC", 'type':'char', 'size':128,},
     'subject': {'string':'Subject', 'type':'char', 'size':128, 'required':True},
     'text': {'string':'Message', 'type':'text_tag', 'required':True},
-    'state':{'string':'State', 'type':'selection', 'selection':[('done','Done'),('pending','Pending'),('unchanged','Unchanged')]}
+    'state':{'string':'State', 'type':'selection', 'selection':[('done','Done'),('pending','Pending'),('unchanged','Unchanged')]},
     'doc1' :  {'string':"Attachment1", 'type':'binary'},
     'doc2' :  {'string':"Attachment2", 'type':'binary'},
     'doc3' :  {'string':"Attachment3", 'type':'binary'},
@@ -83,8 +83,8 @@ def _mass_mail_send(self, cr, uid, data, context):
         emails,
         data['form']['subject'],
         body,
-        attach=attach
         case_pool.format_body(body),
+        attach=attach,
         reply_to=case.section_id.reply_to,
         tinycrm=str(case.id)
     )
