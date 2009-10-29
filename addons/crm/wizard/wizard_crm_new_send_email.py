@@ -46,6 +46,9 @@ email_send_form = '''<?xml version="1.0"?>
     <field name="doc2" />
     <newline/>
     <field name="doc3" />
+    <separator colspan="4" string="State of Case"/>
+    <newline/>
+    <field name="state" />
 </form>'''
 
 email_send_fields = {
@@ -57,6 +60,8 @@ email_send_fields = {
     'doc1' :  {'string':"Attachment1", 'type':'binary'},
     'doc2' :  {'string':"Attachment2", 'type':'binary'},
     'doc3' :  {'string':"Attachment3", 'type':'binary'},
+    'state' :  {'string':"Set State to", 'type':'selection', 'required' : True, 'default' :'done',\
+                    'selection': [('unchanged','Unchanged'),('done','Done'),('pending','Pending')]},
 }
 
 # this sends an email to ALL the addresses of the selected partners.
@@ -91,7 +96,15 @@ def _mass_mail_send(self, cr, uid, data, context):
         tinycrm=str(case.id)
     )
     if flag:
-        raise wizard.except_wizard(_('Message!'),("Email Successfully Sent..!!"))   
+        if data['form']['state'] == 'unchanged':
+            pass
+        elif data['form']['state'] == 'done':
+            case_pool.case_close(cr, uid, data['ids'])
+        elif data['form']['state'] == 'pending':
+            case_pool.case_pending(cr, uid, data['ids'])
+        cr.commit()
+        raise wizard.except_wizard(_('Message!'),("Email Successfully Sent..!!"))
+        
     else:
         raise wizard.except_wizard(_('Warning!'),("Email is not sent Successfully"))
     return {}
