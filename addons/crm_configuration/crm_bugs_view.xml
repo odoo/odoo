@@ -23,10 +23,6 @@
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                     <field name="date"/>
-                    <group colspan="2">
-                        <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>    
                     <field name="user_id" />
                 </group>
                 <notebook colspan="4">
@@ -38,7 +34,10 @@
                     <field name="category2_id" string="Version"/>
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
                     <field name="priority" string="Severity"/>
-
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>    
                     <newline/>
                     <separator string= "Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>

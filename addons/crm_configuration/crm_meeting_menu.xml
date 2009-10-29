@@ -47,6 +47,7 @@
         <field name="view_id" ref="crm_case_calendar_view"/>
         <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
+        <field name="domain" eval="[('section_id.calendar','=',1)]"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
         <field name="sequence" eval="1"/>
@@ -81,7 +82,7 @@
         <field name="res_model">crm.case</field>
         <field name="view_mode">calendar,tree,form,graph,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="domain" eval="'[(\'user_id\',\'=\',uid)]'"/>
+        <field name="domain" eval="'[(\'user_id\',\'=\',uid),(\'section_id.calendar\',\'=\',1)]'"/>
         <field name="context" eval="{'default_state':'open'}"/>
         <field name="filter" eval="True"/>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>

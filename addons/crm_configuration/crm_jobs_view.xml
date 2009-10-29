@@ -13,10 +13,10 @@
             <tree string="Jobs - Recruitment Tree"  colors="red:state=='open'">
                 <field name="id"/>
                 <field name="name" string="Description"/>
-                <field name="partner_name" string="Candidate Name"/>
-                <field name="partner_phone"/>
+                <field name="partner_name" string="Name"/>
+                <field name="email_from" string="Candidate Email"/>
+                <field name="partner_phone" string="Candidate Phone"/>
                 <field name="categ_id" string="Applied Job" select="1"/>
-                <field name="category2_id" string="Degree" select="1"/>
                 <field name="stage_id"/>
                 <field name="priority" string="Appreciation"/>
                 <field name="user_id"/>
@@ -40,7 +40,8 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                    <button name="set_partner" string="Convert to Partner" icon="terp-partner"/>
+                	<button string="Schedule a Phone Call"
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -60,8 +61,11 @@
                         <field name="partner_mobile"/>
                         <field name="email_from" string="Candidate Email"/>
                         <newline/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                        <group col="6" colspan="4">
+                        <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                        <button name="set_partner" string="Convert to Partner" icon="terp-partner"/>
                         <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                        </group>
                         <separator colspan="4" string="Contract Data"/>
                         <field name="probability" string="Availability (weeks)"/>
                         <newline/>
