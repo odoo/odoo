@@ -153,11 +153,15 @@
             <field name="arch" type="xml">
                 <search string="Search Funds">
                    <group col='6' colspan='4'>
-                       <filter icon="gtk-execute" string="My Funds" default="1" domain="[('user_id','=',uid)]" separator="1" help="Funds Related to Current User"/>
+                       <filter icon="terp-partner" string="My Funds"
+                       	default="1" domain="[('user_id','=',uid)]"
+                       	separator="1"
+                       	help="Funds Related to Current User"
+                       />
                        <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Funds"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Funds"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Funds"/>
+                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Funds"/>
+                           <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Funds"/>
+                           <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
                        </field>
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection"/>

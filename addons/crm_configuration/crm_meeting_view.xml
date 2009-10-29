@@ -101,13 +101,13 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                <group col="5" colspan="1">
-                   <filter icon="gtk-execute" string="My Meetings" default="1" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
+                   <filter icon="terp-partner" string="My Meetings" default="1" domain="[('user_id','=',uid)]" help="Meetings Related to Current User"/>
                </group>
                <group col="4" colspan="4">
                    <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Meetings"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Meetings"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Meetings"/>
+                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Meetings"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Meetings"/>
+                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Meetings"/>
                    </field>
                    <field name="name" select='1'/>
                    <field name="user_id" select="1" widget="selection"/>

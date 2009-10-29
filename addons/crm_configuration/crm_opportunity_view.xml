@@ -164,15 +164,28 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
            		<group col="3" colspan="1">
-                <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Opportunities"/>
-                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Opportunities during last 7 days"/> 
-               </group>
+                <filter icon="gtk-home" string="   Today   "
+                	separator="1"
+                	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                	help="Todays's Opportunities"
+                />
+                <filter icon="gtk-media-rewind" string="    7 Days    "
+                	separator="1" domain="[]"
+                	help="Opportunities during last 7 days"
+                />
+           		</group>
                <separator orientation="vertical"/>
                <group col="5" colspan="2">
                    <field name="name" select="1" string="Opportunity"/>
                    <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Opportunities" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Opportunities"/>
+                   	<filter icon="terp-partner"
+                   		domain="[('user_id','=',uid)]"
+                   		help="My Opportunities" default="1"
+                   	/>
+                   	<filter icon="terp-crm"
+                   		domain="[('user_id','child_of',[uid])]"
+                   		help="My department's Opportunities"
+                   	/>
                    </field>
                    <field name="partner_id" select="1"/>
                    <field name="state" select="1">

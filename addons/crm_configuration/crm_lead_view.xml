@@ -178,15 +178,28 @@
         <field name="arch" type="xml">
             <search string="Search Prospects">
                <group col="3" colspan="1">
-                <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Prospects"/>
-                <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Prospects during last 7 days"/> 
+                <filter icon="gtk-home" string="   Today   "
+                	separator="1"
+                	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                	help="Todays's Prospects"
+                />
+                <filter icon="gtk-media-rewind" string="    7 Days    "
+                	separator="1" domain="[]"
+                	help="Prospects during last 7 days"
+                />
                </group>
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
                    <field name="name" select="1"/>
                    <field name="user_id" select="1" widget="selection">
-	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
-	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+	                   	<filter icon="terp-partner"
+	                   		domain="[('user_id','=',uid)]" help="My Prospects"
+	                   		default="1"
+	                   	/>
+	                   	<filter icon="terp-crm"
+	                   		domain="[('user_id','child_of',[uid])]"
+	                   		help="My department's Prospects"
+	                   	/>
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Prospects"/>

@@ -101,23 +101,23 @@
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
                <group col="6" colspan="1">
-                   <filter icon="gtk-execute"
+                   <filter icon="gtk-jump-to"
                    	string="Inbound Phonecalls"
                    	domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]"
                    	separator="1" help="All Inbound Phonecalls"
                    />
-                   <filter icon="gtk-execute"
+                   <filter icon="gtk-redo"
                    	string="Outbound Phonecalls"
                    	domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]"
                    	separator="1" help="All Outbound Phonecalls"
                    />
                    <separator orientation="vertical"/>
-                   <filter icon="gtk-execute" string="   Today   "
+                   <filter icon="gtk-home" string="   Today   "
                    	separator="1"
                    	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                    	help="Todays's Phonecalls"
                    />
-                   <filter icon="gtk-execute" string="    7 Days    "
+                   <filter icon="gtk-media-rewind" string="    7 Days    "
                    	separator="1" domain="[]"
                    	help="Phonecalls during last 7 days"
                    />

@@ -150,12 +150,28 @@
         <field name="arch" type="xml">
             <search string="Search Bugs">
                <group col="7" colspan="1">
-                   <filter icon="gtk-execute" string="Fixed Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Bugs"/>
-                   <filter icon="gtk-execute" string="Waiting Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Bugs"/>
-                   <filter icon="gtk-execute" string="Future Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]" separator="1" help="All Future Bugs"/>
+                   <filter icon="gtk-apply" string="Fixed Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]"
+                   	separator="1" help="All Fixed Bugs"
+                   />
+                   <filter icon="gtk-media-pause" string="Waiting Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]"
+                   	separator="1" help="All Waiting Bugs"
+                   />
+                   <filter icon="gtk-media-forward" string="Future Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]"
+                   	separator="1" help="All Future Bugs"
+                   />
                    <separator orientation="vertical"/>
-                   <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's bugs"/>
-               	    <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Bugs during last 7 days"/>
+                   <filter icon="gtk-home" string="   Today   "
+                   	separator="1"
+                   	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	help="Todays's bugs"
+                   />
+                   <filter icon="gtk-media-rewind" string="    7 Days    "
+                   	separator="1" domain="[]"
+                   	help="Bugs during last 7 days"
+                   />
                </group>
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
@@ -165,9 +181,9 @@
                    	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Bugs"/>
                    </field>
                    <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Bugs"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Bugs"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Bugs"/>
+                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Bugs"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
+                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Bugs"/>
                    </field>
                </group>
             </search>

@@ -162,13 +162,28 @@
             <field name="arch" type="xml">
                 <search string="Search Jobs">
                    <group col="7" colspan="1">
-	                   <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's Opportunities"/>
-	                	<filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Opportunities during last 7 days"/>
-<!--                       <filter icon="gtk-execute" string="My Jobs" domain="[('user_id','=',uid)]" separator="1" help="Jobs Related to Current User"/>-->
-						<separator orientation="vertical"/>
-                       <filter icon="gtk-execute" string="New Jobs" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]" separator="1" help="All Initial Jobs"/>
-                       <filter icon="gtk-execute" string="Open Jobs" domain="[('section_id.name','=','Jobs'),('state','=','open')]" separator="1" help="Open Jobs"/>
-                       <filter icon="gtk-execute" string="Pending Jobs" domain="[('section_id.name','=','Jobs'),('state','=','pending')]" separator="1" help="Pending Jobs"/>
+	                   <filter icon="gtk-home" string="   Today   "
+	                   	separator="1"
+	                   	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+	                   	help="Todays's Opportunities"
+	                   />
+	                   <filter icon="gtk-media-rewind"
+	                   	string="    7 Days    " separator="1" domain="[]"
+	                   	help="Opportunities during last 7 days"
+	                   />
+	                   <separator orientation="vertical"/>
+	                   <filter icon="gtk-new" string="New Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]"
+	                   	separator="1" help="All Initial Jobs"
+	                   />
+	                   <filter icon="gtk-yes" string="Open Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','open')]"
+	                   	separator="1" help="Open Jobs"
+	                   />
+	                   <filter icon="gtk-media-pause" string="Pending Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','pending')]"
+	                   	separator="1" help="Pending Jobs"
+	                   />
                    </group>
                    <separator orientation="vertical"/>
                    <group col="4" colspan="2">

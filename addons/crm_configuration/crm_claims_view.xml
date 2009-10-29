@@ -154,9 +154,20 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                    <group col="4" colspan="1">
-                       <filter icon="gtk-execute" string="New Claims" domain="[('section_id.name','=','Claims'),('state','=','draft')]" separator="1" help="New Claims"/>
-                       <filter icon="gtk-execute" string="In Progress Claims" domain="[('section_id.name','=','Claims'),('state','=','open')]" separator="1" help="In Progress Claims"/>
-                       <filter icon="gtk-execute" string="Pending Claims" domain="[('section_id.name','=','Claims'),('state','=','pending')]" separator="1" help="All pending Claims"/>
+                       <filter icon="gtk-new" string="New Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','draft')]"
+                       	separator="1" help="New Claims"
+                       />
+                       <filter icon="gtk-execute"
+                       	string="In Progress Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','open')]"
+                       	separator="1" help="In Progress Claims"
+                       />
+                       <filter icon="gtk-media-pause"
+                       	string="Pending Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','pending')]"
+                       	separator="1" help="All pending Claims"
+                       />
                    </group>
                    <separator orientation="vertical"/>
                    <group col="4" colspan="2">
