@@ -35,9 +35,9 @@
                     <field name="partner_mobile"/>
                     <field name="email_from" string="Prospect Email"/>
                     <newline/>
-                     <label string="Partner:" align="1.0"/>
-					 <group colspan="1" col="2">
-						 <field name="partner_id" nolabel="1"/>
+					 <group colspan="2" col="4">
+						 <label string="Partner:"  colspan="1" align="1.0"/>
+						 <field name="partner_id" nolabel="1"  colspan="2"/>
 						  <button string="Convert to Partner"
 						  	icon="terp-partner" name="%(wizard_crm_partner_create)d"
 						  	type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
@@ -184,13 +184,13 @@
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
                    <field name="name" select="1"/>
+                   <field name="user_id" select="1" widget="selection">
+	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
+	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+                   </field>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Prospects"/>
                        <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Prospects"/>
-                   </field>
-                   <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
                    </field>
                </group>
            </search>
@@ -205,10 +205,10 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="base.view_partner_form" />
 			<field name="arch" type="xml">
-				<field name="parent_id" position="after">
+				<field name="supplier" position="after">
 					<button string="Create Opportunity"
 						name="%(crm_configuration.wizard_partner_create_opportunity)d" icon="gtk-index"
-						type="action"
+						type="action" colspan="2"
 					/>
 				</field>
 			</field>

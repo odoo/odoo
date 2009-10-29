@@ -153,13 +153,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <group col="5" colspan="1">
-<!--                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" default="1" help="Claims Related to Current User"/>-->
+                   <group col="4" colspan="1">
                        <filter icon="gtk-execute" string="New Claims" domain="[('section_id.name','=','Claims'),('state','=','draft')]" separator="1" help="New Claims"/>
                        <filter icon="gtk-execute" string="In Progress Claims" domain="[('section_id.name','=','Claims'),('state','=','open')]" separator="1" help="In Progress Claims"/>
                        <filter icon="gtk-execute" string="Pending Claims" domain="[('section_id.name','=','Claims'),('state','=','pending')]" separator="1" help="All pending Claims"/>
                    </group>
-                   <group col="4" colspan="4">
+                   <separator orientation="vertical"/>
+                   <group col="4" colspan="2">
                        <field name="name" select='1'/>
                        <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>

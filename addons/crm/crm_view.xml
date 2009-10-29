@@ -237,7 +237,13 @@
             <field name="view_id" ref="crm_case_rule_tree-view"/>
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
-
+		
+       <wizard string="Add a CC"
+           model="crm.case"
+           menu = "False"
+           name="crm.case.email.add_cc"
+           id="wizard_crm_case_email_add_cc"/> 
+        
         <!-- Cases -->
         <record id="crm_case_log_tree-view" model="ir.ui.view">
             <field name="name">crm.case.log.tree</field>

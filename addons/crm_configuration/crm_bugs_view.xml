@@ -154,14 +154,15 @@
                    <filter icon="gtk-execute" string="Waiting Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Bugs"/>
                    <filter icon="gtk-execute" string="Future Bugs" domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]" separator="1" help="All Future Bugs"/>
                    <separator orientation="vertical"/>
-                   <filter icon="gtk-execute" string="Inbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]" separator="1" help="All Inbound Phonecalls"/>
-                   <filter icon="gtk-execute" string="Outbound Phonecalls" domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]" separator="1" help="All Outbound Phonecalls"/>
+                   <filter icon="gtk-execute" string="   Today   " separator="1" domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Todays's bugs"/>
+               	    <filter icon="gtk-execute" string="    7 Days    " separator="1" domain="[]" help="Bugs during last 7 days"/>
                </group>
+               <separator orientation="vertical"/>
                <group col="4" colspan="2">
-               		<field name="name" select='1'/>
+               		<field name="name" select='1' string="Subject"/>
                    <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Bugs"/>
                    </field>
                    <field name="state" select="1">
                        <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Bugs"/>

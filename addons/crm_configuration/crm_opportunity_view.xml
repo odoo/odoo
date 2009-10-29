@@ -6,6 +6,15 @@
     # Opportunities
     # ------------------------------------------------------ 
 
+	<act_window
+        id="crm_case_categ_meet_opportunity"
+        name="Schedule a Meeting"
+        res_model="crm.case"
+        src_model="crm.case"
+        view_mode="calendar,tree,form,gantt"
+        context="{'default_case_id': active_id, 'default_duration': 4.0}"
+        domain="[('section_id','=','Meetings')]"/>
+
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities Form</field>
         <field name="model">crm.case</field>
@@ -29,7 +38,7 @@
                         <field name="case_id" select="1"/>
                         <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
                     </group>
-                    <button string="Schedule Meeting" icon="terp-crm" name="%(wizard_crm_meeting)d" type="action"/>
+                    <button string="Schedule Meeting" icon="terp-crm" name="%(crm_case_categ_meet_opportunity)d" type="action"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
@@ -160,10 +169,10 @@
                </group>
                <separator orientation="vertical"/>
                <group col="5" colspan="2">
-                   <field name="name" select="1"/>
+                   <field name="name" select="1" string="Opportunity"/>
                    <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Opportunities" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Opportunities"/>
                    </field>
                    <field name="partner_id" select="1"/>
                    <field name="state" select="1">
