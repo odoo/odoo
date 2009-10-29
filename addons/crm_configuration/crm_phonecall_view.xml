@@ -102,12 +102,12 @@
             <search string="Search Phonecalls">
                <group col="6" colspan="1">
                    <filter icon="gtk-jump-to"
-                   	string="Inbound Phonecalls"
+                   	string="Inbound"
                    	domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Inbound')]"
                    	separator="1" help="All Inbound Phonecalls"
                    />
                    <filter icon="gtk-redo"
-                   	string="Outbound Phonecalls"
+                   	string="Outbound"
                    	domain="[('section_id.name','=','Phone Calls'),('categ_id.name','=','Outbound')]"
                    	separator="1" help="All Outbound Phonecalls"
                    />
@@ -124,7 +124,7 @@
                </group>
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
-             		<field name="name" select='1'/>
+             		<field name="name" select='1' string="Subject"/>
                		<field name="user_id" select="1" widget="selection">
 	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
 	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
