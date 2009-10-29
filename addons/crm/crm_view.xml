@@ -239,11 +239,37 @@
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
 		
-       <wizard string="Add a CC"
-           model="crm.case"
-           menu = "False"
-           name="crm.case.email.add_cc"
-           id="wizard_crm_case_email_add_cc"/> 
+       <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
+            <field name="name">Add CC</field>
+            <field name="model">crm.email.add.cc</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Add CC">
+                    <field name="name"/>
+                    <separator string="Test" colspan="4"/>
+                    <newline/>
+                    <field name="user_id"
+                    	attrs="{ 'required' : [('name','=','user')]}"
+                    	on_change="change_email(user_id, partner_id)"
+                    />
+                    <field name="partner_id"
+                    	attrs="{'required' : [('name','=','partner')]}"
+                    	on_change="change_email(user_id, partner_id)"
+                    />
+                    <field name="email"/>
+                    <button name="add_cc" string="Ok" type="object" icon="gtk-go-forward"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_crm_email_add_cc_wizard" model="ir.actions.act_window">
+            <field name="name">Add CC</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.email.add.cc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
         
         <!-- Cases -->
         <record id="crm_case_log_tree-view" model="ir.ui.view">
@@ -395,8 +421,8 @@
                                        <field name="email"/>
                                        <field name="canal_id"/>
                                        <button
-                                           	string="Add a CC"
-		                                   	name="%(wizard_crm_case_email_add_cc)d"
+                                     string="Add a CC"
+		                                   	name="%(action_view_crm_email_add_cc_wizard)d"
 		                                   	icon="gtk-add" type="action"/>
                                    </group>
                                    <newline/>
