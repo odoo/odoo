@@ -505,12 +505,13 @@ class sale_order(osv.osv):
         write_done_ids = []
         write_cancel_ids = []
         stock_move_obj = self.pool.get('stock.move')
-
         for order in self.browse(cr, uid, ids, context={}):
             
             #check for pending deliveries 
             pending_deliveries = False
-            
+            # check => if order_lines do not exist,don't proceed for any mode.
+            if not order.order_line:
+                return False
             for line in order.order_line:    
                 move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
@@ -518,8 +519,9 @@ class sale_order(osv.osv):
                     #this order line is not yet delivered
                     if move.state in ('draft', 'auto', 'confirmed'):
                         pending_deliveries = True
-                
-                if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
+                # Reason => if there are no move lines,the following condition will always set to be true,and will set SO to 'DONE'.
+                # Added move_ids check to SOLVE.
+                if move_ids and ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
 #                    finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)
@@ -532,7 +534,6 @@ class sale_order(osv.osv):
                             write_cancel_ids.append(line.id)
                     else:
                         notcanceled = True
-
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
