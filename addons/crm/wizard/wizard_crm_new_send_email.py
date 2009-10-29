@@ -76,6 +76,8 @@ def _mass_mail_send(self, cr, uid, data, context):
     emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
     emails = filter(None, emails)
     body = data['form']['text']
+    if not case.user_id.address_id.email:
+        raise wizard.except_wizard(_('Warning!'),("Please specify user's email address"))
     if case.user_id.signature:
         body += '\n\n%s' % (case.user_id.signature)
     flag = tools.email_send(
