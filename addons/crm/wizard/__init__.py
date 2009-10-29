@@ -23,6 +23,7 @@ import crm_wizard
 import wizard_crm_send_email
 import wizard_crm_new_send_email
 import wizard_fetch_mail
+import wizard_add_cc
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
