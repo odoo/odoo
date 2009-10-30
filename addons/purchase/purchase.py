@@ -192,7 +192,9 @@ class purchase_order(osv.osv):
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
+        'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
+        'create_uid':  fields.many2one('res.users', 'Responsible'),        
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
