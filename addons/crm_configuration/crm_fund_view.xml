@@ -100,10 +100,14 @@
                    </group>
                     <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                        <form string="Communication history">
-                            <group col="6" colspan="4">
+                            <group col="7" colspan="4">
                                 <field name="date"/>
                                 <field name="email"/>
                                 <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>

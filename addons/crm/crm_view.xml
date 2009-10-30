@@ -422,7 +422,7 @@
                                        <field name="canal_id"/>
                                        <button
                                      string="Add a CC"
-		                                   	name="%(action_view_crm_email_add_cc_wizard)d"
+		                                   	name="%(crm.action_view_crm_email_add_cc_wizard)d"
 		                                   	icon="gtk-add" type="action"/>
                                    </group>
                                    <newline/>
@@ -477,7 +477,6 @@
             <field name="res_model">crm.case</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
         <menuitem action="crm_case_categ0-act_open" id="menu_crm_case_categ0-act_open" parent="crm.menu_crm_case_categ0-act" groups="base.group_extended_menu"/>
@@ -488,7 +487,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
         <menuitem action="crm_case_categ0-act_my" id="menu_crm_case_categ0-act_my" parent="crm.next_id_52" groups="base.group_extended_menu"/>
@@ -498,7 +496,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
         <menuitem action="crm_case_categ0-act_my_open" id="menu_crm_case_categ0-act_my_open" parent="crm.menu_crm_case_categ0-act_my" groups="base.group_extended_menu"/>

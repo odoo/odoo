@@ -22,7 +22,7 @@
     <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act111">
         <field name="sequence" eval="2"/>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm.crm_case_calendar-view"/>
+        <field name="view_id" ref="crm_case_helpdesk_calendar_view"/>
         <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act111">
@@ -32,36 +32,6 @@
         <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
     </record>
     <menuitem name="Helpdesk and Support" id="menu_help_support_main" parent="menu_aftersale" action="crm_case_helpdesk_act111"/>    
-
-    <record model="ir.actions.act_window" id="crm_case_categ_help_act">
-        <field name="name">My Helpdesk</field>
-        <field name="res_model">crm.case</field>
-        <field name="view_mode">tree,calendar,form</field>
-        <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+'),(\'user_id\',\'=\',uid)]'"/>
-        <field name="context" eval="{'default_state':'open'}"/>
-        <field name="filter" eval="True"/>
-        <field name="search_view_id" ref="crm.view_crm_case_filter"/>        
-    </record>
-    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view1">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
-        <field name="act_window_id" ref="crm_case_categ_help_act"/>
-    </record>
-    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_calendar_view3">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm_case_helpdesk_calendar_view"/>
-        <field name="act_window_id" ref="crm_case_categ_help_act"/>
-    </record>
-    <record model="ir.actions.act_window.view" id="action_crm_helpdesk_tree_view2">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_helpdesk"/>
-        <field name="act_window_id" ref="crm_case_categ_help_act"/>
-    </record>
-    
     
 </data>
 </openerp>
