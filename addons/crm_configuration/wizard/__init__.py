@@ -24,4 +24,6 @@ import wizard_partner_create
 import wizard_opportunity_set
 import schedule_phone_call
 import wizard_history_event
+import wizard_partner_opportunity
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
