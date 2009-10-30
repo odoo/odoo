@@ -764,7 +764,8 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight'),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'Status', required=True, readonly=True),
-        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer')
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
+        'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
     }
     _order = 'sequence, id'
     _defaults = {

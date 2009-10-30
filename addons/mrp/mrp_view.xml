@@ -525,15 +525,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
-                   <group col='6' colspan='4'>
-                       <field name="state" select="1">
-                           <filter icon="terp-mrp" domain="[('state','=','confirmed')]" help="Confirmed Production Orders"/>
-                           <filter icon="terp-mrp" domain="[('state','=','ready')]" help="Production orders which are ready to produce"/>
-                           <filter icon="terp-mrp" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
-                       </field>
+                   <group col='8' colspan='4'>
+                       <filter icon="terp-mrp" string="Ready" domain="[('state','=','ready')]" help="Production orders which are ready to produce"/>
+                       <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
-                   </group>
+					   <field name="product_id" select='1'/>
+					   <field name="routing_id" select='1'/>	
+                       <field name="origin" select='1'/>
+					</group>
                </search>
             </field>
         </record>
@@ -748,12 +748,30 @@
                 </form>
             </field>
         </record>
+        <record id="view_mrp_procurement_filter" model="ir.ui.view">
+            <field name="name">mrp.procurement.select</field>
+            <field name="model">mrp.procurement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Procurement">
+                   	<group col='8' colspan='4'>
+                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement orders with exceptions"/>
+                       <separator orientation="vertical"/>
+                       <field name="name" select='1'/>
+					   <field name="product_id" select='1'/>
+					   <field name="date_planned" select='1'/>	
+                       <field name="state" select='1'/>
+					</group>
+				</search>
+            </field>
+        </record>
         <record id="mrp_procurement_action" model="ir.actions.act_window">
             <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
 
@@ -784,6 +802,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
+            <field name="filter" eval="True"/>
         </record>
         <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended_menu"/>
 

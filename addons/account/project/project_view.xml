@@ -53,7 +53,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id" select="1"/>
+                            <field name="partner_id"/>
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
@@ -80,6 +80,16 @@
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
         <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="account.menu_analytic_accounting"/>
+	
+		<record id="act_account_renew_view" model="ir.actions.act_window">
+            <field name="name">Accounts to Renew</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date','&lt;',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
+            <field name="filter" eval="True"/>            
+        </record>
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
             <field name="name">Analytic Chart of Accounts</field>
@@ -150,6 +160,22 @@
                 </tree>
             </field>
         </record>
+        <record id="view_account_analytic_line_filter" model="ir.ui.view">
+            <field name="name">account.analytic.line.select</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Search Analytic Lines">
+            		<group col='6' colspan='4'>
+            		    <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Analytic Entries"/>
+                        <field name="name" select="1"/>
+                        <field name="journal_id" select="1"/>
+                        <field name="account_id" select="1"/>
+                        <field name="date" select="1"/>
+            		</group>
+            	</search>
+            </field>
+        </record>
         <record id="action_account_analytic_line_form" model="ir.actions.act_window">
             <field name="name">Analytic Entries</field>
             <field name="type">ir.actions.act_window</field>
@@ -169,6 +195,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('account_id','child_of',[active_id])]</field>
             <field name="context">{'account_id':active_id}</field>
+            <field name="search_view_id" ref="view_account_analytic_line_filter"/>
         </record>
         <record id="ir_open_account_analytic_account" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>

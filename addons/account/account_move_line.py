@@ -282,6 +282,17 @@ class account_move_line(osv.osv):
                 result.append((line.id, line.name))
         return result
 
+    def _balance_search(self, cursor, user, obj, name, args):
+        if not len(args):
+            return []
+        where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
+        cursor.execute('select id, sum(debit-credit) from account_move_line \
+                     group by id,debit,credit having '+where)
+        res = cursor.fetchall()
+        if not len(res):
+            return [('id', '=', '0')]
+        return [('id', 'in', [x[0] for x in res])]
+    
     def _invoice_search(self, cursor, user, obj, name, args):
         if not len(args):
             return []
@@ -365,7 +376,7 @@ class account_move_line(osv.osv):
         'date_created': fields.date('Creation date'),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
-        'balance': fields.function(_balance, method=True, string='Balance'),
+        'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
         'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True, help="If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,\

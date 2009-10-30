@@ -697,14 +697,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Delivery">
-                    <group col='6' colspan='4'>
-                        <field name="state">
-                           <filter icon="terp-stock" domain="[('state','=','auto')]" help="Waiting Orders"/>
-                           <filter icon="terp-stock" domain="[('state','=','confirmed')]" help="Confirmed Orders"/>
-                           <filter icon="terp-stock" domain="[('state','=','assigned')]" help="Assigned Orders"/>
-                        </field>
+                    <group col='8' colspan='4'>
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders"/>
+                        <filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <separator orientation="vertical"/>
+                        <field name="address_id" select="1"/>
                         <field name="name" select="1"/>
+                        <field name="origin" select="1"/>
                    </group>
               </search>
             </field>

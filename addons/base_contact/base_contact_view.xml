@@ -33,14 +33,14 @@
                         <newline/>
                         <separator string="General Information" colspan="4"/>
                        <group string="Partner" colspan="2" col="2">
-                           <field name="partner_id" invisible="1" select="2"/>
-                           <field name="title" select="1" />
+                           <field name="partner_id" invisible="1" select="1"/>
+                           <field name="title" select="1"/>
                            <field name="function_id" invisible="1" select="2"/>
                            <field name="lang_id"/>
                            <field name="active"/>
                        </group>
                        <group string="Communication" colspan="2" col="2">
-                           <field name="mobile" select="2"/>
+                           <field name="mobile"/>
                            <field name="email"  widget="email"/>
                            <field name="website"/>
                        </group>
@@ -79,7 +79,7 @@
                     </page>
                     <page string="Extra Information">
                         <field name="country_id"/>
-                        <field name="birthdate" select="1" />
+                        <field name="birthdate"/>
                     </page>
                     <page string="Notes">
                         <field name="comment" nolabel="1"/>
@@ -92,12 +92,26 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_partner_contact_search">
+        <field name="name">res.partner.contact.search</field>
+        <field name="model">res.partner.contact</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Partner Contact">
+                <field name="name" select="1"/>
+                <field name="first_name" select="1"/>
+                <field name="partner_id" select="1" string="Partner"/>
+            </search>
+        </field>
+    </record>
+    
     <record model="ir.actions.act_window" id="action_partner_contact_form">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner.contact</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_partner_contact_tree"/>
+        <field name="search_view_id" ref="view_partner_contact_search"/>
     </record>
     <menuitem name="Partners/" id="menu_partner_contact_form" action="action_partner_contact_form"/>
     <menuitem name="Partners/Addresses"  id="base.menu_partner_address_form"/>
@@ -167,6 +181,20 @@
                 </field>
             </field>
         </field>
+    </record>
+    
+    <record id="view_res_partner_filter" model="ir.ui.view">
+	    <field name="name">res.partner.select</field>
+	    <field name="model">res.partner</field>
+	    <field name="type">search</field>
+	    <field name="inherit_id" ref="base.view_res_partner_filter"/>
+	    <field name="arch" type="xml">
+	        <search string="Search Partner">
+	        	<field name="address" mode="tree,form" select="1">
+	                <field name="job_ids" select="1" string="Contacts" />
+		        </field>
+	       </search>
+	    </field>
     </record>
 
 <!-- don't display the categories, since it is displayed in an other tab-->
@@ -319,7 +347,19 @@
             </field>
         </field>
     </record>
-
+	
+	<record id="view_res_partner_address_filter" model="ir.ui.view">
+	    <field name="name">res.partner.address.select</field>
+	    <field name="model">res.partner.address</field>
+	    <field name="type">search</field>
+	    <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
+	    <field name="arch" type="xml">
+	        <search string="Search Contact">
+               	<field name="job_ids" select='1'/>
+	       </search>
+	    </field>
+    </record>
+    
     <!-- Views for res.partner.job -->
     <record model="ir.ui.view" id="view_partner_job_tree">
         <field name="name">res.partner.job.tree</field>

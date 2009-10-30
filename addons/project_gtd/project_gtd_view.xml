@@ -1,73 +1,87 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_gtd_context_tree">
-            <field name="name">project.gtd.context.tree</field>
-            <field name="model">project.gtd.context</field>
-            <field name="type">tree</field>            
-            <field name="arch" type="xml">
-                <tree string="Context">
-                    <field name="name"/>
-                    <field name="project_default_id"/>
-                </tree>
-            </field>
-        </record>
-        <record model="ir.ui.view" id="view_gtd_context_form">
-            <field name="name">project.gtd.context.form</field>
-            <field name="model">project.gtd.context</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Context">
-                    <field name="name"/>
-                    <field name="sequence"/>
-                    <field name="project_default_id"/>
-                </form>
-            </field>
-        </record>
-        <record model="ir.actions.act_window" id="open_gtd_context_tree">
-            <field name="name">Contexts</field>
-            <field name="res_model">project.gtd.context</field>
-        </record>
+    <record model="ir.ui.view" id="view_gtd_context_tree">
+        <field name="name">project.gtd.context.tree</field>
+        <field name="model">project.gtd.context</field>
+        <field name="type">tree</field>            
+        <field name="arch" type="xml">
+            <tree string="Context">
+                <field name="name"/>
+                <field name="project_default_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_gtd_context_form">
+        <field name="name">project.gtd.context.form</field>
+        <field name="model">project.gtd.context</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Context">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="project_default_id"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="open_gtd_context_tree">
+        <field name="name">Contexts</field>
+        <field name="res_model">project.gtd.context</field>
+    </record>
 
-        <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions" groups="group_project_getting"/>
-        <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting" parent="menu_open_gtd_time" action="open_gtd_context_tree"/>        
+    <menuitem name="Time Management" id="menu_open_gtd_time" parent="project.menu_definitions" groups="group_project_getting"/>
+    <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting" parent="menu_open_gtd_time" action="open_gtd_context_tree"/>        
 
-        <record model="ir.ui.view" id="view_gtd_timebox_tree">
-            <field name="name">project.gtd.timebox.tree</field>
-            <field name="model">project.gtd.timebox</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Timebox">
-                    <field name="sequence"/>
-                    <field name="name"/>                    
-                    <field name="icon"/>
-                </tree>
-            </field>
-        </record>
+    <record model="ir.ui.view" id="view_gtd_timebox_tree">
+        <field name="name">project.gtd.timebox.tree</field>
+        <field name="model">project.gtd.timebox</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Timebox">
+                <field name="sequence"/>
+                <field name="name"/>                    
+                <field name="icon"/>
+            </tree>
+        </field>
+    </record>
 
-        <record model="ir.ui.view" id="view_gtd_timebox_form">
-            <field name="name">project.gtd.timebox.form</field>
-            <field name="model">project.gtd.timebox</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Timeboxes">
-                    <separator string="Timebox Definition" colspan="4"/>
-                    <field name="name"/>
-                    <field name="sequence"/>
-                    <field name="icon"/>
-                </form>
-            </field>
-        </record>
+    <record model="ir.ui.view" id="view_gtd_timebox_form">
+        <field name="name">project.gtd.timebox.form</field>
+        <field name="model">project.gtd.timebox</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Timeboxes">
+                <separator string="Timebox Definition" colspan="4"/>
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="icon"/>
+            </form>
+        </field>
+    </record>
 
-        <record model="ir.actions.act_window" id="open_gtd_timebox_tree">
-            <field name="name">Timeboxes</field>
-            <field name="res_model">project.gtd.timebox</field>
-            <field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_gtd_timebox_tree"/>
-        </record>
-       
-        <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="menu_open_gtd_time" action="open_gtd_timebox_tree" groups="group_project_getting"/>        
+    <record model="ir.actions.act_window" id="open_gtd_timebox_tree">
+        <field name="name">Timeboxes</field>
+        <field name="res_model">project.gtd.timebox</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gtd_timebox_tree"/>
+    </record>        
+
+    <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="menu_open_gtd_time" action="open_gtd_timebox_tree"/>        
+		
+	<record model="ir.ui.view" id="project_task_tree">
+        <field name="name">project.task.tree.timebox</field>
+        <field name="model">project.task</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="project.view_task_tree2" />
+        <field name="arch" type="xml">
+        	<field name="project_id" position="after">
+        		<field name="timebox_id"/>
+        		<button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
+                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>
+        	</field>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>

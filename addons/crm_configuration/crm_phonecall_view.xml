@@ -34,8 +34,8 @@
                 <group colspan="4" col="7">
                     <field name="name" string="Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="user_id" string="Assigned to" select="2"/>
-                    <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>                    
+                    <field name="user_id" string="Assigned to" select="2"/> 
+                    <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-index" type="action"/>                   
                     <newline/>
                     <field name="date" string="Planned Date"/>
                     <field name="duration"/>
@@ -46,8 +46,6 @@
                                'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
                     </group>
-                    <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-index" type="action"/>
-                    <label string='' colspan='6' />
                     <button string="Schedule a Phone Call"
                         name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                 </group>
@@ -55,11 +53,14 @@
                 <page string="General">
                     <field name="categ_id" string="Direction" select="1" on_change="onchange_categ_id(categ_id)" required="1"/>
                     <field name="active" string="Reminder"/>
-                    <field name="partner_id" string="Partner"/>
-                    <field name="partner_address_id" string="Contact"/>
-                    <newline/>
+                    <label string="Partner:" align="1.0"/>
+                    <group colspan="1">
+                        <field name="partner_id" string="Partner" nolabel="1"/>
+                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>                        
+                    </group>                        
+                    <field name="partner_address_id" string="Contact"/>                                     
                     <field name="partner_phone"/>
-                    <field name="partner_mobile"/>
+                    <field name="partner_mobile"/>                    
                     <newline/>
                     <field name="som"/>
                     <field name="priority" string="Relevant"/>
@@ -126,8 +127,8 @@
                <group col="4" colspan="2">
              		<field name="name" select='1' string="Subject"/>
                		<field name="user_id" select="1" widget="selection">
-	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Prospects" default="1"/>
-	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Prospects"/>
+	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Phonecalls" default="1"/>
+	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Phonecalls"/>
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>

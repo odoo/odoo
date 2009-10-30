@@ -788,6 +788,25 @@
                 </form>
             </field>
         </record>
+		
+		<record id="view_account_move_line_filter" model="ir.ui.view">
+            <field name="name">account.move.line.select</field>
+            <field name="model">account.move.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Move Lines">
+                	<group col='10' colspan='4'>
+                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
+                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
+						<separator orientation="vertical"/>
+						<field name="date" select='1'/>
+						<field name="account_id" select='1'/>
+						<field name="partner_id" select='1'/>
+						<field name="balance" string="Debit/Credit" select='1'/>
+                	</group>
+                </search>
+            </field>
+        </record>
 
         <record id="action_move_line_select" model="ir.actions.act_window">
             <field name="name">Entry Lines</field>
@@ -795,6 +814,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>            
+        </record>
+        
+        <record id="action_view_move_line" model="ir.actions.act_window">
+            <field name="name">Lines to reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('account_id.reconcile', '=', True),('reconcile_id','=',False)]</field>
+            <field eval="False" name="view_id"/>
+            <field eval="True" name="filter"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>            
         </record>
 
         <!--
@@ -894,12 +925,32 @@
             </field>
         </record>
 
+		<record id="view_account_move_filter" model="ir.ui.view">
+            <field name="name">account.move.select</field>
+            <field name="model">account.move</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Move">
+                	<group col='8' colspan='4'>
+                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
+                        <filter icon="terp-account" string="Posted" domain="[('state','=','posted')]" help="Posted Move Lines"/>
+						<separator orientation="vertical"/>
+						<field name="date" select='1'/>
+						<field name="name" select='1'/>
+						<field name="journal_id" select='1'/>
+						<field name="partner_id" select='1'/>
+                	</group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_move_line_form" model="ir.actions.act_window">
             <field name="name">Entries</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
         <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_reporting"/>
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
@@ -910,6 +961,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>            
         </record>
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
@@ -921,6 +973,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
         <record id="action_move_line_search_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
