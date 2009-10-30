@@ -48,9 +48,7 @@ class makohtml2html(object):
         body_list = []
         footer =  self.format_footer(body[-1].getchildren())
         for b in body[:-1]:
-            body_table = ''
-            body_table += etree.tostring(b)
-            body_list.append(body_table.replace('\t', '').replace('\n',''))
+            body_list.append(etree.tostring(b).replace('\t', '').replace('\n',''))
         html_body ='''
         <script type="text/javascript">
 
