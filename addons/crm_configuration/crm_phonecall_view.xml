@@ -115,12 +115,13 @@
                    <separator orientation="vertical"/>
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
-                   	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                    	help="Todays's Phonecalls"
                    />
-                   <filter icon="gtk-media-rewind" string="    7 Days    "
-                   	separator="1" domain="[]"
+                   <filter icon="gtk-media-rewind"
+                   	string="    7 Days    " separator="1"
                    	help="Phonecalls during last 7 days"
+                   	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                    />
                </group>
                <separator orientation="vertical"/>

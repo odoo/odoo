@@ -449,11 +449,14 @@
             <field name="arch" type="xml">
                 <search string="Search Case">
                    <group col='6' colspan='4'>
-                       <filter icon="gtk-execute" string="My Cases" domain="[('user_id','=',uid)]" separator="1" help="Cases Related to Current User"/>
+                       <filter icon="terp-partner" string="My Cases"
+                       	domain="[('user_id','=',uid)]" separator="1"
+                       	default="1" help="Cases Related to Current User"
+                       />
                        <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Cases"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Cases"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Cases"/>
+                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Cases"/>
+                           <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Cases"/>
+                           <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Cases"/>
                        </field>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
