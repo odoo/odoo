@@ -3,6 +3,7 @@
     <data>
         <menuitem icon="terp-crm" id="menu_crm" name="CRM &amp; SRM"/>
         <menuitem id="menu_crm_configuration" name="Configuration" parent="crm.menu_crm" sequence="0"/>
+        <menuitem action="wizard_case_section_menu" id="menu_wizard_case_section_menu" parent="crm.menu_crm_configuration" type="wizard"/>
         <wizard id="wizard_crm_send_mail" model="crm.case.history" name="crm.send.mail" string="Send Mail" menu="False"/>
         <wizard id="wizard_crm_new_send_mail" model="crm.case" name="crm.new.send.mail" string="Send New Mail" menu="False"/>        
 
@@ -37,8 +38,11 @@
                             <field name="active" select="2"/>
                             <field name="user_id" select="2"/>
                             <field name="parent_id" select="2" widget="selection"/>
-                            <field name="allow_unlink" select="2"/>
-                            <field name="reply_to" select="2"/>
+                            <group colspan="2" >
+	                            <field name="allow_unlink" select="2"/>
+	                            <field name="calendar" select="2"/>
+	                        </group>
+	                            <field name="reply_to" select="2"/>
                             <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
                                 <tree string="Email Gateway" editable="bottom">                                   
                                    <field name="name" />                                                                    
@@ -234,7 +238,39 @@
             <field name="view_id" ref="crm_case_rule_tree-view"/>
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
+		
+       <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
+            <field name="name">Add CC</field>
+            <field name="model">crm.email.add.cc</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Add CC">
+                    <field name="name"/>
+                    <separator string="Test" colspan="4"/>
+                    <newline/>
+                    <field name="user_id"
+                    	attrs="{ 'required' : [('name','=','user')]}"
+                    	on_change="change_email(user_id, partner_id)"
+                    />
+                    <field name="partner_id"
+                    	attrs="{'required' : [('name','=','partner')]}"
+                    	on_change="change_email(user_id, partner_id)"
+                    />
+                    <field name="email"/>
+                    <button name="add_cc" string="Ok" type="object" icon="gtk-go-forward"/>
+                </form>
+            </field>
+        </record>
 
+        <record id="action_view_crm_email_add_cc_wizard" model="ir.actions.act_window">
+            <field name="name">Add CC</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.email.add.cc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
         <!-- Cases -->
         <record id="crm_case_log_tree-view" model="ir.ui.view">
             <field name="name">crm.case.log.tree</field>
@@ -380,10 +416,14 @@
                            </group>
                            <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                                <form string="Communication history">
-                                   <group col="6" colspan="4">
+                                   <group col="7" colspan="4">
                                        <field name="date"/>
                                        <field name="email"/>
                                        <field name="canal_id"/>
+                                       <button
+                                     string="Add a CC"
+		                                   	name="%(action_view_crm_email_add_cc_wizard)d"
+		                                   	icon="gtk-add" type="action"/>
                                    </group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>

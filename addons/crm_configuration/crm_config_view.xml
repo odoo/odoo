@@ -111,6 +111,36 @@
         <field name="view_id" ref="crm_case_stage_tree"/>
     </record>
     <menuitem action="crm_case_stage_act" id="menu_crm_case_stage_act" parent="crm.next_id_51"/>
+    
+    
+     <record model="ir.ui.view" id="crm_generic_wizard">
+        <field name="name">crm.generic_wizard.form</field>
+        <field name="model">crm.generic_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Generic Wizard">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="crm_generic_wizard_act" model="ir.actions.act_window">
+        <field name="name">Generic Wizard</field>
+        <field name="res_model">crm.generic_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_generic_wizard"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
         
     </data>
 </openerp>

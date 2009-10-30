@@ -48,7 +48,8 @@ meetings, eso.
         'crm_fund_view.xml',
         'crm_claims_view.xml',
         'crm_phonecall_view.xml',
-        'crm_report_view.xml'
+        'crm_report_view.xml',
+        'crm_helpdesk_view.xml'
     ],
     'update_xml': ['security/ir.model.access.csv', 'process/crm_configuration_process.xml'],
     'demo_xml': [],
