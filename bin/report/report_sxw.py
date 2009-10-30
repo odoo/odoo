@@ -19,10 +19,7 @@
 #
 ##############################################################################
 from lxml import etree
-from mako.template import Template
-from mako.lookup import TemplateLookup
-from mako import  exceptions
-
+import traceback, sys
 import StringIO
 import cStringIO
 import base64
@@ -567,17 +564,10 @@ class report_sxw(report_rml, preprocess.report):
 
     def create_single_mako2html(self, cr, uid, ids, data, report_xml, context=None):
         mako_html = report_xml.report_rml_content
-        path = os.path.realpath('addons/base/report')
-        report_type = report_xml.report_type
         html_parser = self.parser(cr, uid, self.name2, context)
         objs = self.getObjects(cr, uid, ids, context)
-        html_parser.set_context(objs, data, ids, report_type)
-        temp_lookup = TemplateLookup(directories=[path],output_encoding='utf-8', encoding_errors='replace')
-        template = Template(tools.ustr(mako_html), lookup=temp_lookup)
-        html_parser.localcontext.update({'css_path':path})
-        try:
-            html = template.render_unicode(**html_parser.localcontext)
-        except:
-            return(exceptions.html_error_template().render(),'html')
+        html_parser.set_context(objs, data, ids, 'html')
+        create_doc = self.generators['makohtml2html']
+        html = create_doc(mako_html,html_parser.localcontext)
         return (html,'html')
 
