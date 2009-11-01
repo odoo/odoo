@@ -166,9 +166,9 @@ class res_partner(osv.osv):
         'customer': lambda *a: 1,
         'category_id': _default_category,
     }
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': name+' (copy)', 'events':[]})
+        default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def _check_ean_key(self, cr, uid, ids):
