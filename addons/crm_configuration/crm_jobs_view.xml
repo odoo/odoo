@@ -168,12 +168,13 @@
                    <group col="7" colspan="1">
 	                   <filter icon="gtk-home" string="   Today   "
 	                   	separator="1"
-	                   	domain="[('create_date::date','=',time.strftime('%%Y-%%m-%%d'))]"
-	                   	help="Todays's Jobs Requests"
+	                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+	                   	help="Todays's Jobs"
 	                   />
 	                   <filter icon="gtk-media-rewind"
-	                   	string="    7 Days    " separator="1" domain="[]"
-	                   	help="Jobs Requests during last 7 days"
+	                   	string="    7 Days    " separator="1"
+	                   	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                   	help="Jobs during last 7 days"
 	                   />
 	                   <separator orientation="vertical"/>
 	                   <filter icon="gtk-new" string="New Jobs"
