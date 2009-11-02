@@ -93,12 +93,20 @@ def _wo_check(self, cr, uid, data, context):
     #    because if the currency rate
     # Get the amount in company currency for the invoice (according to move lines)
     inv_amount_company_currency=invoice.move_id.amount
-    # Get the amount paid in company currency
+    # Get the current amount paid in company currency
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
         ctx = {'date':data['form']['date']}
         amount_paid = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, data['form']['amount'], round=True, context=ctx)
     else:
         amount_paid = data['form']['amount']
+    # Get the old payment if there are some
+    if invoice.payment_ids:
+        debit=credit=0.0
+        for payment in invoice.payment_ids:
+            debit+=payment.debit
+            credit+=payment.credit
+        amount_paid+=abs(debit-credit)
+        
     # Test if there is a difference according to currency rouding setting
     if pool.get('res.currency').is_zero(cr, uid, invoice.company_id.currency_id,
             (amount_paid - inv_amount_company_currency)):
