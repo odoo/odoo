@@ -209,7 +209,7 @@ def _do_split(self, cr, uid, data, context):
 
 def _get_default(self, cr, uid, data, context):
     if data['form']['back_order']:
-        data['form']['back_order_notification'] = 'Back Order ' + tools.ustr(data['form']['back_order']) + ' Assigned to this Packing.'
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
     return data['form']
 
 class partial_picking(wizard.interface):
