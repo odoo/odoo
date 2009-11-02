@@ -1,3 +1,206 @@
+openerp-server (5.0.6-0-1test4) unstable; urgency=low
+
+  [ Christophe Simonis ]
+  * [IMP] cchange version number
+
+  [ Jay (Open ERP) ]
+  * [FIX] Send mail : Non-English characters were throwing error.
+  * [IMP] Base : Rate for ARS Added
+  * [FIX] Base : 'Supplier Partners' menu will open new record with
+    supplier=1,customer=0
+  * [FIX] Security Loophole corrected
+  * [FIX] Send Mail : Unicode error handled
+  * [FIX] Translation issue with cache: it needed to restart
+    server,SOLVED
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: put max_limit in server connection
+  * [IMP]quality_integration_server : quality html log
+
+  [ Jay (Open ERP) ]
+  * [FIX] Export : Error solved while Exporting O2M records with None
+    value of any field
+
+  [ Fabien Pinckaers ]
+  * merge
+
+  [ P. Christeas ]
+  * Debian changelog for 5.0.4
+  * Two hacks to make it python2.5 compatible..
+
+  [ Fabien Pinckaers ]
+  * [FIX] better log error, new line
+
+  [ P. Christeas ]
+  * Implement safe_eval() in order to armour eval()
+  * [Feature]: add condition to ir.sequence, let it be partitioned.
+  * safe_eval: make python 2.5 compatible.
+  * Backport the HTTP server code from python 2.6 to 2.5
+
+  [ Jay (Open ERP) ]
+  * [FIX] Better translation exportation.
+
+  [ P. Christeas ]
+  * ORM feature: allow renaming of columns.
+  * Web services: fix database operations (create, drop etc.) for new
+    API.
+  * ORM: Protect against dropping columns.
+
+  [ Jay (Open ERP) ]
+  * [IMP] Rng : Accepting Groups under/after/replacing Buttons
+
+  [ Fabien Pinckaers ]
+  * [FIX] regression in fields.function computation
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: get message from
+    base_quality_module if module can not success to reach minimun score
+  * [FIX]quality_integration_server: get message from
+    base_quality_module if module can not success to reach minimun score
+
+  [ Mantavya Gajjar ]
+  * [REM]: remove the name search method, as this method was implemented
+    for the email address field
+  * [MERGE]: merging from the same branch
+
+  [ Harry (Open ERP) ]
+  * [FIX]quality_integration_server : quality log : reduce overwrite
+    last test log in other test logs
+  * [FIX]quality_integration_server: fixe problem on make link of extra-
+    module in addons
+
+  [ tailor ]
+  * [IMP] updated changelog file
+  * [MERGE]
+  * [IMP] updated changelog file
+  * [IMP] updated release.py to 5.0.5
+
+  [ Jay (Open ERP) ]
+  * [FIX] Price Accuracy : rounding made to be based on --price_accuracy
+    option
+  * [FIX] Fields.function : Store value computation corrected
+
+  [ P. Christeas ]
+  * [IMP]: allow binary function fields to directly return size.
+  * Ir.attachment: improve SQL for access checks.
+
+  [ tailor ]
+  * [REL] release.py: 5.0.6
+  * [IMP] updated changelog file for 5.0.6 release
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: quality log : add new option to
+    specify qualitylog path to store html pages of log
+
+  [ Jay (Open ERP) ]
+  * [FIX] Update Module : Float8 to float and numeric to float casting
+    made possible
+
+  [ Harry (Open ERP) ]
+  * [FIX]quality_integration_server: ascci encoding problem in quality
+    html log
+
+  [ P. Christeas ]
+  * [Fix] Tolerate ids that came as strings.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Fields.function : Store value computation corrected
+  * [FIX] Export Translation : Warning on Non-existing record instead of
+    breaking flow
+
+  [ mra (Open ERP) ]
+  * [IMP] base_quality_interrrogation: put message if the score of
+    quality less then minimal and remove unit test condition
+
+  [ Jay (Open ERP) ]
+  * [FIX] Allowing sql keywords as fields(don't use them in order by
+    clause)
+
+  [ Christophe Simonis ]
+  * [IMP] cron: check the arguments to avoid security issues
+
+  [ P. Christeas ]
+  * New API: work better for bad ExportServices.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Name_search() is having now record limit to be 80 instead of
+    None
+  * [FIX] Import : Context of the action/screen passed,taken into
+    consideration while importing
+  * [FIX] Improved Previous bad commit for pagelayout error
+  * [FIX] Domain was getting failed when trying to work upon M2M,O2M
+    field of object
+  * [FIX] Import made successful when field is O2M and it has relation
+    under that.
+
+  [ Stephane Wirtel ]
+  * [MERGE] Backport: http://bazaar.launchpad.net/~openobject-
+    training/+junk/server/revision/1821
+  * [MERGE] Backport: http://bazaar.launchpad.net/~openobject-
+    training/+junk/server/revision/1822
+
+  [ HDA (OpenERP) ]
+  * merged for report improvements
+
+  [ Stephane Wirtel ]
+  * [FIX] Specify the name of the argument for the context, to avoir a
+    critical bug
+
+  [ Christophe Simonis ]
+  * [FIX] allow to call write without ids on osv_memory objects
+
+  [ Fabien Pinckaers ]
+  * [FIX] default context
+
+  [ Stephane Wirtel ]
+  * [FIX] Use an alternative for the locale.RADIXCHAR if this one
+    doesn't exist
+
+  [ P. Christeas ]
+  * [Imp] Allow expressions: ".. child_of, 1" , not only list(1)
+
+  [ Jay (Open ERP) ]
+  * [FIX] Improved Previous bad commit for pagelayout error
+
+  [ Fabien Pinckaers ]
+  * [IMP] default value for module
+  * [FIX] recursive child_of on one2many and many2many
+  * [FIX] recursive calls
+
+  [ Jay (Open ERP) ]
+  * [FIX] Export : Selection field gets imported by its external name
+    if export is not import compatible
+  * [FIX] Expression : domain calculation failes, max. recursion error
+    protected
+
+  [ P. Christeas ]
+  * Mandriva: when server starts/stops, run scripts
+
+  [ Jay (Open ERP) ]
+  * [FIX] Config : wrong calculation if cached_timeout comes from config
+    file
+
+  [ P. Christeas ]
+  * [IMP] If SSL connection fails, close the socket.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Ir_attachment : Context updation corrected on preview
+  * [FIX] Record rule : domain evaluation problem corrected
+
+  [ P. Christeas ]
+  * [IMP] Convert: two minor typos and tab expansion.
+  * Netsvc.Server: Expand tabs
+  * Server: get_stats() RPC call for any extended info.
+  * Client script for statistics.
+  * Net-RPC: armor the thread, provide stats and inf. timeout.
+
+  [ Jay (Open ERP) ]
+  * [REF] Partner : copy() improved
+
+  [ panos ]
+
+ -- panos <panos@debian.pefnos2>  Mon, 02 Nov 2009 18:28:44 -0500
+
 openerp-server (5.0.4-0-1test3) intrepid; urgency=high
 
   [ Panos Christeas ]
