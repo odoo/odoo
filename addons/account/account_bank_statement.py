@@ -170,7 +170,9 @@ class account_bank_statement(osv.osv):
                 if line.state <> 'valid':
                     raise osv.except_osv(_('Error !'),
                             _('The account entries lines are not in valid state.'))
-
+            # for bank.statement.lines
+            # In line we get reconcile_id on bank.ste.rec.
+            # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
@@ -209,7 +211,7 @@ class account_bank_statement(osv.osv):
                     'period_id': st.period_id.id,
                     'currency_id': st.currency.id,
                 }
-
+                
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
                         company_currency_id, move.amount, context=context,
                         account=acc_cur)
@@ -245,6 +247,8 @@ class account_bank_statement(osv.osv):
                             'statement_id': st.id,
                             'journal_id': st.journal_id.id,
                             'period_id': st.period_id.id,
+                            # Add analytical account if provided..
+                            'analytic_account_id':newline.analytic_id and newline.analytic_id.id or False,
                         }, context=context)
 
                 # Fill the secondary amount/currency
@@ -491,10 +495,14 @@ class account_bank_statement_reconcile_line(osv.osv):
     _name = "account.bank.statement.reconcile.line"
     _description = "Statement reconcile line"
     _columns = {
-        'name': fields.char('Description', size=64),
+        'name': fields.char('Description', size=64, required=True),
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
         'amount': fields.float('Amount', required=True),
+        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")
+    }
+    _defaults = {
+        'name': lambda *a: 'Write-Off',
     }
 account_bank_statement_reconcile_line()
 
