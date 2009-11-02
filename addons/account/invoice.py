@@ -106,23 +106,29 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
             debit = credit = 0.0
+            context.update({'date':inv.date_invoice})
             for lines in inv.move_lines:
-                if lines.account_id.company_currency_id.id <> inv.currency_id.id:
-                    if lines.debit:
-                        debit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.debit)
-                    if lines.credit:
-                        credit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.credit)
+                # If currency conversion needed
+                if inv.company_id.currency_id.id <> inv.currency_id.id:
+                    # If invoice paid, compute currency amount according to invoice date
+                    # otherwise, take the line date
+                    if not inv.reconciled:
+                        context.update({'date':lines.date})
+                    # Compute amount in currency
+                    debit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.debit, round=False,context=context)
+                    credit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, lines.credit, round=False,context=context)
                 else:
                     debit += lines.debit
                     credit += lines.credit
-
             if not inv.amount_total:
                 result = 0.0
             elif inv.type in ('out_invoice','in_refund'):
-                result = inv.amount_total * (1.0 - credit / (debit + inv.amount_total))
+                amount = credit-debit
+                result = inv.amount_total - amount
             else:
-                result = inv.amount_total * (1.0 - debit / (credit + inv.amount_total))
-            res[inv.id] = round(result,int(config['price_accuracy']))
+                amount = debit-credit
+                result = inv.amount_total - amount
+            res[inv.id] = result
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
