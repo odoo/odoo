@@ -878,6 +878,16 @@ class account_invoice(osv.osv):
             date=context['date_p']
         else:
             date=time.strftime('%Y-%m-%d')
+            
+        # Take the amount in currency and the currency of the payment
+        if 'amount_currency' in context and context['amount_currency'] and 'currency_id' in context and context['currency_id']:
+            amount_currency = context['amount_currency']
+            currency_id = context['currency_id']
+        else:
+            amount_currency = False
+            currency_id = False
+            
+        # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
@@ -885,6 +895,8 @@ class account_invoice(osv.osv):
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
             'date': date,
+            'currency_id':currency_id,
+            'amount_currency':amount_currency and direction * amount_currency or 0.0,
         }
         l2 = {
             'debit': direction * pay_amount<0 and - direction * pay_amount,
@@ -893,6 +905,8 @@ class account_invoice(osv.osv):
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
             'date': date,
+            'currency_id':currency_id,
+            'amount_currency':amount_currency and - direction * amount_currency or 0.0,
         }
 
         if not name:
