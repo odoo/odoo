@@ -128,6 +128,7 @@ class document_directory_content(osv.osv):
                 event.add('last-modified').value = ics_datetime(perm[0]['write_date'][:19])
             for field in node.content.ics_field_ids:
                 value = getattr(obj, field.field_id.name)
+                value = value and tools.ustr(value)
                 if (not value) and field.name=='uid':
                     value = 'OpenERP-%s_%s@%s' % (node.content.ics_object_id.model, str(obj.id), cr.dbname,)
                     obj_class.write(cr, uid, [obj.id], {field.field_id.name: value})
@@ -146,7 +147,7 @@ class document_directory_content(osv.osv):
                     else:
                         value = ics_datetime(value)
                     event.add(field.name).value = value
-        s= StringIO.StringIO(cal.serialize().encode('utf8'))
+        s= StringIO.StringIO(cal.serialize())
         s.name = node
         cr.commit()
         return s

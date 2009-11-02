@@ -27,6 +27,7 @@ import pooler
 
 import wizard
 from osv import osv
+import tools
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
@@ -34,8 +35,11 @@ _moves_fields = UpdateableDict()
 _moves_arch_end = '''<?xml version="1.0"?>
 <form string="Packing result">
     <label string="The packing has been successfully made !" colspan="4"/>
+    <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
-_moves_fields_end = {}
+_moves_fields_end = {
+    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
+                     }
 
 def make_default(val):
     def fct(uid, data, state):
@@ -198,8 +202,15 @@ def _do_split(self, cr, uid, data, context):
     else:
         pick_obj.action_move(cr, uid, [pick.id])
         wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-    return {'new_picking':new_picking or False}
+    bo_name = ''
+    if new_picking:
+        bo_name = pick_obj.read(cr, uid, [new_picking], ['name'])[0]['name']
+    return {'new_picking':new_picking or False, 'back_order':bo_name}
 
+def _get_default(self, cr, uid, data, context):
+    if data['form']['back_order']:
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
+    return data['form']
 
 class partial_picking(wizard.interface):
 
@@ -215,10 +226,10 @@ class partial_picking(wizard.interface):
         },
         'split': {
             'actions': [ _do_split ],
-            'result': {'type': 'state', 'state': 'end'},
+            'result': {'type': 'state', 'state': 'end2'},
         },
         'end2': {
-            'actions': [ ],
+            'actions': [ _get_default ],
             'result': {'type': 'form', 'arch': _moves_arch_end,
                 'fields': _moves_fields_end,
                 'state': (
