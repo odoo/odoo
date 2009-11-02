@@ -53,6 +53,7 @@ def _pay_and_reconcile(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     cur_obj = pool.get('res.currency')
     amount = form['amount']
+    context['analytic_id'] = form.get('analytic_id', False)
 
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
@@ -62,9 +63,9 @@ def _pay_and_reconcile(self, cr, uid, data, context):
 
     # Take the choosen date
     if form.has_key('comment'):
-        context={'date_p':form['date'],'comment':form['comment']}
+        context.update({'date_p':form['date'],'comment':form['comment']})
     else:
-        context={'date_p':form['date'],'comment':False}
+        context.update({'date_p':form['date'],'comment':False})      
 
     acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
     if not acc_id:
@@ -90,19 +91,22 @@ def _wo_check(self, cr, uid, data, context):
 _transaction_add_form = '''<?xml version="1.0"?>
 <form string="Information addendum">
     <separator string="Write-Off Move" colspan="4"/>
-    <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
     <field name="writeoff_journal_id"/>
+    <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
     <field name="comment"/>
+    <separator string="Analytic" colspan="4"/>
+    <field name="analytic_id"/>
 </form>'''
 
 _transaction_add_fields = {
     'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
     'writeoff_journal_id': {'string': 'Write-Off journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
-    'comment': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
+    'comment': {'string': 'Comment', 'type':'char', 'size': 64 , 'required':True},
+    'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'},
 }
 
 def _get_value_addendum(self, cr, uid, data, context={}):
-    return {}
+    return {'comment': _('Write-Off')}
 
 def _get_period(self, cr, uid, data, context={}):
     pool = pooler.get_pool(cr.dbname)

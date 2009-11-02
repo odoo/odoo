@@ -616,6 +616,7 @@ class account_move_line(osv.osv):
                     'debit':debit,
                     'credit':credit,
                     'account_id':writeoff_acc_id,
+                    'analytic_account_id': context.get('analytic_id', False),
                     'date':date,
                     'partner_id':partner_id
                 })
@@ -624,7 +625,7 @@ class account_move_line(osv.osv):
             writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
-
+                'date':date,
                 'state': 'draft',
                 'line_id': writeoff_lines
             })
@@ -869,7 +870,7 @@ class account_move_line(osv.osv):
                         'amount': vals['debit'] or vals['credit'],
                         'general_account_id': vals['account_id'],
                         'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals['ref'],
+                        'ref': vals.get('ref', False),
                     })]
             #else:
             #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
