@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -82,6 +82,7 @@ class report_rml(report_int):
             'sxw': self.create_sxw,
             'odt': self.create_odt,
             'html2html' : self.create_html2html,
+            'makohtml2html' :self.create_makohtml2html,
         }
 
     def create(self, cr, uid, ids, datas, context):
@@ -220,6 +221,11 @@ class report_rml(report_int):
 
     def create_odt(self,rml,localcontext = None):
         obj = render.odt2odt(rml,localcontext)
+        obj.render()
+        return obj.get()
+
+    def create_makohtml2html(self,html,localcontext = None):
+        obj = render.makohtml2html(html,localcontext)
         obj.render()
         return obj.get()
 

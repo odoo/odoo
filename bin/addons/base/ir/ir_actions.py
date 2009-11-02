@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -129,7 +129,7 @@ class report_xml(osv.osv):
             ('sxw', 'sxw'),
             ('odt', 'odt'),
             ('html2html','HTML from HTML'),
-            ('mako2html','Mako from HTML'),
+            ('mako2html','HTML from HTML(Mako)'),
             ], string='Type', required=True),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
@@ -151,7 +151,7 @@ class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
     _sequence = 'ir_actions_id_seq'
-    
+
     def _check_model(self, cr, uid, ids, context={}):
         for action in self.browse(cr, uid, ids, context):
             if not self.pool.get(action.res_model):
@@ -252,7 +252,7 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
-        'menus': fields.char('Menus', size=4096)            
+        'menus': fields.char('Menus', size=4096)
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
@@ -547,10 +547,10 @@ class actions_server(osv.osv):
             if result in (None, False):
                 return str("--------")
             return str(result)
-        
+
         com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
-        
+
         return message
 
     # Context should contains:
@@ -559,16 +559,16 @@ class actions_server(osv.osv):
     # OUT:
     #   False : Finnished correctly
     #   ACTION_ID : Action to launch
-    
+
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
-        
+
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
-                'context':context, 
-                'object': obj, 
+                'context':context,
+                'object': obj,
                 'time':time,
                 'cr': cr,
                 'pool' : self.pool,
@@ -577,10 +577,10 @@ class actions_server(osv.osv):
             expr = eval(str(action.condition), cxt)
             if not expr:
                 continue
-            
+
             if action.state=='client_action':
                 if not action.action_id:
-                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !")) 
+                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
                 result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
                 return result
 
@@ -605,16 +605,16 @@ class actions_server(osv.osv):
                     address =  eval(str(action.email), cxt)
                 except:
                     pass
-                
+
                 if not address:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Partner Email address not Specified!')
                     continue
                 if not user:
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
-                
+
                 subject = self.merge_message(cr, uid, str(action.subject), action, context)
                 body = self.merge_message(cr, uid, str(action.message), action, context)
-                
+
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -639,7 +639,7 @@ class actions_server(osv.osv):
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
-            
+
             if action.state == 'other':
                 res = []
                 for act in action.child_ids:
@@ -647,15 +647,15 @@ class actions_server(osv.osv):
                     result = self.run(cr, uid, [act.id], context)
                     if result:
                         res.append(result)
-                    
+
                 return res
-            
+
             if action.state == 'loop':
                 obj_pool = self.pool.get(action.model_id.model)
                 obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
                 cxt = {
-                    'context':context, 
-                    'object': obj, 
+                    'context':context,
+                    'object': obj,
                     'time':time,
                     'cr': cr,
                     'pool' : self.pool,
@@ -666,7 +666,7 @@ class actions_server(osv.osv):
                 for i in expr:
                     context['active_id'] = i.id
                     result = self.run(cr, uid, [action.loop_action.id], context)
-            
+
             if action.state == 'object_write':
                 res = {}
                 for exp in action.fields_lines:
@@ -688,7 +688,7 @@ class actions_server(osv.osv):
                         write_id = context.get('active_id')
                         obj_pool = self.pool.get(action.srcmodel_id.model)
                         obj_pool.write(cr, uid, [write_id], res)
-                        
+
                 elif action.write_id:
                     obj_pool = self.pool.get(action.srcmodel_id.model)
                     rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
@@ -697,7 +697,7 @@ class actions_server(osv.osv):
                         id = int(id)
                     except:
                         raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
-                    
+
                     if type(id) != type(1):
                         raise osv.except_osv(_('Error'), _("Problem in configuration `Record Id` in Server Action!"))
                     write_id = id
@@ -741,9 +741,9 @@ act_window_close()
 # if action type is 'service',
 #                - if start_type= 'at once', it will be start at one time on start date
 #                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
-#                - if start_type="manual", it will start and stop on manually 
+#                - if start_type="manual", it will start and stop on manually
 class ir_actions_todo(osv.osv):
-    _name = 'ir.actions.todo'    
+    _name = 'ir.actions.todo'
     _columns={
         'name':fields.char('Name',size=64,required=True, select=True),
         'note':fields.text('Text', translate=True),
@@ -778,7 +778,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
             return item
         return False
     def _get_action_name(self, cr, uid, context={}):
-        next_action=self.next_configuration_action(cr,uid,context=context)        
+        next_action=self.next_configuration_action(cr,uid,context=context)
         if next_action:
             return next_action.note
         else:

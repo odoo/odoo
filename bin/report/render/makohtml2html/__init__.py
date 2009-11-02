@@ -19,14 +19,4 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, odt2odt, html2html, makohtml2html
-from render import render
-
-try:
-    import Image
-except:
-    print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+from makohtml2html import parseNode
