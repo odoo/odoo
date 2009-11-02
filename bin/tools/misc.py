@@ -675,9 +675,9 @@ class cache(object):
             self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
         
         def cached_result(self2, cr, *args, **kwargs):
-            if time.time()-self.timeout > self.lasttime:
+            if time.time()-int(self.timeout) > self.lasttime:
                 self.lasttime = time.time()
-                t = time.time()-self.timeout 
+                t = time.time()-int(self.timeout) 
                 old_keys = [key for key in self.cache if self.cache[key][1] < t]
                 for key in old_keys:
                     del self.cache[key]

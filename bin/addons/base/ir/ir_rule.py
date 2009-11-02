@@ -107,6 +107,11 @@ class ir_rule(osv.osv):
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
                             'time':time}
+            if rule.operand.startswith('user.') and rule.operand.count('.') > 1:
+                #Need to check user.field.field1.field2(if field  is False,it will break the chain)
+                op = rule.operand[5:]
+                rule.operand = rule.operand[:5+len(op[:op.find('.')])] +' and '+ rule.operand + ' or False'
+            
             if rule.domain_force:
                 res[rule.id] = eval(rule.domain_force, eval_user_data)
             else:
