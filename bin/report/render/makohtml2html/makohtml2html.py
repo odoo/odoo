@@ -59,16 +59,28 @@ class makohtml2html(object):
             if(indexer < aryTest.length -1)
                 {
                 indexer += 1;
+                document.forms[0].prev.disabled = false;
                 document.getElementById("openerp_data").innerHTML=aryTest[indexer];
+                document.getElementById("counter").innerHTML= indexer + 1 + ' / ' + aryTest.length;
                 }
+            else
+               {
+                document.forms[0].next.disabled = true;
+               }
             }
         function prevData()
             {
             if (indexer > 0)
                 {
                 indexer -= 1;
+                document.forms[0].next.disabled = false;
                 document.getElementById("openerp_data").innerHTML=aryTest[indexer];
+                document.getElementById("counter").innerHTML=  indexer + 1 + ' / ' + aryTest.length;
                 }
+            else
+               {
+                document.forms[0].prev.disabled = true;
+               }
             }
     </script>
     </head>
@@ -80,10 +92,22 @@ class makohtml2html(object):
         %s
         </div>
         <br>
-        <input type="button" value="Previous" onclick="prevData();">
-        <input type="button" value="Next" onclick="nextData();">
-
-    </body></html>'''%(body_list,body_list[0],footer)
+        <form>
+            <table>
+                <tr>
+                    <td td align="left">
+                        <input name = "prev" type="button" value="Previous" onclick="prevData();">
+                    </td>
+                    <td>
+                        <div id = "counter">%s / %s</div>
+                    </td>
+                    <td align="right">
+                        <input name = "next" type="button" value="Next" onclick="nextData();">
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body></html>'''%(body_list,body_list[0],footer,'1',len(body_list))
         return html_body
 
     def render(self):
