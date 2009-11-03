@@ -124,8 +124,6 @@ def _lang_get(self, cr, uid, context={}):
     return [(r['code'], r['name']) for r in res] + [('','')]
 
 
-
-
 class res_partner(osv.osv):
     _description='Partner'
     _name = "res.partner"
@@ -451,7 +449,13 @@ class res_partner_bank(osv.osv):
 
 res_partner_bank()
 
-
+class res_partner_category(osv.osv):
+    _inherit = 'res.partner.category'
+    _columns = {
+        'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
+    }
+   
+res_partner_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
