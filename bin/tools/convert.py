@@ -663,6 +663,9 @@ form: module.record_id""" % (xml_id,)
         model = self.pool.get(rec_model)
         assert model, "The model %s does not exist !" % (rec_model,)
         rec_id = rec.get("id",'').encode('ascii')
+        rec_context = rec.get("context", None)
+        if rec_context:
+            rec_context = eval(rec_context)
         self._test_xml_id(rec_id)
 
         if self.isnoupdate(data_node) and self.mode != 'init':
@@ -731,7 +734,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = int(f_val)
             res[f_name] = f_val
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode, context=rec_context )
         if rec_id:
             self.idref[rec_id] = int(id)
         if config.get('import_partial', False):
