@@ -108,7 +108,7 @@ _transaction_add_fields = {
     'journal_id': {'string': 'Write-Off Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
     'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
     'date_p': {'string':'Date','type':'date'},
-    'comment': {'string':'Comment','type':'char', 'size': 64},
+    'comment': {'string':'Comment','type':'char', 'size': 64, 'required':True},
     'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'},
 }
 
