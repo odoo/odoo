@@ -25,7 +25,8 @@ import netsvc
 import time
 import osv
 import pooler
-from mx import DateTime
+from datetime import datetime
+from tools.translate import _
 
 _transaction_form = '''<?xml version="1.0"?>
 <form string="Reconciliation">
@@ -74,7 +75,7 @@ def _trans_rec_reconcile(self, cr, uid, data, context=None):
     context['date_p'] = form.get('date_p', False)
     date = False
     if context['date_p']:
-        date = DateTime.strptime(context['date_p'], '%Y-%m-%d')
+        date = datetime.strptime(context['date_p'], '%Y-%m-%d')
     ids = pool.get('account.period').find(cr, uid, dt=date, context=context)
     period_id = False
     if len(ids):
