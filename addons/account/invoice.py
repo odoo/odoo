@@ -104,8 +104,6 @@ class account_invoice(osv.osv):
         res = {}
         data_inv = self.browse(cr, uid, ids)
         cur_obj = self.pool.get('res.currency')
-        import pdb
-        pdb.set_trace()
         for inv in data_inv:
             debit = credit = 0.0
             context.update({'date':inv.date_invoice})
