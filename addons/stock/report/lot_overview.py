@@ -24,7 +24,7 @@ from report import report_sxw
 
 class lot_overview(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(lot_overview, self).__init__(cr, uid, name, context)
+        super(lot_overview, self).__init__(cr, uid, name, context=context)
         self.price_total = 0.0
         self.grand_total = 0.0
         self.localcontext.update({

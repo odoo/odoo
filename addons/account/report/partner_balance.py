@@ -27,7 +27,7 @@ from report import report_sxw
 
 class partner_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(partner_balance, self).__init__(cr, uid, name, context)
+        super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.date_lst = []
         self.date_lst_string = ''
         self.account_ids = ''

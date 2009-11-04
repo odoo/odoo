@@ -26,7 +26,7 @@ import pooler
 
 class order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(order, self).__init__(cr, uid, name, context)
+        super(order, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_line_tax': self._get_line_tax,

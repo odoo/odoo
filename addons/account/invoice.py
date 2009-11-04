@@ -102,15 +102,26 @@ class account_invoice(osv.osv):
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         res = {}
         data_inv = self.browse(cr, uid, ids)
+        cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
-            paid_amt = 0.0
-            to_pay = inv.amount_total
+            debit = credit = 0.0
             for lines in inv.move_lines:
-                if lines.amount_currency and lines.currency_id:
-                    paid_amt += lines.amount_currency
+                if lines.account_id.company_currency_id.id <> inv.currency_id.id:
+                    if lines.debit:
+                        debit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.debit)
+                    if lines.credit:
+                        credit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.credit)
                 else:
-                    paid_amt += lines.credit + lines.debit
-            res[inv.id] = round(to_pay - abs(paid_amt),int(config['price_accuracy']))
+                    debit += lines.debit
+                    credit += lines.credit
+
+            if not inv.amount_total:
+                result = 0.0
+            elif inv.type in ('out_invoice','in_refund'):
+                result = inv.amount_total * (1.0 - credit / (debit + inv.amount_total))
+            else:
+                result = inv.amount_total * (1.0 - debit / (credit + inv.amount_total))
+            res[inv.id] = round(result,int(config['price_accuracy']))
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -1109,24 +1120,27 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,int(config['price_accuracy']))),
     }
+    
     def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency=False
         if company_id:            
-            company_currency=company_obj.browse(cr,uid,company_id).id
+            company_currency = company_obj.read(cr,uid,[company_id],['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            base=cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            base = cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'base_amount':base}}
+
     def amount_change(self, cr, uid, ids, amount,currency_id=False,company_id=False,date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency=False
         if company_id:
-            company_currency=company_obj.browse(cr,uid,company_id).id
+            company_currency = company_obj.read(cr,uid,[company_id],['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
-            amount=cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount':amount}}
+    
     _order = 'sequence'
     _defaults = {
         'manual': lambda *a: 1,
