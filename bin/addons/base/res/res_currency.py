@@ -26,7 +26,6 @@ import ir
 
 from tools.misc import currency
 from tools.translate import _
-from tools import config
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
@@ -68,7 +67,7 @@ class res_currency(osv.osv):
         if currency.rounding == 0:
             return 0.0
         else:
-            return round(amount / currency.rounding, int(config['price_accuracy'])) * currency.rounding
+            return round(amount / currency.rounding) * currency.rounding
 
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
