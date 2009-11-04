@@ -28,7 +28,7 @@ import pooler
 from osv import fields,osv
 
 def str2tuple(s):
-    return eval('tuple(%s)' % s)
+    return eval('tuple(%s)' % (s or ''))
 
 _intervalTypes = {
     'work_days': lambda interval: DateTime.RelativeDateTime(days=interval),
