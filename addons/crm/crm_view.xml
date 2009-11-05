@@ -246,16 +246,15 @@
             <field name="arch" type="xml">
                 <form string="Add CC">
                     <field name="name"/>
-                    <separator string="Test" colspan="4"/>
+                    <field name="subject"/>
+                    <separator string="" colspan="4"/>
                     <newline/>
                     <field name="user_id"
                     	attrs="{ 'required' : [('name','=','user')]}"
-                    	on_change="change_email(user_id, partner_id)"
-                    />
+                    	on_change="change_email(user_id, partner_id)"/>
                     <field name="partner_id"
                     	attrs="{'required' : [('name','=','partner')]}"
-                    	on_change="change_email(user_id, partner_id)"
-                    />
+                    	on_change="change_email(user_id, partner_id)"/>
                     <field name="email"/>
                     <button name="add_cc" string="Ok" type="object" icon="gtk-go-forward"/>
                 </form>
