@@ -419,7 +419,7 @@ class ir_model_data(osv.osv):
         'module': lambda *a: ''
     }
     _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You can not have multiple records with the same id for the same module'),
+        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module'),
     ]
 
     def __init__(self, pool, cr):

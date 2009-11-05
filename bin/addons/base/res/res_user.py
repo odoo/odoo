@@ -135,7 +135,7 @@ class users(osv.osv):
         return result
 
     _sql_constraints = [
-        ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
+        ('login_key', 'UNIQUE (login)', 'You cannot have two users with the same login !')
     ]
 
     def _get_admin_id(self, cr):

@@ -23,9 +23,9 @@
 import os
 from os.path import join
 import fnmatch
-import csv, xml.dom, re
+import csv, re
+from lxml import etree
 import tools, pooler
-from osv.orm import BrowseRecordError
 import ir
 import netsvc
 from tools.misc import UpdateableStr
@@ -132,10 +132,18 @@ class GettextAlias(object):
 
         cr = frame.f_locals.get('cr')
         lang = (frame.f_locals.get('context') or {}).get('lang', False)
+        
+        if not (cr and lang):
+            args = frame.f_locals.get('args',False)
+            if args:
+                lang = args[-1].get('lang',False)
+                if frame.f_globals.get('pooler',False):
+                    cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
+        
         if not (lang and cr):
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
+        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
@@ -335,9 +343,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
 
 def trans_parse_xsl(de):
     res = []
-    for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
-        if n.hasAttribute("t"):
-            for m in [j for j in n.childNodes if (j.nodeType == j.TEXT_NODE)]:
+    for n in [i for i in de.getchildren()]:
+        if n.get("t"):
+            for m in [j for j in n.getchildren()]:
                 l = m.data.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
@@ -346,8 +354,8 @@ def trans_parse_xsl(de):
 
 def trans_parse_rml(de):
     res = []
-    for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
-        for m in [j for j in n.childNodes if (j.nodeType == j.TEXT_NODE)]:
+    for n in [i for i in de.getchildren()]:
+        for m in [j for j in n.getchildren()]:
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.data)]
             for s in string_list:
                 if s:
@@ -357,15 +365,15 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
-    if de.hasAttribute("string"):
-        s = de.getAttribute('string')
+    if de.get("string"):
+        s = de.get('string')
         if s:
             res.append(s.encode("utf8"))
-    if de.hasAttribute("sum"):
-        s = de.getAttribute('sum')
+    if de.get("sum"):
+        s = de.get('sum')
         if s:
             res.append(s.encode("utf8"))
-    for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
+    for n in [i for i in de.getchildren()]:
         res.extend(trans_parse_view(n))
     return res
 
@@ -434,8 +442,8 @@ def trans_generate(lang, modules, dbname=None):
         obj = pool.get(model).browse(cr, uid, res_id)
 
         if model=='ir.ui.view':
-            d = xml.dom.minidom.parseString(encode(obj.arch))
-            for t in trans_parse_view(d.documentElement):
+            d = etree.XML(encode(obj.arch))
+            for t in trans_parse_view(d):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
             service_name = 'wizard.'+encode(obj.wiz_name)
@@ -522,10 +530,10 @@ def trans_generate(lang, modules, dbname=None):
                 report_type = "xsl"
             try:
                 xmlstr = tools.file_open(fname).read()
-                d = xml.dom.minidom.parseString(xmlstr)
-                for t in parse_func(d.documentElement):
+                d = etree.XML()(xmlstr)
+                for t in parse_func(d.getroot()):
                     push_translation(module, report_type, name, 0, t)
-            except IOError, xml.dom.expatbuilder.expat.ExpatError:
+            except IOError, etree.expatbuilder.expat.ExpatError:
                 if fname:
                     logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
