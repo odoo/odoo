@@ -21,6 +21,7 @@
 
 import time
 from osv import fields,osv
+from tools.translate import _
 
 WARNING_MESSAGE = [
                    ('no-message','No Message'),
