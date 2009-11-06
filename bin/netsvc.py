@@ -66,7 +66,7 @@ class LocalService(Service):
             for method_name, method_definition in self._service._methods.items():
                 setattr(self, method_name, method_definition)
         except KeyError, keyError:
-            Logger().notifyChannel('module', LOG_ERROR, 'This service does not exists: %s' % (str(keyError),) )
+            Logger().notifyChannel('module', LOG_ERROR, 'This service does not exist: %s' % (str(keyError),) )
             raise
     def __call__(self, method, *params):
         return getattr(self, method)(*params)

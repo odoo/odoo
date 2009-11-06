@@ -23,12 +23,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Requests">
-                    <notebook>
+                	<field name="act_from" select="1"/>
+                    <field name="act_to" select="1"/>
+                    <field colspan="4" name="name" select="1"/>
+                    <notebook colspan="4">
                         <page string="Request">
                             <separator colspan="4" string="Description"/>
-                            <field name="act_from" select="1"/>
-                            <field name="act_to" select="1"/>
-                            <field colspan="4" name="name" select="1"/>
                             <newline/>
                             <field colspan="4" name="body" select="2"/>
                             <field name="trigger_date" select="2"/>
