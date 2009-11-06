@@ -26,7 +26,7 @@ import pooler
 
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(product_pricelist, self).__init__(cr, uid, name, context)
+        super(product_pricelist, self).__init__(cr, uid, name, context=context)
         self.pricelist=False
         self.quantity=[]
         self.localcontext.update({

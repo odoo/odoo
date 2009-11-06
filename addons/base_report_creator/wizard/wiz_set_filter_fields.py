@@ -128,6 +128,10 @@ def _set_filter_value(self, cr, uid, data, context):
                 value_data = 'true'
             else:
                 value_data = 'false'
+
+        if field_type in ['float','integer']:
+            value_data =  value_data or 0
+        
         if field_type == 'many2many' and value_data and len(value_data):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
         else:
@@ -135,7 +139,7 @@ def _set_filter_value(self, cr, uid, data, context):
         if fields_list:
             create_dict = {
                            'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]) + " ",
-                           'expression':' '.join(fields_list),
+                           'expression':' '.join(map(str,fields_list)),
                            'report_id':data['id'],
                            'condition' : form_data['condition']
                            }

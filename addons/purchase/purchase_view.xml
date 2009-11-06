@@ -264,5 +264,13 @@
             name="Purchase orders"
             res_model="purchase.order"
             src_model="res.partner"/>
+
+        <act_window
+            domain="[('product_id','=',active_id)]" 
+            id="action_purchase_line_product_tree"
+            name="Product purchases"
+            res_model="purchase.order.line" 
+            src_model="product.product"/> 
+                     
     </data>
 </openerp>

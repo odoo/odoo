@@ -32,7 +32,7 @@ class buyer_list(report_sxw.rml_parse):
     sum_buyer_price_val=0.0
     sum_lot_val=0.0
     def __init__(self, cr, uid, name, context):
-        super(buyer_list, self).__init__(cr, uid, name, context)
+        super(buyer_list, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'lines_lots_from_auction' : self.lines_lots_from_auction,

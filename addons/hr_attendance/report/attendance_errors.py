@@ -27,7 +27,7 @@ import datetime
 
 class attendance_print(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(attendance_print, self).__init__(cr, uid, name, context)
+        super(attendance_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'lst': self._lst,

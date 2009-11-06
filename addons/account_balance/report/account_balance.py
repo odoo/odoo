@@ -34,7 +34,7 @@ parents = {
 
 class account_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_balance, self).__init__(cr, uid, name, context)
+        super(account_balance, self).__init__(cr, uid, name, context=context)
         self.flag=1
         self.dr_total= 0.00
         self.cr_total= 0.00

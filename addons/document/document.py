@@ -530,17 +530,21 @@ class document_file(osv.osv):
                 result[id] = base64.encodestring(value)
             except:
                 result[id]=''
-
-            if context.get('bin_size', False):
-                result[id] = tools.human_size(len(result[id]))
-
+#            if context.get('bin_size', False):
+#                result[id] = tools.human_size(result[id])
         return result
 
     #
     # This code can be improved
     #
-    def _data_set(self, cr, obj, id, name, value, uid=None, context={}):
+    def _data_set(self, cr, uid, id, name, value, args=None, context={}):
         if not value:
+            filename = self.browse(cr, uid, id, context).store_fname
+            try:
+                os.unlink(os.path.join(self._get_filestore(cr), filename))
+            except:
+                pass
+            cr.execute('update ir_attachment set store_fname=NULL WHERE id=%s', (id,) )
             return True
         #if (not context) or context.get('store_method','fs')=='fs':
         try:

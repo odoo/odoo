@@ -46,6 +46,8 @@ class account_move_line(osv.osv):
     _name='account.move.line'
 
     def check_date(self, cr, uid, vals, context=None, check=True):
+        if not context:
+            context = {}
         if 'date' in vals.keys():
             if 'journal_id' in vals and 'journal_id' not in context:
                 journal_id = vals['journal_id']

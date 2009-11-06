@@ -25,7 +25,7 @@ import pooler
 
 class account_invoice_with_message(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_invoice_with_message, self).__init__(cr, uid, name, context)
+        super(account_invoice_with_message, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'spcl_msg': self.spcl_msg,

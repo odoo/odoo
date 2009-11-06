@@ -36,7 +36,7 @@ class journal_print(report_sxw.rml_parse):
         self.cr.execute('select sum(amount) from account_analytic_line where journal_id=%s', (journal_id,))
         return self.cr.fetchone()[0] or 0.0
     def __init__(self, cr, uid, name, context):
-        super(journal_print, self).__init__(cr, uid, name, context)
+        super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext = {
             'time': time,
             'lines': self.lines,
