@@ -18,8 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-from xml import dom
+from lxml import etree
 
 from mx import DateTime
 from mx.DateTime import now
@@ -163,7 +162,7 @@ class account_analytic_plan_instance(osv.osv):
                 <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)
                     i+=1
                 res['arch'] += "</form>"
-                doc = dom.minidom.parseString(res['arch'].encode('utf8'))
+                doc = etree.fromstring(res['arch'].encode('utf8'))
                 xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
                 res['arch'] = xarch
                 res['fields'] = xfields

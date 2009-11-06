@@ -351,8 +351,8 @@ class account_move_line(osv.osv):
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
         'product_uom_id': fields.many2one('product.uom', 'UoM'),
         'product_id': fields.many2one('product.product', 'Product'),
-        'debit': fields.float('Debit', digits=(16,2)),
-        'credit': fields.float('Credit', digits=(16,2)),
+        'debit': fields.float('Debit', digits=(16,int(tools.config['price_accuracy']))),
+        'credit': fields.float('Credit', digits=(16,int(tools.config['price_accuracy']))),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
@@ -360,7 +360,7 @@ class account_move_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry."),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits=(16,int(tools.config['price_accuracy']))),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
 
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
@@ -379,14 +379,14 @@ class account_move_line(osv.osv):
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
         'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or tax code account."),
-        'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True, help="If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,\
+        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,\
                     this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount",digits=(16,2)),
+        'amount_taxed':fields.float("Taxed Amount",digits=(16,int(tools.config['price_accuracy']))),
 
     }
 
@@ -626,6 +626,7 @@ class account_move_line(osv.osv):
                     'debit':debit,
                     'credit':credit,
                     'account_id':writeoff_acc_id,
+                    'analytic_account_id': context.get('analytic_id', False),
                     'date':date,
                     'partner_id':partner_id
                 })
@@ -634,7 +635,7 @@ class account_move_line(osv.osv):
             writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
-
+                'date':date,
                 'state': 'draft',
                 'line_id': writeoff_lines
             })
@@ -879,7 +880,7 @@ class account_move_line(osv.osv):
                         'amount': vals['debit'] or vals['credit'],
                         'general_account_id': vals['account_id'],
                         'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals['ref'],
+                        'ref': vals.get('ref', False),
                     })]
             #else:
             #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))
