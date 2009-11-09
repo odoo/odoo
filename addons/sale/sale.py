@@ -33,7 +33,6 @@ class sale_shop(osv.osv):
     _columns = {
         'name': fields.char('Shop Name', size=64, required=True),
         'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
-        'payment_account_id': fields.many2many('account.account', 'sale_shop_account', 'shop_id', 'account_id', 'Payment Accounts'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
