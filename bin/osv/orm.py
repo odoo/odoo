@@ -523,7 +523,7 @@ class orm_template(object):
                                             rr = rr.name
                                         rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
-                                        dt += rr_name or '' + ','
+                                        dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
                                     break
                                 lines += lines2[1:]
