@@ -536,7 +536,7 @@
                     <field name="model" select="1"/>
                     <field name="field_parent"/>
                     <field name="priority"/>
-                    <field name="inherit_id"/>
+                    <field name="inherit_id" select="1"/>
                     <field colspan="4" name="arch"/>
                 </form>
             </field>
@@ -550,6 +550,9 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
+                    <field name="inherit_id"/>                    
+                    <field name="priority"/>
+                    <field name="field_parent"/>
                 </tree>
             </field>
         </record>
