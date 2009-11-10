@@ -239,6 +239,7 @@ class hr_timesheet_sheet(osv.osv):
         'total_difference': fields.function(_total, method=True, string='Difference', multi="_total_sheet"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def _default_date_from(self,cr, uid, context={}):
@@ -269,6 +270,7 @@ class hr_timesheet_sheet(osv.osv):
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': lambda *a: 'new',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
     def _sheet_date(self, cr, uid, ids):

@@ -194,7 +194,8 @@ class purchase_order(osv.osv):
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),        
+        'create_uid':  fields.many2one('res.users', 'Responsible'),    
+        'company_id': fields.many2one('res.company','Company',required=True),    
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="second_partner" model="res.partner">
+            <field name="name">Tiny Editor</field>
+        </record>
+        
+        <record id="second_company" model="res.company">
+            <field name="name">Tiny Editor</field>
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="parent_id" ref="base.main_company"/>
+            <field name="rml_header1">Free Business Solutions</field>
+            <field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
+            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        
+        <record id="ter_partner" model="res.partner">
+            <field name="name">Tiny Integrator</field>
+        </record>
+        
+        <record id="ter_company" model="res.company">
+            <field name="name">Tiny Integrator</field>
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="parent_id" ref="base.main_company"/>
+            <field name="rml_header1">Free Business Solutions</field>
+            <field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
+            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
+            <field name="currency_id" ref="base.EUR"/>
+        </record>
+        
+        
+    </data>
+</openerp>

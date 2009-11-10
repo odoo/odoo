@@ -387,6 +387,7 @@ class account_move_line(osv.osv):
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,int(tools.config['price_accuracy']))),
+        'company_id': fields.many2one('res.company', 'Company', required=True,select=2),
 
     }
 
@@ -421,6 +422,7 @@ class account_move_line(osv.osv):
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date desc,id desc"
     _sql_constraints = [

@@ -116,6 +116,7 @@ class project(osv.osv):
         'notes': fields.text('Notes', help="Internal description of the project."),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
         'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
+        'company_id': fields.many2one('res.company', 'Company'),
      }
 
     _defaults = {
@@ -123,7 +124,8 @@ class project(osv.osv):
         'manager': lambda object,cr,uid,context: uid,
         'priority': lambda *a: 1,
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'open'
+        'state': lambda *a: 'open',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
     _order = "parent_id,priority,name"
@@ -300,7 +302,8 @@ class task(osv.osv):
         'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager')
+        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,
@@ -311,6 +314,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
     _order = "sequence, priority, date_deadline, id"
 
