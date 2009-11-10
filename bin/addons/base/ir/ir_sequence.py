@@ -46,6 +46,7 @@ class ir_sequence(osv.osv):
         'number_next': fields.integer('Next Number', required=True),
         'number_increment': fields.integer('Increment Number', required=True),
         'padding' : fields.integer('Number padding', required=True),
+        'company_id' : fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'active': lambda *a: True,
