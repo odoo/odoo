@@ -85,7 +85,7 @@ def _get_info(self, cr, uid, data, context):
         raise wizard.except_wizard(_('Error'),_('You must put a Partner eMail to use this action!'))
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
-    return {'to': case.email_from,'subject': '['+str(case.id)+'] '+case.name,'cc': case.email_cc or '', 'text': '> ' + case.description.replace('\n','\n> ')}
+    return {'to': case.email_from,'subject': '['+str(case.id)+'] '+case.name,'cc': case.email_cc or '', 'text': '> ' + hist_obj.description.replace('\n','\n> ')}
     
 class wizard_send_mail(wizard.interface):
     states = {
