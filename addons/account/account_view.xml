@@ -16,6 +16,7 @@
                     <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <field name="company_id"/>
                     <field name="end_journal_period_id"/>
                     <separator colspan="4" string="Periods"/>
                     <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
@@ -74,6 +75,7 @@
                     <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
+                    <field name="company_id"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
@@ -166,6 +168,7 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
+                    <field name="company_id" />
                     <field name="company_currency_id"/>
                     <field name="type" invisible="1"/>
                 </tree>
@@ -267,6 +270,7 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
+                            <field name="company_id"/>
                             <newline/>
                             <field name="centralisation"/>
                             <field name="group_invoice_lines"/>
@@ -710,7 +714,8 @@
 
                             <field name="debit" select="2"/>
                             <field name="credit" select="2"/>
-
+							<field name="company_id" required="1"/>
+							
                             <separator colspan="4" string="Optional Information"/>
                             <field name="currency_id"/>
                             <field name="amount_currency"/>
@@ -864,6 +869,7 @@
                     <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
+                    <field name="company_id" required="1"/>
                     <field name="date" select="1"/>
                     <field name="ref" select="1"/>
                     <field name="to_check" select="2"/>
@@ -1101,6 +1107,7 @@
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="state"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
