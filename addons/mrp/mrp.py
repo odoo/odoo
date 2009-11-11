@@ -129,7 +129,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="A cycle is defined in the workcenter definition."),
         'hour_nbr': fields.float('Number of Hours', required=True),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade'),
         'note': fields.text('Description')
     }
     _defaults = {
