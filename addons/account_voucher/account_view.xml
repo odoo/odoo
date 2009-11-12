@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-		<record model="ir.ui.view" id="account_move_inherit">
-			<field name="name">account.move.type.form.inherit1</field>
+		<record model="ir.ui.view" id="account_move_inherit_new">
+			<field name="name">account.move.type.form.inherit2</field>
 			<field name="inherit_id" ref="account.view_move_form"/>
 			<field name="model">account.move</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="journal_id" position="after">
-                    <field name="voucher_type" groups="base.group_extended" select="2"/>
-				</field>
-			</field>
-		</record>
-		
-		<record model="ir.ui.view" id="account_move_inherit_new">
-			<field name="name">account.move.type.form.inherit2</field>
-			<field name="inherit_id" ref="account_move_inherit"/>
-			<field name="model">account.move</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
 				<field name="line_id" position="replace">
-				    <field colspan="4" default_get="{'lines':line_id ,'journal':journal_id }" name="line_id" nolabel="1" widget="one2many_list" height="275">
+				    <field colspan="4" default_get="{'lines':line_id ,'journal':journal_id }" name="line_id" nolabel="1" widget="one2many_list" height="250">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
@@ -120,7 +108,7 @@
 			</field>
 		</record>
 	
-<!--	sub_currency	-->
+        <!--	sub_currency	-->
 		<record model="ir.ui.view" id="sub_currency_form">
 			<field name="name">sub.currency.form</field>
 			<field name="inherit_id" ref="base.view_currency_form" />
