@@ -335,6 +335,7 @@
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
+                                    <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
@@ -345,6 +346,7 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                     <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
@@ -1352,7 +1354,7 @@
         </record>
 
         <record id="action_tax_code_line_open" model="ir.actions.act_window">
-            <field name="name">account.move.line</field>
+            <field name="name">Account Entry Lines</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

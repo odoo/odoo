@@ -129,7 +129,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="A cycle is defined in the workcenter definition."),
         'hour_nbr': fields.float('Number of Hours', required=True),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade'),
         'note': fields.text('Description')
     }
     _defaults = {
@@ -978,6 +978,8 @@ class mrp_procurement(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
+            if procurement.product_qty <= 0.00:
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
