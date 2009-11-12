@@ -36,6 +36,7 @@ TRANSLATION_TYPE = [
     ('help', 'Help'),
     ('code', 'Code'),
     ('constraint', 'Constraint'),
+    ('sql_constraint', 'SQL Constraint')    
 ]
 
 class ir_translation(osv.osv):

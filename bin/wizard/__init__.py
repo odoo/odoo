@@ -24,7 +24,7 @@ import netsvc
 from tools import copy
 from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import translate
-from xml import dom
+from lxml import etree
 
 import ir
 import pooler
@@ -50,13 +50,12 @@ class interface(netsvc.Service):
         self.wiz_name = name
         
     def translate_view(self, cr, node, state, lang):
-        if node.nodeType == node.ELEMENT_NODE:
-            if node.hasAttribute('string') and node.getAttribute('string'):
-                trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.getAttribute('string').encode('utf8'))
+            if node.get('string'):
+                trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.get('string').encode('utf8'))
                 if trans:
-                    node.setAttribute('string', trans)
-        for n in node.childNodes:
-            self.translate_view(cr, n, state, lang)
+                    node.set('string', trans)
+            for n in node.getchildren():
+                self.translate_view(cr, n, state, lang)
 
     def execute_cr(self, cr, uid, data, state='init', context=None):
         if not context:
@@ -132,9 +131,9 @@ class interface(netsvc.Service):
 
                     # translate arch
                     if not isinstance(arch, UpdateableStr):
-                        doc = dom.minidom.parseString(arch.encode('utf8'))
+                        doc = etree.XML(arch)
                         self.translate_view(cr, doc, state, lang)
-                        arch = doc.toxml()
+                        arch = etree.tostring(doc)
 
                     # translate buttons
                     button_list = list(button_list)

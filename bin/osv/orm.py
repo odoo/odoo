@@ -50,16 +50,16 @@ import pickle
 
 import fields
 import tools
+from tools.translate import _
 
+import copy
 import sys
 
 try:
-    from xml import dom, xpath
+    from lxml import etree
 except ImportError:
-    sys.stderr.write("ERROR: Import xpath module\n")
-    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.stderr.write('On Ubuntu Jaunty, try this: sudo cp /usr/lib/python2.6/dist-packages/oldxml/_xmlplus/utils/boolean.so /usr/lib/python2.5/site-packages/oldxml/_xmlplus/utils\n')
-    raise
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 from tools.config import config
 
@@ -521,7 +521,9 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        dt += rr.name or '' + ','
+                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
+                                        rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
+                                        dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
                                     break
                                 lines += lines2[1:]
@@ -532,7 +534,8 @@ class orm_template(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = r.name
+                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id])
+                        r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
@@ -997,14 +1000,14 @@ class orm_template(object):
         fields = {}
         childs = True
 
-        if node.nodeType == node.ELEMENT_NODE and node.localName == 'field':
-            if node.hasAttribute('name'):
+        if node.tag == 'field':
+            if node.get('name'):
                 attrs = {}
                 try:
-                    if node.getAttribute('name') in self._columns:
-                        column = self._columns[node.getAttribute('name')]
+                    if node.get('name') in self._columns:
+                        column = self._columns[node.get('name')]
                     else:
-                        column = self._inherit_fields[node.getAttribute('name')][2]
+                        column = self._inherit_fields[node.get('name')][2]
                 except:
                     column = False
 
@@ -1012,65 +1015,63 @@ class orm_template(object):
                     relation = column._obj
                     childs = False
                     views = {}
-                    for f in node.childNodes:
-                        if f.nodeType == f.ELEMENT_NODE and f.localName in ('form', 'tree', 'graph'):
-                            node.removeChild(f)
+                    for f in node:
+                        if f.tag in ('form', 'tree', 'graph'):
+                            node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
                             xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
-                            views[str(f.localName)] = {
+                            views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
                             }
                     attrs = {'views': views}
-                    if node.hasAttribute('widget') and node.getAttribute('widget')=='selection':
+                    if node.get('widget') and node.get('widget') == 'selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = []
+                        dom = None
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
-                        
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
-                        if (node.hasAttribute('required') and not int(node.getAttribute('required'))) or not column.required:
+                        if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
-                fields[node.getAttribute('name')] = attrs
+                fields[node.get('name')] = attrs
 
-        elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.localName, context)
+        elif node.tag in ('form', 'tree'):
+            result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
-                node.setAttribute('string', result)
+                node.set('string', result)
 
-        elif node.nodeType==node.ELEMENT_NODE and node.localName == 'calendar':
+        elif node.tag == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
-                if node.hasAttribute(additional_field) and node.getAttribute(additional_field):
-                    fields[node.getAttribute(additional_field)] = {}
+                if node.get(additional_field):
+                    fields[node.get(additional_field)] = {}
 
-        if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
-            if node.getAttribute('groups'):
-                groups = node.getAttribute('groups').split(',')
+        if 'groups' in node.attrib:
+            if node.get('groups'):
+                groups = node.get('groups').split(',')
                 readonly = False
                 access_pool = self.pool.get('ir.model.access')
                 for group in groups:
                     readonly = readonly or access_pool.check_groups(cr, user, group)
                 if not readonly:
-                    node.setAttribute('invisible', '1')
-            node.removeAttribute('groups')
+                    node.set('invisible', '1')
+            del(node.attrib['groups'])
 
-        if node.nodeType == node.ELEMENT_NODE:
-            # translate view
-            if ('lang' in context) and not result:
-                if node.hasAttribute('string') and node.getAttribute('string'):
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
-                    if not trans and ('base_model_name' in context):
-                        trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.getAttribute('string').encode('utf8'))
-                    if trans:
-                        node.setAttribute('string', trans)
-                if node.hasAttribute('sum') and node.getAttribute('sum'):
-                    trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
-                    if trans:
-                        node.setAttribute('sum', trans)
+        # translate view
+        if ('lang' in context) and not result:
+            if node.get('string'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string').encode('utf8'))
+                if not trans and ('base_model_name' in context):
+                    trans = self.pool.get('ir.translation')._get_source(cr, user, context['base_model_name'], 'view', context['lang'], node.get('string').encode('utf8'))
+                if trans:
+                    node.set('string', trans)
+            if node.get('sum'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum').encode('utf8'))
+                if trans:
+                    node.set('sum', trans)
 
         if childs:
-            for f in node.childNodes:
+            for f in node:
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
         return fields
@@ -1081,7 +1082,7 @@ class orm_template(object):
         rolesobj = self.pool.get('res.roles')
         usersobj = self.pool.get('res.users')
 
-        buttons = (n for n in node.getElementsByTagName('button') if n.getAttribute('type') != 'object')
+        buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
         for button in buttons:
             can_click = True
             if user != 1:   # admin user has all roles
@@ -1093,7 +1094,7 @@ class orm_template(object):
                           INNER JOIN wkf_transition t ON (t.act_to = a.id)
                                WHERE wkf.osv = %s
                                  AND t.signal = %s
-                           """, (self._name, button.getAttribute('name'),))
+                           """, (self._name, button.get('name'),))
                 roles = cr.fetchall()
                 
                 # draft -> valid = signal_next (role X)
@@ -1104,8 +1105,6 @@ class orm_template(object):
                 #
                 # running -> done = signal_next (role Z)
                 # running -> cancel = signal_cancel (role Z)
-                
-
                 # As we don't know the object state, in this scenario, 
                 #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
                 #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
@@ -1113,9 +1112,9 @@ class orm_template(object):
                 if roles:
                     can_click = any((not role) or rolesobj.check(cr, user, user_roles, role) for (role,) in roles)
             
-            button.setAttribute('readonly', str(int(not can_click)))
+            button.set('readonly', str(int(not can_click)))
 
-        arch = node.toxml(encoding="utf-8").replace('\t', '')
+        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             if field == 'id':
@@ -1180,70 +1179,71 @@ class orm_template(object):
 
         def _inherit_apply(src, inherit):
             def _find(node, node2):
-                if node2.nodeType == node2.ELEMENT_NODE and node2.localName == 'xpath':
-                    res = xpath.Evaluate(node2.getAttribute('expr'), node)
-                    return res and res[0]
+                if node2.tag == 'xpath':
+                    res = node.xpath(node2.get('expr'))
+                    if res:
+                        return res[0]
+                    else:
+                        return None
                 else:
-                    if node.nodeType == node.ELEMENT_NODE and node.localName == node2.localName:
+                    for n in node.getiterator(node2.tag):
                         res = True
-                        for attr in node2.attributes.keys():
+                        for attr in node2.attrib:
                             if attr == 'position':
                                 continue
-                            if node.hasAttribute(attr):
-                                if node.getAttribute(attr)==node2.getAttribute(attr):
+                            if n.get(attr):
+                                if n.get(attr) == node2.get(attr):
                                     continue
                             res = False
                         if res:
-                            return node
-                    for child in node.childNodes:
-                        res = _find(child, node2)
-                        if res:
-                            return res
+                            return n
                 return None
+            # End: _find(node, node2)
 
-
-            doc_src = dom.minidom.parseString(encode(src))
-            doc_dest = dom.minidom.parseString(encode(inherit))
-            toparse = doc_dest.childNodes
+            doc_dest = etree.fromstring(encode(inherit))
+            toparse = [ doc_dest ]
             while len(toparse):
                 node2 = toparse.pop(0)
-                if not node2.nodeType == node2.ELEMENT_NODE:
+                if node2.tag == 'data':
+                    toparse += [ c for c in doc_dest ]
                     continue
-                if node2.localName == 'data':
-                    toparse += node2.childNodes
-                    continue
-                node = _find(doc_src, node2)
-                if node:
+                node = _find(src, node2)
+                if node is not None:
                     pos = 'inside'
-                    if node2.hasAttribute('position'):
-                        pos = node2.getAttribute('position')
+                    if node2.get('position'):
+                        pos = node2.get('position')
                     if pos == 'replace':
-                        parent = node.parentNode
-                        for child in node2.childNodes:
-                            if child.nodeType == child.ELEMENT_NODE:
-                                parent.insertBefore(child, node)
-                        parent.removeChild(node)
+                        parent = node.getparent()
+                        if parent is None:
+                            src = copy.deepcopy(node2.getchildren()[0])
+                        else:
+                            for child in node2:
+                                node.addprevious(child)
+                            node.getparent().remove(node)
                     else:
-                        sib = node.nextSibling
-                        for child in node2.childNodes:
-                            if child.nodeType == child.ELEMENT_NODE:
-                                if pos == 'inside':
-                                    node.appendChild(child)
-                                elif pos == 'after':
-                                    node.parentNode.insertBefore(child, sib)
-                                elif pos=='before':
-                                    node.parentNode.insertBefore(child, node)
+                        sib = node.getnext()
+                        for child in node2:
+                            if pos == 'inside':
+                                node.append(child)
+                            elif pos == 'after':
+                                if sib is None:
+                                    node.addnext(child)
                                 else:
-                                    raise AttributeError(_('Unknown position in inherited view %s !') % pos)
+                                    sib.addprevious(child)
+                            elif pos == 'before':
+                                node.addprevious(child)
+                            else:
+                                raise AttributeError(_('Unknown position in inherited view %s !') % pos)
                 else:
                     attrs = ''.join([
-                        ' %s="%s"' % (attr, node2.getAttribute(attr))
-                        for attr in node2.attributes.keys()
+                        ' %s="%s"' % (attr, node2.get(attr))
+                        for attr in node2.attrib
                         if attr != 'position'
                     ])
-                    tag = "<%s%s>" % (node2.localName, attrs)
+                    tag = "<%s%s>" % (node2.tag, attrs)
                     raise AttributeError(_("Couldn't find tag '%s' in parent view !") % tag)
-            return doc_src.toxml(encoding="utf-8").replace('\t', '')
+            return src
+        # End: _inherit_apply(src, inherit)
 
         result = {'type': view_type, 'model': self._name}
 
@@ -1295,7 +1295,8 @@ class orm_template(object):
                     result = _inherit_apply_rec(result, id)
                 return result
 
-            result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
+            inherit_result = etree.fromstring(encode(result['arch']))
+            result['arch'] = _inherit_apply_rec(inherit_result, sql_res[3])
 
             result['name'] = sql_res[1]
             result['field_parent'] = sql_res[2] or False
@@ -1322,13 +1323,12 @@ class orm_template(object):
                 xml = self.__get_default_calendar_view()
             else:
                 xml = ''
-            result['arch'] = xml
+            result['arch'] = etree.fromstring(xml)
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
 
-        doc = dom.minidom.parseString(encode(result['arch']))
-        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
+        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
         if toolbar:
@@ -2145,6 +2145,20 @@ class orm(orm_template):
             for key, v in r.items():
                 if v == None:
                     r[key] = False
+                if key in self._columns.keys():
+                    type = self._columns[key]._type
+                elif key in self._inherit_fields.keys():
+                    type = self._inherit_fields[key][2]._type
+                else:
+                    continue
+                if type == 'reference' and v:
+                    model,ref_id = v.split(',')
+                    table = self.pool.get(model)._table
+                    cr.execute('select id from "%s" where id=%s' % (table,ref_id))
+                    id_exist = cr.fetchone()
+                    if not id_exist:
+                        cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
+                        r[key] = ''                    
         
         if isinstance(ids, (int, long)):
             return result and result[0] or False
@@ -3045,6 +3059,4 @@ class orm(orm_template):
                     return False
         return True
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
