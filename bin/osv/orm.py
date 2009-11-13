@@ -1856,10 +1856,11 @@ class orm(orm_template):
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
                                     # Adding upcoming 6 lines to check whether only the size of the fields got changed or not.E.g. :(16,3) to (16,4)
                                     field_size_change = False
-                                    if f.digits:
-                                        field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
-                                        if field_size != f_pg_size:
-                                            field_size_change = True
+                                    if f_pg_type in ['int4','numeric','float8']:
+                                        if f.digits:
+                                            field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
+                                            if field_size != f_pg_size:
+                                                field_size_change = True
                                                 
                                     if f_pg_type != f_obj_type or field_size_change:
                                         if f_pg_type != f_obj_type:
