@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,7 +31,7 @@ from tools.translate import _
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context={}):
         number = (datas.get('form', False) and datas['form']['number']) or 1
-        
+
         def process_bom(bom, currency_id):
             xml = '<row>'
             sum = 0
@@ -40,7 +40,7 @@ class report_custom(report_rml):
 
             prod_name = bom['name']
             prod_qtty = bom['product_qty']
-            prod_uom = prod.uom_id.name 
+            prod_uom = prod.uom_id.name
             level = 1
             main_sp_price = ''
             main_sp_name = ''
@@ -136,7 +136,7 @@ class report_custom(report_rml):
                     <col>%s</col>
                 </row>
             </lines>
-        """ % (_('Workcenter name'), _('Cycles Cost'), _('Hours Cost'))
+        """ % (_('Workcenter name'), _('Cycles Cost'), _('Total hourly costs'))
         prod_header = """
             <lines style='header'>
                 <row>

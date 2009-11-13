@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'time_efficiency': fields.float('Time Efficiency', help="Factor that multiplies all times expressed in the workcenter."),
+        'time_efficiency': fields.float('Time Efficiency', help="Factor to adjust the work center cycle and before and after production durations"),
 
         'costs_hour': fields.float('Cost per hour'),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
@@ -197,9 +197,9 @@ class mrp_bom(osv.osv):
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
-        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type'),
-        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many'),
-        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many')
+        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
+        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
+        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many')
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -363,7 +363,7 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
-                    #TODO: fix me sale module can not be used here, 
+                    #TODO: fix me sale module can not be used here,
                     #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
@@ -426,8 +426,8 @@ class mrp_production(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
 
-        'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True,
-            help="This is the internal picking list take bring the raw materials to the production plan."),
+        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
+            help="This is the internal picking list of the raw material needed for the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
@@ -435,7 +435,7 @@ class mrp_production(osv.osv):
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'Status', readonly=True),
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
@@ -782,7 +782,7 @@ mrp_production_product_line()
 class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
     _description = "Procurement"
-    _order = 'priority,date_planned'    
+    _order = 'priority,date_planned'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64,
@@ -802,7 +802,7 @@ class mrp_procurement(osv.osv):
 
         'close_move': fields.boolean('Close Move at end', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
+        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Requisition Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a procurement, you probably want to use" \
             " a make to order method."),
 
@@ -838,7 +838,7 @@ class mrp_procurement(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Requisition Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
@@ -981,7 +981,7 @@ class mrp_procurement(osv.osv):
     def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Requisition Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -1222,7 +1222,7 @@ stock_warehouse_orderpoint()
 class StockMove(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Requisitions'),
     }
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}

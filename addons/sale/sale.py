@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -208,12 +208,12 @@ class sale_order(osv.osv):
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3),
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
-            'Packing Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
+            'Picking Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
             ('prepaid', 'Payment Before Delivery'),
             ('manual', 'Shipping & Manual Invoice'),
             ('postpaid', 'Invoice on Order After Delivery'),
-            ('picking', 'Invoice from the Packing'),
+            ('picking', 'Invoice from Picking'),
         ], 'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
@@ -225,7 +225,7 @@ class sale_order(osv.osv):
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
-        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packing', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
+        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped': fields.boolean('Picked', readonly=True),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
@@ -396,7 +396,7 @@ class sale_order(osv.osv):
         invoice_ids = []
 
         context = {}
-        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the 
+        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_inv:
             context['date_inv'] = date_inv
@@ -497,7 +497,7 @@ class sale_order(osv.osv):
                 if line.procurement_id:
                     res.append(line.procurement_id.id)
         return res
-        
+
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
     # if mode == 'canceled':
@@ -511,13 +511,13 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         stock_move_obj = self.pool.get('stock.move')
         for order in self.browse(cr, uid, ids, context={}):
-            
-            #check for pending deliveries 
+
+            #check for pending deliveries
             pending_deliveries = False
             # check => if order_lines do not exist,don't proceed for any mode.
             if not order.order_line:
                 return False
-            for line in order.order_line:    
+            for line in order.order_line:
                 move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
                     #if one of the related order lines is in state draft, auto or confirmed
@@ -746,12 +746,12 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
+        'procurement_id': fields.many2one('mrp.procurement', 'Requisition'),
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes'),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procure Method', required=True),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties'),
         'address_allotment_id': fields.many2one('res.partner.address', 'Allotment Partner'),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True),
@@ -935,7 +935,7 @@ class sale_order_line(osv.osv):
                 warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
                 warn_msg = warn_msg + "\n\n" + _("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
                 warning = {
-                    'title': _('Packing Information !'),
+                    'title': _('Picking Information !'),
                     'message': warn_msg
                     }
             result['product_uom_qty'] = qty
@@ -1050,14 +1050,14 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Packing Default Policy', required=True),
+        ], 'Picking Default Policy', required=True),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Shipping Default Policy', required=True),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
-            ('two', 'Packing List & Delivery Order')
+            ('two', 'Picking List & Delivery Order')
         ], 'Steps To Deliver a Sale Order', required=True,
            help="By default, Open ERP is able to manage complex routing and paths "\
            "of products in your warehouse and partner locations. This will configure "\

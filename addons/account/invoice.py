@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -191,7 +191,7 @@ class account_invoice(osv.osv):
                 move[line.move_id.id] = True
             for line in r.line_id:
                 move[line.move_id.id] = True
-        
+
         invoice_ids = []
         if move:
             invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
@@ -276,7 +276,7 @@ class account_invoice(osv.osv):
             }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
-        'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
+        'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16, int(config['price_accuracy'])),string='Residual',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
@@ -287,7 +287,7 @@ class account_invoice(osv.osv):
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
-        'move_name': fields.char('Account Move', size=64),
+        'move_name': fields.char('Ledger Posting', size=64),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {
@@ -445,7 +445,7 @@ class account_invoice(osv.osv):
             for taxe in ait_obj.compute(cr, uid, id, context=context).values():
                 ait_obj.create(cr, uid, taxe)
          # Update the stored value (fields.function), so we write to trigger recompute
-        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)    
+        self.pool.get('account.invoice').write(cr, uid, ids, {'invoice_line':[]}, context=context)
 #        self.pool.get('account.invoice').write(cr, uid, ids, {}, context=context)
         return True
 
@@ -630,7 +630,7 @@ class account_invoice(osv.osv):
                     tmp += '-'+str(l.get('product_id',"False"))
                     tmp += '-'+str(l.get('analytic_account_id',"False"))
                     tmp += '-'+str(l.get('date_maturity',"False"))
-                    
+
                     if tmp in line2:
                         am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                         line2[tmp]['debit'] = (am > 0) and am or 0.0
@@ -1120,12 +1120,12 @@ class account_invoice_tax(osv.osv):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,int(config['price_accuracy']))),
     }
-    
+
     def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):
         cur_obj = self.pool.get('res.currency')
         company_obj = self.pool.get('res.company')
         company_currency=False
-        if company_id:            
+        if company_id:
             company_currency = company_obj.read(cr,uid,[company_id],['currency_id'])[0]['currency_id'][0]
         if currency_id and company_currency:
             base = cur_obj.compute(cr, uid, currency_id, company_currency, base, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
@@ -1140,7 +1140,7 @@ class account_invoice_tax(osv.osv):
         if currency_id and company_currency:
             amount = cur_obj.compute(cr, uid, currency_id, company_currency, amount, context={'date': date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return {'value': {'tax_amount':amount}}
-    
+
     _order = 'sequence'
     _defaults = {
         'manual': lambda *a: 1,
