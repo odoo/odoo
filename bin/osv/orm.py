@@ -1854,8 +1854,18 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    if f_pg_type != f_obj_type:
-                                        logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                    # Adding upcoming 6 lines to check whether only the size of the fields got changed or not.E.g. :(16,3) to (16,4)
+                                    field_size_change = False
+                                    if f.digits:
+                                        field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
+                                        if field_size != f_pg_size:
+                                            field_size_change = True
+                                                
+                                    if f_pg_type != f_obj_type or field_size_change:
+                                        if f_pg_type != f_obj_type:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        if field_size_change:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed in the size." % (k, self._table))
                                         ok = True
                                         cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
