@@ -372,7 +372,7 @@ form: module.record_id""" % (xml_id,)
         view_id = False
         if rec.get('view'):
             view_id = self.id_get(cr, 'ir.actions.act_window', rec.get('view','').encode('utf-8'))
-        domain = rec.get('domain','').encode('utf-8')
+        domain = rec.get('domain','').encode('utf-8') or '{}'
         context = rec.get('context','').encode('utf-8') or '{}'
         res_model = rec.get('res_model','').encode('utf-8')
         src_model = rec.get('src_model','').encode('utf-8')
