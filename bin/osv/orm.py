@@ -1997,7 +1997,8 @@ class orm(orm_template):
                 ok = True
                 for x,y,z,e,f in self.pool._store_function[object]:
                     if (x==self._name) and (y==store_field) and (e==fields2):
-                        ok = False
+                        if f==order:
+                            ok = False
                 if ok:
                     self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order))
                     self.pool._store_function[object].sort(lambda x,y: cmp(x[4],y[4]))
