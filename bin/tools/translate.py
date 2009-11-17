@@ -471,8 +471,8 @@ def trans_generate(lang, modules, dbname=None):
                         # export arch
                         arch = result['arch']
                         if arch and not isinstance(arch, UpdateableStr):
-                            d = xml.dom.minidom.parseString(arch)
-                            for t in trans_parse_view(d.documentElement):
+                            d = etree.XML(arch)
+                            for t in trans_parse_view(d):
                                 push_translation(module, 'wizard_view', name, 0, t)
 
                         # export button labels
