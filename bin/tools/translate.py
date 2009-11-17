@@ -345,8 +345,8 @@ def trans_parse_xsl(de):
     res = []
     for n in [i for i in de.getchildren()]:
         if n.get("t"):
-            for m in [j for j in n.getchildren()]:
-                l = m.data.strip().replace('\n',' ')
+            for m in [j for j in n.getchildren() if j.text]:
+                l = m.text.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
         res.extend(trans_parse_xsl(n))
@@ -355,8 +355,8 @@ def trans_parse_xsl(de):
 def trans_parse_rml(de):
     res = []
     for n in [i for i in de.getchildren()]:
-        for m in [j for j in n.getchildren()]:
-            string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.data)]
+        for m in [j for j in n.getchildren() if j.text]:
+            string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
             for s in string_list:
                 if s:
                     res.append(s.encode("utf8"))
@@ -475,8 +475,8 @@ def trans_generate(lang, modules, dbname=None):
                         # export arch
                         arch = result['arch']
                         if arch and not isinstance(arch, UpdateableStr):
-                            d = xml.dom.minidom.parseString(arch)
-                            for t in trans_parse_view(d.documentElement):
+                            d = etree.XML(arch)
+                            for t in trans_parse_view(d):
                                 push_translation(module, 'wizard_view', name, 0, t)
 
                         # export button labels
@@ -530,10 +530,10 @@ def trans_generate(lang, modules, dbname=None):
                 report_type = "xsl"
             try:
                 xmlstr = tools.file_open(fname).read()
-                d = etree.XML()(xmlstr)
-                for t in parse_func(d.getroot()):
+                d = etree.XML(xmlstr)
+                for t in parse_func(d):
                     push_translation(module, report_type, name, 0, t)
-            except IOError, etree.expatbuilder.expat.ExpatError:
+            except IOError, etree.XMLSyntaxError:
                 if fname:
                     logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
