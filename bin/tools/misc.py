@@ -753,22 +753,21 @@ if not hasattr(__builtin__, 'all'):
     def all(iterable):
         for element in iterable:
             if not element:
-               return False
+                return False
         return True
-        
+
     __builtin__.all = all
     del all
-    
+
 if not hasattr(__builtin__, 'any'):
     def any(iterable):
         for element in iterable:
             if element:
-               return True
+                return True
         return False
-        
+
     __builtin__.any = any
     del any
-
 
 
 def get_languages():
@@ -995,14 +994,58 @@ def extract_zip_file(zip_file, outdirectory):
             fp.close()
     zf.close()
 
+def detect_ip_addr():
+    def _detect_ip_addr():
+        from array import array
+        import socket
+        from struct import pack, unpack
 
+        try:
+            import fcntl
+        except ImportError:
+            fcntl = None
 
+        ip_addr = None
+
+        if not fcntl: # not UNIX:
+            host = socket.gethostname()
+            ip_addr = socket.gethostbyname(host)
+        else: # UNIX:
+            # get all interfaces:
+            nbytes = 128 * 32
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            names = array('B', '\0' * nbytes)
+            #print 'names: ', names
+            outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
+            namestr = names.tostring()
+
+            # try 64 bit kernel:
+            for i in range(0, outbytes, 40):
+                name = namestr[i:i+16].split('\0', 1)[0]
+                if name != 'lo':
+                    ip_addr = socket.inet_ntoa(namestr[i+20:i+24])
+                    break
+
+            # try 32 bit kernel:
+            if ip_addr is None:
+                ifaces = filter(None, [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
+
+                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
+                    break
+
+        return ip_addr or 'localhost'
+
+    try:
+        ip_addr = _detect_ip_addr()
+    except:
+        ip_addr = 'localhost'
+    return ip_addr
 
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

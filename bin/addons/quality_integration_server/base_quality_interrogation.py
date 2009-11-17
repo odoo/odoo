@@ -337,7 +337,10 @@ if opt.translate_in:
     translate = opt.translate_in
     for module_name,po_files in map(lambda x:tuple(x.split(':')),translate.split('+')):
         for po_file in po_files.split(','):
-            po_link = '%s/%s/i18n/%s'%(options['addons-path'], module_name, po_file)
+            if module_name == 'base':
+                po_link = '%saddons/%s/i18n/%s'%(options['root-path'],module_name,po_file)
+            else:
+                po_link = '%s/%s/i18n/%s'%(options['addons-path'], module_name, po_file)
             options['translate-in'].append(po_link)
 
 uri = 'http://localhost:' + str(options['port'])
