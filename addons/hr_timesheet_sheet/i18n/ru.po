@@ -1,0 +1,601 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_timesheet_sheet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-02-03 11:45+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 05:10+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_review0
+msgid "Review end of day check day is complete"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: constraint:hr_timesheet_sheet.sheet:0
+msgid ""
+"You can not have 2 timesheets that overlaps !\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr.analytic.timesheet,sheet_id:0
+#: field:hr.attendance,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.account,sheet_id:0
+#: field:hr_timesheet_sheet.sheet.day,sheet_id:0
+msgid "Sheet"
+msgstr "Табель"
+
+#. module: hr_timesheet_sheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_attendance:0
+#: field:hr_timesheet_sheet.sheet,total_attendance_day:0
+#: view:hr_timesheet_sheet.sheet.day:0
+msgid "Total Attendance"
+msgstr "Всего присутствие"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_confirm
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_confirm
+msgid "My timesheets to confirm"
+msgstr "Мои табели к подтветрждению"
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_range:0
+msgid "Timeshet range"
+msgstr "Диапазон табеля"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Today"
+msgstr "Сегодня"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
+msgid "Confirm timesheet sheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetconfirming0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
+msgid "Timesheet"
+msgstr "Табель"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Set to Draft"
+msgstr "Установить в 'Черновик'"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
+msgid "Defines employee's timesheet entry"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
+msgid "Draft Timesheet sheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_current
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
+msgid "My Current Timesheet"
+msgstr "Мой текущий табель"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
+msgid "Validate"
+msgstr "Проверить"
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Day"
+msgstr "День"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Present"
+msgstr "Присутствует"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
+msgid "Refuse"
+msgstr "Отклонить"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Validated Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: constraint:hr_timesheet_sheet.sheet:0
+msgid "You must select a Current date wich is in the timesheet dates !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.day:0
+msgid "Total Difference"
+msgstr "Всего рахсождений"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_phonecallencoding0
+msgid "Phone call encoding"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
+msgid "Timesheet by Day"
+msgstr "Табель по дням"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
+msgid "Defines the task work entry into timesheet line"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: help:res.company,timesheet_max_difference:0
+msgid ""
+"Allowed difference between the sign in/out and the timesheet computation for "
+"one sheet. Set this to 0 if you do not want any control."
+msgstr ""
+"Допустимое расхождение между регистрацией / выходом и вычисленным табелем "
+"для одного табеля. Установите в '0', если хотите отключить контроль."
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.day:0
+msgid "Timesheet by Days"
+msgstr "Табели по дням"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
+msgid "timesheet is confirmed at the end of the week / month"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,name:0
+msgid "Analytic Account"
+msgstr "Счет аналитики"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
+msgid "Project Timesheet"
+msgstr "Табель проекта"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,date_from:0
+msgid "Date from"
+msgstr "Дата с"
+
+#. module: hr_timesheet_sheet
+#: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
+msgid "Hr Timesheet Process"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_analyticcost0
+msgid "Analytic cost"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,total_attendance:0
+#: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
+msgid "Attendance"
+msgstr "Присутствие"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Строки табеля"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_timesheetline0
+msgid "Encode your timesheet line"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
+msgid "Confirm Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
+msgid "Control by the project manager"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "New"
+msgstr "Новый"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_timesheetconfirming0
+msgid "Timesheet sheet confirm at the end of the period"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,total:0
+msgid "Total Time"
+msgstr "Общее время"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
+msgid "Timesheet Lines"
+msgstr "Строки табеля"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
+msgid "Confirm timesheet at the end of the period"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "No employee defined"
+msgstr "Не указаны сотрудники"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
+msgid "Confirmed Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Настройки"
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Week"
+msgstr "Неделя"
+
+#. module: hr_timesheet_sheet
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Неправильный XML для просмотра архитектуры!"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Daily View"
+msgstr "Вид дня"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
+msgid "Timesheets by period"
+msgstr "Табели по периоду"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Sign In"
+msgstr "Зарегистрироваться"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_current
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current
+msgid "My Department's Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Go to:"
+msgstr "Перейти к:"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_phonecall0
+msgid "Phone call"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_timesheet:0
+#: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
+#: view:hr_timesheet_sheet.sheet.day:0
+msgid "Total Timesheet"
+msgstr "Всего по табелю"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_reviewofwork0
+msgid "Review of work"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice on Work"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Month"
+msgstr "Месяц"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
+msgid "Encode Your hours and Sign in / out"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_review0
+#: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_reviewtimesheet0
+msgid "Review"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+#: model:ir.module.module,shortdesc:hr_timesheet_sheet.module_meta_information
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
+#: model:ir.ui.menu,name:hr_timesheet_sheet.next_id_60
+#: view:res.company:0
+msgid "Timesheets"
+msgstr "Табели"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_confirm
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_confirm
+msgid "Timesheets To Confirm"
+msgstr "Табели к подтверждению"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "Дата до"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Current Status"
+msgstr "Текущее состояние"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
+msgid "Invoice on timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice based on timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
+msgid "Timesheet by Account"
+msgstr "Табель по счетам"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.day,name:0
+msgid "Date"
+msgstr "Дата"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,user_id:0
+msgid "User"
+msgstr "Пользователь"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
+msgid "Creates invoice based on timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_valid
+msgid "Timesheets To Validate"
+msgstr "Табели для проверки"
+
+#. module: hr_timesheet_sheet
+#: field:res.company,timesheet_max_difference:0
+msgid "Timesheet allowed difference"
+msgstr "Допустимое расхождение для табеля"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: field:hr_timesheet_sheet.sheet,period_ids:0
+msgid "Period"
+msgstr "Период"
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state:0
+msgid "Done"
+msgstr "Выполнено"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
+msgid "Attendance entry moves into the timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_createanalyticcose0
+msgid "Creates your analytic cost accoording to quantity"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
+msgid "Timesheet Line"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:0
+msgid "Timesheet by Accounts"
+msgstr "Табели по счетам"
+
+#. module: hr_timesheet_sheet
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Название объекта должно начинаться с x_  и не должно содержать специальных "
+"символов !"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
+msgid "Timesheet is validate by project manager."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
+msgid "Whatever time u spent for phone call"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
+msgid "Validate Timesheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_confirm
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_confirm
+msgid "My Department's Timesheet to Confirm"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+#: field:hr_timesheet_sheet.sheet,attendances_ids:0
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
+msgid "Attendances"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,name:hr_timesheet_sheet.process_transition_createanalyticcose0
+msgid "Create Analytic cost"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,name:0
+msgid "Description"
+msgstr "Описание"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Sign Out"
+msgstr "Выход"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "By Day"
+msgstr "По дням"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,total_difference:0
+#: field:hr_timesheet_sheet.sheet,total_difference_day:0
+#: field:hr_timesheet_sheet.sheet.day,total_difference:0
+msgid "Difference"
+msgstr "Расхождение"
+
+#. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet
+msgid "hr_timesheet_sheet.sheet"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: selection:hr_timesheet_sheet.sheet,state_attendance:0
+msgid "Absent"
+msgstr "Отсутствует"
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
+msgid "At the end of the period (week/month)"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
+msgid "timesheet entry is into draft state."
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.node,note:hr_timesheet_sheet.process_node_analyticcost0
+msgid "Analytic cost is created"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
+msgid "Invoice rate"
+msgstr "Ставка счета"
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_phonecallencoding0
+msgid "Encode how much time u spent on phone call"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
+msgid "Review of your work at the end of the day"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,account_ids:0
+msgid "Analytic accounts"
+msgstr "Счета аналитики"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my
+msgid "My timesheets"
+msgstr "Мои табели"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet:0
+msgid "Accept"
+msgstr "Принять"
+
+#. module: hr_timesheet_sheet
+#: field:hr_timesheet_sheet.sheet,date_current:0
+msgid "Current date"
+msgstr "Текущая дата"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_unvalidate
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_sheet_unvalidate
+msgid "Unvalidated Timesheets"
+msgstr "Непроверенные табели"
+
+#. module: hr_timesheet_sheet
+#: selection:res.company,timesheet_range:0
+msgid "Year"
+msgstr "Год"
+
+#. module: hr_timesheet_sheet
+#: view:hr_timesheet_sheet.sheet.account:0
+msgid "Total"
+msgstr "Всего"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_department_validate
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_validate
+msgid "My Department's Timesheet to Validate"
+msgstr ""

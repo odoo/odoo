@@ -1,0 +1,2059 @@
+# Korean translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-09-08 13:56+0000\n"
+"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"Language-Team: Korean <ko@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 04:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: mrp
+#: field:mrp.production,move_created_ids:0
+msgid "Moves Created"
+msgstr "생성된 무브"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "No. Of Cycles"
+msgstr "사이클 번호"
+
+#. module: mrp
+#: help:mrp.procurement.compute.all,init,automatic:0
+msgid ""
+"Triggers an automatic procurement for all products that have a virtual stock "
+"under 0. You should probably not use this option, we suggest using a MTO "
+"configuration on products."
+msgstr ""
+"가상 재고가 0 이하인 모든 제품에 대해 자동 조달 프로세스가 작동되는 트리거. 이 옵션보다는 제품에 대한 MTO 구성을 이용하시길 "
+"권합니다."
+
+#. module: mrp
+#: model:ir.module.module,shortdesc:mrp.module_meta_information
+msgid "Manufacturing Resource Planning"
+msgstr "제조 리소스 계획"
+
+#. module: mrp
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.bom.revision,indice:0
+msgid "Revision"
+msgstr "개정 번호"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
+msgid "Compute Stock Minimum Rules Only"
+msgstr "최소 재고 규칙만 계산"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
+msgid "Exceptions Procurements"
+msgstr "예외적 조달"
+
+#. module: mrp
+#: view:mrp.routing.workcenter:0
+msgid "Routing Workcenters"
+msgstr "워크센터 라우팅"
+
+#. module: mrp
+#: help:mrp.property,composition:0
+msgid "Not used in computations, for information purpose only."
+msgstr "계산용이 아닌 정보 용도"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_routing_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
+msgid "Routings"
+msgstr "라우팅"
+
+#. module: mrp
+#: field:mrp.production,picking_id:0
+msgid "Packing list"
+msgstr "포장 리스트"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_stock0
+msgid "Stockable Stock"
+msgstr "재고"
+
+#. module: mrp
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
+msgid "Origin"
+msgstr "기원"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
+msgid "Configuration"
+msgstr "구성"
+
+#. module: mrp
+#: field:mrp.production,name:0
+msgid "Reference"
+msgstr "참조"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Finished Products"
+msgstr "완제품"
+
+#. module: mrp
+#: wizard_field:mrp.procurement.compute.all,init,automatic:0
+#: wizard_field:mrp.procurement.orderpoint.compute,init,automatic:0
+msgid "Automatic orderpoint"
+msgstr "자동 주문포인트"
+
+#. module: mrp
+#: selection:mrp.bom,method:0
+msgid "Set / Pack"
+msgstr "세트 / 팩"
+
+#. module: mrp
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "뷰 아키텍처용 XML로 유효하지 않음!"
+
+#. module: mrp
+#: help:res.company,security_lead:0
+msgid ""
+"This is the days added to what you promise to customers for security purpose"
+msgstr "고객과의 약속 이행을 보장하기 위한 여유 기간 (일)입니다."
+
+#. module: mrp
+#: field:mrp.workcenter,costs_hour:0
+msgid "Cost per hour"
+msgstr "시간당 원가"
+
+#. module: mrp
+#: selection:stock.warehouse.orderpoint,logic:0
+msgid "Best price (not yet active!)"
+msgstr "최고 가격 (아직 비활성 !)"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Product & Location"
+msgstr "제품 및 위치"
+
+#. module: mrp
+#: view:res.company:0
+msgid "MRP & Logistic Scheduler"
+msgstr "MRP 및 물류 스케줄러"
+
+#. module: mrp
+#: help:mrp.workcenter,capacity_per_cycle:0
+msgid ""
+"Number of operation this workcenter can do in parallel. If this workcenter "
+"represent a team of 5 workers, the capacity per cycle is 5."
+msgstr ""
+"이 워크센터가 병렬처리할 수 있는 오퍼레이션의 수. 워크 센터가 5명의 작업자로 구성된 팀일 경우, 사이클당 생산용량은 5입니다."
+
+#. module: mrp
+#: wizard_button:product.product.procurement,init,create:0
+msgid "Ask New Products"
+msgstr "새 제품 문의"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_reordering
+msgid "Automatic Procurements"
+msgstr "자동 조달"
+
+#. module: mrp
+#: wizard_field:change_production_qty,confirm,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
+#: field:mrp.production.product.line,product_qty:0
+msgid "Product Qty"
+msgstr "상품 수량"
+
+#. module: mrp
+#: field:mrp.production,move_lines:0
+msgid "Products Consummed"
+msgstr "소비된 상품"
+
+#. module: mrp
+#: field:mrp.workcenter,costs_cycle_account_id:0
+msgid "Cycle Account"
+msgstr "사이클 계정"
+
+#. module: mrp
+#: view:mrp.workcenter:0
+msgid "Capacity Information"
+msgstr "생산용량 정보"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Packing Exception"
+msgstr "포장 예외"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_orderrfq0
+msgid "A purchase order is created for a sub-contracting demand."
+msgstr "하청 계약 수요를 위해 구매 주문이 생성됩니다."
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Destination Location"
+msgstr "목적지 위치"
+
+#. module: mrp
+#: view:mrp.workcenter:0
+msgid "Analytic Accounting"
+msgstr "분석 회계"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_servicemts0
+msgid "Do nothing"
+msgstr "아무 것도 안함"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Partner Ref"
+msgstr "파트너 참조"
+
+#. module: mrp
+#: help:mrp.procurement.orderpoint.compute,init,automatic:0
+msgid "If the stock of a product is under 0, it will act like an orderpoint"
+msgstr "제품 스톡이 0 이하일 때, 주문포인트처럼 역할합니다."
+
+#. module: mrp
+#: selection:mrp.workcenter.load,init,measure_unit:0
+msgid "Amount in hours"
+msgstr "수량 (시간)"
+
+#. module: mrp
+#: field:mrp.production,product_lines:0
+msgid "Scheduled goods"
+msgstr "계획된 제품"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_producttostockrules0
+msgid "you can see the minimum stock rules from product"
+msgstr "상품으로부터 최소 재고 규칙을 볼 수 있습니다."
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Sets / Phantom"
+msgstr "세트 / 판톰"
+
+#. module: mrp
+#: wizard_view:mrp.procurement.compute,init:0
+msgid "This wizard will schedule procurements."
+msgstr "이 위저드는 조달 일정을 작성합니다."
+
+#. module: mrp
+#: field:mrp.bom,position:0
+msgid "Internal Ref."
+msgstr "내부 참조"
+
+#. module: mrp
+#: view:mrp.procurement:0
+#: field:mrp.procurement,state:0
+#: field:mrp.production,state:0
+msgid "Status"
+msgstr "상태"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_stockproduction0
+msgid "Stockable Production Order"
+msgstr "재고 주문"
+
+#. module: mrp
+#: help:mrp.bom,position:0
+msgid "Reference to a position in an external plan."
+msgstr "외부 플랜 내 위치에 대한 참조"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_stockrfq0
+msgid "Stockable Request"
+msgstr "재고 요청"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_serviceonorder0
+msgid "Service on Order"
+msgstr "주문 서비스"
+
+#. module: mrp
+#: help:stock.warehouse.orderpoint,product_max_qty:0
+#: help:stock.warehouse.orderpoint,product_min_qty:0
+msgid ""
+"When the virtual stock goes belong the Min Quantity, Open ERP generates a "
+"procurement to bring the virtual stock to the Max Quantity."
+msgstr "가상 재고가 최소 수량 이하로 떨어지면, Linkr는 가상 재고를 최대 수량으로 증가시킬 조달 프로세스를 생성합니다."
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_stockmts0
+msgid "Stockable Make to Stock"
+msgstr "재고 생산"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: view:mrp.production:0
+msgid "Production Orders"
+msgstr "상품 주문"
+
+#. module: mrp
+#: rml:bom.structure:0
+#: field:mrp.procurement,product_qty:0
+#: rml:mrp.production.order:0
+#: wizard_field:product.product.procurement,init,qty:0
+msgid "Quantity"
+msgstr "수량"
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr "긴급하지 않음"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_procureserviceproduct0
+msgid "Procure Service Product"
+msgstr "서비스 상품 조달"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Confirm Production"
+msgstr "생산 확정"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_purchaseprocure0
+#: field:stock.move,procurements:0
+msgid "Procurements"
+msgstr "조달"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_product_line
+msgid "Production scheduled products"
+msgstr "계획된 상품 생산"
+
+#. module: mrp
+#: field:mrp.workcenter,timesheet_id:0
+msgid "Working Time"
+msgstr "근로 시간"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Details"
+msgstr "상세"
+
+#. module: mrp
+#: model:process.process,name:mrp.process_process_procurementprocess0
+msgid "Procurement Process"
+msgstr "조달 프로세스"
+
+#. module: mrp
+#: field:mrp.production,date_planned_date:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Urgent"
+msgstr "긴급"
+
+#. module: mrp
+#: help:mrp.bom,product_rounding:0
+msgid ""
+"Rounding applied on the product quantity. For integer only values, put 1.0"
+msgstr "상품 수량에는 반올림이 적용됩니다. 정수 값의 경우, 1.0을 입력하십시오."
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Bill Of Material"
+msgstr "BoM"
+
+#. module: mrp
+#: help:mrp.routing,location_id:0
+msgid ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+msgstr ""
+"완제품이 필요한 곳에서 생산할 경우에는 비워 두십시오. 고정된 위치에서 생산할 경우, 위치를 설정하십시오. 생산 오퍼레이션을 하청 "
+"계약으로 수행할 경우에는 파트너의 위치가 적용될 수도 있습니다."
+
+#. module: mrp
+#: field:mrp.procurement,move_id:0
+msgid "Reservation"
+msgstr "예약"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action2
+msgid "Bill of Materials Structure"
+msgstr "BoM 구조"
+
+#. module: mrp
+#: wizard_field:product.product.procurement,init,product_id:0
+msgid "product"
+msgstr "상품"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "max"
+msgstr "최대"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_producttostockrules0
+msgid "Product to stock rules"
+msgstr "재고 생산 규칙"
+
+#. module: mrp
+#: wizard_button:product_price,init,price:0
+msgid "Print product price"
+msgstr "상품 가격 출력"
+
+#. module: mrp
+#: wizard_view:product.product.procurement,done:0
+msgid "Make Procurement"
+msgstr "조달하기"
+
+#. module: mrp
+#: field:mrp.bom.revision,date:0
+msgid "Modification Date"
+msgstr "수정 날짜"
+
+#. module: mrp
+#: help:mrp.workcenter,costs_cycle_account_id:0
+#: help:mrp.workcenter,costs_hour_account_id:0
+msgid ""
+"Complete this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr "생산 주문에 따라 자동적으로 분석 회계 엔트리를 생성하려면, 이를 작성하십시오."
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_stockproduction0
+msgid "If Procure method is Make to order and supply method is produce"
+msgstr "조달 방식이 '주문 생산'이고, 공급 방식이 생산일 경우"
+
+#. module: mrp
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
+msgstr "구매 리드 타임"
+
+#. module: mrp
+#: field:mrp.routing,location_id:0
+msgid "Production Location"
+msgstr "생산 위치"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Change Qty"
+msgstr "수량 변경"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Force Reservation"
+msgstr "예약하기"
+
+#. module: mrp
+#: field:mrp.bom.revision,author_id:0
+msgid "Author"
+msgstr "작성자"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_stockproduct0
+msgid "Stockable Product Stock"
+msgstr "재고"
+
+#. module: mrp
+#: field:mrp.bom,product_uos:0
+#: field:mrp.production.product.line,product_uos:0
+msgid "Product UOS"
+msgstr "상품 UOS"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_productionprocureproducts0
+msgid "Production Procure Products"
+msgstr "생산 조달 상품"
+
+#. module: mrp
+#: model:process.process,name:mrp.process_process_serviceproductprocess0
+msgid "Service Product Process"
+msgstr "서비스 상품 프로세스"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_purchaseprocure0
+msgid "Procurement convert into the draft purchase order."
+msgstr "구매주문 초안으로 전환되는 조달"
+
+#. module: mrp
+#: field:mrp.procurement,message:0
+msgid "Latest error"
+msgstr "최종 에러"
+
+#. module: mrp
+#: field:mrp.bom,bom_lines:0
+msgid "BoM Lines"
+msgstr "BoM 라인"
+
+#. module: mrp
+#: field:mrp.workcenter,time_start:0
+msgid "Time before prod."
+msgstr "생산 준비 시간"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing_workcenter
+msgid "Routing workcenter usage"
+msgstr "워크센타 활용 라우팅"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Consumed Products"
+msgstr "소비된 상품"
+
+#. module: mrp
+#: constraint:mrp.bom:0
+msgid "Error ! You can not create recursive BoM."
+msgstr "에러 ! 재귀적 BoM을 만들 수는 없습니다."
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_stockmts0
+#: model:process.transition,note:mrp.process_transition_stockrfq0
+msgid "If Product type is Stockable and procure method is make to stock"
+msgstr "상품 유형이 재고인 경우, 그리고 조달 방법이 '재고 생산'일 경우"
+
+#. module: mrp
+#: field:res.company,manufacturing_lead:0
+msgid "Manufacturity Lead Time"
+msgstr "생산성 리드 타임"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action4
+msgid "Exceptions Procurements to Fix"
+msgstr "고정할 예외 조달"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+msgid "Ready"
+msgstr "준비"
+
+#. module: mrp
+#: view:mrp.routing:0
+msgid "Workcenter Operations"
+msgstr "워크센터 운영"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action2_gantt
+#: model:ir.ui.menu,name:mrp.menu_production_orders_start_gantt
+msgid "Production Orders Planning"
+msgstr "생산 주문 계획"
+
+#. module: mrp
+#: help:mrp.workcenter,time_efficiency:0
+msgid "Factor that multiplies all times expressed in the workcenter."
+msgstr "워크센터에 표현된 모든 시간들을 곱하는 팩터"
+
+#. module: mrp
+#: help:mrp.workcenter,time_cycle:0
+msgid "Time in hours for doing one cycle."
+msgstr "한 사이클을 수행하는 시간"
+
+#. module: mrp
+#: field:mrp.production,date_finnished:0
+msgid "End Date"
+msgstr "마감 날짜"
+
+#. module: mrp
+#: help:mrp.production,picking_id:0
+msgid ""
+"This is the internal picking list take bring the raw materials to the "
+"production plan."
+msgstr "원재료를 생산 플랜에 가져갈 내부 피킹 리스트"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "In Production"
+msgstr "생산 중"
+
+#. module: mrp
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
+msgstr "수량"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+msgid "Waiting"
+msgstr "대기"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing
+#: field:mrp.bom,routing_id:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
+#: model:process.node,name:mrp.process_node_routing0
+msgid "Routing"
+msgstr "라우팅"
+
+#. module: mrp
+#: wizard_button:mrp.workcenter.load,init,report:0
+msgid "Print"
+msgstr "출력"
+
+#. module: mrp
+#: field:mrp.workcenter,type:0
+msgid "Type"
+msgstr "유형"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_stockproduct0
+#: model:process.node,note:mrp.process_node_stockproduct1
+msgid "For stockable and consumable"
+msgstr "재고성이고 소비성"
+
+#. module: mrp
+#: selection:mrp.workcenter.load,init,time_unit:0
+msgid "Per month"
+msgstr "월별"
+
+#. module: mrp
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
+msgstr "UoS 수량"
+
+#. module: mrp
+#: rml:bom.structure:0
+msgid "Product Name"
+msgstr "상품 이름"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Printing date"
+msgstr "출력 날짜"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_orderrfq0
+#: model:process.node,name:mrp.process_node_rfq0
+msgid "RFQ"
+msgstr "RFQ"
+
+#. module: mrp
+#: field:mrp.bom,revision_type:0
+msgid "indice type"
+msgstr "색인 유형"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_production0
+msgid "Production orders are created for the product manufacturing."
+msgstr "상품 생산 주문이 생성되었습니다."
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "WorkCenter"
+msgstr "워크센터"
+
+#. module: mrp
+#: field:stock.warehouse.orderpoint,product_min_qty:0
+msgid "Min Quantity"
+msgstr "최소 수량"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Production orders"
+msgstr "생산 주문"
+
+#. module: mrp
+#: field:mrp.bom,child_complete_ids:0
+#: field:mrp.bom,child_ids:0
+msgid "BoM Hyerarchy"
+msgstr "BoM 계층구조"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Procurement Lines"
+msgstr "조달 라인"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_servicemts0
+msgid "If Product type is service and procure method is Make to stock"
+msgstr "상품 타입이 서비스이고, 조달 방식이 '재고 생산'일 경우"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_serviceproduct0
+#: model:process.node,note:mrp.process_node_serviceproduct1
+msgid "If Product type is service"
+msgstr "상품 타입이 서비스일 경우"
+
+#. module: mrp
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr "안전 기간 (일)"
+
+#. module: mrp
+#: view:mrp.production:0
+#: field:mrp.production,cycle_total:0
+msgid "Total Cycles"
+msgstr "총 사이클"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Ready to Produce"
+msgstr "생산 준비"
+
+#. module: mrp
+#: field:mrp.bom.revision,name:0
+msgid "Modification name"
+msgstr "수정 이름"
+
+#. module: mrp
+#: field:mrp.bom,type:0
+msgid "BoM Type"
+msgstr "BoM 유형"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+msgid "Exception"
+msgstr "예외"
+
+#. module: mrp
+#: wizard_view:product.product.procurement,init:0
+msgid ""
+"This wizard will planify the procurement for this product. This procurement "
+"may generate task, production orders or purchase orders."
+msgstr "이 위저드는 이 상품의 조달 계획을 작성합니다. 조달 프로세스는 과제, 생산 주문 또는 구매 주문을 생성합니다."
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_mts0
+msgid "The system waits for requested products in stock."
+msgstr "시스템이 재고 상품 요청을 기다리고 있습니다."
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_servicemto0
+msgid "Serivce Stockable Order"
+msgstr "서비스 재고 주문"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_minimumstockprocure0
+msgid "From minimum stock rules, it goes for procure product."
+msgstr "최소 재고 규칙으로부터 상품 조달로 이동합니다."
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_stockproduct0
+#: model:process.node,name:mrp.process_node_stockproduct1
+msgid "Stockable Product"
+msgstr "재고"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Production done"
+msgstr "생산 완료"
+
+#. module: mrp
+#: rml:bom.structure:0
+#: field:mrp.bom,code:0
+#: field:mrp.routing,code:0
+#: field:mrp.workcenter,code:0
+msgid "Code"
+msgstr "코드"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "No. Of Hours"
+msgstr "시간"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property_group
+#: field:mrp.property,group_id:0
+#: field:mrp.property.group,name:0
+msgid "Property Group"
+msgstr "속성 그룹"
+
+#. module: mrp
+#: field:mrp.bom,bom_id:0
+msgid "Parent BoM"
+msgstr "부모 BoM"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "References"
+msgstr "참조"
+
+#. module: mrp
+#: wizard_button:change_production_qty,confirm,end:0
+#: view:mrp.procurement:0
+#: selection:mrp.procurement,state:0
+#: wizard_button:mrp.procurement.compute,init,end:0
+#: wizard_button:mrp.procurement.compute.all,init,end:0
+#: wizard_button:mrp.procurement.orderpoint.compute,init,end:0
+#: view:mrp.production:0
+#: wizard_button:mrp.workcenter.load,init,end:0
+#: wizard_button:product.product.procurement,init,end:0
+#: wizard_button:product_price,init,end:0
+msgid "Cancel"
+msgstr "취소"
+
+#. module: mrp
+#: field:mrp.production,move_prod_id:0
+msgid "Move product"
+msgstr "상품 이동"
+
+#. module: mrp
+#: selection:mrp.workcenter,type:0
+msgid "Machine"
+msgstr "기계"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_servicemts0
+msgid "Make to stock"
+msgstr "재고 생산"
+
+#. module: mrp
+#: field:mrp.workcenter,name:0
+msgid "Workcenter Name"
+msgstr "워크센터 이름"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Start Production"
+msgstr "생산 시작"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "min"
+msgstr "최소"
+
+#. module: mrp
+#: help:mrp.workcenter,note:0
+msgid ""
+"Description of the workcenter. Explain here what's a cycle according to this "
+"workcenter."
+msgstr "워크센터 설명. 이 워크센터에 기초하여 사이클을 설명하십시오."
+
+#. module: mrp
+#: rml:bom.structure:0
+msgid "-"
+msgstr "-"
+
+#. module: mrp
+#: selection:mrp.workcenter,type:0
+msgid "Human Resource"
+msgstr "사람"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_action
+#: field:mrp.routing,workcenter_lines:0
+msgid "Workcenters"
+msgstr "워크센터"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "UOM"
+msgstr "UoM"
+
+#. module: mrp
+#: selection:mrp.procurement,procure_method:0
+msgid "on order"
+msgstr "주문"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
+#: model:ir.ui.menu,name:mrp.mrp_Sched_all
+msgid "Compute All Schedulers"
+msgstr "모든 스케줄러 계산"
+
+#. module: mrp
+#: field:mrp.production.workcenter.line,cycle:0
+msgid "Nbr of cycle"
+msgstr "사이클 수"
+
+#. module: mrp
+#: field:mrp.bom,name:0
+#: field:mrp.procurement,name:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.product.line,name:0
+#: field:mrp.property,name:0
+#: field:mrp.routing,name:0
+#: field:mrp.routing.workcenter,name:0
+#: field:stock.warehouse.orderpoint,name:0
+msgid "Name"
+msgstr "이름"
+
+#. module: mrp
+#: field:mrp.routing.workcenter,cycle_nbr:0
+msgid "Number of Cycle"
+msgstr "사이클 수"
+
+#. module: mrp
+#: wizard_field:mrp.workcenter.load,init,measure_unit:0
+msgid "Amount measuring unit"
+msgstr "수량 측정 단위"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Run procurement"
+msgstr "조달 실행"
+
+#. module: mrp
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurement that are not between today and today+range are "
+"skipped for futur computation."
+msgstr ""
+"조달을 계산할 때 스케줄러에 의해 분석되는 시간 프레임입니다. 오늘과 오늘+범위 사이에 있지 않은 모든 조달이 향후 계산에서 제외됩니다."
+
+#. module: mrp
+#: field:mrp.workcenter,time_efficiency:0
+msgid "Time Efficiency"
+msgstr "시간 효율"
+
+#. module: mrp
+#: help:res.company,manufacturing_lead:0
+msgid "Security days for each manufacturing operation."
+msgstr "각 생산 오퍼레이션을 위한 여유 기간 (일)"
+
+#. module: mrp
+#: wizard_view:mrp.procurement.compute.all,init:0
+msgid "Scheduler Parameters"
+msgstr "스케줄러 파라미터"
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid "A cycle is defined in the workcenter definition."
+msgstr "사이클은 워크센터 정의 속에 정의됩니다."
+
+#. module: mrp
+#: selection:mrp.workcenter.load,init,measure_unit:0
+msgid "Amount in cycles"
+msgstr "사이클 내 금액"
+
+#. module: mrp
+#: field:mrp.production,location_dest_id:0
+msgid "Finished Products Location"
+msgstr "완제품 위치"
+
+#. module: mrp
+#: wizard_field:product.product.procurement,init,uom_id:0
+msgid "Unit of Measure"
+msgstr "측정 단위"
+
+#. module: mrp
+#: field:mrp.procurement,procure_method:0
+msgid "Procurement Method"
+msgstr "조달 방법"
+
+#. module: mrp
+#: field:mrp.workcenter,costs_journal_id:0
+msgid "Analytic Journal"
+msgstr "분석 저널"
+
+#. module: mrp
+#: selection:mrp.workcenter.load,init,time_unit:0
+msgid "Per week"
+msgstr "주당"
+
+#. module: mrp
+#: wizard_button:mrp.procurement.compute,init,compute:0
+#: wizard_button:mrp.procurement.compute.all,init,compute:0
+#: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
+msgid "Compute Procurements"
+msgstr "조달 계산"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_stock0
+msgid "Wait for available products for reservation"
+msgstr "예약 가능한 상품 대기"
+
+#. module: mrp
+#: wizard_button:change_production_qty,confirm,validate:0
+msgid "Validate"
+msgstr "검증"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_purchaseprocure0
+msgid "Procurement Purchase"
+msgstr "조달 구매"
+
+#. module: mrp
+#: field:mrp.production.workcenter.line,hour:0
+msgid "Nbr of hour"
+msgstr "시간"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Notes"
+msgstr "노트"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom
+#: view:mrp.bom:0
+#: field:mrp.production,bom_id:0
+msgid "Bill of Material"
+msgstr "BOM"
+
+#. module: mrp
+#: wizard_view:mrp.workcenter.load,init:0
+msgid "Select time unit"
+msgstr "시간 단위 선택"
+
+#. module: mrp
+#: wizard_field:product_price,init,number:0
+msgid "Number of products to produce"
+msgstr "생산할 상품의 수량"
+
+#. module: mrp
+#: help:mrp.production,location_dest_id:0
+msgid "Location where the system will stock the finished products."
+msgstr "완제품을 보관할 시스템의 위치"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
+msgid "Material routing"
+msgstr "원재료 라우팅"
+
+#. module: mrp
+#: selection:mrp.workcenter.load,init,time_unit:0
+msgid "Day by day"
+msgstr "일일"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_productminimumstockrule0
+msgid "Minimum stock rule"
+msgstr "최소 스톡 규칙"
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid "Revisions"
+msgstr "리비전"
+
+#. module: mrp
+#: field:mrp.bom,product_efficiency:0
+msgid "Product Efficiency"
+msgstr "상품 효율"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
+msgid "Orderpoint minimum rule"
+msgstr "주문포인트 최소 규칙"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_servicemts0
+msgid "Service Make to Stock"
+msgstr "서비스 '재고 생산'"
+
+#. module: mrp
+#: field:mrp.production,sale_ref:0
+msgid "Sale Ref"
+msgstr "판매 참조"
+
+#. module: mrp
+#: field:mrp.procurement,priority:0
+#: field:mrp.production,priority:0
+#: rml:mrp.production.order:0
+msgid "Priority"
+msgstr "우선순위"
+
+#. module: mrp
+#: field:mrp.procurement,location_id:0
+#: field:stock.warehouse.orderpoint,location_id:0
+msgid "Location"
+msgstr "위치"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_new
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_new
+msgid "New Procurement"
+msgstr "새 조달"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Production Order N° :"
+msgstr "생산 주문 번호:"
+
+#. module: mrp
+#: selection:mrp.workcenter,type:0
+msgid "Tool"
+msgstr "툴"
+
+#. module: mrp
+#: help:mrp.production,location_src_id:0
+msgid ""
+"Location where the system will look for products used in raw materials."
+msgstr "시스템이 원재료를 찾는 장소"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+#: wizard_field:product.product.procurement,init,date_planned:0
+msgid "Planned Date"
+msgstr "계획된 날짜"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_purchaseprocure0
+msgid "Procurement orders"
+msgstr "조달 주문"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_mts0
+msgid "Make to Stock"
+msgstr "재고 생산"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_servicemto0
+msgid "If product type is service and procure method is Make to order"
+msgstr "상품 유형이 서비스이고, 조달 방법이 '주문 생산'일 경우"
+
+#. module: mrp
+#: field:res.company,schedule_range:0
+msgid "Scheduler Range"
+msgstr "스케줄러 범위"
+
+#. module: mrp
+#: field:stock.warehouse.orderpoint,product_max_qty:0
+msgid "Max Quantity"
+msgstr "최대 수량"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_procurement
+#: view:mrp.procurement:0
+msgid "Procurement"
+msgstr "조달"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.product_procurement_wizard
+msgid "Procurement Request"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wizard_price
+msgid "Product Cost Structure"
+msgstr "상품 원가 구조"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
+msgid "Minimum Stock Procure"
+msgstr "최소 스톡 조달"
+
+#. module: mrp
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
+msgstr "각 구매 주문의 리드/안전 시간"
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid "BoM Structure"
+msgstr "BoM 구조"
+
+#. module: mrp
+#: field:mrp.production,date_start:0
+msgid "Start Date"
+msgstr "시작 날짜"
+
+#. module: mrp
+#: field:mrp.workcenter,costs_hour_account_id:0
+msgid "Hour Account"
+msgstr "시간 계정"
+
+#. module: mrp
+#: selection:mrp.bom,revision_type:0
+msgid "alphabetical indices"
+msgstr "문자 인덱스"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_productionorder0
+msgid "Procurement for raw materials."
+msgstr "원재료 조달"
+
+#. module: mrp
+#: view:mrp.procurement:0
+#: field:mrp.procurement,note:0
+#: rml:mrp.production.order:0
+msgid "Note"
+msgstr "노트"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_procurestockableproduct0
+msgid "Procure Stockable Product"
+msgstr "재고성 상품 조달"
+
+#. module: mrp
+#: field:mrp.bom,method:0
+msgid "Method"
+msgstr "방법"
+
+#. module: mrp
+#: wizard_view:product_price,init:0
+msgid "Paid ?"
+msgstr "지불됨 ?"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_routing0
+msgid "Define a routing to describe the manufacturing steps."
+msgstr "생산 단계를 기술할 라우팅 정의"
+
+#. module: mrp
+#: field:mrp.bom,active:0
+#: field:mrp.routing,active:0
+#: field:mrp.workcenter,active:0
+#: field:stock.warehouse.orderpoint,active:0
+msgid "Active"
+msgstr "활성"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_procureproducts0
+msgid "Procure Products"
+msgstr "상품 조달"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action_prop
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.procurement:0
+#: field:mrp.procurement,property_ids:0
+#: view:mrp.property:0
+msgid "Properties"
+msgstr "속성"
+
+#. module: mrp
+#: field:mrp.procurement,date_planned:0
+#: field:mrp.production,date_planned:0
+msgid "Scheduled date"
+msgstr "계획된 날짜"
+
+#. module: mrp
+#: view:mrp.procurement:0
+#: view:mrp.production:0
+msgid "Extra Information"
+msgstr "추가 정보"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_billofmaterial0
+msgid "Define the product structure, with sub-products and/or components."
+msgstr "상품 구조를 하위 상품 및/또는 부품과 더불어 정의"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_minimumstockrule0
+msgid ""
+"Procurement is created if the product quantity is lower than the minimum "
+"limit."
+msgstr "상품 수량이 최소 한계 이하일 경우 조달이 생성됩니다."
+
+#. module: mrp
+#: field:mrp.procurement,date_close:0
+msgid "Date Closed"
+msgstr "마감된 날짜"
+
+#. module: mrp
+#: field:mrp.workcenter,costs_general_account_id:0
+msgid "General Account"
+msgstr "일반 계정"
+
+#. module: mrp
+#: field:mrp.property,composition:0
+msgid "Properties composition"
+msgstr "속성 구성"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action4
+#: model:ir.ui.menu,name:mrp.menu_production_orders_waiting4
+msgid "Production Orders Waiting Products"
+msgstr "상품을 기다리는 생산 주문"
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "SO Number"
+msgstr "SO 번호"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wizard_change_production_qty
+msgid "Change Product Qty."
+msgstr "상품 수량 변경"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
+msgid "Done"
+msgstr "완료"
+
+#. module: mrp
+#: help:stock.warehouse.orderpoint,qty_multiple:0
+msgid "The procurement quantity will by rounded up to this multiple."
+msgstr "조달 수량은 이 배수로 반올림됩니다."
+
+#. module: mrp
+#: field:stock.warehouse.orderpoint,logic:0
+msgid "Reordering Mode"
+msgstr "재 주문 모드"
+
+#. module: mrp
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr "오브젝트 이름은 x_로 시작하고, 특수 문자가 없어야 합니다 !"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_procureproducts0
+msgid "Central document to procure products"
+msgstr "상품을 조달할 중앙 문서"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action3
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action3
+msgid "Production Orders in Progress"
+msgstr "진행 중인 생산 주문"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_product_2_stock_warehouse_orderpoint
+#: model:ir.actions.act_window,name:mrp.act_stock_warehouse_2_stock_warehouse_orderpoint
+#: model:ir.actions.act_window,name:mrp.action_orderpoint_form
+#: model:ir.ui.menu,name:mrp.menu_action_orderpoint_form
+#: view:stock.warehouse.orderpoint:0
+msgid "Minimum Stock Rules"
+msgstr "최소 재고 규칙"
+
+#. module: mrp
+#: field:mrp.workcenter,capacity_per_cycle:0
+msgid "Capacity per Cycle"
+msgstr "사이클당 생산용량"
+
+#. module: mrp
+#: field:mrp.bom,product_id:0
+#: field:mrp.procurement,product_id:0
+#: field:mrp.production,product_id:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.product.line,product_id:0
+#: field:stock.warehouse.orderpoint,product_id:0
+msgid "Product"
+msgstr "상품"
+
+#. module: mrp
+#: view:mrp.production:0
+#: field:mrp.production,hour_total:0
+msgid "Total Hours"
+msgstr "총 시간"
+
+#. module: mrp
+#: field:mrp.production,location_src_id:0
+msgid "Raw Materials Location"
+msgstr "원재료 위치"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_product_bom_structure
+msgid "Product BoM Structure"
+msgstr "상품 BoM 구조"
+
+#. module: mrp
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
+#: field:mrp.production.product.line,product_uom:0
+#: field:stock.warehouse.orderpoint,product_uom:0
+msgid "Product UOM"
+msgstr "상품 UOM"
+
+#. module: mrp
+#: help:mrp.procurement,origin:0
+msgid ""
+"Reference of the document that created this procurement.\n"
+"This is automatically completed by Open ERP."
+msgstr ""
+"이 조달을 생성한 문저의 참조.\n"
+"시스템이 자동 완성합니다."
+
+#. module: mrp
+#: view:mrp.production.lot.line:0
+msgid "Production Products"
+msgstr "상품 생산"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_stockproduct0
+msgid "Product type is Stockable and procure method is make to stock"
+msgstr "상품 유형이 재고성이며, 조달 방식이 '재고 생산'"
+
+#. module: mrp
+#: help:mrp.bom,date_start:0
+#: help:mrp.bom,date_stop:0
+msgid "Validity of this BoM or component. Keep empty if it's always valid."
+msgstr "이 BoM 또는 부품의 유효성. 항상 유효할 경우에는 비워 두십시오."
+
+#. module: mrp
+#: field:mrp.procurement,product_uos:0
+#: field:mrp.production,product_uos:0
+msgid "Product UoS"
+msgstr "상품 UoS"
+
+#. module: mrp
+#: field:mrp.procurement,product_uom:0
+msgid "Product UoM"
+msgstr "상품 UoM"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter
+#: field:mrp.production.workcenter.line,workcenter_id:0
+#: field:mrp.routing.workcenter,workcenter_id:0
+#: view:mrp.workcenter:0
+msgid "Workcenter"
+msgstr "워크센터"
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Very Urgent"
+msgstr "매우 긴급"
+
+#. module: mrp
+#: field:mrp.procurement,purchase_id:0
+#: field:stock.warehouse.orderpoint,procurement_id:0
+msgid "Purchase Order"
+msgstr "구매 주문"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Production Workcenters"
+msgstr "생산 워크센터"
+
+#. module: mrp
+#: view:mrp.property.group:0
+msgid "Properties categories"
+msgstr "속성 카테고리"
+
+#. module: mrp
+#: help:mrp.procurement,procure_method:0
+msgid ""
+"If you encode manually a procurement, you probably want to use a make to "
+"order method."
+msgstr "조달을 수작업으로 인코드할 경우, '주문 생산' 방식이 적합합니다."
+
+#. module: mrp
+#: rml:mrp.production.order:0
+msgid "Source Location"
+msgstr "출발지"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_servicerfq0
+msgid "Stockable Order Request"
+msgstr "재고성 주문 요청"
+
+#. module: mrp
+#: view:mrp.production:0
+#: view:mrp.production.product.line:0
+msgid "Scheduled Products"
+msgstr "계획된 상품"
+
+#. module: mrp
+#: view:mrp.production.lot.line:0
+msgid "Production Products Consommation"
+msgstr "생산 상품 소비"
+
+#. module: mrp
+#: selection:mrp.bom,revision_type:0
+msgid "numeric indices"
+msgstr "수치 인덱스"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_servicerfq0
+msgid "If Procure method is Make to order and supply method is buy"
+msgstr "조달 방식이 '주문 생산'이고, 공급 방식이 구매일 경우"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_procurestockableproduct0
+msgid "if Product type is Stockable in procurement order"
+msgstr "상품 유형이 조달 주문에서 재고성일 경우"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_workcenter_line
+#: view:mrp.production:0
+#: rml:mrp.production.order:0
+msgid "Work Orders"
+msgstr "작업 지시"
+
+#. module: mrp
+#: field:mrp.workcenter,costs_cycle:0
+msgid "Cost per cycle"
+msgstr "사이클당 원가"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom_revision
+msgid "Bill of material revisions"
+msgstr "BoM 리비전"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Planification"
+msgstr "계획"
+
+#. module: mrp
+#: rml:bom.structure:0
+#: model:process.transition,name:mrp.process_transition_bom0
+msgid "BOM"
+msgstr "BOM"
+
+#. module: mrp
+#: help:mrp.bom,type:0
+msgid ""
+"Use a phantom bill of material in raw materials lines that have to be "
+"automatically computed in on eproduction order and not one per level.If you "
+"put \"Phantom/Set\" at the root level of a bill of material it is considered "
+"as a set or pack: the products are replaced by the components between the "
+"sale order to the picking without going through the production order.The "
+"normal BoM will generate one production order per BoM level."
+msgstr ""
+"레벨 당 하나가 아니라, 하나의 생산 주문에서 자동 계산되어야 하는 원재료 라인 속의 팬텀 BoM을 이용하십시오. BOM의 루트 레벨에 "
+"\"팬텀/세트\"을 두면, 세트나 팩으로 간주됩니다: 상품은 생산 주문을 통하지 않고, 판매 오더에서 피킹 사이에 컴포넌트로 대체됩니다. "
+"일반 BoM은 각 BoM 레벨 마다 하나의 생산 주문을 생성합니다."
+
+#. module: mrp
+#: field:mrp.workcenter,time_cycle:0
+msgid "Time for 1 cycle (hour)"
+msgstr "1 사이클 시간"
+
+#. module: mrp
+#: wizard_view:product.product.procurement,done:0
+msgid "Your procurement request has been sent !"
+msgstr "조달 요청이 전송되었습니다 !"
+
+#. module: mrp
+#: wizard_view:product.product.procurement,init:0
+msgid "Internal Procurement Request"
+msgstr "내부 조달 요청"
+
+#. module: mrp
+#: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
+#: field:mrp.production.product.line,production_id:0
+#: field:mrp.production.workcenter.line,production_id:0
+#: model:process.node,name:mrp.process_node_production0
+#: model:process.node,name:mrp.process_node_productionorder0
+msgid "Production Order"
+msgstr "생산 주문"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Compute Data"
+msgstr "데이터 계산"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_group_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
+msgid "Property Categories"
+msgstr "속성 카테고리"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
+msgid "Compute Procurements Only"
+msgstr "조달만 계산"
+
+#. module: mrp
+#: field:mrp.production,product_uos_qty:0
+msgid "Product UoS Qty"
+msgstr "상품 UoS 수량"
+
+#. module: mrp
+#: rml:bom.structure:0
+#: model:ir.actions.report.xml,name:mrp.report_bom_structure
+msgid "BOM Structure"
+msgstr "BOM 구조"
+
+#. module: mrp
+#: field:mrp.bom,date_stop:0
+msgid "Valid Until"
+msgstr "유효 마감 날짜"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_action11
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action11
+msgid "Temporary Procurement Exceptions"
+msgstr "일시적 조달 예외"
+
+#. module: mrp
+#: field:mrp.bom,date_start:0
+msgid "Valid From"
+msgstr "유효 시작 날짜"
+
+#. module: mrp
+#: selection:mrp.bom,type:0
+msgid "Normal BoM"
+msgstr "일반 BoM"
+
+#. module: mrp
+#: field:mrp.bom,product_uos_qty:0
+#: field:mrp.production.product.line,product_uos_qty:0
+msgid "Product UOS Qty"
+msgstr "상품 UOS 수량"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+msgid "Confirmed"
+msgstr "확정됨"
+
+#. module: mrp
+#: wizard_view:mrp.procurement.compute,init:0
+#: wizard_view:mrp.procurement.orderpoint.compute,init:0
+msgid "Parameters"
+msgstr "파라미터"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Confirm"
+msgstr "확정"
+
+#. module: mrp
+#: field:mrp.production,workcenter_lines:0
+msgid "Workcenters Utilisation"
+msgstr "워크센터 활용"
+
+#. module: mrp
+#: help:mrp.bom,product_efficiency:0
+msgid ""
+"Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
+"production."
+msgstr "생산 효율. 팩터 0.9는 생산 중에 10%의 손실이 발생함을 의미함."
+
+#. module: mrp
+#: field:mrp.bom,product_rounding:0
+msgid "Product Rounding"
+msgstr "상품 반올림"
+
+#. module: mrp
+#: field:mrp.production.workcenter.line,name:0
+msgid "Work Order"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Recreate Picking"
+msgstr "피킹 다시 생성"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_serviceonorder0
+msgid "If procurement is make to order"
+msgstr "조달이 '주문 생산'일 경우"
+
+#. module: mrp
+#: selection:mrp.bom,method:0
+msgid "On Order"
+msgstr "주문에 따라"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_minimumstockrule0
+msgid "Minimum Stock Rule"
+msgstr "최소 재고 규칙"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action_new
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action_new
+msgid "New Bill of Materials"
+msgstr "새 BoM"
+
+#. module: mrp
+#: field:mrp.workcenter,time_stop:0
+msgid "Time after prod."
+msgstr "생산 뒷정리 시간"
+
+#. module: mrp
+#: wizard_field:mrp.workcenter.load,init,time_unit:0
+msgid "Type of period"
+msgstr "기간 유형"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "총 수량"
+
+#. module: mrp
+#: field:mrp.routing.workcenter,hour_nbr:0
+msgid "Number of Hours"
+msgstr "시간"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action
+msgid "Procurement Orders"
+msgstr "조달 주문"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_property
+msgid "Property"
+msgstr "속성"
+
+#. module: mrp
+#: field:mrp.routing.workcenter,routing_id:0
+msgid "Parent Routing"
+msgstr "부모 라우팅"
+
+#. module: mrp
+#: help:mrp.workcenter,time_start:0
+msgid "Time in hours for the setup."
+msgstr "셋업 시간"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Canceled"
+msgstr "취소됨"
+
+#. module: mrp
+#: selection:mrp.property,composition:0
+msgid "plus"
+msgstr "더하기"
+
+#. module: mrp
+#: field:mrp.bom.revision,bom_id:0
+#: field:mrp.procurement,bom_id:0
+msgid "BoM"
+msgstr "BoM"
+
+#. module: mrp
+#: help:mrp.bom,routing_id:0
+msgid ""
+"The list of operations (list of workcenters) to produce the finished "
+"product. The routing is mainly used to compute workcenter costs during "
+"operations and to plan futur loads on workcenters based on production "
+"plannification."
+msgstr ""
+"완제품 생산을 위한 오퍼레이션 리스트 (워크센터 리스트). 이 라우팅은 주로 오퍼레이션 중의 워크센터 원가 계산과 생산 계획에 기초한 "
+"워크센터 부하량을 계획하는데 이용됩니다."
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Waiting Goods"
+msgstr "대기 상품"
+
+#. module: mrp
+#: model:process.process,name:mrp.process_process_stockableproductprocess0
+msgid "Stockable Product Process"
+msgstr "재고성 상품 프로세스"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_new
+#: model:ir.ui.menu,name:mrp.menu_production_orders_new
+msgid "New Production Order"
+msgstr "새 생산 주문"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_rfq0
+msgid "A Request for Quotation is created and sent to the supplier."
+msgstr "견적 요청이 생성되어 공급자에게 전송됩니다."
+
+#. module: mrp
+#: field:mrp.bom.revision,last_indice:0
+msgid "last indice"
+msgstr "마지막 인덱스"
+
+#. module: mrp
+#: field:mrp.bom,revision_ids:0
+#: view:mrp.bom.revision:0
+msgid "BoM Revisions"
+msgstr "BoM 리비전"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Retry"
+msgstr "다시 시도"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+#: selection:mrp.production,state:0
+msgid "Draft"
+msgstr "초안"
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Normal"
+msgstr "보통"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_productionprocureproducts0
+msgid "When any procuere products, it comes into the prpcurement orders"
+msgstr "상품 조달 시, 조달 주문에 들어갑니다."
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action2
+#: model:ir.ui.menu,name:mrp.menu_production_orders_start
+msgid "Production Orders To Start"
+msgstr "시작할 생산 주문"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Procurement Reason"
+msgstr "조달 이유"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
+msgid "An entry is being made from billing material to routing."
+msgstr "원재료 청구에서 라우팅까지 엔트리가 만들어 집니다."
+
+#. module: mrp
+#: help:mrp.workcenter,timesheet_id:0
+msgid "The normal working time of the workcenter."
+msgstr "워크센터의 평균 근로시간"
+
+#. module: mrp
+#: selection:stock.warehouse.orderpoint,logic:0
+msgid "Order to Max"
+msgstr "최대 주문"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
+#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: model:process.node,name:mrp.process_node_billofmaterial0
+msgid "Bill of Materials"
+msgstr "BoM"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_procureserviceproduct0
+msgid "In procurement order, if product type is service"
+msgstr "상품 유형이 서비스일 경우, 조달 주문 내에서"
+
+#. module: mrp
+#: selection:mrp.procurement,procure_method:0
+msgid "from stock"
+msgstr "재고로부터"
+
+#. module: mrp
+#: view:mrp.bom:0
+#: view:mrp.property:0
+#: view:mrp.property.group:0
+#: view:mrp.routing:0
+#: view:mrp.routing.workcenter:0
+msgid "General Information"
+msgstr "일반 정보"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Productions"
+msgstr "생산"
+
+#. module: mrp
+#: wizard_button:product.product.procurement,done,end:0
+msgid "Close"
+msgstr "닫기"
+
+#. module: mrp
+#: field:mrp.production,sale_name:0
+msgid "Sale Name"
+msgstr "판매 이름"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_productminimumstockrule0
+msgid "Create minimum stock rules"
+msgstr "최소 재고 규칙 만들기"
+
+#. module: mrp
+#: wizard_field:product.product.procurement,init,warehouse_id:0
+#: field:stock.warehouse.orderpoint,warehouse_id:0
+msgid "Warehouse"
+msgstr "창고"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
+#: field:stock.move,production_id:0
+msgid "Production"
+msgstr "생산"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_serviceproduct0
+#: model:process.node,name:mrp.process_node_serviceproduct1
+msgid "Service Product"
+msgstr "서비스 상품"
+
+#. module: mrp
+#: field:mrp.procurement,close_move:0
+msgid "Close Move at end"
+msgstr "마지막에 무브를 닫기"
+
+#. module: mrp
+#: wizard_view:change_production_qty,confirm:0
+msgid "Change Product Qty"
+msgstr "상품 수량 변경"
+
+#. module: mrp
+#: field:mrp.bom.revision,description:0
+#: view:mrp.property:0
+#: field:mrp.property,description:0
+#: field:mrp.property.group,description:0
+#: view:mrp.routing:0
+#: field:mrp.routing,note:0
+#: field:mrp.routing.workcenter,note:0
+#: view:mrp.workcenter:0
+#: field:mrp.workcenter,note:0
+msgid "Description"
+msgstr "설명"
+
+#. module: mrp
+#: selection:mrp.procurement,state:0
+msgid "Running"
+msgstr "작동 중"
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_root
+msgid "Manufacturing"
+msgstr "제조"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
+#: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action3
+msgid "Unscheduled procurements"
+msgstr "계획 외 조달"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_bom_tree_action
+#: model:ir.ui.menu,name:mrp.menu_bom_tree
+msgid "Bill of Material Structure"
+msgstr "BoM 구조"
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wizard_workcenter_load
+msgid "Workcenter load"
+msgstr "워크센터 부하"
+
+#. module: mrp
+#: help:mrp.workcenter,time_stop:0
+msgid "Time in hours for the cleaning."
+msgstr "청소 시간"
+
+#. module: mrp
+#: view:mrp.procurement:0
+msgid "Procurement Details"
+msgstr "조달 상세내용"
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_bom0
+msgid "You can see its bill of material which are used to make product"
+msgstr "상품 생산에 이용될 BoM을 볼 수 있습니다."
+
+#. module: mrp
+#: field:mrp.production,date_planned_end:0
+msgid "Scheduled End"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.bom,method:0
+msgid "On Stock"
+msgstr "재고"
+
+#. module: mrp
+#: field:mrp.bom,sequence:0
+#: rml:mrp.production.order:0
+#: field:mrp.production.workcenter.line,sequence:0
+#: field:mrp.routing.workcenter,sequence:0
+msgid "Sequence"
+msgstr "시퀀스"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
+msgid "Bill of Materials Components"
+msgstr "BoM 컴포넌트"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "경고 !"
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "제품 이름"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "상품"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "워크센터 이름"
+
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "상품 표준 가격"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "상품 수량"
+
+#, python-format
+#~ msgid "No BoM defined for this product !"
+#~ msgstr "이 상품에 정의된 BoM이 없습니다 !"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "시간 원가"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "유효하지 않은 액션 !"
+
+#, python-format
+#~ msgid "Couldn't find bill of material for product"
+#~ msgstr "상품의 BoM을 찾을 수 없습니다"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "소계"
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "단위 상품 가격"
+
+#~ msgid "Qty"
+#~ msgstr "수량"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "상품 UoM"
+
+#~ msgid "Create Procurement"
+#~ msgstr "조달 생성"
+
+#, python-format
+#~ msgid "Cycles Cost"
+#~ msgstr "사이클 원가"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "이 공급자의 주소가 없음"
+
+#~ msgid "Production workcenters used"
+#~ msgstr "이용된 생산 워크센터"
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "상품 수량"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "에러"
+
+#, python-format
+#~ msgid "Product supplier"
+#~ msgstr "상품 공급자"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "총"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "이 체품에 할당된 공급자가 없음 !"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "재고로부터: 할당된 상품"
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "재고로부터, 그리고 최소 주문포인트 규칙이 정의되지 않음"
+
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr "생산은 \"%s\" 상태입니다. 더 이상 생산수량을 변경할 수 없습니다."
