@@ -57,6 +57,8 @@ class report_stock(report_int):
         dt_to = now
 
         names = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, product_ids))
+        for name in names:
+            names[name] = names[name].encode('utf8')
         products = {}
         prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids)
 
