@@ -42,20 +42,22 @@ class account_tax_code_report(rml_parse.rml_parse):
         if line_ids:
             move_line_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
             for line in move_line_objs:
-                res = {}
-                res['date'] = line.date
-                res['ref'] = line.ref
-                res['acode'] = line.account_id.code
-                res['pname'] = ''
-                res['country'] = ''
+                res = {'date': line.date,
+                       'ref': line.ref,
+                       'acode': line.account_id.code,
+                       'name': line.name,
+                       'debit': line.debit,
+                       'credit': line.credit,
+                       'pname': line.partner_id and line.partner_id.name or '',
+                       }
                 
-                if line.partner_id:
-                    res['pname'] = line.partner_id.name
-                    if line.partner_id.address and line.partner_id.address[0].country_id:
-                        res['country'] = line.partner_id.address[0].country_id.code
-                res['name'] = line.name
-                res['debit'] = line.debit
-                res['credit'] = line.credit
+                if line.partner_id \
+                        and line.partner_id.address \
+                        and line.partner_id.address[0].country_id:
+                    res['country'] = line.partner_id.address[0].country_id.code
+                else:
+                    res['country'] = ''
+
                 result.append(res)
 
         return result
