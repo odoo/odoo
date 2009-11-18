@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 19:52+0000\n"
+"PO-Revision-Date: 2009-11-17 10:31+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 05:07+0000\n"
+"X-Launchpad-Export-Date: 2009-11-18 04:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -38,37 +38,9 @@ msgid "Untaxed amount"
 msgstr "Maksustamata summa"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree8
-#: model:ir.ui.menu,name:sale.menu_action_order_tree8
-msgid "My sales order waiting Invoice"
-msgstr "Minu müügitellimused mis ootavad arvet"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_shop_configuration
-msgid "Configuration"
-msgstr "Seadistused"
-
-#. module: sale
 #: view:sale.order:0
 msgid "Sales orders"
 msgstr "Müügitellimused"
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0
-#: field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Arveldatud"
-
-#. module: sale
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Viga: vaikimisi MÜ ja ostu MÜ peavad olema samast kategooriast."
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Sales Configuration"
-msgstr "Müükide seadistused"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -439,6 +411,12 @@ msgstr ""
 "kinnitamist. See tehing liigutab müügikorralduse pakkelehele."
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree8
+#: model:ir.ui.menu,name:sale.menu_action_order_tree8
+msgid "My sales order waiting Invoice"
+msgstr "Minu müügitellimused mis ootavad arvet"
+
+#. module: sale
 #: rml:sale.order:0
 msgid "Shipping address :"
 msgstr "Tarneaadress :"
@@ -516,6 +494,11 @@ msgstr "Valmis"
 #: field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Hinnakiri"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_shop_configuration
+msgid "Configuration"
+msgstr "Seadistused"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -673,6 +656,12 @@ msgid "Taxes :"
 msgstr "Maksud :"
 
 #. module: sale
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Arveldatud"
+
+#. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
 msgstr "Ettemaksuarve"
@@ -711,10 +700,21 @@ msgid "Create invoices"
 msgstr "Loo arved"
 
 #. module: sale
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Viga: vaikimisi MÜ ja ostu MÜ peavad olema samast kategooriast."
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
 msgstr "Minu müügid saatmise erandis"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Sales Configuration"
+msgstr "Müükide seadistused"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2

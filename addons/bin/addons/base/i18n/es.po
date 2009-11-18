@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-11 18:02+0000\n"
-"Last-Translator: Fernando Muñoz <munozferna@gmail.com>\n"
+"PO-Revision-Date: 2009-11-18 00:02+0000\n"
+"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 05:04+0000\n"
+"X-Launchpad-Export-Date: 2009-11-18 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -31,6 +31,8 @@ msgstr "Puerta de enlace SMS vía clickatell"
 #, python-format
 msgid "No journal for ending writing has been defined for the fiscal year"
 msgstr ""
+"No se ha definido un diario para el asiento de cierre para el ejercicio "
+"fiscal"
 
 #. module: base
 #: view:res.lang:0
@@ -41,7 +43,7 @@ msgstr "%j - Día del año como un número decimal [001,366]."
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product quantity"
-msgstr ""
+msgstr "Cantidad producto"
 
 #. module: base
 #: field:ir.values,meta_unpickle:0
@@ -76,7 +78,7 @@ msgstr "Flujo"
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "Account move line \"%s\" is not valid"
-msgstr ""
+msgstr "La línea de asiento contable \"%s\" no es válida"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -92,7 +94,7 @@ msgstr "Flujo sobre"
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "The Bank type %s of the bank account: %s is not supported"
-msgstr ""
+msgstr "El tipo bancario %s de la cuenta bancaria: %s no está soportado"
 
 #. module: base
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
@@ -103,12 +105,16 @@ msgid ""
 "basic methods or not.\n"
 "\"\""
 msgstr ""
+"\"\"\n"
+"Esta prueba verifica si las clases del módulo están lanzando excepciones al "
+"llamar a métodos básicos o no.\n"
+"\"\""
 
 #. module: base
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Result (/10)"
-msgstr ""
+msgstr "Resultado (/10)"
 
 #. module: base
 #: view:ir.module.module:0
@@ -119,7 +125,7 @@ msgstr "Vistas creadas"
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr ""
+msgstr "¡No puede eliminar el movimiento validado: \"%s\"!"
 
 #. module: base
 #: view:workflow.activity:0
@@ -189,6 +195,8 @@ msgid ""
 "There is no income account defined ' \\n                                     "
 "   'for this product: \"%s\" (id:%d)"
 msgstr ""
+"No hay cuenta de ingresos definida ' \\n                                     "
+"   'para este producto: \"%s\" (id:%d)"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -231,7 +239,7 @@ msgstr "ir.informe.custom.campos"
 #: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "new"
-msgstr ""
+msgstr "nuevo"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -258,7 +266,7 @@ msgstr "Tamaño máx."
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not use this general account in this journal !"
-msgstr ""
+msgstr "¡No puede usar esta cuenta general en este diario!"
 
 #. module: base
 #: field:res.partner.address,name:0
@@ -312,7 +320,7 @@ msgstr "%y - Año sin siglo como un número decimal [00,99]."
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr ""
+msgstr "No puede añadir/modificar asientos en un diario cerrado."
 
 #. module: base
 #: selection:maintenance.contract.wizard,state:0
@@ -328,7 +336,7 @@ msgstr "La regla se satisface si por lo menos un test es Verdadero (OR)"
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No payment mode or payment type code invalid."
-msgstr ""
+msgstr "Sin modo de pago o código de tipo de pago inválido."
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -411,6 +419,9 @@ msgid ""
 "'you have defined cyclic categories ' \\n                                    "
 "'of products!"
 msgstr ""
+"No se pudo resolver la categoría de producto, ' \\n                          "
+"          '¡ha definido categorías cíclicas ' \\n                            "
+"        'de productos!"
 
 #. module: base
 #: wizard_view:server.action.create,init:0
@@ -422,7 +433,7 @@ msgstr "Seleccione tipo de acción"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
-msgstr ""
+msgstr " ¡ No puede reanudar la operación más que en el estado pausado !"
 
 #. module: base
 #: selection:ir.actions.todo,type:0
@@ -445,7 +456,7 @@ msgstr "Objeto personalizado"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "June"
-msgstr ""
+msgstr "Junio"
 
 #. module: base
 #: field:res.lang,date_format:0
@@ -467,7 +478,7 @@ msgstr "Antillas holandesas"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Workcenter name"
-msgstr ""
+msgstr "Nombre de centro de trabajo"
 
 #. module: base
 #: code:addons/addons/base/res/res_user.py:0
@@ -524,7 +535,7 @@ msgstr "Texto"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Quantity"
-msgstr ""
+msgstr "Cantidad producto"
 
 #. module: base
 #: field:res.country,name:0
@@ -559,7 +570,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Key/value '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "Clave/valor '%s' no encontrado en el campo selección '%s'"
 
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
@@ -592,7 +603,7 @@ msgstr "Ventas & Compras"
 #: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "Ninguna empresa tiene un número fiscal asociado."
 
 #. module: base
 #: view:ir.actions.wizard:0
@@ -633,7 +644,7 @@ msgstr "Seleccione la acción ventana, informe o asistente que se ejecutará."
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Can't connect instance %s"
-msgstr ""
+msgstr "No se pudo conectar la instancia %s"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -649,7 +660,7 @@ msgstr "Descripción del modelo"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "You need to choose a model"
-msgstr ""
+msgstr "Debe escoger un modelo"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
@@ -665,7 +676,7 @@ msgstr "Jordania"
 #: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Tag Name"
-msgstr ""
+msgstr "Nombre de etiqueta"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
@@ -697,25 +708,25 @@ msgstr "ir.acciones.acciones"
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "No puede registrar una entrada en otra fecha que no sea hoy"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "from stock: products assigned."
-msgstr ""
+msgstr "desde stock: productos asignados."
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Too much total record found!"
-msgstr ""
+msgstr "¡Demasiados registros totales encontrados!"
 
 #. module: base
 #: code:addons/addons/account_budget/crossovered_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "¡El presupuesto general '%s' no tiene cuentas!"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -731,7 +742,7 @@ msgstr "STOCK_DIALOG_ERROR"
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is not created"
-msgstr ""
+msgstr "No se ha creado factura"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -743,7 +754,7 @@ msgstr "STOCK_INDEX"
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "File Name"
-msgstr ""
+msgstr "Nombre de archivo"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -782,13 +793,13 @@ msgstr ""
 #: code:addons/addons/project_gtd/project_gtd.py:0
 #, python-format
 msgid "Eff. Hours"
-msgstr ""
+msgstr "Horas efe."
 
 #. module: base
 #: code:addons/addons/document_ics/document.py:0
 #, python-format
 msgid "You can not set negative Duration."
-msgstr ""
+msgstr "No puede establecer una duración negativa."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -804,13 +815,13 @@ msgstr "Papúa Nueva Guinea"
 #: code:addons/addons/odms/wizard/host_status.py:0
 #, python-format
 msgid "Created by the synchronization wizard"
-msgstr ""
+msgstr "Creado por el asistente de sincronización"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "SAJ"
-msgstr ""
+msgstr "VENTA"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -837,7 +848,7 @@ msgstr "Puede tener que volver a reinstalar algún paquete de idioma."
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Deliveries"
-msgstr ""
+msgstr "Envíos futuros"
 
 #. module: base
 #: field:res.partner.address,mobile:0
@@ -891,13 +902,13 @@ msgstr "módulos del contrato de mantenimiento"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "No eficiente"
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "TOTAL"
 
 #. module: base
 #: view:ir.values:0
@@ -944,7 +955,7 @@ msgstr "Tipo"
 #: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "¡Ya existe un modelo con este nombre y código!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -955,7 +966,7 @@ msgstr "STOCK_FILE"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "Datos insuficientes"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child2:0
@@ -994,6 +1005,8 @@ msgstr ""
 msgid ""
 "You have to define a Default Credit Account for your Financial Journals!\n"
 msgstr ""
+"¡Tiene que definir una cuenta de crédito por defecto para sus diarios "
+"financieros!\n"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -1035,6 +1048,8 @@ msgid ""
 "The sum of the data (2nd field) is null.\n"
 "We can't draw a pie chart !"
 msgstr ""
+"﻿La suma de los datos (2º campo) es nula.\n"
+"¡No se puede dibujar un gráfico de sectores!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
@@ -1050,7 +1065,7 @@ msgstr ""
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "modo no válido para test_state"
 
 #. module: base
 #: field:ir.sequence,name:0
@@ -1068,7 +1083,7 @@ msgstr "Chad"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "Septiembre"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -1117,6 +1132,10 @@ msgid ""
 "Mail sent to following Partners successfully, !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"¡Correo electrónico enviado correctamente a las siguientes empresas!\n"
+"\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1170,14 +1189,14 @@ msgstr "URL de la acción"
 #: code:addons/addons/odms/odms_invoice.py:0
 #, python-format
 msgid "Your journal must have a default credit and debit account."
-msgstr ""
+msgstr "El diario debe tener una cuenta haber y debe por defecto."
 
 #. module: base
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Module Name"
-msgstr ""
+msgstr "Nombre de módulo"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1193,7 +1212,7 @@ msgstr "Islas Marshall"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account!"
-msgstr ""
+msgstr "¡Cuenta incorrecta!"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1215,7 +1234,7 @@ msgstr "Empresas por categorías"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr ""
+msgstr "Ctdad recibida"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_report_custom.py:0
@@ -1255,13 +1274,13 @@ msgstr "Características"
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "No Analytic Journal !"
-msgstr ""
+msgstr "¡Sin diario analítico!"
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Unit Product Price"
-msgstr ""
+msgstr "Precio unitario de producto"
 
 #. module: base
 #: field:ir.report.custom,frequency:0
@@ -1346,7 +1365,7 @@ msgstr "-"
 #: code:addons/addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "¡La conexión a WWW.Auction-in-Europe.com ha fallado!"
 
 #. module: base
 #: field:res.payterm,name:0
@@ -1455,7 +1474,7 @@ msgstr ""
 #: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
 #, python-format
 msgid "You can't modify this order. It has already been paid"
-msgstr ""
+msgstr "No puede modificar esta venta. Ya ha sido pagada."
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1519,13 +1538,13 @@ msgstr "República Kyrgyz (Kyrgyzstan)"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "Productos: "
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No bank account for the company."
-msgstr ""
+msgstr "Sin cuenta bancaria para la compañía."
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
@@ -1542,6 +1561,7 @@ msgstr "ID archivo adjunto"
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
 msgstr ""
+"¡No puede modificar/eliminar un diario con asientos para este período!"
 
 #. module: base
 #: view:ir.sequence:0
@@ -1569,7 +1589,7 @@ msgstr "STOCK_FIND_AND_REPLACE"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Relation not found: %s on '%s'"
-msgstr ""
+msgstr "Relación no encontrada: %s on '%s'"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1595,7 +1615,7 @@ msgstr "ir.regla"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Invalid Region"
-msgstr ""
+msgstr "Región inválida"
 
 #. module: base
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
@@ -1605,6 +1625,9 @@ msgid ""
 "Test checks for fields, views, security rules, dependancy level\n"
 "\"\""
 msgstr ""
+"\"\"\n"
+"La prueba verifica campos, vistas, regas de seguridad, nivel de dependencia\n"
+"\"\""
 
 #. module: base
 #: field:ir.report.custom.fields,width:0
@@ -1674,7 +1697,7 @@ msgstr "Nombre disparador"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "unable to find a server"
-msgstr ""
+msgstr "no se puede encontrar un servidor"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
@@ -1745,7 +1768,7 @@ msgstr "Fin de la solicitud"
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "No se ha definido una secuencia de producción"
 
 #. module: base
 #: view:res.request:0
@@ -1803,7 +1826,7 @@ msgstr "Modo de vista"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Cost Structure"
-msgstr ""
+msgstr "Estructura de costes de producto"
 
 #. module: base
 #: code:addons/osv/fields.py:0
@@ -1823,6 +1846,8 @@ msgid ""
 "There is no receivable account defined for this journal:'\\n                 "
 "   ' \"%s\" (id:%d)"
 msgstr ""
+"No hay cuenta de gastos definida para este diario:'\\n                    ' "
+"\"%s\" (id:%d)"
 
 #. module: base
 #: field:res.company,logo:0
@@ -1934,7 +1959,7 @@ msgstr "Belize"
 #: code:addons/addons/stock/stock.py:0
 #, python-format
 msgid "Error, no partner !"
-msgstr ""
+msgstr "¡Error, sin empresa!"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -2002,7 +2027,7 @@ msgstr "STOCK_NO"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Cannot delete a point of sale which is already confirmed !"
-msgstr ""
+msgstr "¡ No se puede borrar un punto de venta ya confirmado !"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -2040,7 +2065,7 @@ msgstr ""
 #. module: base
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
+msgstr "Haga la regla global, sino necesitará ser incluida en un grupo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2072,6 +2097,8 @@ msgid ""
 "There is no journal defined '\\n                            'on the product "
 "category: \"%s\" (id: %d)"
 msgstr ""
+"No hay diario definido '\\n                            'en la categoría de "
+"producto: \"%s\" (id: %d)"
 
 #. module: base
 #: field:ir.actions.url,target:0
@@ -2103,6 +2130,10 @@ msgid ""
 "' \\n\t\t\t\t\t'on the partner: %s\n"
 "' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
+"No se ha definido el banco\n"
+"' \\n\t\t\t\t\t'para la cuenta bancaria: %s\n"
+"' \\n\t\t\t\t\t'en la empresa: %s\n"
+"' \\n\t\t\t\t\t'en la línea: %s"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -2165,7 +2196,7 @@ msgstr "Acción servidor"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "¡ No se ha definido la cuenta como reconciliable !"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -2191,7 +2222,7 @@ msgstr "Mapeado de campos"
 #: code:addons/addons/product_margin/wizard/wizard_product_margin.py:0
 #, python-format
 msgid "Product Margins"
-msgstr ""
+msgstr "Márgenes de producto"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -2207,7 +2238,7 @@ msgstr "Paraguay"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "¡ Debe indicar una cuenta para el asiento de ajuste !"
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -2257,7 +2288,7 @@ msgstr ""
 #: code:addons/addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "¡ Mensaje !"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -2297,7 +2328,7 @@ msgstr ""
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "¡Error!"
 
 #. module: base
 #: view:res.lang:0

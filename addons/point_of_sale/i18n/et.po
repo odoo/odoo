@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 18:58+0000\n"
+"PO-Revision-Date: 2009-11-17 07:01+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 04:55+0000\n"
+"X-Launchpad-Export-Date: 2009-11-18 04:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -21,285 +21,6 @@ msgstr ""
 #: rml:pos.details_summary:0
 msgid "Total paid"
 msgstr "Makstud kokku"
-
-#. module: point_of_sale
-#: field:pos.order,name:0
-msgid "Order Description"
-msgstr "Tellimuse kirjeldus"
-
-#. module: point_of_sale
-#: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
-msgid "Scan Product"
-msgstr "Skaneeri toodet"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
-msgid "Sales (summary)"
-msgstr "Müügid (kokku)"
-
-#. module: point_of_sale
-#: wizard_view:pos.sale.get,init:0
-msgid "Select an Open Sale Order"
-msgstr "Vali avatud müügitellimus"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Invoice Date"
-msgstr "Arve kuupäev"
-
-#. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
-msgid "Details of Sales"
-msgstr "Müügid detailselt"
-
-#. module: point_of_sale
-#: field:pos.order,date_validity:0
-#: wizard_field:pos.refund_order,init,date_validity:0
-msgid "Validity Date"
-msgstr "Kuupäeva kehtivus"
-
-#. module: point_of_sale
-#: model:ir.actions.wizard,name:point_of_sale.pos_refund
-msgid "Refund Orders"
-msgstr "Hüvita korraldused"
-
-#. module: point_of_sale
-#: wizard_view:pos.config.journal,init:0
-msgid "Select default journals"
-msgstr "Vali vaikimisi päevikud"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-msgid "Disc"
-msgstr "Allah."
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "POS Orders"
-msgstr "MK korraldused"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Sales total"
-msgstr "Müügid kokku"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Supplier Invoice"
-msgstr "Ostuarve"
-
-#. module: point_of_sale
-#: wizard_field:pos.payment,ask_pay,payment_name:0
-msgid "Payment name"
-msgstr "Makse nimi"
-
-#. module: point_of_sale
-#: field:pos.order,lines:0
-msgid "Order Lines"
-msgstr "Korralduse read"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_config_journal
-msgid "Point of Sale journal configuration."
-msgstr "Müügikoha päeviku seadistamine"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_config
-msgid "Configuration"
-msgstr "Seadistused"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
-msgid "POS Lines of the day"
-msgstr "MK päeva read"
-
-#. module: point_of_sale
-#: view:pos.order.line:0
-msgid "Total qty"
-msgstr "Kogusumma"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
-msgid "POS Lines"
-msgstr "MK read"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Sales Order POS"
-msgstr "Müügikorralduste MK"
-
-#. module: point_of_sale
-#: wizard_button:pos.config.journal,init,set_default_journal:0
-msgid "Define default journals"
-msgstr "Määra vaikimisi päevikud"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Total of the day"
-msgstr "Päeva summa"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "VAT :"
-msgstr "Käibemaks :"
-
-#. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order lines"
-msgstr "MK korralduse read"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Total invoiced"
-msgstr "Kokku arveldatud"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_today
-msgid "Sales of the day"
-msgstr "Päevamüügid"
-
-#. module: point_of_sale
-#: field:pos.order,amount_paid:0
-#: field:pos.order,amount_return:0
-msgid "unknown"
-msgstr "tundmatu"
-
-#. module: point_of_sale
-#: view:pos.order.line:0
-msgid "POS Order line"
-msgstr "MK tellimuse rida"
-
-#. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
-msgid "Sales by user"
-msgstr "Kasutaja müügid"
-
-#. module: point_of_sale
-#: wizard_button:pos.add_product,init,add:0
-#: view:pos.order:0
-msgid "_Add product"
-msgstr "L_isa toode"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree
-msgid "All the sales"
-msgstr "Kõik müügid"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Summary"
-msgstr "Kokkuvõte"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Refund"
-msgstr "Tagasimakse"
-
-#. module: point_of_sale
-#: wizard_view:pos.refund_order,init:0
-msgid "Refund order :"
-msgstr "Hüvita korraldus:"
-
-#. module: point_of_sale
-#: selection:pos.order,state:0
-msgid "Done"
-msgstr "Tehtud"
-
-#. module: point_of_sale
-#: wizard_button:pos.add_product,init,end:0
-#: wizard_button:pos.config.journal,init,end:0
-#: wizard_button:pos.discount,init,end:0
-#: view:pos.order:0
-#: selection:pos.order,state:0
-#: wizard_button:pos.payment,ask_pay,end:0
-#: wizard_button:pos.refund_order,init,end:0
-#: wizard_button:pos.sale.get,init,end:0
-#: wizard_button:pos.scan_product,init,end:0
-msgid "Cancel"
-msgstr "Loobu"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Order lines"
-msgstr "Korralduse read"
-
-#. module: point_of_sale
-#: field:pos.order.line,order_id:0
-#: field:pos.payment,order_id:0
-msgid "Order Ref"
-msgstr "Korralduse viide"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Total discount"
-msgstr "Kogu allahindlus"
-
-#. module: point_of_sale
-#: wizard_view:pos.refund_order,init:0
-msgid "Refund "
-msgstr "Hüvita "
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Invoicing"
-msgstr "Arveldamine"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Canceled Invoice"
-msgstr "Tühistatud Arve"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Tel. :"
-msgstr "Tel. :"
-
-#. module: point_of_sale
-#: wizard_field:pos.config.journal,init,default_journal_gift:0
-msgid "Default gift journal"
-msgstr "Vaikimisi kingituse päevik"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree3
-msgid "All orders"
-msgstr "Kõik korraldused"
-
-#. module: point_of_sale
-#: wizard_field:pos.sale.get,init,picking_id:0
-msgid "Sale Order"
-msgstr "Müügikorraldus"
-
-#. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_month
-msgid "Sales of the month"
-msgstr "Kuu müügid"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "D_iscount"
-msgstr "Alla_hindlus"
-
-#. module: point_of_sale
-#: field:pos.order,date_order:0
-msgid "Date Ordered"
-msgstr "Tellimise kuupäev"
-
-#. module: point_of_sale
-#: rml:pos.invoice:0
-msgid "Supplier Refund"
-msgstr "Tarnija hüvitis"
-
-#. module: point_of_sale
-#: view:pos.order:0
-msgid "Actions"
-msgstr "Toimingud"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -334,6 +55,16 @@ msgid "Invalid model name in the action definition."
 msgstr "Vigane mudeli nimi toimingu definitsioonis."
 
 #. module: point_of_sale
+#: field:pos.order,name:0
+msgid "Order Description"
+msgstr "Tellimuse kirjeldus"
+
+#. module: point_of_sale
+#: model:ir.actions.wizard,name:point_of_sale.pos_scan_product
+msgid "Scan Product"
+msgstr "Skaneeri toodet"
+
+#. module: point_of_sale
 #: rml:pos.invoice:0
 msgid "Document"
 msgstr "Dokument"
@@ -354,9 +85,19 @@ msgid "Orders of the day"
 msgstr "Päevatellimused"
 
 #. module: point_of_sale
+#: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
+msgid "Sales (summary)"
+msgstr "Müügid (kokku)"
+
+#. module: point_of_sale
 #: help:pos.order,user_id:0
 msgid "This is the logged in user (not necessarily the salesman)."
 msgstr ""
+
+#. module: point_of_sale
+#: wizard_view:pos.sale.get,init:0
+msgid "Select an Open Sale Order"
+msgstr "Vali avatud müügitellimus"
 
 #. module: point_of_sale
 #: rml:pos.lines:0
@@ -364,9 +105,19 @@ msgid "Company"
 msgstr "Ettevõte"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Invoice Date"
+msgstr "Arve kuupäev"
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid ","
 msgstr ","
+
+#. module: point_of_sale
+#: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
+msgid "Details of Sales"
+msgstr "Müügid detailselt"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -450,6 +201,12 @@ msgid "Code"
 msgstr "Tootekood"
 
 #. module: point_of_sale
+#: field:pos.order,date_validity:0
+#: wizard_field:pos.refund_order,init,date_validity:0
+msgid "Validity Date"
+msgstr "Kuupäeva kehtivus"
+
+#. module: point_of_sale
 #: view:pos.order:0
 #: field:pos.order,pickings:0
 msgid "Picking"
@@ -462,9 +219,19 @@ msgid "VAT"
 msgstr "Käibemaks"
 
 #. module: point_of_sale
+#: model:ir.actions.wizard,name:point_of_sale.pos_refund
+msgid "Refund Orders"
+msgstr "Hüvita korraldused"
+
+#. module: point_of_sale
 #: field:pos.order,last_out_picking:0
 msgid "Last Output Picking"
 msgstr ""
+
+#. module: point_of_sale
+#: wizard_view:pos.config.journal,init:0
+msgid "Select default journals"
+msgstr "Vali vaikimisi päevikud"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -491,6 +258,11 @@ msgstr "Maks"
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
 msgstr "Kogu tehing"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+msgid "Disc"
+msgstr "Allah."
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -530,9 +302,25 @@ msgid "Confirm"
 msgstr "Kinnita"
 
 #. module: point_of_sale
+#: view:pos.order:0
+msgid "POS Orders"
+msgstr "MK korraldused"
+
+#. module: point_of_sale
 #: rml:pos.lines:0
 msgid "Disc. (%)"
 msgstr "Allahindl. (%)"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Sales total"
+msgstr "Müügid kokku"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Supplier Invoice"
+msgstr "Ostuarve"
 
 #. module: point_of_sale
 #: field:pos.order,state:0
@@ -548,6 +336,16 @@ msgstr "Vahesummade summa"
 #: wizard_field:pos.payment,ask_pay,payment_date:0
 msgid "Payment date"
 msgstr "Makse kuupäev"
+
+#. module: point_of_sale
+#: wizard_field:pos.payment,ask_pay,payment_name:0
+msgid "Payment name"
+msgstr "Makse nimi"
+
+#. module: point_of_sale
+#: field:pos.order,lines:0
+msgid "Order Lines"
+msgstr "Korralduse read"
 
 #. module: point_of_sale
 #: rml:pos.invoice:0
@@ -580,6 +378,11 @@ msgid "POS "
 msgstr "POS "
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_config_journal
+msgid "Point of Sale journal configuration."
+msgstr "Müügikoha päeviku seadistamine"
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "Total :"
 msgstr ""
@@ -600,6 +403,11 @@ msgid "Get From Order"
 msgstr "Saa korraldusest"
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_point_config
+msgid "Configuration"
+msgstr "Seadistused"
+
+#. module: point_of_sale
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
 #: field:pos.order.line,price_unit:0
@@ -610,6 +418,11 @@ msgstr "Ühiku hind"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
+msgid "POS Lines of the day"
+msgstr "MK päeva read"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -640,6 +453,26 @@ msgstr ""
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
 msgid "Add products"
 msgstr "Lisa tooted"
+
+#. module: point_of_sale
+#: view:pos.order.line:0
+msgid "Total qty"
+msgstr "Kogusumma"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
+msgid "POS Lines"
+msgstr "MK read"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Sales Order POS"
+msgstr "Müügikorralduste MK"
+
+#. module: point_of_sale
+#: wizard_button:pos.config.journal,init,set_default_journal:0
+msgid "Define default journals"
+msgstr "Määra vaikimisi päevikud"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
@@ -673,6 +506,12 @@ msgid "Wizard default journals"
 msgstr "Vaikimisi päevikute nõustaja"
 
 #. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total of the day"
+msgstr "Päeva summa"
+
+#. module: point_of_sale
 #: wizard_button:pos.scan_product,init,add:0
 msgid "Add"
 msgstr "Lisa"
@@ -688,9 +527,41 @@ msgid "Paid"
 msgstr "Tasutud"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "VAT :"
+msgstr "Käibemaks :"
+
+#. module: point_of_sale
+#: view:pos.order.line:0
+msgid "POS Order lines"
+msgstr "MK korralduse read"
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid "E-mail :"
 msgstr "E-post :"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total invoiced"
+msgstr "Kokku arveldatud"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_today
+msgid "Sales of the day"
+msgstr "Päevamüügid"
+
+#. module: point_of_sale
+#: field:pos.order,amount_paid:0
+#: field:pos.order,amount_return:0
+msgid "unknown"
+msgstr "tundmatu"
+
+#. module: point_of_sale
+#: view:pos.order.line:0
+msgid "POS Order line"
+msgstr "MK tellimuse rida"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_discount
@@ -719,6 +590,19 @@ msgid "Date"
 msgstr "Kuupäev"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
+#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
+#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
+msgid "Sales by user"
+msgstr "Kasutaja müügid"
+
+#. module: point_of_sale
+#: wizard_button:pos.add_product,init,add:0
+#: view:pos.order:0
+msgid "_Add product"
+msgstr "L_isa toode"
+
+#. module: point_of_sale
 #: rml:pos.receipt:0
 msgid ":"
 msgstr ":"
@@ -730,6 +614,11 @@ msgid "Period:"
 msgstr "Periood:"
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree
+msgid "All the sales"
+msgstr "Kõik müügid"
+
+#. module: point_of_sale
 #: view:pos.order:0
 msgid "Compute"
 msgstr "Arvuta"
@@ -738,6 +627,12 @@ msgstr "Arvuta"
 #: rml:pos.invoice:0
 msgid "Total:"
 msgstr "Kokku:"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Summary"
+msgstr "Kokkuvõte"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -751,6 +646,11 @@ msgstr "Loo _arve"
 #: field:pos.order.line,qty:0
 msgid "Quantity"
 msgstr "Kogus"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Refund"
+msgstr "Tagasimakse"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -784,6 +684,11 @@ msgid "Receipt"
 msgstr "Kviitung"
 
 #. module: point_of_sale
+#: wizard_view:pos.refund_order,init:0
+msgid "Refund order :"
+msgstr "Hüvita korraldus:"
+
+#. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of Transaction"
 msgstr "Tehingu number"
@@ -799,6 +704,11 @@ msgid "Other"
 msgstr "Muu"
 
 #. module: point_of_sale
+#: selection:pos.order,state:0
+msgid "Done"
+msgstr "Tehtud"
+
+#. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: rml:pos.invoice:0
 #: field:pos.order,invoice_id:0
@@ -808,9 +718,33 @@ msgid "Invoice"
 msgstr "Arve"
 
 #. module: point_of_sale
+#: wizard_button:pos.add_product,init,end:0
+#: wizard_button:pos.config.journal,init,end:0
+#: wizard_button:pos.discount,init,end:0
+#: view:pos.order:0
+#: selection:pos.order,state:0
+#: wizard_button:pos.payment,ask_pay,end:0
+#: wizard_button:pos.refund_order,init,end:0
+#: wizard_button:pos.sale.get,init,end:0
+#: wizard_button:pos.scan_product,init,end:0
+msgid "Cancel"
+msgstr "Loobu"
+
+#. module: point_of_sale
 #: view:pos.order:0
 msgid "Close"
 msgstr "Sulge"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Order lines"
+msgstr "Korralduse read"
+
+#. module: point_of_sale
+#: field:pos.order.line,order_id:0
+#: field:pos.payment,order_id:0
+msgid "Order Ref"
+msgstr "Korralduse viide"
 
 #. module: point_of_sale
 #: wizard_view:pos.payment,ask_pay:0
@@ -830,9 +764,20 @@ msgid "Pos Payment"
 msgstr "MK makse"
 
 #. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total discount"
+msgstr "Kogu allahindlus"
+
+#. module: point_of_sale
 #: field:pos.order,invoice_wanted:0
 msgid "Create Invoice"
 msgstr "Loo arve"
+
+#. module: point_of_sale
+#: wizard_view:pos.refund_order,init:0
+msgid "Refund "
+msgstr "Hüvita "
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -858,6 +803,11 @@ msgid "Product"
 msgstr "Toode"
 
 #. module: point_of_sale
+#: view:pos.order:0
+msgid "Invoicing"
+msgstr "Arveldamine"
+
+#. module: point_of_sale
 #: field:pos.config.journal,journal_id:0
 #: field:pos.order,sale_journal:0
 #: wizard_field:pos.payment,ask_pay,journal:0
@@ -872,6 +822,11 @@ msgid "Barcode"
 msgstr "Ribakood"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Canceled Invoice"
+msgstr "Tühistatud Arve"
+
+#. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "POS"
 msgstr "POS"
@@ -882,9 +837,19 @@ msgid "Pos Lines"
 msgstr "MK read"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Tel. :"
+msgstr "Tel. :"
+
+#. module: point_of_sale
 #: field:pos.payment,payment_nb:0
 msgid "Piece Number"
 msgstr "Tüki nr."
+
+#. module: point_of_sale
+#: wizard_field:pos.config.journal,init,default_journal_gift:0
+msgid "Default gift journal"
+msgstr "Vaikimisi kingituse päevik"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_payment
@@ -893,9 +858,39 @@ msgid "Payment"
 msgstr "Makse"
 
 #. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_tree3
+msgid "All orders"
+msgstr "Kõik korraldused"
+
+#. module: point_of_sale
+#: wizard_field:pos.sale.get,init,picking_id:0
+msgid "Sale Order"
+msgstr "Müügikorraldus"
+
+#. module: point_of_sale
+#: model:ir.ui.menu,name:point_of_sale.menu_trans_pos_tree_month
+msgid "Sales of the month"
+msgstr "Kuu müügid"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "D_iscount"
+msgstr "Alla_hindlus"
+
+#. module: point_of_sale
+#: field:pos.order,date_order:0
+msgid "Date Ordered"
+msgstr "Tellimise kuupäev"
+
+#. module: point_of_sale
 #: view:pos.order:0
 msgid "Payments"
 msgstr "Maksed"
+
+#. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Supplier Refund"
+msgstr "Tarnija hüvitis"
 
 #. module: point_of_sale
 #: field:pos.config.journal,name:0
@@ -924,6 +919,11 @@ msgstr "Maksetingimus"
 #: field:report.transaction.pos,amount:0
 msgid "Amount"
 msgstr "Kogus"
+
+#. module: point_of_sale
+#: view:pos.order:0
+msgid "Actions"
+msgstr "Toimingud"
 
 #. module: point_of_sale
 #: help:pos.order,salesman_id:0
