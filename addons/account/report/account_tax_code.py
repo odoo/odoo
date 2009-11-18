@@ -37,29 +37,30 @@ class account_tax_code_report(rml_parse.rml_parse):
         })
         
     def get_line(self,obj):
-        result = []
         line_ids = self.pool.get('account.move.line').search(self.cr,self.uid,[('tax_code_id','=',obj.id)])
-        if line_ids:
-            move_line_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
-            for line in move_line_objs:
-                res = {'date': line.date,
-                       'ref': line.ref,
-                       'acode': line.account_id.code,
-                       'name': line.name,
-                       'debit': line.debit,
-                       'credit': line.credit,
-                       'pname': line.partner_id and line.partner_id.name or '',
-                       }
+        if not line_ids: return []
+
+        result = []
+        move_line_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
+        for line in move_line_objs:
+            res = {'date': line.date,
+                   'ref': line.ref,
+                   'acode': line.account_id.code,
+                   'name': line.name,
+                   'debit': line.debit,
+                   'credit': line.credit,
+                   'pname': line.partner_id and line.partner_id.name or '',
+                   }
+            
+            if line.partner_id \
+                    and line.partner_id.address \
+                    and line.partner_id.address[0].country_id:
+                res['country'] = line.partner_id.address[0].country_id.code
+            else:
+                res['country'] = ''
                 
-                if line.partner_id \
-                        and line.partner_id.address \
-                        and line.partner_id.address[0].country_id:
-                    res['country'] = line.partner_id.address[0].country_id.code
-                else:
-                    res['country'] = ''
-
-                result.append(res)
-
+            result.append(res)
+                
         return result
         
 report_sxw.report_sxw('report.account.tax.code.entries', 'account.tax.code',
