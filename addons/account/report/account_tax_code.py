@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
@@ -55,15 +56,14 @@ class account_tax_code_report(rml_parse.rml_parse):
             'get_line':self.get_line,
         })
         
-    def get_line(self,obj):
-        line_ids = self.pool.get('account.move.line').search(self.cr,self.uid,[('tax_code_id','=',obj.id)])
+    def get_line(self, obj):
+        line_ids = self.pool.get('account.move.line').search(self.cr, self.uid, [('tax_code_id','=',obj.id)])
         if not line_ids: return []
 
         return map(_record_to_report_line,
                    self.pool.get('account.move.line')\
                        .browse(self.cr, self.uid, line_ids))
 
-        
 report_sxw.report_sxw('report.account.tax.code.entries', 'account.tax.code',
     'addons/account/report/account_tax_code.rml', parser=account_tax_code_report, header=False)
 
