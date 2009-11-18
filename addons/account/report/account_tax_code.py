@@ -37,12 +37,12 @@ class account_tax_code_report(rml_parse.rml_parse):
         })
         
     def get_line(self,obj):
-        res = {}
         result = []
         line_ids = self.pool.get('account.move.line').search(self.cr,self.uid,[('tax_code_id','=',obj.id)])
         if line_ids:
             move_line_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
             for line in move_line_objs:
+                res = {}
                 res['date'] = line.date
                 res['ref'] = line.ref
                 res['acode'] = line.account_id.code
