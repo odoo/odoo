@@ -832,24 +832,27 @@ class orm_template(object):
             #try:
             (res, other, warning, translate, data_id, res_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def)
-            if len(warning):                        
+            if len(warning):
                 cr.rollback()
                 return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
-            
+
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, xml_id=data_id, mode=mode,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
+                import osv
                 if isinstance(e,psycopg2.IntegrityError):
-                    msg= _('Insertion Failed!')
+                    msg= _('Insertion Failed! ')
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
                             break
-                    return (-1, res,'Line ' + str(counter) +' : ' + msg,'' )
-                
+                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
+                if isinstance(e, osv.orm.except_orm ):
+                    msg = _('Insertion Failed! ' + e[1])
+                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
