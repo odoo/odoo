@@ -26,6 +26,25 @@ import copy
 from report import report_sxw
 import re
 
+def _get_country(record):
+    if record.partner_id \
+            and record.partner_id.address \
+            and record.partner_id.address[0].country_id:
+        return record.partner_id.address[0].country_id.code
+    else:
+        return ''
+
+def _record_to_report_line(record):
+    return {'date': record.date,
+            'ref': record.ref,
+            'acode': record.account_id.code,
+            'name': record.name,
+            'debit': record.debit,
+            'credit': record.credit,
+            'pname': record.partner_id and record.partner_id.name or '',
+            'country': _get_country(record)
+            }
+
 class account_tax_code_report(rml_parse.rml_parse):
     #_name = 'report.account.tax.code.entries'
     
@@ -40,28 +59,10 @@ class account_tax_code_report(rml_parse.rml_parse):
         line_ids = self.pool.get('account.move.line').search(self.cr,self.uid,[('tax_code_id','=',obj.id)])
         if not line_ids: return []
 
-        result = []
-        move_line_objs = self.pool.get('account.move.line').browse(self.cr,self.uid,line_ids)
-        for line in move_line_objs:
-            res = {'date': line.date,
-                   'ref': line.ref,
-                   'acode': line.account_id.code,
-                   'name': line.name,
-                   'debit': line.debit,
-                   'credit': line.credit,
-                   'pname': line.partner_id and line.partner_id.name or '',
-                   }
-            
-            if line.partner_id \
-                    and line.partner_id.address \
-                    and line.partner_id.address[0].country_id:
-                res['country'] = line.partner_id.address[0].country_id.code
-            else:
-                res['country'] = ''
-                
-            result.append(res)
-                
-        return result
+        return map(_record_to_report_line,
+                   self.pool.get('account.move.line')\
+                       .browse(self.cr, self.uid, line_ids))
+
         
 report_sxw.report_sxw('report.account.tax.code.entries', 'account.tax.code',
     'addons/account/report/account_tax_code.rml', parser=account_tax_code_report, header=False)
