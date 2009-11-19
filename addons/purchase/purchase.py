@@ -181,15 +181,15 @@ class purchase_order(osv.osv):
                 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
-        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_total': fields.function(_amount_all, method=True, string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
