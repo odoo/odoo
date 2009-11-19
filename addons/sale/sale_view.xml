@@ -226,7 +226,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-sale" string="Quatation" domain="[('state','=','draft')]"/>
+                        <filter icon="terp-sale" string="Quotation" domain="[('state','=','draft')]"/>
                         <filter icon="terp-sale" string="Running" domain="[('state','in',('manual','progress'))]"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
