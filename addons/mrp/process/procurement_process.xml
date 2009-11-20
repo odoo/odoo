@@ -111,8 +111,8 @@
             <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
             <field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Minimum stock rule&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Create minimum stock rules&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Automatic procurement rule&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -122,7 +122,7 @@
             <field name="model_id" ref="mrp.model_mrp_routing"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Routing&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Define a routing to describe the manufacturing steps.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Manufacturing Steps.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -131,8 +131,8 @@
             <field name="menu_id" ref="mrp.menu_mrp_bom_form_action"/>
             <field name="model_id" ref="mrp.model_mrp_bom"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Bill of Materials&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Define the product structure, with sub-products and/or components.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Bill of Material&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Product's structure&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="product.process_process_productprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -225,8 +225,8 @@
          <record id="process_transition_producttostockrules0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Product to stock rules&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;you can see the minimum stock rules from product&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Procurement rule&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;The Minimum Stock Rule is an automatic procurement rule based on a mini and maxi quantity. It's available in the Stock management menu and configured by product.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_productminimumstockrule0"/>
             <field model="process.node" name="source_node_id" ref="product.process_node_product0"/>
         </record>
@@ -234,8 +234,8 @@
         <record id="process_transition_billofmaterialrouting0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Material routing&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;An entry is being made from billing material to routing.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Material Routing&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;The Bill of Material is linked to a routing, i.e. the succession of work centers.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_routing0"/>
             <field model="process.node" name="source_node_id" ref="process_node_billofmaterial0"/>
         </record>
@@ -243,8 +243,8 @@
 		<record id="process_transition_bom0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;BOM&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;You can see its bill of material which are used to make product&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Manufacturing decomposition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;The Bill of Material is the product's decomposition. The components (that are products themselves) can also have their own Bill of Material (multi-level).&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_billofmaterial0"/>
             <field model="process.node" name="source_node_id" ref="product.process_node_product0"/>
         </record>

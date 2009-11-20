@@ -20,8 +20,8 @@
             <field name="menu_id" ref="stock.menu_picking_waiting"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Out Packing&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Invoice based on deliveries&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Outgoing Products&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Outgoing products to invoice&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="account.process_process_invoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('assigned', 'confirmed')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -32,7 +32,7 @@
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Purchase Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;When controlling invoice from orders&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Confirmed purchase order to invoice&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="account.process_process_supplierinvoiceprocess0"/>
             <field name="subflow_id" ref="process_process_purchaseprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
@@ -122,8 +122,8 @@
             <field name="menu_id" ref="stock.menu_picking_waiting"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Product Receipt&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Control invoices on receptions&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Incoming Products&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Incoming products to control&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="process_process_purchaseprocess0"/>
             <field name="process_id" ref="account.process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'close')&quot;&quot;&quot;" name="model_states"/>
@@ -167,8 +167,8 @@
         <record id="process_transition_productrecept0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Product recept invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Create invoice from product recept&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;A Pick list generates a supplier invoice. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_productrecept0"/>
         </record>
@@ -232,8 +232,8 @@
         <record id="process_transition_purchaseinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Purchase Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;After Purchase order , Create invoice.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;From a purchase order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;A purchase order generates a supplier invoice, as soon as it is confirmed by the buyer. Depending on the Invoicing control of the purchase order, the invoice is based on received or on ordered quantities.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_supplierdraftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_purchaseorder0"/>
         </record>
@@ -241,8 +241,8 @@
         <record id="process_transition_packinginvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Packing Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;From Packing list, Create invoice.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;From a Pick list&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;A Pick list generates an invoice. Depending on the Invoicing control of the sale order, the invoice is based on delivered or on ordered quantities.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_packinginvoice0"/>
         </record>

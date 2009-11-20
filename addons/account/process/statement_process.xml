@@ -21,7 +21,7 @@
             <field name="model_id" ref="account.model_account_bank_statement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Electronic File&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Import from your bank statements&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Automatic entry&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_statementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -32,7 +32,7 @@
             <field name="model_id" ref="account.model_account_bank_statement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Manually&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Encode manually the statement&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Manual entry&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_statementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -42,8 +42,8 @@
             <field name="menu_id" ref="account.menu_bank_statement_tree"/>
             <field name="model_id" ref="account.model_account_bank_statement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Import invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Import from invoices or payments&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Import from invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Statement from invoice or payment&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_statementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -54,7 +54,7 @@
             <field name="model_id" ref="account.model_account_bank_statement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft statement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Set starting and ending balance for control&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Status is draft&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_statementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -67,8 +67,8 @@
     	<record id="process_transition_filestatement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;File statement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Import file from your bank statement&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Automatic import of the bank statement&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import of the statement in the system from an electronic file&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_electronicfile0"/>
         </record>
@@ -76,8 +76,8 @@
         <record id="process_transition_invoicemanually0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Manually statement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Encode manually statement comes into the draft statement&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Manual entry&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Encode the statement manually in the system.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_manually0"/>
         </record>
@@ -85,8 +85,8 @@
         <record id="process_transition_invoiceimport0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Invoice import&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Import invoice from statement&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Import from invoice or payment&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Import of the statement in the system from a supplier or customer invoice&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_draftstatement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_importinvoice0"/>
         </record>

@@ -21,7 +21,7 @@
 			<field name="model_id" ref="hr.model_hr_employee"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Employee Complete Form&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Employee form and structure&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -31,7 +31,7 @@
 			<field name="model_id" ref="hr.model_hr_employee"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee Contact&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Fill up employee's contact information&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Other information&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -41,7 +41,7 @@
 			<field name="model_id" ref="base.model_res_users"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Openerp user&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Create OpenERP User&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Creation of a OpenERP user&quot;&quot;&quot;" name="note"/>
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
@@ -53,8 +53,8 @@
 		<record id="process_transition_employeeuser0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Openerp user&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Create openerp user&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Link a user to an employee&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;The field Relate'd user in the Employee form allows to link the OpenERP user (and his rights and role) to the employee.&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_openerpuser0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
@@ -62,8 +62,8 @@
 		<record id="process_transition_contactofemployee0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Contact  of employee&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;Fill up contact information&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Link the employee to information&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;In the Employee form, there are different kind of information like Contact information.&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_employeecontact0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
