@@ -9,6 +9,7 @@
                 <tree editable="bottom" string="Languages">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="iso_code"/>
                     <field name="direction"/>
                     <field name="translatable"/>
                     <field name="active"/>
@@ -22,15 +23,16 @@
             <field name="arch" type="xml">
                 <form string="Languages">
                 	<group col="4" colspan="4">
-                    <field name="name" />
+                    <field name="name" colspan="4"/>
                     <field name="code" />
+                    <field name="iso_code"/>
                     <field name="active" />
                     <field name="translatable"/>
                     <field name="grouping" />
                     <field name="direction" />
                     <newline/>
                     <field name="date_format"/>
-                    <field name="time_format"/>                    
+                    <field name="time_format"/>
                     <field name="decimal_point"/>
                     <field name="thousands_sep"/>
                     <newline/>
@@ -92,11 +94,11 @@
 		                <label align="0.0" string="12. %%w              ==> 5 ( Friday is the 6th day)"/>
 		                <newline/>
                     </group>
-                                      
+
                 </form>
             </field>
         </record>
-        
+
         <record id="res_lang_act_window" model="ir.actions.act_window">
             <field name="name">Languages</field>
             <field name="res_model">res.lang</field>
