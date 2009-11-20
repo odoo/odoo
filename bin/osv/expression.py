@@ -65,7 +65,6 @@ class expression(object):
             res.extend([r[0] for r in cr.fetchall()])
         return res
 
-
     def __init__(self, exp):
         # check if the expression is valid
         if not reduce(lambda acc, val: acc and (self._is_operator(val) or self._is_leaf(val)), exp, True):

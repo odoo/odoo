@@ -90,8 +90,9 @@ class ir_attachment(osv.osv):
         result = {}
         if context is None:
             context = {}
-        context['bin_size'] = False
-        for i in self.browse(cr, uid, ids, context=context):
+        ctx = context.copy()    
+        ctx['bin_size'] = False
+        for i in self.browse(cr, uid, ids, context=ctx):
             result[i.id] = False
             for format in ('png','jpg','jpeg','gif','bmp'):
                 if (i.datas_fname and i.datas_fname.lower() or '').endswith(format):

@@ -60,14 +60,15 @@ class groups(osv.osv):
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)
-
-        # assign this new group to user_root
-        user_obj = self.pool.get('res.users')
-        aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
-        if aid:
-            aid.write({'groups_id': [(4, gid)]})
-
+        gid = super(groups, self).create(cr, uid, vals, context=context)        
+        if context and context.get('noadmin', False):
+            pass
+        else:
+            # assign this new group to user_root
+            user_obj = self.pool.get('res.users')
+            aid = user_obj.browse(cr, 1, user_obj._get_admin_id(cr))
+            if aid:
+                aid.write({'groups_id': [(4, gid)]})
         return gid
 
 groups()
