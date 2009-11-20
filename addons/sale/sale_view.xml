@@ -11,13 +11,11 @@
             <field name="arch" type="xml">
                 <form string="Sale Shop">
                     <field name="name" select="1"/>
-                    <field name="warehouse_id" required="1" select="1"/>
+                    <field name="warehouse_id" required="1" select="1" widget="selection"/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
                     <field name="project_id" select="1"/>
-                    <separator colspan="4" string="Payment accounts"/>
-                    <field colspan="4" name="payment_account_id" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -97,7 +95,7 @@
                         <field name="name" select="1"/>
                         <field name="client_order_ref" select="2"/>
                         <field name="shipped" select="2"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2" widget="selection"/>
                         <field name="date_order" select="1"/>
                         <field name="invoiced" select="2"/>
                     </group>
@@ -206,8 +204,8 @@
                             <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
                             <field groups="base.group_extended" name="origin"/>
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
-                            <field name="payment_term"/>
-                            <field name="fiscal_position" groups="base.group_extended"/>
+                            <field name="payment_term" widget="selection"/>
+                            <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -228,7 +226,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-sale" string="Quatation" domain="[('state','=','draft')]"/>
+                        <filter icon="terp-sale" string="Quotation" domain="[('state','=','draft')]"/>
                         <filter icon="terp-sale" string="Running" domain="[('state','in',('manual','progress'))]"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
@@ -473,7 +471,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <group col='8' colspan='4'>
-						<filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
+						<filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1"/>
 						<separator orientation="vertical"/>
 						<field name="order_id" select="1"/>
                         <field name="order_partner_id" select="1"/>

@@ -12,17 +12,12 @@
         <field name="arch" type="xml">
             <tree string="Claims"  colors="red:state=='open'">
                 <field name="id"/>
+                <field name="name"/>
                 <field name="partner_id"/>
-                <field name="date" string="Date of Claim"/>
-                <field name="categ_id" string="Type of claim" select="1"/>
-                <field name="date_closed"/>
-                <field name="planned_cost" string="Claim Cost"/>
+                <field name="date" string="Date"/>
+                <field name="categ_id" string="Type" select="1"/>
+                <field name="user_id" string="Responsible" select="2"/>
                 <field name="state"/>
-                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>                
             </tree>
         </field>
     </record>
@@ -38,15 +33,18 @@
                     <field name="partner_id"/>
                     <field name="user_id" string="Responsible" select="2"/>
                     <newline/>
-                    <field name="section_id"/>
+                    <field name="section_id" widget="selection"/>
                     <field name="date" string="Date of Claim"/>
                     <field name="categ_id" string="Type of claim" select="1" on_change="onchange_categ_id(categ_id)"/>
-                        <label string="Stage: " align="1.0"/>
-                        <group colspan="1" col="2">
-                            <field name="stage_id" select="1" nolabel="1"/>
-                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                        </group>
-                    <field name="case_id"/>                        
+                    <label string="Stage: " align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="stage_id" select="1" nolabel="1"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>                       
                 </group>
                 <notebook>
                 <page string="Claims Info">
@@ -102,7 +100,7 @@
                            <field name="name"/>
                            <field name="partner_id"/>
                            <field name="user_id"/>
-                           <field name="section_id"/>
+                           <field name="section_id" widget="selection"/>
                            <field name="state"/>
                         </tree>
                     </field>
@@ -113,10 +111,14 @@
                    </group>
                     <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="6" colspan="4">
+                            <group col="7" colspan="4">
                                 <field name="date"/>
                                 <field name="email"/>
                                 <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -155,19 +157,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Claims" domain="[('user_id','=',uid)]" separator="1" help="Claims Related to Current User"/>
-                       <filter icon="gtk-execute" string="Fixed Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Fixed')]" separator="1" help="All Fixed Claims"/>
-                       <filter icon="gtk-execute" string="Waiting Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Awaiting Response')]" separator="1" help="All Waiting Claims"/>
-                       <filter icon="gtk-execute" string="Accepted Claims" domain="[('section_id.name','=','Claims'),('stage_id.name','=','Accepted as Claim')]" separator="1" help="All Accepted Claims"/>
+                   <group col="4" colspan="1">
+                       <filter icon="gtk-new" string="New Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','draft')]"
+                       	separator="1" help="New Claims"
+                       />
+                       <filter icon="gtk-execute"
+                       	string="In Progress Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','open')]"
+                       	separator="1" help="In Progress Claims"
+                       />
+                       <filter icon="gtk-media-pause"
+                       	string="Pending Claims"
+                       	domain="[('section_id.name','=','Claims'),('state','=','pending')]"
+                       	separator="1" help="All pending Claims"
+                       />
                    </group>
-                   <group col="4" colspan="4">
-                       <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Claims"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Claims"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Claims"/>
-                       </field>
+                   <separator orientation="vertical"/>
+                   <group col="4" colspan="2">
                        <field name="name" select='1'/>
+                       <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
                </search>

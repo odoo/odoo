@@ -13,12 +13,16 @@
             <form string="Meetings Form">
                 <group colspan="4" col="6">
                     <field name="name" select="1" string="Title"/>
-                    <field name="section_id"/>
+                    <field name="section_id" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible" required="1"/>
                     <newline/>
                     <field name="date" string="Meeting Date" required="1"/>
                     <field name="duration" colspan="1" widget="float_time" required="1"/>
-                    <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
+                    <group colspan="2">
+                        <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>
+                    
                 </group>
                 <notebook colspan="4">
 	                <page string="Meeting">
@@ -37,66 +41,7 @@
 	                        <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
 	                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
 	                    </group>
-	                </page>
-	                <page string="History">
-	                    <group colspan="4">
-	                        <field name="id" select="1"/>
-	                        <field name="active" select="2"/>
-	                        <newline/>
-	                        <field name="date_deadline" select="2" string="Deadlines"/>
-	                        <field name="priority" select="2"/>
-	                        <newline/>
-	
-	                        <field name="planned_revenue"/>
-	                        <field name="planned_cost"/>
-	                        <field name="probability"/>
-	                        <newline/>                        
-	                        <field name="canal_id"/>
-	                        <field name="som"/>                        
-	                        <separator colspan="4" string="Dates"/>
-	                        <field name="create_date"/>
-	                        <field name="date_closed"/>
-	                        <field name="date_action_last"/>
-	                        <field name="date_action_next"/>
-	                        <separator colspan="4" string="References"/>
-	                        <field name="ref" colspan="4"/>
-	                        <field name="ref2" colspan="4"/>
-	                    </group>                
-	
-	                    <field name="log_ids" nolabel="1" colspan="4">
-	                        <form string="Actions">
-	                            <separator string="Action Information" colspan="4"/>
-	                            <field name="name" colspan="4"/>
-	                            <field name="date"/>
-	                            <field name="user_id"/>
-	                            <field name="som"/>
-	                            <field name="canal_id"/>
-	                        </form>
-	                    </field>
-	                </page>
-	                <page string="Emails" groups="base.group_extended">
-	                    <group colspan="4">
-	                        <field colspan="4" name="email_cc" string="CC"/>
-	                    </group>
-	                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
-	                       <form string="Communication history">
-	                           <group col="6" colspan="4">
-	                               <field name="date"/>
-	                               <field name="email"/>
-	                               <field name="canal_id"/>
-	                           </group>
-	                           <newline/>
-	                           <field name="description" colspan="4" nolabel="1"/>
-	                           <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
-	                        </form>
-	                        <tree string="Communication history">
-	                            <field name="description"/>
-	                            <field name="email"/>
-	                            <field name="date"/>
-	                        </tree>
-	                    </field>
-	                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
-	                </page>                
+	                </page>	               	                             
                 </notebook>
             </form>
         </field>
@@ -110,7 +55,7 @@
                 <field name="id"/>
                 <field name="name" string="Title"/>
                 <field name="date" string="Next Meeting"/>
-                <field name="section_id"/>
+                <field name="section_id" widget="selection"/>
                 <field name="priority"/>
                 <field name="categ_id"/>
                 <field name="category2_id" string="Type"/>
@@ -131,7 +76,7 @@
             <calendar string="Meetings" date_start="date" color="user_id" date_delay="duration">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="section_id"/>
+                <field name="section_id" widget="selection"/>
             </calendar>
         </field>
     </record>
@@ -159,8 +104,8 @@
 	               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" />
 	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" />
 	               		<separator orientation="vertical"/>
-	               		<field name="section_id" select='1'/>
-	               		<field name="partner_id" select='1'/>
+	               		<field name="name" select="1" string="Subject"/>
+	               		<field name="partner_id" select="1"/>
 	               		<field name="user_id" select="1" widget="selection">
                         	<filter icon="terp-crm" domain="[('user_id','=',uid)]" help="My Meetings"/>
                         	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My Departments Meetings"/>

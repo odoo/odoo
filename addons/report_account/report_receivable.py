@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -202,6 +201,81 @@ class report_invoice_created(osv.osv):
                 (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
 report_invoice_created()
+
+class report_account_type_sales(osv.osv):
+    _name = "report.account_type.sales"
+    _description = "Report of the Sales by Account Type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Month', size=64, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
+        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
+        'amount_total': fields.float('Total', readonly=True),  
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+    }
+    _order = 'name desc,amount_total desc'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_account_type_sales as (
+            select
+               min(inv_line.id) as id,
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
+               sum(inv_line.price_subtotal) as amount_total, 
+               inv.currency_id as currency_id,               
+               inv.period_id,
+               inv_line.product_id, 
+               sum(inv_line.quantity) as quantity, 
+               account.user_type
+            from
+                account_invoice_line inv_line 
+            inner join account_invoice inv on inv.id = inv_line.invoice_id
+            inner join account_account account on account.id = inv_line.account_id
+            where
+                inv.state in ('open','paid')
+            group by
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type  
+            )""")
+report_account_type_sales()
+
+
+class report_account_sales(osv.osv):
+    _name = "report.account.sales"
+    _description = "Report of the Sales by Account"
+    _auto = False
+    _columns = {
+        'name': fields.char('Month', size=64, readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
+        'product_id': fields.many2one('product.product', 'Product',readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True),
+        'amount_total': fields.float('Total', readonly=True),  
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+    }
+    _order = 'name desc,amount_total desc'
+    
+    def init(self, cr):
+        cr.execute("""create or replace view report_account_sales as (
+            select
+               min(inv_line.id) as id,
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
+               sum(inv_line.price_subtotal) as amount_total, 
+               inv.currency_id as currency_id,               
+               inv.period_id,
+               inv_line.product_id, 
+               sum(inv_line.quantity) as quantity, 
+               account.id as account_id
+            from
+                account_invoice_line inv_line 
+            inner join account_invoice inv on inv.id = inv_line.invoice_id
+            inner join account_account account on account.id = inv_line.account_id
+            where
+                inv.state in ('open','paid')
+            group by
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.id  
+            )""")
+report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

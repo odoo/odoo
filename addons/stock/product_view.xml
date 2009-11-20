@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
                	<field name="pricelist_id" select="1" widget="selection" position="before">
-               		<field name="warehouse_id" select="1" widget="selection" context="{'warehouse': self}" />
+               		<field name="location_id" select="1" widget="selection" context="{'location': self}" />
                		<separator orientation="vertical"/>
                	</field>
             </field>
@@ -43,9 +43,9 @@
                  <page position="after" string="Information">
                     <page string="Properties">
                         <separator string="Counter-Part Locations Properties" colspan="4"/>
-                        <field name="property_stock_procurement"/>
-                        <field name="property_stock_production"/>
-                        <field name="property_stock_inventory"/>
+                        <field name="property_stock_procurement"  widget="selection"/>
+                        <field name="property_stock_production"  widget="selection"/>
+                        <field name="property_stock_inventory"  widget="selection"/>
                         <separator string="Accounting Entries" colspan="4"/>
                         <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
@@ -100,9 +100,9 @@
                 <group name="store" position="after">
                     <group col="2" colspan="2" name="store">
                         <separator string="Counter-Part Locations Properties" colspan="2"/>
-                        <field name="property_stock_procurement"/>
-                        <field name="property_stock_production"/>
-                        <field name="property_stock_inventory"/>
+                        <field name="property_stock_procurement" widget="selection" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" widget="selection"/>
+                        <field name="property_stock_inventory" widget="selection"/>
                     </group>
                 </group>
             </field>

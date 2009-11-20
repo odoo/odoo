@@ -120,7 +120,7 @@
                     <field name="name" select="1" colspan="4"/>
                     <field name="code" select="1"/>
                     <field name="parent_id"/>
-                    <field name="company_id" select="2"/>
+                    <field name="company_id" select="2" widget="selection"/>
                     <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -336,6 +336,7 @@
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
+                                    <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
@@ -346,6 +347,7 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                     <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
@@ -534,7 +536,7 @@
                 <form string="Account Tax Code">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="company_id"/>
+                    <field name="company_id" widget="selection"/>
                     <field name="notprintable"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
@@ -581,7 +583,7 @@
                 <form string="Account Tax">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="company_id"/>
+                        <field name="company_id" widget="selection"/>
                         <field name="description" select="1"/>
                         <field name="active" select="2"/>
                         <field name="tax_group" select="1"/>
@@ -800,7 +802,6 @@
                         <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
 						<separator orientation="vertical"/>
 						<field name="date" select='1'/>
-						<field name="invoice" select='1'/>
 						<field name="account_id" select='1'/>
 						<field name="partner_id" select='1'/>
 						<field name="balance" string="Debit/Credit" select='1'/>
@@ -815,6 +816,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>            
         </record>
         
         <record id="action_view_move_line" model="ir.actions.act_window">
@@ -961,6 +963,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>            
         </record>
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
@@ -1709,7 +1712,7 @@
                 <form string="Generate Chart of Accounts from a Chart Template">
                     <separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
                     <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
-                    <field name="company_id" />
+                    <field name="company_id"  widget="selection"/>
                     <field name ="code_digits" />
                     <field name="chart_template_id"/>
                     <field name ="seq_journal" />

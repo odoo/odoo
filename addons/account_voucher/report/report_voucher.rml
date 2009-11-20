@@ -104,7 +104,7 @@
     <para style="P2">Cash Payment Voucher [[ (voucher.type == 'pay_voucher' or removeParentNode('para')) and '' ]]</para>
     <para style="P24">Bank Receipt Voucher [[ (voucher.type == 'bank_rec_voucher' or removeParentNode('para')) and '' ]]</para>
     <para style="P2">Bank Payment Voucher [[ (voucher.type == 'bank_pay_voucher' or removeParentNode('para')) and '' ]]</para>
-
+    
     <blockTable colWidths="49.0,143.0,116.0,69.0,106.0" style="Table1">
       <tr>
         <td>
@@ -171,13 +171,14 @@
     <blockTable colWidths="482.0" style="voucher_lines">
       <tr>
         <td>
-          <para style="P20">[[ repeatIn(voucher.move_ids,'move_ids') ]] <font>[[ (not move_ids) and removeParentNode('blockTable') ]]</font></para>
+          <para style="P20">[[ repeatIn(voucher.move_ids,'move_ids') ]] </para>
           <blockTable colWidths="251.0,110.0,115.0" style="Table2">
             <tr>
               <td>
                 <para style="P11">[[ (move_ids.partner_id and move_ids.partner_id.name) or 'Account']] :</para>
                 <para style="P28">[[ move_ids.account_id.name ]] </para>
                 <para style="P28"><i>[[ move_ids.name ]] - [[ get_ref(voucher.id,move_ids) ]]</i></para>
+                <!--para style="P31">[[ get_ref(voucher.id,move_ids) ]]</para-->
               </td>
               <td>
                 <para style="P21">[[ move_ids.debit ]]</para>

@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 import operator
 from osv import osv, fields
 from osv.orm import intersect
@@ -371,10 +371,13 @@ class account_analytic_account(osv.osv):
         res = {}
         for id in ids:
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
-                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                        'AND unit_amount <> 0.0')
-            res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
+            if ids2:
+                cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
+                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                            'AND unit_amount <> 0.0')
+                res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
+            else:
+                res[id] = []
         return res
 
     def _user(self, cr, uid, ids, name, arg, context=None):
@@ -383,10 +386,13 @@ class account_analytic_account(osv.osv):
         max_user = cr.fetchone()[0]
         for id in ids:
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
-                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                        'AND unit_amount <> 0.0')
-            res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+            if ids2:
+                cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
+                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                            'AND unit_amount <> 0.0')
+                res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+            else:
+                res[id] = []   
         return res
 
     _columns ={
@@ -608,7 +614,7 @@ class account_analytic_account_summary_month(osv.osv):
             for child_id in account_obj.search(cr, uid,
                     [('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
                 if child_id != int(str(int(obj_id))[:-6]):
-                    res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
+                    res[obj_id] += res.get(int(child_id * 1000000 + int(str(int(obj_id))[-6:])), 0.0)
         for id in ids:
             res[id] = round(res.get(id, 0.0), 2)
         return res

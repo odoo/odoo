@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 from osv import fields
 import wizard
 import pooler
@@ -80,9 +80,9 @@ def _invoice_membership(self, cr, uid, data, context):
         invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]})
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
-            invoice_obj.write(cr, uid, [invoice_id], {'tax_line':tax_tab})
-            tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()[0]
-            invoice_tax_obj.create(cr, uid, tax_value)
+            tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
+            for tax in tax_value:
+                invoice_tax_obj.create(cr, uid, tax, context=context)
 
     value = {
             'domain': [

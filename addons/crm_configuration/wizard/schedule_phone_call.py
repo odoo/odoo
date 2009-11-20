@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution	
@@ -32,7 +32,7 @@ from tools.translate import _
 
 case_form = """<?xml version="1.0"?>
 <form string="Schedule Phone Call">
-    <separator string="Phone Call Description" colspan="2" />
+    <separator string="Phone Call Description" colspan="4" />
     <newline />
     <field name='user_id' />
     <field name='deadline' />
@@ -45,7 +45,7 @@ case_form = """<?xml version="1.0"?>
 
 case_fields = {
     'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
-    'deadline' : {'string' : 'Planned Date', 'type' : 'datetime', 'required' : True},
+    'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
     'note' : {'string' : 'Goals', 'type' : 'text'},
     'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' : True},
     'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section', 'required' : True},
@@ -68,7 +68,6 @@ class reschedule_phone_call(wizard.interface):
         return {
                 'user_id' : case.user_id and case.user_id.id,
                 'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
-                'deadline' : time.strftime('%Y-%m-%d %H:%M:%S'),
                 'section_id' : sec_id and sec_id[0],
                 'note' : case.description
                }
@@ -104,8 +103,8 @@ class reschedule_phone_call(wizard.interface):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'crm.case',
-#            'view_id': id2,
-            'views': [(id2,'tree'),(id3,'form'),(False,'calendar'),(False,'graph')],
+            'res_id' : new_case,
+            'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }

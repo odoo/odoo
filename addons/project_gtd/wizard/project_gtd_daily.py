@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -30,16 +29,13 @@ from tools.translate import _
 
 class wiz_timebox_open(wizard.interface):
     def _open_timebox(self, cr, uid, data, context):
-        tbtype = 'daily'
         pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [('user_id','=',uid),('type','=',tbtype)])
+        ids = pool.get('project.gtd.timebox').search(cr, uid, [])
         if not len(ids):
             raise wizard.except_wizard(_('Error !'), _('No timebox of the type "%s" defined !') % (tbtype,))
         view_type = 'form,tree'
         if len(ids) >= 1:
-            domain = "[('id','in',["+','.join(map(str,ids))+"])]"
-        else:
-            domain = "[('user_id', '=', uid)]"
+            domain = "[('id','in',["+','.join(map(str, ids))+"])]"
         value = {
             'domain': domain,
             'name': 'My Daily Timebox',

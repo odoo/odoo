@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -35,13 +34,18 @@ def _action_open_window(self, cr, uid, data, context):
         domain = [('date','>=',from_date)]
     elif to_date:
         domain = [('date','<=',to_date)]
+    mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+    result = mod_obj._get_id(cr, uid, 'account', 'view_account_analytic_line_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])        
+
     return {
         'name': _('Analytic Entries'),
         'view_type': 'form',
         "view_mode": 'tree,form',
         'res_model': 'account.analytic.line',
         'type': 'ir.actions.act_window',
-        'domain': domain}
+        'domain': domain,
+        'search_view_id': id['res_id'],}
 
 
 class account_analytic_line(wizard.interface):

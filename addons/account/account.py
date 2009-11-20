@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 import time
 import netsvc
 
@@ -77,7 +77,10 @@ class account_payment_term_line(osv.osv):
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value',required=True),
+        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value', required=True, help="""Example: 14 days 2%, 30 days net
+1. Line 1: percent 0.02 14 days
+2. Line 2: balance 30 days"""),
+
         'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
@@ -90,6 +93,17 @@ class account_payment_term_line(osv.osv):
         'days2': lambda *a: 0,
     }
     _order = "sequence"
+
+    def _check_percent(self, cr, uid, ids, context={}):
+        obj = self.browse(cr, uid, ids[0])
+        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
+            return False
+        return True
+
+    _constraints = [
+        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+    ]
+    
 account_payment_term_line()
 
 
@@ -729,7 +743,7 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,map(int, ids)))+') group by move_id')
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
@@ -807,7 +821,7 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
+            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('posted',))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
         return True
@@ -820,7 +834,7 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
+            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('draft',))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -1177,7 +1191,7 @@ class account_tax_code(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1797,7 +1811,7 @@ class account_account_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1856,7 +1870,7 @@ class account_tax_code_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

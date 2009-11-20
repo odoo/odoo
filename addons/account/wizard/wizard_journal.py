@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -65,6 +64,10 @@ def _action_open_window(self, cr, uid, data, context):
     ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
     jp = jp.browse(cr, uid, ids, context=context)[0]
     name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
+
+    mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+    result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
+    id = mod_obj.read(cr, uid, result, ['res_id'])    
     return {
         'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
         'name': name,
@@ -73,7 +76,8 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model': 'account.move.line',
         'view_id': view_res,
         'context': "{'journal_id':%d, 'period_id':%d}" % (form['journal_id'],form['period_id']),
-        'type': 'ir.actions.act_window'
+        'type': 'ir.actions.act_window',
+        'search_view_id': id['res_id']        
     }
 
 class wiz_journal(wizard.interface):

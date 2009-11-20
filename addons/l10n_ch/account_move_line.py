@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 #  account_move_line.py
 #  l10n_ch
@@ -33,39 +34,39 @@
 from osv import fields, osv
 
 class AccountMoveLine(osv.osv):
-	""" Inherit account.move.line in order to add a custom link 
-		between supplier invoice line and bank. The original link 
-		was defined in account_payment between line """
+    """ Inherit account.move.line in order to add a custom link 
+        between supplier invoice line and bank. The original link 
+        was defined in account_payment between line """
 
-	_inherit = 'account.move.line'
+    _inherit = 'account.move.line'
 
-	## @param self The object pointer.
-	## @param cr a psycopg cursor
-	## @param uid res.user.id that is currently loged
-	## @param payment_type manual 
-	## @parma context a standard dict 
-	## @return a dict  who has the account move line id as key and the bank id as value
-	def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
-		"""add a link to account.move.line in order to link 
-		supplier invoice line and bank. The original link 
-		was defined in account_payment"""
-		payment_mode_obj = self.pool.get('payment.mode')
-		line2bank = {}
-		if not ids:
-			return {}
-		bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,
-				context=context)
-		for line in self.browse(cr, uid, ids, context=context):
-			if line.invoice and line.invoice.partner_bank:
-				line2bank[line.id] = line.invoice.partner_bank.id
-			elif line.partner:
-				for bank in line.partner.bank_ids:
-					if bank.state in bank_type:
-						line2bank[line.id] = bank.id
-						break
-				if line.id not in line2bank and line.partner.bank_ids:
-					line2bank[line.id] = line.partner.bank_ids[0].id
-		return line2bank
+    ## @param self The object pointer.
+    ## @param cr a psycopg cursor
+    ## @param uid res.user.id that is currently loged
+    ## @param payment_type manual 
+    ## @parma context a standard dict 
+    ## @return a dict  who has the account move line id as key and the bank id as value
+    def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
+        """add a link to account.move.line in order to link 
+        supplier invoice line and bank. The original link 
+        was defined in account_payment"""
+        payment_mode_obj = self.pool.get('payment.mode')
+        line2bank = {}
+        if not ids:
+            return {}
+        bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,
+                context=context)
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.invoice and line.invoice.partner_bank:
+                line2bank[line.id] = line.invoice.partner_bank.id
+            elif line.partner_id:
+                for bank in line.partner_id.bank_ids:
+                    if bank.state in bank_type:
+                        line2bank[line.id] = bank.id
+                        break
+                if line.id not in line2bank and line.partner_id.bank_ids:
+                    line2bank[line.id] = line.partner_id.bank_ids[0].id
+        return line2bank
 
 AccountMoveLine()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

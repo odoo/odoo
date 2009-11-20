@@ -196,10 +196,10 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id"/>
-                            <field name="fiscal_position" groups="base.group_extended"/>
+                            <field name="company_id" widget="selection"/>
+                            <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
-                            <field name="payment_term"/>
+                            <field name="payment_term" widget="selection"/>
                             <field name="name" select="2"/>
                             <newline/>
                             <field name="number" select="2"/>
@@ -209,11 +209,11 @@
                             <field name="date_invoice"/>
                             <field name="period_id"/>
                             <label align="0.0" colspan="2" string="(keep empty to use the current period)"/>
-                            <separator colspan="4" string="Additionnal Information"/>
+                            <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-                            <field name="payment_ids" colspan="4" nolabel="1">
+                            <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date"/>
                                     <field name="ref"/>
@@ -255,7 +255,7 @@
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
                             <field name="name" select="2"/>
-                            <field name="payment_term"/>
+                            <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
@@ -287,8 +287,8 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id"/>
-                            <field name="fiscal_position" groups="base.group_extended,base.group_user"/>
+                            <field name="company_id" widget="selection"/>
+                            <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due" select="1"/>
                             <newline/>
@@ -324,18 +324,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                   <group col='6' colspan='4'>
-                       <field name="type">
-                           <filter icon="terp-account" domain="[('type','=','out_invoice')]" help="Customer Invoices"/>
-                           <filter icon="terp-account" domain="[('type','=','in_invoice')]" help="Supplier Invoices"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="state">
-                           <filter icon="terp-account" domain="[('state','=','open')]" help="Open Invoices"/>
-                           <filter icon="terp-account" domain="[('state','=','paid')]" help="Paid Invoices"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
+                   <group col="10" colspan="4">
+                   		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                        <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Invoices"/>
+                        <filter icon="terp-account" string="Unpaid" domain="[('state','in',('open','cancel'))]" help="Unpaid Invoices"/>
+						<separator orientation="vertical"/>
+						<field name="number" select='1'/>
+						<field name="partner_id" select='1'/>
+						<field name="amount_total" string="Price" select='1'/>
+						<field name="origin" select='1'/>
                    </group>
                </search>
             </field>

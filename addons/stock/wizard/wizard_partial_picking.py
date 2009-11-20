@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -27,6 +26,7 @@ import pooler
 
 import wizard
 from osv import osv
+import tools
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
@@ -34,8 +34,11 @@ _moves_fields = UpdateableDict()
 _moves_arch_end = '''<?xml version="1.0"?>
 <form string="Packing result">
     <label string="The packing has been successfully made !" colspan="4"/>
+    <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
-_moves_fields_end = {}
+_moves_fields_end = {
+    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
+                     }
 
 def make_default(val):
     def fct(uid, data, state):
@@ -198,8 +201,15 @@ def _do_split(self, cr, uid, data, context):
     else:
         pick_obj.action_move(cr, uid, [pick.id])
         wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-    return {'new_picking':new_picking or False}
+    bo_name = ''
+    if new_picking:
+        bo_name = pick_obj.read(cr, uid, [new_picking], ['name'])[0]['name']
+    return {'new_picking':new_picking or False, 'back_order':bo_name}
 
+def _get_default(self, cr, uid, data, context):
+    if data['form']['back_order']:
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
+    return data['form']
 
 class partial_picking(wizard.interface):
 
@@ -215,10 +225,10 @@ class partial_picking(wizard.interface):
         },
         'split': {
             'actions': [ _do_split ],
-            'result': {'type': 'state', 'state': 'end'},
+            'result': {'type': 'state', 'state': 'end2'},
         },
         'end2': {
-            'actions': [ ],
+            'actions': [ _get_default ],
             'result': {'type': 'form', 'arch': _moves_arch_end,
                 'fields': _moves_fields_end,
                 'state': (

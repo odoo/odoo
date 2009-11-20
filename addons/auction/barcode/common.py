@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 1996-2000 Tyler C. Sarna <tsarna@sarna.org>
 # All rights reserved.

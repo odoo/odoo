@@ -27,7 +27,7 @@
                     <group colspan="4" col="4">
                         <field name="name" select="1"/>
                         <field name="active" select="1"/>
-                        <field name="company_id"/>
+                        <field name="company_id" widget="selection"/>
                         <field name="user_id"/>
                     </group>
                     <notebook colspan="4">
@@ -59,7 +59,7 @@
                                 <separator string="Job Information" colspan="4"/>
                                 <field name="parent_id" select="1" colspan="4"/>
 
-                                <field name="category_id" colspan="4"/>
+                                <field name="category_id" colspan="4" widget="selection"/>
                             </group>
                         </page>
                         <page string="Notes">
@@ -282,6 +282,25 @@
             <field name="view_id" ref="view_employee_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
+        
+        <record id="hr_employee_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('category_id','child_of',[active_id])]</field>
+            <field name="context">{'category_id':active_id}</field>
+        </record>
+        
+        <record id="hr_employee_category_open" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'hr.employee.category'" name="model"/>
+            <field name="name">Employees by Categories</field>
+            <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
+        
         <menuitem action="open_view_categ_tree" id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
        
     </data>

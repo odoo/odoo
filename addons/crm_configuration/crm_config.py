@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -24,6 +23,9 @@ import tools
 from osv import fields, osv
 import os
 import pooler
+import netsvc
+from tools.translate import _
+from osv.orm import except_orm
 
 #AVAILABLE_STATES = [
 #    ('draft','Unreviewed'),
@@ -185,5 +187,45 @@ class crm_menu_config_wizard(osv.osv_memory):
 
 crm_menu_config_wizard()
 
+
+class crm_generic_wizard(osv.osv_memory):
+    _name = 'crm.generic_wizard'
+    
+    _columns = {        
+        'section_id': fields.many2one('crm.case.section', 'Section', required=True),
+        'user_id': fields.many2one('res.users', 'Responsible'),
+    }
+    
+    def _get_default_section(self, cr, uid, context):
+        case_id = context.get('active_id',False)
+        if not case_id:
+            return False
+        case_obj = self.pool.get('crm.case')    
+        case = case_obj.read(cr, uid, case_id, ['state','section_id'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))              
+        return case['section_id']
+        
+        
+    _defaults = {
+        'section_id': _get_default_section
+    }    
+    def action_create(self, cr, uid, ids, context=None):
+        case_obj = self.pool.get('crm.case')        
+        case_id = context.get('active_id',[])
+        res = self.read(cr, uid, ids)[0]
+        case = case_obj.read(cr, uid, case_id, ['state'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.')) 
+        new_case_id = case_obj.copy(cr, uid, case_id, default=
+                                            {
+                                                'section_id':res.get('section_id',False),
+                                                'user_id':res.get('user_id',False)
+                                            }, context=context)
+        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context) 
+        case_obj.case_close(cr, uid, [case_id])       
+        return {} 
+        
+crm_generic_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

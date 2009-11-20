@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -44,7 +43,7 @@ class hr_department(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str, ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -110,6 +109,7 @@ class res_users(osv.osv):
 
     def _child_compute(self, cr, uid, ids, name, args, context={}):
         obj_dept = self.pool.get('hr.department')
+        obj_user = self.pool.get('res.users')
         result = {}
         for manager_id in ids:
             child_ids = []
@@ -117,8 +117,9 @@ class res_users(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)])
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
-                childs = map(lambda x: x['member_ids'], data_dept)
+                childs = map(lambda x: x['member_ids'], data_dept)                
                 childs = tools.flatten(childs)
+                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])                
                 if manager_id in childs:
                     childs.remove(manager_id)
                 

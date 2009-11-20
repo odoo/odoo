@@ -1,0 +1,2573 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* auction
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-11-17 09:13+0000\n"
+"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-18 04:42+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: auction
+#: field:report.deposit.border,total_marge:0
+msgid "Total margin"
+msgstr "Marge"
+
+#. module: auction
+#: wizard_view:auction.lots.sms_send,init:0
+msgid "SMS - Gateway: clickatell"
+msgstr "SMS - Gateway"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Set to draft"
+msgstr "Setze auf Entwurf"
+
+#. module: auction
+#: field:auction.deposit,partner_id:0
+#: view:auction.lots:0
+#: xsl:report.auction.seller.list:0
+#: field:report.deposit.border,seller:0
+#: field:report.seller.auction,seller:0
+#: field:report.seller.auction2,seller:0
+msgid "Seller"
+msgstr "Einlieferer"
+
+#. module: auction
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,numerotation:0
+#: selection:auction.lots.send.aie,init,numerotation:0
+msgid "Provisoire"
+msgstr "Kommission"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,numerotation:0
+#: selection:auction.lots.send.aie,init,numerotation:0
+msgid "Definitive (ordre catalogue)"
+msgstr "Auktionskatalog"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree1_my
+msgid "My Encoded Objects Per Day"
+msgstr "Meine erfassten Objekte pro Tag"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lot_history
+msgid "Lot history"
+msgstr "Auktionslose Historie"
+
+#. module: auction
+#: field:report.seller.auction,avg_estimation:0
+msgid "Avg estimation"
+msgstr "Durchschn. Schätzwert"
+
+#. module: auction
+#: field:report.auction.object.date,obj_num:0
+#: field:report.auction.view2,obj_number:0
+msgid "# of Objects"
+msgstr "# Objekte"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_action_bids_form
+msgid "Bids line"
+msgstr "Gebote Positionen"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+msgid "Deposit Form"
+msgstr "Zuschlag Formular"
+
+#. module: auction
+#: rml:auction.bids:0
+#: view:auction.lots:0
+#: field:auction.lots,ach_uid:0
+#: wizard_field:auction.lots.buyer_map,check,ach_uid:0
+#: wizard_field:auction.lots.make_invoice_buyer,init,buyer_id:0
+#: wizard_field:auction.pay.buy,init,buyer_id:0
+#: rml:buyer.list:0
+#: model:ir.ui.menu,name:auction.auction_report_buyer_menu
+#: rml:report.auction.buyer.result:0
+#: field:report.buyer.auction,buyer:0
+#: field:report.buyer.auction2,buyer:0
+msgid "Buyer"
+msgstr "Käufer"
+
+#. module: auction
+#: field:report.auction.view,nobjects:0
+#: field:report.buyer.auction,object:0
+msgid "No of objects"
+msgstr "Anzahl Objekte"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_auction_adjudication_tree
+msgid "Adjudication by Auction"
+msgstr "Zuschläge nach Auktionen"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of paid items (based on invoices):"
+msgstr "# der bezahlten Artikel (basierend a. Rechnungen)"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_numerotate_lot
+msgid "Numerotation (per lot)"
+msgstr "Laufende Nummer (nach Auktionslos)"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Books, manuscripts, eso."
+msgstr "Antiquitäten/Bücher, Manuskripte etc."
+
+#. module: auction
+#: view:auction.deposit:0
+#: model:ir.model,name:auction.model_auction_deposit
+msgid "Deposit Border"
+msgstr "Anzahlungslimit"
+
+#. module: auction
+#: wizard_field:auction.lots.make_invoice,init,amount:0
+#: wizard_field:auction.lots.make_invoice_buyer,init,amount:0
+msgid "Invoiced Amount"
+msgstr "Abgerechneter Betrag"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Tin / Copper wares"
+msgstr "Antiquitäten/Zinn, Kupfer"
+
+#. module: auction
+#: field:auction.lots,paid_ach:0
+msgid "Buyer invoice reconciled"
+msgstr "Rechnungsausgleich durch Käufer"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.auction_wizard_able_taken
+msgid "Mark as taken away"
+msgstr "Markiere als Mitgenommen"
+
+#. module: auction
+#: xsl:report.auction.seller.list:0
+msgid "Inv."
+msgstr "Rechn."
+
+#. module: auction
+#: field:auction.deposit.cost,amount:0
+msgid "Amount"
+msgstr "Betrag"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_deposit_border
+#: model:ir.ui.menu,name:auction.menu_auction_deposit_border
+msgid "Deposit border"
+msgstr "Anzahlungslimit"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+msgid "VAT"
+msgstr "USt."
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Statements"
+msgstr "Auszug"
+
+#. module: auction
+#: xsl:flagey.huissier:0
+msgid "Adjudication"
+msgstr "Zuschlag"
+
+#. module: auction
+#: field:auction.dates,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Analytisches Konto"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Unclassifieds"
+msgstr "Unklassifiziert"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_dates_next_by_auction
+msgid "Objects by Auction"
+msgstr "Objekte nach Auktionen"
+
+#. module: auction
+#: field:auction.lots,lot_num:0
+#: field:report.unclassified.objects,lot_num:0
+msgid "List Number"
+msgstr "Listennummer"
+
+#. module: auction
+#: field:auction.deposit.cost,name:0
+msgid "Cost Name"
+msgstr "Kostenposition"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antiques"
+msgstr "Antik"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "State"
+msgstr "Status"
+
+#. module: auction
+#: field:report.auction.estimation.adj.category,lot_type:0
+msgid "Object Type"
+msgstr "Versteigerungsobjekt Typ"
+
+#. module: auction
+#: wizard_field:auction.lots.sms_send,init,text:0
+msgid "SMS Message"
+msgstr "SMS Nachricht"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Contemporary Art"
+msgstr "Zeitgenössische Kunst"
+
+#. module: auction
+#: view:auction.lots:0
+#: view:report.unclassified.objects:0
+msgid "Ref"
+msgstr "Ref."
+
+#. module: auction
+#: field:report.auction.view,nseller:0
+msgid "No of sellers"
+msgstr "Anzahl Einlieferer"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "ned"
+msgstr "ned"
+
+#. module: auction
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
+"Fehler: Sign In (oder Sign Out) sollte auf Sign Out ( oder Sign In) erfolgen."
+
+#. module: auction
+#: view:auction.lots:0
+#: field:report.buyer.auction,total_price:0
+msgid "Total Adj."
+msgstr "Summe Zuschlag"
+
+#. module: auction
+#: field:report.auction.view2,obj_margin_procent:0
+msgid "Net margin (%)"
+msgstr "Netto Spanne (%)"
+
+#. module: auction
+#: selection:auction.lots,state:0
+#: selection:report.object.encoded,state:0
+#: selection:report.seller.auction,state:0
+#: selection:report.unclassified.objects,state:0
+msgid "Unsold"
+msgstr "Unverkäuflich"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Dates"
+msgstr "Termine"
+
+#. module: auction
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Fehler: UOS sollte in einer anderen Kategorie sein als UOM"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Items"
+msgstr "Artikel"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax5
+#: field:auction.dates,seller_costs:0
+msgid "Seller Costs"
+msgstr "Kosten Einlieferer"
+
+#. module: auction
+#: view:auction.bid:0
+#: view:auction.bid_line:0
+#: view:auction.lots:0
+#: field:auction.lots,bid_lines:0
+#: model:ir.actions.report.xml,name:auction.bid_auction
+#: model:ir.ui.menu,name:auction.menu_action_bid_open
+msgid "Bids"
+msgstr "Gebote"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_all_objects_menu
+msgid "All objects"
+msgstr "Alle Versteigerungsobjekte"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting_all2
+msgid "Buyer's auction for all months"
+msgstr "Auktionen des Käufers über alle Monate"
+
+#. module: auction
+#: field:auction.bid,contact_tel:0
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: auction
+#: field:report.auction.view,obj_ret:0
+#: field:report.object.encoded,obj_ret:0
+#: field:report.object.encoded.manager,obj_ret:0
+msgid "# obj ret"
+msgstr "# einbeh. Obj."
+
+#. module: auction
+#: wizard_button:auction.lots.sms_send,init,send:0
+msgid "Send SMS"
+msgstr "SMS senden"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Painting"
+msgstr "Zeitg. Kunst"
+
+#. module: auction
+#: field:auction.lots,sel_inv_id:0
+msgid "Seller Invoice"
+msgstr "Einlieferer Rechnung"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Commissions"
+msgstr "Auktionsgebühren"
+
+#. module: auction
+#: wizard_button:auction.lots.numerotate,search,init:0
+msgid "Back"
+msgstr "Zurück"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_all_objects_unsold
+msgid "Unsold objects"
+msgstr "Unverkäufliche Objekte"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_all_objects_sold1
+msgid "Sold Objects"
+msgstr "Verkaufte Objekte"
+
+#. module: auction
+#: view:report.buyer.auction2:0
+#: view:report.seller.auction2:0
+msgid "Sum net margin"
+msgstr "Summe Netto Marge"
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "Deposit Border Form"
+msgstr "Anzahlungslimit Formular"
+
+#. module: auction
+#: field:auction.bid,bid_lines:0
+#: rml:auction.bids:0
+#: rml:bids.lots:0
+#: model:ir.model,name:auction.model_auction_bid_line
+msgid "Bid"
+msgstr "Gebote"
+
+#. module: auction
+#: wizard_field:auction.lots.send.aie,date_ask,lang:0
+msgid "Langage"
+msgstr "Sprache"
+
+#. module: auction
+#: field:auction.bid_line,lot_id:0
+#: field:auction.lot.history,lot_id:0
+#: view:auction.lots:0
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Object"
+msgstr "Objekt"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_map_user
+msgid "Map buyer username to Partners"
+msgstr "Übernehme Käufer zu Partner"
+
+#. module: auction
+#: wizard_field:auction.lots.numerotate,search,lot_num:0
+msgid "Inventory Number"
+msgstr "Inventarnummer"
+
+#. module: auction
+#: wizard_button:auction.lots.buyer_map,check,end:0
+#: wizard_button:auction.lots.numerotate,not_exist,end:0
+#: wizard_button:auction.lots.numerotate,search,end:0
+#: wizard_button:auction.lots.numerotate_cont,init,end:0
+msgid "Exit"
+msgstr "Ausgang"
+
+#. module: auction
+#: field:report.buyer.auction2,net_revenue:0
+msgid "Net Revenue"
+msgstr "Netto Einnahmen"
+
+#. module: auction
+#: view:report.buyer.auction:0
+msgid "Auction buyer reporting form view"
+msgstr "Report Auktion aus Käufersicht"
+
+#. module: auction
+#: field:auction.dates,state:0
+#: field:auction.lots,state:0
+#: field:report.auction.adjudication,state:0
+#: field:report.object.encoded,state:0
+#: field:report.seller.auction,state:0
+#: field:report.unclassified.objects,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_sms
+msgid "SMS Send"
+msgstr "SMS senden"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Cartoons"
+msgstr "Antik/Cartoons"
+
+#. module: auction
+#: view:auction.lots:0
+#: selection:auction.lots,state:0
+#: selection:report.seller.auction,state:0
+#: selection:report.unclassified.objects,state:0
+msgid "Sold"
+msgstr "Versteigert"
+
+#. module: auction
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+"Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
+
+#. module: auction
+#: field:auction.bid_line,name:0
+msgid "Bid date"
+msgstr "Bietdatum"
+
+#. module: auction
+#: field:auction.dates,acc_expense:0
+msgid "Expense Account"
+msgstr "Aufwandskonto"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_wizard_emporte
+msgid "Deliveries Management"
+msgstr "Auslieferungen"
+
+#. module: auction
+#: field:auction.lots,obj_desc:0
+msgid "Object Description"
+msgstr "Versteigerungsobjekt Beschreibung"
+
+#. module: auction
+#: selection:auction.deposit,method:0
+msgid "Contact the Seller"
+msgstr "Kontaktiere Einlieferer"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Auction Objects"
+msgstr "Auktion Versteigerungsobjekte"
+
+#. module: auction
+#: field:auction.lots,gross_revenue:0
+#: field:report.auction.view2,gross_revenue:0
+#: field:report.object.encoded.manager,gross_revenue:0
+#: field:report.seller.auction2,gross_revenue:0
+msgid "Gross revenue"
+msgstr "Bruttoumsatz"
+
+#. module: auction
+#: view:report.seller.auction2:0
+msgid "Auction reporting2 form view"
+msgstr "Report Auktion 2 Ansicht"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_pay
+msgid "Pay objects of the buyer"
+msgstr "Bezahle ersteigerte Objekte des Käufers"
+
+#. module: auction
+#: view:report.deposit.border:0
+msgid "Depositer's statistics"
+msgstr "Statistik Anzahlungen"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Buyer information"
+msgstr "Käufer Information"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_seller_auction
+msgid "Auction Reporting on seller view"
+msgstr "Report Auktion aus Käufer Sicht"
+
+#. module: auction
+#: field:auction.lots,name2:0
+msgid "Short Description (2)"
+msgstr "Kurzbeschreibung Nr. 2"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_dates
+msgid "auction.dates"
+msgstr "auction.dates"
+
+#. module: auction
+#: rml:auction.total.rml:0
+#: model:ir.ui.menu,name:auction.auction_buyers_menu
+msgid "Buyers"
+msgstr "Käufer"
+
+#. module: auction
+#: wizard_field:auction.pay.buy,init,amount:0
+#: wizard_field:auction.pay.buy,init,amount2:0
+#: wizard_field:auction.pay.buy,init,amount3:0
+msgid "Amount paid"
+msgstr "Gesamtzahlbetrag"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
+msgid "My Latest Deposits"
+msgstr "Meine letzten Anzahlungen"
+
+#. module: auction
+#: field:auction.lots,lot_est1:0
+#: wizard_field:auction.lots.numerotate,search,lot_est1:0
+#: field:report.auction.estimation.adj.category,lot_est1:0
+#: field:report.auction.view,min_est:0
+#: field:report.unclassified.objects,lot_est1:0
+msgid "Minimum Estimation"
+msgstr "Minimum Schätzung"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Accounting"
+msgstr "Finanzbuchhaltung"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view2
+msgid "Buyer's Revenues"
+msgstr "Erlöse des Käufers"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_auction_adjudication
+msgid "report_auction_adjudication"
+msgstr "report_auction_adjudication"
+
+#. module: auction
+#: field:auction.bid_line,price:0
+msgid "Maximum Price"
+msgstr "Maximum Preis"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "eng"
+msgstr "eng"
+
+#. module: auction
+#: view:report.buyer.auction2:0
+msgid "Auction buyer reporting tree view2"
+msgstr "Report Auktion Nr. 2 Käufersicht"
+
+#. module: auction
+#: wizard_view:auction.lots.sms_send,init:0
+msgid "Bulk SMS send"
+msgstr "Bulk SMS Versand"
+
+#. module: auction
+#: wizard_view:auction.taken,init:0
+msgid "Select lots which are Sold"
+msgstr "Wähle verkaufte Auktionslose"
+
+#. module: auction
+#: field:auction.lots,statement_id:0
+msgid "Payment"
+msgstr "Zahlung"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "fr"
+msgstr "fr"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Old weapons and militaria"
+msgstr "Antik/Alte Waffen und Militärausst."
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Oriental Arts/Chineese furnitures"
+msgstr "Antik/Orientalische Kunst/Chinesische Möbel"
+
+#. module: auction
+#: selection:auction.deposit,method:0
+msgid "Keep until sold"
+msgstr "Behalte Ware bis bezahlt"
+
+#. module: auction
+#: wizard_button:auction.lots.numerotate,init,choice:0
+#: wizard_button:auction.lots.send.aie,init,date_ask:0
+#: wizard_button:auction.lots.send.aie.results,init,date_ask:0
+msgid "Continue"
+msgstr "Fortfahren"
+
+#. module: auction
+#: field:report.object.encoded,obj_num:0
+#: field:report.object.encoded.manager,obj_num:0
+msgid "# of Encoded obj."
+msgstr "# Verst. Objekte"
+
+#. module: auction
+#: xsl:report.auction.vnd_bordereau:0
+msgid "List N."
+msgstr "Liste N."
+
+#. module: auction
+#: field:report.deposit.border,moy_est:0
+msgid "Avg. Est"
+msgstr "Durch. Schätzwerte"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of sellers:"
+msgstr "# Einlieferer"
+
+#. module: auction
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Fehler: Falscher EAN code"
+
+#. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid ""
+"This module provides functionality to \n"
+"     manage artists, articles, sellers, buyers and auction.\n"
+"     Manage bids, track of sold, paid and unpaid objects.\n"
+"     Delivery Management. \n"
+"    "
+msgstr ""
+"Dieses Module stellt folgende Funktionalität zur Verfügung\n"
+"     Verwaltung von Künstlern, Produkten, Verkäufer, Käufer, und Auktion.\n"
+"     Verwaltung von Angeboten, verkaufter, bezahlter und unbezahlter "
+"Obkjete\n"
+"     Verwaltung der Auslieferung \n"
+"    "
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of items taken away:"
+msgstr "# ersteigerte Artikel"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_allmonth_view1
+msgid "Auction's Summary"
+msgstr "Auktionsreport"
+
+#. module: auction
+#: rml:buyer.list:0
+msgid "%)"
+msgstr "%)"
+
+#. module: auction
+#: wizard_view:auction.lots.able,init:0
+msgid "Confirmation set taken away"
+msgstr "Nur zur Abholung"
+
+#. module: auction
+#: wizard_field:auction.lots.make_invoice,init,objects:0
+#: wizard_field:auction.lots.make_invoice_buyer,init,objects:0
+#: wizard_field:auction.lots.send.aie,date_ask,objects:0
+#: wizard_field:auction.lots.send.aie.results,date_ask,objects:0
+#: field:report.deposit.border,nb_obj:0
+msgid "# of objects"
+msgstr "# Objekte"
+
+#. module: auction
+#: field:auction.lots,lot_est2:0
+#: wizard_field:auction.lots.numerotate,search,lot_est2:0
+#: field:report.auction.estimation.adj.category,lot_est2:0
+#: field:report.auction.view,max_est:0
+#: field:report.unclassified.objects,lot_est2:0
+msgid "Maximum Estimation"
+msgstr "Max. Schätzung"
+
+#. module: auction
+#: field:auction.lots,buyer_price:0
+msgid "Buyer price"
+msgstr "Käuferpreis"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.auction_wizard_payer_sel
+msgid "Mark as paid for seller"
+msgstr "Markiere als Bezahlt (für Einlieferer)"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.seller_form_id
+msgid "Seller List"
+msgstr "Liste Einlieferer"
+
+#. module: auction
+#: field:auction.lots,is_ok:0
+msgid "Buyer's payment"
+msgstr "Käufer Einzahlungen"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Close + Create all invoices"
+msgstr "Beenden + Erzeugen aller Rechnungen"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.auction_catalog_flagy
+msgid "Auction Catalog Flagey"
+msgstr "Auktionskatalog Flyer"
+
+#. module: auction
+#: field:auction.lot.history,price:0
+msgid "Withdrawn price"
+msgstr "Gebot zurückgezogen"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax4
+msgid "Seller Costs1"
+msgstr "Verkäufer Kosten 1"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Verreries"
+msgstr "Antik/Glas"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Toys"
+msgstr "Antik/Spielzeug"
+
+#. module: auction
+#: field:auction.deposit,create_uid:0
+#: field:auction.lots,create_uid:0
+msgid "Created by"
+msgstr "Erzeugt durch"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Buyer form"
+msgstr "Käufer Formular"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+msgid "Estimate"
+msgstr "Schätzung"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of buyers:"
+msgstr "# an Käufer:"
+
+#. module: auction
+#: field:auction.lots,costs:0
+msgid "Indirect costs"
+msgstr "Indirekte Aufwendungen"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Cat"
+msgstr "Kat."
+
+#. module: auction
+#: constraint:account.tax.code:0
+msgid "Error ! You can not create recursive accounts."
+msgstr "Fehler ! Die Anlage von rekursiven Konten ist nicht möglich."
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_menu_root
+msgid "Auction Management"
+msgstr "Auktionen"
+
+#. module: auction
+#: field:auction.dates,journal_seller_id:0
+msgid "Seller Journal"
+msgstr "Journal Einlieferer"
+
+#. module: auction
+#: view:report.buyer.auction:0
+msgid "Auction buyer reporting tree view"
+msgstr "Report Auktion Käufer (Baum)"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_artist
+msgid "Define Artists"
+msgstr "Definiere Künstler"
+
+#. module: auction
+#: field:auction.lot.category,name:0
+msgid "Category Name"
+msgstr "Kategorie Bezeichnung"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_manager
+#: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_member
+msgid "Comparison of estimations"
+msgstr "Vergleich der Schätzungen"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
+msgid "Code barres du lot"
+msgstr "Barcode Auktionslos"
+
+#. module: auction
+#: wizard_button:auction.lots.numerotate,not_exist,init:0
+msgid "Retry"
+msgstr "Erneuter Versuch"
+
+#. module: auction
+#: field:auction.artists,birth_death_dates:0
+msgid "Birth / Death dates"
+msgstr "Geburts-/ Todesdatum"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Jewelry"
+msgstr "Antik/Schmuck"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_unclassified_objects
+msgid "Unclassified objects "
+msgstr "Nicht klassifizierte Objekte "
+
+#. module: auction
+#: wizard_button:auction.lots.numerotate_cont,init,set_number:0
+#: wizard_field:auction.lots.send.aie,date_ask,numerotation:0
+#: wizard_field:auction.lots.send.aie,init,numerotation:0
+msgid "Numerotation"
+msgstr "Nummernvergabe"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
+msgid "Bordereau de dépôt"
+msgstr "Limit Zuschlag"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+msgid "Document type"
+msgstr "Dokumenten Typ"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_auction_estimation_adj_category
+msgid "comparaison estimate/adjudication "
+msgstr "Vergleich Schätzung/Zuschlag "
+
+#. module: auction
+#: rml:buyer.list:0
+msgid "Adj(EUR)"
+msgstr "Zuschlag (EUR)"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Other Media"
+msgstr "Zeitg. Kunst/Andere Medien"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_emporte
+msgid "Gestion emporte"
+msgstr "Nachlassverwaltung"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Cat. N."
+msgstr "Kategorie Neu"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_object_cat
+msgid "Object Categories"
+msgstr "Auktionssobjekte Kategorien"
+
+#. module: auction
+#: wizard_field:auction.lots.send.aie,date_ask,img_send:0
+msgid "Send Image also ?"
+msgstr "Sende auch Photo?"
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "General Informations"
+msgstr "Allgemeine Informationen"
+
+#. module: auction
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#. module: auction
+#: view:report.auction.view:0
+msgid "Auctions results"
+msgstr "Resultat Auktion"
+
+#. module: auction
+#: wizard_field:auction.lots.sms_send,init,app_id:0
+msgid "API ID"
+msgstr "API ID"
+
+#. module: auction
+#: field:auction.bid,name:0
+#: field:auction.bid_line,bid_id:0
+msgid "Bid ID"
+msgstr "Gebot ID"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Min Estimate:"
+msgstr "Min. Schätzung"
+
+#. module: auction
+#: field:report.buyer.auction2,net_margin:0
+msgid "Net Margin"
+msgstr "Netto Gewinnmarge"
+
+#. module: auction
+#: field:auction.lots,vnd_lim_net:0
+msgid "Net limit ?"
+msgstr "Kreditlimit ?"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of commissions:"
+msgstr "# Auktionskommission."
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_unclassified_objects
+#: model:ir.ui.menu,name:auction.menu_all_objects_unclassified
+#: view:report.unclassified.objects:0
+msgid "Unclassified objects"
+msgstr "Nicht klassifizierte Objekte"
+
+#. module: auction
+#: wizard_view:auction.lots.make_invoice_buyer,init:0
+msgid "(Keep empty for automatic number)"
+msgstr "(frei lassen für automat. Nummernvergabe)"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_auction_object_date
+#: view:report.auction.object.date:0
+msgid "Objects per day"
+msgstr "Objekte pro Tag"
+
+#. module: auction
+#: model:product.template,name:auction.monproduit_product_template
+msgid "Oeuvres a 21%"
+msgstr "Gesamtausgabe mit 21%"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Carpet and textilles"
+msgstr "Antik/Teppiche und Textilien"
+
+#. module: auction
+#: xsl:report.auction.seller.list:0
+#: field:report.object.encoded.manager,adj:0
+msgid "Adj."
+msgstr "Zuschlag"
+
+#. module: auction
+#: field:auction.lot.history,name:0
+#: field:report.attendance,name:0
+#: field:report.auction.adjudication,date:0
+#: xsl:report.auction.deposit:0
+#: field:report.auction.estimation.adj.category,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: auction
+#: field:auction.lots,obj_ret:0
+msgid "Price retired"
+msgstr "Zuschlagspreis"
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "Extra Costs"
+msgstr "Zusatzkosten"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_dates_new
+msgid "New Auction Dates"
+msgstr "Neuer Auktionstermin"
+
+#. module: auction
+#: field:auction.lots,paid_vnd:0
+msgid "Seller Paid"
+msgstr "Einlieferer bezahlt"
+
+#. module: auction
+#: field:auction.deposit,date_dep:0
+msgid "Deposit date"
+msgstr "Datum Anzahlung"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.id_deposit
+msgid "Deposits"
+msgstr "Anzahlungen"
+
+#. module: auction
+#: field:auction.deposit,specific_cost_ids:0
+msgid "Specific Costs"
+msgstr "Zusatzkosten"
+
+#. module: auction
+#: view:report.buyer.auction2:0
+#: view:report.seller.auction2:0
+msgid "Sum adj"
+msgstr "Zuschlagsbetrag"
+
+#. module: auction
+#: view:auction.dates:0
+#: view:report.auction.view2:0
+msgid "Auctions"
+msgstr "Auktionen"
+
+#. module: auction
+#: field:report.seller.auction,object_number:0
+msgid "No of Objects"
+msgstr "Anzahl Auktionsobjekte"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "History"
+msgstr "Historie"
+
+#. module: auction
+#: field:auction.lot.category,priority:0
+msgid "Priority"
+msgstr "Priorität"
+
+#. module: auction
+#: rml:auction.code_bar_lot:0
+msgid "Nr."
+msgstr "Nr."
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Painting"
+msgstr "Antik/Gemälde"
+
+#. module: auction
+#: field:auction.lot.category,aie_categ:0
+msgid "Aie Category"
+msgstr "Aie Kategorie"
+
+#. module: auction
+#: xsl:flagey.huissier:0
+#: rml:report.auction.buyer.result:0
+#: xsl:report.auction.deposit:0
+msgid "Num"
+msgstr "Nummer"
+
+#. module: auction
+#: wizard_button:auction.lots.able,init,end:0
+#: wizard_button:auction.lots.auction_move,init,end:0
+#: wizard_button:auction.lots.enable,init,end:0
+#: wizard_button:auction.lots.make_invoice,init,end:0
+#: wizard_button:auction.lots.make_invoice_buyer,init,end:0
+#: wizard_button:auction.lots.numerotate,init,end:0
+#: wizard_button:auction.lots.send.aie,date_ask,end:0
+#: wizard_button:auction.lots.send.aie,init,end:0
+#: wizard_button:auction.lots.send.aie.results,date_ask,end:0
+#: wizard_button:auction.lots.send.aie.results,init,end:0
+#: wizard_button:auction.lots.sms_send,init,end:0
+#: wizard_button:auction.pay.buy,init,end:0
+#: wizard_button:auction.payer.sel,init,end:0
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Beginning of the auction"
+msgstr "Beginn Auktion"
+
+#. module: auction
+#: field:auction.artists,biography:0
+msgid "Biography"
+msgstr "Biographie"
+
+#. module: auction
+#: field:auction.lots,lot_local:0
+msgid "Location"
+msgstr "Standort"
+
+#. module: auction
+#: wizard_view:auction.payer.sel,init:0
+msgid "Check payment for seller"
+msgstr "Prüfe Zahlungseingang Einlieferer"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
+msgid "Detailed lots"
+msgstr "Details Auktionslos"
+
+#. module: auction
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
+msgid "Objects statistics"
+msgstr "Auswertungen Versteigerungsobjekte"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Analytic"
+msgstr "Analyse Auswertungen"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_results
+msgid "Send results to Auction-in-europe.com"
+msgstr "Sende Ergebnis an auction-in-europe.com"
+
+#. module: auction
+#: rml:bids.lots:0
+#: rml:bids.phones.details:0
+msgid "Cat.N"
+msgstr "Kat. Neu"
+
+#. module: auction
+#: selection:auction.deposit,method:0
+msgid "Decrease limit of 10%"
+msgstr "Setze Limit herunter um 10%"
+
+#. module: auction
+#: field:auction.dates,adj_total:0
+#: field:report.auction.adjudication,adj_total:0
+#: field:report.auction.estimation.adj.category,adj_total:0
+msgid "Total Adjudication"
+msgstr "Summe Auktionszuschlag"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_reporting1
+#: model:ir.actions.act_window,name:auction.action_auction_reporting_all1
+#: model:ir.actions.act_window,name:auction.action_auction_reporting_all2
+msgid "Seller's auction"
+msgstr "Auktionen Einlieferer"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_invoice_buyer1
+msgid "Invoice Buyer objects"
+msgstr "Rechnung Versteigerungsobjekte"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_seller_allmonth_view2
+msgid "Seller's Revenues"
+msgstr "Einlieferer Erträge"
+
+#. module: auction
+#: xsl:flagey.huissier:0
+msgid "Price"
+msgstr "Preis"
+
+#. module: auction
+#: rml:bids.phones.details:0
+msgid "-"
+msgstr "-"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Subtotal:"
+msgstr "Zwischensumme"
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "Photos"
+msgstr "Photos"
+
+#. module: auction
+#: wizard_field:auction.lots.make_invoice,init,number:0
+#: wizard_field:auction.lots.make_invoice_buyer,init,number:0
+msgid "Invoice Number"
+msgstr "Rechnungsnummer"
+
+#. module: auction
+#: field:report.buyer.auction,date:0
+#: field:report.buyer.auction2,date:0
+#: field:report.object.encoded,date:0
+#: field:report.object.encoded.manager,date:0
+#: field:report.seller.auction,date:0
+msgid "Create Date"
+msgstr "Erzeugt am"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
+msgid "Buyer's Summary"
+msgstr "Käufer Zusammenfassung"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Customer Reference"
+msgstr "Referenz des Käufers"
+
+#. module: auction
+#: rml:bids.lots:0
+msgid "Name"
+msgstr "Name"
+
+#. module: auction
+#: field:auction.deposit,name:0
+#: field:auction.lots,bord_vnd_id:0
+#: wizard_field:auction.lots.numerotate,init,bord_vnd_id:0
+#: field:report.deposit.border,bord:0
+#: field:report.unclassified.objects,bord_vnd_id:0
+msgid "Depositer Inventory"
+msgstr "Inventar des Kreditgebers"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_deposit_tree_m
+#: model:ir.ui.menu,name:auction.menu_report_deposit_tree_member
+msgid "Depositer's Statistics"
+msgstr "Statistik des Kreditgebers"
+
+#. module: auction
+#: view:report.object.encoded.manager:0
+msgid "Total adj."
+msgstr "Summe Zuschlag"
+
+#. module: auction
+#: wizard_field:auction.lots.send.aie,date_ask,uname:0
+#: wizard_field:auction.lots.send.aie,init,uname:0
+#: wizard_field:auction.lots.send.aie.results,date_ask,uname:0
+#: wizard_field:auction.lots.send.aie.results,init,uname:0
+#: wizard_field:auction.lots.sms_send,init,user:0
+msgid "Login"
+msgstr "Login"
+
+#. module: auction
+#: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
+msgid "To pay"
+msgstr "Zahlung bis"
+
+#. module: auction
+#: wizard_button:auction.lots.enable,init,go:0
+msgid "Enable Taken away"
+msgstr "Freigabe zur Mitnahme"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Others"
+msgstr "Antik/Weitere Produkte"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.seller_lots_3
+msgid "Seller Form"
+msgstr "Einlieferer Formular"
+
+#. module: auction
+#: field:auction.lots,lot_type:0
+#: field:report.unclassified.objects,lot_type:0
+msgid "Object category"
+msgstr "Versteigerungsobjekte Kategorien"
+
+#. module: auction
+#: wizard_view:auction.taken,init:0
+msgid "Mark Lots"
+msgstr "Markiere Auktionslos"
+
+#. module: auction
+#: field:auction.lots,obj_num:0
+#: wizard_field:auction.lots.enable,init,confirm_en:0
+#: wizard_field:auction.lots.numerotate,search,obj_num:0
+#: field:report.unclassified.objects,obj_num:0
+msgid "Catalog Number"
+msgstr "Katalognummer"
+
+#. module: auction
+#: view:report.auction.view2:0
+msgid "Auction Reporting tree view2"
+msgstr "Report Auktion Nr.2 (Baum)"
+
+#. module: auction
+#: view:report.buyer.auction2:0
+msgid "Auction buyer reporting form view2"
+msgstr "Report Nr. 2 Auktion Käufer"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.bid_phone
+msgid "Bids phones"
+msgstr "Telefonische Gebote"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_object_by_auction
+msgid "Auction dates"
+msgstr "Termine Auktionen"
+
+#. module: auction
+#: view:report.seller.auction2:0
+msgid "Auction seller reporting2 graph view"
+msgstr "Auktion Verkäufer Report Nr. 2"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree
+msgid "Encoded Objects Per Day"
+msgstr "Erfasste Objekte pro Tag"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_buyer_auction
+#: model:ir.model,name:auction.model_report_buyer_auction2
+msgid "Auction Reporting on buyer view"
+msgstr "Auswertung Auktionen aus Käufersicht"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Debit:"
+msgstr "Soll:"
+
+#. module: auction
+#: field:auction.lots,author_right:0
+msgid "Author rights"
+msgstr "Rechte Autor"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Payment's history"
+msgstr "Historie Zahlungen"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Document"
+msgstr "Dokument"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid ", TEL:"
+msgstr "Tel.:"
+
+#. module: auction
+#: view:report.auction.view:0
+msgid "Auction results"
+msgstr "Ergebnisse Auktion"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_allmonth_view2
+msgid "Auction's Revenues"
+msgstr "Auktionsumsatz"
+
+#. module: auction
+#: view:report.object.encoded.manager:0
+msgid "Total net rev."
+msgstr "Gesamt Nettoeinnahmen"
+
+#. module: auction
+#: wizard_button:auction.lots.buyer_map,check,set_buyer:0
+msgid "Update"
+msgstr "Aktualisieren"
+
+#. module: auction
+#: rml:auction.total.rml:0
+#: model:ir.ui.menu,name:auction.auction_report_seller_menu
+#: model:ir.ui.menu,name:auction.auction_seller_menu
+msgid "Sellers"
+msgstr "Einlieferer"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Metal Ware"
+msgstr "Antik/Metallware"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.res_w_buyer
+msgid "Results with buyer"
+msgstr "Resultat mit Käufer"
+
+#. module: auction
+#: selection:auction.lots.send.aie,date_ask,lang:0
+msgid "de"
+msgstr "de"
+
+#. module: auction
+#: wizard_button:auction.lots.auction_move,init,set_date:0
+msgid "Move to Auction date"
+msgstr "Wechsle zu Auktionsdatum"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_dates_old
+msgid "Old Auctions"
+msgstr "Vorherige Auktionen"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of unsold items:"
+msgstr "# der unverkauften Artikel"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Curiosa"
+msgstr "Zeitg. Kunst/Kuriositäten"
+
+#. module: auction
+#: field:auction.bid,auction_id:0
+#: field:auction.lots,auction_id:0
+#: wizard_field:auction.lots.auction_move,init,auction_id:0
+#: wizard_field:auction.lots.send.aie,date_ask,dates:0
+#: wizard_field:auction.lots.send.aie,init,dates:0
+#: wizard_field:auction.lots.send.aie.results,date_ask,dates:0
+#: wizard_field:auction.lots.send.aie.results,init,dates:0
+msgid "Auction Date"
+msgstr "Termin Auktion"
+
+#. module: auction
+#: rml:auction.code_bar_lot:0
+msgid ", ID"
+msgstr ", ID"
+
+#. module: auction
+#: model:ir.module.module,shortdesc:auction.module_meta_information
+msgid "Auction module"
+msgstr "Auktion Modul"
+
+#. module: auction
+#: field:auction.bid_line,auction:0
+msgid "Auction Name"
+msgstr "Name der Auktion"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_auction_sign_in_out_manager_tree1
+#: model:ir.ui.menu,name:auction.menu_report_auction_sign_in_out_member_tree1
+msgid "Attendance"
+msgstr "Teilnahme"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Seller information"
+msgstr "Einlieferer Information"
+
+#. module: auction
+#: field:auction.lots,ach_login:0
+#: wizard_field:auction.lots.buyer_map,check,ach_login:0
+#: field:report.unclassified.objects,ach_login:0
+msgid "Buyer Username"
+msgstr "Benutzername Käufer"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Jewelry"
+msgstr "Zeitg. Kunst/Schmuck"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Inventory"
+msgstr "Warenbestand"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_dates_next
+msgid "Next Auctions"
+msgstr "Kommende Auktionen"
+
+#. module: auction
+#: rml:buyer.list:0
+#: xsl:report.auction.seller.list:0
+msgid "#"
+msgstr "#"
+
+#. module: auction
+#: field:auction.lots,ach_emp:0
+msgid "Taken Away"
+msgstr "Abgeholt"
+
+#. module: auction
+#: view:report.object.encoded.manager:0
+msgid "Total gross rev."
+msgstr "Bruttoumsatz"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Miniatures / Collections"
+msgstr "Antik/Miniaturen/Kollektionen"
+
+#. module: auction
+#: wizard_view:auction.lots.numerotate,not_exist:0
+msgid "This lot does not exist !"
+msgstr "Dieses Los existiert nicht!"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "End of auction"
+msgstr "Ende Auktion"
+
+#. module: auction
+#: field:auction.bid_line,call:0
+msgid "To be Called"
+msgstr "Abzugebende Gebote"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction_estimation_adj_category_manager_tree
+#: model:ir.actions.act_window,name:auction.action_report_auction_estimation_adj_category_member_tree
+#: view:report.auction.estimation.adj.category:0
+msgid "Min est/Adj/Max est"
+msgstr "Min est/Akt/Max Gebot"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.lot_list_inv
+msgid "Lots List - Landscape"
+msgstr "Liste Auktionsposten - Querformat"
+
+#. module: auction
+#: view:report.seller.auction:0
+msgid "Auction reporting tree view"
+msgstr "Report Auktionen (Baum)"
+
+#. module: auction
+#: wizard_view:auction.lots.auction_move,init:0
+#: model:ir.actions.wizard,name:auction.wizard_change_auction
+msgid "Change Auction Date"
+msgstr "Wechsle Auktionsdatum"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Photo"
+msgstr "Zeitg. Kunst/Photographien"
+
+#. module: auction
+#: field:auction.deposit,method:0
+msgid "Withdrawned method"
+msgstr "Methode Kündigung"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Max Estimate:"
+msgstr "Max. Schätzung:"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_bid
+msgid "Bid auctions"
+msgstr "Gebote Auktionen"
+
+#. module: auction
+#: field:report.auction.view2,obj_margin:0
+msgid "Avg margin"
+msgstr "Durchschnittl. Marge"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Art from the Ivory Coast"
+msgstr "Antik/Kunst Elfenbein"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Religiosa"
+msgstr "Antik/Religion"
+
+#. module: auction
+#: wizard_button:auction.lots.make_invoice,init,invoice:0
+#: wizard_button:auction.lots.make_invoice_buyer,init,invoice:0
+msgid "Create invoices"
+msgstr "Erzeuge Rechnungen"
+
+#. module: auction
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben "
+"Kategorie sein."
+
+#. module: auction
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Lot"
+msgstr "Auktionslos"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_all_objects_unplanned1
+msgid "Unplanned objects"
+msgstr "Ungeplante Objekte"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Sculpture"
+msgstr "Zeitg. Kunst/Skulpturen"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_artists
+msgid "auction.artists"
+msgstr "auction.artists"
+
+#. module: auction
+#: field:auction.dates,journal_id:0
+msgid "Buyer Journal"
+msgstr "Käufer Journal"
+
+#. module: auction
+#: selection:auction.lots,state:0
+#: xsl:report.auction.ach_bordereau:0
+#: selection:report.object.encoded,state:0
+#: selection:report.unclassified.objects,state:0
+msgid "Paid"
+msgstr "Bezahlt"
+
+#. module: auction
+#: rml:bids.lots:0
+#: rml:bids.phones.details:0
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Argenterie"
+msgstr "Antik/Tafelsilber"
+
+#. module: auction
+#: wizard_button:auction.pay.buy,init,pay:0
+#: wizard_button:auction.payer.sel,init,pay2:0
+msgid "Pay"
+msgstr "Zahlen"
+
+#. module: auction
+#: field:auction.lot.category,active:0
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Lightings"
+msgstr "Antik/Lampen"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Sculpture, bronze, eso."
+msgstr "Antik/Skulpturen, Bronze"
+
+#. module: auction
+#: rml:buyer.list:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.seller.list:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Total:"
+msgstr "Gesamt:"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax2
+msgid "TVA1"
+msgstr "MWSt 1"
+
+#. module: auction
+#: view:report.auction.object.date:0
+msgid "Objects per Day"
+msgstr "Versteigerungsobjekte pro Tag"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+msgid "Document Number"
+msgstr "Dokumentennummer"
+
+#. module: auction
+#: field:report.object.encoded.manager,obj_margin:0
+#: field:report.seller.auction2,net_margin:0
+msgid "Net margin"
+msgstr "Netto Marge"
+
+#. module: auction
+#: wizard_button:auction.lots.numerotate,search,set_number:0
+msgid "Numerotate"
+msgstr "Laufende Nummer"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "Buyer, Price"
+msgstr "Käufer, Preis"
+
+#. module: auction
+#: rml:auction.code_bar_lot:0
+msgid "Flagey"
+msgstr "Auktionsflyer"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.v_huissier
+msgid "Listing Huissiers"
+msgstr "Verzeichnis Auktionsbeamter"
+
+#. module: auction
+#: field:auction.lots,vnd_lim:0
+msgid "Seller limit"
+msgstr "Einlieferer Limit"
+
+#. module: auction
+#: wizard_view:auction.lots.buyer_map,done:0
+msgid "All objects are assigned to buyers !"
+msgstr "Alle Versteigerungsobjekte sind Käufern zugewiesen!"
+
+#. module: auction
+#: wizard_button:auction.lots.able,init,go:0
+msgid "Able Taken away"
+msgstr "Bereit zur Abholung"
+
+#. module: auction
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+"beinhalten"
+
+#. module: auction
+#: field:auction.deposit,transfer:0
+msgid "Transfer"
+msgstr "Transferiere"
+
+#. module: auction
+#: view:report.auction.adjudication:0
+#: field:report.seller.auction,total_price:0
+msgid "Total adjudication"
+msgstr "Summe Zuschlag"
+
+#. module: auction
+#: field:auction.lots,artist2_id:0
+msgid "Artist/Author 2"
+msgstr "Künstler/Autor 2"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_seller_allmonth_view1
+msgid "Seller's Summary"
+msgstr "Käufer Zusammenfassung"
+
+#. module: auction
+#: view:report.seller.auction:0
+msgid "Auction reporting graph view"
+msgstr "Report Auktion Grafik"
+
+#. module: auction
+#: wizard_field:auction.taken,init,lot_ids:0
+msgid "Lots Emportes"
+msgstr "Importiere Fertigungslos"
+
+#. module: auction
+#: wizard_button:auction.lots.send.aie,date_ask,send:0
+#: wizard_button:auction.lots.send.aie.results,date_ask,send:0
+msgid "Send on your website"
+msgstr "Sende auf Webpage"
+
+#. module: auction
+#: field:auction.lots,net_margin:0
+msgid "Net Margin (%)"
+msgstr "Netto Marge (%)"
+
+#. module: auction
+#: field:report.auction.object.date,month:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.auction_lots_open
+msgid "Simplified lots for adjudication"
+msgstr "Einfache Auktionslose Zuschlag"
+
+#. module: auction
+#: field:auction.lots,product_id:0
+msgid "Product"
+msgstr "Produkt"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_auction_view
+msgid "Auction Reporting on view1"
+msgstr "Report Auktionen Nr.1"
+
+#. module: auction
+#: field:report.seller.auction2,sum_adj:0
+msgid "Sum Adjustication"
+msgstr "Zuschlagsbetrag"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
+msgstr "Antik/Porzellan, Keramik, Glas"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Plate Number:"
+msgstr "Tafel Nummer:"
+
+#. module: auction
+#: view:auction.deposit:0
+#: field:auction.deposit,lot_id:0
+#: model:ir.ui.menu,name:auction.auction_objects_menu
+msgid "Objects"
+msgstr "Versteigerungsobjekte"
+
+#. module: auction
+#: wizard_view:auction.lots.numerotate,init:0
+#: wizard_view:auction.lots.numerotate,search:0
+msgid "Object Reference"
+msgstr "Objektreferenz"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Paid:"
+msgstr "Bezahlt:"
+
+#. module: auction
+#: field:auction.deposit,total_neg:0
+msgid "Allow Negative Amount"
+msgstr "Erlaube negativen Betrag"
+
+#. module: auction
+#: rml:auction.bids:0
+#: view:auction.lots:0
+#: rml:auction.total.rml:0
+#: model:ir.ui.menu,name:auction.auction_report_auction_menu
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
+msgid "Auction"
+msgstr "Auktion"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Shows"
+msgstr "Zeitg. Kunst/Präsentation"
+
+#. module: auction
+#: field:auction.dates,name:0
+#: field:auction.lot.history,auction_id:0
+#: field:report.auction.adjudication,name:0
+#: field:report.auction.view,auction_id:0
+#: field:report.auction.view2,auction:0
+#: field:report.auction.view2,date:0
+#: field:report.buyer.auction,auction:0
+#: field:report.buyer.auction2,auction:0
+#: field:report.seller.auction,auction:0
+#: field:report.seller.auction2,auction:0
+#: field:report.seller.auction2,date:0
+#: field:report.unclassified.objects,auction:0
+msgid "Auction date"
+msgstr "Datum Auktion"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_all_objects_unsold
+msgid "Unsold Objects"
+msgstr "Unverkäufl. Objekte"
+
+#. module: auction
+#: field:report.buyer.auction,avg_price:0
+msgid "Avg Adj."
+msgstr "Durchschn. Zuschlagsbetrag"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_deposit_cost
+msgid "auction.deposit.cost"
+msgstr "auction.deposit.cost"
+
+#. module: auction
+#: wizard_field:auction.lots.numerotate,search,bord_vnd_id:0
+msgid "Object Inventory"
+msgstr "Objekte im Bestand"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Art from the Ivory Coast/African Arts"
+msgstr "Antik/Kunst von der Elfenbeinküste/Afrikanische Kunst"
+
+#. module: auction
+#: field:auction.dates,auction1:0
+msgid "First Auction Day"
+msgstr "Erster Tag der Auktion"
+
+#. module: auction
+#: view:report.attendance:0
+msgid "User's pointing"
+msgstr "Benutzerhinweis"
+
+#. module: auction
+#: view:auction.lot.category:0
+msgid "Lot Category"
+msgstr "Versteigerungslose Kategorie"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_report_manager_menu
+msgid "Manager"
+msgstr "Auktionator"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Names"
+msgstr "Namensliste"
+
+#. module: auction
+#: view:auction.artists:0
+msgid "Artists"
+msgstr "Künstler"
+
+#. module: auction
+#: field:report.attendance,total_attendance:0
+#: xsl:report.auction.ach_bordereau:0
+msgid "Total"
+msgstr "Gesamt"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
+msgid "Open lots"
+msgstr "Offene Auktionslose"
+
+#. module: auction
+#: view:report.seller.auction:0
+msgid "Auction reporting form view"
+msgstr "Report Auktion Ansicht"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Lots"
+msgstr "Auktionslose"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_send
+msgid "Send to website"
+msgstr "Sende an Webseite"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_dates_old
+msgid "Old Auction Dates"
+msgstr "Vorherige Auktionstermine"
+
+#. module: auction
+#: field:auction.lots,seller_price:0
+msgid "Seller price"
+msgstr "Preis Einlieferer"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_seller_auction2
+msgid "Auction Reporting on seller view2"
+msgstr "Report Nr.2 Auktion Einlieferer"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.buy_id_list
+msgid "Buyer List"
+msgstr "Liste der Käufer"
+
+#. module: auction
+#: rml:buyer.list:0
+msgid "Buyer costs("
+msgstr "Kaufkosten("
+
+#. module: auction
+#: wizard_field:auction.pay.buy,init,statement_id1:0
+#: wizard_field:auction.pay.buy,init,statement_id2:0
+#: wizard_field:auction.pay.buy,init,statement_id3:0
+msgid "Statement"
+msgstr "Zahlungsbeleg"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Engravings"
+msgstr "Antik/Gravuren"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax20
+#: model:account.tax,name:auction.auction_tax6
+msgid "Frais de vente"
+msgstr "Kosten des Verkaufes"
+
+#. module: auction
+#: wizard_view:auction.lots.numerotate_cont,init:0
+#: wizard_field:auction.lots.numerotate_cont,init,number:0
+msgid "First Number"
+msgstr "Erste Nummer"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax
+msgid "Droit d'auteur"
+msgstr "Urheberrechte"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_auction_view2
+msgid "Auction Reporting on  view2"
+msgstr "Report Nr.2 Auktion"
+
+#. module: auction
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Erster Tag Exposition"
+
+#. module: auction
+#: wizard_view:auction.lots.auction_move,init:0
+msgid ""
+"Warning, this will erase the object adjudication price and its buyer !"
+msgstr ""
+"Warnung, diese Aktion wird alle Zuschlagsbeträge der Objekte und Ihre Käufer "
+"löschen !"
+
+#. module: auction
+#: field:report.auction.object.date,name:0
+msgid "Created date"
+msgstr "Erzeugter Termin"
+
+#. module: auction
+#: view:auction.bid:0
+msgid "Bid information"
+msgstr "Information Gebot"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "TEL:"
+msgstr "Tel.:"
+
+#. module: auction
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
+msgstr "Ertragskonto"
+
+#. module: auction
+#: field:auction.lots,net_revenue:0
+#: field:report.auction.view2,net_revenue:0
+#: field:report.object.encoded.manager,net_revenue:0
+#: field:report.seller.auction2,net_revenue:0
+msgid "Net revenue"
+msgstr "Netto Einnahmen"
+
+#. module: auction
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.lots.list.landscape:0
+msgid "Limit"
+msgstr "Limit"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree_manager
+msgid "Latest Deposits"
+msgstr "Letzte Anzahlungen"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "# of items:"
+msgstr "# Artikel:"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Musical Instruments"
+msgstr "Antik/Musikinstrumente"
+
+#. module: auction
+#: field:report.object.encoded,estimation:0
+#: field:report.object.encoded.manager,estimation:0
+msgid "Estimation"
+msgstr "Schätzungen"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Graphic Arts"
+msgstr "Antik/Kunst Graphiken"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.buyer_form_id
+msgid "Buyer Form"
+msgstr "Auktionszuschlag Formular"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_invoice
+msgid "Invoice Seller objects"
+msgstr "Berechne Objekte des Einlieferers"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Oriental Arts"
+msgstr "Antik/Oriental. Kunst"
+
+#. module: auction
+#: field:auction.bid,partner_id:0
+msgid "Buyer Name"
+msgstr "Käufer Name"
+
+#. module: auction
+#: field:report.auction.view2,sum_adj:0
+msgid "Sum of adjudication"
+msgstr "Summe Auktionszuschläge"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.auction_wizard_enable_taken
+msgid "Unmark as taken away"
+msgstr "Demarkiere als mitgenommen"
+
+#. module: auction
+#: field:auction.lots,gross_margin:0
+msgid "Gross Margin (%)"
+msgstr "Brutto Spanne (%)"
+
+#. module: auction
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
+msgstr "Beendet"
+
+#. module: auction
+#: field:auction.lots,obj_comm:0
+#: field:report.unclassified.objects,obj_comm:0
+msgid "Commission"
+msgstr "Auktionsgebühr"
+
+#. module: auction
+#: wizard_field:auction.lots.numerotate,init,lot_num:0
+msgid "Lot Number"
+msgstr "Auktionslos Nummer"
+
+#. module: auction
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "Die USt. scheint falsch zu sein."
+
+#. module: auction
+#: field:report.attendance,employee_id:0
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Adj.(EUR)"
+msgstr "Zuschlag (EUR)"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "Est."
+msgstr "Gesch."
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_report_menu
+msgid "Reporting"
+msgstr "Berichtswesen"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Catalog"
+msgstr "Auktionskatalog"
+
+#. module: auction
+#: field:auction.deposit.cost,account:0
+msgid "Destination Account"
+msgstr "Konto Zahlungsempfänger"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_deposit_border
+msgid "Report deposit border"
+msgstr "Report Anzahlungslimits"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_config_menu
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_outils_menu
+msgid "Tools Bar Codes"
+msgstr "Auktionswerkzeuge"
+
+#. module: auction
+#: field:auction.deposit.cost,deposit_id:0
+msgid "Deposit"
+msgstr "Anzahlung"
+
+#. module: auction
+#: field:auction.dates,expo2:0
+msgid "Last Exposition Day"
+msgstr "Letztes Datum Exposition"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_report_allmonth_view1
+#: model:ir.actions.act_window,name:auction.action_auction_report_allmonth_view2
+#: model:ir.actions.act_window,name:auction.action_auction_report_thismonth_view2
+msgid "Auction report"
+msgstr "Report der Auktion"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lot_category
+msgid "auction.lot.category"
+msgstr "auction.lot.category"
+
+#. module: auction
+#: field:auction.artists,name:0
+msgid "Artist/Author Name"
+msgstr "Künstler/Autoren Name"
+
+#. module: auction
+#: field:auction.lots,image:0
+msgid "Image"
+msgstr "Bild / Photo"
+
+#. module: auction
+#: selection:report.object.encoded,state:0
+msgid "Invoiced"
+msgstr "Berechnet"
+
+#. module: auction
+#: view:auction.lots:0
+#: selection:auction.lots,state:0
+msgid "Taken away"
+msgstr "Mitgenommen"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Collectible & art objects"
+msgstr "Antik/Sammlungen & Kunstobjekte"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "BID:"
+msgstr "Gebot:"
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting
+#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting2
+#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting_all1
+msgid "Buyer's auction"
+msgstr "Auktionen des Käufers"
+
+#. module: auction
+#: view:report.seller.auction2:0
+msgid "Auction reporting2 tree view"
+msgstr "Report Nr. 2 Auktion (Baum)"
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "Deposit Costs"
+msgstr "Kosten Anzahlung"
+
+#. module: auction
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
+
+#. module: auction
+#: selection:auction.dates,state:0
+#: selection:auction.lots,state:0
+#: selection:report.auction.adjudication,state:0
+#: selection:report.object.encoded,state:0
+#: selection:report.seller.auction,state:0
+#: selection:report.unclassified.objects,state:0
+msgid "Draft"
+msgstr "Entwurf"
+
+#. module: auction
+#: rml:buyer.list:0
+msgid "........."
+msgstr "........"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Buyer Cost:"
+msgstr "Käufer Kosten:"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "NET"
+msgstr "Netto"
+
+#. module: auction
+#: rml:report.auction.buyer.result:0
+msgid "Adj"
+msgstr "Zuschlag"
+
+#. module: auction
+#: view:auction.dates:0
+#: model:ir.ui.menu,name:auction.auction_date_menu
+msgid "Auction Dates"
+msgstr "Termine Auktionen"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Furnitures"
+msgstr "Antik/Möbel"
+
+#. module: auction
+#: xsl:report.auction.ach_bordereau:0
+msgid "Customer Contact"
+msgstr "Kontakt Käufer"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "Inv, Name"
+msgstr "Rechn. Name"
+
+#. module: auction
+#: field:report.auction.adjudication,user_id:0
+#: field:report.auction.estimation.adj.category,user_id:0
+#: field:report.auction.object.date,user_id:0
+#: field:report.object.encoded,user_id:0
+#: field:report.object.encoded.manager,user_id:0
+msgid "User"
+msgstr "Benutzer"
+
+#. module: auction
+#: view:report.unplanned.object:0
+msgid "Unplanned Objects"
+msgstr "Ungeplante Objekte"
+
+#. module: auction
+#: field:report.buyer.auction2,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Brutto Einnahmen"
+
+#. module: auction
+#: field:auction.artists,pseudo:0
+msgid "Pseudo"
+msgstr "Pseudo"
+
+#. module: auction
+#: field:auction.lots,important:0
+msgid "To be Emphatized"
+msgstr "Hervorzuheben"
+
+#. module: auction
+#: view:auction.lots:0
+msgid "Not sold"
+msgstr "Nicht verkauft"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax3
+#: field:auction.dates,buyer_costs:0
+msgid "Buyer Costs"
+msgstr "Käufer Kosten"
+
+#. module: auction
+#: model:ir.actions.wizard,name:auction.wizard_numerotate_automatic
+msgid "Numerotation (automatic)"
+msgstr "Automatische Nummerierung"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Auction Date:"
+msgstr "Ende Auktion"
+
+#. module: auction
+#: field:auction.lots,ach_inv_id:0
+msgid "Buyer Invoice"
+msgstr "Käufer Rechnung"
+
+#. module: auction
+#: rml:auction.bids:0
+msgid "Tel"
+msgstr "Tel.:"
+
+#. module: auction
+#: wizard_field:auction.pay.buy,init,total:0
+msgid "Amount to paid"
+msgstr "Zu zahlender Betrag"
+
+#. module: auction
+#: field:auction.lots,artist_id:0
+msgid "Artist/Author"
+msgstr "Künstler/Autor"
+
+#. module: auction
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr "MWSt"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.total_result1
+msgid "Auction Totals with lists"
+msgstr "Auktionssumme mit Einzelposten"
+
+#. module: auction
+#: wizard_button:auction.lots.buyer_map,done,end:0
+msgid "Close"
+msgstr "Schliesse"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_object_encoded
+#: model:ir.model,name:auction.model_report_object_encoded_manager
+msgid "Object encoded"
+msgstr "Erfasste Auktionsobjekte"
+
+#. module: auction
+#: rml:bids.phones.details:0
+msgid "Est"
+msgstr "Erwartet"
+
+#. module: auction
+#: field:report.auction.view,nbuyer:0
+msgid "No of buyers"
+msgstr "Anzahl Käufer"
+
+#. module: auction
+#: field:report.seller.auction,avg_price:0
+msgid "Avg adjudication"
+msgstr "Durchschn. Zuschlagswert"
+
+#. module: auction
+#: view:report.object.encoded.manager:0
+msgid "Object statistic"
+msgstr "Auswertung Auktionsobjekte"
+
+#. module: auction
+#: field:auction.dates,auction2:0
+msgid "Last Auction Day"
+msgstr "Letzter Tag Auktion"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_auction_dates_next1
+msgid "Next Auction Dates"
+msgstr "Folgende Auktionen"
+
+#. module: auction
+#: model:ir.model,name:auction.model_report_attendance
+msgid "Report Sign In/Out"
+msgstr "Report An/Abmeldung"
+
+#. module: auction
+#: view:auction.deposit:0
+#: field:auction.deposit,info:0
+#: view:auction.lots:0
+#: wizard_field:auction.lots.numerotate,search,obj_desc:0
+#: rml:bids.phones.details:0
+#: xsl:flagey.huissier:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.vnd_bordereau:0
+msgid "Description"
+msgstr "Beschreibung"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Arts"
+msgstr "Zeitg. Kunst/Kunst"
+
+#. module: auction
+#: field:auction.lots,obj_price:0
+#: field:report.auction.view,adj_price:0
+#: field:report.unclassified.objects,obj_price:0
+msgid "Adjudication price"
+msgstr "Zuschlagspreis"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
+msgstr "Angebot Auktionsobjekte"
+
+#. module: auction
+#: xsl:flagey.huissier:0
+msgid "Ref."
+msgstr "Ref."
+
+#. module: auction
+#: wizard_field:auction.lots.send.aie,date_ask,password:0
+#: wizard_field:auction.lots.send.aie,init,password:0
+#: wizard_field:auction.lots.send.aie.results,date_ask,password:0
+#: wizard_field:auction.lots.send.aie.results,init,password:0
+#: wizard_field:auction.lots.sms_send,init,password:0
+msgid "Password"
+msgstr "Password"
+
+#. module: auction
+#: field:auction.lots,ach_avance:0
+msgid "Buyer Advance"
+msgstr "Anzahlung Käufer"
+
+#. module: auction
+#: field:auction.lots,name:0
+#: wizard_field:auction.lots.numerotate,search,name:0
+#: field:report.unclassified.objects,name:0
+msgid "Short Description"
+msgstr "Kurzbeschreibung"
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.auction_report_employees_menu
+msgid "Employees"
+msgstr "Mitarbeiter"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Clocks and watches"
+msgstr "Antik/Uhren"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Scientific Instruments"
+msgstr "Antik/Wissenschaftliche Instrumente"
+
+#. module: auction
+#: wizard_view:auction.lots.enable,init:0
+msgid "Confirmation enable taken away"
+msgstr "Freigabe zur Mitnahme"
+
+#. module: auction
+#: wizard_view:auction.pay.buy,init:0
+msgid "Pay objects"
+msgstr "Zahle Objekte"
+
+#. module: auction
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
+msgid "# objects"
+msgstr "# Objekte"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Adjudication:"
+msgstr "Zuschlag:"
+
+#. module: auction
+#: field:report.buyer.auction2,sumadj:0
+msgid "Sum of adjustication"
+msgstr "Summe Zuschlag"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.details_bids_phones
+msgid "Bids per lot (phone)"
+msgstr "Gebote pro Los (Telefon.)"
+
+#. module: auction
+#: field:report.buyer.auction,buyer_login:0
+#: field:report.buyer.auction2,buyer_login:0
+msgid "Buyer Login"
+msgstr "Käufer Login"
+
+#. module: auction
+#: field:auction.deposit,tax_id:0
+msgid "Expenses"
+msgstr "Aufwendungen"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Wine"
+msgstr "Antik/Wein"
+
+#. module: auction
+#: rml:auction.total.rml:0
+msgid "Auction name:"
+msgstr "Auktion Bez.:"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/African Arts"
+msgstr "Antik/Afrikanische Kunst"
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.art2
+msgid "Artists Biography"
+msgstr "Künstler Biographie"
+
+#. module: auction
+#: selection:auction.lot.category,aie_categ:0
+msgid "Antique/Posters"
+msgstr "Antik/Poster"
+
+#. module: auction
+#: field:auction.lots,history_ids:0
+msgid "Auction history"
+msgstr "Auktionen Historie"
+
+#. module: auction
+#: xsl:report.auction.lots.list.landscape:0
+msgid "Orders"
+msgstr "Aufträge"

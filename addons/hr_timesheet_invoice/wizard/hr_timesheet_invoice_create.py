@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -171,19 +170,26 @@ class invoice_create(wizard.interface):
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
         
         mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')        
+
+        mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
+        res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
+        act_win = act_obj.read(cr, uid, res_id, [])
+        act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
+        act_win['name'] = _('Invoices')
+        return act_win
         
-        return {
-            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
-            'name': _('Invoices'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'view_id': False,
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
-        }
+#        return {
+#            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
+#            'name': _('Invoices'),
+#            'view_type': 'form',
+#            'view_mode': 'tree,form',
+#            'res_model': 'account.invoice',
+#            'view_id': False,
+#            'context': "{'type':'out_invoice'}",
+#            'type': 'ir.actions.act_window',
+#            'search_view_id': res['res_id']
+#        }
 
     _create_form = """<?xml version="1.0"?>
     <form string="Invoice on analytic entries">

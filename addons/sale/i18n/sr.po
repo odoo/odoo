@@ -1,0 +1,1399 @@
+# Serbian translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-11-18 05:50+0000\n"
+"Last-Translator: Sonja Sardelić <sardelic.sonja@gmail.com>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-19 04:36+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Parcijalna isporuka"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Procurement"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_confirmquotation0
+msgid "Confirm Quotation"
+msgstr "Potvrđivanje ponude"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_deliveryorder0
+msgid "Delivery Order"
+msgstr "Nalog za isporuku"
+
+#. module: sale
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Dodeljivanje partnera"
+
+#. module: sale
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Waiting Schedule"
+msgstr "Raspored čekanja"
+
+#. module: sale
+#: help:sale.order,picking_policy:0
+msgid ""
+"If you don't have enough stock available to deliver all at once, do you "
+"accept partial shipments or not?"
+msgstr ""
+"Ako na raspolaganju nemate dovoljno akcija za dostavu odjednom, da "
+"liprihvatate delimičnu isporuku?"
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "od akcije"
+
+#. module: sale
+#: field:sale.config.picking_policy,step:0
+msgid "Steps To Deliver a Sale Order"
+msgstr "Koraci za dostavu naloga za prodaju"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,create:0
+msgid "You invoice has been successfully created !"
+msgstr "Vaš račun je uspešno kreiran !"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Automatic Declaration"
+msgstr "Automatska deklaracija"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "Stavke za koje ne postoji račun a isporučene su"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Set to Draft"
+msgstr "Postavite kao nacrt"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Invoice Exception"
+msgstr "Računi izuzeci"
+
+#. module: sale
+#: help:sale.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this invoice"
+msgstr "Ovo je spisak izbornih lista koji su generisani za ovaj račun"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_deliveryorder0
+msgid "Delivery, from the warehouse to the customer."
+msgstr "Isporuka, od skladišta do kupca."
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_config_picking_policy
+msgid "sale.config.picking_policy"
+msgstr "sale.config.picking_policy"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_validate0
+msgid "Validate"
+msgstr "Provera"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Make Invoice"
+msgstr "Kreiranje raćina"
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Ukupno"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"Whenever confirm button is clicked, the draft state is moved to manual. that "
+"is, quotation is moved to  sale order."
+msgstr ""
+"Kada se klikne dugme za potvrdu, režim nacrta postaje manuelni. Tako da je "
+"ponuda premeštena u nalog za prodaju."
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr "Poništite nalog"
+
+#. module: sale
+#: field:sale.order.line,move_ids:0
+msgid "Inventory Moves"
+msgstr "Premeštanje inventara"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Manual Designation"
+msgstr "Manuelni ispis"
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
+#: field:sale.order.line,notes:0
+msgid "Notes"
+msgstr "Beleške"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Račun nakon isporuke"
+
+#. module: sale
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr "Porezi"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Net Total :"
+msgstr "Ukupno neto"
+
+#. module: sale
+#: field:sale.order,order_policy:0
+msgid "Shipping Policy"
+msgstr "Opcije transporta"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Shipping Exception"
+msgstr "Izuzeci kod transporta"
+
+#. module: sale
+#: field:sale.order,amount_total:0
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Origin"
+msgstr "Početak"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Adresa računa"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_packinglist0
+msgid "Outgoing Products"
+msgstr "Izlazni proizvodi"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Reference"
+msgstr "Veza"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "All at Once"
+msgstr "Sve odjednom"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleprocurement0
+msgid "Procurement is created after confirmation of sale order."
+msgstr "Nabavka je nastala nakon potvrde naloga za prodaju."
+
+#. module: sale
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
+msgid "Analytic Account"
+msgstr "Analitički nalog"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "TVA :"
+msgstr "TVA:"
+
+#. module: sale
+#: field:sale.order.line,type:0
+msgid "Procure Method"
+msgstr "Matod nabavke"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Extra Info"
+msgstr "Dodatne informacije"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Fax :"
+msgstr "Faks:"
+
+#. module: sale
+#: field:sale.order.line,price_net:0
+msgid "Net Price"
+msgstr "Neto cena"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree9
+#: model:ir.ui.menu,name:sale.menu_action_order_tree9
+msgid "My sales order in progress"
+msgstr "Moj nalog za prodaju u toku"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "Količina (UoS)"
+
+#. module: sale
+#: help:sale.order,invoice_quantity:0
+msgid ""
+"The sale order will automatically create the invoice proposition (draft "
+"invoice). Ordered and delivered quantities may not be the same. You have to "
+"choose if you invoice based on ordered or shipped quantities. If the product "
+"is a service, shipped quantities means hours spent on the associated tasks."
+msgstr ""
+"Nalog za prodaju će automatski da napravi predlog za račun (nacrt računa). "
+"Naručene i isporučene količine ne moraju da budu iste. Morate da izaberete "
+"da li će se Vaš račun bazirati na naručenim ili isporučenim količinama. Ako "
+"je proizvod usluga, isporučena količina su sati provedeni pri pružanju "
+"usluge."
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Potvrđeno"
+
+#. module: sale
+#: field:sale.shop,payment_default_id:0
+msgid "Default Payment Term"
+msgstr "Podrazumevani uslovi plaćanja"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree_all
+#: model:ir.ui.menu,name:sale.menu_action_order_tree_all
+msgid "All Sales Order"
+msgstr "Svi nalozi za prodaju"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_confirm0
+msgid "Confirm"
+msgstr "Potvrda"
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr "Adresa isporuke"
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Isporučene količine"
+
+#. module: sale
+#: selection:sale.config.picking_policy,order_policy:0
+msgid "Invoice Based on Sales Orders"
+msgstr "Račun kreiran na osnovu naloga za prodaju"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
+msgid "Sale Shop"
+msgstr "Prodavnica"
+
+#. module: sale
+#: field:sale.shop,warehouse_id:0
+msgid "Warehouse"
+msgstr "Skladište"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Order N°"
+msgstr "Nalog N°"
+
+#. module: sale
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
+msgid "Order Lines"
+msgstr "Stavke naloga"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Disc.(%)"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Stavke računa"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
+msgid "Force Assignation"
+msgstr "Prinudni prenos"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Untaxed amount"
+msgstr "Neoporezovani iznos"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_packing0
+msgid ""
+"Packing list is created when 'Assign' is being clicked after confirming the "
+"sale order. This transaction moves the sale order to packing list."
+msgstr ""
+"Otpremnica je kreirana kada je 'Dodeli' bilo kliknuto posle potvrde naloga "
+"za prodaju. Ova transakcija premešta nalog za prodaju u otpremnicu."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree8
+#: model:ir.ui.menu,name:sale.menu_action_order_tree8
+msgid "My sales order waiting Invoice"
+msgstr "Moj nalog za prodaju čeka račun"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Shipping address :"
+msgstr "Adresa isporuke:"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
+msgid ""
+"When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+"will automatic create after delivery."
+msgstr ""
+"Kada izaberete pravilo dostave = 'Automatski račun nakon isporuke' , tada će "
+"se automatski kreirati posle isporuke."
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Kompletna isporuka"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Manual Description"
+msgstr "Opis"
+
+#. module: sale
+#: field:sale.order.line,product_uom_qty:0
+msgid "Quantity (UoM)"
+msgstr "Količina (UoM)"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree1
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
+#: view:sale.order.line:0
+msgid "Sales Order Lines"
+msgstr "Stavke naloga za prodaju"
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Naručene količine"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Izvršavanje naloga za prodaju"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_packing0
+msgid "Packing"
+msgstr "Pakovanje"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Total :"
+msgstr "Ukupno:"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Confirm Order"
+msgstr "Potvrda naloga"
+
+#. module: sale
+#: field:sale.order,name:0
+msgid "Order Reference"
+msgstr "Veze naloga"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
+#: selection:sale.order.line,state:0
+msgid "Done"
+msgstr "Urađeno"
+
+#. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
+msgid "Pricelist"
+msgstr "Cenovnik"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_shop_configuration
+msgid "Configuration"
+msgstr "Konfiguracija"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr "Račun na bazi Naloga posle isporuke"
+
+#. module: sale
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Nevažeći XML za pregled arhitekture"
+
+#. module: sale
+#: field:sale.order,picking_ids:0
+msgid "Related Packing"
+msgstr "Povezana pakovanja"
+
+#. module: sale
+#: field:sale.shop,payment_account_id:0
+msgid "Payment Accounts"
+msgstr "Računi plaćanja"
+
+#. module: sale
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Greška: UOS mora da bude u različitoj kategoriji od UOM"
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Customer Ref"
+msgstr "Veze kupca"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales orders"
+msgstr "Nalozi za prodaju"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_saleprocurement0
+#: field:sale.order.line,procurement_id:0
+msgid "Procurement"
+msgstr "Izvršavanje"
+
+#. module: sale
+#: view:sale.shop:0
+msgid "Payment accounts"
+msgstr "Računi plaćanja"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,create,end:0
+msgid "Close"
+msgstr "Zatvaranje"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_invoice0
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+msgid "Draft Invoice"
+msgstr "Nacrti računa"
+
+#. module: sale
+#: wizard_field:sale.order.line.make_invoice,init,grouped:0
+#: wizard_field:sale.order.make_invoice,init,grouped:0
+msgid "Group the invoices"
+msgstr "Grupisanje računa"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+#: model:ir.ui.menu,name:sale.menu_action_order_tree5
+msgid "All Quotations"
+msgstr "Sve ponude"
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "Popust (%)"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoice0
+msgid "Draft customer invoice, to be reviewed by accountant."
+msgstr "Nacrt računa kupca, treba da pregleda računovođa."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree3
+#: model:ir.ui.menu,name:sale.menu_action_order_tree3
+msgid "Sales Order To Be Invoiced"
+msgstr "Nalog za prodaju treba da se napravi račun"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorderprocurement0
+msgid "Procurement for each line"
+msgstr "Izvršavanje za svaku stavku"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree10
+#: model:ir.ui.menu,name:sale.menu_action_order_tree10
+msgid "My Quotations"
+msgstr "Moja ponuda"
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,create:0
+msgid "Invoices"
+msgstr "Računi"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Order Line"
+msgstr "Stavke naloga"
+
+#. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Packing Default Policy"
+msgstr "Podrazumevane opcije za pakovanje"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
+msgstr "Upravljanje napredovanjem isporuke i računima"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Podrazumevane opcije za isporuku"
+
+#. module: sale
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "Pakovanje"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+#: model:ir.ui.menu,name:sale.menu_sale_root
+msgid "Sales Management"
+msgstr "Menadžment prodaje"
+
+#. module: sale
+#: field:sale.order.line,order_id:0
+msgid "Order Ref"
+msgstr "Veze naloga"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Invoice"
+msgstr "Osvežavanje računa"
+
+#. module: sale
+#: field:sale.order,user_id:0
+msgid "Salesman"
+msgstr "Prodavac"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleorderprocurement0
+msgid ""
+"In sale order , procuerement for each line and it comes into the procurement "
+"order"
+msgstr ""
+"U nalogu za prodaju , je naručivanje za svaku stavku i sve ulazi u "
+"narudžbenicu"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Taxes :"
+msgstr "Porezi:"
+
+#. module: sale
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Račun"
+
+#. module: sale
+#: model:ir.actions.wizard,name:sale.advance_payment
+msgid "Advance Invoice"
+msgstr "Račun unapred"
+
+#. module: sale
+#: field:sale.order,state:0
+msgid "Order State"
+msgstr "Stanje naloga"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
+msgid "Uninvoiced Lines"
+msgstr "Stavke koje nisu na računu"
+
+#. module: sale
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid ""
+"This Configuration step use to set default picking policy when make sale "
+"order"
+msgstr ""
+"Ovaj korak pri konfiguraciji se koristi da bi se definisalo podrazumevana "
+"opcija izbora u toku kreiranja naloga za prodaju"
+
+#. module: sale
+#: model:process.process,name:sale.process_process_salesprocess0
+msgid "Sales Process"
+msgstr "Proces prodaje"
+
+#. module: sale
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_button:sale.order.line.make_invoice,init,invoice:0
+#: wizard_view:sale.order.make_invoice,init:0
+#: wizard_button:sale.order.make_invoice,init,invoice:0
+msgid "Create invoices"
+msgstr "Kreiranje računa"
+
+#. module: sale
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Greška: Podrazumevani UOM i and the kupljeni UOM moraju da budu u istoj "
+"kategoriji."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree7
+#: model:ir.ui.menu,name:sale.menu_action_order_tree7
+msgid "My sales in shipping exception"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Sales Configuration"
+msgstr "Konfiguracija prodaje"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree2
+#: model:ir.ui.menu,name:sale.menu_action_order_tree2
+msgid "Sales in Exception"
+msgstr "Prodaje izuzeci"
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "on order"
+msgstr "na nalog"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Nacrt"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Plaćeni"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Procurement Corrected"
+msgstr "Ispravljene nabavke"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Isporuka & Račun"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleorderprocurement0
+#: model:process.transition,name:sale.process_transition_saleprocurement0
+msgid "Sale Procurement"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sale Order Logistic"
+msgstr "Konfigurisanje logistike naloga za prodaju"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Neoporezovani iznos"
+
+#. module: sale
+#: field:sale.order.line,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: sale
+#: field:sale.order,picking_policy:0
+msgid "Packing Policy"
+msgstr "Opcije otpreme"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+msgid "Product sales"
+msgstr "Prodaja proizvoda"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Our Salesman"
+msgstr "Naš prodavac"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,init,create:0
+msgid "Create Advance Invoice"
+msgstr "Kreiranje računa unapred"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleprocurement0
+msgid "One procurement for each product."
+msgstr "Jedna nabavka za svaki proizvod."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
+msgid "Sales Orders"
+msgstr "Nalozi za prodaju"
+
+#. module: sale
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr "Cenovnik prodaje"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Direktna isporuka"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr "Osobine"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_quotation0
+#: selection:sale.order,state:0
+msgid "Quotation"
+msgstr "Ponuda"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance Product"
+msgstr "Unapređeni proizvod"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid ""
+"Invoice is created when 'Create Invoice' is being clicked after confirming "
+"the sale order. This transaction moves the sale order to invoices."
+msgstr ""
+"Račun je kreiran kada je kliknuto 'Kreiranje račun' nakon potvrde naloga za "
+"prodaju. Ovaj proces prenosi nalog za prodaju do računa."
+
+#. module: sale
+#: view:sale.order:0
+msgid "Compute"
+msgstr "Izračunavanje"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
+msgid "Shop"
+msgstr "Prodavnica"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "VAT"
+msgstr "PDV"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree4
+#: model:ir.ui.menu,name:sale.menu_action_order_tree4
+msgid "Sales Order in Progress"
+msgstr "Nalog za prodaju u toku"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_assign0
+msgid "Assign"
+msgstr "Dodeljivanje"
+
+#. module: sale
+#: view:sale.order:0
+msgid "History"
+msgstr "Arhiva"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and "
+"then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly "
+"and wait for the user to manually click on the 'Invoice' button to generate "
+"the draft invoice.\n"
+"  - The 'Invoice on Order After Delivery' choice will generate the draft "
+"invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packing' choice is used to create an invoice "
+"during the packing process."
+msgstr ""
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Your Reference"
+msgstr "Vaše veze"
+
+#. module: sale
+#: selection:sale.config.picking_policy,step:0
+msgid "Delivery Order Only"
+msgstr "Isključivo nalog za isporuku"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Sales order lines"
+msgstr "Stavke naloga za prodaju"
+
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+msgid "Sales"
+msgstr "Prodaja"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_packinglist0
+msgid "Packing OUT is created for stockable products."
+msgstr "Pakovanje NAPOLJU je napravljeno samo za uobičajene proizvode"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Other data"
+msgstr "Ostali podaci"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Jedinica cene"
+
+#. module: sale
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Fiskalna pozicija"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Invoice address :"
+msgstr "Adresa računa:"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoice0
+#: field:sale.order,invoice_ids:0
+msgid "Invoice"
+msgstr "Račun"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
+#: wizard_button:sale.advance_payment_inv,init,end:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
+#: wizard_button:sale.order.line.make_invoice,init,end:0
+#: wizard_button:sale.order.make_invoice,init,end:0
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the state of the quotation or sale order. The exception state is "
+"automatically set when a cancel operation occurs in the invoice validation "
+"(Invoice Exception) or in the packing list process (Shipping Exception). The "
+"'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+"for the scheduler to run on the date 'Date Ordered'."
+msgstr ""
+"Daje status ponudi ili nalogu za prodaju. Status izuzetka je automatski "
+"postavljen kada se pojavi operacija otkaži pri validaciji računa (Računi "
+"izuzeci) ili u procesu kreiranja otpremnice (Izuzeci pri transportu). Status "
+"je 'Raspored na čekanju' kada je račun potvrđen ali se čeka na planer da bi "
+"se prikazao 'Datum naloga'."
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "UoM"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr "Broj paketa"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_deliver0
+msgid ""
+"Confirming the packing list moves them to delivery order. This can be done "
+"by clicking on 'Validate' button."
+msgstr ""
+"Potvrda otpremnice ih premešta u nalog za isporuku. To možete da uradite ako "
+"kliknete dugme 'Validacija'."
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "In Progress"
+msgstr "U toku"
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,init:0
+msgid "Advance Payment"
+msgstr "Akontacija"
+
+#. module: sale
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid "Confirm sale order and Create invoice."
+msgstr "Potvrda naloga za prodaju i kreiranje računa."
+
+#. module: sale
+#: selection:sale.config.picking_policy,step:0
+msgid "Packing List & Delivery Order"
+msgstr "Otpremnica & Nalog za isporuku"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "Izuzetak"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sale Order Lines"
+msgstr "Stavke naloga za prodaju"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.order:0
+msgid "Create Invoice"
+msgstr "Kreiranje računa"
+
+#. module: sale
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_view:sale.order.make_invoice,init:0
+msgid "Do you really want to create the invoices ?"
+msgstr "Da li zaista želite da kreirate račun?"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoiceafterdelivery0
+msgid "Invoice based on packing lists"
+msgstr "Račun baziran na otpremnici"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Set Default"
+msgstr "Postavi podrazumevano"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales order"
+msgstr "Nalog za prodaju"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_quotation0
+msgid "Quotation (A sale order in draft state)"
+msgstr "Ponude (Nalozi za prodaju u statusu nacrta)"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleinvoice0
+msgid "Sale Invoice"
+msgstr "Računi prodaje"
+
+#. module: sale
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,product_id:0
+#: field:sale.order.line,product_id:0
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,create,open:0
+msgid "Open Advance Invoice"
+msgstr "Otvaranje računa unapred"
+
+#. module: sale
+#: field:sale.order,partner_order_id:0
+msgid "Ordering Contact"
+msgstr "Kontakt pri naručivanju"
+
+#. module: sale
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Price"
+msgstr "Cena"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_deliver0
+msgid "Deliver"
+msgstr "Isporuka"
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Ponude / Nalozi"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Tel. :"
+msgstr "Tel.:"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Ponuda N°"
+
+#. module: sale
+#: field:stock.move,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Stavke naloga za prodaju"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
+msgid "Cancel Assignation"
+msgstr "Otkazivanje prenosa"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice from the Packing"
+msgstr "Račun iz Otpreme"
+
+#. module: sale
+#: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
+#: model:ir.actions.wizard,name:sale.wizard_sale_order_make_invoice
+msgid "Make invoices"
+msgstr "Kreiranje računa"
+
+#. module: sale
+#: help:sale.order,partner_order_id:0
+msgid ""
+"The name and address of the contact that requested the order or quotation."
+msgstr "Ime i adresa kontakta koji je zahtevao nalog ili ponudu."
+
+#. module: sale
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: sale
+#: field:product.product,pricelist_purchase:0
+msgid "Purchase Pricelists"
+msgstr "Kupovni cenovnik"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_saleorder0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "Nalog za prodaju"
+
+#. module: sale
+#: field:sale.config.picking_policy,name:0
+msgid "Name"
+msgstr "Ime"
+
+#. module: sale
+#: field:sale.order,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Račun na"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree_new
+#: model:ir.ui.menu,name:sale.menu_action_order_tree_new
+msgid "New Quotation"
+msgstr "Nova ponuda"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total amount"
+msgstr "Ukupan iznos"
+
+#. module: sale
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
+msgid "Date Ordered"
+msgstr "Datum naručivanja"
+
+#. module: sale
+#: field:sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr "Proizvod UoS"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Manual In Progress"
+msgstr "U toku"
+
+#. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Product UoM"
+msgstr "Proizvod UoM"
+
+#. module: sale
+#: help:sale.config.picking_policy,step:0
+msgid ""
+"By default, Open ERP is able to manage complex routing and paths of products "
+"in your warehouse and partner locations. This will configure the most common "
+"and simple methods to deliver products to the customer in one or two "
+"operations by the worker."
+msgstr ""
+"Podrazumevano je da je omogućeno da OpenERP može da savlada složeno "
+"usmeravanje i putanje proizvoda u Vašem skladištu i na lokaciji partnera. "
+"This will configure the most common and simple methods to deliver products "
+"to the customer in one or two operations by the worker."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_config_picking_policy
+msgid "Configure Picking Policy for Sale Order"
+msgstr "Konfigurišite opcije pakovanja naloga za prodaju"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_order0
+msgid "Order"
+msgstr "Nalog"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Payment Terms"
+msgstr "Uslovi plaćanja"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Invoice Corrected"
+msgstr "Ispravljen račun"
+
+#. module: sale
+#: field:sale.order.line,delay:0
+msgid "Delivery Delay"
+msgstr "Kašnjenje isporuke"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Related invoices"
+msgstr "Povezani računi"
+
+#. module: sale
+#: field:sale.shop,name:0
+msgid "Shop Name"
+msgstr "Ime prodavnice"
+
+#. module: sale
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "Uslovi plaćanja"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Plaćanje pre isporuke"
+
+#. module: sale
+#: help:sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sale order. "
+"The same sale order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
+"Ovo je spisak računa koji su napravljeni za ovaj nalog za prodaju. Moguće da "
+"je za jedan nalog za prodaju pravljeno više računa (za svaku stavku na "
+"primer)."
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "States"
+msgstr "Stanja"
+
+#. module: sale
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Težina"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_order0
+msgid "After confirming order, Create the invoice."
+msgstr "Nakon potvrde naloga, kreirajte račun."
+
+#. module: sale
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
+msgid "Picked"
+msgstr "Isabrani"
+
+#. module: sale
+#: view:sale.shop:0
+msgid "Accounting"
+msgstr "Računovodstvo"
+
+#. module: sale
+#: selection:sale.config.picking_policy,order_policy:0
+msgid "Invoice Based on Deliveries"
+msgstr "Račun na osnovu isporuke"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Stock Moves"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+#: model:ir.ui.menu,name:sale.menu_action_order_tree
+msgid "My Sales Order"
+msgstr "Moji nalozi za pordaju"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sale Order line"
+msgstr "Stavke naloga za prodaju"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr ""
+#~ "Ne možete unapred da kreirate nalog za prodaju koji je definisan kao "
+#~ "'Automatski Račun nakon isporuke'."
+
+#, python-format
+#~ msgid "You must first cancel all packing attached to this sale order."
+#~ msgstr ""
+#~ "Prvo morate da otkažete sve otpreme priključene za ovaj nalog za prodaju."
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sale form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "Izaberite kupca u formi za prodaju !\n"
+#~ "Izaberite jednog kupca pre nego što izaberete proizvod."
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Greška!"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr "Poništite sve račune koji su vezani za ovaj nalog za prodaju."
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Neispravna akcija!"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "Ne možete da otkažete nalog za prodaju!"
+
+#~ msgid "Canceled"
+#~ msgstr "Otkazan"
+
+#, python-format
+#~ msgid "No Customer Defined !"
+#~ msgstr "Kupac nije definisan!"
+
+#~ msgid ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
+#~ "then generate the packing order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
+#~ "invoice based on sale order after all packing lists have been finished.\n"
+#~ "  - The 'Invoice from the packing' choice is used to create an invoice "
+#~ "during the packing process."
+#~ msgstr ""
+#~ "Opcije za otpremanje robe se koriste pri usaglašavanju računa i isporuke.\n"
+#~ "  - Opcija 'Plaćanje pre isporuke' prvo generiše račun a zatim, nakon "
+#~ "plaćanja, nalog za pakovanje.\n"
+#~ "  - Opcija 'Otprema & Račun ' kreira nalog za pakovanje automatski, a onda "
+#~ "korisnik klikne na dugme 'Račun' da napravi nacrt računa.\n"
+#~ "  - Opcija 'Račun baziran na nalogu nakon isporuke' kreira nacrt računa koji "
+#~ "se bazira na nalogu za prodaju ali tek nakon završetka otpremnice.\n"
+#~ "  - Opcija 'Račun iz naloga za pakovanje' kreira račun u toku procesa "
+#~ "pakovanja."
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "pogrešan mod za test_state"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Greška"
+
+#, python-format
+#~ msgid "You cannot cancel a sale order line that has already been invoiced !"
+#~ msgstr ""
+#~ "Ne možete da otkažete nalog za prodaju za koju je već napravljen račun!"
+
+#, python-format
+#~ msgid "Could not cancel this sale order !"
+#~ msgstr "Ne možete da otkažete ovaj nalog za prodaju!"
+
+#, python-format
+#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#~ msgstr "Ne možete da obrišete nalog(e) za kupovinu koji su već potvrđeni!"

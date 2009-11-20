@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -211,7 +210,7 @@ class report_creator(osv.osv):
             fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
                                         and x[1].get('relation') in rest_list 
                                         and x[1].get('type')=='many2one' 
-                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related)), fields_get.items()))
+                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related) or isinstance(model_pool._columns[x[0]],fields.dummy)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)
@@ -259,8 +258,8 @@ class report_creator(osv.osv):
                 ret_str = ret_str[0:len(ret_str)-3]
             if ret_str.endswith('or'):
                 ret_str = ret_str[0:len(ret_str)-2]
-            ret_str = ret_str.strip()    
-        return ret_str
+            ret_str = ret_str.strip()
+        return ret_str % {'uid' : uid}
 
     def _id_get(self, cr, uid, id, context):
 #       return 'min(sale_order_line.id)'

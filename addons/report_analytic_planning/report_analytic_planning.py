@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
@@ -6,17 +6,17 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -36,8 +36,11 @@ class one2many_mod3(fields.one2many):
             list_ids = []
             for item in obj.user_id.child_ids:
                 list_ids.append(item.id)
+            list_ids.append(obj.user_id.id)
             ids2 = obj.pool.get(self._obj).search(cr, user, ['&',(self._fields_id,'=',obj.id),'|',('user_id','in',list_ids),('user_id','=',False)], limit=self._limit)
             for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+                if r[self._fields_id] not in res:
+                    res[r[self._fields_id]] = []
                 res[r[self._fields_id]].append( r['id'] )
         return res
 
@@ -65,23 +68,42 @@ class report_account_analytic_planning(osv.osv):
                     total_free = total_free + p.free
             result[plan.id] = total_free
         return result
+    
+    def _check_planning_responsible(self, cr, uid, ids, context={}):
+        for obj_plan in self.browse(cr,uid,ids):
+            cr.execute("""
+                SELECT id FROM report_account_analytic_planning plan 
+                WHERE (   (%(date_from)s BETWEEN date_from AND date_to)
+                                OR (%(date_to)s BETWEEN date_from AND date_to)
+                                OR (%(date_from)s < date_from AND %(date_to)s > date_to)
+                               )  AND user_id = %(uid)s AND id <> %(id)s""", 
+                        {"date_from": obj_plan.date_from,
+                         "date_to": obj_plan.date_to,
+                         "uid": obj_plan.user_id.id,
+                         "id" : obj_plan.id}
+                               )
 
+            res = cr.fetchone()
+            if res:
+                return False
+        return True
+    
     _columns = {
-        'name': fields.char('Planning Name', size=32, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'date_from':fields.date('Start Date', required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'date_to':fields.date('End Date', required=True, readonly=True, states={'draft':[('readonly', False)]}), 
-        'line_ids': fields.one2many('report_account_analytic.planning.line', 'planning_id', 'Planning lines', readonly=True, states={'draft':[('readonly', False)]}), 
+        'name': fields.char('Planning Name', required=True, size=32, states={'done':[('readonly', True)]}), 
+        'code': fields.char('Code', size=32, states={'done':[('readonly', True)]}), 
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'done':[('readonly', True)]}), 
+        'date_from':fields.date('Start Date', required=True, states={'done':[('readonly', True)]}), 
+        'date_to':fields.date('End Date', required=True, states={'done':[('readonly', True)]}), 
+        'line_ids': fields.one2many('report_account_analytic.planning.line', 'planning_id', 'Planning lines', states={'done':[('readonly', True)]}), 
         'stat_ids': fields.one2many('report_account_analytic.planning.stat', 'planning_id', 'Planning analysis', readonly=True), 
         'state': fields.selection([('draft','Draft'),('open', 'Open'), ('done', 'Done'),('cancel','Cancelled')], 'Status', required=True), 
-        'business_days' : fields.integer('Business Days', required=True, readonly=True, states={'draft':[('readonly', False)]}, help='Set here the number of working days within this planning for one person full time'),
+        'business_days' : fields.integer('Business Days', required=True, states={'done':[('readonly', True)]}, help='Set here the number of working days within this planning for one person full time'),
         'planning_user_ids': one2many_mod3('report_account_analytic.planning.user', 'planning_id', 'Planning By User'),
         'planning_account': fields.one2many('report_account_analytic.planning.account', 'planning_id', 'Planning By Account'), 
         'total_planned'  : fields.function(_get_total_planned, method=True, string='Total Planned'), 
         'total_free'  : fields.function(_get_total_free, method=True, string='Total Free'),
     }
     _defaults = {
-        'name': lambda *a: time.strftime('%B-%y'), 
         'date_from': lambda *a: time.strftime('%Y-%m-01'), 
         'date_to': lambda *a: (mx.DateTime.now()+mx.DateTime.RelativeDateTime(months=1, day=1, days=-1)).strftime('%Y-%m-%d'), 
         'user_id': lambda self, cr, uid, c: uid, 
@@ -90,6 +112,10 @@ class report_account_analytic_planning(osv.osv):
     }
     _order = 'date_from desc'
     
+    _constraints = [
+        (_check_planning_responsible, 'Invalid planning ! Planning dates can\'t overlap for the same responsible. ', ['user_id'])
+    ]
+
     def action_open(self, cr, uid, id, context={}):
         self.write(cr, uid, id, {'state' : 'open'})
         return True
@@ -105,7 +131,7 @@ class report_account_analytic_planning(osv.osv):
     def action_done(self, cr, uid, id, context={}):
         self.write(cr, uid, id, {'state' : 'done'})
         return True
-        
+    
 report_account_analytic_planning()
 
 class report_account_analytic_planning_line(osv.osv):
@@ -119,7 +145,11 @@ class report_account_analytic_planning_line(osv.osv):
         reads = self.read(cr, uid, ids, ['user_id','planning_id','note'], context)
         res = []
         for record in reads:
-            name = '['+record['planning_id'][1] + " - " +record['user_id'][1]+'] '
+            name = '['+record['planning_id'][1]
+            if record['user_id']:
+                name += " - " +record['user_id'][1]+'] '
+            else:
+                name += '] '
             if record['note']:
                 name += record['note']
             res.append((record['id'], name))
@@ -127,8 +157,13 @@ class report_account_analytic_planning_line(osv.osv):
 
     def _amount_base_uom(self, cr, uid, ids, name, args, context):
         result = {}
+        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm and tm.factor:
+            div = tm.factor
+        else:
+            div = 1.0
         for line in self.browse(cr, uid, ids, context):
-            result[line.id] = line.amount / line.amount_unit.factor
+            result[line.id] = line.amount / line.amount_unit.factor * div
         return result
 
     _columns = {
@@ -142,15 +177,36 @@ class report_account_analytic_planning_line(osv.osv):
         'task_ids': fields.one2many('project.task', 'planning_line_id', 'Planning Tasks'), 
     }
     _order = 'user_id,account_id'
+    
 report_account_analytic_planning_line()
 
-
+class account_analytic_account(osv.osv):
+    _name = 'account.analytic.account'
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Accounts'
+    _columns = {
+        'planning_ids': fields.one2many('report_account_analytic.planning.line', 'account_id', 'Plannings'),
+    }
+    
+account_analytic_account()
+    
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
         'planning_line_id': fields.many2one('report_account_analytic.planning.line', 'Planning', ondelete='cascade'), 
     }
+    
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context.get('planning'):
+            return super(project_task,self).search(cr, user, args, offset, limit, order, context)
+        cr.execute(" SELECT t.id, t.name \
+                        from project_task t \
+                        join report_account_analytic_planning_line l on (l.id = t.planning_line_id )\
+                        where l.planning_id=%s" % context.get('planning'))
+        ids = map(lambda x: x[0], cr.fetchall())
+        return ids
+        
 project_task()
 
 
@@ -168,13 +224,18 @@ class report_account_analytic_planning_user(osv.osv):
             div = tm.factor
         else:
             div = 1.0
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             if line.user_id:
                 cr.execute("""select COALESCE(sum(tasks.remaining_hours),0) from project_task tasks \
                                where  tasks.planning_line_id in (select id from report_account_analytic_planning_line\
                 where planning_id = %s and user_id=%s)""", (line.planning_id.id, line.user_id.id,))
                 
-                result[line.id] = cr.fetchall()[0][0] / div
+                result[line.id] = cr.fetchall()[0][0] / div * div2
             else:
                 result[line.id] = 0
         return result
@@ -190,6 +251,11 @@ class report_account_analytic_planning_user(osv.osv):
     
     def _get_timesheets(self, cr, uid, ids, name, args, context):
         result = {}
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             if line.user_id:
                 cr.execute("""
@@ -197,7 +263,7 @@ class report_account_analytic_planning_user(osv.osv):
                 LEFT JOIN product_uom uom ON (uom.id = acc.product_uom_id)
                 WHERE acc.date>=%s and acc.date<=%s and acc.user_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.user_id.id ))
                 res = cr.fetchall()
-                result[line.id] = res[0][0] 
+                result[line.id] = res[0][0] and res[0][0] * div2 or False
             else:
                 result[line.id] = 0
         return result
@@ -218,7 +284,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
         cr.execute(""" CREATE OR REPLACE VIEW report_account_analytic_planning_user AS (
         SELECT 
             planning.id AS planning_id,
-            max(planning.id)+COALESCE(users.id,1) AS id,
+            planning.id::varchar(32) || '-' || COALESCE(users.id,0)::varchar(32) AS id,
             planning.business_days,
             users.id AS user_id,
             (SELECT sum(line1.amount_in_base_uom) 
@@ -256,14 +322,13 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
 
         FROM report_account_analytic_planning planning
         LEFT JOIN report_account_analytic_planning_line line ON (line.planning_id = planning.id), res_users users
- 
         GROUP BY planning.id, planning.business_days, users.id, planning.date_from, planning.date_to
 
         UNION
 
         SELECT
             planning.id AS planning_id,
-            max(planning.id) AS id,
+            planning.id::varchar(32) || '-' || '0' AS id,
             planning.business_days,
             line.user_id,
             (SELECT SUM(line1.amount_in_base_uom) 
@@ -299,7 +364,11 @@ class report_account_analytic_planning_account(osv.osv):
             div = tm.factor
         else:
             div = 1.0
-
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             cr.execute("""
                 SELECT COALESCE(sum(tasks.remaining_hours),0) 
@@ -309,11 +378,16 @@ class report_account_analytic_planning_account(osv.osv):
                     FROM report_account_analytic_planning_line
                     WHERE planning_id = %s AND account_id=%s
                 )""", (line.planning_id.id,line.account_id.id ))
-            result[line.id] = cr.fetchall()[0][0] / div
+            result[line.id] = cr.fetchall()[0][0] / div *div2
         return result
     
     def _get_timesheets(self, cr, uid, ids, name, args, context):
         result = {}
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             cr.execute("""
                 SELECT SUM(unit_amount/uom.factor) FROM account_analytic_line acc 
@@ -321,7 +395,7 @@ class report_account_analytic_planning_account(osv.osv):
                 WHERE acc.date>=%s and acc.date<=%s and acc.account_id=%s""", (line.planning_id.date_from, line.planning_id.date_to, line.account_id.id, ))
             res = cr.fetchall()[0][0]
             if res:
-                result[line.id] = res 
+                result[line.id] = res * div2
             else:
                 result[line.id] = 0
         return result
@@ -336,25 +410,36 @@ class report_account_analytic_planning_account(osv.osv):
     }
     
     def init(self, cr):
-        cr.execute(""" create or replace view report_account_analytic_planning_account as (
-          select 
-            min(l.id) as id,
-            l.account_id as account_id,
-            sum(l.amount) as quantity,
-            l.planning_id as planning_id,
-            (Select sum(line1.amount_in_base_uom) from report_account_analytic_planning_line line1
-        where (select count(1) from project_task task where task.planning_line_id = line1.id) > 0 
-                and l.account_id = line1.account_id
-                    and l.planning_id = line1.planning_id
-        ) as plan_tasks,
-            (Select sum(line1.amount_in_base_uom) from report_account_analytic_planning_line line1
-            where (select count(1) from project_task task where task.planning_line_id = line1.id) = 0  and l.account_id = line1.account_id
-                    and planning.id=l.planning_id
-            )  as plan_open
-        from report_account_analytic_planning_line l
-        inner join report_account_analytic_planning planning on planning.id=l.planning_id
-        group by l.account_id, l.planning_id, planning.date_from, planning.date_to, planning.id
-            )
+        cr.execute(""" CREATE OR REPLACE VIEW report_account_analytic_planning_account AS (
+          SELECT 
+            MIN(l.id) AS id,
+            l.account_id AS account_id,
+            SUM(l.amount) AS quantity,
+            l.planning_id AS planning_id,
+            ( SELECT SUM(line1.amount_in_base_uom) 
+              FROM report_account_analytic_planning_line line1
+              WHERE 
+                ( SELECT COUNT(1) 
+                  FROM project_task task 
+                  WHERE task.planning_line_id = line1.id
+                ) > 0 
+                AND l.account_id = line1.account_id
+                AND l.planning_id = line1.planning_id
+            ) AS plan_tasks,
+            ( SELECT SUM(line1.amount_in_base_uom) 
+              FROM report_account_analytic_planning_line line1
+              WHERE 
+                ( SELECT COUNT(1) 
+                  FROM project_task task 
+                  WHERE task.planning_line_id = line1.id
+                ) = 0  
+                AND l.account_id = line1.account_id
+                AND planning.id = line1.planning_id
+            ) AS plan_open
+          FROM report_account_analytic_planning_line l
+          INNER JOIN report_account_analytic_planning planning ON planning.id=l.planning_id
+          GROUP BY l.account_id, l.planning_id, planning.date_from, planning.date_to, planning.id
+        )
         """)
     
     
@@ -366,8 +451,15 @@ class report_account_analytic_planning_stat(osv.osv):
     _rec_name = 'user_id'
     _auto = False
     _log_access = False
+    _order = 'planning_id,user_id'
+    
     def _sum_amount_real(self, cr, uid, ids, name, args, context):
         result = {}
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             if line.user_id:
                 cr.execute('''select sum(acc.unit_amount/uom.factor) from account_analytic_line acc
@@ -375,10 +467,21 @@ class report_account_analytic_planning_stat(osv.osv):
 where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
             else:
                 cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%s and date>=%s and date<=%s', (line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
-            result[line.id] = cr.fetchone()[0]
+            result[line.id] = cr.fetchone()[0] * div2
         return result
+        
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context):
         result = {}
+        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        if tm and tm.factor:
+            div = tm.factor
+        else:
+            div = 1.0
+        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        if tm2 and tm2.factor:
+            div2 = tm2.factor
+        else:
+            div2 = 1.0
         for line in self.browse(cr, uid, ids, context):
             where = ''
             if line.user_id:
@@ -396,8 +499,9 @@ where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                 line.planning_id.date_from, 
                 line.planning_id.date_to)
             )
-            result[line.id] = cr.fetchone()[0]
+            result[line.id] = cr.fetchone()[0] /div * div2
         return result
+        
     _columns = {
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'), 
         'user_id': fields.many2one('res.users', 'User'), 
@@ -407,7 +511,7 @@ where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'), 
         'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'), 
     }
-    _order = 'planning_id,user_id'
+    
     def init(self, cr):
         cr.execute("""
             create or replace view report_account_analytic_planning_stat as (
@@ -429,5 +533,15 @@ where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
             )
         """)
 report_account_analytic_planning_stat()
+
+class res_company(osv.osv):
+    _inherit = 'res.company'
+    _columns = {
+        'planning_time_mode_id': fields.many2one('product.uom', 'Planning Time Unit',
+            help='This will set the unit of measure used in plannings.',
+          
+        ),
+    }
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

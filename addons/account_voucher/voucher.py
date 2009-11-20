@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -214,7 +213,7 @@ class account_voucher(osv.osv):
         
         for il in iml:
             if il['account_analytic_id']:
-                if inv.type in ('pay_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_voucher','journal_pur_voucher'):
+                if inv.type in ('pay_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_vou','journal_pur_voucher'):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
@@ -244,7 +243,7 @@ class account_voucher(osv.osv):
             diff_currency_p = inv.currency_id.id <> company_currency
 
             total = 0
-            if inv.type in ('pay_voucher', 'journal_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_voucher','journal_pur_voucher'):
+            if inv.type in ('pay_voucher', 'journal_voucher', 'rec_voucher','cont_voucher','bank_pay_voucher','bank_rec_voucher','journal_sale_vou','journal_pur_voucher'):
                 ref = inv.reference
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
@@ -405,7 +404,7 @@ class account_voucher(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_voucher ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
+                'WHERE id IN ('+','.join(map(str, ids))+')')
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 number = self.pool.get('ir.sequence').get(cr, uid, invtype)
@@ -509,12 +508,11 @@ class VoucherLine(osv.osv):
             res.append(self.move_line_get_item(cr, uid, line, context))
         return res
     
-    def onchange_partner(self, cr, uid, ids, partner_id, ttype,type1):
+    def onchange_partner(self, cr, uid, ids, partner_id, ttype ,type1):
         if not partner_id:
             return {'value' : {'account_id' : False, 'type' : False ,'amount':False}}
         obj = self.pool.get('res.partner')
         account_id = False
-        
         if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
             account_id = obj.browse(cr, uid, partner_id).property_account_receivable
             balance = obj.browse(cr,uid,partner_id).credit

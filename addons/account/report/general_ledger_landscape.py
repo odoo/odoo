@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.     
 #
 ##############################################################################
 
@@ -52,7 +52,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         super(general_ledger_landscape, self).set_context(objects, data, new_ids,report_type)
 
     def __init__(self, cr, uid, name, context):
-        super(general_ledger_landscape, self).__init__(cr, uid, name, context)
+        super(general_ledger_landscape, self).__init__(cr, uid, name, context=context)
         self.date_borne = {}
         self.query = ""
         self.child_ids = ""

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
@@ -31,16 +31,22 @@ def _open_history_event(self, cr, uid, data, context):
     id = data_obj.read(cr, uid, result, ['res_id'])
     id2 = data_obj._get_id(cr, uid, 'crm_configuration', 'crm_case_calendar_section-view')
     if id2:
-        id2 = data_obj.browse(cr, uid, id2, context=context).res_id     
+        id2 = data_obj.browse(cr, uid, id2, context=context).res_id 
+    res = ''    
+    if data.get('model',False) and data.get('ids',False):           
+        model_obj = pooler.get_pool(cr.dbname).get(data['model'])
+        res = model_obj.browse(cr,uid,data['ids'])
+        if len(res):
+            res = res[0].name       
     return {
-        'name': 'History : ' +  pooler.get_pool(cr.dbname).get(data['model']).browse(cr,uid,data['ids'])[0].name,
+        'name': 'History : ' +  res,
         'view_type': 'form',
         "view_mode": 'calendar, tree, form',
         'view_id' : False,
         'views': [(id2,'calendar'),(False,'form'),(False,'tree'),(False,'graph')],
         'res_model': 'crm.case',
         'type': 'ir.actions.act_window',
-        'domain': "[('case_id','=',%d)]" % (data['id']),
+        'domain': data.get('id',False) and "[('case_id','=',%d)]" % (data['id']) or "[]",
         'search_view_id': id['res_id'] 
     }
     

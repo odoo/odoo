@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -129,6 +128,10 @@ def _set_filter_value(self, cr, uid, data, context):
                 value_data = 'true'
             else:
                 value_data = 'false'
+
+        if field_type in ['float','integer']:
+            value_data =  value_data or 0
+        
         if field_type == 'many2many' and value_data and len(value_data):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
         else:
@@ -136,7 +139,7 @@ def _set_filter_value(self, cr, uid, data, context):
         if fields_list:
             create_dict = {
                            'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]) + " ",
-                           'expression':' '.join(fields_list),
+                           'expression':' '.join(map(str,fields_list)),
                            'report_id':data['id'],
                            'condition' : form_data['condition']
                            }

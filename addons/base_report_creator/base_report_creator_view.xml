@@ -86,6 +86,8 @@
                             <field name="condition"/>
                         </form>
                     </field>
+                    <separator string="Legend" colspan="4"/>
+					<label string="Use %%(uid)s to filter by the connected user" align="0.0"/>
                 </page><page string="Security">
                     <separator string="Authorized Groups (empty for all)" colspan="4"/>
                     <field name="group_ids" colspan="4" nolabel="1"/>
@@ -97,6 +99,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="base_report_creator_action">
+    	<field name="name">Custom Report</field>
         <field name="res_model">base_report_creator.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

@@ -16,26 +16,28 @@
             <form string="Bug Tracker Form">
                 <group colspan="4" col="6">
                     <field name="name" string="Title" colspan="2"/>
-                    <field name="section_id" colspan="1"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
                         <label string="Resolution: " align="1.0"/>
                         <group colspan="1" col="2">
                             <field name="stage_id" select="1" nolabel="1"/>
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                     <field name="date"/>
-                    <field name="email_from" colspan="2"/>
                     <field name="user_id" />
                 </group>
                 <notebook colspan="4">
                 <page string="General">
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <newline/>
+                    <field name="email_from" colspan="2"/>
                     <separator colspan="4"/>
                     <field name="category2_id" string="Version"/>
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
                     <field name="priority" string="Severity"/>
-
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>    
                     <newline/>
                     <separator string= "Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -76,16 +78,33 @@
                         </form>
                     </field>
                 </page>
+                <page string="Events">
+                   <field name="child_ids" colspan="4" nolabel="1">
+                       <tree string="Related Cases">
+                           <field name="id"/>
+                           <field name="date"/>
+                           <field name="name"/>
+                           <field name="partner_id"/>
+                           <field name="user_id"/>
+                           <field name="section_id" widget="selection"/>
+                           <field name="state"/>
+                       </tree>
+                    </field>
+                 </page>
                 <page string="Emails">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
                     <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="6" colspan="4">
+                            <group col="7" colspan="4">
                                 <field name="date"/>
                                 <field name="email"/>
                                 <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -134,19 +153,44 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bugs">
-                <group col="10" colspan="4">
-               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-crm" string="Open" domain="[('state','=','open')]"/>
-                    <filter icon="terp-crm" string="Pending" domain="[('state','=','pending')]"/>
-               		<separator orientation="vertical"/>
-               		<field name="id" select='1' widget="char" size="16"/>
-               		<field name="section_id" select='1'/>
-               		<field name="category2_id" string="Version" select='1'/>
-               		<field name="user_id" select="1" widget="selection">
-                       	<filter icon="terp-crm" domain="[('user_id','=',uid)]" help="Bugs assigned to me"/>
-                       	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="Bugs assigned to my department"/>
-                    </field>
-               	</group>
+               <group col="7" colspan="1">
+                   <filter icon="gtk-apply" string="Fixed Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Fixed')]"
+                   	separator="1" help="All Fixed Bugs"
+                   />
+                   <filter icon="gtk-media-pause" string="Waiting Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Awaiting Response')]"
+                   	separator="1" help="All Waiting Bugs"
+                   />
+                   <filter icon="gtk-media-forward" string="Future Bugs"
+                   	domain="[('section_id.name','=','Bug Tracking'),('stage_id.name','=','Future')]"
+                   	separator="1" help="All Future Bugs"
+                   />
+                   <separator orientation="vertical"/>
+                   <filter icon="gtk-home" string="   Today   "
+                   	separator="1"
+                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	help="Todays's bugs"
+                   />
+                   <filter icon="gtk-media-rewind"
+                   	string="    7 Days    " separator="1"
+                   	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                   	help="Bugs during last 7 days"
+                   />
+               </group>
+               <separator orientation="vertical"/>
+               <group col="4" colspan="2">
+               		<field name="name" select='1' string="Subject"/>
+                   <field name="user_id" select="1" widget="selection">
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Bugs"/>
+                   </field>
+                   <field name="state" select="1">
+                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Bugs"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
+                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Bugs"/>
+                   </field>
+               </group>
             </search>
          </field>
     </record>

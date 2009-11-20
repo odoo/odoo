@@ -48,7 +48,7 @@
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                        <field name="company_id" select="2"/>
+                        <field name="company_id" select="2" widget="selection"/>
                         <field name="type" select="2"/>
                     </group>
                     <notebook colspan="4">
@@ -167,11 +167,11 @@
             <field name="arch" type="xml">
             	<search string="Search Analytic Lines">
             		<group col='6' colspan='4'>
-            			<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Analytic Entries"/>
-            			<field name="name"/>
-            			<field name="account_id"/>
-            			<field name="journal_id"/>
-            			<field name="date"/>
+            		    <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Analytic Entries"/>
+                        <field name="name" select="1"/>
+                        <field name="journal_id" select="1"/>
+                        <field name="account_id" select="1"/>
+                        <field name="date" select="1"/>
             		</group>
             	</search>
             </field>
@@ -189,7 +189,7 @@
 
 
         <record id="action_account_tree1" model="ir.actions.act_window">
-            <field name="name"></field>
+            <field name="name">Analytic Entries</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
