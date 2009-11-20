@@ -743,6 +743,7 @@ class product_supplierinfo(osv.osv):
         'qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', c)
     }
     _order = 'sequence'
 product_supplierinfo()

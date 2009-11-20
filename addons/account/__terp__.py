@@ -65,7 +65,6 @@
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
-        'demo/multi_company_demo.xml',
     ],
     'installable': True,
     'active': False,
