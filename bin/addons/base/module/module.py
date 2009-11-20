@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -145,15 +145,15 @@ class module(osv.osv):
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
 
-        # attention: Incorrect field names !! 
+        # attention: Incorrect field names !!
         #   installed_version refer the latest version (the one on disk)
         #   latest_version refer the installed version (the one in database)
         #   published_version refer the version available on the repository
         'installed_version': fields.function(_get_latest_version, method=True,
-            string='Latest version', type='char'),  
+            string='Latest version', type='char'),
         'latest_version': fields.char('Installed version', size=64, readonly=True),
         'published_version': fields.char('Published Version', size=64, readonly=True),
-        
+
         'url': fields.char('URL', size=128, readonly=True),
         'dependencies_id': fields.one2many('ir.module.module.dependency',
             'module_id', 'Dependencies', readonly=True),
@@ -265,10 +265,10 @@ class module(osv.osv):
             for dep in depobj.browse(cr, uid, iids, context=context):
                 if dep.module_id.state=='installed' and dep.module_id not in todo:
                     todo.append(dep.module_id)
-        
+
         ids = map(lambda x: x.id, todo)
         self.write(cr, uid, ids, {'state':'to upgrade'}, context=context)
-        
+
         to_install = []
         for mod in todo:
             for dep in mod.dependencies_id:
@@ -277,7 +277,7 @@ class module(osv.osv):
                 if dep.state == 'uninstalled':
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
                     to_install.extend(ids2)
-        
+
         self.button_install(cr, uid, to_install, context=context)
         return True
 
@@ -450,7 +450,6 @@ class module(osv.osv):
 
     def update_translations(self, cr, uid, ids, filter_lang=None):
         logger = netsvc.Logger()
-
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
             lang_obj = pool.get('res.lang')
@@ -467,11 +466,11 @@ class module(osv.osv):
                 # unable to find the module. we skip
                 continue
             for lang in filter_lang:
-                f = os.path.join(modpath, 'i18n', lang + '.po')
+                iso_lang = tools.get_iso_codes(lang)
+                f = os.path.join(modpath, 'i18n', iso_lang + '.po')
                 if os.path.exists(f):
-                    logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, lang))
+                    logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
-        
 
     def check(self, cr, uid, ids, context=None):
         logger = netsvc.Logger()
