@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -102,7 +102,7 @@ _LOCALE2WIN32 = {
     'uk_UA': 'Ukrainian_Ukraine',
     'vi_VN': 'Vietnamese_Viet Nam',
     'tlh_TLH': 'Klingon',
-    
+
 }
 
 
@@ -182,7 +182,7 @@ class TinyPoFile(object):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
-                if line.startswith('#:'): 
+                if line.startswith('#:'):
                     tmp_tnrs.append( line[2:].strip().split(':') )
                 if line.startswith('#'):
                     line = None
@@ -416,7 +416,7 @@ def trans_generate(lang, modules, dbname=None):
         tuple = (module, source, name, id, type)
         if source and tuple not in _to_translate:
             _to_translate.append(tuple)
-    
+
     def encode(s):
         if isinstance(s, unicode):
             return s.encode('utf8')
@@ -430,7 +430,7 @@ def trans_generate(lang, modules, dbname=None):
         if not pool.get(model):
             logger.notifyChannel("db", netsvc.LOG_ERROR, "Unable to find object %r" % (model,))
             continue
-        
+
         exists = pool.get(model).exists(cr, uid, res_id)
         if not exists:
             logger.notifyChannel("db", netsvc.LOG_WARNING, "Unable to find object %r with id %d" % (model, res_id))
@@ -451,7 +451,7 @@ def trans_generate(lang, modules, dbname=None):
                         if result['type'] != 'form':
                             continue
                         name = "%s,%s" % (encode(obj.wiz_name), state_name)
-                        
+
                         def_params = {
                             'string': ('wizard_field', lambda s: [encode(s)]),
                             'selection': ('selection', lambda s: [encode(e[1]) for e in ((not callable(s)) and s or [])]),
@@ -461,7 +461,7 @@ def trans_generate(lang, modules, dbname=None):
                         # export fields
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
-                           
+
                             for fn in def_params:
                                 if fn in field_def:
                                     transtype, modifier = def_params[fn]
@@ -554,7 +554,7 @@ def trans_generate(lang, modules, dbname=None):
     modobj = pool.get('ir.module.module')
     installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
-    
+
     root_path = os.path.join(tools.config['root_path'], 'addons')
 
     if root_path in tools.config['addons_path'] :
@@ -562,7 +562,7 @@ def trans_generate(lang, modules, dbname=None):
     else :
         path_list = [root_path,tools.config['addons_path']]
 
-    for path in path_list: 
+    for path in path_list:
         for root, dirs, files in tools.osutil.walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
                 fabsolutepath = join(root, fname)
@@ -573,8 +573,8 @@ def trans_generate(lang, modules, dbname=None):
                     code_string = tools.file_open(fabsolutepath, subdir='').read()
                     iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
                         code_string, re.S)
-                    
-                    if module in installed_modules : 
+
+                    if module in installed_modules :
                         frelativepath =str("addons"+frelativepath)
                     for i in iter:
                         push_translation(module, 'code', frelativepath, 0, encode(i.group(1)))
@@ -586,7 +586,7 @@ def trans_generate(lang, modules, dbname=None):
     for module, source, name, id, type in _to_translate:
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
-    
+
     cr.close()
     return out
 
@@ -600,7 +600,7 @@ def trans_load(db_name, filename, lang, strict=False, verbose=True):
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,)) 
+            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
         return None
 
 def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
@@ -611,11 +611,12 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
     model_data_obj = pool.get('ir.model.data')
+    iso_lang = tools.get_iso_codes(lang)
     try:
         uid = 1
         cr = pooler.get_db(db_name).cursor()
         ids = lang_obj.search(cr, uid, [('code','=', lang)])
-        
+
         if not ids:
             # lets create the language with locale information
             fail = True
@@ -629,13 +630,14 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if fail:
                 lc = locale.getdefaultlocale()[0]
                 msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc)) 
-                
+                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc))
+
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
-            
+
             lang_info = {
                 'code': lang,
+                'iso_code': iso_lang,
                 'name': lang_name,
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
@@ -643,8 +645,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'decimal_point' : str(locale.localeconv()['decimal_point']).replace('\xa0', '\xc2\xa0'),
                 'thousands_sep' : str(locale.localeconv()['thousands_sep']).replace('\xa0', '\xc2\xa0'),
             }
-            
-            try: 
+            try:
                 lang_obj.create(cr, uid, lang_info)
             finally:
                 resetlocale()
@@ -737,16 +738,16 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             logger.notifyChannel("i18n", netsvc.LOG_INFO,
                     "translation file loaded succesfully")
     except IOError:
-        filename = '[lang: %s][format: %s]' % (lang or 'new', fileformat)
+        filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
 
 def get_locales(lang=None):
     if lang is None:
         lang = locale.getdefaultlocale()[0]
-    
+
     if os.name == 'nt':
         lang = _LOCALE2WIN32.get(lang, lang)
-    
+
     def process(enc):
         ln = locale._build_localename((lang, enc))
         yield ln
@@ -759,9 +760,9 @@ def get_locales(lang=None):
     prefenc = locale.getpreferredencoding()
     if prefenc:
         for x in process(prefenc): yield x
-        
+
         prefenc = {
-            'latin1': 'latin9', 
+            'latin1': 'latin9',
             'iso-8859-1': 'iso8859-15',
             'cp1252': '1252',
         }.get(prefenc.lower())
@@ -773,7 +774,7 @@ def get_locales(lang=None):
 
 
 def resetlocale():
-    # locale.resetlocale is bugged with some locales. 
+    # locale.resetlocale is bugged with some locales.
     for ln in get_locales():
         try:
             return locale.setlocale(locale.LC_ALL, ln)
