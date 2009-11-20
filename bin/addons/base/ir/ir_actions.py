@@ -127,6 +127,7 @@ class report_xml(osv.osv):
             ('html', 'html'),
             ('raw', 'raw'),
             ('sxw', 'sxw'),
+            ('txt', 'txt'),
             ('odt', 'odt'),
             ('html2html','HTML from HTML'),
             ('mako2html','HTML from HTML(Mako)'),

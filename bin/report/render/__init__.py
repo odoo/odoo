@@ -20,7 +20,7 @@
 ##############################################################################
 
 from simple import simple
-from rml import rml, rml2html, odt2odt, html2html, makohtml2html
+from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
 from render import render
 
 try:

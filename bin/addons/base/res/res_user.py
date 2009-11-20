@@ -71,6 +71,14 @@ class groups(osv.osv):
                 aid.write({'groups_id': [(4, gid)]})
         return gid
 
+    def copy(self, cr, uid, id, default={}, context={}, done_list=[], local=False):
+	group = self.browse(cr, uid, id, context=context)
+        default = default.copy()
+	if not 'name' in default:
+		default['name'] = group['name']
+        default['name'] = default['name'] + _(' (copy)')
+        return super(groups, self).copy(cr, uid, id, default, context=context)
+
 groups()
 
 

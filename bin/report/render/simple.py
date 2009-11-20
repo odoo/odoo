@@ -67,7 +67,8 @@ class simple(render.render):
 
 if __name__=='__main__':
     import time
-    s = simple('''<test>
+    s = simple()
+    s.xml = '''<test>
         <author-list>
             <author>
                 <name>Fabien Pinckaers</name>
@@ -79,8 +80,9 @@ if __name__=='__main__':
             </author>
             No other
         </author-list>
-    </test>''')
-    print s.render()
+    </test>'''
+    if s.render():
+	print s.get()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

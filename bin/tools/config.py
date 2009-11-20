@@ -66,6 +66,7 @@ class configmanager(object):
             'import_partial': "",
             'pidfile': None,
             'logfile': None,
+	    'logrotate': '1',
             'smtp_server': 'localhost',
             'smtp_user': False,
             'smtp_port':25,
@@ -81,6 +82,8 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
         }
+	
+	self.misc = {}
 
         hasSSL = check_ssl()
 
@@ -131,6 +134,8 @@ class configmanager(object):
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
+        group.add_option("--no-logrotate", dest="logrotate", action="store_false",
+		default=None, help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog",
                          default=False, help="Send the log to the syslog server")
         group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
@@ -220,20 +225,19 @@ class configmanager(object):
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
+                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
+		'netrpc', 'xmlrpc', 'syslog', 'without_demo']
 
         if hasSSL:
             keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
+            keys.append('secure')
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
-
-        if hasSSL and not  self.options['secure']:
-            keys.append('secure')
+                'stop_after_init', 'logrotate']
 
         for arg in keys:
             if getattr(opt, arg) is not None:
@@ -337,6 +341,18 @@ class configmanager(object):
                 if value=='False' or value=='false':
                     value = False
                 self.options[name] = value
+	    #parse the other sections, as well
+	    for sec in p.sections():
+		if sec == 'options':
+			continue
+		if not self.misc.has_key(sec):
+			self.misc[sec]= {}
+		for (name, value) in p.items(sec):
+			if value=='True' or value=='true':
+				value = True
+			if value=='False' or value=='false':
+				value = False
+			self.misc[sec][name] = value
         except IOError:
             pass
         except ConfigParser.NoSectionError:
@@ -353,6 +369,10 @@ class configmanager(object):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
+	
+	for sec in self.misc.keys():
+		for opt in self.misc[sec].keys():
+			p.set(sec,opt,self.misc[sec][opt])
 
         # try to create the directories and write the file
         try:
@@ -370,6 +390,9 @@ class configmanager(object):
 
     def get(self, key, default=None):
         return self.options.get(key, default)
+
+    def get_misc(self, sect, key, default=None):
+        return self.misc.get(sect,{}).get(key, default)
 
     def __setitem__(self, key, value):
         self.options[key] = value

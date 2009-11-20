@@ -105,7 +105,12 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                         all_timezones=[]
                     pytz=pytzclass()
                 idref2['pytz'] = pytz
-                return eval(a_eval, idref2)
+                try:
+                        return eval(a_eval, idref2)
+                except:
+                        logger = netsvc.Logger()
+                        logger.notifyChannel("init", netsvc.LOG_WARNING, 'could eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.getAttribute('name'),context))
+                        return ""
             if t == 'xml':
                 def _process(s, idref):
                     m = re.findall('[^%]%\((.*?)\)[ds]', s)
@@ -231,12 +236,12 @@ class xml_import(object):
         id = xml_id
         if '.' in xml_id:
             module, id = xml_id.split('.', 1)
-            assert '.' not in id, """The ID reference "%s" must contains
+            assert '.' not in id, """The ID reference "%s" must contain
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
             if module != self.module:
                 modcnt = self.pool.get('ir.module.module').search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
-                assert modcnt == 1, """The ID "%s" refer to an uninstalled module""" % (xml_id,)
+                assert modcnt == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
 
         if len(id) > 64:
             self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'% (id,))
@@ -274,8 +279,11 @@ form: module.record_id""" % (xml_id,)
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = eval(rec.get('header',''))
+        if rec.get('report_type'):
+            res['report_type'] = rec.get('report_type','')
         res['multi'] = rec.get('multi','') and eval(rec.get('multi',''))
-        xml_id = rec.get('id','').encode('utf8')
+        xml_id = rec.get('id','').encode('utf8')       
+        
         self._test_xml_id(xml_id)
 
         if rec.get('groups'):

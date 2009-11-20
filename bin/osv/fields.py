@@ -459,7 +459,7 @@ class one2many(_column):
             elif act[0] == 6:
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
                 ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
+                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
                 ids3 = map(lambda x:x[0], cr.fetchall())
                 obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
@@ -504,7 +504,6 @@ class many2many(_column):
             return res
         for id in ids:
             res[id] = []
-        ids_s = ','.join(map(str, ids))
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
@@ -514,10 +513,10 @@ class many2many(_column):
 
         cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
                 FROM '+self._rel+' , '+obj._table+' \
-                WHERE '+self._rel+'.'+self._id1+' in ('+ids_s+') \
+                WHERE '+self._rel+'.'+self._id1+' = ANY (%s) \
                     AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
                 +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
-                d2+[offset])
+                [ids,]+d2+[offset])
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -584,6 +583,16 @@ class many2many(_column):
             elif act[0] == 6:
                 obj.datas[id][name] = act[2]
 
+
+def get_nice_size(a):
+	(x,y) = a
+	if isinstance(y, (int,long)):
+		size = y
+	elif y:
+		y = len(y)
+	else:
+		y = 0
+	return (x, tools.human_size(size))
 
 # ---------------------------------------------------------
 # Function fields
@@ -665,7 +674,7 @@ class function(_column):
             
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
-            res = dict(map(lambda (x, y): (x, tools.human_size(len(y or ''))), res.items()))
+            res = dict(map( get_nice_size, res.items()))
         return res
     get_memory = get
 

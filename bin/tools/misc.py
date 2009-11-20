@@ -173,8 +173,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return: fileobject if pathinfo is False else (fileobject, filepath)
     """
-
-    adp = os.path.normcase(os.path.abspath(config['addons_path']))
+    import addons
+    adps = addons.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
     if name.replace(os.path.sep, '/').startswith('addons/'):
@@ -189,7 +189,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
         subdir2 = (subdir2 != 'addons' or None) and subdir2
 
-        try:
+        for adp in adps:
+          try:
             if subdir2:
                 fn = os.path.join(adp, subdir2, name)
             else:
@@ -199,7 +200,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             if pathinfo:
                 return fo, fn
             return fo
-        except IOError, e:
+          except IOError, e:
             pass
 
     if subdir:
@@ -382,6 +383,18 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         def write(self, s):
             self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
 
+    smtp_server = config['smtp_server']
+    if smtp_server.startswith('maildir:/'):
+        from mailbox import Maildir
+	maildir_path = smtp_server[8:]
+	try:
+		mdir = Maildir(maildir_path,factory=None, create = True)
+		mdir.add(msg.as_string(True))
+		return True
+	except Exception,e:
+		netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
+		return False
+	
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
@@ -391,9 +404,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             if debug:
                 smtplib.stderr = WriteToLogger()
 
-            s.set_debuglevel(int(bool(debug)))  # 0 or 1
-
-            s.connect(config['smtp_server'], config['smtp_port'])
+            s.set_debuglevel(int(bool(debug)))  # 0 or 1            
+            s.connect(smtp_server, config['smtp_port'])
             if ssl:
                 s.ehlo()
                 s.starttls()
@@ -737,14 +749,14 @@ def ustr(value):
     return unicode(value, getlocale()[1])
 
 def exception_to_unicode(e):
-    if hasattr(e, 'message'):
+    if (sys.version_info[:2] < (2,6)) and hasattr(e, 'message'):
         return ustr(e.message)
     if hasattr(e, 'args'):
         return "\n".join((ustr(a) for a in e.args))
     try:
         return ustr(e)
     except:
-        return u"Unknow message"
+        return u"Unknown message"
 
 
 # to be compatible with python 2.4
@@ -794,7 +806,7 @@ def get_languages():
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
-        'el_EL': u'Greek / Ελληνικά',
+        'el_GR': u'Greek / Ελληνικά',
         'en_CA': u'English (CA)',
         'en_GB': u'English (UK)',
         'en_US': u'English (US)',
@@ -843,11 +855,11 @@ def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
         if not ids:
             return []
-        cr.execute('SELECT id FROM res_company WHERE parent_id = any(array[%s])' %(','.join([str(x) for x in ids]),))
+        cr.execute('SELECT id FROM res_company WHERE parent_id = ANY (%s)', (ids,))
         res=[x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id' % (user,))
+    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id', (user,))
     compids=[cr.fetchone()[0]]
     compids.extend(_get_company_children(cr, compids))
     return compids
