@@ -41,6 +41,10 @@ class res_company(osv.osv):
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency')
     }
     
+    
+    def _company_default_get(self, cr, uid, object=False, context={}):
+        return self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+    
     def _get_child_ids(self, cr, uid, uid2, context={}):
         company = self.pool.get('res.users').company_get(cr, uid, uid2)
         ids = self._get_company_children(cr, uid, company)
