@@ -43,7 +43,7 @@
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Invoice's status is Open&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Invoice's state is Open&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
@@ -98,7 +98,7 @@
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Paid invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Invoice's status is Done.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Invoice's state is Done.&quot;&quot;&quot;" name="note"/>
             <field name="process_id" ref="process_process_supplierinvoiceprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
