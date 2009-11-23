@@ -158,7 +158,7 @@
         </record>
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Packing to be invoiced</field>
+            <field name="name">Picking to be invoiced</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -179,7 +179,7 @@
             <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','in')]</field>
             <field name="filter" eval="True"/>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="search_view_id" ref="stock.view_stock_delivery_filter"/>            
+            <field name="search_view_id" ref="stock.view_stock_delivery_filter"/>
         </record>
         <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="stock.menu_action_picking_tree4" groups="base.group_extended_menu"/>
 

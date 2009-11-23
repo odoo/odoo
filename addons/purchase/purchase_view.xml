@@ -131,13 +131,13 @@
               </search>
             </field>
         </record>
-       
+
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -149,9 +149,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
-        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action3" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -161,9 +161,9 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','confirmed')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
-        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -173,9 +173,9 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
-        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action_new" model="ir.actions.act_window">
             <field name="name">New Purchase Order</field>
@@ -266,11 +266,11 @@
             src_model="res.partner"/>
 
         <act_window
-            domain="[('product_id','=',active_id)]" 
+            domain="[('product_id','=',active_id)]"
             id="action_purchase_line_product_tree"
             name="Product purchases"
-            res_model="purchase.order.line" 
-            src_model="product.product"/> 
-                     
+            res_model="purchase.order.line"
+            src_model="product.product"/>
+
     </data>
 </openerp>

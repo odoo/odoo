@@ -332,10 +332,11 @@
                         <page string="Entry encoding">
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <tree editable="bottom" string="Statement lines">
-                                    <field name="sequence"/>                                
+                                    <field name="sequence"/>
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
+                                    <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
@@ -346,13 +347,14 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                     <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="amount"/>
                                     <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field name="ref"/>
-                                    <field name="sequence"/>                                    
+                                    <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
                                 </form>
@@ -386,9 +388,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree" groups="base.group_extended_menu"/>
+        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree" groups="base.group_useability_extended"/>
 
         <record id="action_bank_statement_tree2" model="ir.actions.act_window">
             <field name="name">New Statement</field>
@@ -454,7 +456,7 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="sign"/>
-		    
+
                     <field name="close_method"/>
                     <field name="partner_account"/>
                 </form>
@@ -653,7 +655,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries Encoding by Line"/>
+        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Making Entries by Line"/>
         <menuitem icon="STOCK_JUSTIFY_FILL" action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard" sequence="5"/>
 
         <!--
@@ -788,7 +790,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">account.move.line.select</field>
             <field name="model">account.move.line</field>
@@ -814,9 +816,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>            
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
-        
+
         <record id="action_view_move_line" model="ir.actions.act_window">
             <field name="name">Lines to reconcile</field>
             <field name="res_model">account.move.line</field>
@@ -825,7 +827,7 @@
             <field name="domain">[('account_id.reconcile', '=', True),('reconcile_id','=',False)]</field>
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>            
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
 
         <!--
@@ -880,7 +882,7 @@
                             <field name="debit" select="1"/>
                             <field name="credit" select="1"/>
 							<field name="date" select="1"/>
-							
+
                             <separator colspan="4" string="Optional Information"/>
                             <field name="currency_id"/>
                             <field name="amount_currency"/>
@@ -956,12 +958,12 @@
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
-            <field name="name">Entries Encoding by Move</field>
+            <field name="name">Making Entries by Move</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>            
+            <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
@@ -1339,9 +1341,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','running')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form" groups="base.group_useability_extended"/>
 
         <record id="action_subscription_form_new" model="ir.actions.act_window">
             <field name="name">New Subscription</field>
