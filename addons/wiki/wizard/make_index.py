@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,10 +34,7 @@ def wiki_do_index(self, cr, uid, data, context):
     ids = data['ids']
     pool = pooler.get_pool(cr.dbname)
     wiki_pool = pool.get('wiki.wiki')
-    
-    iid = ','.join([str(x) for x in ids])
-    sSQL = "Select id, section from wiki_wiki where id in (%s) order by section " % (iid)
-    cr.execute(sSQL)
+    cr.execute("Select id, section from wiki_wiki where id in %s order by section " ,(tuple(ids),))
     lst0 = cr.fetchall()
     lst = []
     ids = {}
@@ -52,9 +49,9 @@ def wiki_do_index(self, cr, uid, data, context):
             return int(x)
         except:
             return 1
-    
+
     lst = map(lambda x: map(toint, x.split('.')), lst)
-    
+
     result = []
     current = ['0']
     current2 = []
@@ -69,7 +66,7 @@ def wiki_do_index(self, cr, uid, data, context):
                  current = current[:pos + 1]
             if pos == len(l) - 1:
                  break
-             
+
         key = ('.'.join([str(x) for x in l]))
         id = ids[key]
         val = ('.'.join([str(x) for x in current[:]]), id)
@@ -77,22 +74,21 @@ def wiki_do_index(self, cr, uid, data, context):
         if val:
             result.append(val)
         current2 = l
-    
+
     for rs in result:
         wiki_pool.write(cr, uid, [rs[1]], {'section':rs[0]})
-        
     return {}
 
 class make_index(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
+            'actions': [],
             'result': {'type':'form', 'arch':section_form, 'fields':{}, 'state':[('end','Cancel'),('yes','Create Index')]}
         },
         'yes': {
-            'actions': [wiki_do_index], 
+            'actions': [wiki_do_index],
             'result': {
-                'type':'state', 
+                'type':'state',
                 'state':'end'
             }
         }
