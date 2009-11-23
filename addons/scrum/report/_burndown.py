@@ -26,13 +26,13 @@ import time
 def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
     latest = False
     if len(tasks_id):
-        cr.execute('select id,create_date,state,planned_hours from project_task where id in %s order by create_date',(tuple(tasks_id),))
+        cr.execute('select id,create_date,state,planned_hours from project_task where id = ANY(%s) order by create_date',(tasks_id,))
         tasks = cr.fetchall()
 
-        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id in %s and t.state in (%s,%s) order by date',(tuple(tasks_id),'open','progress',))
+        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id = ANY(%s) and t.state in (%s,%s) order by date',(tasks_id,'open','progress',))
         tasks2 = cr.fetchall()
 
-        cr.execute('select date_close,planned_hours from project_task where id in %s and state in (%s,%s) order by date_close' ,(tuple(tasks_id),'cancelled','done',))
+        cr.execute('select date_close,planned_hours from project_task where id =ANY(%s) and state in (%s,%s) order by date_close' ,(tasks_id,'cancelled','done',))
         tasks2 += cr.fetchall()
         tasks2.sort()
     else:
