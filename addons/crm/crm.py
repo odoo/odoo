@@ -511,7 +511,9 @@ class crm_case(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication', readonly=1),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History', readonly=1),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
+                                  help='The state is set to \'Draft\', when a case is created. If the case is in progress the state is set to \'Open\'.\
+                                  When the case is over, the state is set to \'Done\'. If the case needs to be reviewed then the state is set to \'Pending\'.'),
         'ref' : fields.reference('Reference', selection=_links_get, size=128),
         'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
 

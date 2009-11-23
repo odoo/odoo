@@ -453,7 +453,9 @@ class stock_picking(osv.osv):
             ('assigned', 'Available'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
-            ], 'Status', readonly=True, select=True),
+            ], 'State', readonly=True, select=True,
+            help=' The \'Draft\' state is used when a user is encoding a new and unconfirmed picking. The \'Confirmed\' state is used for stock movement to do with unavailable products. The \'Available\' state is set automatically when the \
+            products are ready to be moved. The \'Waiting\' state is used in MTO moves when a movement is waiting for another one.'),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Packing. Default it takes current date"),
         'date': fields.datetime('Date Order', help="Date of Order"),
@@ -979,7 +981,9 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+                                  help='When the stock move is created it is in the \'Draft\' state. After that it is set to \'Confirmed\' state. If stock is available state is set to \'Avaiable\'. When the packing it done the state is \'Done\'.\
+                                  The state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -1340,7 +1344,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft': [('readonly', False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'Status', readonly=True),
+        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

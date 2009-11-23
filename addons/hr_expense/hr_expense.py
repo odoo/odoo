@@ -77,7 +77,8 @@ class hr_expense_expense(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
             ('cancelled', 'Cancelled')],
-            'State', readonly=True),
+            'State', readonly=True, help='When the expense request is created the state is \'Draft\'. It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
+            If the admin accepts it, the state is \'Accepted\'. If an invoice is made for the expense request, the state is \'Invoiced\'. If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),

@@ -377,7 +377,8 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
+                                  help='When new move line is created the state will be \'Draft\'. When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,\
                     this field will contain the basic amount(without tax)."),

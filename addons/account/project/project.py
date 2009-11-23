@@ -189,7 +189,9 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
-        'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True),
+        'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True,
+                                  help='When an account is created its in \'Draft\' state. If any associated partner is there, it can be in \'Open\' state.\
+                                  If any pending balance is there it can be in \'Pending\'. And finally when all the transactions are over, it can be in \'Close\' state.'),
     }
 
     def _default_company(self, cr, uid, context={}):
