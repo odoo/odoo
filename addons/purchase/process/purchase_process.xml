@@ -17,7 +17,7 @@
         -->
         
         <record id="process_node_packinginvoice0" model="process.node">
-            <field name="menu_id" ref="stock.menu_picking_waiting"/>
+            <field name="menu_id" ref="stock.menu_action_picking_tree"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Out Packing&quot;&quot;&quot;" name="name"/>
@@ -40,7 +40,7 @@
         </record>
     
         <record id="process_node_draftpurchaseorder0" model="process.node">
-            <field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
+            <field name="menu_id" ref="purchase.menu_purchase_form_action"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
@@ -51,7 +51,7 @@
         </record>
         
         <record id="process_node_draftpurchaseorder1" model="process.node">
-            <field name="menu_id" ref="purchase.menu_purchase_order_draft"/>
+            <field name="menu_id" ref="purchase.menu_purchase_form_action"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
@@ -62,7 +62,7 @@
         </record>
     
         <record id="process_node_confirmpurchaseorder0" model="process.node">
-            <field name="menu_id" ref="purchase.menu_purchase_form_action3"/>
+            <field name="menu_id" ref="purchase.menu_purchase_form_action"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Confirmed Purchase&quot;&quot;&quot;" name="name"/>
@@ -73,7 +73,7 @@
         </record>
     
         <record id="process_node_approvepurchaseorder0" model="process.node">
-            <field name="menu_id" ref="purchase.menu_purchase_form_action4"/>
+            <field name="menu_id" ref="purchase.menu_purchase_form_action"/>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Approved Purchase&quot;&quot;&quot;" name="name"/>
@@ -84,7 +84,7 @@
         </record>
     
         <record id="process_node_invoicecontrol0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_invoice_tree8"/>
+            <field name="menu_id" ref="account.menu_action_invoice_tree2"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Draft Invoice&quot;&quot;&quot;" name="name"/>
@@ -119,7 +119,7 @@
         </record>
         
         <record id="process_node_productrecept0" model="process.node">
-            <field name="menu_id" ref="stock.menu_picking_waiting"/>
+            <field name="menu_id" ref="stock.menu_action_picking_tree"/>
             <field name="model_id" ref="stock.model_stock_picking"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product Receipt&quot;&quot;&quot;" name="name"/>

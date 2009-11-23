@@ -91,7 +91,7 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_inventory_form_draft" id="menu_action_inventory_form_draft" parent="menu_action_inventory_form" groups="base.group_extended_menu"/>
+
         <record id="action_inventory_form_new" model="ir.actions.act_window">
             <field name="name">New Periodical Inventory</field>
             <field name="type">ir.actions.act_window</field>
@@ -100,8 +100,6 @@
             <field name="view_mode">form,tree</field>
             <field name="domain">[('state','=','draft')]</field>            
         </record>
-        <menuitem action="action_inventory_form_new" id="menu_action_inventory_form_new" parent="menu_action_inventory_form"/>
-
 
         =============================
         Lot
@@ -767,7 +765,6 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree2_delivery"/>
         </record>
-        <menuitem action="action_picking_tree2_delivery" id="menu_picking_waiting_delivery" parent="menu_action_picking_tree_delivery" groups="base.group_extended_menu" />
 
         <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
             <field name="name">Future Delivery Orders</field>
@@ -797,7 +794,6 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree3_delivery"/>
         </record>
-        <menuitem action="action_picking_tree3_delivery" id="menu_action_picking_tree3_delivery" parent="menu_action_picking_tree_delivery" groups="base.group_extended_menu" />
 
        <record id="action_picking_calendar_delivery" model="ir.actions.act_window">
             <field name="name">Calendar of Deliveries</field>
@@ -808,7 +804,6 @@
             <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <menuitem action="action_picking_calendar_delivery" id="menu_picking_calendar_delivery" parent="menu_action_picking_tree_delivery" groups="base.group_extended_menu" />
 
         #
         # Sending Products
@@ -966,7 +961,6 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree2"/>
         </record>
-        <menuitem action="action_picking_tree2" id="menu_picking_waiting" parent="menu_action_picking_tree" groups="base.group_extended_menu"/>
 
         <record id="action_picking_tree3" model="ir.actions.act_window">
             <field name="name">Confirmed Packing Waiting Availability</field>
@@ -996,7 +990,6 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree3"/>
         </record>
-        <menuitem action="action_picking_tree3" id="menu_action_picking_tree3" parent="menu_action_picking_tree" groups="base.group_extended_menu"/>
 
         #
         # Reception of Products
@@ -1211,7 +1204,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>            
         </record>
-        <menuitem action="action_picking_tree7" id="menu_action_picking_tree7" parent="menu_action_picking_tree6" groups="base.group_extended_menu"/>
 
         <record id="action_picking_tree8" model="ir.actions.act_window">
             <field name="name">Confirmed Packing Waiting Availability</field>
@@ -1224,7 +1216,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>            
         </record>
-        <menuitem action="action_picking_tree8" id="menu_action_picking_tree8" parent="menu_action_picking_tree6" groups="base.group_extended_menu"/>
 
         <record id="action_picking_tree9" model="ir.actions.act_window">
             <field name="name">New Internal Packing</field>
@@ -1327,7 +1318,6 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_move_form3" id="menu_action_move_form3" parent="menu_action_move_form2" groups="base.group_extended_menu"/>
 
         <record id="action_move_form4" model="ir.actions.act_window">
             <field name="name">Available Moves</field>
@@ -1338,7 +1328,6 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_move_form4" id="menu_action_move_form4" parent="menu_action_move_form2" groups="base.group_extended_menu"/>
 
         <record id="action_picking_all" model="ir.actions.act_window">
             <field name="name">Packing</field>

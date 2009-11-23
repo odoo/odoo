@@ -151,7 +151,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action3" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -163,7 +162,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -175,7 +173,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action_new" model="ir.actions.act_window">
             <field name="name">New Purchase Order</field>
@@ -183,7 +180,6 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="purchase_form_action_new" id="menu_purchase_form_action_new" parent="purchase.menu_purchase_root"/>
 
 
         <record id="purchase_order_tree" model="ir.ui.view">

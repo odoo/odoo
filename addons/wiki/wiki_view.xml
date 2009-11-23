@@ -158,8 +158,6 @@
             <field name="domain">[('create_uid','=',uid)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_mypages" string="My Pages" 
-        action="action_wiki_mypages" groups="base.group_extended_menu"/>
         
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
@@ -172,9 +170,7 @@
             <field name="domain">[('review','=',True)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_review" string="Pages Waiting Review" 
-        action="action_wiki_review" groups="base.group_extended_menu"/>
-        
+         
         <record model="ir.ui.view" id="view_wiki_history_tree">
             <field name="name">wiki.wiki.history.tree</field>
             <field name="model">wiki.wiki.history</field>
