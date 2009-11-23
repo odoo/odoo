@@ -88,7 +88,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;If Product type is service&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Product type is service&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Service Product&quot;&quot;&quot;" name="name"/>
 			<field name="subflow_id" ref="process_process_serviceproductprocess0"/>
 			<field name="process_id" ref="process_process_procurementprocess0"/>
@@ -198,7 +198,7 @@
 		<record id="process_transition_procurestockableproduct0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Procurement of stockable products&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Procurement of stockable Products&quot;&quot;&quot;" name="name"/>
 			<field eval="&quot;&quot;&quot;Depending on the chosen method to supply the stockable products, the procurement order creates a RFQ, a production order, ... &quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_stockproduct0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_procureproducts0"/>
