@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -111,8 +111,7 @@ class purchase_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.purchase_id in ('''+','.join(map(str, ids))+''')
-            GROUP BY m.state, p.purchase_id''')
+                p.purchase_id in %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -194,7 +193,7 @@ class purchase_order(osv.osv):
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),        
+        'create_uid':  fields.many2one('res.users', 'Responsible'),
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
