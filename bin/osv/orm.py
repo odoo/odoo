@@ -1373,15 +1373,8 @@ class orm_template(object):
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
-
-	try:
-        	doc = dom.minidom.parseString(encode(result['arch']))
-	except Exception, ex:
-		logger = netsvc.Logger()
-        	logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Wrong arch in %s (%s):\n %s' % (result['name'], view_type, result['arch'] ))
-		raise except_orm('Error',
-                        ('Invalid xml in view %s(%d) of %s: %s' % (result['name'], result['view_id'], self._name, str(ex))))
-        xarch, xfields = self.__view_look_dom_arch(cr, user, doc, view_id, context=context)
+	
+        xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
 
