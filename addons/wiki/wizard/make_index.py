@@ -34,7 +34,7 @@ def wiki_do_index(self, cr, uid, data, context):
     ids = data['ids']
     pool = pooler.get_pool(cr.dbname)
     wiki_pool = pool.get('wiki.wiki')
-    cr.execute("Select id, section from wiki_wiki where id in %s order by section " ,(tuple(ids),))
+    cr.execute("Select id, section from wiki_wiki where id = ANY(%s) order by section " ,(ids,))
     lst0 = cr.fetchall()
     lst = []
     ids = {}
