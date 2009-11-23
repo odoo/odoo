@@ -57,8 +57,8 @@ class expression(object):
                     subids = ids[i:i+cr.IN_MAX]
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                       ' WHERE "%s" = ANY (%%s)' % (s, f, w), (subids,))
-                    res.extend([r[0] for r in cr.fetchall()])
+                               '  WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
+                               subids)                                         
         else:
             cr.execute('SELECT distinct("%s")'    \
                            '  FROM "%s" where "%s" is not null'  % (s, f, s)),
