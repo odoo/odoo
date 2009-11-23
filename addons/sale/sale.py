@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -99,8 +99,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.sale_id in ('''+','.join(map(str, ids))+''')
-            GROUP BY m.state, p.sale_id''')
+                p.sale_id in %s GROUP BY m.state, p.sale_id''',(tuple(ids),))
         for oid, nbr, state in cr.fetchall():
             if state == 'cancel':
                 continue
@@ -295,7 +294,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id in ('+','.join(map(str, ids))+')', ('draft',))
+        cr.execute('select id from sale_order_line where order_id in %s and state=%s',(tuple(ids),'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -395,7 +394,7 @@ class sale_order(osv.osv):
         invoice_ids = []
 
         context = {}
-        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the 
+        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_inv:
             context['date_inv'] = date_inv
@@ -496,7 +495,7 @@ class sale_order(osv.osv):
                 if line.procurement_id:
                     res.append(line.procurement_id.id)
         return res
-        
+
     # if mode == 'finished':
     #   returns True if all lines are done, False otherwise
     # if mode == 'canceled':
@@ -510,13 +509,13 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         stock_move_obj = self.pool.get('stock.move')
         for order in self.browse(cr, uid, ids, context={}):
-            
-            #check for pending deliveries 
+
+            #check for pending deliveries
             pending_deliveries = False
             # check => if order_lines do not exist,don't proceed for any mode.
             if not order.order_line:
                 return False
-            for line in order.order_line:    
+            for line in order.order_line:
                 move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
                     #if one of the related order lines is in state draft, auto or confirmed
