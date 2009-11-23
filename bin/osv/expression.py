@@ -141,6 +141,12 @@ class expression(object):
                 if field._type == 'many2one':
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     self.__exp[i] = (fargs[0], 'in', right)
+                # Making search easier when there is a left operand as field.o2m or field.m2m
+                if field._type in ['many2many','one2many']:
+                    right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
+                    right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
+                    self.__exp[i] = ('id', 'in', right1)                    
+                
                 continue
 
             if field._properties:
@@ -163,32 +169,45 @@ class expression(object):
 
 
             elif field._type == 'one2many':
-                call_null = True
-                
-                if right:
+                # Applying recursivity on field(one2many)
+                if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None)]
-                        operator = 'in' 
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
                     else:
-                        if not isinstance(right,list):
-                            ids2 = [right]
-                        else:
-                            ids2 = right    
-                    if not ids2:
-                        call_null = True
-                        operator = 'in' # operator changed because ids are directly related to main object
+                        ids2 = list(right)
+                    if field._obj != working_table._name:
+                        dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
-                        call_null = False
-                        o2m_op = 'in'
-                        if operator in  ['not like','not ilike','not in','<>','!=']:
-                            o2m_op = 'not in'
-                        self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2, operator, field._type))
+                        dom = _rec_get(ids2, working_table, parent=left)
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 
-                if call_null:
-                    o2m_op = 'not in'
-                    if operator in  ['not like','not ilike','not in','<>','!=']:
-                        o2m_op = 'in'                         
-                    self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', [], operator, field._type) or [0])      
+                else:    
+                    call_null = True
+                    
+                    if right:
+                        if isinstance(right, basestring):
+                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None)]
+                            operator = 'in' 
+                        else:
+                            if not isinstance(right,list):
+                                ids2 = [right]
+                            else:
+                                ids2 = right    
+                        if not ids2:
+                            call_null = True
+                            operator = 'in' # operator changed because ids are directly related to main object
+                        else:
+                            call_null = False
+                            o2m_op = 'in'
+                            if operator in  ['not like','not ilike','not in','<>','!=']:
+                                o2m_op = 'not in'
+                            self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2, operator, field._type))
+                    
+                    if call_null:
+                        o2m_op = 'not in'
+                        if operator in  ['not like','not ilike','not in','<>','!=']:
+                            o2m_op = 'in'                         
+                        self.__exp[i] = ('id', o2m_op, self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', [], operator, field._type) or [0])      
 
             elif field._type == 'many2many':
                 #FIXME
