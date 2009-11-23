@@ -111,7 +111,7 @@ class purchase_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.purchase_id in %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
+                p.purchase_id = ANY(%s) GROUP BY m.state, p.purchase_id''',(ids,))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
