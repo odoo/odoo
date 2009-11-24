@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,7 +46,7 @@ class report_account_receivable(osv.osv):
         'credit':fields.float('Credit', readonly=True),
     }
     _order = 'name desc'
-    
+
     def init(self, cr):
         cr.execute("""
             create or replace view report_account_receivable as (
@@ -72,55 +72,54 @@ report_account_receivable()
 class temp_range(osv.osv):
     _name = 'temp.range'
     _description = 'A Temporary table used for Dashboard view'
-    
+
     _columns = {
         'name' : fields.char('Range',size=64)
     }
-    
-temp_range()    
-    
+
+temp_range()
+
 class report_aged_receivable(osv.osv):
     _name = "report.aged.receivable"
     _description = "Aged Receivable Till Today"
     _auto = False
-    
+
     def __init__(self, pool, cr):
         super(report_aged_receivable, self).__init__(pool, cr)
         self.called = False
-        
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
-        
+
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
-    
+
     def _calc_bal(self, cr, uid, ids, name, args, context):
         res = {}
         for period in self.read(cr,uid,ids,['name']):
            date1,date2 = period['name'].split(' to ')
-           query = "SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
+           cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
-                            AND (COALESCE(line.date,date) BETWEEN '%s' AND  '%s') \
-                            AND (reconcile_id IS NULL) AND ac.active"%(str(date2),str(date1))
-           cr.execute(query)
+                            AND (COALESCE(line.date,date) BETWEEN %s AND  %s) \
+                            AND (reconcile_id IS NULL) AND ac.active",(str(date2),str(date1),))
            amount = cr.fetchone()
            amount = amount[0] or 0.00
            res[period['id']] = amount
-           
+
         return res
-    
+
     _columns = {
         'name': fields.char('Month Range', size=7, readonly=True),
         'balance': fields.function(_calc_bal, method=True, string='Balance', readonly=True),
     }
-    
+
     def init(self, cr, uid=1):
         """ This view will be used in dashboard
-        The reason writing this code here is, we need to check date range from today to first date of fiscal year.        
+        The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
 #        ranges = _get_ranges(cr) # Gets the ranges for the x axis of the graph (name column values)
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
@@ -136,18 +135,18 @@ class report_aged_receivable(osv.osv):
                 LIST_RANGES.append(today + " to " + last_month_date.strftime('%Y-%m-%d'))
                 today = (last_month_date- 1).strftime('%Y-%m-%d')
                 last_month_date = mx.DateTime.strptime(today, '%Y-%m-%d') - mx.DateTime.RelativeDateTime(months=1)
-            
+
             LIST_RANGES.append(today +" to " + fy_start_date.strftime('%Y-%m-%d'))
             cr.execute('delete from temp_range')
-            
+
             for range in LIST_RANGES:
                 pooler.get_pool(cr.dbname).get('temp.range').create(cr, uid, {'name':range})
-                
+
         cr.execute("""
             create or replace view report_aged_receivable as (
                 select id,name from temp_range
             )""")
-    
+
 report_aged_receivable()
 
 class report_invoice_created(osv.osv):
@@ -182,7 +181,7 @@ class report_invoice_created(osv.osv):
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_invoice_created as (
             select
@@ -212,30 +211,30 @@ class report_account_type_sales(osv.osv):
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
-        'amount_total': fields.float('Total', readonly=True),  
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+        'amount_total': fields.float('Total', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
     }
     _order = 'name desc,amount_total desc'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_account_type_sales as (
             select
                min(inv_line.id) as id,
-               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
-               sum(inv_line.price_subtotal) as amount_total, 
-               inv.currency_id as currency_id,               
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,
+               sum(inv_line.price_subtotal) as amount_total,
+               inv.currency_id as currency_id,
                inv.period_id,
-               inv_line.product_id, 
-               sum(inv_line.quantity) as quantity, 
+               inv_line.product_id,
+               sum(inv_line.quantity) as quantity,
                account.user_type
             from
-                account_invoice_line inv_line 
+                account_invoice_line inv_line
             inner join account_invoice inv on inv.id = inv_line.invoice_id
             inner join account_account account on account.id = inv_line.account_id
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type  
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
             )""")
 report_account_type_sales()
 
@@ -250,30 +249,30 @@ class report_account_sales(osv.osv):
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
-        'amount_total': fields.float('Total', readonly=True),  
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),      
+        'amount_total': fields.float('Total', readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
     }
     _order = 'name desc,amount_total desc'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_account_sales as (
             select
                min(inv_line.id) as id,
-               to_char(inv.date_invoice, 'YYYY-MM-01') as name,               
-               sum(inv_line.price_subtotal) as amount_total, 
-               inv.currency_id as currency_id,               
+               to_char(inv.date_invoice, 'YYYY-MM-01') as name,
+               sum(inv_line.price_subtotal) as amount_total,
+               inv.currency_id as currency_id,
                inv.period_id,
-               inv_line.product_id, 
-               sum(inv_line.quantity) as quantity, 
+               inv_line.product_id,
+               sum(inv_line.quantity) as quantity,
                account.id as account_id
             from
-                account_invoice_line inv_line 
+                account_invoice_line inv_line
             inner join account_invoice inv on inv.id = inv_line.invoice_id
             inner join account_account account on account.id = inv_line.account_id
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.id  
+                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
 report_account_sales()
 
