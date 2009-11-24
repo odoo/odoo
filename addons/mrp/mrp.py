@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -215,9 +215,9 @@ class mrp_bom(osv.osv):
     ]
 
     def _check_recursion(self, cr, uid, ids):
-        level = 500
+        level = 100
         while len(ids):
-            cr.execute('select distinct bom_id from mrp_bom where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct bom_id from mrp_bom where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -363,7 +363,7 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
-                    #TODO: fix me sale module can not be used here, 
+                    #TODO: fix me sale module can not be used here,
                     #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
@@ -782,7 +782,7 @@ mrp_production_product_line()
 class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
     _description = "Procurement"
-    _order = 'priority,date_planned'    
+    _order = 'priority,date_planned'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64,

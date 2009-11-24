@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from report.render import render 
+from report.render import render
 from report.interface import report_int
 from pychart import *
 from mx.DateTime import *
@@ -42,7 +42,7 @@ class external_pdf(render):
         render.__init__(self)
         self.pdf = pdf
         self.output_type='pdf'
-        
+
     def _render(self):
         return self.pdf
 
@@ -98,14 +98,13 @@ class report_custom(report_int):
     def create(self, cr, uid, ids, datas, context={}):
         assert len(ids), 'You should provide some ids!'
         colors = choice_colors(len(ids))
-        ids_str = ','.join(map(str, ids))
         cr.execute(
             "SELECT MAX(mrp_production.date_planned) AS stop,MIN(mrp_production.date_planned) AS start "\
             "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "\
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
             "AND mrp_production.state NOT IN ('cancel','done') "\
-            "AND mrp_workcenter.id IN (%s)" % ids_str)
+            "AND mrp_workcenter.id =ANY(%s)",(ids,))
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -136,8 +135,8 @@ class report_custom(report_int):
         # select workcenters
         cr.execute(
             "SELECT id, name FROM mrp_workcenter " \
-            "WHERE id in (%s) "\
-            "ORDER BY mrp_workcenter.id" % ids_str)
+            "WHERE id=ANY(%s)" \
+            "ORDER BY mrp_workcenter.id" ,(ids,))
         workcenters = cr.dictfetchall()
 
         data = []
@@ -161,7 +160,7 @@ class report_custom(report_int):
                         vals.append(res[0]['cycles'] or 0.0)
                     else:
                         vals.append(res[0]['hours'] or 0.0)
-                    
+
             toto = [dates[date]['name']]
             for val in vals:
                 toto.append(val)
@@ -184,7 +183,7 @@ class report_custom(report_int):
         self.obj.render()
         pdf_string.close()
         return (self.obj.pdf, 'pdf')
-    
+
     def _empty_graph(self, date):
         data = [[date, 0]]
         ar = area.T(x_coord = category_coord.T(data, 0), y_range = (0, None),
