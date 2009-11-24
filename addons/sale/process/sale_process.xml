@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    
-        <!--        
+
+        <!--
             Process
         -->
-    
+
         <record id="process_process_salesprocess0" model="process.process">
             <field eval="1" name="active"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;Sales&quot;&quot;&quot;" name="name"/>
         </record>
-        
-        <!--        
-            Process Node 
+
+        <!--
+            Process Node
         -->
-        
+
         <record id="process_node_order0" model="process.node">
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -27,7 +27,7 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_saleorderprocurement0" model="process.node">
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -39,9 +39,9 @@
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_quotation0" model="process.node">
-            <field name="menu_id" ref="sale.menu_action_order_tree10"/>
+            <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
@@ -52,7 +52,7 @@
         </record>
 
         <record id="process_node_saleorder0" model="process.node">
-            <field name="menu_id" ref="sale.menu_action_order_tree9"/>
+            <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>
@@ -61,7 +61,7 @@
             <field eval="&quot;&quot;&quot;object.state=='manual'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
+
         <record id="process_node_saleprocurement0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
@@ -119,8 +119,8 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
-        <!--        
+
+        <!--
             Process Condition
         -->
 
@@ -130,23 +130,23 @@
             <field eval="&quot;&quot;&quot;object.order_policy=='postpaid'&quot;&quot;&quot;" name="model_states"/>
             <field eval="&quot;&quot;&quot;condition_after_delivery&quot;&quot;&quot;" name="name"/>
         </record>
-        
-        <!--        
+
+        <!--
             Process Transition
         -->
-        
+
         <record id="res_roles_salesman0" model="res.roles">
             <field eval="&quot;&quot;&quot;Salesman&quot;&quot;&quot;" name="name"/>
         </record>
-    
+
         <record id="sale.trans_draft_router" model="workflow.transition">
             <field name="role_id" ref="res_roles_salesman0"/>
         </record>
-    
-    	<record id="sale.trans_wait_invoice_invoice_manual" model="workflow.transition">
+
+        <record id="sale.trans_wait_invoice_invoice_manual" model="workflow.transition">
             <field name="role_id" ref="res_roles_salesman0"/>
         </record>
-    
+
         <record id="process_transition_confirmquotation0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm Quotation&quot;&quot;&quot;" name="name"/>
@@ -155,7 +155,7 @@
             <field model="process.node" name="source_node_id" ref="process_node_quotation0"/>
             <field eval="[(6,0,[ref('sale.trans_draft_router')])]" name="transition_ids"/>
         </record>
-        
+
         <record id="process_transition_saleprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Procurement Order&quot;&quot;&quot;" name="name"/>
@@ -171,7 +171,7 @@
             <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleprocurement0"/>
         </record>
-        
+
         <record id="process_transition_deliver0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Delivery Order&quot;&quot;&quot;" name="name"/>
@@ -196,7 +196,7 @@
             <field model="process.node" name="target_node_id" ref="process_node_invoiceafterdelivery0"/>
             <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
         </record>
-    
+
         <record id="process_transition_saleorderprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
@@ -205,7 +205,7 @@
             <field model="process.node" name="target_node_id" ref="mrp.process_node_procureproducts0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>
-        
+
         <record id="process_transition_saleinvoice0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
@@ -214,11 +214,11 @@
             <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
             <field model="process.node" name="source_node_id" ref="process_node_order0"/>
         </record>
-        
-        <!--        
+
+        <!--
             Process Action
         -->
-        
+
         <record id="process_transition_action_confirm0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_wait&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
@@ -232,7 +232,7 @@
             <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_confirmquotation0"/>
         </record>
-        
+
         <record id="process_transition_action_assign0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_assign&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
@@ -253,7 +253,7 @@
             <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_packing0"/>
         </record>
-        
+
         <record id="process_transition_action_cancelassignation0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;cancel_assign&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
@@ -274,20 +274,20 @@
             <field eval="&quot;&quot;&quot;Cancel&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_deliver0"/>
         </record>
-        
+
         <record id="process_transition_action_createinvoice0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_invoice_create&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_invoice0"/>
         </record>
-    
-    	<record id="process_transition_action_cancelorder0" model="process.transition.action">
+
+        <record id="process_transition_action_cancelorder0" model="process.transition.action">
             <field eval="&quot;&quot;&quot;action_cancel&quot;&quot;&quot;" name="action"/>
             <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
             <field eval="&quot;&quot;&quot;Cancel Order&quot;&quot;&quot;" name="name"/>
             <field name="transition_id" ref="process_transition_invoice0"/>
         </record>
-    
+
     </data>
 </openerp>
