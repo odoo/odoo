@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -61,12 +61,12 @@ class project(osv.osv):
             cr.execute('''SELECT
                     project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
                 FROM
-                    project_task 
+                    project_task
                 WHERE
-                    project_id in ('''+','.join(map(str,ids2))+''') AND
+                    project_id =ANY(%s) AND
                     state<>'cancelled'
                 GROUP BY
-                    project_id''')
+                    project_id''',(ids2,))
             progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0,0.0,0.0]
@@ -133,7 +133,7 @@ class project(osv.osv):
 
     # toggle activity of projects, their sub projects and their tasks
     def set_template(self, cr, uid, ids, context={}):
-        res = self.setActive(cr, uid, ids, value=False, context=context) 
+        res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
 
     def set_done(self, cr, uid, ids, context={}):
@@ -165,7 +165,7 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
+        cr.execute('update project_task set active=True where project_id =ANY(%s)',(ids,))
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
@@ -188,17 +188,17 @@ class project(osv.osv):
         raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
     # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, ids, value=True, context={}):   
-        for proj in self.browse(cr, uid, ids, context):            
+    def setActive(self, cr, uid, ids, value=True, context={}):
+        for proj in self.browse(cr, uid, ids, context):
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))            
-            project_ids = [x[0] for x in cr.fetchall()]            
+            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
+            project_ids = [x[0] for x in cr.fetchall()]
             for child in project_ids:
-                self.setActive(cr, uid, [child], value, context)     		
+                self.setActive(cr, uid, [child], value, context)
         return True
 project()
 
@@ -239,8 +239,7 @@ class task(osv.osv):
 
 # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context):
-        task_set = ','.join(map(str, ids))
-        cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
         hours = dict(cr.fetchall())
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -265,7 +264,7 @@ class task(osv.osv):
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
-    
+
     def copy_data(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
@@ -323,7 +322,7 @@ class task(osv.osv):
         if not tm:
             return res
         tm = tm.name
-        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode_id'], context)        
+        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode_id'], context)
         eview = etree.fromstring(res['arch'])
         def _check_rec(eview, tm):
             if eview.attrib.get('widget',False) == 'float_time':
@@ -469,7 +468,7 @@ class config_compute_remaining(osv.osv_memory):
     _defaults = {
         'remaining_hours': _get_remaining
         }
-    
+
     def compute_hours(self, cr, uid, ids, context=None):
         if 'active_id' in context:
             remaining_hrs=self.browse(cr,uid,ids)[0].remaining_hours
