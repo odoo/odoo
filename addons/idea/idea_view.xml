@@ -193,7 +193,7 @@
         <field name="domain">[('state','=','open')]</field>
         <field name="filter" eval="True"/>        
     </record>
-    <menuitem name="Open Ideas" parent="menu_idea_idea" id="menu_idea_idea_open" action="action_idea_idea_open" groups="base.group_useability_extended" />
+    <menuitem name="Open Ideas" parent="menu_idea_idea" id="menu_idea_idea_open" action="action_idea_idea_open" groups="base.group_extended" />
 
 
     <record model="ir.actions.act_window" id="action_idea_idea_my_idea">
@@ -217,7 +217,7 @@
         name="My Draft Ideas" parent="menu_idea_idea_my_idea"
         id="menu_idea_idea_draft_my" 
         action="action_idea_idea_draft_my"
-        groups="base.group_useability_extended" />
+        groups="base.group_extended" />
 
     <record model="ir.actions.act_window" id="action_idea_idea_open_my">
         <field name="name">My Open Ideas</field>
@@ -231,7 +231,7 @@
         name="My Open Ideas" parent="menu_idea_idea_my_idea"
         id="menu_idea_idea_open_my"
         action="action_idea_idea_open_my"
-        groups="base.group_useability_extended"
+        groups="base.group_extended"
         />
 
         <record model="ir.ui.view" id="view_idea_vote_stat_graph">

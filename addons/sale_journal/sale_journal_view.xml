@@ -117,7 +117,7 @@
         <field name="filter" eval="True"/>
     </record>
 
-    <menuitem name="My Open Journals" id="menu_definition_journal_sales_my_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_my" groups="base.group_useability_extended"/>
+    <menuitem name="My Open Journals" id="menu_definition_journal_sales_my_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_my" groups="base.group_extended"/>
 
     <record model="ir.actions.act_window" id="action_definition_journal_tree_all">
         <field name="name">Open journals</field>
@@ -128,7 +128,7 @@
         <field name="filter" eval="True"/>
     </record>
 
-    <menuitem name="All Open Journals" id="menu_definition_journal_sales_all_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_all" groups="base.group_useability_extended"/>
+    <menuitem name="All Open Journals" id="menu_definition_journal_sales_all_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_all" groups="base.group_extended"/>
 
     <record model="ir.ui.view" id="sale_journal_sale_order">
         <field name="name">sale.order.journal.view.form</field>

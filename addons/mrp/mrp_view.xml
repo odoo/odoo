@@ -575,7 +575,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_useability_extended" />
+        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_extended" />
         <record id="mrp_production_action3" model="ir.actions.act_window">
             <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -586,7 +586,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_extended"/>
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -597,7 +597,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_extended"/>
 
          <record id="mrp_production_new" model="ir.actions.act_window">
             <field name="name">New Production Order</field>
@@ -785,7 +785,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
-        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements</field>
@@ -795,7 +795,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements to Fix</field>
@@ -806,7 +806,7 @@
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
             <field name="name">Temporary Procurement Exceptions</field>
@@ -816,7 +816,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
-        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5" groups="base.group_useability_extended"/>
+        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended"/>
 
          <record id="mrp_procurement_new" model="ir.actions.act_window">
             <field name="name">New Procurement</field>
