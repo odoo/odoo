@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -59,7 +59,6 @@ class pos_order(osv.osv):
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
         cr.execute("""
         SELECT
             p.id,
@@ -68,9 +67,8 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id IN (""" + id_set +""") GROUP BY p.id """)
+        WHERE p.id =ANY(%s) GROUP BY p.id """,(ids,))
         res = dict(cr.fetchall())
-
         for rec in self.browse(cr, uid, ids, context):
             if rec.partner_id \
                and rec.partner_id.property_account_position \
@@ -112,8 +110,7 @@ class pos_order(osv.osv):
         return res
 
     def payment_get(self, cr, uid, ids, context=None):
-        cr.execute("select id from pos_payment where order_id in (%s)" % \
-                    ','.join([str(i) for i in ids]))
+        cr.execute("select id from pos_payment where order_id =ANY(%s)",(ids,))
         return [i[0] for i in cr.fetchall()]
 
     def _sale_journal_get(self, cr, uid, context):
@@ -891,14 +888,14 @@ class pos_order_line(osv.osv):
 
         price_line = float(qty)*float(price)
         return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
-    
+
     def unlink(self, cr, uid, ids, context={}):
         """Allows to delete pos order lines in draft,cancel state"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.order_id.state not in ['draft','cancel']:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete an order line which is %s !')%(rec.order_id.state,))
         return super(pos_order_line, self).unlink(cr, uid, ids, context=context)
-    
+
 pos_order_line()
 
 
