@@ -253,7 +253,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_holiday" action="action_my_holiday" groups="base.group_extended_menu" />
+        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_holiday" action="action_my_holiday" groups="base.group_useability_extended" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_draft">
             <field name="name">My Draft Leave Request</field>
@@ -309,7 +309,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_departments_holiday" action="action_departments_my_holiday" groups="base.group_extended_menu"/>
+        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_departments_holiday" action="action_departments_my_holiday" groups="base.group_useability_extended"/>
 
 
         <record model="ir.actions.act_window" id="action_my_departments_holiday_waiting">

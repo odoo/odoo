@@ -235,7 +235,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="menu_all_project" groups="base.group_extended_menu"
+        <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="menu_all_project" groups="base.group_useability_extended"
             sequence="1"/>
 
         <record id="open_view_my_project_my_run" model="ir.actions.act_window">
@@ -534,7 +534,7 @@
             <field eval="True" name="filter"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_tasks" groups="base.group_extended_menu" />
+        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_tasks" groups="base.group_useability_extended" />
 
         <record id="action_view_task_department" model="ir.actions.act_window">
             <field name="name">My Department Tasks</field>
@@ -546,7 +546,7 @@
             <field eval="True" name="filter"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task_department" id="menu_action_view_department_tasks" parent="project.menu_tasks" groups="base.group_extended_menu"/>
+        <menuitem action="action_view_task_department" id="menu_action_view_department_tasks" parent="project.menu_tasks" groups="base.group_useability_extended"/>
 
         <record id="action_view_task5_pending" model="ir.actions.act_window">
             <field name="name">My Pending Tasks</field>
