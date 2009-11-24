@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -208,7 +208,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -394,8 +394,8 @@ class product_product(osv.osv):
         product = self.browse(cr, uid, [product_id], context)[0]
         for supinfo in product.seller_ids:
             if supinfo.name.id == partner_id:
-                return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}                
-        return {'code' : product.default_code, 'name' : product.name, 'variants': product.variants}                
+                return {'code': supinfo.product_code, 'name': supinfo.product_name, 'variants': ''}
+        return {'code' : product.default_code, 'name' : product.name, 'variants': product.variants}
 
     def _product_code(self, cr, uid, ids, name, arg, context={}):
         res = {}
@@ -408,7 +408,7 @@ class product_product(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
             if not data['variants']:
-                data['variants'] = p.variants            
+                data['variants'] = p.variants
             if not data['code']:
                 data['code'] = p.code
             if not data['name']:
@@ -444,7 +444,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
-        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),        
+        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -542,7 +542,7 @@ class product_product(osv.osv):
             default = {}
         default = default.copy()
         default['name'] = product['name'] + _(' (copy)')
-        
+
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
@@ -587,7 +587,7 @@ class product_packaging(osv.osv):
     }
 
     _order = 'sequence'
-    
+
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
