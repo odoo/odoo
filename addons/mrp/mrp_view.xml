@@ -221,8 +221,8 @@
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration"/>
 
         <!--
-    Bill of Materials
-    -->
+          Bill of Materials
+        -->
 
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
@@ -230,12 +230,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
-                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                    <group colspan="4" col="6">
+                      <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                      <field name="name" select="1"/>
+                      <field name="code" select="1"/>
+                    </group>
                     <newline/>
                     <field name="product_uom"/>
                     <field name="product_qty"/>
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
                     <newline/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
@@ -518,7 +520,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_mrp_production_filter" model="ir.ui.view">
             <field name="name">mrp.production.select</field>
             <field name="model">mrp.production</field>
@@ -530,14 +532,14 @@
                        <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
-					   <field name="product_id" select='1'/>
-					   <field name="routing_id" select='1'/>	
+                       <field name="product_id" select='1'/>
+                       <field name="routing_id" select='1'/>
                        <field name="origin" select='1'/>
-					</group>
+                    </group>
                </search>
             </field>
         </record>
-        
+
         <record id="mrp_production_action" model="ir.actions.act_window">
             <field name="name">Production Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -545,7 +547,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
 
@@ -571,7 +573,7 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','ready')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_extended" />
         <record id="mrp_production_action3" model="ir.actions.act_window">
@@ -582,7 +584,7 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','in_production')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_extended"/>
         <record id="mrp_production_action4" model="ir.actions.act_window">
@@ -593,7 +595,7 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','confirmed')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_extended"/>
 
@@ -754,15 +756,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                   	<group col='8' colspan='4'>
+                       <group col='8' colspan='4'>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement orders with exceptions"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
-					   <field name="product_id" select='1'/>
-					   <field name="date_planned" select='1'/>	
+                       <field name="product_id" select='1'/>
+                       <field name="date_planned" select='1'/>
                        <field name="state" select='1'/>
-					</group>
-				</search>
+                    </group>
+                </search>
             </field>
         </record>
         <record id="mrp_procurement_action" model="ir.actions.act_window">
@@ -874,7 +876,7 @@
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-            domain="[('product_id', '=', active_id)]" 
+            domain="[('product_id', '=', active_id)]"
             id="act_product_product_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
