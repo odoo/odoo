@@ -8,35 +8,35 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-12 08:00+0000\n"
+"PO-Revision-Date: 2009-11-23 07:47+0000\n"
 "Last-Translator: NightSpirit <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 05:19+0000\n"
+"X-Launchpad-Export-Date: 2009-11-24 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
 msgid "Final Score (%)"
-msgstr ""
+msgstr "Lopputulos (%)"
 
 #. module: base_module_quality
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
 
 #. module: base_module_quality
 #: model:ir.module.module,shortdesc:base_module_quality.module_meta_information
 msgid "Base module quality"
-msgstr ""
+msgstr "Ydinmoduulin laatu"
 
 #. module: base_module_quality
 #: field:module.quality.check,name:0
 msgid "Rated Module"
-msgstr ""
+msgstr "Arvosteltu moduuli"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -46,22 +46,22 @@ msgstr "Yksityiskohdat"
 #. module: base_module_quality
 #: field:module.quality.detail,note:0
 msgid "Note"
-msgstr ""
+msgstr "Huomautus"
 
 #. module: base_module_quality
 #: field:module.quality.detail,state:0
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
 msgid "Details"
-msgstr ""
+msgstr "Yksityiskohdat"
 
 #. module: base_module_quality
 #: field:module.quality.detail,ponderation:0
 msgid "Ponderation"
-msgstr ""
+msgstr "Punnitseminen (arviointi)"
 
 #. module: base_module_quality
 #: help:module.quality.detail,ponderation:0
@@ -69,17 +69,19 @@ msgid ""
 "Some tests are more critical than others, so they have a bigger weight in "
 "the computation of final rating"
 msgstr ""
+"Osa testeistä on kriittisempiä (tärkeämpiä) kuin toiset, joten näillä "
+"testeillä on suurempi painoarvo lopullisessa arvostelussa"
 
 #. module: base_module_quality
 #: view:module.quality.check:0
 #: field:module.quality.check,check_detail_ids:0
 msgid "Tests"
-msgstr ""
+msgstr "Testit"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Skipped"
-msgstr ""
+msgstr "Ohitettu"
 
 #. module: base_module_quality
 #: help:module.quality.detail,state:0
@@ -87,41 +89,43 @@ msgid ""
 "The test will be completed only if the module is installed or if the test "
 "may be processed on uninstalled module."
 msgstr ""
+"Testi on suoritettu vain jos moduuli on asennettu tai jos testin voi "
+"suorittaa poistetulle moduulille"
 
 #. module: base_module_quality
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
 msgid "module.quality.check"
-msgstr ""
+msgstr "moduulinlaatutarkistus"
 
 #. module: base_module_quality
 #: field:module.quality.detail,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,module_file:0
 msgid "Save report"
-msgstr ""
+msgstr "Tallenna raportti"
 
 #. module: base_module_quality
 #: wizard_field:quality_detail_save,init,name:0
 msgid "File name"
-msgstr ""
+msgstr "Tiedostonnimi"
 
 #. module: base_module_quality
 #: field:module.quality.detail,score:0
 msgid "Score (%)"
-msgstr ""
+msgstr "Tulos (%)"
 
 #. module: base_module_quality
 #: help:quality_detail_save,init,name:0
 msgid "Save report as .html format"
-msgstr ""
+msgstr "Tallenna raportti .html -muotoon"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
@@ -132,32 +136,32 @@ msgstr "Yhteenveto"
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.quality_detail_save
 msgid "Report Save"
-msgstr ""
+msgstr "Raportin Tallennus"
 
 #. module: base_module_quality
 #: wizard_view:quality_detail_save,init:0
 msgid "Standard entries"
-msgstr ""
+msgstr "Normikohdat"
 
 #. module: base_module_quality
 #: view:module.quality.detail:0
 msgid "Save Report"
-msgstr ""
+msgstr "Tallenna raportti"
 
 #. module: base_module_quality
 #: model:ir.actions.wizard,name:base_module_quality.create_quality_check_id
 msgid "Quality Check"
-msgstr ""
+msgstr "Laaduntarkistus"
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_detail
 msgid "module.quality.detail"
-msgstr ""
+msgstr "moduulinlaadunyksityiskohdat"
 
 #. module: base_module_quality
 #: selection:module.quality.detail,state:0
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: base_module_quality
 #: view:module.quality.check:0
@@ -168,12 +172,12 @@ msgstr "Tulös"
 #. module: base_module_quality
 #: wizard_button:quality_detail_save,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: base_module_quality
 #: field:module.quality.detail,message:0
 msgid "Message"
-msgstr ""
+msgstr "Viesti"
 
 #. module: base_module_quality
 #: field:module.quality.detail,quality_check_id:0
