@@ -585,14 +585,14 @@ class many2many(_column):
 
 
 def get_nice_size(a):
-	(x,y) = a
-	if isinstance(y, (int,long)):
-		size = y
-	elif y:
-		y = len(y)
-	else:
-		y = 0
-	return (x, tools.human_size(size))
+    (x,y) = a
+    if isinstance(y, (int,long)):
+        size = y
+    elif y:
+        y = len(y)
+    else:
+        y = 0
+    return (x, tools.human_size(size))
 
 # ---------------------------------------------------------
 # Function fields

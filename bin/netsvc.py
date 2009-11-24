@@ -39,7 +39,7 @@ import release
 class Service(object):
     """ Base class for *Local* services 
    
-	Functionality here is trusted, no authentication.
+        Functionality here is trusted, no authentication.
     """
     _services = {}
     def __init__(self, name, audience=''):
@@ -48,11 +48,11 @@ class Service(object):
         self._methods = {}
 
     def joinGroup(self, name):
-	raise Exception("No group for local services")
+        raise Exception("No group for local services")
         #GROUPS.setdefault(name, {})[self.__name] = self
 
     def service_exist(self,name):
-	return Service._services.has_key(name)
+        return Service._services.has_key(name)
 
     def exportMethod(self, method):
         if callable(method):
@@ -67,9 +67,9 @@ class Service(object):
 class LocalService(object):
     """ Proxy for local services. 
     
-	Any instance of this class will behave like the single instance
-	of Service(name)
-	"""
+        Any instance of this class will behave like the single instance
+        of Service(name)
+    """
     def __init__(self, name):
         self.__name = name
         try:
@@ -158,12 +158,12 @@ def init_logger():
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
-	    if tools.config['logrotate'] is not False:
+            if tools.config['logrotate'] is not False:
                 handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30)
-	    elif os.name == 'posix':
-		handler = logging.handlers.WatchedFileHandler(logf)
-	    else:
-		handler = logging.handlers.FileHandler(logf)
+            elif os.name == 'posix':
+                handler = logging.handlers.WatchedFileHandler(logf)
+            else:
+                handler = logging.handlers.FileHandler(logf)
         except Exception, ex:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
             handler = logging.StreamHandler(sys.stdout)
@@ -223,27 +223,27 @@ class Logger(object):
         if isinstance(msg, Exception):
             msg = tools.exception_to_unicode(msg)
 
-	try:
-	    msg = tools.ustr(msg).strip()
+        try:
+            msg = tools.ustr(msg).strip()
             if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',True):
                 msg = common().exp_get_server_environment() + "\n" + msg
 
             result = msg.split('\n')
-	except UnicodeDecodeError:
-		result = msg.strip().split('\n')
-	try:
+        except UnicodeDecodeError:
+            result = msg.strip().split('\n')
+        try:
             if len(result)>1:
                 for idx, s in enumerate(result):
                     level_method('[%02d]: %s' % (idx+1, s,))
             elif result:
                 level_method(result[0])
-	except IOError,e:
-		# TODO: perhaps reset the logger streams?
-		#if logrotate closes our files, we end up here..
-		pass
-	except:
-		# better ignore the exception and carry on..
-		pass
+        except IOError,e:
+            # TODO: perhaps reset the logger streams?
+            #if logrotate closes our files, we end up here..
+            pass
+        except:
+            # better ignore the exception and carry on..
+            pass
 
     def set_loglevel(self, level):
         log = logging.getLogger()
@@ -364,10 +364,10 @@ class OpenERPDispatcher:
             self.log('service', service_name)
             self.log('method', method)
             self.log('params', params)
-	    if hasattr(self,'auth_provider'):
-	        auth = self.auth_provider
-	    else:
-	        auth = None
+            if hasattr(self,'auth_provider'):
+                auth = self.auth_provider
+            else:
+                auth = None
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result)
             # We shouldn't marshall None,

@@ -2,7 +2,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -49,93 +49,93 @@ import utils
 Font_size= 10.0
 
 def verbose(text):
-	sys.stderr.write(text+"\n");
+    sys.stderr.write(text+"\n");
 
 class textbox():
-	"""A box containing plain text.
-	It can have an offset, in chars.
-	Lines can be either text strings, or textbox'es, recursively.
-	"""
-	def __init__(self,x=0, y=0):
-	    self.posx = x
-	    self.posy = y
-	    self.lines = []
-	    self.curline = ''
-	    self.endspace = False
-	 
-	def newline(self):
-	    if isinstance(self.curline, textbox):
-	        self.lines.extend(self.curline.renderlines())
-	    else:
-	    	self.lines.append(self.curline)
-	    self.curline = ''
-	
-	def fline(self):
-	    if isinstance(self.curline, textbox):
-	        self.lines.extend(self.curline.renderlines())
-	    elif len(self.curline):
-	    	self.lines.append(self.curline)
-	    self.curline = ''
-	
-	def appendtxt(self,txt):
-	    """Append some text to the current line.
-	       Mimic the HTML behaviour, where all whitespace evaluates to
-	       a single space """
-	    if not txt:
-		return
-	    bs = es = False
-	    if txt[0].isspace():
-	        bs = True
-	    if txt[len(txt)-1].isspace():
-		es = True
-	    if bs and not self.endspace:
-		self.curline += " "
-	    self.curline += txt.strip().replace("\n"," ").replace("\t"," ")
-	    if es:
-		self.curline += " "
-	    self.endspace = es
+    """A box containing plain text.
+    It can have an offset, in chars.
+    Lines can be either text strings, or textbox'es, recursively.
+    """
+    def __init__(self,x=0, y=0):
+        self.posx = x
+        self.posy = y
+        self.lines = []
+        self.curline = ''
+        self.endspace = False
+     
+    def newline(self):
+        if isinstance(self.curline, textbox):
+            self.lines.extend(self.curline.renderlines())
+        else:
+            self.lines.append(self.curline)
+        self.curline = ''
+    
+    def fline(self):
+        if isinstance(self.curline, textbox):
+            self.lines.extend(self.curline.renderlines())
+        elif len(self.curline):
+            self.lines.append(self.curline)
+        self.curline = ''
+    
+    def appendtxt(self,txt):
+        """Append some text to the current line.
+           Mimic the HTML behaviour, where all whitespace evaluates to
+           a single space """
+        if not txt:
+            return
+        bs = es = False
+        if txt[0].isspace():
+            bs = True
+        if txt[len(txt)-1].isspace():
+            es = True
+        if bs and not self.endspace:
+            self.curline += " "
+        self.curline += txt.strip().replace("\n"," ").replace("\t"," ")
+        if es:
+            self.curline += " "
+        self.endspace = es
 
-	def rendertxt(self,xoffset=0):
-	    result = ''
-	    lineoff = ""
-	    for i in range(self.posy):
-		result +="\n"
-	    for i in range(self.posx+xoffset):
-	        lineoff+=" "
-	    for l in self.lines:
-	        result+= lineoff+ l +"\n"
-	    return result
-	
-	def renderlines(self,pad=0):
-	    """Returns a list of lines, from the current object
-	    pad: all lines must be at least pad characters.
-	    """
-	    result = []
-	    lineoff = ""
-	    for i in range(self.posx):
-	        lineoff+=" "
-	    for l in self.lines:
-		lpad = ""
-		if pad and len(l) < pad :
-			for i in range(pad - len(l)):
-				lpad += " "
-	        #elif pad and len(l) > pad ?
-	        result.append(lineoff+ l+lpad)
-	    return result
-			
-			
-	def haplines(self,arr,offset,cc= ''):
-		""" Horizontaly append lines 
-		"""
-		while (len(self.lines) < len(arr)):
-			self.lines.append("")
-		
-		for i in range(len(self.lines)):
-			while (len(self.lines[i]) < offset):
-				self.lines[i] += " "
-		for i in range(len(arr)):
-			self.lines[i] += cc +arr[i] 
-		
+    def rendertxt(self,xoffset=0):
+        result = ''
+        lineoff = ""
+        for i in range(self.posy):
+            result +="\n"
+        for i in range(self.posx+xoffset):
+            lineoff+=" "
+        for l in self.lines:
+            result+= lineoff+ l +"\n"
+        return result
+    
+    def renderlines(self,pad=0):
+        """Returns a list of lines, from the current object
+        pad: all lines must be at least pad characters.
+        """
+        result = []
+        lineoff = ""
+        for i in range(self.posx):
+            lineoff+=" "
+        for l in self.lines:
+            lpad = ""
+            if pad and len(l) < pad :
+                for i in range(pad - len(l)):
+                    lpad += " "
+                #elif pad and len(l) > pad ?
+                result.append(lineoff+ l+lpad)
+        return result
+            
+            
+    def haplines(self,arr,offset,cc= ''):
+        """ Horizontaly append lines 
+        """
+        while (len(self.lines) < len(arr)):
+            self.lines.append("")
+        
+        for i in range(len(self.lines)):
+            while (len(self.lines[i]) < offset):
+                self.lines[i] += " "
+        for i in range(len(arr)):
+            self.lines[i] += cc +arr[i] 
+        
 
 class _flowable(object):
     def __init__(self, template, doc,localcontext):
@@ -143,8 +143,8 @@ class _flowable(object):
             '1title': self._tag_title,
             '1spacer': self._tag_spacer,
             'para': self._tag_para,
-	    'font': self._tag_font,
-	    'section': self._tag_section,
+            'font': self._tag_font,
+            'section': self._tag_section,
             '1nextFrame': self._tag_next_frame,
             'blockTable': self._tag_table,
             '1pageBreak': self._tag_page_break,
@@ -152,15 +152,15 @@ class _flowable(object):
         }
         self.template = template
         self.doc = doc
-	self.localcontext = localcontext
-	self.nitags = []
-	self.tbox = None
+        self.localcontext = localcontext
+        self.nitags = []
+        self.tbox = None
 
     def warn_nitag(self,tag):
-	if tag not in self.nitags:
-		verbose("Unknown tag \"%s\", please implement it." % tag)
-		self.nitags.append(tag)
-	
+        if tag not in self.nitags:
+            verbose("Unknown tag \"%s\", please implement it." % tag)
+            self.nitags.append(tag)
+    
     def _tag_page_break(self, node):
         return "\f"
 
@@ -182,79 +182,79 @@ class _flowable(object):
         return "\n"*length
 
     def _tag_table(self, node):
-	self.tb.fline()
-	saved_tb = self.tb
-	self.tb = None
-	sizes = None
+        self.tb.fline()
+        saved_tb = self.tb
+        self.tb = None
+        sizes = None
         if node.get('colWidths'):
             sizes = map(lambda x: utils.unit_get(x), node.get('colWidths').split(','))
-	trs = []
-	for n in utils._child_get(node,self):
-	    if n.tag == 'tr':
-		tds = []
-		for m in utils._child_get(n,self):
-		    if m.tag == 'td':
-		        self.tb = textbox()
-			self.rec_render_cnodes(m)
-			tds.append(self.tb)
-			self.tb = None
-		if len(tds):
-		    trs.append(tds)
-	
-	if not sizes:
-		verbose("computing table sizes..")
-	for tds in trs:
-		trt = textbox()
-		off=0
-		for i in range(len(tds)):
-			p = int(sizes[i]/Font_size)
-			trl = tds[i].renderlines(pad=p)
-			trt.haplines(trl,off)
-			off += sizes[i]/Font_size
-		saved_tb.curline = trt
-		saved_tb.fline()
-	
-	self.tb = saved_tb
+        trs = []
+        for n in utils._child_get(node,self):
+            if n.tag == 'tr':
+                tds = []
+                for m in utils._child_get(n,self):
+                    if m.tag == 'td':
+                        self.tb = textbox()
+                        self.rec_render_cnodes(m)
+                        tds.append(self.tb)
+                        self.tb = None
+                if len(tds):
+                    trs.append(tds)
+        
+        if not sizes:
+            verbose("computing table sizes..")
+        for tds in trs:
+            trt = textbox()
+            off=0
+            for i in range(len(tds)):
+                p = int(sizes[i]/Font_size)
+                trl = tds[i].renderlines(pad=p)
+                trt.haplines(trl,off)
+                off += sizes[i]/Font_size
+            saved_tb.curline = trt
+            saved_tb.fline()
+        
+        self.tb = saved_tb
         return
 
     def _tag_para(self, node):
-	#TODO: styles
-	self.rec_render_cnodes(node)
-	self.tb.newline()
+        #TODO: styles
+        self.rec_render_cnodes(node)
+        self.tb.newline()
 
     def _tag_section(self, node):
-	#TODO: styles
-	self.rec_render_cnodes(node)
-	self.tb.newline()
+        #TODO: styles
+        self.rec_render_cnodes(node)
+        self.tb.newline()
 
     def _tag_font(self, node):
-	"""We do ignore fonts.."""
-	self.rec_render_cnodes(node)
+        """We do ignore fonts.."""
+        self.rec_render_cnodes(node)
 
     def rec_render_cnodes(self,node):
         self.tb.appendtxt(utils._process_text(self, node.text or ''))
         for n in utils._child_get(node,self):
-		self.rec_render(n)
-	self.tb.appendtxt(utils._process_text(self, node.tail or ''))
+            self.rec_render(n)
+        self.tb.appendtxt(utils._process_text(self, node.tail or ''))
 
     def rec_render(self,node):
         """ Recursive render: fill outarr with text of current node
-	"""
-	if node.tag != None:
-		if node.tag in self._tags:
-		    self._tags[node.tag](node)
-		else:
-		    self.warn_nitag(node.tag)
+        """
+        if node.tag != None:
+            if node.tag in self._tags:
+                self._tags[node.tag](node)
+            else:
+                self.warn_nitag(node.tag)
 
     def render(self, node):
-	self.tb= textbox()
+        self.tb= textbox()
         #result = self.template.start()
         #result += self.template.frame_start()
-	self.rec_render_cnodes(node)
+        self.rec_render_cnodes(node)
         #result += self.template.frame_stop()
         #result += self.template.end()
-	result = self.tb.rendertxt()
-	del self.tb
+        result = self.tb.rendertxt()
+        del self.tb
         return result
 
 class _rml_tmpl_tag(object):
@@ -274,12 +274,12 @@ class _rml_tmpl_frame(_rml_tmpl_tag):
         self.width = width
         self.posx = posx
     def tag_start(self):
-	return "frame start"
+        return "frame start"
         return '<table border="0" width="%d"><tr><td width="%d">&nbsp;</td><td>' % (self.width+self.posx,self.posx)
     def tag_end(self):
         return True
     def tag_stop(self):
-	return "frame stop"
+        return "frame stop"
         return '</td></tr></table><br/>'
     def tag_mergeable(self):
         return False
@@ -301,7 +301,7 @@ class _rml_tmpl_draw_string(_rml_tmpl_tag):
         self.pos = [(self.posx, self.posy, align, utils.text_get(node), style.get('td'), style.font_size_get('td'))]
 
     def tag_start(self):
-	return "draw string \"%s\" @(%d,%d)..\n" %("txt",self.posx,self.posy)
+        return "draw string \"%s\" @(%d,%d)..\n" %("txt",self.posx,self.posy)
         self.pos.sort()
         res = '\\table ...'
         posx = 0
@@ -335,7 +335,7 @@ class _rml_tmpl_draw_lines(_rml_tmpl_tag):
         self.style = style.get('hr')
 
     def tag_start(self):
-	return "draw lines..\n"
+        return "draw lines..\n"
         if self.ok:
             return '<table border="0" cellpadding="0" cellspacing="0" width="%d"><tr><td width="%d"></td><td><hr width="100%%" style="margin:0px; %s"></td></tr></table>' % (self.posx+self.width,self.posx,self.style)
         else:
@@ -475,7 +475,7 @@ class _rml_template(object):
         return ''
     
     def end(self):
-	return "template end\n"
+        return "template end\n"
         result = ''
         while not self.loop:
             result += self.frame_start()
@@ -498,16 +498,16 @@ class _rml_doc(object):
         #self.styles = _rml_styles(el,self.localcontext)
 
         el = self.etree.findall('template')
-	self.result =""
+        self.result =""
         if len(el):
             pt_obj = _rml_template(self.localcontext, out, el[0], self)
             stories = utils._child_get(self.etree, self, 'story')
-	    for story in stories:
-		if self.result:
-			self.result += '\f'
-		f = _flowable(pt_obj,story,self.localcontext)
-		self.result += f.render(story)
-		del f
+            for story in stories:
+                if self.result:
+                    self.result += '\f'
+                f = _flowable(pt_obj,story,self.localcontext)
+                self.result += f.render(story)
+                del f
         else:
             self.result = "<cannot render w/o template>"
         self.result += '\n'

@@ -167,21 +167,21 @@ class _rml_doc(object):
         from reportlab.lib.fonts import addMapping
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
-	
-	pdfmetrics.registerFont(TTFont(fontname, filename ))
-	if (mode == 'all'):
-		addMapping(face, 0, 0, fontname)    #normal
-		addMapping(face, 0, 1, fontname)    #italic
-		addMapping(face, 1, 0, fontname)    #bold
-		addMapping(face, 1, 1, fontname)    #italic and bold
-	elif (mode== 'normal') or (mode == 'regular'):
-		addMapping(face, 0, 0, fontname)    #normal
-	elif (mode == 'italic'):
-		addMapping(face, 0, 1, fontname)    #italic
-	elif (mode == 'bold'):
-		addMapping(face, 1, 0, fontname)    #bold
-	elif (mode == 'bolditalic'):
-		addMapping(face, 1, 1, fontname)    #italic and bold
+    
+        pdfmetrics.registerFont(TTFont(fontname, filename ))
+        if (mode == 'all'):
+            addMapping(face, 0, 0, fontname)    #normal
+            addMapping(face, 0, 1, fontname)    #italic
+            addMapping(face, 1, 0, fontname)    #bold
+            addMapping(face, 1, 1, fontname)    #italic and bold
+        elif (mode== 'normal') or (mode == 'regular'):
+            addMapping(face, 0, 0, fontname)    #normal
+        elif (mode == 'italic'):
+            addMapping(face, 0, 1, fontname)    #italic
+        elif (mode == 'bold'):
+            addMapping(face, 1, 0, fontname)    #bold
+        elif (mode == 'bolditalic'):
+            addMapping(face, 1, 1, fontname)    #italic and bold
 
     def _textual_image(self, node):
         rc = ''
@@ -797,10 +797,10 @@ def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     r = _rml_doc(node, localcontext, images, path, title=title)
     #try to override some font mappings
     try:
-	from customfonts import SetCustomFonts
-	SetCustomFonts(r)
+        from customfonts import SetCustomFonts
+        SetCustomFonts(r)
     except:
-	pass
+        pass
     fp = cStringIO.StringIO()
     r.render(fp)
     return fp.getvalue()
@@ -811,10 +811,10 @@ def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None
 
     #try to override some font mappings
     try:
-	from customfonts import SetCustomFonts
-	SetCustomFonts(r)
+        from customfonts import SetCustomFonts
+        SetCustomFonts(r)
     except:
-	pass
+        pass
 
     if fout:
         fp = file(fout,'wb')

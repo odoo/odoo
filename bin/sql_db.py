@@ -119,14 +119,14 @@ class Cursor(object):
         try:
             params = params or None
             res = self._obj.execute(query, params)
-	except psycopg2.ProgrammingError, pe:
-	    logger= netsvc.Logger()
-	    logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
-	    raise
+        except psycopg2.ProgrammingError, pe:
+            logger= netsvc.Logger()
+            logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
+            raise
         except Exception, e:
             log("bad query: %s" % self._obj.query)
             log(e)
-	    raise
+            raise
 
         if self.sql_log:
             log("query: %s" % self._obj.query)
@@ -144,8 +144,8 @@ class Cursor(object):
         return res
 
     def print_log(self):
-	global sql_counter
-	sql_counter += self.count
+        global sql_counter
+        sql_counter += self.count
         def process(type):
             sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
             sum = 0

@@ -52,10 +52,10 @@ sys.path.insert(1, _ad)
 ad_cnt=1
 for adp in ad_paths:
     if adp != _ad:
-	sys.path.insert(ad_cnt, adp)
-	ad_cnt+=1
+        sys.path.insert(ad_cnt, adp)
+        ad_cnt+=1
 
-ad_paths.append(_ad)	# for get_module_path
+ad_paths.append(_ad)    # for get_module_path
 
 # Modules already loaded
 loaded = []
@@ -289,7 +289,7 @@ def get_modules():
 
     plist = []
     for ad in ad_paths:
-	plist.extend(listdir(ad))
+        plist.extend(listdir(ad))
     return list(set(plist))
 
 def get_modules_with_version():
@@ -318,7 +318,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
-	    logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
             cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
             continue
 

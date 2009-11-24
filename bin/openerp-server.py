@@ -56,8 +56,8 @@ __version__ = release.version
 # We DON't log this using the standard logger, because we might mess
 # with the logfile's permissions. Just do a quick exit here.
 if pwd.getpwuid(os.getuid())[0] == 'root' :
-	sys.stderr.write("Attempted to run OpenERP server as root. This is not good, aborting.\n")
-        sys.exit(1)
+    sys.stderr.write("Attempted to run OpenERP server as root. This is not good, aborting.\n")
+    sys.exit(1)
 
 #----------------------------------------------------------
 # get logger
@@ -114,13 +114,13 @@ import addons
 import service.http_server
 
 if not ( tools.config["stop_after_init"] or \
-	tools.config["translate_in"] or \
-	tools.config["translate_out"] ):
-	service.http_server.init_servers()
-	service.http_server.init_xmlrpc()
+    tools.config["translate_in"] or \
+    tools.config["translate_out"] ):
+    service.http_server.init_servers()
+    service.http_server.init_xmlrpc()
 
-	import service.netrpc_server
-	service.netrpc_server.init_servers()
+    import service.netrpc_server
+    service.netrpc_server.init_servers()
 
 if tools.config['db_name']:
     for db in tools.config['db_name'].split(','):

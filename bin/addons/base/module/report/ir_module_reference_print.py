@@ -29,37 +29,37 @@ class ir_module_reference_print(report_sxw.rml_parse):
             'time': time,
             'findobj': self._object_find,
             'objdoc': self._object_doc,
-	    'objdoc2': self._object_doc2,
+            'objdoc2': self._object_doc2,
             'findflds': self._fields_find,
         })
     def _object_doc(self, obj):
         modobj = self.pool.get(obj)
-	strdocs= modobj.__doc__
-	if not strdocs:
-		return None
-	else:
-		strdocs=strdocs.strip().splitlines(True)
-	res = ''
-	for stre in strdocs:
-		if not stre or stre.isspace():
-			break
-		res += stre
+        strdocs= modobj.__doc__
+        if not strdocs:
+            return None
+        else:
+            strdocs=strdocs.strip().splitlines(True)
+        res = ''
+        for stre in strdocs:
+            if not stre or stre.isspace():
+                break
+            res += stre
         return res
 
     def _object_doc2(self, obj):
         modobj = self.pool.get(obj)
-	strdocs= modobj.__doc__
-	if not strdocs:
-		return None
-	else:
-		strdocs=strdocs.strip().splitlines(True)
-	res = []
-	fou = False
-	for stre in strdocs:
-		if fou:
-			res.append(stre.strip())
-		elif not stre or stre.isspace():
-			fou = True
+        strdocs= modobj.__doc__
+        if not strdocs:
+            return None
+        else:
+            strdocs=strdocs.strip().splitlines(True)
+        res = []
+        fou = False
+        for stre in strdocs:
+            if fou:
+                res.append(stre.strip())
+            elif not stre or stre.isspace():
+                fou = True
         return res
 
     def _object_find(self, module):

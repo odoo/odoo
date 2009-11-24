@@ -22,28 +22,28 @@
 
 
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
-		('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
-		('Helvetica',"DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
-		('Helvetica',"DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
-		('Times',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
-		('Times',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
-		('Times',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
-		('Times',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
-		('Times-Roman',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
-		('Times-Roman',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
-		('Times-Roman',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
-		('Times-Roman',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
-		('ZapfDingbats',"DejaVu Serif", "DejaVuSerif.ttf", 'normal'),
-		('ZapfDingbats',"DejaVu Serif Bold", "DejaVuSerif-Bold.ttf", 'bold'),
-		('ZapfDingbats',"DejaVu Serif Italic", "DejaVuSerif-Italic.ttf", 'italic'),
-		('ZapfDingbats',"DejaVu Serif BoldItalic", "DejaVuSerif-BoldItalic.ttf", 'bolditalic'),
-		('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
-		('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
-		('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
-		('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
+        ('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
+        ('Helvetica',"DejaVu Sans Oblique", "DejaVuSans-Oblique.ttf", 'italic'),
+        ('Helvetica',"DejaVu Sans BoldOblique", "DejaVuSans-BoldOblique.ttf", 'bolditalic'),
+        ('Times',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
+        ('Times',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
+        ('Times',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
+        ('Times',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
+        ('Times-Roman',"Liberation Serif", "LiberationSerif-Regular.ttf", 'normal'),
+        ('Times-Roman',"Liberation Serif Bold", "LiberationSerif-Bold.ttf", 'bold'),
+        ('Times-Roman',"Liberation Serif Italic", "LiberationSerif-Italic.ttf", 'italic'),
+        ('Times-Roman',"Liberation Serif BoldItalic", "LiberationSerif-BoldItalic.ttf", 'bolditalic'),
+        ('ZapfDingbats',"DejaVu Serif", "DejaVuSerif.ttf", 'normal'),
+        ('ZapfDingbats',"DejaVu Serif Bold", "DejaVuSerif-Bold.ttf", 'bold'),
+        ('ZapfDingbats',"DejaVu Serif Italic", "DejaVuSerif-Italic.ttf", 'italic'),
+        ('ZapfDingbats',"DejaVu Serif BoldItalic", "DejaVuSerif-BoldItalic.ttf", 'bolditalic'),
+        ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
+        ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
+        ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
+        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
 def SetCustomFonts(rmldoc):
-	for name, font, fname, mode in CustomTTFonts:
-		rmldoc.setTTFontMapping(name, font,fname, mode)
+    for name, font, fname, mode in CustomTTFonts:
+        rmldoc.setTTFontMapping(name, font,fname, mode)
 
 #eof

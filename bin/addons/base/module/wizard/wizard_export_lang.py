@@ -80,7 +80,7 @@ class wizard_export_lang(osv.osv_memory):
                                        ) ),
             }
     _defaults = { 'state': lambda *a: 'choose',
-    		  'name': lambda *a: 'lang.tar.gz'
+                  'name': lambda *a: 'lang.tar.gz'
                 }
 wizard_export_lang()
 

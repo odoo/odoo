@@ -205,9 +205,9 @@ class browse_record(object):
                                 d[n].set_value(self._cr, self._uid, d[n], self, f, lang_obj)
 
 
-	    if not datas:
-		    # Where did those ids come from? Perhaps old entries in ir_model_data?
-		    raise except_orm('NoDataError', 'Field %s in %s%s'%(name,self._table_name,str(ids)))
+            if not datas:
+                # Where did those ids come from? Perhaps old entries in ir_model_data?
+                raise except_orm('NoDataError', 'Field %s in %s%s'%(name,self._table_name,str(ids)))
             # create browse records for 'remote' objects
             for data in datas:
                 for n, f in ffields:
@@ -228,12 +228,12 @@ class browse_record(object):
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
                         data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                 self._data[data['id']].update(data)
-	if not name in self._data[self._id]:
-		#how did this happen?
-		logger = netsvc.Logger()
-		logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Ffields: %s, datas: %s"%(str(fffields),str(datas)))
-		logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Data: %s, Table: %s"%(str(self._data[self._id]),str(self._table)))
-		raise AttributeError(_('Unknown attribute %s in %s ') % (str(name),self._table_name))
+        if not name in self._data[self._id]:
+            #how did this happen?
+            logger = netsvc.Logger()
+            logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Ffields: %s, datas: %s"%(str(fffields),str(datas)))
+            logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Data: %s, Table: %s"%(str(self._data[self._id]),str(self._table)))
+            raise AttributeError(_('Unknown attribute %s in %s ') % (str(name),self._table_name))
         return self._data[self._id][name]
 
     def __getattr__(self, name):
@@ -671,10 +671,10 @@ class orm_template(object):
                             else:
                                 module, xml_id = current_module, line[i]
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-			    res_res_id = ir_model_data_obj.read(cr, uid, [id],
-                                    ['res_id'])
-			    if res_res_id:
-				    res_id = res_res_id[0]['res_id']
+                            res_res_id = ir_model_data_obj.read(cr, uid, [id],
+                                                ['res_id'])
+                            if res_res_id:
+                                res_id = res_res_id[0]['res_id']
                     row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
@@ -962,7 +962,7 @@ class orm_template(object):
                             and getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
 
-		#TODO: optimize
+                #TODO: optimize
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
@@ -1373,7 +1373,7 @@ class orm_template(object):
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
-	
+    
         xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
@@ -1454,7 +1454,7 @@ class orm_template(object):
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
-	#FIXME: collect all calls to _get_source into one SQL call.
+        #FIXME: collect all calls to _get_source into one SQL call.
         for lang in langs:
             res[lang] = {'code': lang}
             for f in fields:
@@ -1476,7 +1476,7 @@ class orm_template(object):
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
         self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
-	#FIXME: try to only call the translation in one SQL
+        #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
                 if field in self._columns:
@@ -1897,20 +1897,20 @@ class orm(orm_template):
                                "AND c.oid=a.attrelid " \
                                "AND a.atttypid=t.oid", (self._table, k))
                     res = cr.dictfetchall()
-		    if not res and hasattr(f,'oldname'):
-				cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-					"FROM pg_class c,pg_attribute a,pg_type t " \
-					"WHERE c.relname=%s " \
-					"AND a.attname=%s " \
-					"AND c.oid=a.attrelid " \
-					"AND a.atttypid=t.oid", (self._table, f.oldname))
-				res_old = cr.dictfetchall()
-                                logger.notifyChannel('orm', netsvc.LOG_DEBUG, 'trying to rename %s(%s) to %s'% (self._table, f.oldname, k))
-				if res_old and len(res_old)==1:
-					cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % ( self._table,f.oldname, k))
-					res = res_old
-					res[0]['attname'] = k
-				
+                    if not res and hasattr(f,'oldname'):
+                        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+                            "FROM pg_class c,pg_attribute a,pg_type t " \
+                            "WHERE c.relname=%s " \
+                            "AND a.attname=%s " \
+                            "AND c.oid=a.attrelid " \
+                            "AND a.atttypid=t.oid", (self._table, f.oldname))
+                        res_old = cr.dictfetchall()
+                        logger.notifyChannel('orm', netsvc.LOG_DEBUG, 'trying to rename %s(%s) to %s'% (self._table, f.oldname, k))
+                        if res_old and len(res_old)==1:
+                            cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % ( self._table,f.oldname, k))
+                            res = res_old
+                            res[0]['attname'] = k
+                
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -2342,7 +2342,7 @@ class orm(orm_template):
                 continue
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
-		#TODO: optimize out of this loop
+                #TODO: optimize out of this loop
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
                     r[f] = res_trans.get(r['id'], False) or r[f]
@@ -2658,7 +2658,7 @@ class orm(orm_template):
                             'where id in ('+ids_str+')', upd1)
 
             if totranslate:
-		# TODO: optimize
+                # TODO: optimize
                 for f in direct:
                     if self._columns[f].translate:
                         src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
@@ -3189,7 +3189,7 @@ class orm(orm_template):
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
-	#TODO: optimize translations
+        #TODO: optimize translations
         trans_name=''
         for f in fields:
             trans_flag=True

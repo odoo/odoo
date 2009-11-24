@@ -37,115 +37,115 @@ from BaseHTTPServer import *
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 class AuthRequiredExc(Exception):
-	def __init__(self,atype,realm):
-		Exception.__init__(self)
-		self.atype = atype
-		self.realm = realm
-		
+    def __init__(self,atype,realm):
+        Exception.__init__(self)
+        self.atype = atype
+        self.realm = realm
+        
 class AuthRejectedExc(Exception):
-	pass
+    pass
 
 class AuthProvider:
-	def __init__(self,realm):
-		self.realm = realm
+    def __init__(self,realm):
+        self.realm = realm
 
-	def setupAuth(self, multi,handler):
-		""" Attach an AuthProxy object to handler
-		"""
-		pass
+    def setupAuth(self, multi,handler):
+        """ Attach an AuthProxy object to handler
+        """
+        pass
 
-	def authenticate(self, user, passwd, client_address):
-		return False
-		
-	def log(self, msg):
-		print msg
+    def authenticate(self, user, passwd, client_address):
+        return False
+        
+    def log(self, msg):
+        print msg
 
 class BasicAuthProvider(AuthProvider):
-	def setupAuth(self, multi, handler):
-		if not multi.sec_realms.has_key(self.realm):
-			multi.sec_realms[self.realm] = BasicAuthProxy(self)
-			
+    def setupAuth(self, multi, handler):
+        if not multi.sec_realms.has_key(self.realm):
+            multi.sec_realms[self.realm] = BasicAuthProxy(self)
+            
 
 class AuthProxy:
-	""" This class will hold authentication information for a handler,
-	    i.e. a connection
-	"""
-	def __init__(self, provider):
-		self.provider = provider
+    """ This class will hold authentication information for a handler,
+        i.e. a connection
+    """
+    def __init__(self, provider):
+        self.provider = provider
 
-	def checkRequest(self,handler,path = '/'):
-		""" Check if we are allowed to process that request
-		"""
-		pass
+    def checkRequest(self,handler,path = '/'):
+        """ Check if we are allowed to process that request
+        """
+        pass
 
 class BasicAuthProxy(AuthProxy):
-	""" Require basic authentication..
-	"""
-	def __init__(self,provider):
-		AuthProxy.__init__(self,provider)
-		self.auth_creds = None
-		self.auth_tries = 0
+    """ Require basic authentication..
+    """
+    def __init__(self,provider):
+        AuthProxy.__init__(self,provider)
+        self.auth_creds = None
+        self.auth_tries = 0
 
-	def checkRequest(self,handler,path = '/'):
-		if self.auth_creds:
-			return True
-		auth_str = handler.headers.get('Authorization',False)
-		if auth_str and auth_str.startswith('Basic '):
-			auth_str=auth_str[len('Basic '):]
-			(user,passwd) = base64.decodestring(auth_str).split(':')
-			self.provider.log("Found user=\"%s\", passwd=\"%s\"" %(user,passwd))
-			self.auth_creds = self.provider.authenticate(user,passwd,handler.client_address)
-			if self.auth_creds:
-				return True
-		if self.auth_tries > 5:
-			self.provider.log("Failing authorization after 5 requests w/o password")
-			raise AuthRejectedExc("Authorization failed.")
-		self.auth_tries += 1
-		raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
+    def checkRequest(self,handler,path = '/'):
+        if self.auth_creds:
+            return True
+        auth_str = handler.headers.get('Authorization',False)
+        if auth_str and auth_str.startswith('Basic '):
+            auth_str=auth_str[len('Basic '):]
+            (user,passwd) = base64.decodestring(auth_str).split(':')
+            self.provider.log("Found user=\"%s\", passwd=\"%s\"" %(user,passwd))
+            self.auth_creds = self.provider.authenticate(user,passwd,handler.client_address)
+            if self.auth_creds:
+                return True
+        if self.auth_tries > 5:
+            self.provider.log("Failing authorization after 5 requests w/o password")
+            raise AuthRejectedExc("Authorization failed.")
+        self.auth_tries += 1
+        raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
 
 
 class HTTPHandler(SimpleHTTPRequestHandler):
-	def __init__(self,request, client_address, server):
-		SimpleHTTPRequestHandler.__init__(self,request,client_address,server)
-		# print "Handler for %s inited" % str(client_address)
-		self.protocol_version = 'HTTP/1.1'
-		self.connection = dummyconn()
-	
-	def handle(self):
-		""" Classes here should NOT handle inside their constructor
-		"""
-		pass
-	
-	def finish(self):
-		pass
-	
-	def setup(self):
-		pass
+    def __init__(self,request, client_address, server):
+        SimpleHTTPRequestHandler.__init__(self,request,client_address,server)
+        # print "Handler for %s inited" % str(client_address)
+        self.protocol_version = 'HTTP/1.1'
+        self.connection = dummyconn()
+    
+    def handle(self):
+        """ Classes here should NOT handle inside their constructor
+        """
+        pass
+    
+    def finish(self):
+        pass
+    
+    def setup(self):
+        pass
 
 class HTTPDir:
-	""" A dispatcher class, like a virtual folder in httpd
-	"""
-	def __init__(self,path,handler, auth_provider = None):
-		self.path = path
-		self.handler = handler
-		self.auth_provider = auth_provider
-		
-	def matches(self, request):
-		""" Test if some request matches us. If so, return
-		    the matched path. """
-		if request.startswith(self.path):
-			return self.path
-		return False
+    """ A dispatcher class, like a virtual folder in httpd
+    """
+    def __init__(self,path,handler, auth_provider = None):
+        self.path = path
+        self.handler = handler
+        self.auth_provider = auth_provider
+        
+    def matches(self, request):
+        """ Test if some request matches us. If so, return
+            the matched path. """
+        if request.startswith(self.path):
+            return self.path
+        return False
 
 class noconnection:
-	""" a class to use instead of the real connection
-	"""
-	def makefile(self, mode, bufsize):
-		return None
+    """ a class to use instead of the real connection
+    """
+    def makefile(self, mode, bufsize):
+        return None
 
 class dummyconn:
-	def shutdown(self, tru):
-		pass
+    def shutdown(self, tru):
+        pass
 
 def _quote_html(html):
     return html.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -168,7 +168,7 @@ class FixSendError:
         self.send_response(code, message)
         self.send_header("Content-Type", self.error_content_type)
         self.send_header('Connection', 'close')
-	self.send_header('Content-Length', len(content) or 0)
+        self.send_header('Content-Length', len(content) or 0)
         self.end_headers()
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
@@ -176,65 +176,65 @@ class FixSendError:
 class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
-	
-	The handler will also have *one* dict of authentication proxies,
-	groupped by their realm.
+    
+        The handler will also have *one* dict of authentication proxies,
+        groupped by their realm.
     """
 
     protocol_version = "HTTP/1.1"
-    default_request_version = "HTTP/0.9"	# compatibility with py2.5
+    default_request_version = "HTTP/0.9"    # compatibility with py2.5
     
     auth_required_msg = """ <html><head><title>Authorization required</title></head>
     <body>You must authenticate to use this service</body><html>\r\r"""
 
     def __init__(self, request, client_address, server):
-	self.in_handlers = {}
-	self.sec_realms = {}
-	SocketServer.StreamRequestHandler.__init__(self,request,client_address,server)
-	self.log_message("MultiHttpHandler init for %s" %(str(client_address)))
+        self.in_handlers = {}
+        self.sec_realms = {}
+        SocketServer.StreamRequestHandler.__init__(self,request,client_address,server)
+        self.log_message("MultiHttpHandler init for %s" %(str(client_address)))
 
     def _handle_one_foreign(self,fore, path, auth_provider):
         """ This method overrides the handle_one_request for *children*
             handlers. It is required, since the first line should not be
-	    read again..
+            read again..
 
         """
         fore.raw_requestline = "%s %s %s\n" % (self.command, path, self.version)
         if not fore.parse_request(): # An error code has been sent, just exit
             return
-	self.request_version = fore.request_version
-	if auth_provider and auth_provider.realm:
-		try:
-			self.sec_realms[auth_provider.realm].checkRequest(fore,path)
-		except AuthRequiredExc,ae:
-			if self.request_version != 'HTTP/1.1':
-				self.log_error("Cannot require auth at %s",self.request_version)
-				self.send_error(401)
-				return
-			self._get_ignore_body(fore) # consume any body that came, not loose sync with input
-			self.send_response(401,'Authorization required')
-			self.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
-			self.send_header('Connection', 'keep-alive')
-			self.send_header('Content-Type','text/html')
-			self.send_header('Content-Length',len(self.auth_required_msg))
-			self.end_headers()
-			self.wfile.write(self.auth_required_msg)
-			return
-		except AuthRejectedExc,e:
-			self.log_error("Rejected auth: %s" % e.args[0])
-			self.send_error(401,e.args[0])
-			self.close_connection = 1
-			return
+        self.request_version = fore.request_version
+        if auth_provider and auth_provider.realm:
+            try:
+                self.sec_realms[auth_provider.realm].checkRequest(fore,path)
+            except AuthRequiredExc,ae:
+                if self.request_version != 'HTTP/1.1':
+                    self.log_error("Cannot require auth at %s",self.request_version)
+                    self.send_error(401)
+                    return
+                self._get_ignore_body(fore) # consume any body that came, not loose sync with input
+                self.send_response(401,'Authorization required')
+                self.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
+                self.send_header('Connection', 'keep-alive')
+                self.send_header('Content-Type','text/html')
+                self.send_header('Content-Length',len(self.auth_required_msg))
+                self.end_headers()
+                self.wfile.write(self.auth_required_msg)
+                return
+            except AuthRejectedExc,e:
+                self.log_error("Rejected auth: %s" % e.args[0])
+                self.send_error(401,e.args[0])
+                self.close_connection = 1
+                return
         mname = 'do_' + fore.command
         if not hasattr(fore, mname):
             fore.send_error(501, "Unsupported method (%r)" % fore.command)
             return
-	fore.close_connection = 0
+        fore.close_connection = 0
         method = getattr(fore, mname)
         method()
-	if fore.close_connection:
-		# print "Closing connection because of handler"
-		self.close_connection = fore.close_connection
+        if fore.close_connection:
+            # print "Closing connection because of handler"
+            self.close_connection = fore.close_connection
 
     def parse_rawline(self):
         """Parse a request (internal).
@@ -295,67 +295,67 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
         else:
             self.send_error(400, "Bad request syntax (%r)" % requestline)
             return False
-	self.request_version = version
-	self.command, self.path, self.version = command, path, version
-	return True
+        self.request_version = version
+        self.command, self.path, self.version = command, path, version
+        return True
 
     def handle_one_request(self):
         """Handle a single HTTP request.
-	   Dispatch to the correct handler.
+           Dispatch to the correct handler.
         """
-	self.request.setblocking(True)
+        self.request.setblocking(True)
         self.raw_requestline = self.rfile.readline()
-	if not self.raw_requestline:
-		self.close_connection = 1
-		# self.log_message("no requestline, connection closed?")
-		return
-	if not self.parse_rawline():
-		self.log_message("Could not parse rawline.")
-		return
+        if not self.raw_requestline:
+            self.close_connection = 1
+            # self.log_message("no requestline, connection closed?")
+            return
+        if not self.parse_rawline():
+            self.log_message("Could not parse rawline.")
+            return
         # self.parse_request(): # Do NOT parse here. the first line should be the only 
-	for vdir in self.server.vdirs:
-		p = vdir.matches(self.path)
-		if p == False:
-			continue
-		npath = self.path[len(p):]
-		if not npath.startswith('/'):
-			npath = '/' + npath
+        for vdir in self.server.vdirs:
+            p = vdir.matches(self.path)
+            if p == False:
+                continue
+            npath = self.path[len(p):]
+            if not npath.startswith('/'):
+                npath = '/' + npath
 
-		if not self.in_handlers.has_key(p):
-			self.in_handlers[p] = vdir.handler(noconnection(),self.client_address,self.server)
-			if vdir.auth_provider:
-				vdir.auth_provider.setupAuth(self, self.in_handlers[p])
-		hnd = self.in_handlers[p]
-		hnd.rfile = self.rfile
-		hnd.wfile = self.wfile
-		self.rlpath = self.raw_requestline
-		self._handle_one_foreign(hnd,npath, vdir.auth_provider)
-		# print "Handled, closing = ", self.close_connection
-		return
-	# if no match:
+            if not self.in_handlers.has_key(p):
+                self.in_handlers[p] = vdir.handler(noconnection(),self.client_address,self.server)
+                if vdir.auth_provider:
+                    vdir.auth_provider.setupAuth(self, self.in_handlers[p])
+            hnd = self.in_handlers[p]
+            hnd.rfile = self.rfile
+            hnd.wfile = self.wfile
+            self.rlpath = self.raw_requestline
+            self._handle_one_foreign(hnd,npath, vdir.auth_provider)
+            # print "Handled, closing = ", self.close_connection
+            return
+        # if no match:
         self.send_error(404, "Path not found: %s" % self.path)
         return
 
     def _get_ignore_body(self,fore):
-	if not fore.headers.has_key("content-length"):
-		return
-	max_chunk_size = 10*1024*1024
-	size_remaining = int(fore.headers["content-length"])
-	got = ''
-	while size_remaining:
-		chunk_size = min(size_remaining, max_chunk_size)
-		got = fore.rfile.read(chunk_size)
-		size_remaining -= len(got)
+        if not fore.headers.has_key("content-length"):
+            return
+        max_chunk_size = 10*1024*1024
+        size_remaining = int(fore.headers["content-length"])
+        got = ''
+        while size_remaining:
+            chunk_size = min(size_remaining, max_chunk_size)
+            got = fore.rfile.read(chunk_size)
+            size_remaining -= len(got)
 
 
 class SecureMultiHTTPHandler(MultiHTTPHandler):
     def getcert_fnames(self):
-	""" Return a pair with the filenames of ssl cert,key
-	
-	    Override this to direct to other filenames
-	"""
-	return ('server.cert','server.key')
-	
+        """ Return a pair with the filenames of ssl cert,key
+        
+            Override this to direct to other filenames
+        """
+        return ('server.cert','server.key')
+    
     def setup(self):
         import ssl
         certfile, keyfile = self.getcert_fnames()
@@ -386,10 +386,10 @@ import threading
 class ConnThreadingMixIn:
     """Mix-in class to handle each _connection_ in a new thread.
     
-	This is necessary for persistent connections, where multiple
-	requests should be handled synchronously at each connection, but
-	multiple connections can run in parallel.
-	"""
+       This is necessary for persistent connections, where multiple
+       requests should be handled synchronously at each connection, but
+       multiple connections can run in parallel.
+    """
 
     # Decides how threads will act upon termination of the
     # main process
@@ -401,7 +401,7 @@ class ConnThreadingMixIn:
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
-	
+    
     def _handle_request2(self):
         """Handle one request, without blocking.
 

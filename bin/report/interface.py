@@ -80,7 +80,7 @@ class report_rml(report_int):
             'html': self.create_html,
             'raw': self.create_raw,
             'sxw': self.create_sxw,
-	    'txt': self.create_txt,
+            'txt': self.create_txt,
             'odt': self.create_odt,
             'html2html' : self.create_html2html,
             'makohtml2html' :self.create_makohtml2html,

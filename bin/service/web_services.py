@@ -51,23 +51,23 @@ class db(netsvc.ExportService):
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
     def dispatch(self, method, auth, params):
-	if method in [ 'create', 'get_progress', 'drop', 'dump', 
-		'restore', 'rename', 
-		'change_admin_password', 'migrate_databases' ]:
-		passwd = params[0]
-		params = params[1:]
-		security.check_super(passwd)
-	elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
-		# params = params
-		# No security check for these methods
-		pass
-	else:
-		raise KeyError("Method not found: %s" % method)
-	fn = getattr(self, 'exp_'+method)
-	return fn(*params)
-	
+        if method in [ 'create', 'get_progress', 'drop', 'dump', 
+            'restore', 'rename', 
+            'change_admin_password', 'migrate_databases' ]:
+            passwd = params[0]
+            params = params[1:]
+            security.check_super(passwd)
+        elif method in [ 'db_exist', 'list', 'list_lang', 'server_version' ]:
+            # params = params
+            # No security check for these methods
+            pass
+        else:
+            raise KeyError("Method not found: %s" % method)
+        fn = getattr(self, 'exp_'+method)
+        return fn(*params)
+    
     def new_dispatch(self,method,auth,params):
-	pass
+        pass
 
     def exp_create(self, db_name, demo, lang, user_password='admin'):
         self.id_protect.acquire()
@@ -366,15 +366,15 @@ class _ObjectService(netsvc.ExportService):
      "A common base class for those who have fn(db, uid, password,...) "
 
      def common_dispatch(self, method, auth, params):
-	(db, uid, passwd ) = params[0:3]
-	params = params[3:]
-	security.check(db,uid,passwd)
-	cr = pooler.get_db(db).cursor()
-	fn = getattr(self, 'exp_'+method)
-	res = fn(cr, uid, *params)
-	cr.commit()
-	cr.close()
-	return res
+        (db, uid, passwd ) = params[0:3]
+        params = params[3:]
+        security.check(db,uid,passwd)
+        cr = pooler.get_db(db).cursor()
+        fn = getattr(self, 'exp_'+method)
+        res = fn(cr, uid, *params)
+        cr.commit()
+        cr.close()
+        return res
 
 class common(_ObjectService):
     def __init__(self,name="common"):
@@ -382,36 +382,36 @@ class common(_ObjectService):
         self.joinGroup("web-services")
 
     def dispatch(self, method, auth, params):
-	logger = netsvc.Logger()
-	if method in [ 'ir_set','ir_del', 'ir_get' ]:
-		return self.common_dispatch(method,auth,params)
-	if method == 'login':
-		# At this old dispatcher, we do NOT update the auth proxy
-		res = security.login(params[0], params[1], params[2])
-		msg = res and 'successful login' or 'bad login or password'
-		# TODO log the client ip address..
-		logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
-		return res or False
-	elif method == 'logout':
-		if auth:
-			auth.logout(params[1])
-		logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
-		return True
-	elif method in ['about', 'timezone_get', 'get_server_environment', 'login_message', 'get_stats' ]:
-		pass
-	elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
-		passwd = params[0]
-		params = params[1:]
-		security.check_super(passwd)
-	else:
-		raise Exception("Method not found: %s" % method)
-	
-	fn = getattr(self, 'exp_'+method)
-	return fn(*params)
+        logger = netsvc.Logger()
+        if method in [ 'ir_set','ir_del', 'ir_get' ]:
+            return self.common_dispatch(method,auth,params)
+        if method == 'login':
+            # At this old dispatcher, we do NOT update the auth proxy
+            res = security.login(params[0], params[1], params[2])
+            msg = res and 'successful login' or 'bad login or password'
+            # TODO log the client ip address..
+            logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
+            return res or False
+        elif method == 'logout':
+            if auth:
+                auth.logout(params[1])
+            logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
+            return True
+        elif method in ['about', 'timezone_get', 'get_server_environment', 'login_message', 'get_stats' ]:
+            pass
+        elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
+            passwd = params[0]
+            params = params[1:]
+            security.check_super(passwd)
+        else:
+            raise Exception("Method not found: %s" % method)
+        
+        fn = getattr(self, 'exp_'+method)
+        return fn(*params)
 
 
     def new_dispatch(self,method,auth,params):
-	pass
+        pass
 
     def exp_ir_set(self, cr, uid, keys, args, name, value, replace=True, isobject=False):
         res = ir.ir_set(cr,uid, keys, args, name, value, replace, isobject)
@@ -574,7 +574,7 @@ GNU Public Licence.
     def exp_get_stats(self):
         import threading
         res = "OpenERP server: %d threads\n" % threading.active_count()
-	res += netsvc.Server.allStats()
+        res += netsvc.Server.allStats()
         return res
 
 common()
@@ -585,19 +585,19 @@ class objects_proxy(netsvc.ExportService):
         self.joinGroup('web-services')
 
     def dispatch(self, method, auth, params):
-	(db, uid, passwd ) = params[0:3]
-	params = params[3:]
-	if method not in ['execute','exec_workflow','obj_list']:
-		raise KeyError("Method not supported %s" % method)
-	security.check(db,uid,passwd)
-	ls = netsvc.LocalService('object_proxy')
-	fn = getattr(ls, method)
-	res = fn(db, uid, *params)
-	return res
+        (db, uid, passwd ) = params[0:3]
+        params = params[3:]
+        if method not in ['execute','exec_workflow','obj_list']:
+            raise KeyError("Method not supported %s" % method)
+        security.check(db,uid,passwd)
+        ls = netsvc.LocalService('object_proxy')
+        fn = getattr(ls, method)
+        res = fn(db, uid, *params)
+        return res
 
-	
+    
     def new_dispatch(self,method,auth,params):
-	pass
+        pass
 
 objects_proxy()
 
@@ -623,17 +623,17 @@ class wizard(netsvc.ExportService):
         self.wiz_uid = {}
 
     def dispatch(self, method, auth, params):
-	(db, uid, passwd ) = params[0:3]
-	params = params[3:]
-	if method not in ['execute','create']:
-		raise KeyError("Method not supported %s" % method)
-	security.check(db,uid,passwd)
-	fn = getattr(self, 'exp_'+method)
-	res = fn(db, uid, *params)
-	return res
-	
+        (db, uid, passwd ) = params[0:3]
+        params = params[3:]
+        if method not in ['execute','create']:
+            raise KeyError("Method not supported %s" % method)
+        security.check(db,uid,passwd)
+        fn = getattr(self, 'exp_'+method)
+        res = fn(db, uid, *params)
+        return res
+    
     def new_dispatch(self,method,auth,params):
-	pass
+        pass
 
     def _execute(self, db, uid, wiz_id, datas, action, context):
         self.wiz_datas[wiz_id].update(datas)
@@ -685,18 +685,18 @@ class report_spool(netsvc.ExportService):
         self.id_protect = threading.Semaphore()
 
     def dispatch(self, method, auth, params):
-	(db, uid, passwd ) = params[0:3]
-	params = params[3:]
-	if method not in ['report','report_get']:
-		raise KeyError("Method not supported %s" % method)
-	security.check(db,uid,passwd)
-	fn = getattr(self, 'exp_' + method)
-	res = fn(db, uid, *params)
-	return res
+        (db, uid, passwd ) = params[0:3]
+        params = params[3:]
+        if method not in ['report','report_get']:
+            raise KeyError("Method not supported %s" % method)
+        security.check(db,uid,passwd)
+        fn = getattr(self, 'exp_' + method)
+        res = fn(db, uid, *params)
+        return res
 
-	
+    
     def new_dispatch(self,method,auth,params):
-	pass
+        pass
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if not datas:

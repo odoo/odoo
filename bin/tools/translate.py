@@ -133,12 +133,12 @@ class GettextAlias(object):
             return source
 
         cr = frame.f_locals.get('cr')
-	try:
-        	lang = (frame.f_locals.get('context') or {}).get('lang', False)
-		if not (lang and cr):
-			return source
-	except:
-		return source
+        try:
+            lang = (frame.f_locals.get('context') or {}).get('lang', False)
+            if not (lang and cr):
+                return source
+        except:
+            return source
 
         cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
         res_trans = cr.fetchone()
@@ -154,7 +154,7 @@ class TinyPoFile(object):
     def __iter__(self):
         self.buffer.seek(0)
         self.lines = self._get_lines()
-	self.lines_count = len(self.lines);
+        self.lines_count = len(self.lines);
 
         self.first = True
         self.tnrs= []
@@ -170,7 +170,7 @@ class TinyPoFile(object):
         return lines
 
     def cur_line(self):
-	return (self.lines_count - len(self.lines))
+        return (self.lines_count - len(self.lines))
 
     def next(self):
         def unquote(str):
@@ -185,30 +185,30 @@ class TinyPoFile(object):
         else:
             tmp_tnrs = []
             line = None
-	    fuzzy = False
+            fuzzy = False
             while (not line):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
                 if line.startswith('#:'):
-		    if ' ' in line[2:].strip():
-			for lpart in line[2:].strip().split(' '):
-				tmp_tnrs.append(lpart.strip().split(':',2))
-		    else:
+                    if ' ' in line[2:].strip():
+                        for lpart in line[2:].strip().split(' '):
+                            tmp_tnrs.append(lpart.strip().split(':',2))
+                    else:
                         tmp_tnrs.append( line[2:].strip().split(':',2) )
-		elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
-			fuzzy = True
+                elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
+                    fuzzy = True
                 line = self.lines.pop(0).strip()
             while not line:
                 # allow empty lines between comments and msgid
                 line = self.lines.pop(0).strip()
-	    if line.startswith('#~ '):
-		while line.startswith('#~ ') or not line.strip():
-		    if 0 == len(self.lines):
+            if line.startswith('#~ '):
+                while line.startswith('#~ ') or not line.strip():
+                    if 0 == len(self.lines):
                         raise StopIteration()
-		    line = self.lines.pop(0)
-		# This has been a deprecated entry, don't return anything
-		return self.next()
+                    line = self.lines.pop(0)
+                # This has been a deprecated entry, don't return anything
+                return self.next()
 
 
             if not line.startswith('msgid'):
@@ -242,9 +242,9 @@ class TinyPoFile(object):
                     self.tnrs.append((t, n, r, source, trad))
 
         self.first = False
-	
-	if name == None:
-		return self.next()
+    
+        if name == None:
+            return self.next()
         return type, name, res_id, source, trad
 
     def write_infos(self, modules):
@@ -279,7 +279,7 @@ class TinyPoFile(object):
         def quote(s):
             return '"%s"' % s.replace('"','\\"') \
                              .replace('\n', '\\n"\n"') \
-			     .replace(' \\ ',' \\\\ ')
+                             .replace(' \\ ',' \\\\ ')
 
 
         plurial = len(modules) > 1 and 's' or ''
@@ -490,9 +490,9 @@ def trans_generate(lang, modules, dbname=None):
                         }
 
                         # export fields
-			if not result.has_key('fields'):
-				logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
-				continue
+                        if not result.has_key('fields'):
+                            logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
+                            continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
 
@@ -517,11 +517,11 @@ def trans_generate(lang, modules, dbname=None):
                             push_translation(module, 'wizard_button', res_name, 0, button_label)
 
         elif model=='ir.model.fields':
-	    try:
+            try:
                 field_name = encode(obj.name)
-	    except AttributeError, exc:
-	        logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
-	        continue
+            except AttributeError, exc:
+                logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
+                continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
                 continue
@@ -578,28 +578,28 @@ def trans_generate(lang, modules, dbname=None):
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
-		try:
+                try:
                     trad = getattr(obj, field_name) or ''
-		except:
-		    trad = ''
+                except:
+                    trad = ''
                 push_translation(module, 'model', name, xml_name, encode(trad))
 
     # parse source code for _() calls
     def get_module_from_path(path,mod_paths=None):
-	if not mod_paths:
-		# First, construct a list of possible paths
-		def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
-		ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
-		mod_paths=[def_path]
-		for adp in ad_paths:
-			mod_paths.append(adp)
-			if not adp.startswith('/'):
-				mod_paths.append(os.path.join(def_path,adp))
-			elif adp.startswith(def_path):
-				mod_paths.append(adp[len(def_path)+1:])
-	
-	for mp in mod_paths:
-	    if path.startswith(mp) and (os.path.dirname(path) != mp):
+        if not mod_paths:
+            # First, construct a list of possible paths
+            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
+            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+            mod_paths=[def_path]
+            for adp in ad_paths:
+                mod_paths.append(adp)
+                if not adp.startswith('/'):
+                    mod_paths.append(os.path.join(def_path,adp))
+                elif adp.startswith(def_path):
+                    mod_paths.append(adp[len(def_path)+1:])
+        
+        for mp in mod_paths:
+            if path.startswith(mp) and (os.path.dirname(path) != mp):
                 path = path[len(mp)+1:]
                 return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
@@ -760,8 +760,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
 
                     # if the resource id (res_id) is in that list, use it,
                     # otherwise use the whole list
-		    if not ids:
-			ids = []
+                    if not ids:
+                        ids = []
                     ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
                     for id in ids:
                         dic['res_id'] = id

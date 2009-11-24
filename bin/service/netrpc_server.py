@@ -141,23 +141,23 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
             return False
 
     def stats(self):
-	res = "Net-RPC: " + ( (self.running and "running") or  "stopped")
-	i = 0
-	for t in self.threads:
-	    i += 1
-	    res += "\nNet-RPC #%d: %s " % (i, t.name)
-	    if t.isAlive():
-	        res += "running"
-	    else:
-	        res += "finished"
-	    if t.sock:
-		res += ", socket"
-	return res
+        res = "Net-RPC: " + ( (self.running and "running") or  "stopped")
+        i = 0
+        for t in self.threads:
+            i += 1
+            res += "\nNet-RPC #%d: %s " % (i, t.name)
+            if t.isAlive():
+                res += "running"
+            else:
+                res += "finished"
+            if t.sock:
+                res += ", socket"
+        return res
 
 netrpcd = None
 
 def init_servers():
-	global netrpcd
-	if tools.config.get_misc('netrpcd','enable', True):
-		netrpcd = TinySocketServerThread(tools.config.get_misc('netrpcd','interface', ''), \
-			tools.config.get_misc('netrpcd','port', 8070))
+    global netrpcd
+    if tools.config.get_misc('netrpcd','enable', True):
+        netrpcd = TinySocketServerThread(tools.config.get_misc('netrpcd','interface', ''), \
+            tools.config.get_misc('netrpcd','port', 8070))
