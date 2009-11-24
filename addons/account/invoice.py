@@ -105,23 +105,41 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         for inv in data_inv:
             debit = credit = 0.0
+            context.update({'date':inv.date_invoice})
+            context_unreconciled=context.copy()
             for lines in inv.move_lines:
-                if lines.account_id.company_currency_id.id <> inv.currency_id.id:
-                    if lines.debit:
-                        debit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.debit)
-                    if lines.credit:
-                        credit += cur_obj.compute(cr, uid, lines.account_id.company_currency_id.id, inv.currency_id.id, lines.credit)
+                debit_tmp = lines.debit
+                credit_tmp = lines.credit
+                # If currency conversion needed
+                if inv.company_id.currency_id.id <> inv.currency_id.id:
+                    # If invoice paid, compute currency amount according to invoice date
+                    # otherwise, take the line date
+                    if not inv.reconciled:
+                        context.update({'date':lines.date})
+                    context_unreconciled.update({'date':lines.date})
+                    # If amount currency setted, compute for debit and credit in company currency
+                    if lines.amount_currency < 0:
+                        credit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False,context=context_unreconciled))
+                    elif lines.amount_currency > 0:
+                        debit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False,context=context_unreconciled))
+                    # Then, recomput into invoice currency to avoid rounding trouble !
+                    debit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, debit_tmp, round=False,context=context)
+                    credit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, credit_tmp, round=False,context=context)
                 else:
-                    debit += lines.debit
-                    credit += lines.credit
-
+                    debit+=debit_tmp
+                    credit+=credit_tmp
+                    
             if not inv.amount_total:
                 result = 0.0
             elif inv.type in ('out_invoice','in_refund'):
-                result = inv.amount_total * (1.0 - credit / (debit + inv.amount_total))
+                amount = credit-debit
+                result = inv.amount_total - amount
             else:
-                result = inv.amount_total * (1.0 - debit / (credit + inv.amount_total))
-            res[inv.id] = round(result,int(config['price_accuracy']))
+                amount = debit-credit
+                result = inv.amount_total - amount
+            # Use is_zero function to avoid rounding trouble => should be fixed into ORM
+            res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id,result) and result or 0.0
+            
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -871,6 +889,16 @@ class account_invoice(osv.osv):
             date=context['date_p']
         else:
             date=time.strftime('%Y-%m-%d')
+            
+        # Take the amount in currency and the currency of the payment
+        if 'amount_currency' in context and context['amount_currency'] and 'currency_id' in context and context['currency_id']:
+            amount_currency = context['amount_currency']
+            currency_id = context['currency_id']
+        else:
+            amount_currency = False
+            currency_id = False
+            
+        # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
@@ -878,6 +906,8 @@ class account_invoice(osv.osv):
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
             'date': date,
+            'currency_id':currency_id,
+            'amount_currency':amount_currency and direction * amount_currency or 0.0,
         }
         l2 = {
             'debit': direction * pay_amount<0 and - direction * pay_amount,
@@ -886,6 +916,8 @@ class account_invoice(osv.osv):
             'partner_id': invoice.partner_id.id,
             'ref':invoice.number,
             'date': date,
+            'currency_id':currency_id,
+            'amount_currency':amount_currency and - direction * amount_currency or 0.0,
         }
 
         if not name:

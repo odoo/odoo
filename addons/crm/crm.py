@@ -755,7 +755,7 @@ class crm_case(osv.osv):
                 })
         return True
 
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
         for case in cases:
             data = {
                 'name': keyword,
@@ -769,7 +769,7 @@ class crm_case(osv.osv):
             obj = self.pool.get('crm.case.log')
             if history and case.description:
                 obj = self.pool.get('crm.case.history')
-                data['description'] = case.description
+                data['description'] = details or case.description
                 data['email'] = email or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or False
@@ -1048,6 +1048,7 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         'user_id': fields.many2one('res.users',"User"),
         'partner_id': fields.many2one('res.partner',"Partner"),
         'email': fields.char('Email', size=32),
+        'subject': fields.char('Subject', size=32),
     }
     
     def change_email(self, cr, uid, ids, user, partner):
@@ -1066,13 +1067,28 @@ class crm_email_add_cc_wizard(osv.osv_memory):
     
     
     def add_cc(self, cr, uid, ids, context={}):
-        email = self.read(cr, uid, ids[0])['email']
+        data = self.read(cr, uid, ids[0])
+        email = data['email']
+        subject = data['subject']
+
         if not context:
             return {}
         history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
         crm_case = self.pool.get('crm.case')
-        case_id = history_line.log_id.case_id.id
-        crm_case.write(cr, uid, case_id, {'email_cc' : email})
+        case = history_line.log_id.case_id
+        body = history_line.description.replace('\n','\n> ')              
+        flag = tools.email_send(
+            case.user_id.address_id.email,
+            [case.email_from],
+            subject or '['+str(case.id)+'] '+case.name,
+            crm_case.format_body(body),
+            email_cc = [email],
+            tinycrm=str(case.id)
+        )
+        if flag:
+            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})             
+        else:                    
+            raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))        
         return {}
     
 crm_email_add_cc_wizard()

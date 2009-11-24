@@ -159,7 +159,7 @@
             <field name="filter" eval="True"/>
         </record>
         <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_mypages" string="My Pages" 
-        action="action_wiki_mypages" groups="base.group_extended_menu"/>
+        action="action_wiki_mypages" groups="base.group_useability_extended"/>
         
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
@@ -173,7 +173,7 @@
             <field name="filter" eval="True"/>
         </record>
         <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_review" string="Pages Waiting Review" 
-        action="action_wiki_review" groups="base.group_extended_menu"/>
+        action="action_wiki_review" groups="base.group_useability_extended"/>
         
         <record model="ir.ui.view" id="view_wiki_history_tree">
             <field name="name">wiki.wiki.history.tree</field>

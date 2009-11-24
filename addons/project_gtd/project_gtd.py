@@ -158,17 +158,20 @@ class project_task(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
+        timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
-            search_extended ='''<newline/> <group colspan="2">'''
-            timebox_obj = self.pool.get('project.gtd.timebox')
-            for time in timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[])):
+            tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
+            search_extended ='''<newline/><group col="%d">''' % (len(tt)+6,)
+            search_extended += '''<filter domain="[('timebox_id','=', 0)]" icon="gtk-new" string="Inbox"/>'''
+            search_extended += '''<separator orientation="vertical"/>'''
+            for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += ''' <filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" help = "Task Related to ''' +  time.name  + ''' Timeboxs" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
-            search_extended += '''</group>
-            <group colspan="2">
+                search_extended += ''' <filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
+            search_extended += '''
+            <separator orientation="vertical"/>
             <field name="context_id" select="1" widget="selection"/> 
             <field name="priority" select="1"/>
             </group>

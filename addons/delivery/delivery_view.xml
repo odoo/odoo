@@ -168,7 +168,7 @@
             <field name="context">{'contact_display': 'partner'}</field>
             <field name="search_view_id" ref="stock.view_stock_delivery_filter"/>
         </record>
-        <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree" groups="base.group_extended_menu"/>
+        <menuitem action="action_picking_tree4" id="menu_action_picking_tree3" parent="stock.menu_action_picking_tree" groups="base.group_useability_extended"/>
 
         <record id="action_picking_tree5" model="ir.actions.act_window">
             <field name="name">Generate Draft Invoices On Receptions</field>
@@ -181,7 +181,7 @@
             <field name="context">{'contact_display': 'partner'}</field>
             <field name="search_view_id" ref="stock.view_stock_delivery_filter"/>
         </record>
-        <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="stock.menu_action_picking_tree4" groups="base.group_extended_menu"/>
+        <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="stock.menu_action_picking_tree4" groups="base.group_useability_extended"/>
 
     </data>
 </openerp>
