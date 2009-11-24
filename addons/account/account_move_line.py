@@ -387,7 +387,7 @@ class account_move_line(osv.osv):
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,int(tools.config['price_accuracy']))),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=2),
+        'company_id': fields.related('move_id','company_id',type='many2one',object='res.company',string='Company')
 
     }
 

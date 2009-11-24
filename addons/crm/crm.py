@@ -517,6 +517,7 @@ class crm_case(osv.osv):
 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'company_id': fields.many2one('res.company','Company'),
     }
     def _get_default_partner_address(self, cr, uid, context):
         if not context.get('portal',False):
