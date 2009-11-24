@@ -775,7 +775,12 @@ get_iso = {'ca_ES':'ca',
 'sv_SE': 'sv',
 'sq_AL': 'sq',
 'uk_UA': 'uk',
-'vi_VN': 'vi' }
+'vi_VN': 'vi',
+'af_ZA': 'af',
+'be_BY': 'be',
+'ja_JP': 'ja',
+'ko_KR': 'ko'
+}
 
 def get_iso_codes(lang):
     if lang in get_iso:
