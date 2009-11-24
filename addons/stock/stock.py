@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -419,9 +419,9 @@ class stock_picking(osv.osv):
             from
                 stock_move
             where
-                picking_id in (""" + ','.join(map(str, ids)) + """)
+                picking_id=ANY(%s)
             group by
-                picking_id""")
+                picking_id""",(ids,))
         for pick, dt1, dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
@@ -707,7 +707,7 @@ class stock_picking(osv.osv):
                     'name': (invoice.name or '') + ', ' + (picking.name or ''),
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
-                    'date_invoice':context.get('date_inv',False)                    
+                    'date_invoice':context.get('date_inv',False)
                 }
                 invoice_obj.write(cursor, user, [invoice_id], invoice_vals, context=context)
             else:
@@ -768,7 +768,7 @@ class stock_picking(osv.osv):
                     notes = move_line.sale_line_id.notes
                 elif move_line.purchase_line_id:
                     notes = move_line.purchase_line_id.notes
-                
+
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'origin': origin,
@@ -781,7 +781,7 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
-                    'note': notes,                    
+                    'note': notes,
                     }, context=context)
                 self._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
@@ -834,7 +834,6 @@ class stock_production_lot(osv.osv):
             ids = [ids]
 
         res = {}.fromkeys(ids, 0.0)
-
         if locations:
             cr.execute('''select
                     prodlot_id,
@@ -842,11 +841,7 @@ class stock_production_lot(osv.osv):
                 from
                     stock_report_prodlots
                 where
-                    location_id in ('''+','.join(map(str, locations))+''')  and
-                    prodlot_id in  ('''+','.join(map(str, ids))+''')
-                group by
-                    prodlot_id
-            ''')
+                    location_id =ANY(%s) and prodlot_id =ANY(%s) group by prodlot_id''',(locations,ids,))
             res.update(dict(cr.fetchall()))
         return res
 
@@ -858,11 +853,8 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id in ('''+','.join(map(str, locations)) + ''')
-            group by
-                prodlot_id
-            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2])
-        )
+                location_id =ANY(%s) group by prodlot_id
+            having  sum(name) '''+ str(args[0][1]) + str(args[0][2]),(locations,))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids
@@ -1163,8 +1155,8 @@ class stock_move(osv.osv):
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
-                    #in the same order. This is e.g. the case when using the button 'split in two' of 
-                    #the stock outgoing form                    
+                    #in the same order. This is e.g. the case when using the button 'split in two' of
+                    #the stock outgoing form
                     self.write(cr, uid, move.id, {'state':'assigned'})
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1

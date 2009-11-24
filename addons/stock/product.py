@@ -73,16 +73,12 @@ class product_product(osv.osv):
         else:
             location_ids= location_ids
 
-        states_str = ','.join(map(lambda s: "'%s'" % s, states))
-
         uoms_o = {}
         product2uom = {}
         for product in self.browse(cr, uid, ids, context=context):
             product2uom[product.id] = product.uom_id.id
             uoms_o[product.uom_id.id] = product.uom_id
 
-        prod_ids_str = ','.join(map(str, ids))
-        location_ids_str = ','.join(map(str, location_ids))
         results = []
         results2 = []
 
@@ -101,11 +97,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id not in ('+location_ids_str+') '\
-                'and location_dest_id in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom'
+                'where location_id <> ANY(%s)'\
+                'and location_dest_id =ANY(%s)'\
+                'and product_id =ANY(%s)'\
+                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
+                'group by product_id,product_uom',(location_ids,location_ids,ids,states,)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -113,11 +109,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id in ('+location_ids_str+') '\
-                'and location_dest_id not in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom'
+                'where location_id = ANY(%s)'\
+                'and location_dest_id <> ANY(%s) '\
+                'and product_id =ANY(%s)'\
+                'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
+                'group by product_id,product_uom',(location_ids,location_ids,ids,states,)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')

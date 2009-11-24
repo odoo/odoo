@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -56,7 +56,7 @@ def do_merge(self, cr, uid, data, context):
 
     cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     inv = cr.fetchall()
-    cr.execute('select distinct product_id from stock_move where (location_dest_id='+loc+') or (location_id='+loc+')')
+    cr.execute('select distinct product_id from stock_move where location_dest_id=%s or location_id=%s',(loc,loc,))
     stock = cr.fetchall()
     for s in stock:
         if (loc,s[0]) not in inv:
