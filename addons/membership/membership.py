@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -147,9 +147,7 @@ class membership_line(osv.osv):
             )
         JOIN account_invoice ai ON (
             ai.id = ail.invoice_id)
-        WHERE ml.id in (%s)
-        ''' % ','.join([str(id) for id in ids]))
-
+        WHERE ml.id =ANY(%s)''',(ids,))
         res = cr.fetchall()
         for r in res:
             if r[0] and r[0] < 0:
@@ -401,7 +399,7 @@ class Partner(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct associate_member from res_partner where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct associate_member from res_partner where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
