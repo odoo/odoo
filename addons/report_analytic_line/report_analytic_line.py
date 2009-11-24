@@ -20,27 +20,32 @@
 ##############################################################################
 
 from osv import fields,osv
+import tools
 
 class report_account_analytic_line_to_invoice(osv.osv):
     _name = "report.account.analytic.line.to.invoice"
     _description = "Analytic lines to invoice report"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
         'product_uom_id':fields.many2one('product.uom', 'UoM', readonly=True),
         'unit_amount': fields.float('Units', readonly=True),
         'sale_price': fields.float('Sale price', readonly=True),
         'amount': fields.float('Amount', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc, product_id asc, account_id asc'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_account_analytic_line_to_invoice')
         cr.execute("""
             CREATE OR REPLACE VIEW report_account_analytic_line_to_invoice AS (
                 SELECT
-                    DISTINCT(to_char(l.date,'YYYY-MM-DD')) AS name,
+                    DISTINCT(to_char(l.date,'MM')) as month,
+                    to_char(l.date, 'YYYY') as name,
                     MIN(l.id) AS id,
                     l.product_id,
                     l.account_id,
@@ -57,7 +62,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
                 WHERE
                     (invoice_id IS NULL) and (to_invoice IS NOT NULL)
                 GROUP BY
-                    to_char(l.date,'YYYY-MM-DD'), product_id, product_uom_id, account_id
+                    to_char(l.date, 'YYYY'), to_char(l.date,'MM'), product_id, product_uom_id, account_id
             )
         """)
 report_account_analytic_line_to_invoice()

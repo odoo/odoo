@@ -758,7 +758,7 @@ class account_move(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True,
-                                  help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Valid\' state.'),
+                                  help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
