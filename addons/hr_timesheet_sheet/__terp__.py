@@ -49,6 +49,7 @@ The validation can be configured in te company:
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/hr_timesheet_data.xml',
         'hr_timesheet_sheet_view.xml',
         'hr_timesheet_workflow.xml',
         'process/hr_timesheet_sheet_process.xml'
