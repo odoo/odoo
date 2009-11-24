@@ -27,10 +27,12 @@ class report_timesheet_user(osv.osv):
     _description = "Timesheet per day"
     _auto = False
     _columns = {
-        'name': fields.date('Date', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
-        'cost': fields.float('Cost', readonly=True)
+        'cost': fields.float('Cost', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
@@ -39,7 +41,8 @@ class report_timesheet_user(osv.osv):
             create or replace view report_timesheet_user as (
                 select
                     min(l.id) as id,
-                    l.date as name,
+                    to_char(l.date,'YYYY') as name,
+                    to_char(l.date,'MM') as month,
                     l.user_id,
                     sum(l.unit_amount) as quantity,
                     sum(l.amount) as cost
@@ -47,7 +50,7 @@ class report_timesheet_user(osv.osv):
                     account_analytic_line l
                 where
                     user_id is not null
-                group by l.date, l.user_id
+                group by l.date, to_char(l.date,'YYYY'),to_char(l.date,'MM'), l.user_id
             )
         """)
 report_timesheet_user()
@@ -57,10 +60,13 @@ class report_timesheet_account(osv.osv):
     _description = "Timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+
     }
     _order = 'name desc,account_id desc,user_id desc'
     def init(self, cr):
@@ -69,14 +75,15 @@ class report_timesheet_account(osv.osv):
             create or replace view report_timesheet_account as (
                 select
                     min(id) as id,
-                    to_char(create_date, 'YYYY-MM-01') as name,
+                    to_char(create_date, 'YYYY') as name,
+                    to_char(create_date,'MM') as month,
                     user_id,
                     account_id,
                     sum(unit_amount) as quantity
                 from
                     account_analytic_line
                 group by
-                    to_char(create_date, 'YYYY-MM-01'), user_id, account_id
+                    to_char(create_date, 'YYYY'),to_char(create_date, 'MM'), user_id, account_id
             )
         """)
 report_timesheet_account()
@@ -87,10 +94,12 @@ class report_timesheet_account_date(osv.osv):
     _description = "Daily timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.date('Date', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
     
@@ -100,14 +109,15 @@ class report_timesheet_account_date(osv.osv):
             create or replace view report_timesheet_account_date as (
                 select
                     min(id) as id,
-                    date as name,
+                    to_char(date,'YYYY') as name,
+                    to_char(date,'MM') as month,
                     user_id,
                     account_id,
                     sum(unit_amount) as quantity
                 from
                     account_analytic_line
                 group by
-                    date, user_id, account_id
+                    to_char(date,'YYYY'),to_char(date,'MM'), user_id, account_id
             )
         """)
 report_timesheet_account_date()
