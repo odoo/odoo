@@ -1,0 +1,1441 @@
+# Greek translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-09-08 14:52+0000\n"
+"Last-Translator: Makis Nicolaou <mark.nicolaou@gmail.com>\n"
+"Language-Team: Greek <el@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 05:07+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Μερική Παράδοση"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Procurement"
+msgstr "Επαναδημιουργία Προμήθειας"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_confirmquotation0
+msgid "Confirm Quotation"
+msgstr "Επιβεβαίωση Πώλησης"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_deliveryorder0
+msgid "Delivery Order"
+msgstr "Εντολή Παράδοσης"
+
+#. module: sale
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Συνεργάτης Παροχής"
+
+#. module: sale
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Waiting Schedule"
+msgstr "Χρονοδιάγραμμα Αναμονής"
+
+#. module: sale
+#: help:sale.order,picking_policy:0
+msgid ""
+"If you don't have enough stock available to deliver all at once, do you "
+"accept partial shipments or not?"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "Απο στόκ"
+
+#. module: sale
+#: field:sale.config.picking_policy,step:0
+msgid "Steps To Deliver a Sale Order"
+msgstr "Βήματα για την παράδοση μιάς εντολής πώλησης"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,qtty:0
+#: rml:sale.order:0
+msgid "Quantity"
+msgstr "Ποσότητα"
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,create:0
+msgid "You invoice has been successfully created !"
+msgstr "Το τιμολόγιο σας έχει δημιουργηθεί με επιτυχία!"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Automatic Declaration"
+msgstr "Αυτόματη Δήλωση"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "Μή τιμολογημένα και Απεσταλμένες Γραμμές"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Set to Draft"
+msgstr "Ρύθμιση σε πρόχειρο"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Invoice Exception"
+msgstr "Εξαίρεση Τιμολογίου"
+
+#. module: sale
+#: help:sale.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this invoice"
+msgstr ""
+"Αυτή είναι η λίστα της λίστας συλλογής που έχει δημιουργηθεί για αυτό το "
+"τιμολόγιο"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_deliveryorder0
+msgid "Delivery, from the warehouse to the customer."
+msgstr "Παράδοση, απο την αποθήκη στον πελάτη."
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_config_picking_policy
+msgid "sale.config.picking_policy"
+msgstr "sale.config.picking_policy"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_validate0
+msgid "Validate"
+msgstr "Επιβεβαίωση"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Make Invoice"
+msgstr "Δημιουργία Τιμολογίου"
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Υποσύνολο"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"Whenever confirm button is clicked, the draft state is moved to manual. that "
+"is, quotation is moved to  sale order."
+msgstr ""
+"Όποτε το πλήκτρο επιβεβαίωσης πατιέται, η πρόχειρη κατάσταση μεταφέρεται σε "
+"χειροκίνητη, δηλαδή η προσφορά μετατρέπεται σε εντολή πώλησης."
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr "Ακύρωση Εντολής"
+
+#. module: sale
+#: field:sale.order.line,move_ids:0
+msgid "Inventory Moves"
+msgstr "Κινήσεις Αποθήκης"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Manual Designation"
+msgstr "Χειροκίνητος Προσδιορισμός"
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,note:0
+#: view:sale.order.line:0
+#: field:sale.order.line,notes:0
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Τιμολόγιο κατόπιν παράδοσης"
+
+#. module: sale
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr "Φόροι"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Net Total :"
+msgstr "Καθαρό Σύνολο:"
+
+#. module: sale
+#: field:sale.order,order_policy:0
+msgid "Shipping Policy"
+msgstr "Πολτική Μεταφορών"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Shipping Exception"
+msgstr "Εξαίρεση Παράδοσης"
+
+#. module: sale
+#: field:sale.order,amount_total:0
+msgid "Total"
+msgstr "Σύνολο"
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Origin"
+msgstr "Καταγωγή"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Διεύθυνση Τιμολογίου"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_packinglist0
+msgid "Outgoing Products"
+msgstr "Εξερχόμενα Προϊόντα"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Reference"
+msgstr "Παραπομπή"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "All at Once"
+msgstr "Όλα Αμέσως"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleprocurement0
+msgid "Procurement is created after confirmation of sale order."
+msgstr ""
+"Οι προμήθειες δημιουργούνται κατόπιν επιβεβαίωσης της εντολής πώλησης."
+
+#. module: sale
+#: field:sale.order,project_id:0
+#: field:sale.shop,project_id:0
+msgid "Analytic Account"
+msgstr "Αναλυτικός Λογαριασμός"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "TVA :"
+msgstr "TVA :"
+
+#. module: sale
+#: field:sale.order.line,type:0
+msgid "Procure Method"
+msgstr "Μέθοδος Προμήθειας"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Extra Info"
+msgstr "Επιπλέον Πληροφορία"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Fax :"
+msgstr "Fax:"
+
+#. module: sale
+#: field:sale.order.line,price_net:0
+msgid "Net Price"
+msgstr "Καθαρό Σύνολο"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree9
+#: model:ir.ui.menu,name:sale.menu_action_order_tree9
+msgid "My sales order in progress"
+msgstr "Οι εντολή πώλησης μου σε εξέλιξη"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,invoice_quantity:0
+msgid ""
+"The sale order will automatically create the invoice proposition (draft "
+"invoice). Ordered and delivered quantities may not be the same. You have to "
+"choose if you invoice based on ordered or shipped quantities. If the product "
+"is a service, shipped quantities means hours spent on the associated tasks."
+msgstr ""
+"Η εντολή πώλησης θα δημιουργήσει αυτόματα μιά πρόταση τιμολογίου (πρόχειρο "
+"τιμολόγιο). Παραγγελθέντα και παραδοθέντα τεμάχια μπορεί να μην είναι ίδια. "
+"Θα πρέπει να επιλέξετε εάν θα τιμολογήσετε βάσει παραγγελθέντων ή "
+"παραδοθέντων ποσοτήτων. Εάν το προϊόν είναι υπηρεσία, τα παραδοθέντα τεμάχια "
+"σημαίνουν ώρες καταναλωμένες στην σχετική εργασία"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Επιβεβαιωμένο"
+
+#. module: sale
+#: field:sale.shop,payment_default_id:0
+msgid "Default Payment Term"
+msgstr "Προκαθορισμένος Όρος Πληρωμής"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree_all
+#: model:ir.ui.menu,name:sale.menu_action_order_tree_all
+msgid "All Sales Order"
+msgstr "Όλες οι Εντολές Πώλησης"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_confirm0
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr "Διεύθυνση Παράδοσης"
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Shipped Quantities"
+msgstr "Παραδοθέντα Τεμάχια"
+
+#. module: sale
+#: selection:sale.config.picking_policy,order_policy:0
+msgid "Invoice Based on Sales Orders"
+msgstr "Τιμολόγια βάσει εντολών πώλησης"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
+msgid "Sale Shop"
+msgstr "Κατάστημα Πώλησης"
+
+#. module: sale
+#: field:sale.shop,warehouse_id:0
+msgid "Warehouse"
+msgstr "Αποθήκη"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Order N°"
+msgstr "Αρ. Εντολής"
+
+#. module: sale
+#: field:sale.order,order_line:0
+#: view:sale.order.line:0
+msgid "Order Lines"
+msgstr "Γραμμές Εντολής"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Disc.(%)"
+msgstr "Εκπτ.(%)"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Γραμμές Τιμολογίου"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
+msgid "Force Assignation"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Untaxed amount"
+msgstr "Αφορολόγητο ποσό"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_packing0
+msgid ""
+"Packing list is created when 'Assign' is being clicked after confirming the "
+"sale order. This transaction moves the sale order to packing list."
+msgstr ""
+"Η λίστα συσκευασιών δημιουργείται όταν το πλήκτρο 'Ανάθεση' πατιέται μετα "
+"την επιβεβαίωση της εντολής πώλησης. Αυτή η συναλλαγή κινεί την εντολή "
+"πώήσης σε λίστα συσκευασίας."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree8
+#: model:ir.ui.menu,name:sale.menu_action_order_tree8
+msgid "My sales order waiting Invoice"
+msgstr "Οι εντολές πώλησης μου σε κατάσταση προς Τιμολόγηση"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Shipping address :"
+msgstr "Διεύθυνση παράδοσης:"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
+msgid ""
+"When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+"will automatic create after delivery."
+msgstr ""
+"Όταν επιλέγετε Πολιτική Παραδόσεων = 'Αυτόματη ΤΙμολόγηση μετά την "
+"παράδοση', θα δημιουργήθεί αυτόματα μετά την παράδοση."
+
+#. module: sale
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Ολοκληρωμένη Παράδοση"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Manual Description"
+msgstr "Χειροκίνητη Περιγραφή"
+
+#. module: sale
+#: field:sale.order.line,product_uom_qty:0
+msgid "Quantity (UoM)"
+msgstr "Ποσότητα (ΜΜ)"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree1
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
+#: view:sale.order.line:0
+msgid "Sales Order Lines"
+msgstr "Γραμμές Εντολών Πώλησης"
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Παραγγελθέντα Τεμάχια"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Προμήθεια Εντολών Πώλησης"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_packing0
+msgid "Packing"
+msgstr "Συσκευασία"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Total :"
+msgstr "Σύνολο:"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Confirm Order"
+msgstr "Επιβεβαίωση Εντολής"
+
+#. module: sale
+#: field:sale.order,name:0
+msgid "Order Reference"
+msgstr "Παραπομπή Εντολής"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
+#: selection:sale.order.line,state:0
+msgid "Done"
+msgstr "Εκπληρωμένο"
+
+#. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
+msgid "Pricelist"
+msgstr "Τιμοκατάλογος"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_shop_configuration
+msgid "Configuration"
+msgstr "Παραμετροποίηση"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice on Order After Delivery"
+msgstr "Τιμολόγηση στην εντολή μετά την παράδοση"
+
+#. module: sale
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
+
+#. module: sale
+#: field:sale.order,picking_ids:0
+msgid "Related Packing"
+msgstr ""
+
+#. module: sale
+#: field:sale.shop,payment_account_id:0
+msgid "Payment Accounts"
+msgstr ""
+
+#. module: sale
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+"Σφάλμα: η δεύτερη ΜΜ πρέπει να είναι σε διαφορετική κατηγορία απο την πρώτη "
+"ΜΜ"
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Customer Ref"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales orders"
+msgstr "Εντολές πώλησης"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_saleprocurement0
+#: field:sale.order.line,procurement_id:0
+msgid "Procurement"
+msgstr "Προμήθεια"
+
+#. module: sale
+#: view:sale.shop:0
+msgid "Payment accounts"
+msgstr "Λογαριασμοί πληρωμών"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,create,end:0
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_invoice0
+#: model:process.node,name:sale.process_node_invoiceafterdelivery0
+msgid "Draft Invoice"
+msgstr "Πρόχειρο Τιμολόγιο"
+
+#. module: sale
+#: wizard_field:sale.order.line.make_invoice,init,grouped:0
+#: wizard_field:sale.order.make_invoice,init,grouped:0
+msgid "Group the invoices"
+msgstr "Ομαδοποίηση τιμολογίων"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+#: model:ir.ui.menu,name:sale.menu_action_order_tree5
+msgid "All Quotations"
+msgstr "Όλες οι προσφορές"
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "Έκπτωση (%)"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoice0
+msgid "Draft customer invoice, to be reviewed by accountant."
+msgstr "Πρόχειρο τιμολόγιο πελάτη, για έλεγχο απο λογιστή."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree3
+#: model:ir.ui.menu,name:sale.menu_action_order_tree3
+msgid "Sales Order To Be Invoiced"
+msgstr "Εντολή Πώλησης Προς Τιμολόγηση"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorderprocurement0
+msgid "Procurement for each line"
+msgstr "Προμήθεια για κάθε γραμμή"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree10
+#: model:ir.ui.menu,name:sale.menu_action_order_tree10
+msgid "My Quotations"
+msgstr "Οι Προσφορές Μου"
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,create:0
+msgid "Invoices"
+msgstr "Τιμολόγια"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Order Line"
+msgstr "Γραμμή Εντολής"
+
+#. module: sale
+#: field:sale.config.picking_policy,picking_policy:0
+msgid "Packing Default Policy"
+msgstr "Προκαθορισμένη Πολιτική Συσκευασιών"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Manages the delivery and invoicing progress"
+msgstr "Διαχειρίζεται την εξέλιξη στις παράδοσεις και τις τιμολόγησεις"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Προκαθορισμένη Πολιτική Παραδόσεων"
+
+#. module: sale
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "Συσκευασία"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+#: model:ir.ui.menu,name:sale.menu_sale_root
+msgid "Sales Management"
+msgstr "Διαχείριση Πωλήσεων"
+
+#. module: sale
+#: field:sale.order.line,order_id:0
+msgid "Order Ref"
+msgstr "Σχετ. Εντολή"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Invoice"
+msgstr "Επαναδημιουργία Τιμολογίου"
+
+#. module: sale
+#: field:sale.order,user_id:0
+msgid "Salesman"
+msgstr "Πωλητής"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleorderprocurement0
+msgid ""
+"In sale order , procuerement for each line and it comes into the procurement "
+"order"
+msgstr ""
+"Στις εντολές πώλησης, οι προμήθειες γίνονται για κάθε γραμμή και δημιουργούν "
+"εντολές προμήθειας"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Taxes :"
+msgstr "Φόροι:"
+
+#. module: sale
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Τιμολογημένα"
+
+#. module: sale
+#: model:ir.actions.wizard,name:sale.advance_payment
+msgid "Advance Invoice"
+msgstr "Advance Invoice"
+
+#. module: sale
+#: field:sale.order,state:0
+msgid "Order State"
+msgstr "Κατάσταση Εντολών"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+#: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
+msgid "Uninvoiced Lines"
+msgstr "Μή Τιμολογημένες Γραμμές"
+
+#. module: sale
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid ""
+"This Configuration step use to set default picking policy when make sale "
+"order"
+msgstr ""
+"Αυτό το βήμα παραμετροποίησης χρησιμοποιείται για να ρυθμιστεί η "
+"προκαθορισμένη πολιτική φορτώσεων όταν δημιουργείτε μία εντολή πώλησης"
+
+#. module: sale
+#: model:process.process,name:sale.process_process_salesprocess0
+msgid "Sales Process"
+msgstr "Εξέλιξη Πωλήσεων"
+
+#. module: sale
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_button:sale.order.line.make_invoice,init,invoice:0
+#: wizard_view:sale.order.make_invoice,init:0
+#: wizard_button:sale.order.make_invoice,init,invoice:0
+msgid "Create invoices"
+msgstr "Δημιουργία τιμολογίων"
+
+#. module: sale
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Σφάλμα: Η προκαθορισμένη ΜΜ και η ΜΜ αγοράς πρέπει να είναι στην ίδια "
+"κατηγορία."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree7
+#: model:ir.ui.menu,name:sale.menu_action_order_tree7
+msgid "My sales in shipping exception"
+msgstr "Οι πωλήσεις μου στις εξαιρέσεις παραδόσεων"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Sales Configuration"
+msgstr "Παραμετροποίηση Πωλήσεων"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree2
+#: model:ir.ui.menu,name:sale.menu_action_order_tree2
+msgid "Sales in Exception"
+msgstr "Πωλήσεις σε Εξαίρεση"
+
+#. module: sale
+#: selection:sale.order.line,type:0
+msgid "on order"
+msgstr "Σε εντολή"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Πρόχειρο"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Πληρωμένα"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Procurement Corrected"
+msgstr "Διόρθωση Προμήθειας"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Shipping & Manual Invoice"
+msgstr "Παράδοση & Χειροκίνητη Τιμολόγηση"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleorderprocurement0
+#: model:process.transition,name:sale.process_transition_saleprocurement0
+msgid "Sale Procurement"
+msgstr "Προμήθεια Πώλησης"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Configure Sale Order Logistic"
+msgstr "Configure Sale Order Logistic"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Αφορολόγητο Ποσό"
+
+#. module: sale
+#: field:sale.order.line,state:0
+msgid "Status"
+msgstr "Κατάσταση"
+
+#. module: sale
+#: field:sale.order,picking_policy:0
+msgid "Packing Policy"
+msgstr "Πολιτική Συσκευασιών"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+msgid "Product sales"
+msgstr "Πωλήσεις προϊόντος"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Our Salesman"
+msgstr "Οι πωλητές μας"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,init,create:0
+msgid "Create Advance Invoice"
+msgstr "Create Advance Invoice"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleprocurement0
+msgid "One procurement for each product."
+msgstr "Μία προμήθεια για κάθε προϊόν."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
+msgid "Sales Orders"
+msgstr "Εντολές Πώλησης"
+
+#. module: sale
+#: field:product.product,pricelist_sale:0
+msgid "Sale Pricelists"
+msgstr "Τιμοκατάλογοι Πώλησης"
+
+#. module: sale
+#: selection:sale.config.picking_policy,picking_policy:0
+msgid "Direct Delivery"
+msgstr "Απευθείας Παράδοση"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr "Ιδιότητες"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_quotation0
+#: selection:sale.order,state:0
+msgid "Quotation"
+msgstr "Προσφορά"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance Product"
+msgstr "Advance Product"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid ""
+"Invoice is created when 'Create Invoice' is being clicked after confirming "
+"the sale order. This transaction moves the sale order to invoices."
+msgstr ""
+"Το τιμολόγιο δημιουργείται όταν το πλήκτρο 'Δημιουργία Τιμολογίου' πατιέται "
+"μετά την επιβεβαίωση της εντολής πώλησης. Αυτή η συναλλαγή μετατρέπει την "
+"εντολή πώλησης σε τιμολόγιο"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Compute"
+msgstr "Υπολογισμός"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: model:ir.ui.menu,name:sale.menu_action_shop_form
+#: field:sale.order,shop_id:0
+msgid "Shop"
+msgstr "Κατάστημα"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "VAT"
+msgstr "ΦΠΑ"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree4
+#: model:ir.ui.menu,name:sale.menu_action_order_tree4
+msgid "Sales Order in Progress"
+msgstr "Εντολές Πώλησης σε Εξέλιξη"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_assign0
+msgid "Assign"
+msgstr "Ανάθεση"
+
+#. module: sale
+#: view:sale.order:0
+msgid "History"
+msgstr "Ιστορικό"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and "
+"then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly "
+"and wait for the user to manually click on the 'Invoice' button to generate "
+"the draft invoice.\n"
+"  - The 'Invoice on Order After Delivery' choice will generate the draft "
+"invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packing' choice is used to create an invoice "
+"during the packing process."
+msgstr ""
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Your Reference"
+msgstr "Οι Παραπομπές σας"
+
+#. module: sale
+#: selection:sale.config.picking_policy,step:0
+msgid "Delivery Order Only"
+msgstr "Μόνον Εντολή Παράδοσης"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Sales order lines"
+msgstr "Γραμμές εντολών πώλησης"
+
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "Αλληλουχία"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+msgid "Sales"
+msgstr "Πωλήσεις"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr "Ποσότητα"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_packinglist0
+msgid "Packing OUT is created for stockable products."
+msgstr "Packing OUT is created for stockable products."
+
+#. module: sale
+#: view:sale.order:0
+msgid "Other data"
+msgstr "Άλλες πληροφορίες"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,amount:0
+#: rml:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Τιμή Μονάδας"
+
+#. module: sale
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Λογιστική Θέση"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Invoice address :"
+msgstr "Διεύθυνση τιμολογίου:"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoice0
+#: field:sale.order,invoice_ids:0
+msgid "Invoice"
+msgstr "Τιμολόγιο"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: model:process.transition.action,name:sale.process_transition_action_cancel1
+#: model:process.transition.action,name:sale.process_transition_action_cancel2
+#: wizard_button:sale.advance_payment_inv,init,end:0
+#: view:sale.config.picking_policy:0
+#: view:sale.order.line:0
+#: wizard_button:sale.order.line.make_invoice,init,end:0
+#: wizard_button:sale.order.make_invoice,init,end:0
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the state of the quotation or sale order. The exception state is "
+"automatically set when a cancel operation occurs in the invoice validation "
+"(Invoice Exception) or in the packing list process (Shipping Exception). The "
+"'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+"for the scheduler to run on the date 'Date Ordered'."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "UoM"
+msgstr "1η ΜΜ"
+
+#. module: sale
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_deliver0
+msgid ""
+"Confirming the packing list moves them to delivery order. This can be done "
+"by clicking on 'Validate' button."
+msgstr ""
+"Επιβεβαιώνοντας την λίστα φορτώσεων τα μεταφέρει σε εντολή παράδοσης. Αυτό "
+"μπορεί να γίνει πιέζοντας το πλήκτρο 'Επικύρωση'"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "In Progress"
+msgstr ""
+
+#. module: sale
+#: wizard_view:sale.advance_payment_inv,init:0
+msgid "Advance Payment"
+msgstr "Advance Payment"
+
+#. module: sale
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Το όνομα του αντικειμένου θα πρέπει να αρχίζει απο x_ και να μην περιέχει "
+"ειδικούς χαρακτήρες!"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid "Confirm sale order and Create invoice."
+msgstr "Επιβεβαίωση εντολής πώλησης και Δημιουργία τιμολογίου"
+
+#. module: sale
+#: selection:sale.config.picking_policy,step:0
+msgid "Packing List & Delivery Order"
+msgstr "Λίστα Φορτώσεων & Εντολή Παράδοσης"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "Εξαίρεση"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sale Order Lines"
+msgstr "Γραμμές Εντολών Πώλησης"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.order:0
+msgid "Create Invoice"
+msgstr "Δημιουργία Τιμολογίου"
+
+#. module: sale
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_view:sale.order.make_invoice,init:0
+msgid "Do you really want to create the invoices ?"
+msgstr "Θέλετε σίγουρα να δημιουργήσετε τα τιμολόγια;"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoiceafterdelivery0
+msgid "Invoice based on packing lists"
+msgstr "Τιμολόγια βασισμένα σε λίστες φορτώσεων"
+
+#. module: sale
+#: view:sale.config.picking_policy:0
+msgid "Set Default"
+msgstr "Ρύθμιση Προκαθορισμένου"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales order"
+msgstr "Εντολή πώλησης"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_quotation0
+msgid "Quotation (A sale order in draft state)"
+msgstr "Προσφορά (Μια εντολή πώλησης σε πρόχειρη κατάσταση)"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleinvoice0
+msgid "Sale Invoice"
+msgstr "Τιμολόγιο Πώλησης"
+
+#. module: sale
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale
+#: wizard_field:sale.advance_payment_inv,init,product_id:0
+#: field:sale.order.line,product_id:0
+msgid "Product"
+msgstr "Προϊόν"
+
+#. module: sale
+#: wizard_button:sale.advance_payment_inv,create,open:0
+msgid "Open Advance Invoice"
+msgstr "Open Advance Invoice"
+
+#. module: sale
+#: field:sale.order,partner_order_id:0
+msgid "Ordering Contact"
+msgstr "Επαφή Τιμολογίου"
+
+#. module: sale
+#: rml:sale.order:0
+#: field:sale.order.line,name:0
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Price"
+msgstr "Τιμή"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_deliver0
+msgid "Deliver"
+msgstr "Μεταφορά"
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Προσφορά / Εντολή"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Tel. :"
+msgstr "Τηλ:"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Αρ. Προσφοράς"
+
+#. module: sale
+#: field:stock.move,sale_line_id:0
+msgid "Sale Order Line"
+msgstr "Γραμμή Εντολής Πώλησης"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
+msgid "Cancel Assignation"
+msgstr "Ακύρωση Ανάθεσης"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Invoice from the Packing"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
+#: model:ir.actions.wizard,name:sale.wizard_sale_order_make_invoice
+msgid "Make invoices"
+msgstr "Δημιουργία τιμολογίων"
+
+#. module: sale
+#: help:sale.order,partner_order_id:0
+msgid ""
+"The name and address of the contact that requested the order or quotation."
+msgstr ""
+"Το όνομα και η διεύθυνση της επαφής που έχει ζητηθεί για αυτήν την εντολή ή "
+"προσφορά."
+
+#. module: sale
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr "Πελάτης"
+
+#. module: sale
+#: field:product.product,pricelist_purchase:0
+msgid "Purchase Pricelists"
+msgstr "Τιμοκατάλογοι Αγορών"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_saleorder0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "Εντολή Πώλησης"
+
+#. module: sale
+#: field:sale.config.picking_policy,name:0
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: sale
+#: field:sale.order,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Τιμολόγηση σε"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree_new
+#: model:ir.ui.menu,name:sale.menu_action_order_tree_new
+msgid "New Quotation"
+msgstr "Νέα Προσφορά"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total amount"
+msgstr "Συνολικό ποσό"
+
+#. module: sale
+#: rml:sale.order:0
+#: field:sale.order,date_order:0
+msgid "Date Ordered"
+msgstr "Ημερομηνία Εντολής"
+
+#. module: sale
+#: field:sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Manual In Progress"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Product UoM"
+msgstr "1η ΜΜ Προϊόντος"
+
+#. module: sale
+#: help:sale.config.picking_policy,step:0
+msgid ""
+"By default, Open ERP is able to manage complex routing and paths of products "
+"in your warehouse and partner locations. This will configure the most common "
+"and simple methods to deliver products to the customer in one or two "
+"operations by the worker."
+msgstr ""
+"Κατα προεπιλογή, το Open ERP, είναι ικανό να διαχειρίζεται πολύπλοκες "
+"διαδρομές σε προϊόντα μέσα στην αποθήκη σας ή σε τοποθεσίες συνεργατών. Αυτό "
+"θα παραμετροποιήσει κοινές και απλές μεθόδους για να παραδόσετε προϊόντα σε "
+"πελάτες σε μία ή δύο εργασίες απο τον εργάτη."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_config_picking_policy
+msgid "Configure Picking Policy for Sale Order"
+msgstr "Παραμετροποίηση Πολιτικής Συσκευασίας Εντολής Πώλησης"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_order0
+msgid "Order"
+msgstr "Εντολή"
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Payment Terms"
+msgstr "Όροι Πληρωμής"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Invoice Corrected"
+msgstr "Διόρθωση Τιμολογίου"
+
+#. module: sale
+#: field:sale.order.line,delay:0
+msgid "Delivery Delay"
+msgstr "Καθυστέρηση Παράδοσης"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Related invoices"
+msgstr "Σχετικά τιμολόγια"
+
+#. module: sale
+#: field:sale.shop,name:0
+msgid "Shop Name"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "Όροι Πληρωμής"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "Payment Before Delivery"
+msgstr "Πληρωμή Πριν Την Παράδοση"
+
+#. module: sale
+#: help:sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sale order. "
+"The same sale order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
+"Αυτή είναι η λίστα τιμολογίων που έχει δημιουργηθεί απο αυτήν την εντολή "
+"πώλησης. Η ίδια εντολή πώλησης μπορεί να έχει τιμολογηθεί πολλές φορές (ως "
+"παράδειγμα σε γραμμή)."
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "States"
+msgstr "Καταστάσεις"
+
+#. module: sale
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Βάρος"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_order0
+msgid "After confirming order, Create the invoice."
+msgstr "Μετά την επιβεβαίωση της εντολής, δημιουργήστε το τιμολόγιο"
+
+#. module: sale
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Σφάλμα: Άκυρος κώδικας ΕΑΝ"
+
+#. module: sale
+#: field:sale.order,picked_rate:0
+#: field:sale.order,shipped:0
+msgid "Picked"
+msgstr "Picked"
+
+#. module: sale
+#: view:sale.shop:0
+msgid "Accounting"
+msgstr ""
+
+#. module: sale
+#: selection:sale.config.picking_policy,order_policy:0
+msgid "Invoice Based on Deliveries"
+msgstr "Τιμολόγηση Βασισμένη Σε Παραδόσεις"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Stock Moves"
+msgstr "Κινήσεις Αποθεμάτων"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+#: model:ir.ui.menu,name:sale.menu_action_order_tree
+msgid "My Sales Order"
+msgstr "Οι εντολές πωλήσεων μου"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sale Order line"
+msgstr "Γραμμή Εντολών Πώλησης"
+
+#~ msgid "Customer Ref."
+#~ msgstr "Σχετ. Πελάτη"
+
+#~ msgid "Invoice from the packings"
+#~ msgstr "Τιμολόγιο απο συσκευασίες"
+
+#~ msgid "Shop name"
+#~ msgstr "Όνομα Καταστήματος"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Σφάλμα!"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr ""
+#~ "Θα πρέπει πρώτα να ακυρώσετε τα επισυναπτόμενα τιμολόγια αυτής της εντολής "
+#~ "πώλησης."
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Άκυρη ενέργεια!"
+
+#~ msgid "Manual in progress"
+#~ msgstr "Χειροκίνητη λειτουργία σε εξέλιξη"
+
+#~ msgid "Number packages"
+#~ msgstr "Αριθμοδότηση συσκευασιών"
+
+#, python-format
+#~ msgid "Could not cancel sale order !"
+#~ msgstr "Αδύνατη η ακύρωση της εντολής πώλησης!"
+
+#~ msgid "In progress"
+#~ msgstr "Σε εξέλιξη"
+
+#~ msgid "Canceled"
+#~ msgstr "Ακυρωμένο"
+
+#~ msgid "Quantity (UOS)"
+#~ msgstr "Ποσότητα (2η ΜΜ)"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "άκυρη κατάσταση για test_state"
+
+#~ msgid "Related Packings"
+#~ msgstr "Σχετικές συσκευασίες"
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shippings or not."
+#~ msgstr ""
+#~ "Εάν δεν έχετε αρκετό διαθέσιμο απόθεμα για ολοκληρωμένη παράδοση, "
+#~ "συμφωνείται για μερική παράδοση ή όχι."
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Σφάλμα"
+
+#, python-format
+#~ msgid "You must first cancel all packings attached to this sale order."
+#~ msgstr ""
+#~ "Θα πρέπει πρώτα να ακυρώσετε τις επισυναπτόμενες φορτώσεις για την εντολή "
+#~ "πώλησης."
+
+#~ msgid "Product UOS"
+#~ msgstr "2η ΜΜ Προϊόντος"
+
+#, python-format
+#~ msgid "Could not cancel this sale order !"
+#~ msgstr "Αδύνατη η ακύρωση αυτής της εντολής πώλησης!"
+
+#, python-format
+#~ msgid "You can not cancel a sale order line that has already been invoiced !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να ακυρώσετε μιά γραμμή εντολής πώλησης εάν έχει τιμολογηθεί!"
+
+#, python-format
+#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#~ msgstr "Αδύνατη η διαγραφή Εντολής(λών) Πώλησης που έχουν ήδη επιβεβαιωθεί!"
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sale order. The exception state is "
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to be on the date 'Date Ordered'."
+#~ msgstr ""
+#~ "Gives the state of the quotation or sale order. The exception state is "
+#~ "automatically set when a cancel operation occurs in the invoice validation "
+#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
+#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+#~ "for the scheduler to be on the date 'Date Ordered'."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+
+#~ msgid ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
+#~ "then generate the packing order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
+#~ "invoice based on sale order after all packing lists have been finished.\n"
+#~ "  - The 'Invoice from the packings' choice is used to create an invoice "
+#~ "during the packing process."
+#~ msgstr ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
+#~ "then generate the packing order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
+#~ "invoice based on sale order after all packing lists have been finished.\n"
+#~ "  - The 'Invoice from the packings' choice is used to create an invoice "
+#~ "during the packing process."

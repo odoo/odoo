@@ -29,18 +29,15 @@ from tools.translate import _
 class project_work(osv.osv):
     _inherit = "project.task.work"
     _description = "Task Work"
-    def create(self, cr, uid, vals, *args, **kwargs):
 
-        obj = self.pool.get('hr.analytic.timesheet')
-        vals_line = {}
-        obj_task = self.pool.get('project.task').browse(cr, uid, vals['task_id'])
-
+    def get_user_related_details(self, cr, uid, user_id):
+        res = {}
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', vals.get('user_id', uid))])
-
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
         if not emp_id:
+            user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No employee defined for this user. You must create one.'))
+                 _('No employee defined for user "%s". You must create one.')% (user_name,))
         emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
@@ -53,9 +50,22 @@ class project_work(osv.osv):
         a =  emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
-
+            if not a:
+                raise osv.except_osv(_('Bad Configuration !'),
+                        _('No product and product category property account defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+        res['product_id'] = emp.product_id.id
+        res['journal_id'] = emp.journal_id.id
+        res['general_account_id'] = a
+        return res
+        
+    def create(self, cr, uid, vals, *args, **kwargs):
+        obj = self.pool.get('hr.analytic.timesheet')
+        vals_line = {}
+        obj_task = self.pool.get('project.task').browse(cr, uid, vals['task_id'])
+        result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
         vals_line['user_id'] = vals['user_id']
+        vals_line['product_id'] = result['product_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
         acc_id = obj_task.project_id.category_id.id
@@ -63,8 +73,8 @@ class project_work(osv.osv):
         res = obj.on_change_account_id(cr, uid, False, acc_id)
         if res.get('value'):
             vals_line.update(res['value'])
-        vals_line['general_account_id'] = a
-        vals_line['journal_id'] = emp.journal_id.id
+        vals_line['general_account_id'] = result['general_account_id']
+        vals_line['journal_id'] = result['journal_id']
         vals_line['amount'] = 00.0
         timeline_id = obj.create(cr, uid, vals_line, {})
 
@@ -83,9 +93,13 @@ class project_work(osv.osv):
         if line_id in list_avail_ids:
             obj = self.pool.get('hr.analytic.timesheet')
             if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (tools.ustr(task.name), tools.ustr(vals['name']) or '/')
+                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
+                result = self.get_user_related_details(cr, uid, vals['user_id'])
+                vals_line['product_id'] = result['product_id']
+                vals_line['general_account_id'] = result['general_account_id']
+                vals_line['journal_id'] = result['journal_id']
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:

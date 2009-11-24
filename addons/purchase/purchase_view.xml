@@ -114,7 +114,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group col='8' colspan='4'>
+                 <group col='10' colspan='4'>
                     <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
                 	<filter icon="terp-purchase" string="Unapproved" domain="[('state','in',('wait','confirmed'))]" separator="1"/>
 					<separator orientation="vertical"/>
@@ -122,6 +122,11 @@
 					<separator orientation="vertical"/>
 					<field name="name" select="1"/>
 					<field name="partner_id" select="1"/>
+					<field name="product_id" select="1"/>
+					<field name="create_uid" select="1" widget="selection">
+    					<filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
+                        <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
+                    </field>
                 </group>
               </search>
             </field>
@@ -146,7 +151,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action3" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -158,7 +163,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -170,7 +175,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
+        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_useability_extended"/>
 
         <record id="purchase_form_action_new" model="ir.actions.act_window">
             <field name="name">New Purchase Order</field>
@@ -259,5 +264,13 @@
             name="Purchase orders"
             res_model="purchase.order"
             src_model="res.partner"/>
+
+        <act_window
+            domain="[('product_id','=',active_id)]" 
+            id="action_purchase_line_product_tree"
+            name="Product purchases"
+            res_model="purchase.order.line" 
+            src_model="product.product"/> 
+                     
     </data>
 </openerp>

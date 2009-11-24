@@ -3,15 +3,15 @@
 <data>
 
     # ------------------------------------------------------ 
-    # HelpDesk
+    # Helpdesk Support
     # ------------------------------------------------------ 
 
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
-        <field name="name">CRM - Helpdisk Support Form</field>
+        <field name="name">CRM - Helpdesk Support Form</field>
         <field name="model">crm.case</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Helpdisk Support">
+            <form string="Helpdesk Support">
                 <group colspan="4" col="7">
                     <field colspan="2" name="name" select="1"/>
                     <field colspan="1" name="section_id" widget="selection"/>
@@ -121,11 +121,11 @@
         </field>
     </record>
     <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
-        <field name="name">CRM - Helpdisk Support Tree</field>
+        <field name="name">CRM - Helpdesk Support Tree</field>
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Helpdisk Support Tree"  colors="red:state=='open'">
+            <tree string="Helpdesk Support Tree"  colors="red:state=='open'">
                 <field name="id"/>
                 <field name="name" string="Support Query"/>                
                 <field name="partner_id" string="Partner"/>
@@ -142,6 +142,20 @@
                 <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>                
             </tree>
         </field>
-    </record>    
+    </record>   
+    
+    <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
+        <field name="name">CRM - Helpdesk Support Calendar</field>
+        <field name="model">crm.case</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Helpdesk Supports" date_start="date" color="user_id" date_delay="duration">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="categ_id"/>
+            </calendar>
+        </field>
+    </record> 
 </data>
 </openerp>

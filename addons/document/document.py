@@ -530,17 +530,21 @@ class document_file(osv.osv):
                 result[id] = base64.encodestring(value)
             except:
                 result[id]=''
-
-            if context.get('bin_size', False):
-                result[id] = tools.human_size(len(result[id]))
-
+#            if context.get('bin_size', False):
+#                result[id] = tools.human_size(result[id])
         return result
 
     #
     # This code can be improved
     #
-    def _data_set(self, cr, obj, id, name, value, uid=None, context={}):
+    def _data_set(self, cr, uid, id, name, value, args=None, context={}):
         if not value:
+            filename = self.browse(cr, uid, id, context).store_fname
+            try:
+                os.unlink(os.path.join(self._get_filestore(cr), filename))
+            except:
+                pass
+            cr.execute('update ir_attachment set store_fname=NULL WHERE id=%s', (id,) )
             return True
         #if (not context) or context.get('store_method','fs')=='fs':
         try:
@@ -714,45 +718,29 @@ class document_configuration_wizard(osv.osv_memory):
     _rec_name = 'Auto Directory configuration'
     _columns = {
         'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
-            "Keep localhost if you don't know what to write.", required=True)
+            "Keep localhost if you don't know what to write.", required=True),
+        'suggested_host': fields.char('Suggested Server Address', size=64, readonly=True, help="This is the guessed server address"),
+        'port': fields.char('Server Port', size=5, help="Put here the server port. " \
+            "Keep 8021 if you don't know what to write.", required=True)
     }
 
-    def detect_ip_addr(self, cr, uid, context=None):
-        def _detect_ip_addr(self, cr, uid, context=None):
-            from array import array
-            import socket
-            from struct import pack, unpack
+    def get_ftp_server_address(self, cr, uid, context=None):
+        default_address = config.get('ftp_server_address', None)
+        if default_address is None:
+            default_address = tools.misc.detect_ip_addr()
 
-            try:
-                import fcntl
-            except ImportError:
-                fcntl = None
+        return default_address
 
-            if not fcntl: # not UNIX:
-                host = socket.gethostname()
-                ip_addr = socket.gethostbyname(host)
-            else: # UNIX:
-                # get all interfaces:
-                nbytes = 128 * 32
-                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                names = array('B', '\0' * nbytes)
-                outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
-                namestr = names.tostring()
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
+    def get_ftp_server_port(self, cr, uid, context=None):
+        return config.get('ftp_server_port', 8021)
 
-                for ifname in [iface for iface in ifaces if iface != 'lo']:
-                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
-                    break
-            return ip_addr
-
-        try:
-            ip_addr = _detect_ip_addr(self, cr, uid, context)
-        except:
-            ip_addr = 'localhost'
-        return ip_addr
+    def get_suggested_ftp_server_address(self, cr, uid, context=None):
+        return tools.misc.detect_ip_addr()
 
     _defaults = {
-        'host': detect_ip_addr,
+        'host': get_ftp_server_address,
+        'suggested_host': get_suggested_ftp_server_address,
+        'port': get_ftp_server_port,
     }
 
     def action_cancel(self,cr,uid,ids,conect=None):
@@ -832,7 +820,11 @@ class document_configuration_wizard(osv.osv_memory):
 
         aid = objid._get_id(cr, uid, 'document', 'action_document_browse')
         aid = objid.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':'+conf.port+'/'})
+
+        config['ftp_server_address'] = conf.host
+        config['ftp_server_port'] = conf.port
+        config.save()
 
         return {
                 'view_type': 'form',
@@ -841,4 +833,53 @@ class document_configuration_wizard(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
         }
+
 document_configuration_wizard()
+
+
+class document_configuration_ftpserver_wizard(osv.osv_memory):
+    _name='document.configuration.ftp_server.wizard'
+    _rec_name = 'Configure FTP server address'
+    _columns = {
+        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
+            "Keep localhost if you don't know what to write.", required=True),
+        'suggested_host': fields.char('Suggested Server Address', size=64, readonly=True, help="This is the guessed server address"),
+        'port': fields.char('Server Port', size=5, help="Put here the server port. " \
+            "Keep 8021 if you don't know what to write.", required=True)
+    }
+
+    def get_ftp_server_address(self, cr, uid, context=None):
+        default_address = tools.misc.detect_ip_addr()
+        return config.get('ftp_server_address', default_address)
+
+    def get_ftp_server_port(self, cr, uid, context=None):
+        return config.get('ftp_server_port', '8021')
+
+    def get_suggested_ftp_server_address(self, cr, uid, context=None):
+        return tools.misc.detect_ip_addr()
+
+    _defaults = {
+        'host': get_ftp_server_address,
+        'suggested_host': get_suggested_ftp_server_address,
+        'port': get_ftp_server_port,
+    }
+
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {}
+
+    def action_config(self, cr, uid, ids, context=None):
+        conf = self.browse(cr, uid, ids[0], context)
+        obj = self.pool.get('ir.model.data')
+
+        aid = obj._get_id(cr, uid, 'document', 'action_document_browse')
+        aid = obj.browse(cr, uid, aid, context=context).res_id
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':'+conf.port+'/'})
+
+        config['ftp_server_address'] = conf.host
+        config['ftp_server_port'] = conf.port
+        config.save()
+
+        return {}
+
+document_configuration_ftpserver_wizard()
+

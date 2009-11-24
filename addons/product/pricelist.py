@@ -331,6 +331,16 @@ class product_pricelist_item(osv.osv):
         'sequence': lambda *a: 5,
         'price_discount': lambda *a: 0,
     }
+    
+    def _check_recursion(self, cr, uid, ids):
+        for obj_list in self.browse(cr, uid, ids):
+            if obj_list.base == -1:
+                main_pricelist = obj_list.price_version_id.pricelist_id.id
+                other_pricelist = obj_list.base_pricelist_id.id
+                if main_pricelist == other_pricelist:
+                    return False 
+        return True
+    
     _columns = {
         'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True),
@@ -357,6 +367,11 @@ class product_pricelist_item(osv.osv):
         'price_max_margin': fields.float('Max. Price Margin',
             digits=(16, int(config['price_accuracy']))),
     }
+    
+    _constraints = [
+        (_check_recursion, _('Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!'), ['base_pricelist_id'])
+    ]
+     
     def product_id_change(self, cr, uid, ids, product_id, context={}):
         if not product_id:
             return {}

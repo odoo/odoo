@@ -23,6 +23,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from osv import osv
 
 invoice_form = """<?xml version="1.0"?>
 <form string="Control invoices">

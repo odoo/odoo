@@ -29,7 +29,7 @@ class buyer_form_report(report_sxw.rml_parse):
     count=0
     c=0
     def __init__(self, cr, uid, name, context):
-        super(buyer_form_report, self).__init__(cr, uid, name, context)
+        super(buyer_form_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'sum_taxes': self.sum_taxes,

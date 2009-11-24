@@ -5,7 +5,7 @@
     # Jobs
     # ------------------------------------------------------ 
 
-    <record model="ir.ui.view" id="crm_case_tree_view11">
+    <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">CRM - Jobs Requests Tree</field>
         <field name="model">crm.case</field>
         <field name="type">tree</field>
@@ -30,7 +30,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_form_view11">
+    <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">CRM - Jobs Requests Form</field>
         <field name="model">crm.case</field>
         <field name="type">form</field>
@@ -125,8 +125,8 @@
                                 <field name="canal_id"/>
                                 <button
 								   string="Add a CC"
-								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-								    icon="gtk-add" type="action"/>
+								   name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								   icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -145,7 +145,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_calendar_view11">
+    <record model="ir.ui.view" id="crm_case_calendar_view_job">
         <field name="name">CRM - Jobs Requests Calendar</field>
         <field name="model">crm.case</field>
         <field name="type">calendar</field>
@@ -192,7 +192,7 @@
                    </group>
                    <separator orientation="vertical"/>
                    <group col="4" colspan="2">
-                   		<field name="name" select='1'/>
+                   		<field name="name" select='1' string="Name"/>
                    		<field name="email_from" select='1' string="Email"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>

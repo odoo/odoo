@@ -32,7 +32,7 @@ import sys
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(rml_parse, self).__init__(cr, uid, name, context=None)
+        super(rml_parse, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'comma_me': self.comma_me,
             'format_date': self._get_and_change_date_format_for_swiss,

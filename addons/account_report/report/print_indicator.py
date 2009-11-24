@@ -45,7 +45,7 @@ import os
 class accounting_report_indicator(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(accounting_report_indicator, self).__init__(cr, uid, name, context)
+        super(accounting_report_indicator, self).__init__(cr, uid, name, context=context)
         self.ret_list = []
         self.localcontext.update({
             'time': time,

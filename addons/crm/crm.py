@@ -1076,8 +1076,7 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
         crm_case = self.pool.get('crm.case')
         case = history_line.log_id.case_id
-        body = history_line.description.replace('\n','\n> ')
-        crm_case.write(cr, uid, case.id, {'email_cc' : email})
+        body = history_line.description.replace('\n','\n> ')              
         flag = tools.email_send(
             case.user_id.address_id.email,
             [case.email_from],
@@ -1087,7 +1086,9 @@ class crm_email_add_cc_wizard(osv.osv_memory):
             tinycrm=str(case.id)
         )
         if flag:
-            cr.commit()
+            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})             
+        else:                    
+            raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))        
         return {}
     
 crm_email_add_cc_wizard()

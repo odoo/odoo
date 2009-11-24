@@ -22,6 +22,7 @@
 import wizard
 import pooler
 import netsvc
+from tools.translate import _
 
 form = '''<?xml version="1.0"?>
 <form string="Open Invoice">

@@ -27,7 +27,7 @@ from report import report_sxw
 class aged_trial_report(rml_parse.rml_parse):
 
 	def __init__(self, cr, uid, name, context):
-		super(aged_trial_report, self).__init__(cr, uid, name, context)
+		super(aged_trial_report, self).__init__(cr, uid, name, context=context)
 		self.line_query = ''
 		self.total_account = []
 
