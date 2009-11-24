@@ -25,6 +25,12 @@ from osv import fields, osv
 class res_partner_contact(osv.osv):
     _name = "res.partner.contact"
     _description = "res.partner.contact"
+    def init(self, cr):
+        address_obj = self.pool.get('res.partner.address')
+        job_obj = self.pool.get('res.partner.job')
+        address_ids = address_obj.search(cr, 1, [])
+        for address in address_obj.browse(cr, 1, address_ids):
+            contact_id = self.create(cr, 1, {'name': address.name or 't'})
 
     def _title_get(self,cr, user, context={}):
         obj = self.pool.get('res.partner.title')
@@ -99,6 +105,15 @@ class res_partner_address(osv.osv):
 res_partner_address()
 
 class res_partner_job(osv.osv):
+    def init(self, cr):
+        address_obj = self.pool.get('res.partner.address')
+        contact_obj = self.pool.get('res.partner.contact')
+        address_ids = address_obj.search(cr, 1, [])
+        for address in address_obj.browse(cr, 1, address_ids):
+            contact_id = contact_obj.search(cr, 1, [('name','=', address.name)])
+            if contact_id:
+                contact_id = contact_id[0]
+                self.create(cr, 1, {'address_id': address.id, 'contact_id': contact_id})
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
