@@ -192,7 +192,7 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_payment_order_draft" id="menu_action_payment_order_draft" parent="account_payment.menu_action_payment_order_form" sequence="2" groups="base.group_extended_menu"/>
+        <menuitem action="action_payment_order_draft" id="menu_action_payment_order_draft" parent="account_payment.menu_action_payment_order_form" sequence="2" groups="base.group_useability_extended"/>
 
         <record id="action_payment_order_open" model="ir.actions.act_window">
             <field name="name">Payment Orders to Validate</field>
@@ -202,7 +202,7 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_payment_order_open" id="menu_action_payment_order_open" parent="account_payment.menu_action_payment_order_form" sequence="3" groups="base.group_extended_menu"/>
+        <menuitem action="action_payment_order_open" id="menu_action_payment_order_open" parent="account_payment.menu_action_payment_order_form" sequence="3" groups="base.group_useability_extended"/>
 
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>
