@@ -118,6 +118,7 @@ class project(osv.osv):
         'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
                                   help='The project can be in either if the states \'Template\' and \'Running\'. If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                   If it is to be reviewed then the state is \'Pending\'. When the project is completed the state is set to \'Done\'.'),
+        'company_id': fields.many2one('res.company', 'Company'),
      }
 
     _defaults = {
