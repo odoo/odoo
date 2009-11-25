@@ -101,7 +101,7 @@ class product_product(osv.osv):
                 'and location_dest_id =ANY(%s)'\
                 'and product_id =ANY(%s)'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,states,)
+                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -113,7 +113,7 @@ class product_product(osv.osv):
                 'and location_dest_id <> ANY(%s) '\
                 'and product_id =ANY(%s)'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,states,)
+                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')

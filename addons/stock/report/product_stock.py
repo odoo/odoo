@@ -68,10 +68,10 @@ class report_stock(report_int):
 
         cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
-                   "where state =ANY(%s)"
+                   "where state in %s"
                    "and location_id=ANY(%s)"
                    "and product_id=ANY(%s)"
-                   "group by date_planned,product_id",(['confirmed','assigned','waiting'],loc_ids ,product_ids,))
+                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
                 dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
@@ -82,10 +82,10 @@ class report_stock(report_int):
 
         cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
-                   "where state=ANY(%s)"
+                   "where state in %s"
                    "and location_dest_id=ANY(%s)"
                    "and product_id=ANY(%s)"
-                   "group by date_planned,product_id",(['confirmed','assigned','waiting'],loc_ids ,product_ids,))
+                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
 
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
