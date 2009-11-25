@@ -796,10 +796,10 @@
             <field name="model">account.move.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Move Lines">
+                <search string="Search Entry Lines">
                 	<group col='10' colspan='4'>
-                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
-                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
+                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
+                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
 						<separator orientation="vertical"/>
 						<field name="date" select='1'/>
 						<field name="account_id" select='1'/>
@@ -1088,7 +1088,7 @@
         <!--
     TODO:
         Print Journal (and change state)
-        Close Journal (and verify that there is no draft move lines)
+        Close Journal (and verify that there is no draft Entry Lines)
 -->
 
         <record id="view_journal_period_tree" model="ir.ui.view">

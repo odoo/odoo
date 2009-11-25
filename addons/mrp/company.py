@@ -26,7 +26,7 @@ class company(osv.osv):
     _columns = {
         'schedule_range': fields.float('Scheduler Range', required=True,
             help="This is the time frame analysed by the scheduler when "\
-            "computing procurements. All procurement that are not between "\
+            "computing Requisitions. All Requisition that are not between "\
             "today and today+range are skipped for futur computation."),
         'po_lead': fields.float('Purchase Lead Time', required=True,
             help="This is the leads/security time for each purchase order."),

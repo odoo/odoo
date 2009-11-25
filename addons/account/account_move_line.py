@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,12 +46,12 @@ class account_move_line(osv.osv):
 
         if context.get('date_from', False) and context.get('date_to', False):
             where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
-            
+
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
-        
-                
+
+
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
             return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
@@ -292,7 +292,7 @@ class account_move_line(osv.osv):
         if not len(res):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
-    
+
     def _invoice_search(self, cursor, user, obj, name, args):
         if not len(args):
             return []
@@ -550,7 +550,7 @@ class account_move_line(osv.osv):
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
         id_set = ','.join(map(str, ids))
-        
+
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
@@ -826,7 +826,7 @@ class account_move_line(osv.osv):
                 if res:
                     if res[1] != 'draft':
                         raise osv.except_osv(_('UserError'),
-                                _('The account move (%s) for centralisation ' \
+                                _('The Ledger Posting (%s) for centralisation ' \
                                         'has been confirmed!') % res[2])
                     vals['move_id'] = res[0]
 

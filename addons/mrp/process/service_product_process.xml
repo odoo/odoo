@@ -20,7 +20,7 @@
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;If procurement is make to order&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;If Requisition is make to order&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Service on Order&quot;&quot;&quot;" name="name"/>
 			<field name="process_id" ref="process_process_serviceproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
@@ -58,7 +58,7 @@
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable Order Request&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;If Requisition method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_orderrfq0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_serviceonorder0"/>
 		</record>

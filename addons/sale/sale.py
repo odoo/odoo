@@ -196,7 +196,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'.", select=True),
+            ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'.", select=True),
         'date_order': fields.date('Date Ordered', required=True, readonly=True, states={'draft': [('readonly', False)]}),
 
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
@@ -217,8 +217,8 @@ class sale_order(osv.osv):
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.
-  - The 'Invoice from the packing' choice is used to create an invoice during the packing process."""),
+  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all picking lists have been finished.
+  - The 'Invoice from the picking' choice is used to create an invoice during the packing process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
 

@@ -128,7 +128,7 @@ class account_invoice(osv.osv):
                 else:
                     debit+=debit_tmp
                     credit+=credit_tmp
-                    
+
             if not inv.amount_total:
                 result = 0.0
             elif inv.type in ('out_invoice','in_refund'):
@@ -139,7 +139,7 @@ class account_invoice(osv.osv):
                 result = inv.amount_total - amount
             # Use is_zero function to avoid rounding trouble => should be fixed into ORM
             res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id,result) and result or 0.0
-            
+
         return res
 
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
@@ -260,7 +260,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated account moves."),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated Ledger Postings."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])),string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -291,7 +291,7 @@ class account_invoice(osv.osv):
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, None, 50), # Check if we can remove ?
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
-            }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
+            }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Entry Lines'),
@@ -889,7 +889,7 @@ class account_invoice(osv.osv):
             date=context['date_p']
         else:
             date=time.strftime('%Y-%m-%d')
-            
+
         # Take the amount in currency and the currency of the payment
         if 'amount_currency' in context and context['amount_currency'] and 'currency_id' in context and context['currency_id']:
             amount_currency = context['amount_currency']
@@ -897,7 +897,7 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
-            
+
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,

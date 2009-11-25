@@ -191,7 +191,7 @@ class mrp_bom(osv.osv):
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity. For integer only values, put 1.0"),
-        'product_efficiency': fields.float('Product Efficiency', required=True, help="Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."),
+        'product_efficiency': fields.float('Product Efficiency', required=True, help="Material efficiency. A factor of 0.9 means a loss of 10% in the production."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
@@ -786,7 +786,7 @@ class mrp_procurement(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64,
-            help="Reference of the document that created this procurement.\n"
+            help="Reference of the document that created this Requisition.\n"
             "This is automatically completed by Open ERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
@@ -803,7 +803,7 @@ class mrp_procurement(osv.osv):
         'close_move': fields.boolean('Close Move at end', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Requisition Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
-            readonly=True, required=True, help="If you encode manually a procurement, you probably want to use" \
+            readonly=True, required=True, help="If you encode manually a Requisition, you probably want to use" \
             " a make to order method."),
 
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
@@ -1182,12 +1182,12 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a requisition to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a requisition to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The procurement quantity will by rounded up to this multiple."),
+            help="The requisition quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
     }
     _defaults = {

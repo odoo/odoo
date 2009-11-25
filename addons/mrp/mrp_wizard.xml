@@ -3,15 +3,15 @@
     <data>
         <wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="100"/>
-        
-        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
+
+        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute 	Requisitions Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
-        
+
         <wizard id="wiz_mrp_proc2" model="mrp.procurement" string="Compute Stock Minimum Rules Only" name="mrp.procurement.orderpoint.compute"/>
         <menuitem action="wiz_mrp_proc2" id="menu_wiz_mrp_proc2" parent="mrp.mrp_Sched_all" type="wizard"/>
-        
+
         <wizard id="wizard_workcenter_load" model="mrp.workcenter" name="mrp.workcenter.load" string="Workcenter load"/>
-        
+
         <wizard id="wizard_price" menu="False" model="product.product" name="product_price" string="Product Cost Structure"/>
         <record id="ir_project_cost_structure" model="ir.values">
             <field eval="'client_print_multi'" name="key2"/>
@@ -22,18 +22,18 @@
         </record>
 
     <wizard
-        string="Procurement Request"
+        string="Requisition Request"
         model="product.product"
         name="product.product.procurement"
         keyword="client_action_multi"
         id="product_procurement_wizard"/>
-    
+
     <wizard
         id="stock.track_line"
         model="stock.move"
         multi="True"
         name="mrp.stock.move.track"
-        string="Track line"/>    
+        string="Track line"/>
 
     </data>
 </openerp>

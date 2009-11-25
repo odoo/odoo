@@ -187,8 +187,8 @@
                                 <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-print"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Requisition" icon="gtk-ok"/>
+                                <button name="ship_corrected" states="shipping_except" string="Requisition Corrected" icon="gtk-apply"/>
                                 <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-print"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
@@ -218,7 +218,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
@@ -240,14 +240,14 @@
                </search>
             </field>
         </record>
-        
+
         <record id="action_order_form" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
 
@@ -258,7 +258,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order" groups="base.group_useability_extended"/>
 
@@ -268,7 +268,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order" groups="base.group_useability_extended"/>
 
@@ -290,7 +290,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except'))]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="menu_action_order_tree_all" groups="base.group_useability_extended"/>
 
@@ -302,7 +302,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.menu_action_order_tree_all" groups="base.group_useability_extended"/>
 
@@ -313,7 +313,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.menu_action_order_tree_all" sequence="2" groups="base.group_useability_extended"/>
 
@@ -325,7 +325,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.menu_action_order_tree_all" sequence="1" groups="base.group_useability_extended"/>
 
@@ -336,7 +336,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="menu_action_order_tree" groups="base.group_useability_extended"/>
 
@@ -347,7 +347,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.menu_action_order_tree" groups="base.group_useability_extended"/>
 
@@ -358,7 +358,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.menu_action_order_tree" sequence="2" groups="base.group_useability_extended"/>
 
@@ -369,7 +369,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.menu_action_order_tree" sequence="1" groups="base.group_useability_extended"/>
 
@@ -381,7 +381,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('date_order','&lt;',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
         <record id="view_order_line_graph" model="ir.ui.view">
@@ -503,7 +503,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
         <menuitem action="action_order_line_tree2" id="menu_action_order_line_tree2" parent="sale.menu_action_order_line_tree1" groups="base.group_useability_extended"/>
 
@@ -514,7 +514,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
         <menuitem action="action_order_line_tree3" id="menu_action_order_line_tree3" parent="sale.menu_action_order_line_tree2" groups="base.group_useability_extended"/>
 

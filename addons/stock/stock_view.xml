@@ -462,7 +462,7 @@
             <field name="model">stock.picking.move.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Move Lines">
+                <form string="Entry Lines">
                     <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
                     <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"/><newline/>
@@ -487,7 +487,7 @@
 
 
         =============================
-        Packing
+        Picking
         =============================
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
@@ -507,7 +507,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Packing list">
+                <tree color="red:state=='cancel'" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -524,7 +524,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Packing list">
+                <form string="Picking list">
                     <group colspan="4" col="6">
                         <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
                         <field name="type"/>
@@ -606,7 +606,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Packing list">
+                <tree color="red:state=='cancel'" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -622,7 +622,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Packing list">
+                <form string="Picking list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="1"/>
                         <field name="type"/>
@@ -819,7 +819,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state=='cancel';grey:state=='confirmed';blue:state=='done'" string="Packing list">
+                <tree colors="red:state=='cancel';grey:state=='confirmed';blue:state=='done'" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -836,7 +836,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Packing list">
+                <form string="Picking list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="2"/>
                         <field name="type"/>
@@ -888,7 +888,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Packing Done" type="action" icon="gtk-execute"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -939,7 +939,7 @@
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
 
         <record id="action_picking_tree2" model="ir.actions.act_window">
-            <field name="name">Available Packing</field>
+            <field name="name">Available Picking</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -969,7 +969,7 @@
         <menuitem action="action_picking_tree2" id="menu_picking_waiting" parent="menu_action_picking_tree" groups="base.group_useability_extended"/>
 
         <record id="action_picking_tree3" model="ir.actions.act_window">
-            <field name="name">Confirmed Packing Waiting Availability</field>
+            <field name="name">Confirmed Picking Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1006,7 +1006,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Packing list">
+                <tree color="red:state=='cancel'" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -1023,7 +1023,7 @@
             <field name="model">stock.picking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Input Packing List">
+                <form string="Input Picking List">
                     <group colspan="4" col="6">
                         <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'contact_display':'partner'}"/>
                         <field name="type"/>
@@ -1129,7 +1129,7 @@
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_root" sequence="17"/>
 
         <record id="action_picking_tree5" model="ir.actions.act_window">
-            <field name="name">Packing to Process</field>
+            <field name="name">Picking to Process</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1159,7 +1159,7 @@
         <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="menu_action_picking_tree4" groups="base.group_useability_extended"/>
 
         <record id="action_picking_form" model="ir.actions.act_window">
-            <field name="name">New Reception Packing</field>
+            <field name="name">New Reception Picking</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1201,7 +1201,7 @@
 
 
         <record id="action_picking_tree7" model="ir.actions.act_window">
-            <field name="name">Available Packing</field>
+            <field name="name">Available Picking</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1214,7 +1214,7 @@
         <menuitem action="action_picking_tree7" id="menu_action_picking_tree7" parent="menu_action_picking_tree6" groups="base.group_useability_extended"/>
 
         <record id="action_picking_tree8" model="ir.actions.act_window">
-            <field name="name">Confirmed Packing Waiting Availability</field>
+            <field name="name">Confirmed Picking Waiting Availability</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1227,7 +1227,7 @@
         <menuitem action="action_picking_tree8" id="menu_action_picking_tree8" parent="menu_action_picking_tree6" groups="base.group_useability_extended"/>
 
         <record id="action_picking_tree9" model="ir.actions.act_window">
-            <field name="name">New Internal Packing</field>
+            <field name="name">New Internal Picking</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1341,7 +1341,7 @@
         <menuitem action="action_move_form4" id="menu_action_move_form4" parent="menu_action_move_form2" groups="base.group_useability_extended"/>
 
         <record id="action_picking_all" model="ir.actions.act_window">
-            <field name="name">Packing</field>
+            <field name="name">Picking</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

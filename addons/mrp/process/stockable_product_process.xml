@@ -69,7 +69,7 @@
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable Request&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If Product type is Stockable and procure method is make to stock&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;If Product type is Stockable and Requisition method is make to stock&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_rfq0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_stock0"/>
 		</record>
@@ -78,7 +78,7 @@
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
 			<field eval="&quot;&quot;&quot;Stockable Production Order&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;If Requisition method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_production0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_stock0"/>
 		</record>

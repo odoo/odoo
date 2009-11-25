@@ -32,8 +32,8 @@
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Procurement for each line&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sale Order Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Requisition for each line&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="process_process_salesprocess0"/>
             <field name="process_id" ref="mrp.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
@@ -66,8 +66,8 @@
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Procurement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;One procurement for each product.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;One requisition for each product.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="mrp.process_process_procurementprocess0"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -158,8 +158,8 @@
 
         <record id="process_transition_saleprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Sale Procurement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Procurement is created after confirmation of sale order.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sale Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Requisition is created after confirmation of sale order.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_saleprocurement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
         </record>
@@ -200,8 +200,8 @@
         <record id="process_transition_saleorderprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Sale Procurement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;In sale order , procuerement for each line and it comes into the procurement order&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sale Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;In sale order , 	requisition for each line and it comes into the requisition order&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="mrp.process_node_procureproducts0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>
