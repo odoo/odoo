@@ -1326,7 +1326,7 @@ class orm_template(object):
                 xml = self.__get_default_calendar_view()
             else:
                 xml = ''
-            result['arch'] = etree.fromstring(xml)
+            result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0

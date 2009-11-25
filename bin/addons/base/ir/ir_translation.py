@@ -133,14 +133,14 @@ class ir_translation(osv.osv):
                         'and type=%s ' \
                         'and name=%s ' \
                         'and src=%s',
-                    (lang, tt, str(name), source))
+                    (lang, tt, tools.ustr(name), source))
         else:
             cr.execute('select value ' \
                     'from ir_translation ' \
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s',
-                    (lang, tt, str(name)))
+                    (lang, tt, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or ''
         return trad
