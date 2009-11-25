@@ -151,6 +151,7 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'city':fields.related('address','city',type='char', string='City'),
         'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def _default_category(self, cr, uid, context={}):
