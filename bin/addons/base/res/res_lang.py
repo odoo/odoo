@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,13 +34,14 @@ class lang(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'code': fields.char('Code', size=5, required=True),
+        'code': fields.char('Locale Code', size=5, required=True, help='This field is used to set/get locales for user'),
+        'iso_code': fields.char('ISO code', size=5, required=False, help='This ISO code is the name of po files to use for translations'),
         'translatable': fields.boolean('Translatable'),
         'active': fields.boolean('Active'),
         'direction': fields.selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], 'Direction',required=True),
         'date_format':fields.char('Date Format',size=64,required=True),
         'time_format':fields.char('Time Format',size=64,required=True),
-        'grouping':fields.char('Separator Format',size=64,required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),        
+        'grouping':fields.char('Separator Format',size=64,required=True,help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."),
         'decimal_point':fields.char('Decimal Separator', size=64,required=True),
         'thousands_sep':fields.char('Thousands Separator',size=64),
     }
@@ -65,7 +66,7 @@ class lang(osv.osv):
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
 
         grouping = eval(lang_obj.grouping)
-        
+
         if not grouping:
             return (s, 0)
         result = ""
@@ -107,13 +108,13 @@ class lang(osv.osv):
             raise ValueError("format() must be given exactly one %char format specifier")
 
         lang_obj=self.browse(cr,uid,ids[0])
-        
+
         formatted = percent % value
         # floats and decimal ints need special action!
         if percent[-1] in 'eEfFgG':
             seps = 0
             parts = formatted.split('.')
-            
+
             if grouping:
                 parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary)
 

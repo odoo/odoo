@@ -20,6 +20,7 @@
                     <rng:ref name="image"/>
                     <rng:ref name="form"/>
                     <rng:ref name="vpaned"/>
+                    <rng:ref name="attribute"/>
                     <rng:ref name="filter"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
@@ -48,6 +49,7 @@
                     <rng:ref name="tree"/>
                     <rng:ref name="group"/>
                     <rng:ref name="button"/>
+                    <rng:ref name="attribute"/>
                     <rng:ref name="filter"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -182,6 +184,7 @@
                 <rng:choice>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
+                    <rng:ref name="attribute" />
                     <rng:ref name="label" />
                     <rng:ref name="field"/>
                     <rng:ref name="group"/>
@@ -219,6 +222,7 @@
             <rng:optional><rng:attribute name="orientation"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="attribute"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="field"/>
@@ -261,6 +265,15 @@
                     <rng:ref name="graph"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="attribute">
+        <rng:element name="attribute">
+            <rng:attribute name="name" />
+            <rng:zeroOrMore>
+                <rng:text />
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -314,6 +327,7 @@
             <rng:optional><rng:attribute name="selection"/></rng:optional>            
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="attribute" />
                     <rng:ref name="form"/>
                     <rng:ref name="data"/>
                     <rng:ref name="tree"/>
@@ -348,6 +362,7 @@
             <rng:optional><rng:attribute name="color" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="attribute"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="field"/>
@@ -413,6 +428,7 @@
             <rng:optional><rng:attribute name="help"/></rng:optional>            
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="attribute" />
                     <rng:ref name="form" />
                     <rng:ref name="field" />
                     <rng:ref name="tree" />

@@ -97,8 +97,8 @@ class ir_cron(osv.osv, netsvc.Agent):
             db, pool = pooler.get_db_and_pool(db_name)
         except:
             return False        
+        cr = db.cursor()
         try:
-            cr = db.cursor()
             if not pool._init:
                 now = DateTime.now()
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
