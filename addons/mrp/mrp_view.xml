@@ -7,8 +7,8 @@
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--
-    Property / Property Group
-    -->
+        Property / Property Group
+        -->
 
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
@@ -33,7 +33,8 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="menu_mrp_root"
-            groups="group_mrp_manager"/>
+            groups="group_mrp_manager"
+            sequence="-50" />
         <menuitem
             id="menu_mrp_property_group_action_prop"
             name="Properties"
@@ -84,8 +85,8 @@
             parent="menu_mrp_property_group_action_prop"/>
 
         <!--
-    Workcenters
-    -->
+        Workcenters
+        -->
 
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
@@ -144,11 +145,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
         </record>
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration"/>
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration" groups="base.group_extended" />
 
         <!--
-    Routings
-    -->
+        Routings
+        -->
 
         <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
@@ -218,7 +219,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration"/>
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration" groups="base.group_extended"/>
 
         <!--
           Bill of Materials
@@ -549,7 +550,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root" sequence="-30"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
             <field name="name">Production Orders Planning</field>
@@ -768,7 +769,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"
+                  sequence="-40" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Unscheduled procurements</field>

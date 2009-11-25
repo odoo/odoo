@@ -2,7 +2,6 @@
 <openerp>
     <data>
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
-        <menuitem id="menu_products_products" name="Products" parent="product.menu_main_product" sequence="18" />
         <menuitem
             id="menu_config_product"
             name="Configuration"
@@ -195,7 +194,7 @@
             <field name="search_view_id" ref="product_search_form_view"/>
         </record>
 
-        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_products_products" sequence="1"/>
+        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="1"/>
 
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
@@ -593,7 +592,8 @@
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
 
-        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products_products" sequence="2"/>
+        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_main_product" sequence="2"
+                  groups="product.group_product_variant" />
 
         <record id="company_wise_cost_price_form_view" model="ir.ui.view">
             <field name="name">company.wise.cost.price.form</field>
