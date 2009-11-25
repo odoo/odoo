@@ -141,7 +141,7 @@
             </field>
         </record>
         <menuitem name="Point of Sale" id="menu_point_root" />
-        <menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_order_tree2"/>
+
         <wizard 
             string="Wizard default journals"
             model="pos.config.journal"
@@ -179,6 +179,7 @@
             <field name="filter" eval="True"/>
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-%d')),('date_order','&lt;=',time.strftime('%Y-%m-%d'))]</field>
         </record>
+        <menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_order_tree2"/>
 
         <record model="ir.actions.act_window" id="action_pos_order_tree3">
             <field name="name">All orders</field>
