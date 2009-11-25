@@ -53,6 +53,7 @@
 		    <field name="type">search</field>
 		    <field name="arch" type="xml">
 		        <search string="Search Contact">
+		        	<field name="name" select='1'/>
 	           		<field name="partner_id" select='1'/>
 	           		<field name="country_id" select='1'/>
 		       </search>
@@ -320,6 +321,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select='1'/>
                         <field name="country" select='1'/>
+                        <field name="address" select="1"/>
                    </group>
                </search>
             </field>
@@ -358,7 +360,7 @@
             <field name="domain">[('customer','=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_customer_form" id="menu_partner_customer_form" parent="menu_partner_form"/>
+        
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
             <field name="name">Suppliers Partners</field>
             <field name="type">ir.actions.act_window</field>
@@ -368,7 +370,7 @@
             <field name="context">{'default_customer':0}</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_supplier_form" id="menu_partner_supplier_form" parent="menu_partner_form"/>
+        
         <record id="action_partner_other_form" model="ir.actions.act_window">
             <field name="name">Others Partners</field>
             <field name="type">ir.actions.act_window</field>
@@ -377,7 +379,7 @@
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_other_form" id="menu_partner_other_form" parent="menu_partner_form"/>
+        
         <record id="action_partner_customer_form_new" model="ir.actions.act_window">
             <field name="name">New Partner</field>
             <field name="type">ir.actions.act_window</field>
@@ -386,10 +388,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_partner_form"/>            
         </record>
-        <menuitem
-            action="action_partner_customer_form_new"
-            sequence="50"
-            id="menu_partner_customer_form_new" parent="menu_partner_form"/>
 
         <record id="view_payterm_form" model="ir.ui.view">
             <field name="name">res.payterm</field>
