@@ -54,15 +54,6 @@
             <field name="filter" eval="True"/>            
         </record>
 
-        <record id="action_account_analytic_new" model="ir.actions.act_window">
-            <field name="name">New Analytic Account</field>
-            <field name="res_model">account.analytic.account</field>
-
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,graph</field>
-        </record>
-        <menuitem action="action_account_analytic_new" id="menu_action_account_analytic_new" sequence="50" parent="account_analytic_analysis.menu_account"/>
-
         <record id="action_account_analytic_all" model="ir.actions.act_window">
             <field name="name">All Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
