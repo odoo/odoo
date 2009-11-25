@@ -334,29 +334,37 @@
                     <field name="src_model" select="2"/>
                     <field name="usage"/>
                     <field name="view_type"/>
-                    <field colspan="4" name="view_ids">
-                        <form string="Views">
-                            <field colspan="4" name="sequence"/>
-                            <field name="view_mode"/>
-                            <field domain="[('type', '=', view_mode)]" name="view_id"/>
-                        </form>
-                        <tree string="Views">
-                            <field name="sequence"/>
-                            <field name="view_mode"/>
-                            <field name="view_id"/>
-                        </tree>
-                    </field>
-                    <field colspan="4" name="default_user_ids"/>
-                    <field colspan="4" name="menus"/>
-                    <field colspan="4" name="domain"/>
-                    <field colspan="4" name="context"/>
-                    <field name="limit"/>
-                    <field name="auto_refresh"/>
-                    <newline/>
-                    <field name="view_mode"/>
-                    <field name="filter"/>                    
-                    <field name="view_id"/>
-                    <field name="search_view_id"/>                    
+                    <notebook colspan="4">
+                    	<page string="General Settings">
+		                    <field colspan="4" name="view_ids">
+		                        <form string="Views">
+		                            <field colspan="4" name="sequence"/>
+		                            <field name="view_mode"/>
+		                            <field domain="[('type', '=', view_mode)]" name="view_id"/>
+		                        </form>
+		                        <tree string="Views">
+		                            <field name="sequence"/>
+		                            <field name="view_mode"/>
+		                            <field name="view_id"/>
+		                        </tree>
+		                    </field>
+		                    <field colspan="4" name="default_user_ids"/>
+		                    <field colspan="4" name="menus"/>
+		                    <field colspan="4" name="domain"/>
+		                    <field colspan="4" name="context"/>
+		                    <field name="limit"/>
+		                    <field name="auto_refresh"/>
+		                    <newline/>
+		                    <field name="view_mode"/>
+		                    <field name="filter"/>                    
+		                    <field name="view_id"/>
+		                    <field name="search_view_id"/>
+		                </page>
+		                <page string="Security">
+		                	<separator colspan="4" string="Select Groups" />
+		                	<field name="groups_id" nolabel="1" colspan="4" />
+		                </page>
+	                </notebook>                   
                 </form>
             </field>
         </record>
