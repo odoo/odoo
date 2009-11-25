@@ -57,12 +57,11 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
     # we now searhc for company
     user_obj=pooler.get_pool(cursor.dbname).get('res.users')
     user_current=user_obj.browse(cursor, user, user)
-    
+
     ##
-    
-    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = " + str(user_current.company_id.id))
+    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" ,(user_current.company_id.id,))
     result_invoice = cursor.fetchall()
-    
+
     for inv_id,inv_name in result_invoice:
         inv_name =  re.sub('[^0-9]', '0', str(inv_name))
         if inv_name == reference:
@@ -72,7 +71,7 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
         cursor.execute('SELECT l.id ' \
                     'FROM account_move_line l, account_invoice i ' \
                     'WHERE l.move_id = i.move_id AND l.reconcile_id is NULL  ' \
-                        'AND i.id in (' + ','.join([str(x) for x in [id_invoice]]) + ')')
+                        'AND i.id =ANY(%s)',([id_invoice],))
         inv_line = []
         for id_line in cursor.fetchall():
             inv_line.append(id_line[0])
@@ -181,7 +180,7 @@ def _import(obj, cursor, user, data, context):
             ], order='date desc', context=context)
         if not line_ids:
             line_ids = _reconstruct_invoice_ref(cursor,user,reference,None)
-            
+
         line2reconcile = False
         partner_id = False
         account_id = False
