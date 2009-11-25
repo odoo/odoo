@@ -42,8 +42,8 @@ MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft','Draft'),
     ('open','Open'),
-    ('cancel', 'Cancel'),
-    ('done', 'Close'),
+    ('cancel', 'Cancelled'),
+    ('done', 'Closed'),
     ('pending','Pending')
 ]
 
@@ -74,7 +74,9 @@ class crm_case_section(osv.osv):
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
-        "gateway_ids" : fields.one2many("crm.email.gateway",'section_id',"Email Gateway")        
+        "gateway_ids" : fields.one2many("crm.email.gateway",'section_id',"Email Gateway"),
+        'calendar' : fields.boolean('Calendar', help='Allow to show calendar'),   
+             
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -515,6 +517,7 @@ class crm_case(osv.osv):
 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
+        'company_id': fields.many2one('res.company','Company'),
     }
     def _get_default_partner_address(self, cr, uid, context):
         if not context.get('portal',False):
@@ -753,7 +756,7 @@ class crm_case(osv.osv):
                 })
         return True
 
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
         for case in cases:
             data = {
                 'name': keyword,
@@ -767,7 +770,7 @@ class crm_case(osv.osv):
             obj = self.pool.get('crm.case.log')
             if history and case.description:
                 obj = self.pool.get('crm.case.history')
-                data['description'] = case.description
+                data['description'] = details or case.description
                 data['email'] = email or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or False
@@ -1036,6 +1039,60 @@ class crm_email_history(osv.osv):
     }
     _order = 'id desc'
 crm_email_history()
+
+
+class crm_email_add_cc_wizard(osv.osv_memory):
+    _name = "crm.email.add.cc"
+    _description = "Email Add CC"
+    _columns = {
+        'name': fields.selection([('user','User'),('partner','Partner'),('email','Email Address')], 'Send to', required=True),
+        'user_id': fields.many2one('res.users',"User"),
+        'partner_id': fields.many2one('res.partner',"Partner"),
+        'email': fields.char('Email', size=32),
+        'subject': fields.char('Subject', size=32),
+    }
+    
+    def change_email(self, cr, uid, ids, user, partner):
+        if (not partner and not user):
+            return {'value':{'email': False}}
+        email = False
+        if partner:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [partner], ['contact'])
+            if addr:
+                email = self.pool.get('res.partner.address').read(cr, uid,addr['contact'] , ['email'])['email']
+        elif user:
+            addr = self.pool.get('res.users').read(cr, uid, user, ['address_id'])['address_id']
+            if addr:
+                email = self.pool.get('res.partner.address').read(cr, uid,addr[0] , ['email'])['email']
+        return {'value':{'email': email}}
+    
+    
+    def add_cc(self, cr, uid, ids, context={}):
+        data = self.read(cr, uid, ids[0])
+        email = data['email']
+        subject = data['subject']
+
+        if not context:
+            return {}
+        history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
+        crm_case = self.pool.get('crm.case')
+        case = history_line.log_id.case_id
+        body = history_line.description.replace('\n','\n> ')              
+        flag = tools.email_send(
+            case.user_id.address_id.email,
+            [case.email_from],
+            subject or '['+str(case.id)+'] '+case.name,
+            crm_case.format_body(body),
+            email_cc = [email],
+            tinycrm=str(case.id)
+        )
+        if flag:
+            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})             
+        else:                    
+            raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))        
+        return {}
+    
+crm_email_add_cc_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -114,10 +114,15 @@ class make_opportunity(wizard.interface):
             'case_id':data['id'],
             'state':'open',
         })
-        case_obj.write(cr, uid, [data['id']], {
+        
+        vals = {
             'partner_id': data['form']['partner_id'],
             'state':'done',
-        })
+            }
+        case_id = case_obj.read(cr, uid, data['id'], ['case_id'])['case_id']
+        if not case_id:
+            vals.update({'case_id' : new_pros})
+        case_obj.write(cr, uid, [data['id']], vals)
         value = {
             'domain': "[('section_id','=',%d)]"%(id),
             'name': _('Opportunity'),

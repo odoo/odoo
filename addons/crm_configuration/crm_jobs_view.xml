@@ -5,7 +5,7 @@
     # Jobs
     # ------------------------------------------------------ 
 
-    <record model="ir.ui.view" id="crm_case_tree_view11">
+    <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">CRM - Jobs Requests Tree</field>
         <field name="model">crm.case</field>
         <field name="type">tree</field>
@@ -13,10 +13,10 @@
             <tree string="Jobs - Recruitment Tree"  colors="red:state=='open'">
                 <field name="id"/>
                 <field name="name" string="Description"/>
-                <field name="partner_name" string="Candidate Name"/>
-                <field name="partner_phone"/>
+                <field name="partner_name" string="Name"/>
+                <field name="email_from" string="Candidate Email"/>
+                <field name="partner_phone" string="Candidate Phone"/>
                 <field name="categ_id" string="Applied Job" select="1"/>
-                <field name="category2_id" string="Degree" select="1"/>
                 <field name="stage_id"/>
                 <field name="priority" string="Appreciation"/>
                 <field name="user_id"/>
@@ -30,7 +30,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_form_view11">
+    <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">CRM - Jobs Requests Form</field>
         <field name="model">crm.case</field>
         <field name="type">form</field>
@@ -40,7 +40,8 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                    <button name="set_partner" string="Convert to Partner" icon="terp-partner"/>
+                	<button string="Schedule a Phone Call"
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -60,8 +61,11 @@
                         <field name="partner_mobile"/>
                         <field name="email_from" string="Candidate Email"/>
                         <newline/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                        <group col="6" colspan="4">
+                        <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                        <button name="set_partner" string="Convert to Partner" icon="terp-partner"/>
                         <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                        </group>
                         <separator colspan="4" string="Contract Data"/>
                         <field name="probability" string="Availability (weeks)"/>
                         <newline/>
@@ -115,10 +119,14 @@
                        </group>
                        <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="6" colspan="4">
+                            <group col="7" colspan="4">
                                 <field name="date"/>
                                 <field name="email"/>
                                 <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								   name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								   icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -137,7 +145,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_calendar_view11">
+    <record model="ir.ui.view" id="crm_case_calendar_view_job">
         <field name="name">CRM - Jobs Requests Calendar</field>
         <field name="model">crm.case</field>
         <field name="type">calendar</field>
@@ -157,19 +165,35 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Jobs">
-                   <group col="5" colspan="1">
-                       <filter icon="gtk-execute" string="My Jobs" domain="[('user_id','=',uid)]" separator="1" help="Jobs Related to Current User"/>
-                       <filter icon="gtk-execute" string="Initial Jobs" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]" separator="1" help="All Initial Jobs"/>
-                       <filter icon="gtk-execute" string="First Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','First Interview')]" separator="1" help="First Interview"/>
-                       <filter icon="gtk-execute" string="Second Interview" domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Second Interview')]" separator="1" help="Second Interview"/>
+                   <group col="7" colspan="1">
+	                   <filter icon="gtk-home" string="   Today   "
+	                   	separator="1"
+	                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+	                   	help="Todays's Jobs"
+	                   />
+	                   <filter icon="gtk-media-rewind"
+	                   	string="    7 Days    " separator="1"
+	                   	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                   	help="Jobs during last 7 days"
+	                   />
+	                   <separator orientation="vertical"/>
+	                   <filter icon="gtk-new" string="New Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]"
+	                   	separator="1" help="All Initial Jobs"
+	                   />
+	                   <filter icon="gtk-yes" string="Open Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','open')]"
+	                   	separator="1" help="Open Jobs"
+	                   />
+	                   <filter icon="gtk-media-pause" string="Pending Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','pending')]"
+	                   	separator="1" help="Pending Jobs"
+	                   />
                    </group>
-                   <group col="4" colspan="4">
-                       <field name="state" select="1">
-                           <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Jobs"/>
-                           <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Jobs"/>
-                       </field>
-                       <field name="name" select='1'/>
+                   <separator orientation="vertical"/>
+                   <group col="4" colspan="2">
+                   		<field name="name" select='1' string="Name"/>
+                   		<field name="email_from" select='1' string="Email"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
                </search>

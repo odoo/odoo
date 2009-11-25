@@ -30,7 +30,7 @@ import re
 class tax_report(rml_parse.rml_parse):
 	_name = 'report.account.vat.declaration'
 	def __init__(self, cr, uid, name, context):
-		super(tax_report, self).__init__(cr, uid, name, context)
+		super(tax_report, self).__init__(cr, uid, name, context=context)
 		self.localcontext.update({
 			'time': time,
 			'get_period': self._get_period,

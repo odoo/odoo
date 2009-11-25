@@ -44,10 +44,12 @@ class account_budget_post(osv.osv):
         'dotation_ids': fields.one2many('account.budget.post.dotation', 'post_id', 'Spreading'),
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'sequence': fields.integer('Sequence'),        
     }
     _defaults = {
-        'sequence': lambda *a: 1,                 
+        'sequence': lambda *a: 1,   
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,              
     }
     _order = "sequence, name"    
 

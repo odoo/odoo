@@ -65,8 +65,15 @@ class account_analytic_account(osv.osv):
         return r
 
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not acc_set:
+            return res
         
         where_date = ''
         if context.get('from_date',False):
@@ -75,7 +82,7 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
             
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
-        res = {}
+        
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
@@ -85,10 +92,12 @@ class account_analytic_account(osv.osv):
 
         res_currency= self.pool.get('res.currency')
         for id in ids:
+            if id not in ids2:
+                continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
                 if child <> id:
                     res.setdefault(id, 0.0)
-                    if  currency[child]<>currency[id] :
+                    if  currency[child]<>currency[id]:
                         res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
                     else:
                         res[id] += res.get(child, 0.0)
@@ -96,14 +105,22 @@ class account_analytic_account(osv.osv):
         cur_obj = res_currency.browse(cr,uid,currency.values(),context)
         cur_obj = dict([(o.id, o) for o in cur_obj])
         for id in ids:
-            res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0))
+            if id in ids2:
+                res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0))
 
         return dict([(i, res[i]) for i in ids ])
 
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
         #XXX must convert into one uom
+        res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not acc_set:
+            return res
         
         where_date = ''
         if context.get('from_date',False):
@@ -115,11 +132,13 @@ class account_analytic_account(osv.osv):
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
                 WHERE a.id IN ('+acc_set+') GROUP BY a.id')
-        res = {}
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
         for id in ids:
+            if id not in ids2:
+                continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
                 if child <> id:
                     res.setdefault(id, 0.0)
@@ -250,10 +269,12 @@ class account_analytic_journal(osv.osv):
         'active' : fields.boolean('Active'),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: True,
         'type': lambda *a: 'general',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 account_analytic_journal()
 

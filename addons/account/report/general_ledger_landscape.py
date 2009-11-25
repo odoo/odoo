@@ -52,7 +52,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         super(general_ledger_landscape, self).set_context(objects, data, new_ids,report_type)
 
     def __init__(self, cr, uid, name, context):
-        super(general_ledger_landscape, self).__init__(cr, uid, name, context)
+        super(general_ledger_landscape, self).__init__(cr, uid, name, context=context)
         self.date_borne = {}
         self.query = ""
         self.child_ids = ""

@@ -33,7 +33,6 @@ class sale_shop(osv.osv):
     _columns = {
         'name': fields.char('Shop Name', size=64, required=True),
         'payment_default_id': fields.many2one('account.payment.term', 'Default Payment Term', required=True),
-        'payment_account_id': fields.many2many('account.account', 'sale_shop_account', 'shop_id', 'account_id', 'Payment Accounts'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
@@ -224,7 +223,7 @@ class sale_order(osv.osv):
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
-        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
+        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packing', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped': fields.boolean('Picked', readonly=True),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
@@ -254,7 +253,8 @@ class sale_order(osv.osv):
 
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
@@ -510,12 +510,13 @@ class sale_order(osv.osv):
         write_done_ids = []
         write_cancel_ids = []
         stock_move_obj = self.pool.get('stock.move')
-
         for order in self.browse(cr, uid, ids, context={}):
             
             #check for pending deliveries 
             pending_deliveries = False
-            
+            # check => if order_lines do not exist,don't proceed for any mode.
+            if not order.order_line:
+                return False
             for line in order.order_line:    
                 move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
@@ -523,8 +524,9 @@ class sale_order(osv.osv):
                     #this order line is not yet delivered
                     if move.state in ('draft', 'auto', 'confirmed'):
                         pending_deliveries = True
-                
-                if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
+                # Reason => if there are no move lines,the following condition will always set to be true,and will set SO to 'DONE'.
+                # Added move_ids check to SOLVE.
+                if move_ids and ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
 #                    finished = True
                     if line.state != 'done':
                         write_done_ids.append(line.id)
@@ -537,7 +539,6 @@ class sale_order(osv.osv):
                             write_cancel_ids.append(line.id)
                     else:
                         notcanceled = True
-
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -766,6 +767,7 @@ class sale_order_line(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'Status', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
+        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
     }
     _order = 'sequence, id'
     _defaults = {
@@ -824,6 +826,9 @@ class sale_order_line(osv.osv):
                             int(config['price_accuracy']))
                 fpos = line.order_id.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
+                if not a:
+                    raise osv.except_osv(_('Error !'),
+                                _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
                     'origin': line.order_id.name,

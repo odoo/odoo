@@ -1,0 +1,888 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-09-16 12:48+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 04:53+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: purchase
+#: field:purchase.order,invoiced:0
+msgid "Invoiced & Paid"
+msgstr "Fatturato e Pagato"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_invoiceafterpacking0
+msgid "Supplier Invoice pre-generated on receptions for control"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,location_id:0
+msgid "Destination"
+msgstr "Destinazione"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From Picking"
+msgstr "Da Prelievo"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Validated By"
+msgstr ""
+
+#. module: purchase
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,partner_id:0
+msgid "Supplier"
+msgstr "Fornitore"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery"
+msgstr "Consegna"
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "Quantità"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From Order"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
+msgid "Confirmed Purchase"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Invoice Exception"
+msgstr "Eccezione Fattura"
+
+#. module: purchase
+#: model:product.pricelist,name:purchase.list0
+msgid "Default Purchase Pricelist"
+msgstr "Listino Predefinito Prezzi Acquisto"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
+msgid "Create invoice"
+msgstr ""
+
+#. module: purchase
+#: help:res.partner,property_product_pricelist_purchase:0
+msgid ""
+"This pricelist will be used, instead of the default one, for purchases from "
+"the current partner"
+msgstr ""
+"Questo listino verrà utilizzato, al posto di quello predefinito, per gli "
+"acquisti dal partner corrente."
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Fax :"
+msgstr "Fax :"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_productrecept0
+msgid "Create invoice from product recept"
+msgstr "Creare fattura da ricezione prodotti"
+
+#. module: purchase
+#: help:purchase.order,pricelist_id:0
+msgid ""
+"The pricelist sets the currency used for this purchase order. It also "
+"computes the supplier price for the selected products/quantities."
+msgstr ""
+"Il listino, oltre a definire la valuta utilizzata per questo ordine, calcola "
+"il prezzo del fornitore per i prodotti e le quantità selezionate"
+
+#. module: purchase
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase Process"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
+msgid "Invoice from Packing list"
+msgstr "Fattura da Lista di Prelievo"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approve Purchase"
+msgstr "Approva Acquisto"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Approved"
+msgstr "Approvato"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action4
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action4
+msgid "Purchase Orders in Progress"
+msgstr "Ordini Acquisto in corso"
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Totale Imponibile"
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,notes:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,notes:0
+msgid "Notes"
+msgstr "Note"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: field:purchase.order,amount_tax:0
+#: field:purchase.order.line,taxes_id:0
+msgid "Taxes"
+msgstr "Tasse"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_order
+#: model:process.node,name:purchase.process_node_purchaseorder0
+#: view:purchase.order:0
+#: model:res.request.link,name:purchase.req_link_purchase_order
+#: field:stock.picking,purchase_id:0
+msgid "Purchase Order"
+msgstr "Ordine Acquisto"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Regards,"
+msgstr "Saluti,"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Total :"
+msgstr "Totale netto:"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Cancelled"
+msgstr "Annullato"
+
+#. module: purchase
+#: help:purchase.order,state:0
+msgid ""
+"The state of the purchase order or the quotation request. A quotation is a "
+"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
+"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
+"order to change the state to 'Approved'. When the purchase order is paid and "
+"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
+"or in the reception of goods, the state becomes in exception."
+msgstr ""
+"Lo stato della richiesta di preventivo o di ordine. Un preventivo è un "
+"ordine in stato di 'Bozza'. Nel momento in cui un ordine viene confermato da "
+"un utente, lo stato passa automaticamente a 'Confermato'. Poi il fornitore "
+"dovrà confermare l'ordine (lo stato passerà ad 'approvato'). Infine, quando "
+"l'ordine verrà ricevuto e pagato, lo stato diventerà 'Completato'. Se si "
+"procederà ad annullare un'operazione durante le fasi di fatturazione o di "
+"ricezione, lo stato dell'ordine verrà passato a 'Eccezione'."
+
+#. module: purchase
+#: field:purchase.order,origin:0
+msgid "Origin"
+msgstr "Origine"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinglist0
+msgid "Incoming Products"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Qty"
+msgstr "Qta'"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Manually Corrected"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Reference"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "TVA :"
+msgstr "IVA :"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Tel.:"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Contabilità Analitica"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+msgid "Purchase Order lines"
+msgstr "Riga Ordine Acquisto"
+
+#. module: purchase
+#: field:purchase.order,validator:0
+msgid "Validated by"
+msgstr "Confermata da"
+
+#. module: purchase
+#: help:purchase.order,invoice_method:0
+msgid ""
+"From Order: a draft invoice will be pre-generated based on the purchase "
+"order. The accountant will just have to validate this invoice for control.\n"
+"From Picking: a draft invoice will be pre-genearted based on validated "
+"receptions.\n"
+"Manual: no invoice will be pre-generated. The accountant will have to encode "
+"manually."
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Invoice based on deliveries"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Net Price"
+msgstr "Prezzo Netto"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Order Line"
+msgstr "Riga Ordine"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Confirmed"
+msgstr "Confermato"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_productrecept0
+msgid "Product Receipt"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
+msgid "Confirm"
+msgstr "Conferma"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Invoice Control"
+msgstr "Controllo Fatturazione"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Waiting"
+msgstr "In attesa"
+
+#. module: purchase
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "Lista di Presa in Carico"
+
+#. module: purchase
+#: field:purchase.order,warehouse_id:0
+msgid "Warehouse"
+msgstr "Magazzino"
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr "Righe Ordine"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
+msgid "Confirm Purchase order from Request for quotation without origin"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Fax:"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Untaxed amount"
+msgstr "Totale Imponibile"
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Expected Date"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Shipping address :"
+msgstr "Indirizzo Spedizione:"
+
+#. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Listino Prezzi d'Acquisto"
+
+#. module: purchase
+#: field:purchase.order,minimum_planned_date:0
+msgid "Planned Date"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved by Supplier"
+msgstr "Approvato da Fornitore"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packing"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.wizard,name:purchase.purchase_order_merge
+msgid "Merge purchases"
+msgstr "Unisci Acquisti"
+
+#. module: purchase
+#: field:purchase.order.line,move_dest_id:0
+msgid "Reservation Destination"
+msgstr "Destinazione Prenotata"
+
+#. module: purchase
+#: field:purchase.order,name:0
+msgid "Order Reference"
+msgstr "Rif. Ordine"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Done"
+msgstr "Completato"
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0
+msgid "Pricelist"
+msgstr "Listino Prezzi"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_purchaseorder0
+msgid "When controlling invoice from orders"
+msgstr ""
+
+#. module: purchase
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valido per Visualizzazione Architettura!"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_invoicecontrol0
+msgid "Pre-generated supplier invoice to control based on order"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
+msgid "Invoice from Purchase"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_packinglist0
+msgid "Packing is created for the products reception control."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Manual"
+msgstr "Manuale"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
+msgid "Confirming Purchase"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "Approve Purchase order after Confirming"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Shipping Exception"
+msgstr "Eccezione Spedizione"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Encoded manually by the user."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid ""
+"This is computed as the minimum scheduled date of all purchase order lines' "
+"products."
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
+msgid "Purchase orders"
+msgstr "Ordini d'Acquisto"
+
+#. module: purchase
+#: help:purchase.order,dest_address_id:0
+msgid ""
+"Put an address if you want to deliver directly from the supplier to the "
+"customer.In this case, it will remove the warehouse link and set the "
+"customer location."
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Request for Quotation :"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
+msgid "Confirm Purchase order from Request for quotation"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Confirm Purchase Order"
+msgstr "Conferma Ordine d'Acquisto"
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this purchase"
+msgstr "Questa è la lista delle Prese in Carico generate per questo Acquisto"
+
+#. module: purchase
+#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.ui.menu,name:purchase.menu_purchase_root
+msgid "Purchase Management"
+msgstr "Gestione Acquisti"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Partner Ref."
+msgstr "Rif. Partner"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Taxes :"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoiced_rate:0
+msgid "Invoiced"
+msgstr "Fatturato"
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Destination Address"
+msgstr "Indirizzo Destinazione"
+
+#. module: purchase
+#: view:purchase.order.line:0
+#: field:stock.move,purchase_line_id:0
+msgid "Purchase Order Line"
+msgstr "Riga Ordine d'Acquisto"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Calendar View"
+msgstr "Vista calendario"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Set to Draft"
+msgstr "Imposta come Bozza"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_approvepurchaseorder0
+msgid "Purchase order is approved by supplier."
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_invoiceafterpacking0
+#: model:process.node,name:purchase.process_node_invoicecontrol0
+msgid "Draft Invoice"
+msgstr "Bozza Fattura"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order
+msgid "Purchase order"
+msgstr "Ordine Acquisto"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_packinginvoice0
+msgid "Packing Invoice"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
+msgid "Creates invoice from packin list"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,date_order:0
+msgid "Date on which this document has been created."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery & Invoices"
+msgstr "Consegne e Fatture"
+
+#. module: purchase
+#: field:purchase.order,date_order:0
+msgid "Date"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,origin:0
+msgid "Reference of the document that generated this purchase order request."
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Tél. :"
+msgstr "Tel. :"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_purchaseinvoice0
+msgid "After Purchase order , Create invoice."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled date"
+msgstr "Data Programmata"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Our Order Reference"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "TVA:"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Compute"
+msgstr "Calcola"
+
+#. module: purchase
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Purchase Order"
+msgstr "Annulla Ordine d'Acquisto"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_createpackinglist0
+msgid "Create Packing list"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Total :"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_createpackinglist0
+msgid "When purchase order is approved , it creates its packing list."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "History"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,state:0
+msgid "Order Status"
+msgstr "Stato Ordine"
+
+#. module: purchase
+#: field:purchase.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Subtotale"
+
+#. module: purchase
+#: model:product.pricelist.version,name:purchase.ver0
+msgid "Default Purchase Pricelist Version"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Prezzo unitario"
+
+#. module: purchase
+#: field:purchase.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Request for Quotation N°"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,invoice_id:0
+msgid "Invoice"
+msgstr "Fattura"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
+#: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
+#: wizard_button:purchase.order.merge,init,end:0
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Purchases Properties"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,order_id:0
+msgid "Order Ref"
+msgstr "Rif. Ordine"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+msgid "Purchase Orders"
+msgstr "Ordini d'Acquisto"
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+#: wizard_button:purchase.order.merge,init,merge:0
+msgid "Merge orders"
+msgstr "Unisci Ordini"
+
+#. module: purchase
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+"speciali!"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action_new
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
+msgid "New Purchase Order"
+msgstr "Nuovo Ordine d'Acquisto"
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+#: field:purchase.order,shipped_rate:0
+msgid "Received"
+msgstr "Ricevuto"
+
+#. module: purchase
+#: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
+#: selection:purchase.order,state:0
+msgid "Request for Quotation"
+msgstr "Richiesta Preventivo"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinginvoice0
+msgid "Out Packing"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_productrecept0
+msgid "Control invoices on receptions"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date Req."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,date_approve:0
+msgid "Date Approved"
+msgstr "Data Approvazione"
+
+#. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order.line,product_id:0
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: purchase
+#: rml:purchase.order:0
+#: field:purchase.order.line,name:0
+#: rml:purchase.quotation:0
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_productrecept0
+msgid "Product recept invoice"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.quotation:0
+msgid "Expected Delivery address:"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action3
+#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
+msgid "Purchase Order Waiting Approval"
+msgstr "Ordini d'Acquisto in Attesa di Approvazione"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
+msgid "Confirming Purchase Order"
+msgstr "Confermare Ordine di Acquisto"
+
+#. module: purchase
+#: field:purchase.order.line,product_uom:0
+msgid "Product UOM"
+msgstr "Unità di Misura del Prodotto"
+
+#. module: purchase
+#: field:purchase.order.line,move_ids:0
+msgid "Reservation"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
+msgid "Purchase order is confirmed by the user."
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_purchaseinvoice0
+msgid "Purchase Invoice"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Your Order Reference"
+msgstr ""
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Purchase Order Confirmation N°"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total amount"
+msgstr "Importo Totale"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Date Ordered"
+msgstr "Ordinato per data"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Purchase Control"
+msgstr "Controllo Acquisto"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
+msgid "Request For Quotations"
+msgstr "Richiesta di Preventivo"
+
+#. module: purchase
+#: field:purchase.order,invoice_method:0
+msgid "Invoicing Control"
+msgstr "Controllo Fatturazione"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
+msgid "Approve"
+msgstr ""
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+msgid "Approved Purchase"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_packinginvoice0
+msgid "From Packing list, Create invoice."
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Totale"
+
+#. module: purchase
+#: wizard_view:purchase.order.merge,init:0
+msgid "Are you sure you want to merge these orders ?"
+msgstr "Sei sicuro di voler unire questi ordini ?"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
+msgid "Approving Purchase Order"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
+msgid "After approved purchase order , it comes into the supplier invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Stock Moves"
+msgstr ""

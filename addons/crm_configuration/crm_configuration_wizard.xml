@@ -3,10 +3,13 @@
     <data>
 
        <wizard 
-           string="History of Events" 
+         string="History of Events"
            name="crm.case.history.events" 
            model="crm.case" 
-           id="wizard_case_history_event" />
+           id="wizard_case_history_event" 
+           keyword="client_action_relate"
+           
+           />
 
         <wizard
             id="wizard_crm_partner_create"
@@ -31,6 +34,14 @@
             name="crm.case.opportunity_set"
             multi="True"
             string="Convert To Opportunity"/>
+            
+	<wizard
+          id="wizard_partner_create_opportunity"
+            keyword="client_action_multi"
+            model="res.partner"
+            name="crm.case.partner.opportunity_create"
+            menu="False"
+            string="Create Opportunity"/>
 
         <wizard
             id="wizard_crm_reschedule_phone_call"
@@ -39,6 +50,14 @@
             name="crm.case.reschedule_phone_call"
             multi="True"
             string="Schedule Phone Call" />
+            
+	   <wizard
+          id="wizard_partner_create_opportunity1"
+            keyword="client_action_relate"
+            model="res.partner"
+            name="crm.case.partner.opportunity_create"
+            string="Create Opportunity"/>
+            
 
     </data>
 </openerp>

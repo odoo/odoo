@@ -27,7 +27,7 @@ from report import report_sxw
 
 class bids_phones_details(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(bids_phones_details, self).__init__(cr, uid, name, context)
+        super(bids_phones_details, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
         })

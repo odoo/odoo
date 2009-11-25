@@ -25,7 +25,7 @@ from report import report_sxw
 
 class code_barcode(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(code_barcode, self).__init__(cr, uid, name, context)
+        super(code_barcode, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
         })

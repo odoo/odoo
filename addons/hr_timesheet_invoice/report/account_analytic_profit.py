@@ -24,7 +24,7 @@ import pooler
 
 class account_analytic_profit(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_analytic_profit, self).__init__(cr, uid, name, context)
+        super(account_analytic_profit, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'lines': self._lines,
             'user_ids': self._user_ids,

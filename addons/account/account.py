@@ -77,7 +77,10 @@ class account_payment_term_line(osv.osv):
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value',required=True),
+        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value', required=True, help="""Example: 14 days 2%, 30 days net
+1. Line 1: percent 0.02 14 days
+2. Line 2: balance 30 days"""),
+
         'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
@@ -90,6 +93,17 @@ class account_payment_term_line(osv.osv):
         'days2': lambda *a: 0,
     }
     _order = "sequence"
+
+    def _check_percent(self, cr, uid, ids, context={}):
+        obj = self.browse(cr, uid, ids[0])
+        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
+            return False
+        return True
+
+    _constraints = [
+        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+    ]
+    
 account_payment_term_line()
 
 
@@ -464,7 +478,8 @@ class account_journal(osv.osv):
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        #'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
     }
@@ -472,6 +487,7 @@ class account_journal(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'user_id': lambda self,cr,uid,context: uid,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
@@ -506,7 +522,7 @@ class account_fiscalyear(osv.osv):
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company',
-            help="Keep empty if the fiscal year belongs to several companies."),
+            help="Keep empty if the fiscal year belongs to several companies.", required=True),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
@@ -515,6 +531,7 @@ class account_fiscalyear(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'draft',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -573,10 +590,12 @@ class account_period(osv.osv):
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True)
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -657,6 +676,7 @@ class account_journal_period(osv.osv):
         'active': fields.boolean('Active', required=True),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
+        'company_id' : fields.many2one('res.company', 'Company')
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -685,6 +705,7 @@ class account_journal_period(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'active': lambda *a: True,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "period_id"
 
@@ -756,6 +777,7 @@ class account_move(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'name': lambda *a: '/',
@@ -763,6 +785,7 @@ class account_move(osv.osv):
         'period_id': _get_period,
         'type' : lambda *a : 'journal_voucher',
         'date': lambda *a:time.strftime('%Y-%m-%d'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def _check_centralisation(self, cursor, user, ids):

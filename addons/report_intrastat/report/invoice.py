@@ -25,7 +25,7 @@ import pooler
 
 class account_invoice_intrastat(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_invoice_intrastat, self).__init__(cr, uid, name, context)
+        super(account_invoice_intrastat, self).__init__(cr, uid, name, context=context)
         self.total=0
         self.localcontext.update({
             'time': time,

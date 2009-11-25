@@ -389,7 +389,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <field name="priority" position="before">
-                	<field name="planning_line_id" select="2" domain="[('user_id', '=', user_id)]" />
+                	<field name="planning_line_id" select="2" domain="['|', ('user_id','=',user_id), ('user_id','=', False)]"/>
                 </field>
             </field>
         </record>
