@@ -175,15 +175,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col='6' colspan='4'>
+                   <group col='8' colspan='4'>
+	                   <filter icon="terp-partner" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheet"/>
+	                   <filter icon="terp-crm" string="My departments timesheets"  domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
+						<separator orientation="vertical"/>
                        <field name="state">
                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                        </field>
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection">
-                           <filter icon="gtk-execute" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-                           <filter icon="gtk-execute" domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
                        </field>                       
                    </group>
                </search>
