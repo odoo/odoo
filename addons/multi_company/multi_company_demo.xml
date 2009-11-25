@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+<!--                      Partner                        -->    
+        <record id="base.main_partner" model="res.partner">
+            <field name="name">OpenERP Corp.</field>
+        </record>
+		<record id="res_partner_oerp_editor" model="res.partner">
+			<field name="name">OpenERP Editor</field>
+		</record>
+		<record id="res_partner_oerp_us" model="res.partner">
+			<field name="name">OpenERP US</field>
+		</record>
+		<record id="res_partner_oerp_in" model="res.partner">
+			<field name="name">OpenERP IN</field>
+		</record>
+		<record id="res_partner_oerp_be" model="res.partner">
+			<field name="name">OpenERP BE</field>
+		</record>
+		<record id="res_partner_odoo" model="res.partner">
+			<field name="name">Odoo</field>
+		</record>
+		
+<!--                      Company                        -->    		
+		<record id="base.main_company" model="res.company">
+			<field name="name">OpenERP Corp.</field>
+		</record>
+		<record id="res_company_oerp_editor" model="res.company">
+			<field name="partner_id" ref="res_partner_oerp_editor"/>
+			<field name="parent_id" ref="base.main_company"/>
+			<field name="name">OpenERP Editor</field>
+		</record>
+		<record id="res_company_oerp_us" model="res.company">
+			<field name="partner_id" ref="res_partner_oerp_us"/>
+			<field name="parent_id" ref="res_company_oerp_editor"/>
+			<field name="name">OpenERP US</field>
+		</record>
+		<record id="res_company_oerp_be" model="res.company">
+			<field name="partner_id" ref="res_partner_oerp_be"/>
+			<field name="parent_id" ref="res_company_oerp_editor"/>
+			<field name="name">OpenERP BE</field>
+		</record>OpenERP IN
+		<record id="res_company_oerp_in" model="res.company">
+			<field name="partner_id" ref="res_partner_oerp_in"/>
+			<field name="parent_id" ref="res_company_oerp_editor"/>
+			<field name="name">OpenERP IN</field>
+		</record>
+		<record id="res_company_odoo" model="res.company">
+			<field name="partner_id" ref="res_partner_odoo"/>
+			<field name="parent_id" ref="base.main_company"/>
+			<field name="name">Odoo</field>
+		</record>
+		
+<!--                      User                        -->
+
+		<record id="res_users_editor_demo" model="res.users">
+			<field name="password">editor_demo</field>
+			<field name="name">OpenERP Editor</field>
+			<field name="login">editor_demo</field>
+			<field name="company_id" ref="res_company_oerp_editor"/>
+		</record>
+		<record id="res_users_sales_demo_us" model="res.users">
+			<field name="password">sales_demo_us</field>
+			<field name="name">OpenERP Salesman US</field>
+			<field name="login">sales_demo_us</field>
+			<field name="company_id" ref="res_company_oerp_us"/>
+		</record>
+		<record id="res_users_sales_demo_be" model="res.users">
+			<field name="password">sales_demo_be</field>
+			<field name="name">OpenERP Salesman BE</field>
+			<field name="login">sales_demo_be</field>
+			<field name="company_id" ref="res_company_oerp_be"/>
+		</record>
+		<record id="res_users_sales_demo_in" model="res.users">
+			<field name="password">sales_demo_in</field>
+			<field name="name">OpenERP Salesman IN</field>
+			<field name="login">sales_demo_in</field>
+			<field name="company_id" ref="res_company_oerp_in"/>
+		</record>
+		<record id="res_users_odoo_demo" model="res.users">
+			<field name="password">odoo_demo</field>
+			<field name="name">Odoo</field>
+			<field name="login">odoo_demo</field>
+			<field name="company_id" ref="res_company_odoo"/>
+		</record>
+
+
+        <!--
+	Resource: product.product
+	-->
+        
+        <record id="product.product_product_0" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_1" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_pc1" model="product.product">
+    	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_pc2" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_pc3" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_pc4" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_mb1" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_mb2" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_cpu1" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_cpu3" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_hdd1" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_hdd2" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_hdd3" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_fan" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_fan2" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_cpu_gen" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_ram" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_ram512" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_cpu2" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_tow1" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_20" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_21" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_22" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_23" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_24" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_25" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="product.product_product_26" model="product.product">
+	    <field name="company_id" ref="res_company_oerp_editor"/>
+        </record>
+        <record id="Odoo1" model="product.category">
+            <field name="parent_id" ref="product.cat0"/>
+            <field name="name">Odoo Offers</field>
+        </record>
+        <record id="product_product_odoo1" model="product.product">
+            <field name="default_code">ODOO</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">35.0</field>
+            <field name="standard_price">10.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="name">Odoo Offer</field>
+            <field name="categ_id" ref="Odoo1"/>
+	    <field name="company_id" ref="res_company_odoo"/>
+        </record>
+
+        <!--
+	Resource: sale.order
+	-->
+
+        <record id="sale.order" model="sale.order">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="sale.order2" model="sale.order">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="sale.order3" model="sale.order">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="sale.order4" model="sale.order">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="sale.order5" model="sale.order">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+<!--		Project		-->
+
+        <record id="project.project_project_9" model="project.project">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_project_21" model="project.project">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_project_22" model="project.project">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_project_23" model="project.project">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="project.project_task_116" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_130" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_131" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_184" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_186" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_188" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_189" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_190" model="project.task">
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_192" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_193" model="project.task">
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_194" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_195" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_196" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_197" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_198" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_199" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_200" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_201" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_202" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_203" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_204" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_205" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_206" model="project.task">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+
+       
+        <!--
+		Resource: res.partner
+		-->
+        
+        <record id="base.res_partner_asus" model="res.partner">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_agrolait" model="res.partner">
+            	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_c2c" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_sednacom" model="res.partner">
+          	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_thymbra" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_desertic_hispafuentes" model="res.partner">
+        	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_tinyatwork" model="res.partner">
+	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
+	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_3" model="res.partner">
+            	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_4" model="res.partner">
+        	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_5" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_6" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_maxtor" model="res.partner">
+          	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_seagate" model="res.partner">
+          	    <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_8" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_9" model="res.partner">
+          	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_10" model="res.partner">
+       	    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_11" model="res.partner">
+           	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_14" model="res.partner">
+          	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_15" model="res.partner">
+         	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_accent" model="res.partner">
+         	    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>        
+        
+
+
+    </data>
+</openerp>
+

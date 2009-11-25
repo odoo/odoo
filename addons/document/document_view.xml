@@ -243,40 +243,86 @@
         </field>
     </record>
 
+    <!-- initial ftp server address, port configuration -->
 
-        <record id="view_auto_config_form" model="ir.ui.view">
-            <field name="name">Auto Configure Directory</field>
-            <field name="model">document.configuration.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Auto Configure">
-                    <separator string="Document Management System." colspan="4"/>
-                    <label string="This wizard will automatically configure the document management system according to modules installed on your system." align="0.0" colspan="4"/>
-                    <field name="host" colspan="4"/>
-                    <separator string="" colspan="4"/>
-                    <label string="" colspan="2"/>
-                    <group col="4" colspan="2">
-                        <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
-                        <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
+    <record id="view_auto_config_form" model="ir.ui.view">
+        <field name="name">Auto Configure Directory</field>
+        <field name="model">document.configuration.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auto Configure">
+                <separator string="Document Management System." colspan="4"/>
+                <label string="This wizard will automatically configure the document management system according to modules installed on your system." align="0.0" colspan="4"/>
+                <separator string="" colspan="4"/>
+                <label string="Choose the ftp server address and port. These values will be stored in the configuration file." align="0.0" colspan="4"/>
+                <field name="host" colspan="4"/>
+                <field name="suggested_host" colspan="4"/>
+                <field name="port" colspan="4"/>
+                <separator string="" colspan="4"/>
+                <label string="" colspan="2"/>
+                <group col="4" colspan="2">
+                    <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
+                    <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
 
-        <record id="action_config_auto_directory" model="ir.actions.act_window">
-            <field name="name">Auto Configure Directory</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">document.configuration.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+    <record id="action_config_auto_directory" model="ir.actions.act_window">
+        <field name="name">Auto Configure Directory</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.configuration.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
-        <record model="ir.actions.todo" id="config_auto_directory">
-            <field name="name">Auto Configure Directory</field>
-            <field name="note">This wizard will configure the URL of the server of the document management system.</field>
-            <field name="action_id" ref="action_config_auto_directory"/>
-        </record>
+    <record model="ir.actions.todo" id="config_auto_directory">
+        <field name="name">Auto Configure Directory</field>
+        <field name="note">This wizard will configure the URL of the server of the document management system. These ftp server address and port will be stored in the configuration file.</field>
+        <field name="action_id" ref="action_config_auto_directory"/>
+    </record>
+
+    <!-- ftp server address, port configuration -->
+
+    <record id="view_config_form" model="ir.ui.view">
+        <field name="name">Configure FTP server address</field>
+        <field name="model">document.configuration.ftp_server.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="FTP Server Configuration">
+                <separator string="Document Management System." colspan="4"/>
+                <label string="This wizard will configure the ftp server address and port." align="0.0" colspan="4"/>
+                <label string="These values will be stored in the configuration file." align="0.0" colspan="4"/>
+                <field name="host" colspan="4"/>
+                <field name="suggested_host" colspan="4"/>
+                <field name="port" colspan="4"/>
+                <separator string="" colspan="4"/>
+                <label string="" colspan="2"/>
+                <group col="4" colspan="2">
+                    <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
+                    <button name="action_config" string="Configure" icon='gtk-ok' type="object"/>
+                </group>
+                <group col="4" colspan="4">
+                  <label string="Don't forget to restart the Open ERP server if you change these values !" align="0.0" colspan="4"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_config_ftp_server" model="ir.actions.act_window">
+        <field name="name">Configure FTP server address</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.configuration.ftp_server.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="FTP Server Configuration"
+              id="menu_document_configuration_ftpserver"
+              action="action_config_ftp_server"
+              parent="menu_document_configuration"/>
 
 </data>
 </openerp>

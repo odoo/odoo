@@ -1,0 +1,535 @@
+# Korean translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-09-08 12:57+0000\n"
+"Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
+"Language-Team: Korean <ko@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 04:54+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_invoicetoassociate0
+msgid "invoice to associate"
+msgstr "연관지을 인보이스"
+
+#. module: membership
+#: model:process.process,name:membership.process_process_membershipprocess0
+msgid "Membership Process"
+msgstr "멤버십 프로세스"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Paid Member"
+msgstr "결제한 멤버"
+
+#. module: membership
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: membership
+#: field:report.partner_member.year,currency:0
+#: field:report.partner_member.year_new,currency:0
+msgid "Currency"
+msgstr "통화"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_setassociation0
+msgid "Set an associate member of partner."
+msgstr "파트너의 연관 멤버로 설정"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_invoicetopaid0
+msgid "Invoice is be paid."
+msgstr "인보이스가 결제됨"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_membershipproduct0
+msgid "Define membership product."
+msgstr "멤버십 상품 정의"
+
+#. module: membership
+#: field:product.product,membership_date_to:0
+msgid "Date to"
+msgstr "종료 날짜"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_waitingtoinvoice0
+msgid "Waiting to invoice"
+msgstr "인보이스 대기"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_producttomember0
+msgid "Product to member"
+msgstr "멤버에 대한 상품"
+
+#. module: membership
+#: field:res.partner,associate_member:0
+msgid "Associate member"
+msgstr "연관 멤버"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_associatedmember0
+msgid "Member is associated."
+msgstr "멤버가 연관되었습니다."
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_associationpartner0
+msgid "Associated partner."
+msgstr "연관 파트너."
+
+#. module: membership
+#: constraint:account.account:0
+msgid "Error ! You can not create recursive accounts."
+msgstr "에러! 재귀적 계정을 생성할 수는 없습니다."
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: BVR reference is required."
+msgstr "에러: BVR 참조가 필요합니다."
+
+#. module: membership
+#: field:product.product,membership_date_from:0
+msgid "Date from"
+msgstr "시작 날짜"
+
+#. module: membership
+#: field:membership.membership_line,partner:0
+msgid "Partner"
+msgstr "파트너"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_free
+#: model:ir.ui.menu,name:membership.menu_members_free
+msgid "Free members"
+msgstr "자유 멤버"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_invoicetopaid0
+msgid "Invoice to paid"
+msgstr "결제할 인보이스"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Partners"
+msgstr "파트너"
+
+#. module: membership
+#: field:membership.membership_line,date_from:0
+msgid "From"
+msgstr ""
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "에러, 이 멤버십 상품은 날짜가 지났습니다."
+
+#. module: membership
+#: wizard_button:wizard_invoice_membership,init,ok:0
+msgid "Confirm"
+msgstr "확정"
+
+#. module: membership
+#: model:process.transition.action,name:membership.process_transition_action_create0
+msgid "Create"
+msgstr "생성"
+
+#. module: membership
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Member line"
+msgstr "멤버 라인"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "State"
+msgstr "상태"
+
+#. module: membership
+#: field:res.partner,membership_start:0
+msgid "Start membership date"
+msgstr "멤버십 시작 날짜"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_paidmember0
+msgid "Paid member"
+msgstr "결제된 멤버"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_partner_member_year
+#: model:ir.ui.menu,name:membership.menu_report_partner_member_year
+#: view:report.partner_member.year:0
+msgid "Membership by Years"
+msgstr "년도별 멤버십"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_reporting
+msgid "Reporting"
+msgstr "리포팅"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Members"
+msgstr "멤버"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Non Member"
+msgstr "비 멤버"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_invoicedmember0
+msgid "Open invoice."
+msgstr "인보이스 열기"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_conf
+msgid "Configuration"
+msgstr "구성"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_producttomember0
+msgid "Define product for membership."
+msgstr "멤버십을 위한 상품 정의"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr "인보이스된 멤버가 연관 멤버일 수 있습니다."
+
+#. module: membership
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: view:product.product:0
+msgid "Membership products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_members_waiting
+msgid "Future members (invoice not confirmed)"
+msgstr "향후 멤버 (확정되지 않은 인보이스)"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_setassociation0
+msgid "Set association"
+msgstr "연관 설정"
+
+#. module: membership
+#: model:product.template,name:membership.member_product_1_product_template
+msgid "Membership Product - 2"
+msgstr "멤버십 상품 - 2"
+
+#. module: membership
+#: model:product.template,name:membership.member_product_0_product_template
+msgid "Membership Product - 1"
+msgstr "멤버십 상품 - 1"
+
+#. module: membership
+#: field:report.partner_member.year,canceled_amount:0
+#: field:report.partner_member.year,canceled_number:0
+#: field:report.partner_member.year_new,canceled_amount:0
+#: field:report.partner_member.year_new,canceled_number:0
+msgid "Canceled"
+msgstr "취소됨"
+
+#. module: membership
+#: model:product.pricelist,name:membership.list1m
+msgid "Member Sale Pricelist"
+msgstr "멤버 판매 가격리스트"
+
+#. module: membership
+#: field:report.partner_member.year,invoiced_amount:0
+#: field:report.partner_member.year,invoiced_number:0
+#: field:report.partner_member.year_new,invoiced_amount:0
+#: field:report.partner_member.year_new,invoiced_number:0
+msgid "Invoiced"
+msgstr "인보이스됨"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "자유 멤버"
+
+#. module: membership
+#: model:product.pricelist.version,name:membership.ver1m
+msgid "Member Sale Pricelist Version"
+msgstr "멤버 판매 가격리스트 버전"
+
+#. module: membership
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negociated by the partner"
+msgstr "파트너 협상 가격"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_associatedmember0
+msgid "Associated member"
+msgstr "연관 멤버"
+
+#. module: membership
+#: constraint:account.invoice:0
+msgid "Error: Invalid Bvr Number (wrong checksum)."
+msgstr "에러: 유효하지 않은 BVR 숫자 (잘못된 checksum)"
+
+#. module: membership
+#: field:res.partner,membership_cancel:0
+msgid "Cancel membership date"
+msgstr "멤버십 날짜 취소"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+msgid "Membership Products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
+msgstr "결제된 멤버십 인보이스"
+
+#. module: membership
+#: field:report.partner_member.year,paid_amount:0
+#: field:report.partner_member.year,paid_number:0
+#: field:report.partner_member.year_new,paid_amount:0
+#: field:report.partner_member.year_new,paid_number:0
+msgid "Paid"
+msgstr "결제됨"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "인보이스된 멤버"
+
+#. module: membership
+#: model:ir.module.module,shortdesc:membership.module_meta_information
+#: model:ir.ui.menu,name:membership.menu_membership
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "멤버십"
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Specify if this product is a membership product"
+msgstr "이 상품이 멤버십 상품인지 여부를 지정"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Waiting Member"
+msgstr "대기 멤버"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_associationpartner0
+msgid "Association Partner"
+msgstr "연관 파트너"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_invoiced
+#: model:ir.ui.menu,name:membership.menu_members_invoiced
+msgid "Invoiced members"
+msgstr "인보이스된 멤버"
+
+#. module: membership
+#: constraint:product.pricelist.version:0
+msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_old
+#: model:ir.ui.menu,name:membership.menu_members_old
+msgid "Old members"
+msgstr "옛 멤버들"
+
+#. module: membership
+#: field:res.partner,membership_amount:0
+msgid "Membership amount"
+msgstr "멤버십 금액"
+
+#. module: membership
+#: wizard_view:wizard_invoice_membership,init:0
+msgid "Choose invoice details"
+msgstr "인보이스 상세 선택"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Old Member"
+msgstr "옛 멤버"
+
+#. module: membership
+#: field:membership.membership_line,date_to:0
+msgid "To"
+msgstr ""
+
+#. module: membership
+#: field:report.partner_member.year,waiting_amount:0
+#: field:report.partner_member.year,waiting_number:0
+#: field:report.partner_member.year_new,waiting_amount:0
+#: field:report.partner_member.year_new,waiting_number:0
+msgid "Waiting"
+msgstr "대기"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_waitingtoinvoice0
+msgid "Draft invoice is now open."
+msgstr "초안 인보이스가 오픈되었습니다."
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_waiting
+msgid "Future members"
+msgstr "향후 멤버"
+
+#. module: membership
+#: wizard_button:wizard_invoice_membership,init,end:0
+msgid "Cancel"
+msgstr "취소"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_associated
+#: model:ir.ui.menu,name:membership.menu_members_associated
+msgid "Associated members"
+msgstr "연관된 멤버"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members_paid
+#: model:ir.ui.menu,name:membership.menu_members_paid
+msgid "Paid members"
+msgstr "결제된 멤버"
+
+#. module: membership
+#: view:product.product:0
+msgid "Information"
+msgstr "정보"
+
+#. module: membership
+#: field:membership.membership_line,account_invoice_line:0
+msgid "Account Invoice line"
+msgstr "계정 인보이스 라이"
+
+#. module: membership
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+
+#. module: membership
+#: model:process.node,note:membership.process_node_waitingmember0
+msgid "Draft invoice for membership."
+msgstr "멤버십을 위한 초안 인보이스"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:res.partner,membership_state:0
+msgid "Canceled Member"
+msgstr "취쇤 멤버"
+
+#. module: membership
+#: model:product.price.type,name:membership.product_price_type_memberprice
+#: field:product.template,member_price:0
+msgid "Member Price"
+msgstr "멤버 가격"
+
+#. module: membership
+#: field:res.partner,free_member:0
+msgid "Free member"
+msgstr "자유 멤버"
+
+#. module: membership
+#: field:res.partner,membership_stop:0
+msgid "Stop membership date"
+msgstr "멤버십 날짜를 중단"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_members
+msgid "Current members"
+msgstr "현재 멤버들"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_partner_member_year_new
+#: model:ir.ui.menu,name:membership.menu_report_partner_member_year_new
+#: view:report.partner_member.year_new:0
+msgid "New Membership by Years"
+msgstr "연도별 새로운 멤버십"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_invoicedmember0
+msgid "Invoiced member"
+msgstr "인보이스된 멤버"
+
+#. module: membership
+#: field:membership.membership_line,date_cancel:0
+msgid "Cancel date"
+msgstr "취소 날짜"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_waitingmember0
+msgid "Waiting member"
+msgstr "대기 멤버"
+
+#. module: membership
+#: model:ir.actions.wizard,name:membership.wizard_invoice_membership
+msgid "Invoice Membership"
+msgstr "인보이스 멤버십"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_membershipproduct0
+#: wizard_field:wizard_invoice_membership,init,product:0
+msgid "Membership product"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "에러: 유효하하지 않은 EAN 코드"
+
+#. module: membership
+#: field:report.partner_member.year,year:0
+#: field:report.partner_member.year_new,year:0
+msgid "Year"
+msgstr "년도"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current membership state"
+msgstr "현재 멤버십 날짜"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "에러!"
+
+#, python-format
+#~ msgid "No Address defined for this partner"
+#~ msgstr "이 파트너의 주소가 없습니다."
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "2개의 가격리스트 버전이 중첩되면 안됩니다."

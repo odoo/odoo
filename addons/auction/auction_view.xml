@@ -375,7 +375,7 @@
 	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu"/>
 	<menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
 
-	<menuitem name="Sold Objects" parent="auction_all_objects_menu" action="action_all_objects_sold" id="menu_all_objects_sold1" groups="base.group_extended_menu"/>
+	<menuitem name="Sold Objects" parent="auction_all_objects_menu" action="action_all_objects_sold" id="menu_all_objects_sold1" groups="base.group_extended"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_to_sell">
 		<field name="res_model">auction.lots</field>
@@ -384,7 +384,7 @@
 		<field name="domain">[('state','&lt;&gt;','sold')]</field>
         <field name="filter" eval="True"/>		
 	</record>
-	<menuitem name="Objects to sell" parent="auction_all_objects_menu" action="action_all_objects_to_sell" id="menu_all_objects_to_sell" groups="base.group_extended_menu"/>
+	<menuitem name="Objects to sell" parent="auction_all_objects_menu" action="action_all_objects_to_sell" id="menu_all_objects_to_sell" groups="base.group_extended"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_unplanned">
 		<field name="res_model">auction.lots</field>
@@ -393,7 +393,7 @@
 		<field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
         <field name="filter" eval="True"/>		
 	</record>
-	<menuitem name="Unplanned objects" parent="auction_all_objects_menu" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1" groups="base.group_extended_menu"/>
+	<menuitem name="Unplanned objects" parent="auction_all_objects_menu" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1" groups="base.group_extended"/>
 
 
 	<!--		for the sold object  start-->
@@ -410,7 +410,7 @@
 		parent="auction_all_objects_menu"
 		action="action_all_objects_unsold"
 		id="menu_all_objects_unsold"
-		groups="base.group_extended_menu"/>
+		groups="base.group_extended"/>
 
 
 
@@ -486,7 +486,7 @@
 		<field name="view_mode">tree,form</field>
         <field name="filter" eval="True"/>		
 	 </record>
-	 <menuitem name="Unclassified objects" parent="auction_all_objects_menu" action="action_unclassified_objects" id="menu_all_objects_unclassified" groups="base.group_extended_menu"/>
+	 <menuitem name="Unclassified objects" parent="auction_all_objects_menu" action="action_unclassified_objects" id="menu_all_objects_unclassified" groups="base.group_extended"/>
 
 	<record model="ir.ui.view" id="v12">
 		<field name="name">Auction.deposit.tree</field>

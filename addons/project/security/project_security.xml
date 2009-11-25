@@ -19,5 +19,29 @@
 		<field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
 	</record>
 
+	<record model="ir.rule.group" id="project_comp_rule_group">
+		<field name="name">Project multi-company</field>
+		<field name="model_id" search="[('model','=','project.project')]" model="ir.model"/>
+		<field name="global" eval="True"/>
+	</record>
+	<record model="ir.rule" id="project_comp_rule">
+		<field name="field_id" search="[('model','=','project.project'),('name','=','company_id')]" model="ir.model.fields"/>
+		<field name="operator">child_of</field>
+		<field name="operand">user.company_id.id</field>
+		<field name="rule_group" ref="project_comp_rule_group"/>
+	</record>
+
+	<record model="ir.rule.group" id="task_comp_rule_group">
+		<field name="name" >Task multi-company</field>
+		<field name="model_id" search="[('model','=','project.task')]" model="ir.model"/>
+		<field name="global" eval="True"/>
+	</record>
+	<record model="ir.rule" id="task_comp_rule">
+		<field name="field_id" search="[('model','=','project.task'),('name','=','company_id')]" model="ir.model.fields"/>
+		<field name="operator">child_of</field>
+		<field name="operand">user.company_id.id</field>
+		<field name="rule_group" ref="task_comp_rule_group"/>
+	</record>
+
 </data>
 </openerp>

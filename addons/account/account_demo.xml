@@ -11,6 +11,7 @@
             <field eval="'FY'+time.strftime('%Y')" name="code"/>
             <field eval="time.strftime('%Y')+'-01-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-12-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         
         <!--
@@ -23,6 +24,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-01-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-01-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_2" model="account.period">
             <field eval="'Feb.'+time.strftime('%Y')" name="name"/>
@@ -30,6 +32,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-02-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-02-28'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_3" model="account.period">
             <field eval="'Mar.'+time.strftime('%Y')" name="name"/>
@@ -37,6 +40,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-03-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-03-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_4" model="account.period">
             <field eval="'Apr.'+time.strftime('%Y')" name="name"/>
@@ -44,6 +48,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-04-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-04-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_5" model="account.period">
             <field eval="'May.'+time.strftime('%Y')" name="name"/>
@@ -51,6 +56,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-05-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-05-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_6" model="account.period">
             <field eval="'Jun.'+time.strftime('%Y')" name="name"/>
@@ -58,6 +64,7 @@
             <field eval="True" name="special"/>
             <field eval="time.strftime('%Y')+'-06-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-06-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_7" model="account.period">
             <field eval="'Jul.'+time.strftime('%Y')" name="name"/>
@@ -65,6 +72,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-07-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-07-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_8" model="account.period">
             <field eval="'Aug.'+time.strftime('%Y')" name="name"/>
@@ -72,6 +80,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-08-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-08-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_9" model="account.period">
             <field eval="'Sep.'+time.strftime('%Y')" name="name"/>
@@ -79,6 +88,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-09-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-09-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_10" model="account.period">
             <field eval="'Oct.'+time.strftime('%Y')" name="name"/>
@@ -86,6 +96,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-10-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-10-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_11" model="account.period">
             <field eval="'Nov.'+time.strftime('%Y')" name="name"/>
@@ -93,6 +104,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-11-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-11-30'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="period_12" model="account.period">
             <field eval="'Dec.'+time.strftime('%Y')" name="name"/>
@@ -100,6 +112,7 @@
             <field name="fiscalyear_id" ref="data_fiscalyear"/>
             <field eval="time.strftime('%Y')+'-12-01'" name="date_start"/>
             <field eval="time.strftime('%Y')+'-12-31'" name="date_stop"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         
     </data>

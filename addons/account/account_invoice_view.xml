@@ -52,7 +52,7 @@
                 <form string="Invoice Line">
                     <notebook>
                         <page string="Line">
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit)" select="1"/>
+                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, {'company_id': parent.company_id})"/>
                             <field name="uos_id"/>
                             <field name="quantity" select="1"/>
                             <field name="price_unit" select="1"/>
@@ -117,6 +117,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="number"/>
+                    <field name="company_id"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="amount_untaxed" sum="Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
@@ -141,7 +142,7 @@
                         <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
                         <field name="type" readonly="1" select="2"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
-                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1" context="{'default_customer': 0}" />
+                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" select="1" context="{'default_customer': 0}"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                     </group>
@@ -154,7 +155,7 @@
                             <field name="check_total" required="2"/>
                             <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1">
                                 <tree string="Invoice lines" editable="top">
-                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id)"/>
+                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, {'company_id': parent.company_id})"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
@@ -196,7 +197,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" widget="selection"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
@@ -242,7 +243,7 @@
                         <field name="journal_id" select="2" groups="base.group_user"/>
                         <field name="type" readonly="1" select="2"/>
                         <field name="number" select="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1" groups="base.group_user"/>
+                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" select="1" groups="base.group_user"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
                         <field name="date_invoice" select="1"/>
@@ -287,7 +288,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" widget="selection"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"/>
                             <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due" select="1"/>
@@ -484,7 +485,7 @@
             <field name="act_window_id" ref="action_invoice_tree5"/>
         </record>
 
-        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="menu_action_invoice_tree1" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
 
         <record id="action_invoice_tree6" model="ir.actions.act_window">
             <field name="name">PRO-FORMA Customer Invoices</field>
@@ -508,7 +509,7 @@
             <field name="act_window_id" ref="action_invoice_tree6"/>
         </record>
 
-        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="menu_action_invoice_tree1" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
 
         <record id="action_invoice_tree7" model="ir.actions.act_window">
             <field name="name">Unpaid Customer Invoices</field>
@@ -532,7 +533,7 @@
             <field name="act_window_id" ref="action_invoice_tree7"/>
         </record>
 
-        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="menu_action_invoice_tree1" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
 
         <record id="action_invoice_tree8" model="ir.actions.act_window">
             <field name="name">Draft Supplier Invoices</field>
@@ -556,7 +557,7 @@
             <field name="act_window_id" ref="action_invoice_tree8"/>
         </record>
 
-        <menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="menu_action_invoice_tree2" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="menu_action_invoice_tree2" groups="base.group_extended"/>
 
         <record id="action_invoice_tree9" model="ir.actions.act_window">
             <field name="name">Unpaid Supplier Invoices</field>
@@ -580,7 +581,7 @@
             <field name="act_window_id" ref="action_invoice_tree9"/>
         </record>
 
-        <menuitem action="action_invoice_tree9" id="menu_action_invoice_tree9" parent="menu_action_invoice_tree2" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree9" id="menu_action_invoice_tree9" parent="menu_action_invoice_tree2" groups="base.group_extended"/>
 
         <record id="action_invoice_tree10" model="ir.actions.act_window">
             <field name="name">Draft Customer Refunds</field>
@@ -604,7 +605,7 @@
             <field name="act_window_id" ref="action_invoice_tree10"/>
         </record>
 
-        <menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="menu_action_invoice_tree3" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="menu_action_invoice_tree3" groups="base.group_extended"/>
 
         <record id="action_invoice_tree11" model="ir.actions.act_window">
             <field name="name">Unpaid Customer Refunds</field>
@@ -628,7 +629,7 @@
             <field name="act_window_id" ref="action_invoice_tree11"/>
         </record>
 
-        <menuitem action="action_invoice_tree11" id="menu_action_invoice_tree11" parent="menu_action_invoice_tree3" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree11" id="menu_action_invoice_tree11" parent="menu_action_invoice_tree3" groups="base.group_extended"/>
 
         <record id="action_invoice_tree12" model="ir.actions.act_window">
             <field name="name">Draft Supplier Refunds</field>
@@ -652,7 +653,7 @@
             <field name="act_window_id" ref="action_invoice_tree12"/>
         </record>
 
-        <menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="menu_action_invoice_tree4" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="menu_action_invoice_tree4" groups="base.group_extended"/>
 
         <record id="action_invoice_tree13" model="ir.actions.act_window">
             <field name="name">Unpaid Supplier Refunds</field>
@@ -676,7 +677,7 @@
             <field name="act_window_id" ref="action_invoice_tree13"/>
         </record>
 
-        <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4" groups="base.group_extended_menu"/>
+        <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4" groups="base.group_extended"/>
 
         <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 

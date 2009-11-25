@@ -239,6 +239,10 @@ class email_parser(object):
                 elif txt and part.get_content_subtype() == 'html':                                                               
                     message['body'] += html2plaintext(txt)  
                 
+                filename = part.get_filename();
+                if filename :
+                    attachment[filename] = part.get_payload(decode=True);
+                    
             elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
                 filename = part.get_filename();
                 if filename :

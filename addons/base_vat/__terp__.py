@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'VAT',
+    'name': 'Base VAT - To check VAT number validity',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """Enable the VAT Number for the partner. Check the validity of that VAT Number.""",
