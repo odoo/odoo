@@ -94,21 +94,23 @@
                     <field name="name" select="1"/>
                     <field domain="[('domain', '=', 'contact')]" name="title"/>
                     <field name="function"/>
-                    <field name="type" select="2"/>
-                    <field name="street" select="2"/>
-                    <field name="street2"/>
                     <newline/>
-                    <field name="zip" select="2"/>
-                    <field name="city" select="2"/>
-                    <newline/>
-                    <field completion="1" name="country_id" select="1"/>
-                    <field name="state_id" select="2"/>
-                    <newline/>
-                    <field name="phone" select="2"/>
-                    <field name="fax"/>
-                    <newline/>
-                    <field name="mobile" select="2"/>
-                    <field name="email" select="2" widget="email"/>
+                      <group string="Postal Address" colspan="2" col="2">
+                        <field name="type" select="2" />
+                        <field name="street" select="2"/>
+                        <field name="street2"/>
+                        <field name="zip" select="2"/>
+                        <field name="city" select="2"/>
+                        <field name="country_id" select="2" completion="1"/>
+                        <field name="state_id" select="2"/>
+                      </group>
+                      <group string="Communication" colspan="2" col="2">
+                        <field name="phone"/>
+                        <field name="fax"/>
+                        <field name="mobile" select="2"/>
+                        <field name="email"  select="2" widget="email"/>
+                     </group>
+                    
                 </form>
             </field>
         </record>
@@ -259,21 +261,23 @@
                                     <field name="name" select="2"/>
                                     <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
                                     <field name="function"/>
-                                    <field name="type" select="2"/>
-                                    <field name="street" select="2"/>
-                                    <field name="street2"/>
                                     <newline/>
-                                    <field name="zip" select="2"/>
-                                    <field name="city" select="2"/>
-                                    <newline/>
-                                    <field completion="1" name="country_id" select="2"/>
-                                    <field name="state_id" select="2"/>
-                                    <newline/>
-                                    <field name="phone"/>
-                                    <field name="fax"/>
-                                    <newline/>
-                                    <field name="mobile"/>
-                                    <field name="email" select="2" widget="email"/>
+                                      <group string="Postal Address" colspan="2" col="4">
+                                        <field name="type" select="2" colspan="4"/>
+                                        <field name="street" select="2" colspan="4"/>
+                                        <field name="street2" colspan="4"/>
+                                        <field name="zip" select="2"/>
+                                        <field name="city" select="2"/>
+                                        <field name="country_id" select="2" completion="1"/>
+                                        <field name="state_id" select="2"/>
+                                     </group>
+                                     <group string="Communication" colspan="2" col="2">
+                                        <field name="phone"/>
+                                        <field name="mobile"/>
+                                        <field name="fax"/>
+                                        <field name="email" select="2" widget="email"/>
+                                     </group>
+                                    
                                 </form>
                                 <tree string="Partner Contacts">
                                     <field name="name"/>
