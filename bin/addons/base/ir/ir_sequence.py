@@ -48,7 +48,8 @@ class ir_sequence(osv.osv):
         'number_increment': fields.integer('Increment Number', required=True),
         'padding' : fields.integer('Number padding', required=True),
         'condition': fields.char('Condition', size=250, help="If set, sequence will only be used in case this python expression matches, and will precede other sequences."),
-        'weight': fields.integer('Weight',required=True, help="If two sequences match, the highest weight will be used.")
+        'weight': fields.integer('Weight',required=True, help="If two sequences match, the highest weight will be used."),
+        'company_id' : fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'active': lambda *a: True,
@@ -56,6 +57,7 @@ class ir_sequence(osv.osv):
         'number_next': lambda *a: 1,
         'padding' : lambda *a : 0,
         'weight' : lambda *a: 10,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', c)
     }
 
     def _process(self, s):

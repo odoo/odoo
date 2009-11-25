@@ -57,11 +57,27 @@ class res_currency(osv.osv):
         'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding factor', digits=(12,6)),
         'active': fields.boolean('Active'),
+        'company_id':fields.many2one('res.company', 'Company'),
+        'date': fields.date('Date'),
+        'base': fields.boolean('Base')
+
     }
     _defaults = {
         'active': lambda *a: 1,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', c)
     }
     _order = "code"
+
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        for r in res:
+            if r.__contains__('rate_ids'):
+                rates=r['rate_ids']
+                if rates:
+                    currency_rate_obj=self.pool.get('res.currency.rate')
+                    currency_date=currency_rate_obj.read(cr,user,rates[0],['name'])['name']
+                    r['date']=currency_date
+        return res
 
     def round(self, cr, uid, currency, amount):
         if currency.rounding == 0:

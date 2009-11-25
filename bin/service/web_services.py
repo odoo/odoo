@@ -78,13 +78,14 @@ class db(netsvc.ExportService):
         self.actions[id] = {'clean': False}
 
         db = sql_db.db_connect('template1')
-        cr = db.serialized_cursor()
+        cr = db.cursor()
         try:
-            cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
+            cr.autocommit(True) # avoid transaction block
             cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
         finally:
             cr.close()
-            sql_db.close_db('template1')
+            del db
+
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
                 cr = None
@@ -157,8 +158,8 @@ class db(netsvc.ExportService):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        cr = db.serialized_cursor()
-        cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
+        cr = db.cursor()
+        cr.autocommit(True) # avoid transaction block
         try:
             try:
                 cr.execute('DROP DATABASE "%s"' % db_name)
@@ -170,9 +171,7 @@ class db(netsvc.ExportService):
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'DROP DB: %s' % (db_name))
         finally:
-            cr.commit()
             cr.close()
-            sql_db.close_db('template1')
         return True
 
     def _set_pg_psw_env_var(self):
@@ -224,13 +223,13 @@ class db(netsvc.ExportService):
             raise Exception, "Database already exists"
 
         db = sql_db.db_connect('template1')
-        cr = db.serialized_cursor()
-        cr.autocommit(True) # XXX inhibit the effect of a serialized cursor. is it what we want ?
+        cr = db.cursor()
+        cr.autocommit(True) # avoid transaction block
         try:
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % db_name)
         finally:
             cr.close()
-            sql_db.close_db('template1')
+            del db
 
         cmd = ['pg_restore', '--no-owner']
         if tools.config['db_user']:
@@ -268,7 +267,7 @@ class db(netsvc.ExportService):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        cr = db.serialized_cursor()
+        cr = db.cursor()
         try:
             try:
                 cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
@@ -284,9 +283,7 @@ class db(netsvc.ExportService):
                 logger.notifyChannel("web-services", netsvc.LOG_INFO,
                     'RENAME DB: %s -> %s' % (old_name, new_name))
         finally:
-            cr.commit()
             cr.close()
-            sql_db.close_db('template1')
         return True
 
     def exp_db_exist(self, db_name):
@@ -321,7 +318,6 @@ class db(netsvc.ExportService):
                 res = []
         finally:
             cr.close()
-            sql_db.close_db('template1')
         res.sort()
         return res
 

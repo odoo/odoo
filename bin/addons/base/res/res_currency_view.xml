@@ -8,12 +8,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Currencies">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="rate"/>
-                    <field name="rounding"/>
-                    <field name="accuracy"/>
-                    <field name="active"/>
+	                    <field name="name"/>
+	                    <field name="code"/>
+	                    <field name="company_id" select="2" />
+	                     <field name="rate_ids" invisible="1"/>
+	                    <field name="date"/>
+	                    <field name="rate"/>
+	                    <field name="rounding"/>
+	                    <field name="accuracy"/>
+	                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -24,12 +27,14 @@
             <field name="arch" type="xml">
                 <form string="Currency">
                     <field name="name" select="1" colspan="4"/>
+                    <field name="company_id" select="2" />
                     <field name="code" select="1"/>
                     <field name="rate"/>
                     <field name="rounding"/>
                     <field name="accuracy"/>
                     <field name="active" select="1"/>
-                    <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1">
+                    <field name="base"/>
+                    <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1" attrs="{'readonly':[('base','=',True)]}">
                         <form string="Rates">
                             <field name="name"/>
                             <field name="rate"/>

@@ -787,7 +787,12 @@ get_iso = {'ca_ES':'ca',
 'sv_SE': 'sv',
 'sq_AL': 'sq',
 'uk_UA': 'uk',
-'vi_VN': 'vi' }
+'vi_VN': 'vi',
+'af_ZA': 'af',
+'be_BY': 'be',
+'ja_JP': 'ja',
+'ko_KR': 'ko'
+}
 
 def get_iso_codes(lang):
     if lang in get_iso:
@@ -843,10 +848,12 @@ def get_languages():
     return languages
 
 def scan_languages():
-    import glob
-    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
+#    import glob
+#    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'],'addons', 'base', 'i18n', '*.po'))]
+#    ret = [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    # Now it will take all languages from get languages function without filter it with base module languages
     lang_dict = get_languages()
-    ret = [(lang, lang_dict.get(lang, lang)) for lang in file_list]
+    ret = [(lang, lang_dict.get(lang, lang)) for lang in list(lang_dict)]
     ret.sort(key=lambda k:k[1])
     return ret
 
