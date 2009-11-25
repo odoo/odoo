@@ -14,7 +14,7 @@
 
      <record model="ir.rule.group" id="product_comp_rule_group">
         <field name="name" >Product multi-company</field>
-        <field name="model_id" search="[('model','=','product.product')]" model="ir.model"/>
+        <field name="model_id" ref="model_product_product"/>
         <field name="global" eval="True"/>
     </record>
     <record id="product_comp_rule" model="ir.rule">

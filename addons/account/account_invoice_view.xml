@@ -117,7 +117,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="number"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="amount_untaxed" sum="Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
@@ -197,7 +197,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection" groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>

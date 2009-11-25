@@ -130,7 +130,7 @@
                             <group colspan="2" col="2" name="misc">
                                 <separator string="Miscelleanous" colspan="2"/>
                                 <field name="active" select="2"/>
-                                <field name="company_id" select="2" groups="base.group_extended" widget="selection"/>
+                                <field name="company_id" select="2" groups="base.group_multi_company" widget="selection"/>
                             </group>
 
                         </page>
@@ -139,11 +139,11 @@
                             <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <field name="standard_price_multi"/>
-            				<field name="list_price_multi"/>
-            				<newline/>
+                            <field name="list_price_multi"/>
+                            <newline/>
                             <field name="standard_price_ids" nolabel="1" colspan="2"/>
-            				<field name="list_price_ids" nolabel="1" colspan="2"/>
-            				<newline/>
+                            <field name="list_price_ids" nolabel="1" colspan="2"/>
+                            <newline/>
                             <field name="price_margin" select="1"/>
                             <field name="price_extra" select="1"/>
                             <newline/>
@@ -414,7 +414,7 @@
                     <field name="product_code"/>
                     <field name="delay"/>
                     <field name="qty"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
                         <tree editable="bottom" string="Pricelist">
                             <field name="min_quantity"/>
@@ -439,7 +439,7 @@
                     <field name="delay"/>
                     <field name="qty"/>
                     <field name="product_code"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -601,7 +601,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company Wise Cost Prices">
-                    <field name="company_id" on_change="company_cost_onchange(company_id)"/>
+                    <field name="company_id" on_change="company_cost_onchange(company_id)" groups="base.group_multi_company"/>
                     <field name="standard_price"/>
                     <field name="currency_id"/>
                 </form>
@@ -614,7 +614,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Company Wise Cost Prices">
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="standard_price"/>
                     <field name="currency_id"/>
                 </tree>
@@ -627,7 +627,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company Wise Sale Prices">
-                    <field name="company_id" on_change="company_sale_onchange(company_id)"/>
+                    <field name="company_id" on_change="company_sale_onchange(company_id)" groups="base.group_multi_company"/>
                     <field name="list_price"/>
                     <field name="currency_id"/>
                 </form>
@@ -640,7 +640,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Company Wise Sale Prices">
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="list_price"/>
                     <field name="currency_id"/>
                 </tree>

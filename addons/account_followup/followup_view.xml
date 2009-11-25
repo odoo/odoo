@@ -45,7 +45,7 @@
             <field name="arch" type="xml">
                 <form string="Follow-Up">
                     <field name="name" select="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
+                    <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="description" nolabel="1" select="1"/>
                     <separator colspan="4" string="Lines"/>
@@ -61,8 +61,7 @@
             <field name="arch" type="xml">
                 <tree string="Follow-Up">
                     <field name="name"/>
-                    <field name="company_id"/>
-                    <field name="description"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
