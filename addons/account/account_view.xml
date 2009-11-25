@@ -394,7 +394,6 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree" groups="base.group_extended"/>
 
         <record id="action_bank_statement_tree2" model="ir.actions.act_window">
             <field name="name">New Statement</field>
@@ -402,7 +401,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="action_bank_statement_tree2" id="menu_bank_statement_tree2" parent="menu_bank_statement_tree"/>
 
         <record id="view_bank_statement_reconcile" model="ir.ui.view">
             <field name="name">account.bank.statement.reconcile.form</field>
@@ -1350,7 +1348,6 @@
             <field name="domain">[('state','=','running')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form" groups="base.group_extended"/>
 
         <record id="action_subscription_form_new" model="ir.actions.act_window">
             <field name="name">New Subscription</field>
@@ -1359,7 +1356,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_subscription_form"/>
         </record>
-        <menuitem action="action_subscription_form_new" id="menu_action_subscription_form_new" parent="menu_action_subscription_form"/>
 
         <record id="view_subscription_line_form_complete" model="ir.ui.view">
             <field name="name">account.subscription.line.form</field>

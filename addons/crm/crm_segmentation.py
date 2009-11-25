@@ -36,7 +36,7 @@ class crm_segmentation(osv.osv):
         'description': fields.text('Description'),
         'categ_id': fields.many2one('res.partner.category', 'Partner Category', required=True, help='The partner category that will be added to partners that match the segmentation criterions after computation.'),
         'exclusif': fields.boolean('Exclusive', help='Check if the category is limited to partners that match the segmentation criterions. If checked, remove the category from partners that doesn\'t match segmentation criterions'),
-        'state': fields.selection([('not running','Not Running'),('running','Running')], 'Execution Status', readonly=True),
+        'state': fields.selection([('not running','Not Running'),('running','Running')], 'Execution State', readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', 'segmentation_id', 'Criteria', required=True),
         'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."),

@@ -209,13 +209,14 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Files by Month">
-                    <field name="name" />
+                    <field name="name"/>
+                    <field name="month"/>
                     <field name="nbr"/>
                 </tree>
             </field>
         </record>
         
-            <record model="ir.actions.act_window" id="action_view_files_by_month_graph">
+        <record model="ir.actions.act_window" id="action_view_files_by_month_graph">
             <field name="name">Files by Month</field>
             <field name="res_model">report.document.user</field>
             <field name="view_id" ref="view_files_by_month_graph"></field>
@@ -269,11 +270,27 @@
             <field name="arch" type="xml">
                 <tree string="Files per Month">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="partner"/>
                     <field name="nbr"/>
                 </tree>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="view_files_by_partner_form">
+            <field name="name">view.files.partner.form</field>
+            <field name="model">report.files.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <tree string="Files per Month">
+                    <field name="name" select="1"/>
+                    <field name="month" select="1"/>
+                    <field name="partner"/>
+                    <field name="nbr"/>
+                </tree>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_view_files_by_partner">
             <field name="name">Files Per Partner</field>
             <field name="res_model">report.files.partner</field>

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields,osv
+import tools
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -34,7 +35,7 @@ class report_crm_case_user(osv.osv):
     _description = "Cases by user and section"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
@@ -44,14 +45,18 @@ class report_crm_case_user(osv.osv):
         'probability': fields.float('Avg. Probability', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc, user_id, section_id'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_crm_case_user')
         cr.execute("""
             create or replace view report_crm_case_user as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY-MM-01') as name,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.state,
                     c.user_id,
                     c.section_id,
@@ -63,7 +68,7 @@ class report_crm_case_user(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.user_id, c.section_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id, c.section_id
             )""")
 report_crm_case_user()
 
@@ -72,7 +77,7 @@ class report_crm_case_categ(osv.osv):
     _description = "Cases by section and category"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
@@ -82,14 +87,18 @@ class report_crm_case_categ(osv.osv):
         'probability': fields.float('Avg. Probability', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'delay_close': fields.char('Delay Close', size=20, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc, categ_id, section_id'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_crm_case_categ')
         cr.execute("""
             create or replace view report_crm_case_categ as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY-MM-01') as name,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.state,
                     c.categ_id,
                     c.section_id,
@@ -101,7 +110,7 @@ class report_crm_case_categ(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.categ_id, c.section_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.categ_id, c.section_id
             )""")
 report_crm_case_categ()
 
@@ -134,7 +143,7 @@ class report_crm_case_section(osv.osv):
         return res
     
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
 #        'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr_cases': fields.integer('# of Cases', readonly=True),
@@ -142,14 +151,18 @@ class report_crm_case_section(osv.osv):
         'perc_done': fields.function(_get_data,string='%Done', method=True,type="float"),
         'perc_cancel': fields.function(_get_data,string='%Cancel', method=True,type="float"),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc, section_id'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_crm_case_section')
         cr.execute("""
             create or replace view report_crm_case_section as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY-MM-01') as name,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.section_id as section_id,
                     count(*) as nbr_cases,
                     0 as avg_answers,
@@ -158,7 +171,7 @@ class report_crm_case_section(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY-MM-01'),c.section_id
+                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date, 'MM'),c.section_id
             )""")
 report_crm_case_section()
 

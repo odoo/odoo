@@ -141,7 +141,7 @@
             </field>
         </record>
         <menuitem name="Point of Sale" id="menu_point_root" />
-        <menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_pos_form"/>
+        <menuitem name="Point of Sale" parent="menu_point_root" id="menu_point_ofsale" action="action_pos_order_tree2"/>
         <wizard 
             string="Wizard default journals"
             model="pos.config.journal"
@@ -170,27 +170,25 @@
         <!-- 	<menuitem name="Point of Sale/Point of Sale/Orders not invoiced" id="menu_action_pos_order_tree" action="action_pos_order_tree"/> -->
 
         <record model="ir.actions.act_window" id="action_pos_order_tree2">
-            <field name="name">Point of Sale</field>
+            <field name="name">Orders of the day</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
+            <field name="filter" eval="True"/>
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-%d')),('date_order','&lt;=',time.strftime('%Y-%m-%d'))]</field>
         </record>
 
-        <menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/>
-
         <record model="ir.actions.act_window" id="action_pos_order_tree3">
-            <field name="name">Point of Sale</field>
+            <field name="name">All orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem name="All orders" parent="menu_point_ofsale" id="menu_action_pos_order_tree3" action="action_pos_order_tree3"/>
-
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -235,15 +233,15 @@
         <menuitem name="POS Lines" parent="menu_point_root" id="menu_action_pos_order_line" action="action_pos_order_line"/>
 
         <record model="ir.actions.act_window" id="action_pos_order_line_day">
-            <field name="name">Sale line</field>
+            <field name="name">POS Lines of the day</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_pos_order_line"/>
+			<field name="filter" eval="True"/>
             <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
         </record>
-        <menuitem name="POS Lines of the day" parent="menu_action_pos_order_line" id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
 
 
         <!-- report -->

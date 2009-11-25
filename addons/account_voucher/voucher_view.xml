@@ -101,9 +101,8 @@
 			<field name="view_id" eval="view_voucher_tree"/>
 			<field name="domain">[('type','=','rec_voucher')]</field>
 			<field name="context">{'type':'rec_voucher'}</field>
+			<field name="filter" eval="True"/>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/Cash Receipts" 
-		id="menu_action_receipt_cashreceipt_voucher_list" action="action_receipt_cashreceipt_voucher_list"/>
 				
 		<record model="ir.actions.act_window" id="action_view_cash_rec_voucher_form">
 			<field name="name">Cash Receipt Voucher</field>
@@ -114,7 +113,7 @@
 			<field name="domain">[('type','=','rec_voucher')]</field>
 			<field name="context">{'type':'rec_voucher'}</field>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/Cash Receipts/New Cash Receipt" id="menu_action_view_cash_rec_voucher_form" action="action_view_cash_rec_voucher_form"/>
+		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/New Cash Receipt" id="menu_action_view_cash_rec_voucher_form" action="action_view_cash_rec_voucher_form"/>
 		
 		<record model="ir.actions.act_window" id="action_receipt_bakreceipt_voucher_list">
 			<field name="name">Bank Receipt</field>
@@ -124,9 +123,8 @@
 			<field name="view_id" eval="view_voucher_tree"/>
 			<field name="domain">[('type','=','bank_rec_voucher')]</field>
 			<field name="context">{'type':'bank_rec_voucher'}</field>
+			<field name="filter" eval="True"/>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/Bank Receipts" 
-		id="menu_action_receipt_bakreceipt_voucher_list" action="action_receipt_bakreceipt_voucher_list"/>
 		
 		<record model="ir.actions.act_window" id="action_view_bank_rec_voucher_form">
 			<field name="name">Bank Receipt Voucher</field>
@@ -137,7 +135,7 @@
 			<field name="domain">[('type','=','bank_rec_voucher')]</field>
 			<field name="context">{'type':'bank_rec_voucher'}</field>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/Bank Receipts/New Bank Receipt" id="menu_action_view_bank_rec_voucher_form" action="action_view_bank_rec_voucher_form"/>
+		<menuitem name="Financial Management/Voucher Entries/Receipt Vouchers/New Bank Receipt" id="menu_action_view_bank_rec_voucher_form" action="action_view_bank_rec_voucher_form"/>
 		
 		
 		<!--  End Receipt Vouchers -->
@@ -157,16 +155,15 @@
 		id="menu_action_payments_voucher_list" action="action_payments_voucher_list"/>
 		
 		<record model="ir.actions.act_window" id="action_payments_cashpay_voucher_list">
-			<field name="name">Payment Vouchers</field>
+			<field name="name">Cash Payment Vouchers</field>
 			<field name="res_model">account.voucher</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_voucher_tree"/>
 			<field name="domain">[('type','=','pay_voucher')]</field>
 			<field name="context">{'type':'pay_voucher'}</field>
+			<field name="filter" eval="True"/>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/Cash Payments" 
-		id="menu_action_payments_cashpay_voucher_list" action="action_payments_cashpay_voucher_list"/>
 		
 		<record model="ir.actions.act_window" id="action_view_cash_pay_voucher_form">
 			<field name="name">Cash Payment Voucher</field>
@@ -177,19 +174,18 @@
 			<field name="domain">[('type','=','pay_voucher')]</field>
 			<field name="context">{'type':'pay_voucher'}</field>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/Cash Payments/New Cash Payment" id="menu_action_view_cash_pay_voucher_form" action="action_view_cash_pay_voucher_form"/>
+		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/New Cash Payment" id="menu_action_view_cash_pay_voucher_form" action="action_view_cash_pay_voucher_form"/>
 	
 		<record model="ir.actions.act_window" id="action_payments_bankpay_voucher_list">
-			<field name="name">Payment Vouchers</field>
+			<field name="name">Bank Payment Vouchers</field>
 			<field name="res_model">account.voucher</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" eval="view_voucher_tree"/>
 			<field name="domain">[('type','=','bank_pay_voucher')]</field>
 			<field name="context">{'type':'bank_pay_voucher'}</field>
+			<field name="filter" eval="True"/>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/Bank Payments" 
-		id="menu_action_payments_bankpay_voucher_list" action="action_payments_bankpay_voucher_list"/>
 		
 		<record model="ir.actions.act_window" id="action_view_bank_pay_voucher_form">
 			<field name="name">Bank Payment Voucher</field>
@@ -200,7 +196,7 @@
 			<field name="domain">[('type','=','bank_pay_voucher')]</field>
 			<field name="context">{'type':'bank_pay_voucher'}</field>
 		</record>
-		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/Bank Payments/New Bank Payment" id="menu_action_view_bank_pay_voucher_form" action="action_view_bank_pay_voucher_form"/>
+		<menuitem name="Financial Management/Voucher Entries/Payment Vouchers/New Bank Payment" id="menu_action_view_bank_pay_voucher_form" action="action_view_bank_pay_voucher_form"/>
 		
 		<!-- End Payment Vouchers -->
 		
