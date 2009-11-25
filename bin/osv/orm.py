@@ -1596,7 +1596,11 @@ class orm_memory(orm_template):
         # get the default values for the inherited fields
         for f in fields_list:
             if f in self._defaults:
-                value[f] = self._defaults[f](self, cr, uid, context)
+                if callable(self._defaults[f]):
+                    value[f] = self._defaults[f](self, cr, uid, context)
+                else:
+                    value[f] = self._defaults[f]
+
             fld_def = ((f in self._columns) and self._columns[f]) \
                     or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
                     or False
@@ -1897,7 +1901,11 @@ class orm(orm_template):
 
                             # initialize it
                             if not create and k in self._defaults:
-                                default = self._defaults[k](self, cr, 1, {})
+                                if callable(self._defaults[k]):
+                                    default = self._defaults[k](self, cr, 1, context)
+                                else:
+                                    default = self._defaults[k]
+
                                 ss = self._columns[k]._symbol_set
                                 query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
                                 cr.execute(query, (ss[1](default),))
@@ -1983,7 +1991,11 @@ class orm(orm_template):
                             if f.required and f_pg_notnull == 0:
                                 # set the field to the default value if any
                                 if k in self._defaults:
-                                    default = self._defaults[k](self, cr, 1, {})
+                                    if callable(self._defaults[k]):
+                                        default = self._defaults[k](self, cr, 1, context)
+                                    else:
+                                        default = self._defaults[k]
+
                                     if (default is not None):
                                         ss = self._columns[k]._symbol_set
                                         query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
@@ -2164,7 +2176,11 @@ class orm(orm_template):
         # get the default values defined in the object
         for f in fields_list:
             if f in self._defaults:
-                value[f] = self._defaults[f](self, cr, uid, context)
+                if callable(self._defaults[f]):
+                    value[f] = self._defaults[f](self, cr, uid, context)
+                else:
+                    value[f] = self._defaults[f]
+
             fld_def = ((f in self._columns) and self._columns[f]) \
                     or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
                     or False
@@ -3130,7 +3146,11 @@ class orm(orm_template):
             default = {}
         if 'state' not in default:
             if 'state' in self._defaults:
-                default['state'] = self._defaults['state'](self, cr, uid, context)
+                if callable(self._defaults['state']):
+                    default['state'] = self._defaults['state'](self, cr, uid, context)
+                else:
+                    default['state'] = self._defaults['state']
+
         data = self.read(cr, uid, [id], context=context)[0]
         fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
