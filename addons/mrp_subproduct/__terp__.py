@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'MRP Sub Product',
+    'name': 'MRP Sub Product - To produce several products from one production order',
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """

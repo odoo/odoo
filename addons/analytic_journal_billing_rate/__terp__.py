@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Analytic Journal Billing Rate',
+    'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
