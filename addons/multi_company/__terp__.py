@@ -26,13 +26,12 @@
     'category': 'Custom',
     'description': " ",
     'author': 'Tiny',
-    'depends': ['base'],
+    'depends': ['base','sale','project'],
     'update_xml': [
         'multi_company_view.xml',
     ],
     'demo_xml': ['multi_company_demo.xml'],
     'installable': True,
-    'active': True,
-    'certificate': '',
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
