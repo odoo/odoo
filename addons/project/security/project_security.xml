@@ -25,10 +25,8 @@
 		<field name="global" eval="True"/>
 	</record>
 	<record model="ir.rule" id="project_comp_rule">
-		<field name="field_id" search="[('model','=','project.project'),('name','=','company_id')]" model="ir.model.fields"/>
-		<field name="operator">child_of</field>
-		<field name="operand">user.company_id.id</field>
 		<field name="rule_group" ref="project_comp_rule_group"/>
+        	<field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
 	</record>
 
 	<record model="ir.rule.group" id="task_comp_rule_group">
@@ -37,9 +35,7 @@
 		<field name="global" eval="True"/>
 	</record>
 	<record model="ir.rule" id="task_comp_rule">
-		<field name="field_id" search="[('model','=','project.task'),('name','=','company_id')]" model="ir.model.fields"/>
-		<field name="operator">child_of</field>
-		<field name="operand">user.company_id.id</field>
+        	<field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
 		<field name="rule_group" ref="task_comp_rule_group"/>
 	</record>
 
