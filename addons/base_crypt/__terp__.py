@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    "name" : "Base",
+    "name" : "Base - Password Encryption",
     "version" : "1.0",
     "author" : "FS3 , Review Tiny",
     "website" : "http://www.openerp.com",
