@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 P. Christeas, Tiny SPRL (<http://tiny.be>). 
+#    Copyright (C) 2004-2009 P. Christeas, Tiny SPRL (<http://tiny.be>).
 #    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,8 @@
 #
 ##############################################################################
 
+from reportlab import rl_config
+import os
 
 CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Helvetica',"DejaVu Sans Bold", "DejaVuSans-Bold.ttf", 'bold'),
@@ -42,8 +44,19 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
         ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
+
 def SetCustomFonts(rmldoc):
     for name, font, fname, mode in CustomTTFonts:
-        rmldoc.setTTFontMapping(name, font,fname, mode)
+        for dirname in rl_config.TTFSearchPath:
+            for root, dirs, files in os.walk(os.path.abspath(dirname)):
+                for file_name in files:
+                    filename = os.path.join(root, file_name)
+                    extension = os.path.splitext(filename)[1]
+                    if extension.lower() in ['.ttf']:
+                          if file_name==fname:
+                              rmldoc.setTTFontMapping(name, font,filename, mode)
+
+
+
 
 #eof
