@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Auction module',
+    'name': 'Auction Management',
     'version': '1.0',
     'category': 'Generic Modules/Auction',
     'description': """This module provides functionality to 

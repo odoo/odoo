@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'account_invoice_layout',
+    'name': 'Invoices Layout Improvement',
     'version': '1.0',
     'category': 'Generic Modules/Projects & Services',
     'description': """
