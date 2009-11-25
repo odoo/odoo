@@ -120,8 +120,8 @@ class idea_idea(osv.osv):
         'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True ),
         'state': fields.selection([('draft','Draft'),('open','Opened'),('close','Accepted'),('cancel','Cancelled')], 'State', readonly=True, 
-                                  help='When the Idea is created the state is \'Draft\'. It is opened by the user, the state is \'Opened\'.\
-                                    If the idea is accepted, the state is \'Accepted\'.'),
+                                  help='When the Idea is created the state is \'Draft\'.\n It is opened by the user, the state is \'Opened\'.\
+                                    \nIf the idea is accepted, the state is \'Accepted\'.'),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
     }
 

@@ -116,8 +116,8 @@ class project(osv.osv):
         'notes': fields.text('Notes', help="Internal description of the project."),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
         'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
-                                  help='The project can be in either if the states \'Template\' and \'Running\'. If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-                                  If it is to be reviewed then the state is \'Pending\'. When the project is completed the state is set to \'Done\'.'),
+                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
+                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
      }
 
@@ -283,8 +283,8 @@ class task(osv.osv):
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
-                                  help='If the task is created the state \'Draft\'. If the task is started, the state becomes \'In Progress\'. If review is needed the task is in \'Pending\' state.\
-                                  If the task is over, the states is set to \'Done\'.'),
+                                  help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                  \n If the task is over, the states is set to \'Done\'.'),
         'date_start': fields.datetime('Starting Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),

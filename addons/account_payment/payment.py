@@ -101,7 +101,7 @@ class payment_order(osv.osv):
             ('open','Confirmed'),
             ('cancel','Cancelled'),
             ('done','Done')], 'State', select=True, 
-            help='When an order is placed the state is \'Draft\'. Once the bank is confirmed the state is set to \'Confirmed\'. Then the order is paid the state is \'Done\'.'),
+            help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
         'line_ids': fields.one2many('payment.line','order_id','Payment lines',states={'done':[('readonly',True)]}),
         'total': fields.function(_total, string="Total", method=True,
             type='float'),

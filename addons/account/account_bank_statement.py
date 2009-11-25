@@ -127,7 +127,8 @@ class account_bank_statement(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
             'State', required=True,
             states={'confirm': [('readonly', True)]}, readonly="1",
-            help='When new statement is created the state will be \'Draft\'. And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
+            help='When new statement is created the state will be \'Draft\'. \
+            \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
     }

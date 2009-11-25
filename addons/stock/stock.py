@@ -984,8 +984,8 @@ class stock_move(osv.osv):
         'note': fields.text('Notes'),
 
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-                                  help='When the stock move is created it is in the \'Draft\' state. After that it is set to \'Confirmed\' state. If stock is available state is set to \'Avaiable\'. When the packing it done the state is \'Done\'.\
-                                  The state is \'Waiting\' if the move is waiting for another one.'),
+                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the packing it done the state is \'Done\'.\
+                                  \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
