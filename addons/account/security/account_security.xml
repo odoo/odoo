@@ -38,7 +38,7 @@
 
     <record id="account_move_comp_rule_group" model="ir.rule.group">
         <field name="name">Account Entry</field>
-        <field ref="model_account_move"/>
+        <field ref="model_account_move" name="model_id"/>
         <field eval="True" name="global"/>
     </record>
 
@@ -51,7 +51,7 @@
 
     <record id="account_move_line_comp_rule_group" model="ir.rule.group">
         <field name="name">Entry lines</field>
-        <field model="ir.model" ref="model_account_move_line"/>
+        <field model="ir.model" name="model_id" ref="model_account_move_line"/>
         <field eval="True" name="global"/>
     </record>
 
