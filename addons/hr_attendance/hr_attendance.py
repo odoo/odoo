@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -56,7 +56,7 @@ class hr_attendance(osv.osv):
         'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'employee_id' : _employee_get,
     }
-    
+
     def _altern_si_so(self, cr, uid, ids):
         for id in ids:
             sql = '''
@@ -66,14 +66,14 @@ class hr_attendance(osv.osv):
             and action in ('sign_in','sign_out')
             and name <= (select name from hr_attendance where id=%s)
             order by name desc
-            limit 2
-            ''' % (id, id)
-            cr.execute(sql)
+            limit 2 '''
+
+            cr.execute(sql,(id,id))
             atts = cr.fetchall()
             if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
                 return False
         return True
-    
+
     _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
 hr_attendance()
@@ -81,7 +81,7 @@ hr_attendance()
 class hr_employee(osv.osv):
     _inherit = "hr.employee"
     _description = "Employee"
-    
+
     def _state(self, cr, uid, ids, name, args, context={}):
         result = {}
         for id in ids:
@@ -96,16 +96,15 @@ class hr_employee(osv.osv):
                 LEFT JOIN hr_attendance \
                     ON (hr_attendance.employee_id = foo.employee_id \
                         AND hr_attendance.name = foo.name) \
-                WHERE hr_attendance.employee_id \
-                    in (' + ','.join([str(x) for x in ids]) + ')')
+                WHERE hr_attendance.employee_id =ANY(%s)',(ids,))
         for res in cr.fetchall():
             result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result
-    
+
     _columns = {
        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
      }
-    
+
     def sign_change(self, cr, uid, ids, context={}, dt=False):
         for emp in self.browse(cr, uid, ids):
             if not self._action_check(cr, uid, emp.id, dt, context):
@@ -143,7 +142,7 @@ class hr_employee(osv.osv):
                 res['name'] = dt
             id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
         return id
-    
+
 hr_employee()
-    
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:    
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
