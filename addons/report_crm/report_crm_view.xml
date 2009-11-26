@@ -12,7 +12,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
-                    <field name="name"/>
+                    <field name="name" />
+                    <field name="month"/>
                     <field name="user_id"/>
                     <field name="section_id"/>
                     <field name="nbr"/>
@@ -32,6 +33,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="nbr" select="1"/>
@@ -103,6 +105,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="categ_id"/>
                     <field name="section_id"/>
                     <field name="nbr"/>
@@ -122,6 +125,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="categ_id" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="nbr" select="1"/>
@@ -165,6 +169,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="section_id" select="1"/>
                     <field name="nbr_cases" select="1"/>
                     <field name="avg_answers"/>

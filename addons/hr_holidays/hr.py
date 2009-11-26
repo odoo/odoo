@@ -96,7 +96,8 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Validation\'.\
+            If the admin accepts it, the state is \'Validated\'. If it is refused, the state is \'Refused\'.'),
         'date_from' : fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'date_to' : fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),

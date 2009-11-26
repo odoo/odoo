@@ -314,8 +314,7 @@
     </record>
 
     <menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>
-    <menuitem name="This Month" id="menu_definition_report_sales_this_month" parent="menu_definition_report_sales"/>
-    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_menu" parent="menu_definition_report_sales_this_month" action="action_sale_sale_stats_open_menu_month"/>
+    <menuitem name="Sales by Journal (This Month)" id="menu_sale_sale_stats_open_menu" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_month"/>
 
     <record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_all">
         <field name="res_model">sale_journal.sale.stats</field>
@@ -323,9 +322,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem name="All Months" id="menu_definition_report_sales_all_month" parent="menu_definition_report_sales"/>
-    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales_all_month" action="action_sale_sale_stats_open_menu_all"/>
+    
+    <menuitem name="Sales by Journal (All Months)" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
 
     <act_window name="Monthly sales"
         domain="[('journal_id', '=', active_id)]"

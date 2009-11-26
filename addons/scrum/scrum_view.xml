@@ -126,7 +126,6 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_product_backlog_form_draft" id="menu_action_product_backlog_form_draft" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended"/>
         
         <record id="action_product_backlog_form_open" model="ir.actions.act_window">
             <field name="name">Opened Backlogs</field>
@@ -136,7 +135,6 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_product_backlog_form_open" id="menu_action_product_backlog_form_open" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended"/>
         
         <!--
               Scrum Sprint
@@ -438,7 +436,7 @@
             <field name="domain">[('user_id', '=', uid),('scrum','=',1)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="scrum.menu_action_view_task" groups="base.group_extended"/>
+        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="scrum.next_id_67" groups="base.group_extended"/>
         
         <record id="action_view_task5" model="ir.actions.act_window">
             <field name="name">My opened tasks</field>
@@ -448,7 +446,6 @@
             <field name="domain">[('user_id','=',uid),('state','=','open'),('scrum','=',1)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="scrum.menu_action_view_task4" groups="base.group_extended"/>
         
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Opened tasks</field>
@@ -456,8 +453,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','open'),('scrum','=',1)]</field>
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_view_task6" id="menu_action_view_task6" parent="project.menu_action_view_task" />
     
     </data>
 </openerp>

@@ -252,6 +252,27 @@
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
 
+        <record id="action_order_tree" model="ir.actions.act_window">
+            <field name="name">My Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
+        </record>
+        <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order" groups="base.group_extended"/>
+
+        <record id="action_order_tree_all" model="ir.actions.act_window">
+            <field name="name">All Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
+        </record>
+        <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order" groups="base.group_extended"/>
+
         <record id="action_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Quotation</field>
             <field name="type">ir.actions.act_window</field>
@@ -290,10 +311,61 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
 
-        <record id="action_order_tree" model="ir.actions.act_window">
+
+        <record id="action_order_tree5" model="ir.actions.act_window">
+            <field name="name">All Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
+        </record>
+
+        <record id="action_order_tree7" model="ir.actions.act_window">
+            <field name="name">My sales in shipping exception</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
+        </record>
+
+        <record id="action_order_tree8" model="ir.actions.act_window">
+            <field name="name">My sales order waiting Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
+        </record>
+
+        <record id="action_order_tree9" model="ir.actions.act_window">
+            <field name="name">My sales order in progress</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
+        </record>
+
+        <record id="action_order_tree10" model="ir.actions.act_window">
+            <field name="name">My Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
+        </record>
+
+		<record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">Old Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
