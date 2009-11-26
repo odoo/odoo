@@ -81,7 +81,10 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
     start = cr.fetchone()[0]
     cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%s", (wkf_id,))
     stop = cr.fetchall()
-    stop = (stop[0][1], dict(stop))
+    if (stop):
+        stop = (stop[0][1], dict(stop))
+    else:
+        stop = ("stop",{})
     return ((start,{}),stop)
 
 
@@ -143,7 +146,7 @@ showpage'''
                 else:
                     inst_id = inst_id[0]
                     graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
-                                      size='10.7, 7.3', center='1', ratio='auto', rotate='90', rankdir='LR'
+                                      size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',                                      
                                      )
                     graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
