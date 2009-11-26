@@ -187,7 +187,7 @@ def init_servers():
     global httpd, httpsd
     if tools.config.get_misc('httpd','enable', True):
         httpd = HttpDaemon(tools.config.get_misc('httpd','interface', ''), \
-            tools.config.get_misc('httpd','port', 8069))
+            tools.config.get_misc('httpd','port', int(tools.config.get('port',8069))))
 
     if tools.config.get_misc('httpsd','enable', False):
         httpsd = HttpSDaemon(tools.config.get_misc('httpsd','interface', ''), \
