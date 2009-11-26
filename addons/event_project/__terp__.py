@@ -21,12 +21,12 @@
 
 
 {
-    'name': 'Event - Project',
+    'name': 'Event Project - Create Retro-Planning to manage your Events',
     'version': '0.1',
     'category': 'Generic Modules/Association',
     'description': """Organization and management of events.
 
-    This module allow you to create retro planning for managing your events.
+    This module allows you to create retro planning for managing your events.
 """,
     'author': 'Tiny',
     'depends': ['project_retro_planning', 'event'],

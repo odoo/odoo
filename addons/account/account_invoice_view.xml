@@ -117,7 +117,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="number"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="amount_untaxed" sum="Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
@@ -197,7 +197,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection" groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
@@ -327,7 +327,7 @@
                 <search string="Search Invoice">
                    <group col="10" colspan="4">
                    		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Invoices"/>
+                        <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
                         <filter icon="terp-account" string="Unpaid" domain="[('state','in',('open','cancel'))]" help="Unpaid Invoices"/>
 						<separator orientation="vertical"/>
 						<field name="number" select='1'/>
@@ -392,7 +392,6 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
-        <menuitem action="action_invoice_tree1_new" sequence="50" id="menu_action_invoice_tree1_new" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
             <field name="name">Supplier Invoices</field>
@@ -414,7 +413,6 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
-        <menuitem action="action_invoice_tree2_new" sequence="50" id="menu_action_invoice_tree2_new" parent="menu_action_invoice_tree2"/>
 
         <record id="action_invoice_tree3" model="ir.actions.act_window">
             <field name="name">Customer Refunds</field>
@@ -437,7 +435,6 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
-        <menuitem action="action_invoice_tree3_new" sequence="50" id="menu_action_invoice_tree3_new" parent="menu_action_invoice_tree3"/>
 
         <record id="action_invoice_tree4" model="ir.actions.act_window">
             <field name="name">Supplier Refunds</field>
@@ -460,7 +457,6 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
-        <menuitem action="action_invoice_tree4_new" sequence="50" id="menu_action_invoice_tree4_new" parent="menu_action_invoice_tree4"/>
 
 
         <record id="action_invoice_tree5" model="ir.actions.act_window">
@@ -485,8 +481,6 @@
             <field name="act_window_id" ref="action_invoice_tree5"/>
         </record>
 
-        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
-
         <record id="action_invoice_tree6" model="ir.actions.act_window">
             <field name="name">PRO-FORMA Customer Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -508,8 +502,6 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree6"/>
         </record>
-
-        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
 
         <record id="action_invoice_tree7" model="ir.actions.act_window">
             <field name="name">Unpaid Customer Invoices</field>
@@ -533,8 +525,6 @@
             <field name="act_window_id" ref="action_invoice_tree7"/>
         </record>
 
-        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="menu_action_invoice_tree1" groups="base.group_extended"/>
-
         <record id="action_invoice_tree8" model="ir.actions.act_window">
             <field name="name">Draft Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -556,8 +546,6 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree8"/>
         </record>
-
-        <menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="menu_action_invoice_tree2" groups="base.group_extended"/>
 
         <record id="action_invoice_tree9" model="ir.actions.act_window">
             <field name="name">Unpaid Supplier Invoices</field>
@@ -581,8 +569,6 @@
             <field name="act_window_id" ref="action_invoice_tree9"/>
         </record>
 
-        <menuitem action="action_invoice_tree9" id="menu_action_invoice_tree9" parent="menu_action_invoice_tree2" groups="base.group_extended"/>
-
         <record id="action_invoice_tree10" model="ir.actions.act_window">
             <field name="name">Draft Customer Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -604,8 +590,6 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree10"/>
         </record>
-
-        <menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="menu_action_invoice_tree3" groups="base.group_extended"/>
 
         <record id="action_invoice_tree11" model="ir.actions.act_window">
             <field name="name">Unpaid Customer Refunds</field>
@@ -629,8 +613,6 @@
             <field name="act_window_id" ref="action_invoice_tree11"/>
         </record>
 
-        <menuitem action="action_invoice_tree11" id="menu_action_invoice_tree11" parent="menu_action_invoice_tree3" groups="base.group_extended"/>
-
         <record id="action_invoice_tree12" model="ir.actions.act_window">
             <field name="name">Draft Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -653,8 +635,6 @@
             <field name="act_window_id" ref="action_invoice_tree12"/>
         </record>
 
-        <menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="menu_action_invoice_tree4" groups="base.group_extended"/>
-
         <record id="action_invoice_tree13" model="ir.actions.act_window">
             <field name="name">Unpaid Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -676,8 +656,6 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree13"/>
         </record>
-
-        <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4" groups="base.group_extended"/>
 
         <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 

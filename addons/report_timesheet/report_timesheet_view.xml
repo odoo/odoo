@@ -25,6 +25,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by user">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
                 </form>
             </field>
@@ -185,6 +186,7 @@
             <field name="arch" type="xml">
                 <form string="Daily timesheet by account">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="account_id" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="quantity"/>
@@ -246,6 +248,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="account_id" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="quantity"/>

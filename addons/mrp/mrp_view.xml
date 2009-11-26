@@ -7,8 +7,8 @@
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--
-    Property / Property Group
-    -->
+        Property / Property Group
+        -->
 
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
@@ -33,7 +33,8 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="menu_mrp_root"
-            groups="group_mrp_manager"/>
+            groups="group_mrp_manager"
+            sequence="-50" />
         <menuitem
             id="menu_mrp_property_group_action_prop"
             name="Properties"
@@ -84,8 +85,8 @@
             parent="menu_mrp_property_group_action_prop"/>
 
         <!--
-    Workcenters
-    -->
+        Workcenters
+        -->
 
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
@@ -144,11 +145,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
         </record>
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration"/>
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration" groups="base.group_extended" />
 
         <!--
-    Routings
-    -->
+        Routings
+        -->
 
         <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
@@ -218,7 +219,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration"/>
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration" groups="base.group_extended"/>
 
         <!--
           Bill of Materials
@@ -549,7 +550,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root" sequence="-30"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
             <field name="name">Production Orders Planning</field>
@@ -559,11 +560,6 @@
             <field name="view_mode">gantt,tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
         </record>
-        <menuitem
-            action="mrp_production_action2_gantt"
-            id="menu_production_orders_start_gantt"
-            parent="menu_mrp_production_action"
-            sequence="20" icon="terp-calendar"/>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
             <field name="name">Production Orders To Start</field>
@@ -575,7 +571,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_extended" />
+        
         <record id="mrp_production_action3" model="ir.actions.act_window">
             <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -586,7 +582,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_extended"/>
+        
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -597,7 +593,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_extended"/>
 
          <record id="mrp_production_new" model="ir.actions.act_window">
             <field name="name">New Production Order</field>
@@ -606,7 +601,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree,calendar,graph,gantt</field>
         </record>
-        <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
 
         <record id="mrp_production_lot_form_view" model="ir.ui.view">
             <field name="name">mrp.production.lot.line.form</field>
@@ -775,7 +769,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"
+                  sequence="-40" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Unscheduled procurements</field>
@@ -785,7 +780,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
-        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements</field>
@@ -795,7 +789,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Exceptions Procurements to Fix</field>
@@ -806,7 +799,6 @@
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended"/>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
             <field name="name">Temporary Procurement Exceptions</field>
@@ -816,7 +808,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
-        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5" groups="base.group_extended"/>
 
          <record id="mrp_procurement_new" model="ir.actions.act_window">
             <field name="name">New Procurement</field>
@@ -825,7 +816,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="mrp_procurement_new" id="menu_mrp_procurement_new" parent="mrp.menu_mrp_procurement_action"/>
 
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">

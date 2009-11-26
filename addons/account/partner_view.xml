@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position">
                     <field name="name" select="1"/>
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="note" colspan="4"/>
                     <field name="tax_ids" colspan="4" widget="one2many_list">
@@ -42,7 +42,7 @@
             <field name="arch" type="xml">
                 <tree string="Fiscal Position">
                     <field name="name"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

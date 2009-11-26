@@ -44,17 +44,16 @@ class multi_company_default(osv.osv):
 multi_company_default()
 
 class res_company(osv.osv):
- _inherit = 'res.company'
+    _inherit = 'res.company'
  
- def _company_default_get(self, cr, uid, object=False, context={}):
-
-     proxy = self.pool.get('multi_company.default')
-     ids = proxy.search(cr, uid, [('object_id.name', '=', object)])
-     for rule in proxy.browse(cr, uid, ids, context):
-         user = self.pool.get('res.user').browse(cr, uid, uid)
-         if eval(rule.expression, {'context': context, 'user': user}):
-             return rule.company_dest_id.id
-     return super(res_company, self)._company_default_get(cr, uid, object, context)
+    def _company_default_get(self, cr, uid, object=False, context={}):
+        proxy = self.pool.get('multi_company.default')
+        ids = proxy.search(cr, uid, [('object_id.name', '=', object)])
+        for rule in proxy.browse(cr, uid, ids, context):
+            user = self.pool.get('res.user').browse(cr, uid, uid)
+            if eval(rule.expression, {'context': context, 'user': user}):
+                return rule.company_dest_id.id
+        return super(res_company, self)._company_default_get(cr, uid, object, context)
  
 res_company()
 

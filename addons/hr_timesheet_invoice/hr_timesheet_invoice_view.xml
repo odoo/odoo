@@ -15,7 +15,7 @@
                         <field name="to_invoice" widget="selection" />
                         <field name="amount_max"/>
                         <field name="amount_invoiced"/>
-                        <separator colspan="4" string="Status"/>
+                        <separator colspan="4" string="State"/>
                         <field name="state"/>
                     </group>
                 </field>
@@ -108,18 +108,14 @@
         </record>
         <menuitem action="action_hr_analytic_timesheet_open_tree" id="menu_hr_analytic_timesheet_tree" parent="account.menu_finance_periodical_processing"/>
 
-
-
         <record id="action_hr_analytic_timesheet_tree_invoiced" model="ir.actions.act_window">
             <field name="name">Uninvoiced Entries</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_hr_analytic_timesheet_tree_invoiced" id="menu_hr_analytic_timesheet_tree_invoiced" parent="menu_hr_analytic_timesheet_tree"/>
-
-
 
         <record id="action_hr_analytic_timesheet_tree_invoiced_my" model="ir.actions.act_window">
             <field name="name">My Uninvoiced Entries</field>
@@ -127,9 +123,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('user_id','=',uid)]</field>
+        	<field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_hr_analytic_timesheet_tree_invoiced_my" id="menu_hr_analytic_timesheet_tree_invoiced_my" parent="menu_hr_analytic_timesheet_tree"/>
-
 
         <record id="action_open_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Open Analytic Accounts</field>
@@ -138,8 +133,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem action="action_open_analytic_accounts" id="menu_action_open_analytic_accounts" parent="account.account_analytic_def_chart"/>
-
 
         <record id="action_open_invoice_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Unclosed Invoiceable Accounts</field>
@@ -148,9 +141,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view'),('pricelist_id','&lt;&gt;',False)]</field>
         </record>
-        <menuitem action="action_open_invoice_analytic_accounts" id="menu_action_open_invoice_analytic_accounts" parent="hr_timesheet_invoice.menu_action_open_analytic_accounts"/>
-
-
 
         <record id="action_draft_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Draft Analytic Accounts</field>
@@ -159,9 +149,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem action="action_draft_analytic_accounts" id="menu_action_draft_analytic_accounts" parent="account.account_analytic_def_chart"/>
-
-
 
         <record id="action_pending_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Pending Analytic Accounts</field>
@@ -170,11 +157,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','pending'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem action="action_pending_analytic_accounts" id="menu_action_pending_analytic_accounts" parent="account.account_analytic_def_chart"/>
-
-
-
-
 
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>

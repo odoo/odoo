@@ -16,7 +16,7 @@
                     <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="end_journal_period_id"/>
                     <separator colspan="4" string="Periods"/>
                     <field colspan="4" name="period_ids" nolabel="1" widget="one2many_list">
@@ -75,7 +75,7 @@
                     <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
@@ -122,7 +122,7 @@
                     <field name="name" select="1" colspan="4"/>
                     <field name="code" select="1"/>
                     <field name="parent_id"/>
-                    <field name="company_id" select="2" widget="selection"/>
+                    <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                     <field name="user_type" select="1"/>
                     </group>
                     <notebook colspan="4">
@@ -168,7 +168,7 @@
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="company_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
                     <field name="type" invisible="1"/>
                 </tree>
@@ -242,7 +242,7 @@
                 <tree string="Account Journal">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -270,7 +270,7 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
-                            <field name="company_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="centralisation"/>
                             <field name="group_invoice_lines"/>
@@ -394,7 +394,6 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_bank_statement_draft_tree" id="menu_bank_statement_draft_tree" parent="account.menu_bank_statement_tree" groups="base.group_extended"/>
 
         <record id="action_bank_statement_tree2" model="ir.actions.act_window">
             <field name="name">New Statement</field>
@@ -402,7 +401,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="action_bank_statement_tree2" id="menu_bank_statement_tree2" parent="menu_bank_statement_tree"/>
 
         <record id="view_bank_statement_reconcile" model="ir.ui.view">
             <field name="name">account.bank.statement.reconcile.form</field>
@@ -460,7 +458,7 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="sign"/>
-		    
+            
                     <field name="close_method"/>
                     <field name="partner_account"/>
                 </form>
@@ -540,7 +538,7 @@
                 <form string="Account Tax Code">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" widget="selection"  groups="base.group_multi_company"/>
                     <field name="notprintable"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
@@ -587,7 +585,7 @@
                 <form string="Account Tax">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="company_id" widget="selection"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="description" select="1"/>
                         <field name="active" select="2"/>
                         <field name="tax_group" select="1"/>
@@ -714,8 +712,8 @@
 
                             <field name="debit" select="2"/>
                             <field name="credit" select="2"/>
-							<field name="company_id" required="1"/>
-							
+                            <field name="company_id" required="1" groups="base.group_multi_company"/>
+
                             <separator colspan="4" string="Optional Information"/>
                             <field name="currency_id"/>
                             <field name="amount_currency"/>
@@ -795,22 +793,22 @@
                 </form>
             </field>
         </record>
-		
-		<record id="view_account_move_line_filter" model="ir.ui.view">
+        
+        <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">account.move.line.select</field>
             <field name="model">account.move.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Move Lines">
-                	<group col='10' colspan='4'>
-                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
+                    <group col='10' colspan='4'>
+                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
                         <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
-						<separator orientation="vertical"/>
-						<field name="date" select='1'/>
-						<field name="account_id" select='1'/>
-						<field name="partner_id" select='1'/>
-						<field name="balance" string="Debit/Credit" select='1'/>
-                	</group>
+                        <separator orientation="vertical"/>
+                        <field name="date" select='1'/>
+                        <field name="account_id" select='1'/>
+                        <field name="partner_id" select='1'/>
+                        <field name="balance" string="Debit/Credit" select='1'/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -869,7 +867,7 @@
                     <field name="name" select="1" readonly="True"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
-                    <field name="company_id" required="1"/>
+                    <field name="company_id" required="1" groups="base.group_multi_company"/>
                     <field name="date" select="1"/>
                     <field name="ref" select="1"/>
                     <field name="to_check" select="2"/>
@@ -887,8 +885,8 @@
 
                             <field name="debit" select="1"/>
                             <field name="credit" select="1"/>
-							<field name="date" select="1"/>
-							
+                            <field name="date" select="1"/>
+                            
                             <separator colspan="4" string="Optional Information"/>
                             <field name="currency_id"/>
                             <field name="amount_currency"/>
@@ -933,21 +931,21 @@
             </field>
         </record>
 
-		<record id="view_account_move_filter" model="ir.ui.view">
+        <record id="view_account_move_filter" model="ir.ui.view">
             <field name="name">account.move.select</field>
             <field name="model">account.move</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                	<group col='8' colspan='4'>
-                		<filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
+                    <group col='8' colspan='4'>
+                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
                         <filter icon="terp-account" string="Posted" domain="[('state','=','posted')]" help="Posted Move Lines"/>
-						<separator orientation="vertical"/>
-						<field name="date" select='1'/>
-						<field name="name" select='1'/>
-						<field name="journal_id" select='1'/>
-						<field name="partner_id" select='1'/>
-                	</group>
+                        <separator orientation="vertical"/>
+                        <field name="date" select='1'/>
+                        <field name="name" select='1'/>
+                        <field name="journal_id" select='1'/>
+                        <field name="partner_id" select='1'/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1107,7 +1105,7 @@
                     <field name="period_id"/>
                     <field name="journal_id"/>
                     <field name="state"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -1350,7 +1348,6 @@
             <field name="domain">[('state','=','running')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form" groups="base.group_extended"/>
 
         <record id="action_subscription_form_new" model="ir.actions.act_window">
             <field name="name">New Subscription</field>
@@ -1359,7 +1356,6 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_subscription_form"/>
         </record>
-        <menuitem action="action_subscription_form_new" id="menu_action_subscription_form_new" parent="menu_action_subscription_form"/>
 
         <record id="view_subscription_line_form_complete" model="ir.ui.view">
             <field name="name">account.subscription.line.form</field>
@@ -1719,7 +1715,7 @@
                 <form string="Generate Chart of Accounts from a Chart Template">
                     <separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
                     <label align="0.0" string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template" colspan="4"/>
-                    <field name="company_id"  widget="selection"/>
+                    <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
                     <field name ="code_digits" />
                     <field name="chart_template_id"/>
                     <field name ="seq_journal" />
@@ -1764,11 +1760,11 @@
                     <field name="balance" operator="+"/>
                 </graph>
             </field>
-     	</record>
+         </record>
 
-     	<!-- Fiscal Position Templates -->
+         <!-- Fiscal Position Templates -->
 
-		<record id="view_account_position_template_form" model="ir.ui.view">
+        <record id="view_account_position_template_form" model="ir.ui.view">
             <field name="name">account.fiscal.position.template.form</field>
             <field name="model">account.fiscal.position.template</field>
             <field name="type">form</field>

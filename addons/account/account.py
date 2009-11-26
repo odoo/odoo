@@ -526,7 +526,8 @@ class account_fiscalyear(osv.osv):
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
+                                  help='When fiscal year is created. The state is \'Draft\'. At the end of the year it is in \'Done\' state.'),
     }
 
     _defaults = {
@@ -590,7 +591,8 @@ class account_period(osv.osv):
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True),
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
+                                  help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True)
     }
     _defaults = {
@@ -674,7 +676,8 @@ class account_journal_period(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='char', size=32),
         'active': fields.boolean('Active', required=True),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
+                                  help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
         'company_id' : fields.many2one('res.company', 'Company')
     }
@@ -761,7 +764,8 @@ class account_move(osv.osv):
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
-        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True,
+                                  help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
@@ -1613,7 +1617,7 @@ class account_subscription(osv.osv):
         'period_total': fields.integer('Number of Periods', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State', required=True, readonly=True),
 
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }

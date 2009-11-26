@@ -435,8 +435,10 @@ class mrp_production(osv.osv):
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'Status', readonly=True),
-        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
+        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
+                                    help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Packing Exception\'.\
+                                    \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production get started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
+        'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),    
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
         'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
@@ -820,7 +822,9 @@ class mrp_procurement(osv.osv):
             ('cancel','Cancel'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'Status', required=True),
+            ('waiting','Waiting')], 'State', required=True,
+            help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
+            \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note' : fields.text('Note'),
     }
     _defaults = {
