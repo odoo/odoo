@@ -206,6 +206,7 @@
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
                             <field name="payment_term" widget="selection"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                            <field name="company_id" groups="base.group_extended" widget="selection"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>

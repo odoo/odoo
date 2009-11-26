@@ -9,13 +9,13 @@
         <field name="name">Stock / Worker</field>
     </record>
 
-	<record model='ir.ui.menu' id='menu_stock_root'>
-		<field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user')])]"/>
-	</record>
+    <record model='ir.ui.menu' id='menu_stock_root'>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager'),ref('group_stock_user')])]"/>
+    </record>
 
-	<record model='ir.ui.menu' id='menu_stock_configuration'>
-		<field name="groups_id" eval="[(6,0,[ref('group_stock_manager')])]"/>
-	</record>
+    <record model='ir.ui.menu' id='menu_stock_configuration'>
+        <field name="groups_id" eval="[(6,0,[ref('group_stock_manager')])]"/>
+    </record>
 
 </data>
 </openerp>
