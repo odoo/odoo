@@ -164,7 +164,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <menuitem action="open_view_project_open" id="menu_open_view_project_open" groups="base.group_extended" parent="menu_open_view_project_all"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
@@ -249,11 +248,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <menuitem
-            action="open_view_my_project_my_run"
-            id="menu_open_view_my_project_my_run"
-            groups="base.group_extended"
-            parent="menu_open_view_my_project"/>
 
         <record id="open_view_my_project_open" model="ir.actions.act_window">
             <field name="name">Projects Structure</field>
@@ -566,7 +560,6 @@
             <field name="view_id" ref="my_pending_task"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" groups="base.group_extended" parent="menu_action_view_task4"/>
 
         <record id="action_view_task5_prog" model="ir.actions.act_window">
             <field name="name">My Current Tasks</field>
@@ -579,7 +572,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_prog" id="menu_tasks_yours_prog" parent="menu_action_view_task4" sequence="1"/>
 
         <record id="action_view_task5_prog_prog" model="ir.actions.act_window">
             <field name="name">My Tasks in Progress</field>
@@ -591,7 +583,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_prog_prog" id="menu_tasks_yours_prog_prog" groups="base.group_extended" parent="menu_tasks_yours_prog"/>
 
         <record id="action_view_task5_prog_draft" model="ir.actions.act_window">
             <field name="name">My Draft Tasks</field>
@@ -603,7 +594,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_prog_draft" id="menu_tasks_yours_prog_draft" groups="base.group_extended" parent="menu_tasks_yours_prog"/>
 
         <record id="action_view_task5_departments_pending" model="ir.actions.act_window">
             <field name="name">My Department's Pending Tasks</field>
@@ -615,7 +605,6 @@
            <field name="filter" eval="True"/>
            <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_departments_pending" id="menu_tasks_yours_departments_pending" groups="base.group_extended" parent="menu_action_view_department_tasks"/>
 
         <record id="action_view_task5_departments_prog" model="ir.actions.act_window">
             <field name="name">My Department's Current Tasks</field>
@@ -627,7 +616,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_departments_prog" id="menu_tasks_yours_departments_prog" parent="menu_action_view_department_tasks" sequence="1"/>
 
         <record id="action_view_task5_departments_prog_prog" model="ir.actions.act_window">
             <field name="name">My Department's Tasks in Progress</field>
@@ -638,7 +626,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_departments_prog_prog" id="menu_tasks_yours_departments_prog_prog" groups="base.group_extended" parent="menu_tasks_yours_departments_prog"/>
 
         <record id="action_view_task5_departments_prog_draft" model="ir.actions.act_window">
             <field name="name">My Department's Draft Tasks</field>
@@ -649,7 +636,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task5_departments_prog_draft" id="menu_tasks_yours_departments_prog_draft" groups="base.group_extended" parent="menu_tasks_yours_departments_prog"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -677,7 +663,6 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="domain">[('state','=','open')]</field>
         </record>
-        <menuitem action="action_view_task6_prog" id="menu_action_view_task6_prog" parent="project.menu_action_view_task" groups="base.group_extended"/>
 
         <record id="action_view_task7" model="ir.actions.act_window">
             <field name="name">Unassigned Tasks</field>
@@ -688,7 +673,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task7" id="menu_action_view_task7" parent="project.menu_action_view_task" groups="base.group_extended"/>
 
         <!-- Opening task when double clicking on project -->
         <record id="dblc_proj" model="ir.actions.act_window">

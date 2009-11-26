@@ -32,7 +32,7 @@
 
 from osv import fields,osv
 import time
-
+import tools
 
 class report_document_user(osv.osv):
     _name = "report.document.user"
@@ -81,7 +81,7 @@ class report_files_partner(osv.osv):
     _description = "Files details by Partners"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'file_title': fields.char('File Name',size=64,readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -90,19 +90,23 @@ class report_files_partner(osv.osv):
         'nbr':fields.integer('# of Files', readonly=True),
         'type':fields.char('Directory Type',size=64,readonly=True),
         'partner':fields.char('Partner',size=64,readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
      }
     def init(self, cr):
+         tools.drop_view_if_exists(cr, 'report_files_partner')
          cr.execute("""
             create or replace view report_files_partner as (
                 select min(f.id) as id,count(*) as nbr,
-                       min(to_char(f.create_date,'YYYY-MM-01')) as name,
+                       to_char(f.create_date,'YYYY') as name,
+                       min(to_char(f.create_date,'MM')) as month,
                        min(f.title) as file_title,
                        p.name as partner 
                 from ir_attachment f 
                 inner join res_partner p 
                 on (f.partner_id=p.id)
                 where f.datas_fname is not null
-                group by p.name
+                group by p.name, to_char(f.create_date,'YYYY')
              )
          """)
 report_files_partner()

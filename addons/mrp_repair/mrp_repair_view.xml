@@ -191,6 +191,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_progress_tree" model="ir.actions.act_window">
@@ -200,6 +201,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','under_repair')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_ready_tree" model="ir.actions.act_window">
@@ -209,6 +211,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','!=','draft'),('state','!=','under_repair'),('state','!=','2binvoiced'),('state','!=','invoice_except'),('state','!=','done'),('state','!=','cancel'),]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_2binvoiced_tree" model="ir.actions.act_window">
@@ -218,20 +221,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','2binvoiced')]</field>
+            <field name="filter" eval="True"/>
         </record>
 
         <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_root" name="Repairs" sequence="50"/>
-
-        <menuitem action="action_repair_quotation_tree" id="menu_repair_quotation" parent="menu_repair_order"/>
-
-        <menuitem action="action_repair_progress_tree" id="menu_repair_progress" parent="menu_repair_order"/>
-
-        <menuitem action="action_repair_ready_tree" id="menu_repair_ready" parent="menu_repair_order"/>
-
-    	<menuitem action="action_repair_2binvoiced_tree" id="menu_repair_2binvoiced" parent="menu_repair_order"/>
-
-    	<menuitem action="action_repair_order_form" id="menu_repair_form" parent="menu_repair_order" sequence = "50"/>
-
 
     </data>
 </openerp>

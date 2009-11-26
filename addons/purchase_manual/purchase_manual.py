@@ -26,7 +26,7 @@ import netsvc
 class purchase_order_line(osv.osv):
     _inherit='purchase.order.line'
     _columns = {
-        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),

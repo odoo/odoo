@@ -137,6 +137,7 @@
             <field name="name">Paid members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state', '=', 'paid')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_paid_view_tree">
@@ -152,10 +153,6 @@
             <field name="act_window_id" ref="action_membership_members_paid"/>
         </record>
 
-        <menuitem name="Paid members" parent="menu_members"
-            id="menu_members_paid"
-            action="action_membership_members_paid"/>
-
 
         <!-- MEMBERSHIP/MEMBERS/FREE MEMBERS  -->
 
@@ -163,6 +160,7 @@
             <field name="name">Free members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state', '=', 'free')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_free_view_tree">
@@ -177,13 +175,6 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_membership_members_free"/>
         </record>
-
-        <menuitem name="Free members" parent="menu_members"
-            id="menu_members_free"
-            action="action_membership_members_free"/>
-
-
-
 
         <!-- MEMBERSHIP/MEMBERS/ASSOCIATED MEMBERS  -->
         <record model="ir.ui.view" id="membership_members_associated_tree">
@@ -205,6 +196,7 @@
             <field name="name">Associated members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('associate_member', '!=', False), ('membership_state', '!=', 'none')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_associated_view_tree">
@@ -220,10 +212,6 @@
             <field name="act_window_id" ref="action_membership_members_associated"/>
         </record>
 
-        <menuitem name="Associated members" parent="menu_members"
-            id="menu_members_associated"
-            action="action_membership_members_associated"/>
-
 
         <!-- MEMBERSHIP/MEMBERS/INVOICED MEMBERS  -->
 
@@ -231,6 +219,7 @@
             <field name="name">Invoiced members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state', '=', 'invoiced')]</field>
+            <field name="filter" eval="True"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_invoiced_view_tree">
@@ -245,10 +234,6 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_membership_members_invoiced"/>
         </record>
-
-        <menuitem name="Invoiced members" parent="menu_members"
-            id="menu_members_invoiced"
-            action="action_membership_members_invoiced"/>
 
 
         <!-- MEMBERSHIP/MEMBERS/FUTURE MEMBERS  -->
