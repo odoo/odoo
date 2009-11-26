@@ -38,7 +38,7 @@
 
     <record id="account_move_comp_rule_group" model="ir.rule.group">
             <field name="name">Account Entry</field>
-            <field model="ir.model" ref="model_account_move"/>
+            <field model="ir.model" name="model_id" ref="model_account_move"/>
             <field eval="True" name="global"/>
     </record>
 
@@ -51,7 +51,7 @@
 
     <record id="account_move_line_comp_rule_group" model="ir.rule.group">
             <field name="name">Entry lines</field>
-            <field model="ir.model" ref="model_account_move_line"/>
+            <field model="ir.model" name="model_id" ref="model_account_move_line"/>
             <field eval="True" name="global"/>
     </record>
 
@@ -63,7 +63,7 @@
     </record>
     <record id="journal_period_comp_rule_group" model="ir.rule.group">
         <field name="name">Journal Period</field>
-        <field model="ir.model" ref="model_account_journal_period"/>
+        <field model="ir.model" name="model_id" ref="model_account_journal_period"/>
         <field eval="True" name="global"/>
     </record>
     <record id="journal_period_comp_rule" model="ir.rule">
@@ -75,7 +75,7 @@
     
     <record id="journal_comp_rule_group" model="ir.rule.group">
         <field name="name">Journal multi-company</field>
-        <field model="ir.model" ref="model_account_journal"/>
+        <field model="ir.model" name="model_id" ref="model_account_journal"/>
         <field eval="True" name="global"/>
     </record>
     <record id="journal_comp_rule" model="ir.rule">
@@ -87,7 +87,7 @@
     
     <record id="analytic_journal_comp_rule_group" model="ir.rule.group">
         <field name="name">Analytic journal multi-company</field>
-        <field model="ir.model" ref="model_account_analytic_journal"/>
+        <field model="ir.model" name="model_id" ref="model_account_analytic_journal"/>
         <field eval="True" name="global"/>
     </record>
     <record id="analytic_journal_comp_rule" model="ir.rule">
@@ -98,7 +98,7 @@
     </record>
     <record id="analytic_journal_comp_rule_group1" model="ir.rule.group">
         <field name="name">Analytic journal multi-company</field>
-        <field model="ir.model" ref="model_account_analytic_journal"/>
+        <field model="ir.model" name="model_id" ref="model_account_analytic_journal"/>
         <field eval="True" name="global"/>
     </record>
     
@@ -111,7 +111,7 @@
     
     <record id="period_comp_rule_group" model="ir.rule.group">
         <field name="name">Period multi-company</field>
-        <field model="ir.model" ref="model_account_period"/>
+        <field model="ir.model" name="model_id" ref="model_account_period"/>
         <field eval="True" name="global"/>
     </record>
     <record id="period_comp_rule" model="ir.rule">
@@ -124,7 +124,7 @@
     
     <record id="fiscal_year_comp_rule_group" model="ir.rule.group">
         <field name="name">Fiscal year multi-company</field>
-        <field model="ir.model" ref="model_account_fiscalyear"/>
+        <field model="ir.model" name="model_id" ref="model_account_fiscalyear"/>
         <field eval="True" name="global"/>
     </record>
     <record id="fiscal_year_comp_rule" model="ir.rule">
@@ -136,7 +136,7 @@
     
     <record id="account_comp_rule_group" model="ir.rule.group">
         <field name="name">Account multi-company</field>
-        <field model="ir.model" ref="model_account_account"/>
+        <field model="ir.model" name="model_id" ref="model_account_account"/>
         <field eval="True" name="global"/>
     </record>
     <record id="account_comp_rule" model="ir.rule">
@@ -148,7 +148,7 @@
     
     <record id="tax_comp_rule_group" model="ir.rule.group">
         <field name="name">Tax multi-company</field>
-        <field model="ir.model" ref="model_account_tax"/>
+        <field model="ir.model" name="model_id" ref="model_account_tax"/>
         <field eval="True" name="global"/>
     </record>
     <record id="tax_comp_rule" model="ir.rule">
@@ -160,7 +160,7 @@
     
     <record id="tax_code_comp_rule_group" model="ir.rule.group">
         <field name="name">Tax code multi-company</field>
-        <field model="ir.model" ref="model_account_tax_code"/>
+        <field model="ir.model" name="model_id" ref="model_account_tax_code"/>
         <field eval="True" name="global"/>
     </record>
     <record id="tax_code_comp_rule" model="ir.rule">
@@ -172,7 +172,7 @@
     
     <record id="invoice_comp_rule_group" model="ir.rule.group">
         <field name="name">Invoice multi-company</field>
-        <field model="ir.model" ref="model_account_invoice"/>
+        <field model="ir.model" name="model_id" ref="model_account_invoice"/>
         <field eval="True" name="global"/>
     </record>
     <record id="invoice_comp_rule" model="ir.rule">
