@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,15 +35,15 @@ class invoice_create(wizard.interface):
     def _get_accounts(self, cr, uid, data, context):
         if not len(data['ids']):
             return {}
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN (%s)"% (','.join(map(str,data['ids'])),))
+        cr.execute("SELECT distinct(account_id) from account_analytic_line where id =ANY(%s)",(data['ids'],))
         account_ids = cr.fetchall()
         return {'accounts': [x[0] for x in account_ids]}
 
     def _do_create(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])        
+        res = mod_obj.read(cr, uid, result, ['res_id'])
         analytic_account_obj = pool.get('account.analytic.account')
         res_partner_obj = pool.get('res.partner')
         account_payment_term_obj = pool.get('account.payment.term')
@@ -91,9 +91,8 @@ class invoice_create(wizard.interface):
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
-                        "AND id IN (" + ','.join([str(x) for x in data['ids']]) + ") " \
-                        "AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id,))
+                        "AND id =ANY(%s) AND to_invoice IS NOT NULL " \
+                    "GROUP BY product_id,to_invoice", (account.id,data['ids'],))
 
             for product_id,factor_id,qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
@@ -101,7 +100,7 @@ class invoice_create(wizard.interface):
                     raise wizard.except_wizard(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
-                
+
                 if not data['form']['product']:
                     if factor.customer_name:
                         factor_name = product.name+' - '+factor.customer_name
@@ -109,7 +108,7 @@ class invoice_create(wizard.interface):
                         factor_name = product.name
                 else:
                     factor_name = pool.get('product.product').name_get(cr, uid, [data['form']['product']], context=context)[0][1]
-                            
+
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
                     price = pool.get('product.pricelist').price_get(cr,uid,[pl], data['form']['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
@@ -119,7 +118,6 @@ class invoice_create(wizard.interface):
                 taxes = product.taxes_id
                 tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
-
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -133,17 +131,16 @@ class invoice_create(wizard.interface):
                     'account_id': account_id,
                     'account_analytic_id': account.id,
                 }
-                
+
                 #
                 # Compute for lines
                 #
                 cr.execute("SELECT * "  # TODO optimize this
                            "  FROM account_analytic_line"
-                           " WHERE account_id=%%s"
-                           "   AND id IN (%s)"
-                           "   AND product_id=%%s"
-                           "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])),
-                           tuple([account.id]+ data['ids']+[ product_id, factor_id]))
+                           " WHERE account_id =%s"
+                           "   AND id =ANY(%s)"
+                           "   AND product_id=%s"
+                           "   AND to_invoice=%s",(account.id,data['ids'],product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:
@@ -164,13 +161,12 @@ class invoice_create(wizard.interface):
 
                 curr_line['note'] = "\n".join(map(lambda x: x or '',note))
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
-                strids = ','.join(map(str, data['ids']))
-                cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
-                
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id =ANY(%s)" ,(last_invoice,account.id,data['ids']))
+
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
-        
+
         mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')        
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
 
         mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
         res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
@@ -178,7 +174,7 @@ class invoice_create(wizard.interface):
         act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
-        
+
 #        return {
 #            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
 #            'name': _('Invoices'),
