@@ -160,4 +160,4 @@ def init_servers():
     global netrpcd
     if tools.config.get_misc('netrpcd','enable', True):
         netrpcd = TinySocketServerThread(tools.config.get_misc('netrpcd','interface', ''), \
-            tools.config.get_misc('netrpcd','port', int(tools.config.get('netport', 8070))))
+            int(tools.config.get_misc('netrpcd','port', tools.config.get('netport', 8070))))
