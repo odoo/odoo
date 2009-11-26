@@ -190,6 +190,9 @@ class TinyPoFile(object):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
+            while line.startswith('#'):
+                if line.startswith('#~ '):
+                    break
                 if line.startswith('#:'):
                     if ' ' in line[2:].strip():
                         for lpart in line[2:].strip().split(' '):
