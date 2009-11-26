@@ -1,0 +1,1067 @@
+openerp-server (5.0.6-0-1test4) unstable; urgency=low
+
+  [ Christophe Simonis ]
+  * [IMP] cchange version number
+
+  [ Jay (Open ERP) ]
+  * [FIX] Send mail : Non-English characters were throwing error.
+  * [IMP] Base : Rate for ARS Added
+  * [FIX] Base : 'Supplier Partners' menu will open new record with
+    supplier=1,customer=0
+  * [FIX] Security Loophole corrected
+  * [FIX] Send Mail : Unicode error handled
+  * [FIX] Translation issue with cache: it needed to restart
+    server,SOLVED
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: put max_limit in server connection
+  * [IMP]quality_integration_server : quality html log
+
+  [ Jay (Open ERP) ]
+  * [FIX] Export : Error solved while Exporting O2M records with None
+    value of any field
+
+  [ Fabien Pinckaers ]
+  * merge
+
+  [ P. Christeas ]
+  * Debian changelog for 5.0.4
+  * Two hacks to make it python2.5 compatible..
+
+  [ Fabien Pinckaers ]
+  * [FIX] better log error, new line
+
+  [ P. Christeas ]
+  * Implement safe_eval() in order to armour eval()
+  * [Feature]: add condition to ir.sequence, let it be partitioned.
+  * safe_eval: make python 2.5 compatible.
+  * Backport the HTTP server code from python 2.6 to 2.5
+
+  [ Jay (Open ERP) ]
+  * [FIX] Better translation exportation.
+
+  [ P. Christeas ]
+  * ORM feature: allow renaming of columns.
+  * Web services: fix database operations (create, drop etc.) for new
+    API.
+  * ORM: Protect against dropping columns.
+
+  [ Jay (Open ERP) ]
+  * [IMP] Rng : Accepting Groups under/after/replacing Buttons
+
+  [ Fabien Pinckaers ]
+  * [FIX] regression in fields.function computation
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: get message from
+    base_quality_module if module can not success to reach minimun score
+  * [FIX]quality_integration_server: get message from
+    base_quality_module if module can not success to reach minimun score
+
+  [ Mantavya Gajjar ]
+  * [REM]: remove the name search method, as this method was implemented
+    for the email address field
+  * [MERGE]: merging from the same branch
+
+  [ Harry (Open ERP) ]
+  * [FIX]quality_integration_server : quality log : reduce overwrite
+    last test log in other test logs
+  * [FIX]quality_integration_server: fixe problem on make link of extra-
+    module in addons
+
+  [ tailor ]
+  * [IMP] updated changelog file
+  * [MERGE]
+  * [IMP] updated changelog file
+  * [IMP] updated release.py to 5.0.5
+
+  [ Jay (Open ERP) ]
+  * [FIX] Price Accuracy : rounding made to be based on --price_accuracy
+    option
+  * [FIX] Fields.function : Store value computation corrected
+
+  [ P. Christeas ]
+  * [IMP]: allow binary function fields to directly return size.
+  * Ir.attachment: improve SQL for access checks.
+
+  [ tailor ]
+  * [REL] release.py: 5.0.6
+  * [IMP] updated changelog file for 5.0.6 release
+
+  [ Harry (Open ERP) ]
+  * [IMP]quality_integration_server: quality log : add new option to
+    specify qualitylog path to store html pages of log
+
+  [ Jay (Open ERP) ]
+  * [FIX] Update Module : Float8 to float and numeric to float casting
+    made possible
+
+  [ Harry (Open ERP) ]
+  * [FIX]quality_integration_server: ascci encoding problem in quality
+    html log
+
+  [ P. Christeas ]
+  * [Fix] Tolerate ids that came as strings.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Fields.function : Store value computation corrected
+  * [FIX] Export Translation : Warning on Non-existing record instead of
+    breaking flow
+
+  [ mra (Open ERP) ]
+  * [IMP] base_quality_interrrogation: put message if the score of
+    quality less then minimal and remove unit test condition
+
+  [ Jay (Open ERP) ]
+  * [FIX] Allowing sql keywords as fields(don't use them in order by
+    clause)
+
+  [ Christophe Simonis ]
+  * [IMP] cron: check the arguments to avoid security issues
+
+  [ P. Christeas ]
+  * New API: work better for bad ExportServices.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Name_search() is having now record limit to be 80 instead of
+    None
+  * [FIX] Import : Context of the action/screen passed,taken into
+    consideration while importing
+  * [FIX] Improved Previous bad commit for pagelayout error
+  * [FIX] Domain was getting failed when trying to work upon M2M,O2M
+    field of object
+  * [FIX] Import made successful when field is O2M and it has relation
+    under that.
+
+  [ Stephane Wirtel ]
+  * [MERGE] Backport: http://bazaar.launchpad.net/~openobject-
+    training/+junk/server/revision/1821
+  * [MERGE] Backport: http://bazaar.launchpad.net/~openobject-
+    training/+junk/server/revision/1822
+
+  [ HDA (OpenERP) ]
+  * merged for report improvements
+
+  [ Stephane Wirtel ]
+  * [FIX] Specify the name of the argument for the context, to avoir a
+    critical bug
+
+  [ Christophe Simonis ]
+  * [FIX] allow to call write without ids on osv_memory objects
+
+  [ Fabien Pinckaers ]
+  * [FIX] default context
+
+  [ Stephane Wirtel ]
+  * [FIX] Use an alternative for the locale.RADIXCHAR if this one
+    doesn't exist
+
+  [ P. Christeas ]
+  * [Imp] Allow expressions: ".. child_of, 1" , not only list(1)
+
+  [ Jay (Open ERP) ]
+  * [FIX] Improved Previous bad commit for pagelayout error
+
+  [ Fabien Pinckaers ]
+  * [IMP] default value for module
+  * [FIX] recursive child_of on one2many and many2many
+  * [FIX] recursive calls
+
+  [ Jay (Open ERP) ]
+  * [FIX] Export : Selection field gets imported by its external name
+    if export is not import compatible
+  * [FIX] Expression : domain calculation failes, max. recursion error
+    protected
+
+  [ P. Christeas ]
+  * Mandriva: when server starts/stops, run scripts
+
+  [ Jay (Open ERP) ]
+  * [FIX] Config : wrong calculation if cached_timeout comes from config
+    file
+
+  [ P. Christeas ]
+  * [IMP] If SSL connection fails, close the socket.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Ir_attachment : Context updation corrected on preview
+  * [FIX] Record rule : domain evaluation problem corrected
+
+  [ P. Christeas ]
+  * [IMP] Convert: two minor typos and tab expansion.
+  * Netsvc.Server: Expand tabs
+  * Server: get_stats() RPC call for any extended info.
+  * Client script for statistics.
+  * Net-RPC: armor the thread, provide stats and inf. timeout.
+
+  [ Jay (Open ERP) ]
+  * [REF] Partner : copy() improved
+
+  [ panos ]
+
+ -- panos <panos@debian.pefnos2>  Mon, 02 Nov 2009 18:28:44 -0500
+
+openerp-server (5.0.4-0-1test3) intrepid; urgency=high
+
+  [ Panos Christeas ]
+  * Testing release, with HTTP/1.1 features
+
+  [ P. Christeas ]
+  * Translating: skip buggy wizard states.
+  * If the server is only translating, don't init the httpd.
+  * Remove debuggint print's
+  * Implement basic-authenticated services. Log messages.
+  * Initialize services before databases.
+  * Don't print messages, log them..
+  * Bring back net-rpc service.
+  * Fix quoting of ids when passed to sql.
+  * Fix merging of 5.0.4 into API-changed netsvc.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Security Loophole corrected
+
+  [ P. Christeas ]
+  * Fix https transports, certificates etc.
+  * [IMP] reorder the imports in websrv_lib.
+  * Fix dispatching of reports after API change.
+  * [MAJOR IMP] Rewrite the http/RPC engine and let HTTP/1.1 features.
+
+  [ Christophe Simonis ]
+  * [REL] 5.0.4
+  * [MERGE]
+  * [MERGE]
+  * [IMP] replace partner name and address in demo
+  * [IMP] add translation names
+  * [IMP] update translations files
+
+  [ Jay (Open ERP) ]
+  * [FIX] Functional fields with M2O relation can be printed on print
+    screen now
+
+  [ HDA (OpenERP) ]
+  * [FIX] Pagecount probelm while all objects print on same page and
+    printing special character on xsl report
+
+  [ Harry (Open ERP) ]
+  * [FIX] import: support "<rel_field>:db_id" , better warning message
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_cron :function and its arguements are now editable
+
+  [ HDA (OpenERP) ]
+  * [Merge]
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Tue, 08 Sep 2009 10:06:51 +0300
+
+openerp-server (5.0.3-0-1ubuntu2) intrepid; urgency=low
+
+  * Merge packaging work from Debian official
+
+ -- Panos Christeas <p_christ@hol.gr>  Mon, 24 Aug 2009 22:10:00 +0300
+
+openerp-server (5.0.3-0-1ubuntu1) intrepid; urgency=low
+
+  [ P. Christeas ]
+  * Introduce 'debug2' loglevel, use it for SQL
+
+  [ Christophe Simonis ]
+  * [IMP] change version number
+
+  [ P. Christeas ]
+  * [IMP]: allow Log level to be changed in runtime.
+  * Config: misc options. Logger: option to turn env_info off.
+  * Remove base_setup/i18n/el_GR.po, module is moved to addons repo.
+  * Merge el_GR translation with template.
+  * Update translation template.
+  * Fix +x permission of openerp-server.py
+
+ -- Panos Christeas <p_christ@hol.gr>  Fri, 14 Aug 2009 20:40:29 +0300
+
+openerp-server (5.0.3-0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.3-0.
+  * Removing xmlrpc.patch, went upstream.
+  * Using dedicated storage directory in /var/lib/openerp-server, that
+    way the addons directory can stay read-only for the unprivileged
+    user.
+  * Commenting out db_name in config (Closes: #542391).
+  * Commenting out port in config (Closes: #542406).
+  * Renaming logfile to openerp-server.log for consistency.
+  * Commenting out pidfile in config (Closes: #542427).
+  * Removing debconf handling in postrm, not possible to do that.
+  * Removing local storage directory on purge.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Aug 2009 20:16:55 +0200
+
+openerp-server (5.0.2-0-3) unstable; urgency=low
+
+  * Wrapping and sorting depends.
+  * Correcting spelling of Open ERP.
+  * Updating maintainer field.
+  * Updating vcs fields.
+  * Updating to standards version 3.8.3.
+  * Dropping old depends on python-xml (Closes: #543127).
+  * Adding maintainer homepage field to control.
+  * Marking maintainer homepage field to be also included in binary
+    packages and changelog.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 24 Aug 2009 18:23:54 +0200
+
+openerp-server (5.0.2-0-2) unstable; urgency=high
+
+  * Adding patch from Panos Christeas <p_christ@hol.gr> to forbid RPC
+    calls without credentials. All versions of openerp-server affected.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 13 Aug 2009 14:45:17 +0200
+
+openerp-server (5.0.2-0-1ubuntu2) intrepid; urgency=critical
+
+  [ P. Christeas ]
+  * Security: check_creds is not really needed, use "check"
+
+  [ Christophe Simonis ]
+  * [FIX] security issue: avoid access to inactive users
+  * [FIX] avoid a bug when look in stack when translate code strings
+
+  [ P. Christeas ]
+  * [SEC] [CRITICAL] Forbid RPC calls w/o credentials.
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Thu, 13 Aug 2009 15:25:26 +0300
+
+openerp-server (5.0.2-0-1ubuntu1) intrepid; urgency=low
+
+  [ P. Christeas ]
+  * [b98f26433c82] Greek translations, shorten terms.
+  * [2567b4e8fbc4] [IMP] Partial restrict operator for domains.
+  * [a507f9bee128] Shortcuts in RNG view definition.
+  * [e8da054afe0a] [IMP] Allow OS to rotate the logs, use
+    WatchedFileHandler if needed.
+
+  [ Jay (Open ERP) ]
+  * [8174407a30ec] [FIX] Property : Removed old referenced values from
+    property
+
+  [ mra (Open ERP) ]
+  * [819f9df328fa] [REV] revert chanegs for revision no 1810
+  * [70535423260f] [FIX] loading module sequence while creating new
+    database
+
+  [ Fabien Pinckaers ]
+  * [5aa83e5bb359] [FIX] bug 369947
+  * [dcde99cd9c5e] [FIX] bug 371496
+  * [8fbad91c586e] [FIX] bug 371768 bad tooltip
+  * [f42a9ae9115b] merge
+  * [db313489098d] merge
+
+  [ dsh (Open ERP) ]
+  * [a86dc3304dde] [IMP] attributes of barcode
+
+  [ Jay (Open ERP) ]
+  * [b2dafdb68cce] [FIX] ir_translation : corrected entry insertion when
+    adding translation
+
+  [ husen daudi ]
+  * [696445ddfb83] [MERGE]
+  * [7f9d0d2dd239] [FIX] module:base made name field translatable in
+    action.server (ref:mga)
+
+  [ Jay (Open ERP) ]
+  * [ed97326339a8] [FIX] Character Truncation problem on updation solved
+
+  [ Christophe Simonis ]
+  * [0b6c92ede314] [IMP] ir_model_data: convert assert to sql constraint
+    + exception
+
+  [ Jay (Open ERP) ]
+  * [f98cc5a0bee6] [FIX] Custom report : sorted X-axis values
+  * [0cf0628f3c8a] [FIX] SQL Constraint failure error on particular
+    record while importing
+
+  [ husen daudi ]
+  * [d56bb59ca02d] [FIX] xml encoding in header for &.<.>
+  * [04d765f45692] [Merge] Converted xml reports from xmldom to etree
+    and better error message with environment information
+
+  [ Jay (Open ERP) ]
+  * [a915dc15dbfd] [FIX] User with blank password(if so) allowed to log
+    in.
+
+  [ Fabien Pinckaers ]
+  * [19e2f2b84eac] [FIX] avoid required parameters rule (domain_force)
+  * [b8d383a666e6] merge
+  * [7cdc6778acb1] merge
+  * [70c8fcdf67f2] merge
+  * [7cd04889bd27] [IMP] better error message
+
+  [ Jay (Open ERP) ]
+  * [99f3b0db73f8] [FIX] Fixed oldxml at  python2.6 for Ubuntu
+    8.0.4,9.04
+  * [14b488955652] [IMP] default_xx in context isuue
+
+  [ Fabien Pinckaers ]
+  * [15a617ecbe04] merge
+  * [26f02d120db1] [fix] launch signal after action in workflows
+
+  [ Jay (Open ERP) ]
+  * [0ff7ddcd394d] [FIX] ORM: Defult_field name in context belongs to
+    curent object only, not to its relationals anymore
+  * [843604436871] [FIX] ir_attachment preview method corrected
+
+  [ Stephane Wirtel ]
+  * [406601019f23] [MERGE]
+  * [fa17b9e5f302] [FIX] fields.related (m2o poiting to M2M/O2M should
+    be skipped during write.
+
+  [ Jay (Open ERP) ]
+  * [7feb86ed7ad4] [IMP] Temporarily commented exception for browse
+    record that broke reports from wizard
+
+  [ husen daudi ]
+  * [665433813e7f] [FIX] Bad commit
+  * [c866dcb38c74] [FIX] Added PageCount tag in report engine
+
+  [ Fabien Pinckaers ]
+  * [a79d7777c888] merge
+  * [60d6357d3b2b] modifs
+  * [9ed525cfcd51] [FIX] bug in report engine
+
+  [ Jay (Open ERP) ]
+  * [2a571396d23e] [FIX] GIF image is previewed
+
+  [ Christophe Simonis ]
+  * [cee0846dff3c] [MERGE]
+  * [d2a31d33e1b1] [FIX] upgrade doesn't try to delete modules
+  * [1376272db30b] [MERGE]
+  * [bbaad3809f36] [FIX] xml: the tag <delete> delete also the reference
+    to the deleted objects into ir_model_data
+  * [35d4aa682b36] [FIX] translation export: catch the case when a
+    object does not exists in database
+  * [1f0cb7576704] [FIX] browse_record: raise a better exception when
+    the id doesn't exists
+
+  [ dsh (Open ERP) ]
+  * [0c8fe65fe3c0] [FIX] fix &,<,> problem for html2html-url report
+  * [71298ebb40b4] [FIX] fix &,<,> problem for html2html report
+  * [58b9464b7813] [IMP] added style for the url which are as text
+
+  [ Fabien Pinckaers ]
+  * [b934dd73d408] merge
+  * [fe33fdc8df19] [FIX] translations resynchro terms
+  * [4efe96b4f584] [FIX] Bugfix translations and float/int format in
+    reports
+  * [688883ce8183] bugfix_lang_notavailabel
+
+  [ Olivier Laurent ]
+  * [bee98151efd0] [MERGE]
+  * [adf826c7285b] [IMP] base: french translations
+
+  [ Christophe Simonis ]
+  * [cf01b2f3ee31] [IMP] maintenance: complete the remarks with the
+    database name
+  * [34e10ece0768] [FIX] complete rng file
+  * [eb179c00941a] [FIX] load the module graph even if it containt only
+    "base"
+
+  [ dsh (Open ERP) ]
+  * [5f1426c9e322] bug fix(skip text if child nodes are there) for the
+    html2html and openoffice reports
+
+  [ Panos Christeas ]
+
+  [ husen daudi ]
+  * Revert bad commit
+
+  [ Christophe Simonis ]
+  * [REL] 5.0.2
+  * [MERGE]
+  * [FIX] ensure sys is imported
+
+  [ Jay (Open ERP) ]
+  * [FIX] _inherits was misbehaving on search
+
+  [ Christophe Simonis ]
+  * [FIX] pass the context to check method of 'ir.model.access'
+  * [FIX] disallow the deletion of records set as default properties
+  * [MERGE]
+  * [FIX] increase size of field "name" of ir.model.data
+  * [IMP] update french translations
+  * [IMP] update french translations
+
+  [ Jay (Open ERP) ]
+  * [REF] Unused argument removed
+
+  [ Christophe Simonis ]
+  * [IMP] update po(t) files
+
+  [ Jay (Open ERP) ]
+  * [FIX] Login : Login and password accepting accented characters
+  * [FIX] Error reporting : library error corrected
+  * [FIX] default_xxx in context was passed to relational
+    fields,corrected.
+
+  [ P. Christeas ]
+  * Fix whitespace merging, that broke logging.
+
+  [ Jay (Open ERP) ]
+  * [FIX] Print screen now displays the report as per WYSIWYG
+  * [FIX]Importation problem for bool fields corrected
+
+  [ Christophe Simonis ]
+  * [IMP] new method that ollow the server to return a message that will
+    be display on login page
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_model_data : SQL_Constraint failure covered
+  * [FIX] Accented characters are displayed on footer now
+  * [FIX] DB operations(backup,restore) process corrected,were blocked
+    if db_port was supplied
+
+  [ husen daudi ]
+  * Merged
+
+  [ Jay (Open ERP) ]
+  * [FIX] Expression calculation for Datetime Corrected
+  * [FIX] Logger notification improved
+  * [FIX] ir_model : context key deletion
+  * [FIX] Translation : Text with prefix '_' from py files included for
+    exports.
+  * [FIX] Corrected bug of expression calculation in previous commit
+
+  [ Olivier Laurent ]
+  * [FIX] sql expression: in search, add the time part to datetime field
+    when it's not present
+
+  [ P. Christeas ]
+  * email_send: feature to place mails in a maildir, instead of smtp
+  * Fix Greek translation of email "subject".
+
+  [ Olivier Laurent ]
+  * [FIX] setup.py: py2exe now adds 'zoneinfo' directory in library.zip
+
+  [ Jay (Open ERP) ]
+  * [FIX] Importation problem corrected for unicode.
+  * [IMP] Environment Information Notification  Improved
+
+  [ husen daudi ]
+  * [FIX] place tag
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] tools.amount_to_text_en: now displays cents
+
+  [ P. Christeas ]
+  * Greek translations, shorten terms.
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] RuntimeError in the cache system
+
+  [ Jay (Open ERP) ]
+  * [FIX] Print screen reports will behave acc. to locale for
+    date,datetime
+  * [FIX] Import : context provided for language translation
+
+  [ dsh (Open ERP) ]
+  * [FIX] size miss match for page and frame
+
+  [ husen daudi ]
+  * [FIX] removed report etree warning of len
+  * [FIX] Added sql_constraint on adding field having size<1
+
+  [ Quentin De Paoli ]
+  * [FIX] security on wokflows bugfixed. The security has to be checked
+    using the current uid, not the one that created the workflow
+    instance!
+
+  [ Harry (Open ERP) ]
+  * [FIX] export window : use context for import compatable option in
+    pass argument instend of added new argemenent
+  * [IMP] import/export : added Database ID, ID
+
+  [ P. Christeas ]
+  * [IMP] Partial restrict operator for domains.
+  * Shortcuts in RNG view definition.
+  * [IMP] Allow OS to rotate the logs, use WatchedFileHandler if needed.
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [FIX] supply password problem with pg_dump, pg_restore on win32
+  * [IMP] french translations
+
+  [ Jay (Open ERP) ]
+  * [FIX] Certificate in non-digit format will not be accepted
+  * [FIX] Certificate in non-digit format will not be accepted
+
+  [ husen daudi ]
+  * [IMP] Improved environment information message
+
+  [ Jay (Open ERP) ]
+  * [Fix] CSV Import : Accepting 'Value' of selection field
+    from[(key,value)]
+  * [FIX] Property : Removed old referenced values from property
+
+  [ mra (Open ERP) ]
+  * [REV] revert chanegs for revision no 1810
+  * [FIX] loading module sequence while creating new database
+
+  [ Fabien Pinckaers ]
+  * [FIX] bug 369947
+  * [FIX] bug 371496
+  * [FIX] bug 371768 bad tooltip
+  * merge
+  * merge
+
+  [ dsh (Open ERP) ]
+  * [IMP] attributes of barcode
+
+  [ Jay (Open ERP) ]
+  * [FIX] ir_translation : corrected entry insertion when adding
+    translation
+
+  [ husen daudi ]
+  * [MERGE]
+  * [FIX] module:base made name field translatable in action.server
+    (ref:mga)
+
+  [ Jay (Open ERP) ]
+  * [FIX] Character Truncation problem on updation solved
+
+  [ Christophe Simonis ]
+  * [IMP] ir_model_data: convert assert to sql constraint + exception
+
+  [ Jay (Open ERP) ]
+  * [FIX] Custom report : sorted X-axis values
+  * [FIX] SQL Constraint failure error on particular record while
+    importing
+
+  [ husen daudi ]
+  * [FIX] xml encoding in header for &.<.>
+  * [Merge] Converted xml reports from xmldom to etree and better error
+    message with environment information
+
+  [ Jay (Open ERP) ]
+  * [FIX] User with blank password(if so) allowed to log in.
+
+  [ Fabien Pinckaers ]
+  * [FIX] avoid required parameters rule (domain_force)
+  * merge
+  * merge
+  * merge
+  * [IMP] better error message
+
+  [ Jay (Open ERP) ]
+  * [FIX] Fixed oldxml at  python2.6 for Ubuntu 8.0.4,9.04
+  * [IMP] default_xx in context isuue
+
+  [ Fabien Pinckaers ]
+  * merge
+  * [fix] launch signal after action in workflows
+
+  [ Jay (Open ERP) ]
+  * [FIX] ORM: Defult_field name in context belongs to curent object
+    only, not to its relationals anymore
+  * [FIX] ir_attachment preview method corrected
+
+  [ Stephane Wirtel ]
+  * [MERGE]
+  * [FIX] fields.related (m2o poiting to M2M/O2M should be skipped
+    during write.
+
+  [ Jay (Open ERP) ]
+  * [IMP] Temporarily commented exception for browse record that broke
+    reports from wizard
+
+  [ husen daudi ]
+  * [FIX] Bad commit
+  * [FIX] Added PageCount tag in report engine
+
+  [ Fabien Pinckaers ]
+  * merge
+  * modifs
+  * [FIX] bug in report engine
+
+  [ Jay (Open ERP) ]
+  * [FIX] GIF image is previewed
+
+  [ Christophe Simonis ]
+  * [MERGE]
+  * [FIX] upgrade doesn't try to delete modules
+  * [MERGE]
+  * [FIX] xml: the tag <delete> delete also the reference to the deleted
+    objects into ir_model_data
+  * [FIX] translation export: catch the case when a object does not
+    exists in database
+  * [FIX] browse_record: raise a better exception when the id doesn't
+    exists
+
+  [ dsh (Open ERP) ]
+  * [FIX] fix &,<,> problem for html2html-url report
+  * [FIX] fix &,<,> problem for html2html report
+  * [IMP] added style for the url which are as text
+
+  [ Fabien Pinckaers ]
+  * merge
+  * [FIX] translations resynchro terms
+  * [FIX] Bugfix translations and float/int format in reports
+  * bugfix_lang_notavailabel
+
+  [ Olivier Laurent ]
+  * [MERGE]
+  * [IMP] base: french translations
+
+  [ Christophe Simonis ]
+  * [IMP] maintenance: complete the remarks with the database name
+  * [FIX] complete rng file
+  * [FIX] load the module graph even if it containt only "base"
+
+  [ dsh (Open ERP) ]
+  * bug fix(skip text if child nodes are there) for the html2html and
+    openoffice reports
+
+  [ Panos Christeas ]
+
+ -- Panos Christeas <p_christ@hol.gr>  Thu, 13 Aug 2009 10:21:28 +0300
+
+openerp-server (5.0.2-0-1) unstable; urgency=low
+
+  * Updating standards to 3.8.1.
+  * Rediffing autobuild.patch (Closes: #538625).
+  * Upgrading package to standards version 3.8.2.
+  * Managing setup of unprivileged user account with debconf.
+  * Using more common directory name to store local debian additions.
+  * Updating README.Debian to reflect that the database has to be
+    initialized through the client (Closes: #518675).
+  * Removing package leftovers in postrm script.
+  * Merging upstream version 5.0.2-0.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 13 Aug 2009 11:24:59 +0200
+
+openerp-server (5.0.1-0-1ubuntu2) karmic; urgency=low
+
+  * Minor updates
+
+ -- Panagiotis Kranidiotis <panos@anaximandros>  Thu, 18 Jun 2009 19:05:32 +0300
+
+openerp-server (5.0.1-0-1ubuntu1) karmic; urgency=low
+
+  * New greek translations added
+
+ -- Panagiotis Kranidiotis <kranidiotis@vatica.org>  Wed, 17 Jun 2009 18:45:37 +0300
+
+openerp-server (5.0.1-0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.1-0.
+  * Correcting path of openerp-server in README.Debian (Closes:
+    #520890).
+  * Correcting user handling in init script and config file (Closes:
+    #513263, #516348).
+  * Setting port to 8070.
+  * Also mentioning debug_mode and price_accuracy in config file
+    (Closes: #513264).
+  * Using correct rfc-2822 date formats in changelog.
+  * Rediffing shebang.patch.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 30 May 2009 12:53:39 +0200
+
+openerp-server (5.0.0-3-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0-3.
+  * Improving init call in README.Debian, thanks to David Goodenough
+    <david.goodenough@btconnect.com>.
+  * Fixed wrapping in README.Debian.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 14 Feb 2009 00:51:00 +0100
+
+openerp-server (5.0.0-2-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0-2 (Closes: #514920).
+  * Updating README.Debian.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 14 Feb 2009 00:12:00 +0100
+
+openerp-server (5.0.0-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 07 Feb 2009 13:33:00 +0100
+
+openerp-server (5.0.0~rc3-1) unstable; urgency=low
+
+  * Adding note about initializing the database in README.Debian.
+  * Adding changelog for debian version 4.2.3.4-3.
+  * Merging upstream version 5.0.0~rc3.
+  * Using quilt rather than dpatch.
+  * Updating year in copyright file.
+  * Updating python-openssl depends.
+  * Updating lintian overrides.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 09 Jan 2009 18:31:00 -0500
+
+openerp-server (5.0.0~rc2-1) unstable; urgency=low
+
+  * Updating python xml depends (Closes: #508911).
+  * Merging upstream version 5.0.0~rc2.
+  * New upstream no longer uses embedded copies of pydot, pychart and
+    reportlab (Closes: #468104).
+  * Rediffing shebang.dpatch.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 25 Dec 2008 15:13:00 +0100
+
+openerp-server (5.0.0~rc1.1-2) unstable; urgency=low
+
+  * Adjusting sed call to correct path in /usr/bin/openerp-server.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 17 Dec 2008 08:32:00 +0100
+
+openerp-server (5.0.0~rc1.1-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0~rc1.1.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 16 Dec 2008 13:08:00 +0100
+
+openerp-server (5.0.0~rc1-1) unstable; urgency=low
+
+  * Merging upstream version 5.0.0~rc1.
+  * Removing openerp.dpatch, went upstream.
+  * Rediffing shebang.dpatch.
+  * Removing workaround for import_xml.rng, not needed anymore.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 16 Dec 2008 12:51:00 +0100
+
+openerp-server (5.0.0~alpha-3) unstable; urgency=low
+
+  * Adding ghostscript, python-matplotlib, and python-pyopenssl to recommends.
+  * Correcting chown calls in postinst.
+  * Prefixing debhelper files with package name.
+  * Adding changelog for debian version 4.2.3.4-2.
+  * Dropping tinyerp-server transitional package, this allows to have both
+    packages available in unstable.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 07 Dec 2008 20:13:00 +0100
+
+openerp-server (5.0.0~alpha-2) experimental; urgency=low
+
+  * Renaming tinyerp-server to new upstream openerp-server name.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 18:59:00 +0100
+
+tinyerp-server (5.0.0~alpha-1) experimental; urgency=low
+
+  * Merging upstream version 5.0.0~alpha.
+  * Rediffing autobuild.dpatch.
+  * Removing shebang.dpatch, not needed anymore.
+  * Removing python2.5.dpatch, not needed anymore.
+  * Rediffing openerp.dpatch.
+  * Rediffing migrate.dpatch.
+  * Not moving server to sbin anymore for the sake of consistency.
+  * Removing unneeded chmod call for tinyerp-server.py.
+  * Sorting build-depends, depends and recommends.
+  * Dropping /etc/default/tinyerp-server in favour of using
+    /etc/tinyerp-server.conf directly.
+  * Updating chmod call in rules to also cope with filenames that embedd
+    whitespaces.
+  * Adding patch to correct shebang in two addon files.
+  * Adding workaround for bug in setup.py that puts import_xml.rng into the
+    wrong location.
+  * Adding symlink for tinyerp_serverrc manpage to tinyerp-server.conf.
+  * Renaming everything except the package name itself from tinyerp-server to
+    openerp-server.
+  * Updating copyright file to current upstream.
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 15:52:00 +0100
+
+tinyerp-server (4.2.3.4-3) unstable; urgency=high
+
+  * Updating python depends (Closes: #506615).
+  * Adding note about initializising the database in README.Debian
+    (Closes: #464557).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Nov 2008 12:40:00 +0100
+
+tinyerp-server (4.2.3.4-2) unstable; urgency=low
+
+  * Correcting chown calls in postinst.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 10 Nov 2008 12:40:00 +0100
+
+tinyerp-server (4.2.3.4-1) unstable; urgency=low
+
+  * Merging upstream version 4.2.3.4.
+  * Upgrading package to debhelper 7.
+  * Upgrading package to standards 3.8.0.
+  * Updating homepage field in control file.
+  * Adding vcs fields in control file.
+  * Rewriting copyright file in machine-interpretable format.
+  * Using lintian debhelper to install lintian overrides.
+  * Removing bind-exit.dpatch, went upstream.
+  * Updating default database port.
+  * Adding logfile handling.
+  * Updating postresql recommends.
+  * Reordering and splitting out rules file into individual debhelper files.
+  * Applying some shell cosmetics to init and maintainer scripts.
+  * Adding patch to update homepage location of tinyerp.
+  * Setting ownership of addons directory in postinst (Closes: #487112).
+  * Adding patch from Brian DeRocher <brian@derocher.org> to fix sql syntax in
+    migrate script (Closes: #467517).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 09 Nov 2008 09:11:00 +0100
+
+tinyerp-server (4.2.2-2) unstable; urgency=medium
+
+  * Readding depends to python-psycopg (Closes: #463079, #493374).
+  * Adding depends to python-tz (Closes: #482359).
+
+ -- Daniel Baumann <daniel@debian.org>  Sun, 03 Aug 2008 00:20:00 +0200
+
+tinyerp-server (4.2.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: #477698).
+  * Dropping depends against python-xml (Closes: #468619).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 26 Apr 2008 16:15:00 +0200
+
+tinyerp-server (4.2.1-1) unstable; urgency=low
+
+  * Maintainer upload from the Zuerich BSP.
+  * New upstream release.
+  * Bumping to new policy.
+  * Using new homepage field in control.
+  * Including documentation for migration and testing (Closes: #445464).
+  * Adjusting 04-bind-exit.dpatch to new upstream release.
+  * Added lintian overrides.
+  * Depending now on python-psycopg2, not python-psycopg anymore
+    (Closes: #445464).
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 12 Jan 2008 15:20:00 +0100
+
+tinyerp-server (4.2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 31 Oct 2007 21:31:00 +0100
+
+tinyerp-server (4.0.3-3) unstable; urgency=medium
+
+  * Setting database port to 5433 (Closes: #443626).
+  * Applied patch from Aldrin Martoq to make tinyerp-server compatible with
+    python 2.5.
+  * Applied patch from Luca Falavigna <dktrkranz@ubuntu.com> to fix exception
+    raised when address is already in use.
+
+ -- Daniel Baumann <daniel@debian.org>  Sat, 29 Sep 2007 17:07:00 +0200
+
+tinyerp-server (4.0.3-2) unstable; urgency=low
+
+  * Check for existence of deluser in postrm (Closes: #431532).
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 03 Jul 2007 11:01:00 +0200
+
+tinyerp-server (4.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Taking package back, Jean-Marc seems to be MIA.
+  * Changed wording of 'listen to all interfaces' paragraph in README.Debian,
+    thanks to Gerfried Fuchs <alfie@debian.org>.
+  * Added lsb header to init script.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 01 Jun 2007 11:59:00 +0200
+
+tinyerp-server (4.0.2-3) unstable; urgency=low
+
+  * Setting maintainer to Jean-Marc, this time really :)
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 28 Mar 2007 21:48:00 +0100
+
+tinyerp-server (4.0.2-2) unstable; urgency=low
+
+  * Setting maintainer to Jean-Marc.
+
+ -- Daniel Baumann <daniel@debian.org>  Wed, 07 Feb 2007 13:41:00 +0100
+
+tinyerp-server (4.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Some minor cleanups.
+
+ -- Daniel Baumann <daniel@debian.org>  Thu, 18 Jan 2007 14:19:00 +0100
+
+tinyerp-server (4.0.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Removed 03-setup.dpatch, went upstream.
+
+ -- Daniel Baumann <daniel@debian.org>  Fri, 29 Dec 2006 01:03:00 +0100
+
+tinyerp-server (4.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added patch to fix a typo in setup.py.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 17:43:00 +0100
+
+tinyerp-server (4.0.0~rc1-2) unstable; urgency=low
+
+  * Cleaned up build-depends.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 13:19:00 +0100
+
+tinyerp-server (4.0.0~rc1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 05 Dec 2006 12:57:00 +0100
+
+tinyerp-server (3.5.0-1) experimental; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 23 Oct 2006 12:23:00 +0200
+
+tinyerp-server (3.4.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * New email address.
+  * Complying with new python policy (Closes: #380973).
+  * Adjusted postgre depends (Closes: #376614).
+
+ -- Daniel Baumann <daniel@debian.org>  Mon, 16 Oct 2006 14:45:00 +0200
+
+tinyerp-server (3.3.0-1) unstable; urgency=low
+
+  * New upstream release (Closes: #369769):
+    - fixed installation script to install all needed files (Closes: #355224)
+  * Updated README.Debian (Closes: #352322, #360222, #360223).
+  * Set to architecture to all (Closes: #356962).
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Sun, 04 Jun 2006 00:50:00 +0100
+
+tinyerp-server (3.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Thu, 02 Feb 2006 09:44:00 +0100
+
+tinyerp-server (3.2.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Adjusted shellbang in bin/addons/base/ir/workflow/pydot/dot_parser.py.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 24 Jan 2006 07:00:00 +0100
+
+tinyerp-server (3.1.99+3.2.0rc1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Tue, 27 Dec 2005 20:00:00 +0100
+
+tinyerp-server (3.1.1+debian-1) unstable; urgency=low
+
+  * Initial release (Closes: #301510).
+  * Rebuild orig.tar.gz to remove unnecessary files in upstreams debian/.
+  * Added changelog from website.
+
+ -- Daniel Baumann <daniel.baumann@panthera-systems.net>  Sun, 16 Oct 2005 13:35:00 +0200

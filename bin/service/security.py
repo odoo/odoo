@@ -24,6 +24,13 @@ import tools
 
 _uid_cache = {}
 
+# When rejecting a password, we need to give as little info as possible
+class ExceptionNoTb(Exception):
+    def __init__(self, msg ):
+        # self.message = msg # No need in Python 2.6
+        self.traceback = ('','','')
+        self.args = (msg, '')
+
 def login(db, login, password):
     cr = pooler.get_db(db).cursor()
     if password:
@@ -41,7 +48,7 @@ def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
         return True
     else:
-        raise Exception('AccessDenied')
+        raise ExceptionNoTb('AccessDenied')
 
 def check(db, uid, passwd):
     cached_pass = _uid_cache.get(db, {}).get(uid)
@@ -55,7 +62,7 @@ def check(db, uid, passwd):
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
-        raise Exception('AccessDenied')
+        raise ExceptionNoTb('AccessDenied')
     if res:
         if _uid_cache.has_key(db):
             ulist = _uid_cache[db]
@@ -73,8 +80,9 @@ def access(db, uid, passwd, sec_level, ids):
     res = cr.fetchone()
     cr.close()
     if not res:
-        raise Exception('Bad username or password')
+        raise ExceptionNoTb('Bad username or password')
     return res[0]
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

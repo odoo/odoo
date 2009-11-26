@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution    
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -25,7 +25,7 @@ import time
 import netsvc
 import tools
 import pooler
-from osv import fields,osv
+from osv import fields, osv
 
 def str2tuple(s):
     return eval('tuple(%s)' % s)
@@ -76,7 +76,7 @@ class ir_cron(osv.osv, netsvc.Agent):
             return False
         return True
     
-    _constraints= [
+    _constraints = [
         (_check_args, 'Invalid arguments', ['args']),
     ]
 
@@ -92,7 +92,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                 self._logger.notifyChannel('timers', netsvc.LOG_ERROR, tools.exception_to_unicode(e))
 
 
-    def _poolJobs(self, db_name, check=False):        
+    def _poolJobs(self, db_name, check=False):
         try:
             db, pool = pooler.get_db_and_pool(db_name)
         except:
@@ -115,7 +115,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                         if numbercall:
                             nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                         ok = True
-                    addsql=''
+                    addsql = ''
                     if not numbercall:
                         addsql = ', active=False'
                     cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
@@ -124,13 +124,18 @@ class ir_cron(osv.osv, netsvc.Agent):
 
             cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and nextcall>=now()')
             next_call = cr.dictfetchone()['min_next_call']  
-            if next_call:                
+            if next_call:
                 next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
             else:
                 next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
         
             if not check:
                 self.setAlarm(self._poolJobs, next_call, db_name, db_name)
+
+        except Exception, ex:
+            logger = netsvc.Logger()
+            logger.notifyChannel('cron', netsvc.LOG_WARNING,
+                'Exception in cron:'+str(ex))
         
         finally:
             cr.commit()

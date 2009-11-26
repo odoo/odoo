@@ -160,7 +160,7 @@ def check_quality(uri, user, pwd, dbname, modules, quality_logs):
 
 def wait(id,url=''):
     progress=0.0
-    sock2 = xmlrpclib.ServerProxy(url+'/db')
+    sock2 = xmlrpclib.ServerProxy(url+'/xmlrpc/db')
     while not progress==1.0:
         progress,users = execute(sock2,'get_progress',admin_passwd, id)
     return True

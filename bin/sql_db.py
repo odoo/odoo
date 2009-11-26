@@ -59,9 +59,11 @@ re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
 
-def log(msg, lvl=netsvc.LOG_DEBUG):
+def log(msg, lvl=netsvc.LOG_DEBUG2):
     logger = netsvc.Logger()
     logger.notifyChannel('sql', lvl, msg)
+
+sql_counter = 0
 
 class Cursor(object):
     IN_MAX = 1000
@@ -70,7 +72,7 @@ class Cursor(object):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if self.__closed:
-                raise psycopg2.ProgrammingError('Unable to use the cursor after having closing it')
+                raise psycopg2.ProgrammingError('Unable to use the cursor after having closed it')
             return f(self, *args, **kwargs)
         return wrapper
 
@@ -111,7 +113,7 @@ class Cursor(object):
     def execute(self, query, params=None):
         if '%d' in query or '%f' in query:
             log(query, netsvc.LOG_WARNING)
-            log("SQL queries mustn't contain %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
+            log("SQL queries cannot contain %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
             if params:
                 query = query.replace('%d', '%s').replace('%f', '%s')
 
@@ -121,6 +123,10 @@ class Cursor(object):
         try:
             params = params or None
             res = self._obj.execute(query, params)
+        except psycopg2.ProgrammingError, pe:
+            logger= netsvc.Logger()
+            logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
+            raise
         except Exception, e:
             log("bad query: %s" % self._obj.query)
             log(e)
@@ -142,22 +148,22 @@ class Cursor(object):
         return res
 
     def print_log(self):
+        global sql_counter
+        sql_counter += self.sql_log_count
         if not self.sql_log:
             return
-
         def process(type):
             sqllogs = {'from':self.sql_from_log, 'into':self.sql_into_log}
-            if not sqllogs[type]:
-                return
-            sqllogitems = sqllogs[type].items()
-            sqllogitems.sort(key=lambda k: k[1][1])
             sum = 0
-            log("SQL LOG %s:" % (type,))
-            for r in sqllogitems:
-                log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
-                sum+= r[1][1]
-            log("SUM:%s/%d" % (sum, self.sql_log_count))
-            sqllogs[type].clear()
+            if sqllogs[type]:
+                sqllogitems = sqllogs[type].items()
+                sqllogitems.sort(key=lambda k: k[1][1])
+                log("SQL LOG %s:" % (type,))
+                for r in sqllogitems:
+                    log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
+                    sum+= r[1][1]
+                sqllogs[type].clear()
+            log("SUM %s:%s/%d [%d]" % (type, sum, self.sql_log_count,sql_counter))
         process('from')
         process('into')
         self.sql_log_count = 0

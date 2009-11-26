@@ -249,8 +249,7 @@ class ir_values(osv.osv):
                     if r[2].has_key('groups_id'):
                         groups = r[2]['groups_id']
                         if len(groups) > 0:
-                            group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
-                            cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
+                            cr.execute("SELECT count(*) FROM res_groups_users_rel WHERE gid = ANY(%s) AND uid=%s",(groups, uid))
                             gr_ids = cr.fetchall()
                             if not gr_ids[0][0] > 0:
                                 res2.remove(r)
