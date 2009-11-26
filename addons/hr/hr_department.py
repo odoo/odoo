@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -43,7 +43,7 @@ class hr_department(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_department where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -117,12 +117,12 @@ class res_users(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)])
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
-                childs = map(lambda x: x['member_ids'], data_dept)                
+                childs = map(lambda x: x['member_ids'], data_dept)
                 childs = tools.flatten(childs)
-                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])                
+                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])
                 if manager_id in childs:
                     childs.remove(manager_id)
-                
+
                 child_ids.extend(tools.flatten(childs))
                 set = {}
                 map(set.__setitem__, child_ids, [])
