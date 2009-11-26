@@ -417,9 +417,12 @@ class _rml_canvas(object):
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def setFont(self, node):
-        from reportlab.pdfbase import pdfmetrics        
-        if  node.get('name') in pdfmetrics.standardFonts:
-            return self.canvas.setFont(node.get('name'), utils.unit_get(node.get('size')))
+        from reportlab.pdfbase import pdfmetrics 
+        fname = node.get('name')
+        #TODO : other fonts should be supported      
+        if fname not in pdfmetrics.standardFonts:
+           fname = self.canvas._fontname          
+        return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
 
     def render(self, node):
         tags = {
