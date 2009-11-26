@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -103,7 +103,7 @@ class hr_timesheet_sheet(osv.osv):
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
                     ON (sheet.id = day.sheet_id \
                         AND day.name = sheet.date_current) \
-                WHERE sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
+                WHERE sheet.id =ANY(%s)',(ids,))
         for record in cr.fetchall():
             res[record[0]] = {}
             res[record[0]]['total_attendance_day'] = record[1]
@@ -117,8 +117,7 @@ class hr_timesheet_sheet(osv.osv):
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN hr_timesheet_sheet_sheet_day d \
                         ON (s.id = d.sheet_id) \
-                WHERE s.id in ('+ ','.join(map(str, ids)) + ') \
-                GROUP BY s.id')
+                WHERE s.id =ANY(%s) GROUP BY s.id',(ids,))
         for record in cr.fetchall():
             res[record[0]] = {}
             res[record[0]]['total_attendance'] = record[1]
@@ -215,7 +214,7 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Description', size=64, select=1, 
+        'name': fields.char('Description', size=64, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'User', required=True, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -337,8 +336,7 @@ class hr_timesheet_line(osv.osv):
                         ON (s.date_to >= al.date \
                             AND s.date_from <= al.date \
                             AND s.user_id = al.user_id) \
-                WHERE l.id in (' + ','.join([str(x) for x in ids]) + ') \
-                GROUP BY l.id')
+                WHERE l.id =ANY(%s) GROUP BY l.id',(ids,))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
@@ -455,8 +453,7 @@ class hr_attendance(osv.osv):
                         ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.user_id = e.user_id) \
-                WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
-                GROUP BY a.id")
+                WHERE a.id =ANY(%s) GROUP BY a.id",(ids,))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
