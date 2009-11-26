@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -77,9 +77,9 @@ def _to_decode(s):
             try:
                 return s.decode('ascii')
             except UnicodeError:
-                return s  
-    
-			
+                return s
+
+
 class file_wrapper(StringIO.StringIO):
     def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
         StringIO.StringIO.__init__(self, sstr)
@@ -153,7 +153,7 @@ class abstracted_fs:
                     cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
                     if not cr.fetchone():
                         continue
-    
+
                     cr.execute("select id from ir_module_module where name like 'document%' and state='installed' ")
                     res = cr.fetchone()
                     if res and len(res):
@@ -165,7 +165,7 @@ class abstracted_fs:
                 if cr is not None:
                     cr.close()
                 #if db is not None:
-                #    pooler.close_db(db_name)        
+                #    pooler.close_db(db_name)
         return self.db_name_list
 
     # Ok
@@ -210,10 +210,10 @@ class abstracted_fs:
     def ftp2fs(self, path_orig, data):
         path = self.ftpnorm(path_orig)
         if not data or (path and path=='/'):
-            return None               
+            return None
         path2 = filter(None,path.split('/'))[1:]
         (cr, uid, pool) = data
-        if len(path2):     
+        if len(path2):
             path2[-1]=_to_unicode(path2[-1])
         res = pool.get('document.directory').get_object(cr, uid, path2[:])
         if not res:
@@ -221,15 +221,15 @@ class abstracted_fs:
         return res
 
     # Ok
-    def fs2ftp(self, node):        
+    def fs2ftp(self, node):
         res='/'
         if node:
             res=os.path.normpath(node.path)
-            res = res.replace("\\", "/")        
+            res = res.replace("\\", "/")
             while res[:2] == '//':
                 res = res[1:]
-            res='/' + node.cr.dbname + '/' + _to_decode(res)            
-            
+            res='/' + node.cr.dbname + '/' + _to_decode(res)
+
         #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
 
@@ -309,7 +309,7 @@ class abstracted_fs:
 
             s = file_wrapper('', cid, cr.dbname, uid, )
             return s
-        except Exception,e:             
+        except Exception,e:
             log(e)
             raise OSError(1, 'Operation not permited.')
 
@@ -372,7 +372,7 @@ class abstracted_fs:
 
 
     # Ok
-    def chdir(self, path):        
+    def chdir(self, path):
         if not path:
             self.cwd='/'
             return None
@@ -400,7 +400,7 @@ class abstracted_fs:
                 'ressource_parent_type_id': object and object.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False
             }
-            if (object and (object.type in ('directory'))) or not object2:                
+            if (object and (object.type in ('directory'))) or not object2:
                 val['parent_id'] =  object and object.id or False
             # Check if it alreayd exists !
             pool.get('document.directory').create(cr, uid, val)
@@ -448,8 +448,8 @@ class abstracted_fs:
                 try:
                     uid = security.login(db, self.username, self.password)
                     if uid:
-                        result.append(false_node(db))                    
-                except osv.except_osv:                    
+                        result.append(false_node(db))
+                except osv.except_osv:
                     pass
             return result
         return path.children()
@@ -535,11 +535,11 @@ class abstracted_fs:
                     ressource_type_id = pool.get('ir.model').search(cr,uid,[('model','=',dst_basedir.object2._name)])[0]
                     ressource_id = dst_basedir.object2.id
                     title = dst_basedir.object2.name
-                    ressource_model = dst_basedir.object2._name                    
+                    ressource_model = dst_basedir.object2._name
                     if dst_basedir.object2._name=='res.partner':
                         partner_id=dst_basedir.object2.id
                     else:
-                        obj2=pool.get(dst_basedir.object2._name)                         
+                        obj2=pool.get(dst_basedir.object2._name)
                         partner_id= obj2.fields_get(cr,uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 else:
                     ressource_type_id = False
@@ -560,7 +560,7 @@ class abstracted_fs:
                 }
                 pool.get('ir.attachment').write(cr, uid, result['attachment'], val)
                 if (not val['res_id']) and result['attachment']:
-                    dst_basedir.cr.execute('update ir_attachment set res_id=NULL where id in ('+','.join(map(str,result['attachment']))+')')
+                    dst_basedir.cr.execute('update ir_attachment set res_id=NULL where id =ANY(%s)',(result['attachment'],))
 
                 cr.commit()
             elif src.type=='file':
@@ -586,7 +586,7 @@ class abstracted_fs:
                     if dst_basedir.object2._name=='res.partner':
                         val['partner_id']=dst_basedir.object2.id
                     else:
-                        obj2=pool.get(dst_basedir.object2._name) 
+                        obj2=pool.get(dst_basedir.object2._name)
                         val['partner_id']= obj2.fields_get(src.cr, src.uid,['partner_id']) and dst_basedir.object2.partner_id.id or False
                 elif src.object.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
@@ -700,7 +700,7 @@ class abstracted_fs:
     def get_list_dir(self, path):
         """"Return an iterator object that yields a directory listing
         in a form suitable for LIST command.
-        """        
+        """
         if self.isdir(path):
             listing = self.listdir(path)
             #listing.sort()
@@ -735,7 +735,7 @@ class abstracted_fs:
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok    
+    # Ok
     def format_list(self, basedir, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
@@ -774,13 +774,13 @@ class abstracted_fs:
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
+                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))
                 mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
             except ValueError:
                 mname=_get_month_name(time.strftime("%m"))
-                mtime = mname+' '+time.strftime("%d %H:%M")            
-            # formatting is matched with proftpd ls output            
-            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')                    
+                mtime = mname+' '+time.strftime("%d %H:%M")
+            # formatting is matched with proftpd ls output
+            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
                                                      size, mtime, path.split('/')[-1])
 
@@ -818,7 +818,7 @@ class abstracted_fs:
         if 'd' in perms:
             permdir += 'p'
         type = size = perm = modify = create = unique = mode = uid = gid = ""
-        for file in listing:                        
+        for file in listing:
             try:
                 st = self.stat(file)
             except OSError:
@@ -828,7 +828,7 @@ class abstracted_fs:
             # type + perm
             if stat.S_ISDIR(st.st_mode):
                 if 'type' in facts:
-                    type = 'type=dir;'                    
+                    type = 'type=dir;'
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permdir
             else:
