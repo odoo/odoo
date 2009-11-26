@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,7 +32,7 @@ invoice_form = """<?xml version="1.0"?>
     <newline/>
     <field name="type"/>
     <newline/>
-    <field name="invoice_date" />    
+    <field name="invoice_date" />
 </form>
 """
 
@@ -53,7 +53,7 @@ invoice_fields = {
         'selection': [],
         'required': True
     },
-    'invoice_date': {'string': 'Invoiced date', 'type':'date' }    
+    'invoice_date': {'string': 'Invoiced date', 'type':'date' }
 }
 
 def _get_type(obj, cr, uid, data, context):
@@ -63,7 +63,7 @@ def _get_type(obj, cr, uid, data, context):
     if pick.invoice_state == 'invoiced':
         raise wizard.except_wizard(_('UserError'), _('Invoice is already created.'))
     if pick.invoice_state == 'none':
-        raise wizard.except_wizard(_('UserError'), _('Invoice cannot be created from Packing.'))
+        raise wizard.except_wizard(_('UserError'), _('Invoice cannot be created from Picking.'))
 
     if pick.move_lines:
         usage = pick.move_lines[0].location_id.usage
@@ -85,7 +85,7 @@ def _get_type(obj, cr, uid, data, context):
             ('out_refund', 'Customer Refund'),
             ('in_refund', 'Supplier Refund'),
             ]
-                    
+
     if pick.type == 'out' and usage == 'supplier':
         type = 'in_refund'
     elif pick.type == 'out' and usage == 'customer':

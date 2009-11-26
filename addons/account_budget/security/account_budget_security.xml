@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><openerp><data noupdate="0">
     <record id="budget_post_comp_rule_group" model="ir.rule.group">
         <field name="name">Budget post multi-company</field>
-        <field name="model_id" model="model_account_budget_post"/>
+        <field name="model_id" ref="model_account_budget_post"/>
         <field eval="True" name="global"/>
     </record>
     <record id="budget_post_comp_rule" model="ir.rule">

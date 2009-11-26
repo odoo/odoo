@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,7 +30,7 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             help="The JIT module allows you to not run the scheduler "\
                 "periodically. It's easier and faster for real time "\
                 "stock computation but, in counter-part, it manages less "\
-                "efficiently priorities in procurements."
+                "efficiently priorities in requisitions."
         ),
         'sale_margin':fields.boolean('Margins on Sales Order',
             help="Display margins on the sale order form."),
@@ -46,7 +46,7 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             ),
         'mrp_operation': fields.boolean('Manufacturing Operations',
             help="This module allows you to not only manage by production order "\
-            "but also by work order/operation. You will be able to planify, "\
+            "but also by work order/operation. You will be able to plan, "\
             "analyse the cost, check times, ... on all operations of each "\
             "manufacturing order"),
         'stock_location': fields.boolean('Advanced Locations',
@@ -70,9 +70,9 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             help="This module allows you to add sub poducts in mrp bom."),
          'warning': fields.boolean('Warning',
             help="Able you to set warnings on products and partners."),
-        'board_document':fields.boolean('Document Management', 
+        'board_document':fields.boolean('Document Management',
             help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
-        'mrp_repair': fields.boolean('Repair', 
+        'mrp_repair': fields.boolean('Repair',
             help="Allow to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
 
     }

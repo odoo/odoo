@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -77,7 +77,7 @@ def _create_returns(self, cr, uid, data, context):
             else:
                 new_type='internal'
             new_picking=pick_obj.copy(cr, uid, pick.id, {'name':'%s (return)' % pick.name,
-                    'move_lines':[], 'state':'draft', 'type':new_type, 
+                    'move_lines':[], 'state':'draft', 'type':new_type,
                     'date':date_cur, 'invoice_state':data['form']['invoice_state'],})
         new_location=move.location_dest_id.id
 
@@ -101,7 +101,7 @@ def _action_open_window(self, cr, uid, data, context):
         return {}
     return {
         'domain': "[('id', 'in', ["+str(res)+"])]",
-        'name': 'Packing List',
+        'name': 'Picking List',
         'view_type':'form',
         'view_mode':'tree,form',
         'res_model':'stock.picking',

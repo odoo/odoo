@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -115,7 +115,7 @@ class mrp_procurement(osv.osv):
     '''% (start_date, end_date, report_total, report_except, report_later)
             summary += '\n'.join(report)
             request.create(cr, uid,
-                {'name': "Procurement calculation report.",
+                {'name': "Requisition calculation report.",
                     'act_from': uid,
                     'act_to': uid,
                     'body': summary,

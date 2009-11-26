@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,7 +42,7 @@ sale_fields = {
     'partner_id': {'string': 'Customer', 'type': 'many2one',
         'relation': 'res.partner',
         'help': 'Use this partner if there is no partner on the case'},
-    'picking_policy': {'string': 'Packing Policy', 'type': 'selection',
+    'picking_policy': {'string': 'Picking Policy', 'type': 'selection',
         'selection': [('direct','Direct Delivery'),('one','All at once')]},
     'products': {'string': 'Products', 'type': 'many2many',
         'relation': 'product.product'},
@@ -62,9 +62,9 @@ class make_sale(wizard.interface):
 
     def _makeOrder(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'])        
+        id = mod_obj.read(cr, uid, result, ['res_id'])
         case_obj = pool.get('crm.case')
         sale_obj = pool.get('sale.order')
         partner_obj = pool.get('res.partner')
@@ -93,7 +93,7 @@ class make_sale(wizard.interface):
 
             if False in partner_addr.values():
                 raise wizard.except_wizard(_('Data Insufficient!'),_('Customer has no addresses defined!'))
-            
+
             vals = {
                 'origin': 'CRM:%s' % str(case.id),
                 'picking_policy': data['form']['picking_policy'],
@@ -131,7 +131,7 @@ class make_sale(wizard.interface):
             'res_model': 'sale.order',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id']            
+            'search_view_id': id['res_id']
         }
         return value
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -108,7 +108,7 @@ class wizard_payment_order(wizard.interface):
     - Small number of non-reconcilied move line , payment mode and bank account type,
     - Big number of partner and bank account.
 
-    If a type is given, unsuitable account move lines are ignored.
+    If a type is given, unsuitable account Entry lines are ignored.
     """
     states = {
 
