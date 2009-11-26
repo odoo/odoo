@@ -245,18 +245,16 @@
                             <field name="ref" select="1"/>
                             <field domain="[('domain', '=', 'partner')]" name="title"/>
                             <field name="lang" select="2"/>
+                            <field name="company_id" colspan="4"/>
                         </group>
                         <group colspan="1" col="2">
                             <field name="customer" select="1"/>
                             <field name="supplier" select="2"/>
                         </group>
                     </group>
-                    <group colspan="2" col="1">
-                       <field name="company_id"/>
-					</group>
                     <notebook colspan="4">
                         <page string="General">
-                            <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1">
+                            <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
                                     <field name="name" select="2"/>
                                     <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
@@ -289,7 +287,7 @@
                                 </tree>
                             </field>
                             <separator colspan="4" string="Categories"/>
-                            <field colspan="4" name="category_id" nolabel="1" select="2"/>
+                            <field colspan="4" name="category_id" nolabel="1" select="2" height="90"/>
                         </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
@@ -305,6 +303,7 @@
                             <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Notes">
+                            <separator string="Description" colspan="4"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                     </notebook>
