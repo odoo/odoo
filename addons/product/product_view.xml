@@ -79,7 +79,7 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="Procurement" colspan="2"/>
+                                <separator string="	Requisition" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
@@ -113,7 +113,7 @@
                             </group>
 
                         </page>
-                        <page string="Procurement &amp; Locations">
+                        <page string="Requisition &amp; Locations">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -510,7 +510,7 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="Procurement" colspan="2"/>
+                                <separator string="Requisition" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
@@ -544,7 +544,7 @@
                             </group>
 
                         </page>
-                        <page string="Procurement &amp; Locations">
+                        <page string="Requisition &amp; Locations">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -607,7 +607,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="company_wise_cost_price_tree_view" model="ir.ui.view">
             <field name="name">company.wise.cost.price.tree</field>
             <field name="model">company.wise.cost.price</field>
@@ -620,7 +620,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="company_wise_sale_price_form_view" model="ir.ui.view">
             <field name="name">company.wise.sale.price.form</field>
             <field name="model">company.wise.sale.price</field>
@@ -633,7 +633,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="company_wise_sale_price_tree_view" model="ir.ui.view">
             <field name="name">company.wise.sale.price.tree</field>
             <field name="model">company.wise.sale.price</field>
@@ -646,6 +646,6 @@
                 </tree>
             </field>
         </record>
-       
+
     </data>
 </openerp>

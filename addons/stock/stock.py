@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -130,7 +130,7 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production')], 'Location Type', required=True),
+        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Requisition'), ('production', 'Production')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
@@ -373,7 +373,7 @@ stock_tracking()
 #----------------------------------------------------------
 class stock_picking(osv.osv):
     _name = "stock.picking"
-    _description = "Packing List"
+    _description = "Picking List"
 
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
         if not value:
@@ -459,18 +459,18 @@ class stock_picking(osv.osv):
             \n* The \'Available\' state is set automatically when the products are ready to be moved.\
             \n* The \'Waiting\' state is used in MTO moves when a movement is waiting for another one.'),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Packing. Default it takes current date"),
+                 method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Picking. Default it takes current date"),
         'date': fields.datetime('Date Order', help="Date of Order"),
         'date_done': fields.datetime('Date Done', help="Date of completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Planned Date', select=2),
-        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
-        'auto_picking': fields.boolean('Auto-Packing'),
+        'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not from Packing")], "Invoice Status",
+            ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
@@ -711,7 +711,7 @@ class stock_picking(osv.osv):
                     'name': (invoice.name or '') + ', ' + (picking.name or ''),
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
-                    'date_invoice':context.get('date_inv',False)                    
+                    'date_invoice':context.get('date_inv',False)
                 }
                 invoice_obj.write(cursor, user, [invoice_id], invoice_vals, context=context)
             else:
@@ -772,7 +772,7 @@ class stock_picking(osv.osv):
                     notes = move_line.sale_line_id.notes
                 elif move_line.purchase_line_id:
                     notes = move_line.purchase_line_id.notes
-                
+
                 invoice_line_id = invoice_line_obj.create(cursor, user, {
                     'name': name,
                     'origin': origin,
@@ -785,7 +785,7 @@ class stock_picking(osv.osv):
                     'quantity': move_line.product_uos_qty or move_line.product_qty,
                     'invoice_line_tax_id': [(6, 0, tax_ids)],
                     'account_analytic_id': account_analytic_id,
-                    'note': notes,                    
+                    'note': notes,
                     }, context=context)
                 self._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
@@ -979,7 +979,7 @@ class stock_move(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
         'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History'),
-        'picking_id': fields.many2one('stock.picking', 'Packing List', select=True),
+        'picking_id': fields.many2one('stock.picking', 'Picking List', select=True),
 
         'note': fields.text('Notes'),
 
@@ -1169,8 +1169,8 @@ class stock_move(osv.osv):
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
-                    #in the same order. This is e.g. the case when using the button 'split in two' of 
-                    #the stock outgoing form                    
+                    #in the same order. This is e.g. the case when using the button 'split in two' of
+                    #the stock outgoing form
                     self.write(cr, uid, move.id, {'state':'assigned'})
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
@@ -1471,9 +1471,9 @@ class stock_picking_move_wizard(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=64, invisible=True),
         #'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',readonly=True),
-        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines', required=True),
+        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Entry lines', required=True),
         'address_id': fields.many2one('res.partner.address', 'Dest. Address', invisible=True),
-        'picking_id': fields.many2one('stock.picking', 'Packing list', select=True, invisible=True),
+        'picking_id': fields.many2one('stock.picking', 'Picking list', select=True, invisible=True),
     }
     _defaults = {
         'picking_id': _get_picking,

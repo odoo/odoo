@@ -3,8 +3,7 @@
     <data>
         <wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="-49"/>
-
-        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Procurements Only" name="mrp.procurement.compute"/>
+        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute 	Requisitions Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
 
         <wizard id="wiz_mrp_proc2" model="mrp.procurement" string="Compute Stock Minimum Rules Only" name="mrp.procurement.orderpoint.compute"/>
@@ -22,7 +21,7 @@
         </record>
 
     <wizard
-        string="Procurement Request"
+        string="Requisition Request"
         model="product.product"
         name="product.product.procurement"
         keyword="client_action_multi"

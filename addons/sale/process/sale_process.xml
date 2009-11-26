@@ -32,8 +32,8 @@
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Sale Order Procurement&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;Drives procurement orders for every sale order line.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Sale Order Requisition&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;Drives requisition orders for every sale order line.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="process_process_salesprocess0"/>
             <field name="process_id" ref="mrp.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
@@ -66,8 +66,8 @@
             <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;One procurement order for each sale order line and for each of the components.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Requisition Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;One requisition order for each sale order line and for each of the components.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="mrp.process_process_procurementprocess0"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
@@ -158,8 +158,8 @@
 
         <record id="process_transition_saleprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Create Procurement Order&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;A procurement order is automatically created as soon as a sale order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sale order's parameters. &quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Create Requisition Order&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;A requisition order is automatically created as soon as a sale order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sale order's parameters. &quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_saleprocurement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
         </record>
@@ -167,7 +167,7 @@
         <record id="process_transition_packing0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Pick List&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sale order is confirmed, in the same time as the procurement order. It represents the assignment of parts to the sale order. There is 1 pick list by sale order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sale order is confirmed, in the same time as the requisition order. It represents the assignment of parts to the sale order. There is 1 pick list by sale order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleprocurement0"/>
         </record>
@@ -200,8 +200,8 @@
         <record id="process_transition_saleorderprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;For every sale order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Requisition of sold material&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;For every sale order line, a requisition order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="mrp.process_node_procureproducts0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>

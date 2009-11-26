@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -194,8 +194,8 @@ class purchase_order(osv.osv):
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),    
-        'company_id': fields.many2one('res.company','Company',required=True),    
+        'create_uid':  fields.many2one('res.users', 'Responsible'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
@@ -357,7 +357,7 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Could not cancel purchase order !'),
-                        _('You must first cancel all packing attached to this purchase order.'))
+                        _('You must first cancel all picking attached to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)

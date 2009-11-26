@@ -346,7 +346,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -369,7 +369,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -401,7 +401,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_invoice"/>
         <record id="action_invoice_tree2_new" model="ir.actions.act_window">
@@ -422,7 +422,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
 
@@ -444,7 +444,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="account.menu_finance_invoice"/>
 
@@ -467,7 +467,7 @@
             <field name="domain">[('state','=','draft'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -489,7 +489,7 @@
             <field name="domain">[('state','=','proforma2'),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree6_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -511,7 +511,7 @@
             <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree7_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -533,7 +533,7 @@
             <field name="domain">[('state','=','draft'),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree8_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -555,7 +555,7 @@
             <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree9_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -577,7 +577,7 @@
             <field name="domain">[('state','=','draft'),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree10_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -599,7 +599,7 @@
             <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree11_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -621,7 +621,7 @@
             <field name="domain">[('state','=','draft'),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree12_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -643,7 +643,7 @@
             <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>            
+            <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
         <record id="action_invoice_tree13_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

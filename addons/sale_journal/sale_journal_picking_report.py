@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -71,7 +71,7 @@ report_sale_journal_invoice_type_stats()
 
 class report_sale_journal_picking(osv.osv):
     _name = "sale_journal.picking.stats"
-    _description = "Packing lists by Journal"
+    _description = "Picking lists by Journal"
     _auto = False
     _columns = {
         'name': fields.date('Month', readonly=True),

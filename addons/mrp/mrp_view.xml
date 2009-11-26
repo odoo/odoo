@@ -4,7 +4,7 @@
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_root" sequence="4"/>
 
         <!--
         Property / Property Group
@@ -666,7 +666,7 @@
         </record>
 
         <!--
-    Procurement
+    	Requisition
     -->
 
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
@@ -674,7 +674,7 @@
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines">
+                <tree string="Requisition Lines">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -692,10 +692,10 @@
             <field name="model">mrp.procurement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement">
+                <form string="Requisition">
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
-                        <field name="name" select="1" string="Procurement Reason"/>
+                        <field name="name" select="1" string="Requisition Reason"/>
                         <field name="origin" select="2"/>
                     </group>
                     <group col="2" colspan="2">
@@ -705,7 +705,7 @@
                         <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
-                    <page string="Procurement Details">
+                    <page string="Requisition Details">
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" select="2"/>
@@ -722,7 +722,7 @@
                             <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
                             <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
                             <button name="button_cancel" states="exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_check" states="confirmed" string="Run procurement" icon="gtk-media-play"/>
+                            <button name="button_check" states="confirmed" string="Run 	Requisition" icon="gtk-media-play"/>
                             <button name="button_cancel" states="draft,running" string="Cancel" icon="gtk-cancel"/>
                         </group>
                     </page>
@@ -749,9 +749,9 @@
             <field name="model">mrp.procurement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Procurement">
+                <search string="Search Requisition">
                        <group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement orders with exceptions"/>
+                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Requisition orders with exceptions"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
                        <field name="product_id" select='1'/>
@@ -762,7 +762,7 @@
             </field>
         </record>
         <record id="mrp_procurement_action" model="ir.actions.act_window">
-            <field name="name">Procurement Orders</field>
+            <field name="name">Requisition Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -773,7 +773,7 @@
                   sequence="-40" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
-            <field name="name">Unscheduled procurements</field>
+            <field name="name">Unscheduled Requisitions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -782,7 +782,7 @@
         </record>
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Exceptions Procurements</field>
+            <field name="name">Requisition Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -791,7 +791,7 @@
         </record>
 
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Exceptions Procurements to Fix</field>
+            <field name="name">Requisition Exceptions to Fix</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -801,7 +801,7 @@
         </record>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
-            <field name="name">Temporary Procurement Exceptions</field>
+            <field name="name">Temporary Requisition Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -810,7 +810,7 @@
         </record>
 
          <record id="mrp_procurement_new" model="ir.actions.act_window">
-            <field name="name">New Procurement</field>
+            <field name="name">New Requisition</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
