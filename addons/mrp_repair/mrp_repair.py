@@ -503,7 +503,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', required=True, readonly=True),
     }
     _defaults = {
      'state': lambda *a: 'draft',

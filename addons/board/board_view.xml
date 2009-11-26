@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem icon="terp-graph" id="dashboard_menu" name="Dashboards"/>
-        
+
         <record id="view_board_note_tree" model="ir.ui.view">
             <field name="name">board.note.tree</field>
             <field name="model">board.note</field>
@@ -33,12 +33,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        
-        <menuitem action="action_view_board_note_form" id="menu_view_board_note_form" parent="board.dashboard_menu" sequence="100"/>
-        
+
+        <menuitem action="action_view_board_note_form" id="menu_view_board_note_form" parent="board.dashboard_menu"
+                  sequence="100"
+                  groups="base.group_system" />
+
         <wizard id="wizard_board_create_menu" model="board.board" multi="True" name="board.board.menu.create" string="Create Board Menu"/>
-        
-        
+
+
         <record id="view_board_tree" model="ir.ui.view">
             <field name="name">board.board.tree</field>
             <field name="model">board.board</field>
@@ -94,6 +96,6 @@
             id="menu_view_board_form"
             parent="next_id_50"/>
         <act_window context="{'view': active_id}" id="dashboard_open" multi="True" name="Open Dashboard" res_model="board.board" src_model="board.board"/>
-        
+
     </data>
 </openerp>

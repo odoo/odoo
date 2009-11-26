@@ -2,8 +2,7 @@
 <openerp>
     <data>
         <wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute All Schedulers" name="mrp.procurement.compute.all"/>
-        <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="100"/>
-
+        <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard" sequence="-49"/>
         <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute 	Requisitions Only" name="mrp.procurement.compute"/>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
 

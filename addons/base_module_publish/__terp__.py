@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Module publisher',
+    'name': 'Module publisher - To automatically publish modules new version',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """

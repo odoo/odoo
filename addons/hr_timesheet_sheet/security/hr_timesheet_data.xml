@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record model="ir.rule.group" id="timesheet_comp_rule_group">
+			<field name="name">Timesheet multi-company</field>
+			<field name="model_id" search="[('model','=','hr_timesheet_sheet.sheet')]" model="ir.model"/>
+			<field name="global" eval="True"/>
+		</record>
+		<record model="ir.rule" id="timesheet_comp_rule">
+			<field name="field_id" search="[('model','=','hr_timesheet_sheet.sheet'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">child_of</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="rule_group" ref="timesheet_comp_rule_group"/>
+		</record>
+
+	</data>
+</openerp>

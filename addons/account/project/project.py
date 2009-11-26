@@ -189,7 +189,11 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
-        'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True),
+        'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True,
+                                  help='* When an account is created its in \'Draft\' state.\
+                                  \n* If any associated partner is there, it can be in \'Open\' state.\
+                                  \n* If any pending balance is there it can be in \'Pending\'. \
+                                  \n* And finally when all the transactions are over, it can be in \'Close\' state.'),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -269,10 +273,12 @@ class account_analytic_journal(osv.osv):
         'active' : fields.boolean('Active'),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: True,
         'type': lambda *a: 'general',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 account_analytic_journal()
 

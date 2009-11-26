@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'crm_profiling management',
+    'name': 'Crm Profiling management - To Perform Segmentation within Partners',
     'version': '1.3',
     'category': 'Generic Modules/CRM & SRM',
     'description': """

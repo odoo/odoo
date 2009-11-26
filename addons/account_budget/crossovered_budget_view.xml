@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-	<!-- budget form and tree view from account module *********************************** -->
-		<record id="action_account_budget_post_tree" model="ir.actions.act_window">
+    <data>
+    <!-- budget form and tree view from account module *********************************** -->
+        <record id="action_account_budget_post_tree" model="ir.actions.act_window">
             <field name="name">Budgets</field>
             <field name="res_model">account.budget.post</field>
             <field name="view_type">tree</field>
@@ -19,9 +19,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Budgetary Position">
-                    <field name="sequence"/>                
+                    <field name="sequence"/>
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -60,239 +61,240 @@
         <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_31"/>
 
 
-		<record model="ir.ui.view" id="view_budget_post_form">
-			<field name="name">account.budget.post.form.inherit</field>
-			<field name="model">account.budget.post</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Budgetary Position">
-					<field name="name" select="1"/>
-					<field name="code" select="1"/>
-                    <field name="sequence" select="2"/>					
-					<notebook colspan="4">
-						<page string="Accounts">
-							<field name="account_ids" colspan="4" nolabel="1"/>
-						</page>
-						<page string="Dotations">
-							<button string="Spread" name="%(wizard_budget_spread)d" type="action" icon="gtk-fullscreen"/>
-							<field name="dotation_ids" colspan="4" nolabel="1"/>
-						</page>
+        <record model="ir.ui.view" id="view_budget_post_form">
+            <field name="name">account.budget.post.form.inherit</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Budgetary Position">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="company_id"  groups="base.group_multi_company"/>
+                    <field name="sequence" select="2"/>                    
+                    <notebook colspan="4">
+                        <page string="Accounts">
+                            <field name="account_ids" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Dotations">
+                            <button string="Spread" name="%(wizard_budget_spread)d" type="action" icon="gtk-fullscreen"/>
+                            <field name="dotation_ids" colspan="4" nolabel="1"/>
+                        </page>
 
-						<page string="Budget Lines">
-							<field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
-								<graph type="bar" string="Lines">
-									<field name="analytic_account_id" />
-									<!--<field name="general_budget_id" operator="+" />-->
-									<field name="planned_amount" operator="+"/>
-									<field group="True" name="general_budget_id"/>
-								</graph>
-								<tree string="Budget Lines"  editable="top">
-									<field name="crossovered_budget_id"/>
-									<field name="analytic_account_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-									<field name="practical_amount" select="1"/>
-									<field name="theoritical_amount"/>
-									<field name="percentage"/>
-								</tree>
-								<form string="Budget Lines">
-									<field name="crossovered_budget_id"/>
-									<field name="analytic_account_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-									<field name="practical_amount" select="1"/>
-									<field name="theoritical_amount"/>
-									<field name="percentage"/>
-								</form>
-							</field>
-						</page>
-					</notebook>
-				</form>
-			</field>
-		</record>
+                        <page string="Budget Lines">
+                            <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="graph,tree">
+                                <graph type="bar" string="Lines">
+                                    <field name="analytic_account_id" />
+                                    <!--<field name="general_budget_id" operator="+" />-->
+                                    <field name="planned_amount" operator="+"/>
+                                    <field group="True" name="general_budget_id"/>
+                                </graph>
+                                <tree string="Budget Lines"  editable="top">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
+                                    <field name="practical_amount" select="1"/>
+                                    <field name="theoritical_amount"/>
+                                    <field name="percentage"/>
+                                </tree>
+                                <form string="Budget Lines">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="analytic_account_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
+                                    <field name="practical_amount" select="1"/>
+                                    <field name="theoritical_amount"/>
+                                    <field name="percentage"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="crossovered_budget_view_form">
-			<field name="name">crossovered.budget.view.form</field>
-			<field name="model">crossovered.budget</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Budget">
-							<field name="name" colspan="1" select="1"/>
-							<field name="code" colspan="1" select="1" />
-							<field name="creating_user_id" />
-							<field name="validating_user_id" readonly="True"/>
-							<field name="date_from" select="2"/>
-							<field name="date_to" select="2"/>
-							<field name="crossovered_budget_line" colspan="4" nolabel="1">
-								<tree string="Budget Lines">
-									<field name="analytic_account_id"/>
-									<field name="general_budget_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-									<field name="practical_amount"/>
-									<field name="theoritical_amount"/>
-									<field name="percentage"/>
-								</tree>
-								<form string="Budget Lines">
-									<field name="analytic_account_id" select="1"/>
-									<field name="general_budget_id" select="1"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date" select="1"/>
-									<field name="planned_amount" select="1"/>
-								</form>
-							</field>
-							<field name="state" select="1"/>
-							<group col="4" colspan="2">
+        <record model="ir.ui.view" id="crossovered_budget_view_form">
+            <field name="name">crossovered.budget.view.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Budget">
+                            <field name="name" colspan="1" select="1"/>
+                            <field name="code" colspan="1" select="1" />
+                            <field name="creating_user_id" />
+                            <field name="validating_user_id" readonly="True"/>
+                            <field name="date_from" select="2"/>
+                            <field name="date_to" select="2"/>
+                            <field name="crossovered_budget_line" colspan="4" nolabel="1">
+                                <tree string="Budget Lines">
+                                    <field name="analytic_account_id"/>
+                                    <field name="general_budget_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
+                                    <field name="practical_amount"/>
+                                    <field name="theoritical_amount"/>
+                                    <field name="percentage"/>
+                                </tree>
+                                <form string="Budget Lines">
+                                    <field name="analytic_account_id" select="1"/>
+                                    <field name="general_budget_id" select="1"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date" select="1"/>
+                                    <field name="planned_amount" select="1"/>
+                                </form>
+                            </field>
+                            <field name="state" select="1"/>
+                            <group col="4" colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-apply" />
                                 <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-ok"/>
                                 <button string="Done" name="done" states="validate" type="workflow"   icon="gtk-jump-to" />
                                 <button string="Cancel" name="cancel" states="confirm,validate" type="workflow" icon="gtk-cancel"/>
-								<!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
-							</group>
+                                <!--<button string="Set to Draft" name="action_set_to_draft" states="cancel" type="object"/>-->
+                            </group>
 
-				</form>
-			</field>
-		</record>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="crossovered_budget_view_tree">
-			<field name="name">crossovered.budget.view.tree</field>
-			<field name="model">crossovered.budget</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Budget">
-					<field name="name" colspan="1" select="1"/>
-					<field name="code" colspan="1" select="1" />
-					<field name="state"/>
-					<field name="date_from"/>
-					<field name="date_to"/>
-				</tree>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="crossovered_budget_view_tree">
+            <field name="name">crossovered.budget.view.tree</field>
+            <field name="model">crossovered.budget</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Budget">
+                    <field name="name" colspan="1" select="1"/>
+                    <field name="code" colspan="1" select="1" />
+                    <field name="state"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </tree>
+            </field>
+        </record>
 
-		<record model="ir.actions.act_window" id="act_crossovered_budget_view">
-			<field name="name">Budget</field>
-			<field name="res_model">crossovered.budget</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="crossovered_budget_view_tree"/>
-		</record>
-		<menuitem parent="next_id_31"
-			id="menu_act_crossovered_budget_view"
-			action="act_crossovered_budget_view" />
+        <record model="ir.actions.act_window" id="act_crossovered_budget_view">
+            <field name="name">Budget</field>
+            <field name="res_model">crossovered.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="crossovered_budget_view_tree"/>
+        </record>
+        <menuitem parent="next_id_31"
+            id="menu_act_crossovered_budget_view"
+            action="act_crossovered_budget_view" />
 
-		<record model="ir.ui.view" id="view_crossovered_budget_line_tree">
-			<field name="name">crossovered.budget.line.tree</field>
-			<field name="model">crossovered.budget.lines</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Budget Lines">
-					<field name="analytic_account_id"/>
-					<field name="general_budget_id"/>
-					<field name="date_from"/>
-					<field name="date_to"/>
-					<field name="paid_date"/>
-					<field name="planned_amount"/>
-					<field name="practical_amount" select="1"/>
-					<field name="theoritical_amount"/>
-					<field name="percentage"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_crossovered_budget_line_form">
-			<field name="name">crossovered.budget.line.form</field>
-			<field name="model">crossovered.budget.lines</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Budget Lines">
-					<field name="crossovered_budget_id"/>
-					<field name="analytic_account_id" select="1"/>
-					<field name="general_budget_id" select="1"/>
-					<field name="date_from"/>
-					<field name="date_to"/>
-					<field name="paid_date" select="1"/>
-					<field name="planned_amount" select="1"/>
-					<field name="practical_amount" select="1"/>
-					<field name="theoritical_amount"/>
-					<field name="percentage"/>
-				</form>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
+            <field name="name">crossovered.budget.line.tree</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Budget Lines">
+                    <field name="analytic_account_id"/>
+                    <field name="general_budget_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="paid_date"/>
+                    <field name="planned_amount"/>
+                    <field name="practical_amount" select="1"/>
+                    <field name="theoritical_amount"/>
+                    <field name="percentage"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_crossovered_budget_line_form">
+            <field name="name">crossovered.budget.line.form</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Budget Lines">
+                    <field name="crossovered_budget_id"/>
+                    <field name="analytic_account_id" select="1"/>
+                    <field name="general_budget_id" select="1"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="paid_date" select="1"/>
+                    <field name="planned_amount" select="1"/>
+                    <field name="practical_amount" select="1"/>
+                    <field name="theoritical_amount"/>
+                    <field name="percentage"/>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.actions.act_window" id="act_crossovered_budget_lines_view">
-			<field name="name">Budget Lines</field>
-			<field name="res_model">crossovered.budget.lines</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_crossovered_budget_line_tree"/>
-		</record>
+        <record model="ir.actions.act_window" id="act_crossovered_budget_lines_view">
+            <field name="name">Budget Lines</field>
+            <field name="res_model">crossovered.budget.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_crossovered_budget_line_tree"/>
+        </record>
 
-		<menuitem parent="menu_action_account_budget_post_tree"
-			id="menu_act_crossovered_budget_lines_view"
-			action="act_crossovered_budget_lines_view" />
+        <menuitem parent="menu_action_account_budget_post_tree"
+            id="menu_act_crossovered_budget_lines_view"
+            action="act_crossovered_budget_lines_view" />
 
-		<!--  Shortcuts -->
-		<act_window name="Budget Lines"
-			domain="[('analytic_account_id', '=', active_id)]"
-			res_model="crossovered.budget.lines"
-			src_model="account.analytic.account"
-			id="act_account_analytic_account_cb_lines"/>
+        <!--  Shortcuts -->
+        <act_window name="Budget Lines"
+            domain="[('analytic_account_id', '=', active_id)]"
+            res_model="crossovered.budget.lines"
+            src_model="account.analytic.account"
+            id="act_account_analytic_account_cb_lines"/>
 
 
-		<record model="ir.ui.view" id="view_account_analytic_account_form_inherit_cci">
-			<field name="name">account.analytic.account.form.inherot.cci</field>
-			<field name="type">form</field>
-			<field name="model">account.analytic.account</field>
-			<field name="inherit_id" ref="account.view_account_analytic_account_form"/>
-			<field name="arch" type="xml">
-				<notebook position="inside">
-					<page string="Budget Lines">
-							<field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
-								<tree string="Budget Lines" editable="top">
-									<field name="crossovered_budget_id"/>
-									<field name="general_budget_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-								</tree>
-								<form string="Budget Lines">
-									<field name="crossovered_budget_id"/>
-									<field name="general_budget_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-								</form>
-								<graph type="bar" string="Lines">
-									<field name="general_budget_id" />
-									<!--<field name="analytic_account_id" operator="+"/>-->
-									<field name="planned_amount" operator="+"/>
-									<field group="True" name="analytic_account_id"/>
-								</graph>
-							</field>
-					</page>
-				</notebook>
-			</field>
-		</record>
-		<!-- moved from account module -->
-		 <!--Budget -->
+        <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_cci">
+            <field name="name">account.analytic.account.form.inherot.cci</field>
+            <field name="type">form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Budget Lines">
+                            <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
+                                <tree string="Budget Lines" editable="top">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="general_budget_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
+                                </tree>
+                                <form string="Budget Lines">
+                                    <field name="crossovered_budget_id"/>
+                                    <field name="general_budget_id"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date"/>
+                                    <field name="planned_amount"/>
+                                </form>
+                                <graph type="bar" string="Lines">
+                                    <field name="general_budget_id" />
+                                    <!--<field name="analytic_account_id" operator="+"/>-->
+                                    <field name="planned_amount" operator="+"/>
+                                    <field group="True" name="analytic_account_id"/>
+                                </graph>
+                            </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <!-- moved from account module -->
+         <!--Budget -->
         <!--<report
- 			id="account_analytic_budget_print"
-			string="Print Budget"
-			model="account.analytic.budget.post"
-			name="account.analytic.budget.print"
-			rml="account/project/report/account_analytic_budget_report.rml"
-			auto="False"
-			menu="False"/>-->
+             id="account_analytic_budget_print"
+            string="Print Budget"
+            model="account.analytic.budget.post"
+            name="account.analytic.budget.print"
+            rml="account/project/report/account_analytic_budget_report.rml"
+            auto="False"
+            menu="False"/>-->
 
-	</data>
+    </data>
 </openerp>
 
 

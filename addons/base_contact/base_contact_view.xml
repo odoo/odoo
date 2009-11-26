@@ -325,7 +325,8 @@
         <field name="inherit_id" ref="base.view_partner_address_form1"/>
         <field name='type'>form</field>
         <field name='arch' type='xml'>
-            <field name="email" position="replace">
+            <group string="Communication" colspan="2" col="2" position="after">
+			<newline/>
                 <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>
@@ -344,7 +345,7 @@
                         <field name="email" widget="email"/>
                     </form>
                 </field>
-            </field>
+            </group>
         </field>
     </record>
 	
