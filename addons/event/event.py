@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -76,8 +76,8 @@ class event(osv.osv):
     def _get_register(self, cr, uid, ids, name, args, context=None):
         res={}
         for event in self.browse(cr, uid, ids, context):
-            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state in ('open','done')""" % event.section_id.id
-            cr.execute(query)
+            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state in ('open','done')"""
+            cr.execute(query,(event.section_id.id,))
             res2 = cr.fetchone()
             if res2 and res2[0]:
                 res[event.id] = res2[0]
@@ -88,8 +88,8 @@ class event(osv.osv):
     def _get_prospect(self, cr, uid, ids, name, args, context=None):
         res={}
         for event in self.browse(cr, uid, ids, context):
-            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state = 'draft'""" % event.section_id.id
-            cr.execute(query)
+            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state = 'draft'"""
+            cr.execute(query,(event.section_id.id,))
             res2 = cr.fetchone()
             if res2 and res2[0]:
                 res[event.id] = res2[0]
