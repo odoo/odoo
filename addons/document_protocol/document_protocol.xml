@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_document_file_form_proto">
+            <field name="name">ir.attachment.inherited</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="document.view_document_file_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+	    <xpath expr="/form/notebook/page[@string='Others Info']" position="inside">
+                <group name="protocol" colspan="2" col="2">
+		    <separator string="Protocol" colspan="2" />
+                    <field name="proto_num" select="1"/>
+		    <field name="proto_date" />
+		    <field name="proto_from" />
+		    <field name="proto_to" />
+                </group>
+	    </xpath>
+            </field>
+        </record>
+	
+        <record model="ir.ui.view" id="view_document_file_form_proto2">
+            <field name="name">ir.attachment.inherited2</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="view_document_file_form_proto" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<xpath expr="/form/notebook/page" position="after">
+	        <page name='signatures' string='Signatures'>
+                    <field name="signature_ids">
+			<tree string="Signatures">
+				<field name="write_uid" />
+				<field name="keyid"/>
+				<field name="write_date"/>
+				<field name="status"/>
+			</tree>
+		    </field>
+		</page>
+	    </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_document_signature_tree">
+            <field name="name">document.signature.tree</field>
+            <field name="model">document.signature</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+		<tree string="Signatures">
+                    <field name="file"/>
+		    <field name="write_uid" />
+                    <field name="keyid"/>
+                    <field name="write_date"/>
+                    <field name="status"/>
+                </tree>
+	     </field>
+	 </record>
+
+        <record model="ir.ui.view" id="view_document_signature_view">
+            <field name="name">document.signature.form</field>
+            <field name="model">document.signature</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		<form string="Signatures">
+                    <field name="file_id"/>
+		    <field name="write_uid" />
+                    <field name="keyid"/>
+                    <field name="write_date"/>
+                    <field name="status"/>
+		    <newline />
+		    <field name="signature" colspan="4"/>
+                </form>
+	     </field>
+	 </record>
+
+	<!-- A separate menu only for the protocolled documents -->
+	
+    <record model="ir.ui.view" id="view_protocol_tree">
+        <field name="name">ir.attachment.protocol.tree</field>
+        <field name="model">ir.attachment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Files">
+		<field name="proto_num" />
+		<field name="proto_date" />
+                <field name="partner_id"/>
+                <field name="title" />
+                <field name="name"/>
+                <field name="datas_fname"/>
+            </tree>
+        </field>
+    </record>
+
+     <record model="ir.actions.act_window" id="action_document_proto_tree">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_type">form</field>
+	<field name="view_mode">tree,form</field>
+	<field name="domain">[('proto_num','!=',False)]</field>
+     </record>
+        <record id="action_protocol_view2" model="ir.actions.act_window.view">
+            <field eval="16" name="sequence"/>
+            <field name="view_mode">tree</field>
+	    <field name="view_id" ref="view_protocol_tree" />
+            <field name="act_window_id" ref="action_document_proto_tree"/>
+        </record>
+        <record id="action_protocol_view3" model="ir.actions.act_window.view">
+            <field eval="16" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="document.view_document_file_form"/>
+	    <field name="act_window_id" ref="action_document_proto_tree"/>
+        </record>
+
+
+    <menuitem
+        name="Documents in protocol"
+        action="action_document_proto_tree"
+        id="menu_document_protocol"
+        parent="document.menu_document"/>
+
+    </data>
+</openerp>

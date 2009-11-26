@@ -797,7 +797,7 @@
         </record>
 		
 		<record id="view_account_move_line_filter" model="ir.ui.view">
-            <field name="name">account.move.line.select</field>
+            <field name="name">Entry Lines</field>
             <field name="model">account.move.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -1484,8 +1484,28 @@
         </record>
 
 
+        <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
+            <field name="name">Account Add wizard</field>
+            <field name="model">account.addtmpl.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Add">
+                    <separator col="4" colspan="4" string="Select the common parent for the accounts"/>
+                    <field name="cparent_id"/>
+                    <group col="2" colspan="2">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-
+        <act_window domain="[]" id="action_account_addtmpl_wizard_form"
+            name="Add account Wizard"
+            res_model="account.addtmpl.wizard"
+            context="{'tmpl_ids': active_id}"
+            src_model="account.account.template"
+	    view_type="form" view_mode="form"/>
 
         <!-- register configuration wizard -->
 

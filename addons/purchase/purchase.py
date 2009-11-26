@@ -464,13 +464,15 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False):
+            partner_id, date_order=False, fiscal_position=False, date_planned=False, 
+            name=False, price_unit=False, notes=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
             raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
-            return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
+                'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
@@ -484,7 +486,10 @@ class purchase_order_line(osv.osv):
             uom = prod_uom_po
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+        if price_unit:
+            price = price_unit
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                 product, qty or 1.0, partner_id, {
                     'uom': uom,
                     'date': date_order,
@@ -503,8 +508,9 @@ class purchase_order_line(osv.osv):
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
-        res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
-            'date_planned': dt,'notes':prod.description_purchase,
+        res = {'value': {'price_unit': price, 'name': name or prod_name, 
+            'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
+            'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
             'product_uom': uom}}
         domain = {}

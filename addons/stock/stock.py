@@ -330,8 +330,9 @@ class stock_tracking(osv.osv):
         return (10 - (sum % 10)) % 10
     checksum = staticmethod(checksum)
 
-    def make_sscc(self, cr, uid, context={}):
-        sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking')
+    def make_sscc(self, cr, uid, context=None):
+	context = context or {}
+        sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking',context)
         return sequence + str(self.checksum(sequence))
 
     _columns = {
@@ -428,8 +429,10 @@ class stock_picking(osv.osv):
         return res
 
     def create(self, cr, user, vals, context=None):
+	context = (context or {}).copy()
+	context.update({'object': vals})
         if ('name' not in vals) or (vals.get('name')=='/'):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking',context)
 
         return super(stock_picking, self).create(cr, user, vals, context)
 
@@ -484,7 +487,7 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         if not default.get('name',False):
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking', context)
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
@@ -877,7 +880,7 @@ class stock_production_lot(osv.osv):
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial', c),
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
@@ -1034,20 +1037,25 @@ class stock_move(osv.osv):
             cursor.commit()
         return res
 
-    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
-        if not prodlot_id or not loc_id:
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False,product_id=True, context=None):
+        if not prodlot_id:
             return {}
         ctx = context and context.copy() or {}
         ctx['location_id'] = loc_id
         prodlot = self.pool.get('stock.production.lot').browse(cr, uid, prodlot_id, ctx)
+	ret = {}
+	if not product_id:
+		ret['value']= { 'product_id': prodlot.product_id.id }
+	if not loc_id:
+		return ret
         location = self.pool.get('stock.location').browse(cr, uid, loc_id)
-        warning = {}
         if (location.usage == 'internal') and (product_qty > (prodlot.stock_available or 0.0)):
-            warning = {
+            ret['warning']={
                 'title': 'Bad Lot Assignation !',
                 'message': 'You are moving %.2f products but only %.2f available in this lot.' % (product_qty, prodlot.stock_available or 0.0)
             }
-        return {'warning': warning}
+	    
+        return ret
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
