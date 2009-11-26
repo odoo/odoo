@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,17 +28,17 @@ def _get_answers(cr, uid, ids):
     query = """
     select distinct(answer)
     from profile_question_yes_rel
-    where profile in (%s)"""% ','.join([str(i) for i in ids ])
+    where profile=ANY(%s)"""
 
-    cr.execute(query)
+    cr.execute(query,(ids,))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
     select distinct(answer)
     from profile_question_no_rel
-    where profile in (%s)"""% ','.join([str(i) for i in ids ])
+    where profile=ANY(%s)"""
 
-    cr.execute(query)
+    cr.execute(query,(ids,))
     ans_no = [x[0] for x in cr.fetchall()]
 
     return [ans_yes, ans_no]
@@ -50,7 +50,7 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id in (%s)""" % ','.join([str(i) for i in ids ]))
+     and id=ANY(%s)""",(ids,))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 
@@ -88,17 +88,17 @@ def test_prof(cr, uid, seg_id, pid, answers_ids = []):
 def _recompute_categ(self, cr, uid, pid, answers_ids):
     ok =  []
     cr.execute('''
-        select r.category_id 
-        from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id) 
+        select r.category_id
+        from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
         where r.partner_id = %s and (s.exclusif = false or s.exclusif is null)
         ''', (pid,))
     for x in cr.fetchall():
         ok.append(x[0])
 
     query = '''
-        select id, categ_id 
-        from crm_segmentation 
-        where profiling_active = true''' 
+        select id, categ_id
+        from crm_segmentation
+        where profiling_active = true'''
     if ok != []:
         query = query +''' and categ_id not in(%s)'''% ','.join([str(i) for i in ok ])
     query = query + ''' order by id '''
@@ -140,7 +140,7 @@ class questionnaire(osv.osv):
         for name, oid in result:
             quest_form = quest_form + '<field name="quest_form%d"/><newline/>' % (oid,)
             quest_fields['quest_form%d' % (oid,)] = {'string': name, 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',oid)] }
-        quest_form = quest_form + '''</form>'''      
+        quest_form = quest_form + '''</form>'''
         return quest_form, quest_fields
 
     _columns = {
@@ -213,7 +213,7 @@ class crm_segmentation(osv.osv):
                 if categ['exclusif']:
                     cr.execute('delete from res_partner_category_rel where category_id=%s', (categ['categ_id'][0],))
 
-            id = categ['id']            
+            id = categ['id']
 
             cr.execute('select id from res_partner order by id ')
             partners = [x[0] for x in cr.fetchall()]
