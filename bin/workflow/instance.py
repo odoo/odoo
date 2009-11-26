@@ -27,9 +27,8 @@ import pooler
 
 def create(cr, ident, wkf_id):
     (uid,res_type,res_id) = ident
-    cr.execute("select nextval('wkf_instance_id_seq')")
+    cr.execute('insert into wkf_instance (res_type,res_id,uid,wkf_id) values (%s,%s,%s,%s) RETURNING id', (res_type,res_id,uid,wkf_id))
     id_new = cr.fetchone()[0]
-    cr.execute('insert into wkf_instance (id,res_type,res_id,uid,wkf_id) values (%s,%s,%s,%s,%s)', (id_new,res_type,res_id,uid,wkf_id))
     cr.execute('select * from wkf_activity where flow_start=True and wkf_id=%s', (wkf_id,))
     res = cr.dictfetchall()
     stack = []

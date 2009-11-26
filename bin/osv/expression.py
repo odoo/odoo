@@ -36,7 +36,7 @@ class expression(object):
         return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
-        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
         INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
@@ -44,6 +44,7 @@ class expression(object):
                 or (internal and element[1] in INTERNAL_OPS))
 
     def __execute_recursive_in(self, cr, s, f, w, ids, op, type):
+        # todo: merge into parent query as sub-query
         res = []
         if ids:
             if op in ['<','>','>=','<=']:
@@ -56,9 +57,8 @@ class expression(object):
                     subids = ids[i:i+cr.IN_MAX]
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
-                               subids)
-                    res.extend([r[0] for r in cr.fetchall()])
+                               '  WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
+                               subids)                                         
         else:
             cr.execute('SELECT distinct("%s")'    \
                            '  FROM "%s" where "%s" is not null'  % (s, f, s)),
@@ -236,6 +236,8 @@ class expression(object):
                 if operator == 'child_of':
                     if isinstance(right, basestring):
                         ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                    elif isinstance(right, (int, long)):
+                        ids2 = list([right])
                     else:
                         ids2 = list(right)
 
@@ -343,6 +345,18 @@ class expression(object):
                 query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
                 query = '%s.%s IS NOT NULL' % (table._table, left)
+            elif (operator == '=?'):
+                op = '='
+                if (right is False or right is None):
+                    return ( 'TRUE',[])
+                if left in table._columns:
+                        format = table._columns[left]._symbol_set[0]
+                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                        params = table._columns[left]._symbol_set[1](right)
+                else:
+                        query = "(%s.%s %s '%%s')" % (table._table, left, op)
+                        params = right
+
             else:
                 if left == 'id':
                     query = '%s.id %s %%s' % (table._table, operator)

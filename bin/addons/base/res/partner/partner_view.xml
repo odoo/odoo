@@ -46,19 +46,20 @@
     Partner Address
     =====================
     -->
-    
+
     	<record id="view_res_partner_address_filter" model="ir.ui.view">
 		    <field name="name">res.partner.address.select</field>
 		    <field name="model">res.partner.address</field>
 		    <field name="type">search</field>
 		    <field name="arch" type="xml">
 		        <search string="Search Contact">
+		        	<field name="name" select='1'/>
 	           		<field name="partner_id" select='1'/>
 	           		<field name="country_id" select='1'/>
 		       </search>
 		    </field>
 	    </record>
-	    
+
         <record id="view_partner_address_tree" model="ir.ui.view">
             <field name="name">res.partner.address.tree</field>
             <field name="model">res.partner.address</field>
@@ -93,21 +94,23 @@
                     <field name="name" select="1"/>
                     <field domain="[('domain', '=', 'contact')]" name="title"/>
                     <field name="function"/>
-                    <field name="type" select="2"/>
-                    <field name="street" select="2"/>
-                    <field name="street2"/>
                     <newline/>
-                    <field name="zip" select="2"/>
-                    <field name="city" select="2"/>
-                    <newline/>
-                    <field completion="1" name="country_id" select="1"/>
-                    <field name="state_id" select="2"/>
-                    <newline/>
-                    <field name="phone" select="2"/>
-                    <field name="fax"/>
-                    <newline/>
-                    <field name="mobile" select="2"/>
-                    <field name="email" select="2" widget="email"/>
+                      <group string="Postal Address" colspan="2" col="2">
+                        <field name="type" select="2" />
+                        <field name="street" select="2"/>
+                        <field name="street2"/>
+                        <field name="zip" select="2"/>
+                        <field name="city" select="2"/>
+                        <field name="country_id" select="2" completion="1"/>
+                        <field name="state_id" select="2"/>
+                      </group>
+                      <group string="Communication" colspan="2" col="2">
+                        <field name="phone"/>
+                        <field name="fax"/>
+                        <field name="mobile" select="2"/>
+                        <field name="email"  select="2" widget="email"/>
+                     </group>
+
                 </form>
             </field>
         </record>
@@ -242,6 +245,7 @@
                             <field name="ref" select="1"/>
                             <field domain="[('domain', '=', 'partner')]" name="title"/>
                             <field name="lang" select="2"/>
+                            <field name="company_id" colspan="4"/>
                         </group>
                         <group colspan="1" col="2">
                             <field name="customer" select="1"/>
@@ -250,26 +254,28 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General">
-                            <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1">
+                            <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
                                     <field name="name" select="2"/>
                                     <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
                                     <field name="function"/>
-                                    <field name="type" select="2"/>
-                                    <field name="street" select="2"/>
-                                    <field name="street2"/>
                                     <newline/>
-                                    <field name="zip" select="2"/>
-                                    <field name="city" select="2"/>
-                                    <newline/>
-                                    <field completion="1" name="country_id" select="2"/>
-                                    <field name="state_id" select="2"/>
-                                    <newline/>
-                                    <field name="phone"/>
-                                    <field name="fax"/>
-                                    <newline/>
-                                    <field name="mobile"/>
-                                    <field name="email" select="2" widget="email"/>
+                                      <group string="Postal Address" colspan="2" col="4">
+                                        <field name="type" select="2" colspan="4"/>
+                                        <field name="street" select="2" colspan="4"/>
+                                        <field name="street2" colspan="4"/>
+                                        <field name="zip" select="2"/>
+                                        <field name="city" select="2"/>
+                                        <field name="country_id" select="2" completion="1"/>
+                                        <field name="state_id" select="2"/>
+                                     </group>
+                                     <group string="Communication" colspan="2" col="2">
+                                        <field name="phone"/>
+                                        <field name="mobile"/>
+                                        <field name="fax"/>
+                                        <field name="email" select="2" widget="email"/>
+                                     </group>
+
                                 </form>
                                 <tree string="Partner Contacts">
                                     <field name="name"/>
@@ -281,7 +287,7 @@
                                 </tree>
                             </field>
                             <separator colspan="4" string="Categories"/>
-                            <field colspan="4" name="category_id" nolabel="1" select="2"/>
+                            <field colspan="4" name="category_id" nolabel="1" select="2" height="90"/>
                         </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
@@ -290,12 +296,14 @@
                             <field name="website" widget="url"/>
                             <field name="date" select="2"/>
                             <field name="parent_id"/>
+                            <field name="company_id" groups="base.group_extended" widget="selection"/>
                             <newline/>
                         </page>
                         <page string="History">
                             <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Notes">
+                            <separator string="Description" colspan="4"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                     </notebook>
@@ -317,6 +325,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select='1'/>
                         <field name="country" select='1'/>
+                        <field name="address" select="1"/>
                    </group>
                </search>
             </field>
@@ -327,7 +336,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="search_view_id" ref="view_res_partner_filter"/>            
+            <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -348,16 +357,16 @@
             sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
-            <field name="name">Customers Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('customer','=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_customer_form" id="menu_partner_customer_form" parent="menu_partner_form"/>
+
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
-            <field name="name">Suppliers Partners</field>
+            <field name="name">Suppliers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -365,28 +374,24 @@
             <field name="context">{'default_customer':0}</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_supplier_form" id="menu_partner_supplier_form" parent="menu_partner_form"/>
+
         <record id="action_partner_other_form" model="ir.actions.act_window">
-            <field name="name">Others Partners</field>
+            <field name="name">Other Partners</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_partner_other_form" id="menu_partner_other_form" parent="menu_partner_form"/>
+
         <record id="action_partner_customer_form_new" model="ir.actions.act_window">
             <field name="name">New Partner</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_partner_form"/>            
+            <field name="view_id" ref="view_partner_form"/>
         </record>
-        <menuitem
-            action="action_partner_customer_form_new"
-            sequence="50"
-            id="menu_partner_customer_form_new" parent="menu_partner_form"/>
 
         <record id="view_payterm_form" model="ir.ui.view">
             <field name="name">res.payterm</field>
@@ -519,7 +524,7 @@
                     <field name="active" select="1"/>
                     <field name="parent_id"/>
                     <separator colspan="4" string="Partners"/>
-                    <field colspan="4" name="partner_ids" nolabel="1" select="2"/>                    
+                    <field colspan="4" name="partner_ids" nolabel="1" select="2"/>
                 </form>
             </field>
         </record>

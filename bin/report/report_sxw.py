@@ -354,14 +354,14 @@ class report_sxw(report_rml, preprocess.report):
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
-        elif report_type in ['pdf','raw','html']:
+        elif report_type in ['pdf','raw','txt','html']:
             fnct = self.create_source_pdf
         elif report_type=='html2html':
             fnct = self.create_source_html2html
         elif report_type=='mako2html':
             fnct = self.create_source_mako2html
         else:
-            raise 'Unknown Report Type'
+            raise Exception('Unknown Report Type: '+report_type)
         return fnct(cr, uid, ids, data, report_xml, context)
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):

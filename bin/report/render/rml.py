@@ -22,6 +22,7 @@
 import render
 import rml2pdf
 import rml2html as htmlizer
+import rml2txt as txtizer
 import odt2odt as odt
 import html2html as html
 import makohtml2html as makohtml
@@ -49,6 +50,16 @@ class rml2html(render.render):
 
     def _render(self):
         return htmlizer.parseString(self.rml,self.localcontext)
+
+class rml2txt(render.render):
+    def __init__(self, rml, localcontext= None, datas={}):
+        super(rml2txt, self).__init__(datas)
+        self.rml = rml
+	self.localcontext = localcontext
+        self.output_type = 'txt'
+
+    def _render(self):
+        return txtizer.parseString(self.rml, self.localcontext)
 
 class odt2odt(render.render):
     def __init__(self, rml, localcontext = None, datas = {}):

@@ -45,11 +45,17 @@ from cStringIO import StringIO
 logger = netsvc.Logger()
 
 _ad = os.path.abspath(opj(tools.config['root_path'], 'addons'))     # default addons path (base)
-ad = os.path.abspath(tools.config['addons_path'])           # alternate addons path
+ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
 
 sys.path.insert(1, _ad)
-if ad != _ad:
-    sys.path.insert(1, ad)
+
+ad_cnt=1
+for adp in ad_paths:
+    if adp != _ad:
+        sys.path.insert(ad_cnt, adp)
+        ad_cnt+=1
+
+ad_paths.append(_ad)    # for get_module_path
 
 # Modules already loaded
 loaded = []
@@ -153,11 +159,10 @@ class Node(Singleton):
 
 def get_module_path(module, downloaded=False):
     """Return the path of the given module."""
-    if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
-        return opj(ad, module)
+    for adp in ad_paths:
+        if os.path.exists(opj(adp, module)) or os.path.exists(opj(adp, '%s.zip' % module)):
+            return opj(adp, module)
 
-    if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
-        return opj(_ad, module)
     if downloaded:
         return opj(_ad, module)
     logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: module not found' % (module,))
@@ -282,7 +287,10 @@ def get_modules():
             return os.path.isdir(name) or zipfile.is_zipfile(name)
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
-    return list(set(listdir(ad) + listdir(_ad)))
+    plist = []
+    for ad in ad_paths:
+        plist.extend(listdir(ad))
+    return list(set(plist))
 
 def get_modules_with_version():
     modules = get_modules()
@@ -310,6 +318,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
             cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
             continue
 
@@ -325,6 +334,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
+    
     while packages and current > later:
         package, deps, data = packages[0]
 
@@ -394,7 +404,7 @@ def register_class(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            fm = imp.find_module(m, [ad, _ad])
+            fm = imp.find_module(m, ad_paths)
             try:
                 imp.load_module(m, *fm)
             finally:
@@ -571,6 +581,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     has_updates = False
     modobj = None
 
+    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
+    
     for package in graph:
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
@@ -751,7 +763,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
                 for rmod, rid in cr.fetchall():
                     uid = 1
-                    pool.get(rmod).unlink(cr, uid, [rid])
+                    rmod_module= pool.get(rmod)
+                    if rmod_module:
+                        rmod_module.unlink(cr, uid, [rid])
+                    else:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not locate %s to remove res=%d' % (rmod,rid))
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
             #
