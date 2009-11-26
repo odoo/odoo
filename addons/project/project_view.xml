@@ -23,7 +23,7 @@
                     <notebook colspan="4">
                         <page string="Administration">
                             <field name="warn_manager"/>
-                            <field name="company_id" select="1"/>
+                            <field name="company_id" select="1" groups="base.group_multi_company"/>
                             <field name="priority"/>
                             <field name="timesheet_id"/>
                             <field name="active" select="2"/>
@@ -372,7 +372,7 @@
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="type" widget="selection"/>
-                            <field name="company_id" select="1"/>
+                            <field name="company_id" select="1" groups="base.group_multi_company"/>
                             <field name="active" select="2"/>
                             <field name="partner_id" select="2"/>
                             <separator colspan="4" string="Notes"/>

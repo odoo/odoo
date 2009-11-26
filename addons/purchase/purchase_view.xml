@@ -43,7 +43,7 @@
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
                         <field name="origin" select="2"/>
                         <field name="shipped" select="2"/>
-                        <field name="company_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
@@ -201,7 +201,7 @@
                 <tree string="Purchase Order">
                     <field name="name" string="Reference"/>
                     <field name="date_order"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="minimum_planned_date"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
