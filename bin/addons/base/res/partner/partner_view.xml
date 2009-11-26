@@ -46,7 +46,7 @@
     Partner Address
     =====================
     -->
-    
+
     	<record id="view_res_partner_address_filter" model="ir.ui.view">
 		    <field name="name">res.partner.address.select</field>
 		    <field name="model">res.partner.address</field>
@@ -59,7 +59,7 @@
 		       </search>
 		    </field>
 	    </record>
-	    
+
         <record id="view_partner_address_tree" model="ir.ui.view">
             <field name="name">res.partner.address.tree</field>
             <field name="model">res.partner.address</field>
@@ -110,7 +110,7 @@
                         <field name="mobile" select="2"/>
                         <field name="email"  select="2" widget="email"/>
                      </group>
-                    
+
                 </form>
             </field>
         </record>
@@ -275,7 +275,7 @@
                                         <field name="fax"/>
                                         <field name="email" select="2" widget="email"/>
                                      </group>
-                                    
+
                                 </form>
                                 <tree string="Partner Contacts">
                                     <field name="name"/>
@@ -336,7 +336,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="search_view_id" ref="view_res_partner_filter"/>            
+            <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="10" name="sequence"/>
@@ -357,16 +357,16 @@
             sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
-            <field name="name">Customers Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('customer','=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        
+
         <record id="action_partner_supplier_form" model="ir.actions.act_window">
-            <field name="name">Suppliers Partners</field>
+            <field name="name">Suppliers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -374,23 +374,23 @@
             <field name="context">{'default_customer':0}</field>
             <field name="filter" eval="True"/>
         </record>
-        
+
         <record id="action_partner_other_form" model="ir.actions.act_window">
-            <field name="name">Others Partners</field>
+            <field name="name">Other Partners</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-        
+
         <record id="action_partner_customer_form_new" model="ir.actions.act_window">
             <field name="name">New Partner</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_partner_form"/>            
+            <field name="view_id" ref="view_partner_form"/>
         </record>
 
         <record id="view_payterm_form" model="ir.ui.view">
@@ -524,7 +524,7 @@
                     <field name="active" select="1"/>
                     <field name="parent_id"/>
                     <separator colspan="4" string="Partners"/>
-                    <field colspan="4" name="partner_ids" nolabel="1" select="2"/>                    
+                    <field colspan="4" name="partner_ids" nolabel="1" select="2"/>
                 </form>
             </field>
         </record>
