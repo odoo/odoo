@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -100,7 +100,7 @@ class payment_order(osv.osv):
             ('draft', 'Draft'),
             ('open','Confirmed'),
             ('cancel','Cancelled'),
-            ('done','Done')], 'State', select=True, 
+            ('done','Done')], 'State', select=True,
             help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
         'line_ids': fields.one2many('payment.line','order_id','Payment lines',states={'done':[('readonly',True)]}),
         'total': fields.function(_total, string="Total", method=True,
@@ -225,8 +225,8 @@ class payment_line(osv.osv):
             from account_move_line ml
                 inner join payment_line pl
                 on (ml.id = pl.move_line_id)
-            where pl.id in (%s)"""%
-            (self.translate(name), ','.join(map(str, ids))))
+            where pl.id =ANY(%s)""",
+            (self.translate(name),ids,))
         res = dict(cr.fetchall())
 
         if name == 'partner_id':
