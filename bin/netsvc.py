@@ -331,7 +331,19 @@ class HttpDaemon(threading.Thread):
     def stop(self):
         self.running = False
         if os.name != 'nt':
-            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
+            try:
+                self.server.socket.shutdown(
+                    hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2)
+            except socket.error, e:
+                if e.errno != 57: raise
+                # OSX, socket shutdowns both sides if any side closes it
+                # causing an error 57 'Socket is not connected' on shutdown
+                # of the other side (or something), see
+                # http://bugs.python.org/issue4397
+                Logger().notifyChannel(
+                    'server', LOG_DEBUG,
+                    '"%s" when shutting down server socket, '
+                    'this is normal under OS X'%e)
         self.server.socket.close()
 
     def run(self):
