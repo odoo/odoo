@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,14 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import operator
 from osv import osv, fields
 from osv.orm import intersect
-import tools.sql 
+import tools.sql
 from tools.translate import _
 
 
@@ -34,14 +34,13 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id  \
-                    where account_analytic_line.account_id IN (%s) \
+                    where account_analytic_line.account_id =ANY(%s) \
                         and account_analytic_journal.type = 'sale' \
-                    group by account_analytic_line.account_id" % acc_set)
+                    group by account_analytic_line.account_id" ,(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         for obj_id in ids:
@@ -60,7 +59,6 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             # Amount uninvoiced hours to invoice at sale price
-            acc_set = ",".join(map(str, ids2))
             cr.execute("""SELECT account_analytic_account.id, \
                         COALESCE(sum (product_template.list_price * \
                             account_analytic_line.unit_amount * \
@@ -77,11 +75,11 @@ class account_analytic_account(osv.osv):
                         on account_analytic_account.id = account_analytic_line.account_id \
                     JOIN hr_timesheet_invoice_factor \
                         on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
-                    WHERE account_analytic_account.id IN (%s) \
+                    WHERE account_analytic_account.id =ANY(%s) \
                         AND account_analytic_line.invoice_id is null \
                         AND account_analytic_line.to_invoice IS NOT NULL \
                         and account_analytic_journal.type in ('purchase','general') \
-                    GROUP BY account_analytic_account.id;"""%acc_set)
+                    GROUP BY account_analytic_account.id;""",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
 
@@ -113,16 +111,15 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("select account_analytic_line.account_id, COALESCE(sum(unit_amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
+                    where account_analytic_line.account_id =ANY(%s) \
                         and account_analytic_journal.type='general' \
                         and invoice_id is null \
                         AND to_invoice IS NOT NULL \
-                    GROUP BY account_analytic_line.account_id;"%acc_set)
+                    GROUP BY account_analytic_line.account_id;",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         for obj_id in ids:
@@ -139,14 +136,13 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("select account_analytic_line.account_id,COALESCE(SUM(unit_amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
+                    where account_analytic_line.account_id =ANY(%s) \
                         and account_analytic_journal.type='general' \
-                    GROUP BY account_analytic_line.account_id"%acc_set)
+                    GROUP BY account_analytic_line.account_id",(ids2,))
             ff =  cr.fetchall()
             for account_id, sum in ff:
                 res[account_id] = round(sum,2)
@@ -164,14 +160,13 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
+                    where account_analytic_line.account_id =ANY(%s) \
                         and amount<0 \
-                    GROUP BY account_analytic_line.account_id"""%acc_set)
+                    GROUP BY account_analytic_line.account_id""",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         for obj_id in ids:
@@ -189,7 +184,6 @@ class account_analytic_account(osv.osv):
         res2 = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("""select account_analytic_line.account_id as account_id, \
                         COALESCE(sum((account_analytic_line.unit_amount * pt.list_price) \
                             - (account_analytic_line.unit_amount * pt.list_price \
@@ -205,10 +199,10 @@ class account_analytic_account(osv.osv):
                         on (a.id=account_analytic_line.account_id) \
                     join hr_timesheet_invoice_factor hr \
                         on (hr.id=a.to_invoice) \
-                where account_analytic_line.account_id IN (%s) \
+                where account_analytic_line.account_id =ANY(%s) \
                     and a.to_invoice IS NOT NULL \
                     and account_analytic_journal.type in ('purchase','general')
-                GROUP BY account_analytic_line.account_id"""%acc_set)
+                GROUP BY account_analytic_line.account_id""",(ids2,))
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
 
@@ -230,12 +224,11 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("select account_analytic_line.account_id, max(date) \
                     from account_analytic_line \
-                    where account_id IN (%s) \
+                    where account_id =ANY(%s) \
                         and invoice_id is null \
-                    GROUP BY account_analytic_line.account_id" % acc_set)
+                    GROUP BY account_analytic_line.account_id" ,(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         for obj_id in ids:
@@ -252,15 +245,14 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute ("select account_analytic_line.account_id, \
                         date(max(account_invoice.date_invoice)) \
                     from account_analytic_line \
                     join account_invoice \
                         on account_analytic_line.invoice_id = account_invoice.id \
-                    where account_analytic_line.account_id IN (%s) \
+                    where account_analytic_line.account_id =ANY(%s) \
                         and account_analytic_line.invoice_id is not null \
-                    GROUP BY account_analytic_line.account_id"%acc_set)
+                    GROUP BY account_analytic_line.account_id",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         for obj_id in ids:
@@ -277,12 +269,11 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            acc_set = ",".join(map(str, ids2))
             cr.execute("select account_analytic_line.account_id, max(date) \
                     from account_analytic_line \
-                    where account_id IN (%s) \
+                    where account_id =ANY(%s) \
                         and invoice_id is not null \
-                    GROUP BY account_analytic_line.account_id;"%acc_set)
+                    GROUP BY account_analytic_line.account_id;",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = sum
         for obj_id in ids:
@@ -373,8 +364,7 @@ class account_analytic_account(osv.osv):
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
             if ids2:
                 cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
-                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                            'AND unit_amount <> 0.0')
+                        'WHERE account_id =ANY(%s) AND unit_amount <> 0.0',(ids2,))
                 res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
             else:
                 res[id] = []
@@ -388,11 +378,10 @@ class account_analytic_account(osv.osv):
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
             if ids2:
                 cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
-                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                            'AND unit_amount <> 0.0')
+                        'WHERE account_id =ANY(%s) AND unit_amount <> 0.0',(ids2,))
                 res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
             else:
-                res[id] = []   
+                res[id] = []
         return res
 
     _columns ={
@@ -432,13 +421,11 @@ class account_analytic_account_summary_user(osv.osv):
         account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
         user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
         account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
-        user_set = ','.join([str(x) for x in user_ids])
         if account_ids2:
-            acc_set = ','.join([str(x) for x in account_ids2])
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_user ' \
-                    'WHERE account_id in (%s) ' \
-                        'AND "user" in (%s) ' % (acc_set, user_set))
+                    'WHERE account_id =ANY(%s) ' \
+                        'AND "user" =ANY(%s)',(account_ids2, user_ids,))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
@@ -599,14 +586,11 @@ class account_analytic_account_summary_month(osv.osv):
         account_ids = [int(str(int(x))[:-6]) for x in ids]
         month_ids = [int(str(int(x))[-6:]) for x in ids]
         account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
-        month_set = ','.join([str(x) for x in month_ids])
         if account_ids2:
-            acc_set = ','.join([str(x) for x in account_ids2])
             cr.execute('SELECT id, unit_amount ' \
                     'FROM account_analytic_analysis_summary_month ' \
-                    'WHERE account_id in (%s) ' \
-                        'AND month_id in (%s) ' % \
-                        (acc_set, month_set))
+                    'WHERE account_id =ANY(%s) ' \
+                        'AND month_id =ANY(%s) ',(account_ids2, month_ids,))
             for sum_id, unit_amount in cr.fetchall():
                 res[sum_id] = unit_amount
         for obj_id in ids:
