@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -45,8 +45,9 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model in ('%s')"% ("','".join(obj_list)))
+            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model =ANY(%s)",(obj_list,))
             res = cr.fetchall()
+            print res
             for remove_obj in res:
                 if remove_obj and (remove_obj[0] in obj_list):
                     obj_list.remove(remove_obj[0])
