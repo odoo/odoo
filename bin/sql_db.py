@@ -235,7 +235,7 @@ class ConnectionPool(object):
 
         result = None
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx.dsn == dsn:
+            if not used and dsn_are_equals(cnx.dsn, dsn):
                 self._debug('Existing connection found at index %d' % i)
 
                 self._connections.pop(i)
@@ -276,7 +276,7 @@ class ConnectionPool(object):
     @locked
     def close_all(self, dsn):
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if cnx.dsn == dsn:
+            if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
                 self._connections.pop(i)
 
@@ -295,6 +295,7 @@ class Connection(object):
 
     def __del__(self):
         if self._unique:
+            close_db(self.dbname)
             self.__LOCKS[self.dbname].release()
 
     def cursor(self, serialized=False):
@@ -312,6 +313,13 @@ for p in ('host', 'port', 'user', 'password'):
 
 def dsn(db_name):
     return '%sdbname=%s' % (_dsn, db_name)
+
+def dsn_are_equals(first, second):
+    def key(dsn):
+        k = dict(x.split('=', 1) for x in dsn.strip().split())
+        k.pop('password', None) # password is not relevant
+        return k
+    return key(first) == key(second)
 
 
 _Pool = ConnectionPool(int(tools.config['db_maxconn']))
