@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,7 +49,7 @@ class buyer_list(report_sxw.rml_parse):
         for lot_id  in objects:
             auc_lot_ids.append(lot_id.id)
         self.auc_lot_ids=auc_lot_ids
-        self.cr.execute('select auction_id from auction_lots where id in ('+','.join(map(str,auc_lot_ids))+') group by auction_id')
+        self.cr.execute('select auction_id from auction_lots where id =ANY(%s) group by auction_id',(auc_lot_ids,))
         auc_date_ids = self.cr.fetchall()
         auct_dat=[]
         for ad_id in auc_date_ids:
@@ -70,7 +70,7 @@ class buyer_list(report_sxw.rml_parse):
         auc_date_ids = self.pool.get('auction.dates').search(self.cr,self.uid,([('name','like',obj['name'])]))
 
 #       self.cr.execute('select ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%s  and ach_uid is not null group by ach_uid ', (auc_date_ids[0],))
-        self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%s and ach_login is not null  group by ach_login order by ach_login', (auc_date_ids[0],))
+        self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id =ANY(%s) and  auction_id=%s and ach_login is not null  group by ach_login order by ach_login', (self.auc_lot_ids,auc_date_ids[0],))
         res = self.cr.dictfetchall()
         for r in res:
 #           if r['ach_uid']:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -95,12 +95,12 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
-        cr.execute('select count(*) as c from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
         r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and obj_price>0')
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0',(ids,))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
         c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
@@ -113,7 +113,7 @@ auction_dates()
 # Deposits
 #----------------------------------------------------------
 def _inv_uniq(cr, ids):
-    cr.execute('select name from auction_deposit where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('select name from auction_deposit where id =ANY(%s)',(ids,))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
         if cr.fetchone()[0]>1:
@@ -229,7 +229,7 @@ def _type_get(self, cr, uid,ids):
 # Lots
 #----------------------------------------------------------
 def _inv_constraint(cr, ids):
-    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id =ANY(%s)', (ids,))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1],datas[2]))
         if cr.fetchone()[0]>1:
