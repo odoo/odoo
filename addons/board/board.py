@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,9 +24,9 @@ from osv import fields,osv
 
 class board_board(osv.osv):
     _name = 'board.board'
-    
+
     def create_view(self, cr, uid, ids, context):
-        
+
         board = self.pool.get('board.board').browse(cr, uid, ids, context)
         left = []
         right = []
@@ -52,23 +52,22 @@ class board_board(osv.osv):
                 </child2>
             </hpaned>
             </form>""" % ('\n'.join(left), '\n'.join(right))
-        
+
         return arch
 
     def write(self, cr, uid, ids, vals, context={}):
         result = super(board_board, self).write(cr, uid, ids, vals, context)
         cr.commit()
-        
+
         board = self.pool.get('board.board').browse(cr, uid, ids[0])
-        
+
         view = self.create_view(cr, uid, ids[0], context)
         id = board.view_id.id
-        
-        cr.execute("update ir_ui_view set arch='%s' where id=%s" % (view, id))
+        cr.execute("update ir_ui_view set arch=%s where id=%s" , (view, id))
         cr.commit()
-                
+
         return result
-    
+
     def create(self, cr, user, vals, context=None):
         if not 'name' in vals:
             return False
@@ -84,31 +83,31 @@ class board_board(osv.osv):
         super(board_board, self).write(cr, user, [id], {'view_id': view_id}, context)
 
         return id
-    
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        
+
         vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
         if vids:
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id)
             res['arch'] = arch.arch
-            
+
         res['toolbar'] = {'print':[],'action':[],'relate':[]}
         return res
-    
+
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
         'view_id': fields.many2one('ir.ui.view', 'Board View'),
         'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
     }
-    
+
     # the following lines added to let the button on dashboard work.
     _defaults = {
         'name': lambda *args: 'Dashboard'
     }
-    
+
 board_board()
 
 class board_line(osv.osv):
