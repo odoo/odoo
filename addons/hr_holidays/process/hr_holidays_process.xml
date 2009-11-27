@@ -7,7 +7,7 @@
 		-->
 	
 		<record id="process_process_holidaysprocess0" model="process.process">
-			<field eval="&quot;&quot;&quot;Holidays Process&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Holidays&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays"/>
 			<field eval="1" name="active"/>
 		</record>
@@ -17,7 +17,7 @@
 		-->
 		
 		<record id="process_node_holidaysdefinition0" model="process.node">
-			<field name="menu_id" ref="hr_holidays.menu_action_my_holiday_available"/>
+			<field name="menu_id" ref="hr_holidays.menu_open_ask_holidays_new"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays_per_user"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Encoding of annual available holidays.&quot;&quot;&quot;" name="note"/>
@@ -27,7 +27,7 @@
 		</record>
 	
 		<record id="process_node_holidaysrequest0" model="process.node">
-			<field name="menu_id" ref="hr_holidays.menu_action_my_holiday"/>
+			<field name="menu_id" ref="hr_holidays.menu_open_ask_holidays_new"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee fills in a request for holidays&quot;&quot;&quot;" name="note"/>
@@ -38,7 +38,7 @@
 		</record>
 	
 		<record id="process_node_refused0" model="process.node">
-			<field name="menu_id" ref="hr_holidays.menu_action_my_holiday_refuse"/>
+			<field name="menu_id" ref="hr_holidays.menu_open_ask_holidays_new"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;His manager refuses the request&quot;&quot;&quot;" name="note"/>
@@ -49,7 +49,7 @@
 		</record>
 	
 		<record id="process_node_approved0" model="process.node">
-			<field name="menu_id" ref="hr_holidays.menu_action_my_holiday_validate"/>
+			<field name="menu_id" ref="hr_holidays.menu_open_ask_holidays_new"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;His manager approves the request&quot;&quot;&quot;" name="note"/>
@@ -60,7 +60,7 @@
 		</record>
 	
 		<record id="process_node_calendar0" model="process.node">
-			<field name="menu_id" ref="hr_holidays.menu_action_my_holiday_validate"/>
+			<field name="menu_id" ref="hr_holidays.menu_open_ask_holidays_new"/>
 			<field name="model_id" ref="hr_holidays.model_hr_holidays"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;The holiday is set in the calendar&quot;&quot;&quot;" name="note"/>

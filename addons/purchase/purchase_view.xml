@@ -43,6 +43,7 @@
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
                         <field name="origin" select="2"/>
                         <field name="shipped" select="2"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
@@ -116,28 +117,28 @@
                 <search string="Search Purchase Order">
                  <group col='10' colspan='4'>
                     <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
-                	<filter icon="terp-purchase" string="Unapproved" domain="[('state','in',('wait','confirmed'))]" separator="1"/>
-					<separator orientation="vertical"/>
-					<filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
-					<separator orientation="vertical"/>
-					<field name="name" select="1"/>
-					<field name="partner_id" select="1"/>
-					<field name="product_id" select="1"/>
-					<field name="create_uid" select="1" widget="selection">
-    					<filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
+                    <filter icon="terp-purchase" string="Unapproved" domain="[('state','in',('wait','confirmed'))]" separator="1"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" select="1"/>
+                    <field name="partner_id" select="1"/>
+                    <field name="product_id" select="1"/>
+                    <field name="create_uid" select="1" widget="selection">
+                        <filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
                         <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
                     </field>
                 </group>
               </search>
             </field>
         </record>
-       
+
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -151,7 +152,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action3" model="ir.actions.act_window">
             <field name="name">Purchase Order Waiting Approval</field>
@@ -163,7 +163,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -175,7 +174,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
         </record>
-        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action" groups="base.group_extended_menu"/>
 
         <record id="purchase_form_action_new" model="ir.actions.act_window">
             <field name="name">New Purchase Order</field>
@@ -183,8 +181,17 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="purchase_form_action_new" id="menu_purchase_form_action_new" parent="purchase.menu_purchase_root"/>
 
+        <record id="purchase_form_action3" model="ir.actions.act_window">
+            <field name="name">Purchase Order Waiting Approval</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="domain">[('state','=','confirmed')]</field>
+            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
+        </record>
 
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
@@ -194,6 +201,7 @@
                 <tree string="Purchase Order">
                     <field name="name" string="Reference"/>
                     <field name="date_order"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="minimum_planned_date"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
@@ -266,11 +274,11 @@
             src_model="res.partner"/>
 
         <act_window
-            domain="[('product_id','=',active_id)]" 
+            domain="[('product_id','=',active_id)]"
             id="action_purchase_line_product_tree"
             name="Product purchases"
-            res_model="purchase.order.line" 
-            src_model="product.product"/> 
-                     
+            res_model="purchase.order.line"
+            src_model="product.product"/>
+
     </data>
 </openerp>

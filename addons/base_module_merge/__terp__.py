@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Module Merger',
+    'name': 'Module Merger - Merge all files of  modules with same name',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """

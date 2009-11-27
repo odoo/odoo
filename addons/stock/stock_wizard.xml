@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!--
         <wizard string="UPS xml file" model="stock.move.lot" name="stock.ups_xml" />
         -->
-        
-        
+
+
         <wizard
             id="move_split"
             model="stock.picking"
@@ -19,7 +19,7 @@
             model="stock.picking"
             multi="True"
             name="stock.partial_picking"
-            string="Partial packing"/>
+            string="Partial picking"/>
 
     <wizard
         id="track_line"
@@ -28,13 +28,13 @@
         name="stock.move.track"
         string="Track line"/>
 
-    <wizard id="make_picking" model="stock.picking" multi="True" name="stock.picking.make" string="Make packing"/>
+    <wizard id="make_picking" model="stock.picking" multi="True" name="stock.picking.make" string="Make picking"/>
 
     <wizard
         id="return_picking"
         model="stock.picking"
         name="stock.return.picking"
-        string="Return packing"/>
+        string="Return picking"/>
 
     <wizard
         id="wizard_invoice_onshipping"
@@ -70,6 +70,6 @@
         id="location_product"
         model="stock.location"
         name="stock.location.products"
-        string="Products by Location"/> 
+        string="Products by Location"/>
     </data>
 </openerp>

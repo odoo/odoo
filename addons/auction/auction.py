@@ -75,7 +75,8 @@ class auction_dates(osv.osv):
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
         'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication',store=True),
-        'state': fields.selection((('draft','Draft'),('closed','Closed')),'Status',select=1, readonly=True),
+        'state': fields.selection((('draft','Draft'),('closed','Closed')),'State',select=1, readonly=True,
+                                  help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
 
     }
@@ -442,7 +443,7 @@ class auction_lots(osv.osv):
 #       'paid_vnd':fields.function(_is_paid_vnd,string='Seller Paid',method=True,type='boolean',store=True),
         'paid_vnd':fields.boolean('Seller Paid'),
         'paid_ach':fields.function(_is_paid_ach,string='Buyer invoice reconciled',method=True, type='boolean',store=True),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold'),('taken_away','Taken away')),'Status', required=True, readonly=True),
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold'),('taken_away','Taken away')),'State', required=True, readonly=True),
         'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price',store=True),
         'seller_price': fields.function(_sellerprice, method=True, string='Seller price',store=True),
         'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue',store=True),
@@ -989,7 +990,7 @@ class report_seller_auction(osv.osv):
         'avg_price':fields.float('Avg adjudication',readonly=True),
         'avg_estimation':fields.float('Avg estimation',readonly=True),
         'date': fields.date('Create Date',  required=True, select=1),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('sold','Sold')),'Status',readonly=True, select=1)
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('sold','Sold')),'State',readonly=True, select=1)
     }
 
     def init(self, cr):
@@ -1199,7 +1200,7 @@ class report_auction_adjudication(osv.osv):
     _auto = False
     _columns = {
             'name': fields.many2one('auction.dates','Auction date',readonly=True,select=1),
-            'state': fields.selection((('draft','Draft'),('close','Closed')),'Status', select=1),
+            'state': fields.selection((('draft','Draft'),('close','Closed')),'State', select=1),
             'adj_total': fields.float('Total Adjudication'),
             'date': fields.date('Date', readonly=True,select=1),
             'user_id':fields.many2one('res.users', 'User',select=1)
@@ -1305,7 +1306,7 @@ class report_object_encoded(osv.osv):
     _description = "Object encoded"
     _auto = False
     _columns = {
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'Status', required=True,select=1),
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'State', required=True,select=1),
         'user_id':fields.many2one('res.users', 'User', select=1),
         'estimation': fields.float('Estimation',select=2),
         'date': fields.date('Create Date',  required=True),
@@ -1375,7 +1376,7 @@ class report_unclassified_objects(osv.osv):
         'obj_num': fields.integer('Catalog Number'),
         'obj_price': fields.float('Adjudication price'),
         'lot_num': fields.integer('List Number', required=True, select=1 ),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold')),'Status', required=True, readonly=True),
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold')),'State', required=True, readonly=True),
         'obj_comm': fields.boolean('Commission'),
         'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True),
         'ach_login': fields.char('Buyer Username',size=64),

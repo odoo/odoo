@@ -78,9 +78,9 @@ def _invoice_membership(self, cr, uid, data, context):
         invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]})
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
-            invoice_obj.write(cr, uid, [invoice_id], {'tax_line':tax_tab})
-            tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()[0]
-            invoice_tax_obj.create(cr, uid, tax_value)
+            tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
+            for tax in tax_value:
+                invoice_tax_obj.create(cr, uid, tax, context=context)
 
     value = {
             'domain': [

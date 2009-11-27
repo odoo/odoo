@@ -130,7 +130,9 @@ class event(osv.osv):
         'register_prospect': fields.function(_get_prospect, method=True, string='Unconfirmed Registrations'),
         'date_begin': fields.datetime('Beginning date', required=True),
         'date_end': fields.datetime('Ending date', required=True),
-        'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Cancelled')], 'Status', readonly=True, required=True),
+        'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Cancelled')], 'State', readonly=True, required=True,
+                                  help='If event is created, the state is \'Draft\'.\n If event is confirmed for the particular dates the state is set to \'Confirmed\'.\
+                                  \nIf the event is over, the state is set to \'Done\'.\n If event is cancelled the state is set to \'Cancelled\'.'),
         'mail_auto_registr':fields.boolean('Mail Auto Register',help='Check this box if you want to use the automatic mailing for new registration'),
         'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='Check this box if you want ot use the automatic confirmation emailing or the reminder'),
         'mail_registr':fields.text('Registration Email',help='This email will be sent when someone subscribes to the event.'),

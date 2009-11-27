@@ -62,7 +62,7 @@ class hr_expense_expense(osv.osv):
         'date_confirm': fields.date('Date Confirmed'),
         'date_valid': fields.date('Date Validated'),
         'user_valid': fields.many2one('res.users', 'Validation User'),
-        'account_move_id': fields.many2one('account.move', 'Account Move'),
+        'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, method=True, string='Total Amount'),
@@ -76,7 +76,8 @@ class hr_expense_expense(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
             ('cancelled', 'Cancelled')],
-            'State', readonly=True),
+            'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
+            \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),

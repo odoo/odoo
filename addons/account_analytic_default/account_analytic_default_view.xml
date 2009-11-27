@@ -12,7 +12,7 @@
                     <field name="product_id" select="2"/>
                     <field name="partner_id" select="2"/>
                     <field name="user_id" select="2"/>
-                    <field name="company_id" select="2"/>
+                    <field name="company_id" select="2" groups="base.group_multi_company"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </tree>
@@ -30,7 +30,7 @@
                     <field name="product_id" select="2"/>
                     <field name="partner_id" select="2"/>
                     <field name="user_id" select="2"/>
-                    <field name="company_id" select="2" widget="selection"/>
+                    <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                 </form>

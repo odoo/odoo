@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Sales Management - Reporting',
+    'name': 'Project Management - Reporting',
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """A module that adds some reports on projects.

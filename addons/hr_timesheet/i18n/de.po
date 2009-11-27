@@ -1,0 +1,477 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_timesheet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-11-22 19:08+0000\n"
+"Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-23 04:49+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: hr_timesheet
+#: wizard_view:hr.analytical.timesheet,init:0
+#: wizard_view:hr.analytical.timesheet.my,init:0
+msgid "Choose your month"
+msgstr "Wähle Monat"
+
+#. module: hr_timesheet
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+"beinhalten"
+
+#. module: hr_timesheet
+#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
+msgid "Employee timesheet"
+msgstr "Mitarbeiter Zeiterfassung"
+
+#. module: hr_timesheet
+#: model:ir.actions.wizard,name:hr_timesheet.si_so
+#: model:ir.ui.menu,name:hr_timesheet.menu_si_so
+msgid "Sign in / Sign out by project"
+msgstr "Sign In / Sign Out Projekte"
+
+#. module: hr_timesheet
+#: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
+msgid "Stop Working"
+msgstr "Beende Arbeit"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_in:0
+msgid "(Keep empty for current_time)"
+msgstr "(frei lassen um aktuelle Zeiteinstellung zu verwenden)"
+
+#. module: hr_timesheet
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben "
+"Kategorie sein."
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_in:0
+msgid "Sign in status"
+msgstr "Status Sign In / Sign Out"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_out:0
+msgid "(Keep empty for current time)"
+msgstr "(Leer lassen für aktuelle Zeit)"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
+msgid "Current Date"
+msgstr "Aktuelles Datum"
+
+#. module: hr_timesheet
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
+
+#. module: hr_timesheet
+#: wizard_button:hr.analytical.timesheet,init,report:0
+#: wizard_button:hr.analytical.timesheet.my,init,report:0
+#: wizard_button:hr.analytical.timesheet_users,init,report:0
+msgid "Print"
+msgstr "Druck"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,analytic_amount:0
+msgid "Minimum Analytic Amount"
+msgstr "Minimum Analyt. Betrag"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
+msgid "Current Server Date"
+msgstr "aktuelles Datum Server"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,date_start:0
+#: wizard_field:hr_timesheet.si_so,sign_out,date:0
+msgid "Starting Date"
+msgstr "Anfangsdatum"
+
+#. module: hr_timesheet
+#: field:hr.employee,product_id:0
+msgid "Product"
+msgstr "Produkt"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "août"
+msgstr "August"
+
+#. module: hr_timesheet
+#: field:hr.employee,journal_id:0
+msgid "Analytic Journal"
+msgstr "Analytisches Journal"
+
+#. module: hr_timesheet
+#: model:product.uom,name:hr_timesheet.uom_hour
+msgid "Hour"
+msgstr "Stunde"
+
+#. module: hr_timesheet
+#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet
+msgid "Employee Timesheet"
+msgstr "MItarbeiter Zeiterfassung"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Work done stats"
+msgstr "Arbeitszeit Statistik"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_today_form
+msgid "Working Hours"
+msgstr "Alle Arbeitsstunden"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Timesheet Lines"
+msgstr "Zeiterfassung Positionen"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "Gesamtzeit"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "juillet"
+msgstr "Juli"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+#: model:ir.ui.menu,name:hr_timesheet.next_id_48
+msgid "Timesheet"
+msgstr "Zeiterfassung"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "janvier"
+msgstr "Jänner"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "juin"
+msgstr "Juni"
+
+#. module: hr_timesheet
+#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_my
+#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_my
+msgid "Print My Timesheet"
+msgstr "Drucke meine Arbeitszeitaufzeichnung"
+
+#. module: hr_timesheet
+#: wizard_field:hr.analytical.timesheet,init,user_id:0
+#: wizard_field:hr.analytical.timesheet.my,init,user_id:0
+msgid "User"
+msgstr "Benutzer"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_out:0
+msgid "Sign in"
+msgstr "Sign In"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form
+msgid "Working Hours of The Day"
+msgstr "Alle heutigen Arbeitsstunden"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_out:0
+msgid "(local time on the server side)"
+msgstr "(Ortszeit auf dem Server)"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Total cost"
+msgstr "Gesamtkosten"
+
+#. module: hr_timesheet
+#: model:product.uom,name:hr_timesheet.uom_day
+msgid "Day"
+msgstr "Tag"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,date:0
+msgid "Closing Date"
+msgstr "Ende Datum:"
+
+#. module: hr_timesheet
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "avril"
+msgstr "April"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,line_id:0
+msgid "Analytic line"
+msgstr "Analyt. Zeitpositionen"
+
+#. module: hr_timesheet
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Fehler: UOS sollte in einer anderen Kategorie sein als UOM"
+
+#. module: hr_timesheet
+#: wizard_view:hr.analytical.timesheet_users,init:0
+msgid "Choose Users"
+msgstr "Wähle Benutzer"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "novembre"
+msgstr "November"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_out:0
+msgid "Sign in / Sign out"
+msgstr "Sign In / Sign Out"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_in:0
+msgid "Work done in the last period"
+msgstr "erledigte Arbeit (vorherige Periode)"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Key dates"
+msgstr "Schlüsseltermine"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,state:0
+#: wizard_field:hr_timesheet.si_so,sign_out,state:0
+msgid "Current state"
+msgstr "Aktueller Status"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "octobre"
+msgstr "Oktober"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Analysis stats"
+msgstr "Analyse Statistik"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "décembre"
+msgstr "Dezember"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,info:0
+msgid "Work Description"
+msgstr "Arbeitsplatzbeschreibung"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,name:0
+#: wizard_field:hr_timesheet.si_so,sign_out,name:0
+msgid "Employee's name"
+msgstr "Name Mitarbeiter"
+
+#. module: hr_timesheet
+#: model:product.template,name:hr_timesheet.product_consultant_product_template
+msgid "Consultancy - Senior Developer"
+msgstr "Beratung - Senier Entwickler"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_me_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_me_all_form
+msgid "My Working Hours"
+msgstr "Meine Arbeitsstunden"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet line"
+msgstr "Zeiterfassung Positionen"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Summe"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form_my
+#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form_my
+msgid "My Working Hours of The Day"
+msgstr "Meine heutigen Arbeitsstunden"
+
+#. module: hr_timesheet
+#: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
+msgid "Human Resources (Timesheet encoding)"
+msgstr "Personalwirtschaft - Arbeitszeitaufzeichnung"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "mars"
+msgstr "März"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Betrag gesammt"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "mai"
+msgstr "Mai"
+
+#. module: hr_timesheet
+#: wizard_button:hr_timesheet.si_so,sign_out,si_result:0
+msgid "Start Working"
+msgstr "Beginne Arbeit"
+
+#. module: hr_timesheet
+#: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
+msgid "Change Work"
+msgstr "Wechsle Arbeitsplatz"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "février"
+msgstr "Februar"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Stats by month"
+msgstr "Auswertung nach Monaten"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+#: wizard_field:hr.analytical.timesheet,init,month:0
+#: wizard_field:hr.analytical.timesheet.my,init,month:0
+#: wizard_field:hr.analytical.timesheet_users,init,month:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: hr_timesheet
+#: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
+msgid "Analytic Account"
+msgstr "Analytisches Konto"
+
+#. module: hr_timesheet
+#: wizard_view:hr_timesheet.si_so,sign_in:0
+msgid "General Information"
+msgstr "Grundinformation"
+
+#. module: hr_timesheet
+#: model:process.process,name:hr_timesheet.process_process_timesheetprocess0
+msgid "Timesheet Process"
+msgstr "Arbeitszeitaufzeichnung Prozess"
+
+#. module: hr_timesheet
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Fehler: Falscher EAN code"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Stats by user"
+msgstr "Zeiterfassung nach Benutzer (Statistik)"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Timesheet Line"
+msgstr "Zeiterfassung Positionen"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Analysis summary"
+msgstr "Gesamtanalyse"
+
+#. module: hr_timesheet
+#: wizard_field:hr.analytical.timesheet,init,year:0
+#: wizard_field:hr.analytical.timesheet.my,init,year:0
+#: wizard_field:hr.analytical.timesheet_users,init,year:0
+msgid "Year"
+msgstr "Jahr"
+
+#. module: hr_timesheet
+#: wizard_button:hr.analytical.timesheet,init,end:0
+#: wizard_button:hr.analytical.timesheet.my,init,end:0
+#: wizard_button:hr.analytical.timesheet_users,init,end:0
+#: wizard_button:hr_timesheet.si_so,sign_in,end:0
+#: wizard_button:hr_timesheet.si_so,sign_out,end:0
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+#: wizard_field:hr.analytical.timesheet_users,init,user_ids:0
+msgid "Users"
+msgstr "Benutzer"
+
+#. module: hr_timesheet
+#: model:product.uom.categ,name:hr_timesheet.uom_categ_wtime
+msgid "Working Time"
+msgstr "Arbeitszeit"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "To be invoiced"
+msgstr "Abzurechnen"
+
+#. module: hr_timesheet
+#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
+#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
+#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_users
+msgid "Employees Timesheet"
+msgstr "MItarbetier Arbeitszeiterfassung"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+msgid "septembre"
+msgstr "September"
+
+#. module: hr_timesheet
+#: view:hr.employee:0
+msgid "Timesheets"
+msgstr "Zeiterfassung"

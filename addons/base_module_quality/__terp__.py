@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Base module quality',
+    'name': 'Base module quality - To check the quality of other modules' ,
     'version': '1.0',
     'category': 'Tiny Specific Modules/Base module quality',
     'description': """

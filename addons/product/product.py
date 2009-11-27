@@ -239,17 +239,44 @@ class product_template(osv.osv):
                 result[product.id] = 1
         return result
 
+    def _calc_standard_price(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        company=self.pool.get('res.users').read(cr,uid,uid,['company_id'])['company_id']
+        company_cost_obj=self.pool.get('company.wise.cost.price')
+        for product in self.browse(cr, uid, ids, context=context):
+            company_cost_ids=company_cost_obj.search(cr,uid,[('company_id','=',company[0]),('product_id','=',product.id)])
+            if company_cost_ids:
+                company_cost_data=company_cost_obj.read(cr,uid,company_cost_ids,['standard_price'])
+                res[product.id]=company_cost_data[0]['standard_price']
+            else:
+                res[product.id]=1.0
+            
+        return dict([(i, res[i]) for i in ids ])
+    
+    def _calc_list_price(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        company=self.pool.get('res.users').read(cr,uid,uid,['company_id'])['company_id']
+        company_cost_obj=self.pool.get('company.wise.sale.price')
+        for product in self.browse(cr, uid, ids, context=context):
+            company_list_ids=company_cost_obj.search(cr,uid,[('company_id','=',company[0]),('product_id','=',product.id)])
+            if company_list_ids:
+                company_list_data=company_cost_obj.read(cr,uid,company_list_ids,['list_price'])
+                res[product.id]=company_list_data[0]['list_price']
+            else:
+                res[product.id]=1.0
+        return dict([(i, res[i]) for i in ids ])
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."),
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
@@ -262,7 +289,7 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
+        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
@@ -277,6 +304,11 @@ class product_template(osv.osv):
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company'),
+        'list_price_multi': fields.function(_calc_list_price, method=True, type='float', string='Company Sale Price', help="Base price for computing the customer price. Sometimes called the catalog price."),
+        'standard_price_multi': fields.function(_calc_standard_price, method=True, type='float', string='Company Cost Price', required=True, help="The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."),
+        'standard_price_ids' :fields.one2many('company.wise.cost.price','product_id'),
+        'list_price_ids' :fields.one2many('company.wise.sale.price','product_id')
+
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -342,6 +374,79 @@ class product_template(osv.osv):
         return super(product_template, self).name_get(cr, user, ids, context)
 
 product_template()
+
+class company_wise_cost_price(osv.osv):
+    _name="company.wise.cost.price"
+    _description="Company Wise Cost Price"
+    _columns={
+              'product_id':fields.many2one('product.template','Product Id'),
+              'company_id':fields.many2one('res.company','Company'),
+              'standard_price':fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."),
+              'currency_id':fields.many2one('res.currency','Currency',readonly=True)
+              }
+    
+    def company_cost_onchange(self,cr,uid,ids,company_id):
+        if company_id:
+            currency=self.pool.get('res.company').read(cr,uid,company_id,['currency_id'])
+            return {'value':{'currency_id':currency['currency_id'][0]}}
+        else:
+            return{'value':{'currency_id':False}}
+            
+    def create(self,cr,uid,values,context={}):
+        #code to make onchange_currency_id effectiv for readonly fields
+        if values and values.has_key('company_id') and values['company_id']:
+            val = self.company_cost_onchange(cr, uid, [] ,values['company_id'])['value']
+            values['currency_id']=val['currency_id']        
+        return super(company_wise_cost_price, self).create(cr, uid, values, context=context)
+    
+    def write(self,cr,uid,ids,values,context={}):
+         #code to make onchange_currency_id effectiv for readonly fields
+        if values and  values.has_key('company_id') and values['company_id']:
+            company_id = values['company_id']
+        # this code effects when currency_id is not changed still the rate are chnged then 
+        #        
+        val = self.company_cost_onchange(cr, uid, ids ,company_id)['value']
+        values['currency_id']=val['currency_id']        
+        return super(company_wise_cost_price, self).write(cr, uid, ids, values, context=context)
+        
+company_wise_cost_price()
+
+class company_wise_sale_price(osv.osv):
+    _name="company.wise.sale.price"
+    _description="Company Wise Sale Price"
+    _columns={
+              'product_id':fields.many2one('product.template','Product Id'),
+              'company_id':fields.many2one('res.company','Company'),
+              'list_price':fields.float('Sale Price', required=True, digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
+              'currency_id':fields.many2one('res.currency','Currency',readonly=True)
+              }
+    
+    def company_sale_onchange(self,cr,uid,ids,company_id):
+        if company_id:
+            currency=self.pool.get('res.company').read(cr,uid,company_id,['currency_id'])
+            return {'value':{'currency_id':currency['currency_id'][0]}}
+        else:
+            return{'value':{'currency_id':False}}
+            
+    def create(self,cr,uid,values,context={}):
+        #code to make onchange_currency_id effectiv for readonly fields
+        if values and values.has_key('company_id') and values['company_id']:
+            val = self.company_sale_onchange(cr, uid, [] ,values['company_id'])['value']
+            values['currency_id']=val['currency_id']
+        return super(company_wise_sale_price, self).create(cr, uid, values, context=context)
+    
+    def write(self,cr,uid,ids,values,context={}):
+         #code to make onchange_currency_id effectiv for readonly fields
+        if values and  values.has_key('company_id') and values['company_id']:
+            company_id = values['company_id']
+        # this code effects when currency_id is not changed still the rate are chnged then 
+        #        
+        val = self.company_sale_onchange(cr, uid, ids ,company_id)['value']
+        values['currency_id']=val['currency_id']
+        
+        return super(company_wise_sale_price, self).write(cr, uid, ids, values, context=context)
+    
+company_wise_sale_price()
 
 class product_product(osv.osv):
     def view_header_get(self, cr, uid, view_id, view_type, context):
@@ -441,7 +546,7 @@ class product_product(osv.osv):
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'ean13': fields.char('EAN13', size=13),
-        'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
+        'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
@@ -632,11 +737,13 @@ class product_supplierinfo(osv.osv):
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Delay', required=True, help="Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
+        'company_id':fields.many2one('res.company','Company'),
     }
     _defaults = {
         'qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', c)
     }
     _order = 'sequence'
 product_supplierinfo()

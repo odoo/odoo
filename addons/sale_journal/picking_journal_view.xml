@@ -6,7 +6,7 @@
 		<field name="model">sale_journal.picking.journal</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Packing Journal">
+			<form string="Picking Journal">
 				<notebook>
 				<page string="Journal">
 					<separator string="Journal Information" colspan="4"/>
@@ -24,7 +24,7 @@
                         <button name="button_draft" string="Set to Draft" states="close,open" type="object" icon="gtk-convert"/>
 					</group>
 				</page>
-				<page string="Packing">
+				<page string="Picking">
                     <button string="Cancel Packing" name="button_picking_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
 					<newline/>
 					<field name="picking_stats_ids" colspan="4" nolabel="1"/>
@@ -40,7 +40,7 @@
 		<field name="model">sale_journal.picking.journal</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Packing Journal">
+			<tree string="Picking Journal">
 				<field name="name" select="1"/>
 				<field name="code" select="1"/>
 				<field name="user_id" select="1"/>
@@ -50,25 +50,25 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_definition_picking_journal">
-		<field name="name">Packing journals</field>
+		<field name="name">Picking journals</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	
-	
-	<menuitem name="Packing Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
+
+
+	<menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree">
-		<field name="name">Packing by journal</field>
+		<field name="name">Picking by journal</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
 	</record>
-	
-	
-	<menuitem name="Packing by Journal" id="menu_definition_journal_picking_byjournal" parent="stock.menu_stock_root" action="action_definition_picking_journal_tree"/>
+
+
+	<menuitem name="Picking by Journal" id="menu_definition_journal_picking_byjournal" parent="stock.menu_stock_root" action="action_definition_picking_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_my">
 		<field name="name">My open packing journals</field>
@@ -76,36 +76,36 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
-	
-	<menuitem name="My Open Journals" id="menu_definition_journal_picking_byjournal_my" parent="menu_definition_journal_picking_byjournal" action="action_definition_picking_journal_tree_my"  groups="base.group_extended_menu"/>
-	
+
+	<menuitem name="My Open Journals" id="menu_definition_journal_picking_byjournal_my" parent="menu_definition_journal_picking_byjournal" action="action_definition_picking_journal_tree_my"  groups="base.group_extended"/>
+
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_all">
-		<field name="name">Packing by journal</field>
+		<field name="name">Picking by journal</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
-	
-	<menuitem name="All Open Journals" id="menu_definition_journal_picking_byjournal_all" parent="menu_definition_journal_picking_byjournal" action="action_definition_picking_journal_tree_all" groups="base.group_extended_menu"/>
+
+	<menuitem name="All Open Journals" id="menu_definition_journal_picking_byjournal_all" parent="menu_definition_journal_picking_byjournal" action="action_definition_picking_journal_tree_all" groups="base.group_extended"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_tree">
-		<field name="name">Packing by invoice_method</field>
+		<field name="name">Picking by invoice_method</field>
 		<field name="name">sale_journal.invoice.type.tree</field>
 		<field name="res_model">sale_journal.invoice.type</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">tree</field>
 	</record>
-	
-	
-	<menuitem name="Packing to Invoice" id="menu_definition_journal_picking_invoice" parent="stock.menu_action_picking_tree"/>
-	<menuitem name="Packing by Invoice Method" id="menu_definition_journal_picking_invoice_method" parent="menu_definition_journal_picking_invoice" action="action_invoice_type_tree"/>
-	
+
+
+	<menuitem name="Picking to Invoice" id="menu_definition_journal_picking_invoice" parent="stock.menu_action_picking_tree"/>
+	<menuitem name="Picking by Invoice Method" id="menu_definition_journal_picking_invoice_method" parent="menu_definition_journal_picking_invoice" action="action_invoice_type_tree"/>
+
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_open">
-		<field name="name">Packing to invoice</field>
+		<field name="name">Picking to invoice</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -115,7 +115,7 @@
 	<record model="ir.values" id="ir_open_invoice_type">
 		<field name="key2">tree_but_open</field>
 		<field name="model">sale_journal.invoice.type</field>
-		<field name="name">Packing to invoice</field>
+		<field name="name">Picking to invoice</field>
 		<field name="value" eval="'ir.actions.act_window,%d'%action_invoice_type_picking_open"/>
 		<field name="object" eval="True"/>
 	</record>

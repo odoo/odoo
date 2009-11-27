@@ -1,67 +1,67 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!--
 			Process
 		-->
-	
+
 		<record id="process_process_serviceproductprocess0" model="process.process">
-			<field eval="&quot;&quot;&quot;Service Product Process&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="1" name="active"/>
 		</record>
-		
+
 		<!--
 			Process Node
 		-->
-		
+
 		<record id="process_node_serviceonorder0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;If procurement is make to order&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;Service on Order&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Assignment from Production or Purchase Order.&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
 			<field name="process_id" ref="process_process_serviceproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-	
+
 		<record id="process_node_servicemts0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Do nothing&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Assignment from stock.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>
 			<field name="process_id" ref="process_process_serviceproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_orderrfq0" model="process.node">
 			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
 			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;A purchase order is created for a sub-contracting demand.&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Request for Quotation.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
 			<field name="subflow_id" ref="purchase.process_process_purchaseprocess0"/>
 			<field name="process_id" ref="process_process_serviceproductprocess0"/>
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<!--
 			Process Transition
 		-->
-		
+
 		<record id="process_transition_servicerfq0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;Stockable Order Request&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If Procure method is Make to order and supply method is buy&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;If the service has a 'Buy' supply method, this creates a RFQ, a subcontracting demand for instance.&quot;&quot;&quot;" name="note"/>
 			<field model="process.node" name="target_node_id" ref="process_node_orderrfq0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_serviceonorder0"/>
 		</record>
-		
+
 	</data>
 </openerp>

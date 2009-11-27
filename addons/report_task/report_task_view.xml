@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <form string="Tasks by User">
                     <field name="user_id" select="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
+                    <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                     <field name="task_nbr" select="2"/>
                     <field name="task_hrs" select="2"/>
                     <field name="task_progress" select="2"/>
@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <tree string="Tasks by User">
                     <field name="user_id"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="task_nbr"/>
                     <field name="task_hrs"/>
                     <field name="task_progress"/>

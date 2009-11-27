@@ -481,7 +481,6 @@
             <field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
-        <menuitem action="crm_case_categ0-act_open" id="menu_crm_case_categ0-act_open" parent="crm.menu_crm_case_categ0-act" groups="base.group_extended_menu"/>
 
         <record id="crm_case_categ0-act_my" model="ir.actions.act_window">
             <field name="name">My cases</field>
@@ -491,7 +490,7 @@
             <field name="domain">[('user_id','=',uid)]</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
-        <menuitem action="crm_case_categ0-act_my" id="menu_crm_case_categ0-act_my" parent="crm.next_id_52" groups="base.group_extended_menu"/>
+        <menuitem action="crm_case_categ0-act_my" id="menu_crm_case_categ0-act_my" parent="crm.next_id_52" groups="base.group_extended"/>
         <record id="crm_case_categ0-act_my_open" model="ir.actions.act_window">
             <field name="name">My Open Cases</field>
             <field name="res_model">crm.case</field>
@@ -500,7 +499,6 @@
             <field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>            
         </record>
-        <menuitem action="crm_case_categ0-act_my_open" id="menu_crm_case_categ0-act_my_open" parent="crm.menu_crm_case_categ0-act_my" groups="base.group_extended_menu"/>
 
         <record id="crm_case_section_open_act" model="ir.actions.act_window">
             <field name="name">crm.case.section.open</field>

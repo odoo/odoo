@@ -115,7 +115,10 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'notes': fields.text('Notes', help="Internal description of the project."),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
+                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
+                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
+        'company_id': fields.many2one('res.company', 'Company'),
      }
 
     _defaults = {
@@ -123,7 +126,8 @@ class project(osv.osv):
         'manager': lambda object,cr,uid,context: uid,
         'priority': lambda *a: 1,
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'open'
+        'state': lambda *a: 'open',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', c)
     }
 
     _order = "parent_id,priority,name"
@@ -277,7 +281,9 @@ class task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+                                  help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                  \n If the task is over, the states is set to \'Done\'.'),
         'date_start': fields.datetime('Starting Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
@@ -299,7 +305,8 @@ class task(osv.osv):
         'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager')
+        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,
@@ -310,6 +317,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', c) 
     }
     _order = "sequence, priority, date_deadline, id"
 

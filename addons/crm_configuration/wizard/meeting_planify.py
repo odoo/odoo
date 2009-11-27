@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,7 @@ import pooler
 from tools.translate import _
 
 case_form = """<?xml version="1.0"?>
-<form string="Planify Meeting">
+<form string="Plan Meeting">
     <field name="date"/>
     <field name="duration" widget="float_time"/>
     <label string="Note that you can also use the calendar view to graphically schedule your next meeting." colspan="4"/>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -53,12 +53,12 @@ class MakeProcurement(wizard.interface):
     '''Wizard that create a procurement from a product form'''
 
     done_form = """<?xml version="1.0"?>
-<form string="Make Procurement">
+<form string="Make Requisition">
     <label string="Your procurement request has been sent !"/>
 </form>"""
     procurement_form = """<?xml version="1.0"?>
-<form string="Internal Procurement Request">
-    <label string="This wizard will planify the procurement for this product. This procurement may generate task, production orders or purchase orders." align="0.0" colspan="4"/>
+<form string="Internal Requisition Request">
+    <label string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders." align="0.0" colspan="4"/>
     <field name="product_id"/>
     <field name="warehouse_id"/>
     <field name="qty"/>

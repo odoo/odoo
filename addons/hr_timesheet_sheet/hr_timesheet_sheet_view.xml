@@ -87,7 +87,7 @@
                     <field name="user_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -175,15 +175,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col='6' colspan='4'>
+                   <group col='8' colspan='4'>
+	                   <filter icon="terp-partner" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheet"/>
+	                   <filter icon="terp-crm" string="My departments timesheets"  domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
+						<separator orientation="vertical"/>
                        <field name="state">
                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                        </field>
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection">
-                           <filter icon="gtk-execute" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-                           <filter icon="gtk-execute" domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
                        </field>                       
                    </group>
                </search>
@@ -212,7 +213,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my" id="menu_act_hr_timesheet_sheet_form_my" parent="hr_timesheet_sheet.next_id_60" groups="base.group_extended_menu"/>
+        <menuitem action="act_hr_timesheet_sheet_form_my" id="menu_act_hr_timesheet_sheet_form_my" parent="hr_timesheet_sheet.next_id_60" groups="base.group_extended"/>
         
         <record id="act_hr_timesheet_sheet_form_my_confirm" model="ir.actions.act_window">
             <field name="name">My timesheets to confirm</field>
@@ -224,7 +225,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_confirm" id="menu_act_hr_timesheet_sheet_form_my_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" groups="base.group_extended_menu"/>
 
         <record id="act_hr_timesheet_sheet_form_my_department" model="ir.actions.act_window">
             <field name="name">My Department's Timesheets</field>
@@ -236,7 +236,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_department" id="menu_act_hr_timesheet_sheet_form_my_department" parent="hr_timesheet_sheet.next_id_60" groups="base.group_extended_menu"/>
+        <menuitem action="act_hr_timesheet_sheet_form_my_department" id="menu_act_hr_timesheet_sheet_form_my_department" parent="hr_timesheet_sheet.next_id_60" groups="base.group_extended"/>
 
         <record id="act_hr_timesheet_sheet_form_my_confirm_department" model="ir.actions.act_window">
             <field name="name">My Department's Timesheets to Confirm</field>
@@ -248,7 +248,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_confirm_department" id="menu_act_hr_timesheet_sheet_form_my_confirm_department" parent="menu_act_hr_timesheet_sheet_form_my_department" groups="base.group_extended_menu"/>
 
         <record id="act_hr_timesheet_sheet_form_my_validate_department" model="ir.actions.act_window">
             <field name="name">My Department's Timesheets to Validate</field>
@@ -260,7 +259,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_validate_department" id="menu_act_hr_timesheet_sheet_form_my_validate_department" parent="menu_act_hr_timesheet_sheet_form_my_department" groups="base.group_extended_menu"/>
         
         <wizard id="act_hr_timesheet_sheet_form_my_current" model="hr.employee" name="hr_timesheet_sheet.current.open" string="My Current Timesheet"/>
 
@@ -276,8 +274,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_all_confirm" id="menu_act_hr_timesheet_sheet_form_all_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_extended_menu"/>
-        
         <record id="act_hr_timesheet_sheet_form_all_valid" model="ir.actions.act_window">
             <field name="name">Timesheets To Validate</field>
             <field name="type">ir.actions.act_window</field>
@@ -288,7 +284,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_all_valid" id="menu_act_hr_timesheet_sheet_form_all_valid" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_extended_menu"/>
         
         <!--
             Company inheritancy
@@ -386,6 +381,5 @@
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
         </record>
         
-        <menuitem action="act_hr_timesheet_sheet_unvalidate" id="menu_hr_timesheet_sheet_unvalidate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_extended_menu"/>
     </data>
 </openerp>

@@ -86,7 +86,7 @@
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
                                 <button name="action_invoice_create" states="2binvoiced" string="Make Invoice"/>
-								<button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
+                                <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                                 <button name="cancel" states="draft" string="Cancel Repair"/>
                                 <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
@@ -102,15 +102,15 @@
                                     <notebook>
                                         <page string="Fees Line">
                                             <field name='name'/>
-		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
-		                                    <field name="product_uom_qty" string="Qty"/>
-		                                    <field name="product_uom" string="UoM" />
-		                                    <field name="price_unit"/>
-		                                    <field name="price_subtotal"/>
+                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
+                                            <field name="product_uom_qty" string="Qty"/>
+                                            <field name="product_uom" string="UoM" />
+                                            <field name="price_unit"/>
+                                            <field name="price_subtotal"/>
                                             <newline/>
                                             <group colspan="2">
                                                 <field name="to_invoice"/>
-    		                                    <field name="invoiced"/>
+                                                <field name="invoiced"/>
                                             </group>
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&gt;&gt;','purchase')]"/>
@@ -191,6 +191,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_progress_tree" model="ir.actions.act_window">
@@ -200,6 +201,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','under_repair')]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_ready_tree" model="ir.actions.act_window">
@@ -209,6 +211,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','!=','draft'),('state','!=','under_repair'),('state','!=','2binvoiced'),('state','!=','invoice_except'),('state','!=','done'),('state','!=','cancel'),]</field>
+        	<field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_2binvoiced_tree" model="ir.actions.act_window">
@@ -218,20 +221,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','2binvoiced')]</field>
+            <field name="filter" eval="True"/>
         </record>
 
-        <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_root" name="Repairs"/>
-
-        <menuitem action="action_repair_quotation_tree" id="menu_repair_quotation" parent="menu_repair_order"/>
-
-        <menuitem action="action_repair_progress_tree" id="menu_repair_progress" parent="menu_repair_order"/>
-
-        <menuitem action="action_repair_ready_tree" id="menu_repair_ready" parent="menu_repair_order"/>
-
-    	<menuitem action="action_repair_2binvoiced_tree" id="menu_repair_2binvoiced" parent="menu_repair_order"/>
-
-    	<menuitem action="action_repair_order_form" id="menu_repair_form" parent="menu_repair_order" sequence = "50"/>
-
+        <menuitem action="action_repair_order_tree" id="menu_repair_order" parent="mrp.menu_mrp_root" name="Repairs" sequence="50"/>
 
     </data>
 </openerp>

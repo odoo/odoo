@@ -24,6 +24,7 @@ import datetime
 import mx.DateTime
 
 import pooler
+import tools
 from osv import fields,osv
 
 
@@ -206,21 +207,25 @@ class report_account_type_sales(osv.osv):
     _description = "Report of the Sales by Account Type"
     _auto = False
     _columns = {
-        'name': fields.char('Month', size=64, readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'user_type': fields.many2one('account.account.type', 'Account Type', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_account_type_sales')
         cr.execute("""create or replace view report_account_type_sales as (
             select
                min(inv_line.id) as id,
-               to_char(inv.date_invoice, 'YYYY-MM-01') as name,
+               to_char(inv.date_invoice, 'YYYY') as name,
+               to_char(inv.date_invoice,'MM') as month,
                sum(inv_line.price_subtotal) as amount_total,
                inv.currency_id as currency_id,
                inv.period_id,
@@ -234,7 +239,7 @@ class report_account_type_sales(osv.osv):
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
+                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
             )""")
 report_account_type_sales()
 
@@ -244,21 +249,25 @@ class report_account_sales(osv.osv):
     _description = "Report of the Sales by Account"
     _auto = False
     _columns = {
-        'name': fields.char('Month', size=64, readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period',readonly=True),
         'product_id': fields.many2one('product.product', 'Product',readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,amount_total desc'
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_account_sales')
         cr.execute("""create or replace view report_account_sales as (
             select
                min(inv_line.id) as id,
-               to_char(inv.date_invoice, 'YYYY-MM-01') as name,
+               to_char(inv.date_invoice, 'YYYY') as name,
+               to_char(inv.date_invoice,'MM') as month,
                sum(inv_line.price_subtotal) as amount_total,
                inv.currency_id as currency_id,
                inv.period_id,
@@ -272,7 +281,7 @@ class report_account_sales(osv.osv):
             where
                 inv.state in ('open','paid')
             group by
-                to_char(inv.date_invoice, 'YYYY-MM-01'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
+                to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
 report_account_sales()
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -68,7 +68,7 @@ class mrp_production_workcenter_line(osv.osv):
         return res
     _inherit = 'mrp.production.workcenter.line'
     _columns = {
-       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'Status', readonly=True),
+       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'State', readonly=True),
        'date_start_date': fields.function(_get_date_date, method=True, string='Start Date', type='date'),
        'date_planned': fields.related('production_id', 'date_planned', type='datetime', string='Date Planned'),
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
@@ -77,7 +77,7 @@ class mrp_production_workcenter_line(osv.osv):
        'delay': fields.float('Working Hours',help="This is delay between operation start and stop in this workcenter",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
-            selection=[('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
+            selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
             string='Prod.State', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
@@ -230,9 +230,9 @@ class mrp_production(osv.osv):
                     if l.production_id.state not in ('done','cancel'):
                         for wc in l.production_id.workcenter_lines:
                             i = self.pool.get('hr.timesheet.group').interval_min_get(
-                                cr, 
-                                uid, 
-                                wc.workcenter_id.timesheet_id.id or False, 
+                                cr,
+                                uid,
+                                wc.workcenter_id.timesheet_id.id or False,
                                 dt, wc.hour or 0.0
                             )
                             dt = i[0][0]

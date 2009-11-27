@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -75,7 +75,7 @@ class crm_cases(osv.osv):
         'partner_name2': fields.char('Employee Email', size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'child_ids': fields.one2many('crm.case', 'case_id', 'Events'),        
+        'child_ids': fields.one2many('crm.case', 'case_id', 'Events'),
     }
 
     def stage_next(self, cr, uid, ids, context={}):
@@ -125,11 +125,11 @@ class crm_menu_config_wizard(osv.osv_memory):
         'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
         'jobs': fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
         'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
-        'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on softwares"),
+        'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
         'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to planify a list of phone calls to process."),
+        'phonecall': fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to plan a list of phone calls to process."),
     }
     _defaults = {
         'meeting': lambda *args: True,
@@ -190,42 +190,42 @@ crm_menu_config_wizard()
 
 class crm_generic_wizard(osv.osv_memory):
     _name = 'crm.generic_wizard'
-    
-    _columns = {        
+
+    _columns = {
         'section_id': fields.many2one('crm.case.section', 'Section', required=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
-    
+
     def _get_default_section(self, cr, uid, context):
         case_id = context.get('active_id',False)
         if not case_id:
             return False
-        case_obj = self.pool.get('crm.case')    
+        case_obj = self.pool.get('crm.case')
         case = case_obj.read(cr, uid, case_id, ['state','section_id'])
         if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))              
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
         return case['section_id']
-        
-        
+
+
     _defaults = {
         'section_id': _get_default_section
-    }    
+    }
     def action_create(self, cr, uid, ids, context=None):
-        case_obj = self.pool.get('crm.case')        
+        case_obj = self.pool.get('crm.case')
         case_id = context.get('active_id',[])
         res = self.read(cr, uid, ids)[0]
         case = case_obj.read(cr, uid, case_id, ['state'])
         if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.')) 
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
         new_case_id = case_obj.copy(cr, uid, case_id, default=
                                             {
                                                 'section_id':res.get('section_id',False),
                                                 'user_id':res.get('user_id',False)
                                             }, context=context)
-        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context) 
-        case_obj.case_close(cr, uid, [case_id])       
-        return {} 
-        
+        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
+        case_obj.case_close(cr, uid, [case_id])
+        return {}
+
 crm_generic_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

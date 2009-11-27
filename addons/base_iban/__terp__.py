@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'IBAN',
+    'name': 'Create IBAN bank accounts',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """

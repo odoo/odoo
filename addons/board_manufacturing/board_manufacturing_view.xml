@@ -4,7 +4,7 @@
         <record id="note_sale_type" model="board.note.type">
             <field name="name">Production</field>
         </record>
-        
+
         <record id="board_mrp_manager_form" model="ir.ui.view">
             <field name="name">board.mrp.manager.form</field>
             <field name="model">board.board</field>
@@ -14,21 +14,21 @@
                     <hpaned position="100">
                         <child1>
                             <action colspan="4" height="200" name="%(mrp.mrp_production_action2)d" string="Next production orders" width="510"/>
-                            <action colspan="4" name="%(stock.action_picking_tree2)d" string="Deliveries (Out packing)"/>
-                            <action colspan="4" name="%(mrp.mrp_procurement_action4)d" string="Procurement in Exception"/>
+                            <action colspan="4" name="%(stock.action_picking_tree2)d" string="Deliveries (Out picking)"/>
+                            <action colspan="4" name="%(mrp.mrp_procurement_action4)d" string="	Requisition in Exception"/>
                         </child1>
-                        
-                        
+
+
                         <child2>
-                            <action colspan="4" name="%(report_mrp.action_report_workcenter_load_tree)d" string="Workcenter futur load"/>
-                            
+                            <action colspan="4" name="%(report_mrp.action_report_workcenter_load_tree)d" string="Workcenter future load"/>
+
                             <action colspan="4" name="%(report_mrp.action_report_in_out_picking_tree)d" string="Stock value variation"/>
                         </child2>
                     </hpaned>
                 </form>
             </field>
         </record>
-        
+
         <record id="open_board_manufacturing" model="ir.actions.act_window">
             <field name="name">Production Dashboard</field>
             <field name="res_model">board.board</field>
