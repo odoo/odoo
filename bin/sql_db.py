@@ -53,6 +53,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 import tools
 from tools.func import wraps
 from datetime import datetime as mdt
+from datetime import timedelta
 import threading
 
 import re
@@ -128,18 +129,21 @@ class Cursor(object):
             raise
 
         if self.sql_log:
+            delay = mdt.now() - now
+            delay = delay.seconds * 1E6 + delay.microseconds
+
             log("query: %s" % self._obj.query)
             self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += mdt.now() - now
+                self.sql_from_log[res_from.group(1)][1] += delay
             res_into = re_into.match(query.lower())
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
-                self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
+                self.sql_into_log[res_into.group(1)][1] += delay
         return res
 
     def print_log(self):
@@ -155,9 +159,11 @@ class Cursor(object):
             sum = 0
             log("SQL LOG %s:" % (type,))
             for r in sqllogitems:
-                log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
+                delay = timedelta(microseconds=r[1][1])
+                log("table: %s: %s/%s" %(r[0], str(delay), r[1][0]))
                 sum+= r[1][1]
-            log("SUM:%s/%d" % (sum, self.sql_log_count))
+            sum = timedelta(microseconds=sum)
+            log("SUM:%s/%d" % (str(sum), self.sql_log_count))
             sqllogs[type].clear()
         process('from')
         process('into')
