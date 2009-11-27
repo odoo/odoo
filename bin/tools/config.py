@@ -204,7 +204,8 @@ class configmanager(object):
         else:
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
-        self.rcfile = fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath
+        self.rcfile = os.path.abspath(
+            fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
 
