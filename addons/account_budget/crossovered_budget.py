@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -45,13 +45,13 @@ class account_budget_post(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sequence': fields.integer('Sequence'),        
+        'sequence': fields.integer('Sequence'),
     }
     _defaults = {
-        'sequence': lambda *a: 1,   
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,              
+        'sequence': lambda *a: 1,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
-    _order = "sequence, name"    
+    _order = "sequence, name"
 
     def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
         dobj = self.pool.get('account.budget.post.dotation')
@@ -76,8 +76,10 @@ class account_budget_post_dotation(osv.osv):
 
                 total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
                 budget_id=line.post_id and line.post_id.id or False
-                query="select id from crossovered_budget_lines where  general_budget_id= '"+ str(budget_id) + "' AND (date_from  >='"  +obj_period.date_start +"'  and date_from <= '"+obj_period.date_stop + "') OR (date_to  >='"  +obj_period.date_start +"'  and date_to <= '"+obj_period.date_stop + "') OR (date_from  <'"  +obj_period.date_start +"'  and date_to > '"+obj_period.date_stop + "')"
-                cr.execute(query)
+                query="select id from crossovered_budget_lines where \
+                        general_budget_id= %s AND (date_from  >=%s and date_from <= %s ) \
+                        OR (date_to  >=%s and date_to <= %s) OR (date_from  < %s  and date_to > %s)"
+                cr.execute(query,(budget_id,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,obj_period.date_start,obj_period.date_stop,))
                 res1=cr.fetchall()
 
                 tot_planned=0.00
@@ -175,10 +177,9 @@ class crossovered_budget_lines(osv.osv):
                 date_from = context['wizard_date_from']
             if context.has_key('wizard_date_to'):
                 date_to = context['wizard_date_to']
-
-            cr.execute("select sum(amount) from account_analytic_line where account_id=%%s and (date "
-                       "between to_date(%%s,'yyyy-mm-dd') and to_date(%%s,'yyyy-mm-dd')) and "
-                       "general_account_id in (%s)" % ",".join(map(str,acc_ids)), (line.analytic_account_id.id, date_from, date_to ))
+            cr.execute("select sum(amount) from account_analytic_line where account_id=%s and (date "
+                       "between to_date(%s,'yyyy-mm-dd') and to_date(%s,'yyyy-mm-dd')) and "
+                       "general_account_id=ANY(%s)", (line.analytic_account_id.id, date_from, date_to,acc_ids,))
             result = cr.fetchone()[0]
             if result is None:
                 result = 0.00
@@ -213,7 +214,7 @@ class crossovered_budget_lines(osv.osv):
                 elapsed = min(strToDate(line.date_to),strToDate(date_to)) - max(strToDate(line.date_from),strToDate(date_from))
                 if strToDate(date_to) < strToDate(line.date_from):
                     elapsed = strToDate(date_to) - strToDate(date_to)
-                
+
                 if total.days:
                     theo_amt = float(elapsed.days/float(total.days))*line.planned_amount
                 else:

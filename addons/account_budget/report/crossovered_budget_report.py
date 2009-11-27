@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -71,10 +71,8 @@ class budget_report(report_sxw.rml_parse):
             if not budget_ids:
                 return []
 
-            b_line_ids=','.join([str(x) for x in budget_ids])
-
 #            bd_ids = ','.join([str(x) for x in budget_lines])
-            self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id in (%s)'%(b_line_ids))
+            self.cr.execute('select distinct(analytic_account_id) from crossovered_budget_lines where id =ANY(%s)',(budget_ids,))
             an_ids=self.cr.fetchall()
 
             context={'wizard_date_from':d_from,'wizard_date_to':d_to}
