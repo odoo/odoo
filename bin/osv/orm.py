@@ -1218,7 +1218,7 @@ class orm_template(object):
                     if pos == 'replace':
                         parent = node.getparent()
                         if parent is None:
-                            src = copy.deepcopy(node2.getchildren()[0])
+                            src = copy.deepcopy(node2[0])
                         else:
                             for child in node2:
                                 node.addprevious(child)

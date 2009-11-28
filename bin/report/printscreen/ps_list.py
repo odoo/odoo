@@ -36,14 +36,9 @@ class report_printscreen_list(report_int):
 
     def _parse_node(self, root_node):
         result = []
-        for node in root_node.getchildren():
+        for node in root_node:
             if node.tag == 'field':
-                attrsa = node.attrib
-                attrs = {}
-                if not attrsa is None:
-                   for key,val in attrsa.items():
-                    attrs[key] = val
-                result.append(attrs['name'])
+                result.append(node.get('name'))
             else:
                 result.extend(self._parse_node(node))
         return result

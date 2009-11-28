@@ -296,7 +296,7 @@ class _rml_template(object):
                 posx = int(utils.unit_get(tmpl.get('x1')))
                 frames[(posy,posx,tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
             for tmpl in pt.findall('pageGraphics'):
-                for n in tmpl.getchildren():
+                for n in tmpl:
                         if n.tag == 'image':
                            self.data = rc + utils._process_text(self, n.text)
                         if n.tag in self._tags:

@@ -56,7 +56,7 @@ def xml2str(s):
 
 def _child_get(node, self=None, tagname=None):
     for n in node:
-        if self and self.localcontext and n.get('rml_loop', False):
+        if self and self.localcontext and n.get('rml_loop'):
             oldctx = self.localcontext
 
             for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
@@ -80,12 +80,12 @@ def _child_get(node, self=None, tagname=None):
                         yield n
             self.localcontext = oldctx
             continue
-        if self and self.localcontext and n.get('rml_except', False):
+        if self and self.localcontext and n.get('rml_except'):
             try:
                 eval(n.get('rml_except'), {}, self.localcontext)
             except:
                 continue
-        if self and self.localcontext and n.get('rml_tag', False):
+        if self and self.localcontext and n.get('rml_tag'):
             try:
                 (tag,attr) = eval(n.get('rml_tag'),{}, self.localcontext)
                 n2 = copy.deepcopy(n)
@@ -125,10 +125,7 @@ def _process_text(self, txt):
         return result
 
 def text_get(node):
-    rc = ''
-    for node in node.getchildren():
-            rc = rc + tools.ustr(node.text)
-    return rc
+    return ''.join([tools.ustr(n.text) for n in node])
 
 units = [
     (re.compile('^(-?[0-9\.]+)\s*in$'), reportlab.lib.units.inch),
@@ -158,8 +155,7 @@ def unit_get(size):
 def tuple_int_get(node, attr_name, default=None):
     if not node.get(attr_name):
         return default
-    res = [int(x) for x in node.get(attr_name).split(',')]
-    return res
+    return map(int, node.get(attr_name).split(','))
 
 def bool_get(value):
     return (str(value)=="1") or (value.lower()=='yes')
