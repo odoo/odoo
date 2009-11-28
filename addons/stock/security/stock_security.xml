@@ -17,5 +17,50 @@
         <field name="groups_id" eval="[(6,0,[ref('group_stock_manager')])]"/>
     </record>
 
+    <record model="ir.rule.group" id="stock_warehouse_comp_rule_group">
+        <field name="name">Warehouse multi-company</field>
+        <field name="model_id" ref="model_stock_warehouse"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="stock_warehouse_comp_rule">
+        <field name="field_id" search="[('model','=','stock.warehouse'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="stock_warehouse_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
+    <record model="ir.rule.group" id="stock_location_comp_rule_group">
+        <field name="name">Location multi-company</field>
+        <field name="model_id" ref="model_stock_location"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="stock_location_comp_rule">
+        <field name="field_id" search="[('model','=','stock.location'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="stock_location_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
+    <record model="ir.rule.group" id="stock_inventory_line_comp_rule_group">
+        <field name="name">Inventory Line multi-company</field>
+        <field name="model_id" ref="model_stock_inventory_line"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="stock_inventory_line_comp_rule">
+        <field name="field_id" search="[('model','=','stock.inventory.line'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="stock_inventory_line_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule.group" id="stock_inventory_comp_rule_group">
+        <field name="name">Inventory multi-company</field>
+        <field name="model_id" ref="model_stock_inventory"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="stock_inventory_comp_rule">
+        <field name="field_id" search="[('model','=','stock.inventory'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="stock_inventory_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
 </data>
 </openerp>
