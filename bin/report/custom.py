@@ -33,7 +33,6 @@ from osv.osv import except_osv
 from osv.orm import browse_null
 from osv.orm import browse_record_list
 import pooler
-from xml.dom import minidom
 from pychart import *
 import misc
 import cStringIO
@@ -286,17 +285,14 @@ class report_custom(report_int):
         if report['print_orientation']=='landscape':
             pageSize=[pageSize[1],pageSize[0]]
 
-        impl = minidom.getDOMImplementation()
-        new_doc = impl.createDocument(None, "report", None)
+        new_doc = etree.Element('report')
         
-        # build header
-        config = new_doc.createElement("config")
+        config = etree.Element('config')
 
         def _append_node(name, text):
-            n = new_doc.createElement(name)
-            t = new_doc.createTextNode(text)
-            n.appendChild(t)
-            config.appendChild(n)
+            n = etree.Element(name)
+            t.text = text
+            config.append(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageFormat', '%s' % report['print_format'])
@@ -316,45 +312,41 @@ class report_custom(report_int):
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 
-        new_doc.childNodes[0].appendChild(config)
-        header = new_doc.createElement("header")
+        new_doc.append(config)
+        header = etree.Element('header')
         
         for f in fields:
-            field = new_doc.createElement("field")
-            field_txt = new_doc.createTextNode('%s' % (f['name'],))
-            field.appendChild(field_txt)
-            header.appendChild(field)
-        
-        new_doc.childNodes[0].appendChild(header)
+            field = etree.Element('field')
+            field.text = f['name']
+            header.append(field)
+        new_doc.append(header)
 
-        lines = new_doc.createElement("lines")
+        lines = etree.Element('lines')
         level.reverse()
         for line in results:
             shift = level.pop()
-            node_line = new_doc.createElement("row")
+            node_line = etree.Element('row')
             prefix = '+'
             for f in range(len(fields)):
-                col = new_doc.createElement("col")
+                col = etree.Element('col')
                 if f == 0:
-                    col.setAttribute('para','yes')
-                    col.setAttribute('tree','yes')
-                    col.setAttribute('space',str(3*shift)+'mm')
+                    col.set('para','yes')
+                    col.set('tree','yes')
+                    col.set('space',str(3*shift)+'mm')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(prefix+str(line[f]) or '')
+                    col.text = prefix+str(line[f]) or ''
                 else:
-                    txt = new_doc.createTextNode('/')
-                col.appendChild(txt)
-                node_line.appendChild(col)
+                    col.text = '/'
+                node_line.append(col)
                 prefix = ''
-            lines.appendChild(node_line)
+            lines.append(node_line)
             
-        new_doc.childNodes[0].appendChild(lines)
+        new_doc.append(lines)
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
                                      'addons/base/report/custom_new.xsl')))
-        rml = etree.tostring(
-            transform(etree.fromstring(new_doc.toxml())))
+        rml = etree.tostring(transform(new_doc))
 
         self.obj = render.rml(rml)
         self.obj.render()
@@ -591,16 +583,12 @@ class report_custom(report_int):
         if report['print_orientation']=='landscape':
             pageSize=[pageSize[1],pageSize[0]]
 
-        impl = minidom.getDOMImplementation()
-        new_doc = impl.createDocument(None, "report", None)
-        
-        # build header
-        config = new_doc.createElement("config")
+        new_doc = etree.Element('report')
+        config = etree.Element('config')
 
         def _append_node(name, text):
-            n = new_doc.createElement(name)
-            t = new_doc.createTextNode(text)
-            n.appendChild(t)
+            n = etree.Element(name)
+            n.text = text
             config.appendChild(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
@@ -621,38 +609,35 @@ class report_custom(report_int):
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 
-        new_doc.childNodes[0].appendChild(config)
-        header = new_doc.createElement("header")
+        new_doc.append(config)
+        header = etree.Element("header")
         
         for f in fields:
-            field = new_doc.createElement("field")
-            field_txt = new_doc.createTextNode('%s' % (f['name'],))
-            field.appendChild(field_txt)
-            header.appendChild(field)
+            field = etree.Element("field")
+            field.text = f['name']
+            header.append(field)
         
-        new_doc.childNodes[0].appendChild(header)
+        new_doc.append(header)
 
-        lines = new_doc.createElement("lines")
+        lines = etree.Element("lines")
         for line in results:
-            node_line = new_doc.createElement("row")
+            node_line = etree.Element("row")
             for f in range(len(fields)):
-                col = new_doc.createElement("col")
-                col.setAttribute('tree','no')
+                col = etree.Element("col")
+                col.set('tree','no')
                 if line[f] != None:
-                    txt = new_doc.createTextNode(str(line[f] or ''))
+                    col.text = line[f] or ''
                 else:
-                    txt = new_doc.createTextNode('/')
-                col.appendChild(txt)
+                    col.text = '/'
                 node_line.appendChild(col)
-            lines.appendChild(node_line)    
+            lines.append(node_line)
             
-        new_doc.childNodes[0].appendChild(lines)
+        new_doc.append(lines)
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
                                      'addons/base/report/custom_new.xsl')))
-        rml = etree.tostring(
-            transform(etree.fromstring(new_doc.toxml())))
+        rml = etree.tostring(transform(new_doc))
 
         self.obj = render.rml(rml)
         self.obj.render()
