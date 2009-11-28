@@ -23,8 +23,6 @@
 import os
 import re
 
-import libxml2
-import libxslt
 from lxml import etree
 import netsvc
 import pooler
@@ -145,48 +143,34 @@ class report_rml(report_int):
         if not self.xsl:
             return xml
 
-        # load XSL (parse it to the XML level)
-        styledoc = libxml2.parseDoc(tools.file_open(self.xsl).read())
-        xsl_path, tail = os.path.split(self.xsl)
-        for child in styledoc.children:
-            if child.name == 'import':
-                if child.hasProp('href'):
-                    imp_file = child.prop('href')
-                    _x, imp_file = tools.file_open(imp_file, subdir=xsl_path, pathinfo=True)
-                    child.setProp('href', urllib.quote(str(imp_file)))
+        stylesheet = etree.parse(tools.file_open(self.xsl))
+        xsl_path, _ = os.path.split(self.xsl)
+        for import_child in stylesheet.findall('./import'):
+            if 'href' in import_child.attrib:
+                imp_file = import_child.get('href')
+                _, imp_file = tools.file_open(imp_file, subdir=xsl_path, pathinfo=True)
+                import_child.set('href', urllib.quote(str(imp_file)))
 
         #TODO: get all the translation in one query. That means we have to:
         # * build a list of items to translate,
         # * issue the query to translate them,
         # * (re)build/update the stylesheet with the translated items
 
-        # translate the XSL stylesheet
-        def look_down(child, lang):
-            while child is not None:
-                if (child.type == "element") and child.hasProp('t'):
-                    #FIXME: use cursor
-                    res = service.execute(cr.dbname, uid, 'ir.translation',
-                            '_get_source', self.name2, 'xsl', lang, child.content)
-                    if res:
-                        child.setContent(res.encode('utf-8'))
-                look_down(child.children, lang)
-                child = child.next
+        def translate(doc, lang):
+            for node in doc.xpath('//*[@t]'):
+                translation = service.execute(
+                    cr.dbname, uid, 'ir.translation', '_get_source',
+                    self.name2, 'xsl', lang, node.text)
+                if translation:
+                    node.text = translation
 
         if context.get('lang', False):
-            look_down(styledoc.children, context['lang'])
+            translate(stylesheet, context['lang'])
 
-        # parse XSL
-        style = libxslt.parseStylesheetDoc(styledoc)
-        # load XML (data)
-        doc = libxml2.parseMemory(xml,len(xml))
-        # create RML (apply XSL to XML data)
-        result = style.applyStylesheet(doc, None)
-        # save result to string
-        xml = style.saveResultToString(result)
+        transform = etree.XSLT(stylesheet)
+        xml = etree.tostring(
+            transform(etree.fromstring(xml)))
 
-        style.freeStylesheet()
-        doc.freeDoc()
-        result.freeDoc()
         return xml
 
     def create_pdf(self, rml, localcontext = None, logo=None, title=None):

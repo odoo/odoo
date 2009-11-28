@@ -34,11 +34,10 @@ from osv.orm import browse_null
 from osv.orm import browse_record_list
 import pooler
 from xml.dom import minidom
-import libxml2
-import libxslt
 from pychart import *
 import misc
 import cStringIO
+from lxml import etree
 
 class external_pdf(render.render):
     def __init__(self, pdf):
@@ -351,11 +350,11 @@ class report_custom(report_int):
             
         new_doc.childNodes[0].appendChild(lines)
 
-        styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
-        style = libxslt.parseStylesheetDoc(styledoc)
-        doc = libxml2.parseDoc(new_doc.toxml())
-        rml_obj = style.applyStylesheet(doc, None)
-        rml = style.saveResultToString(rml_obj) 
+        transform = etree.XSLT(
+            etree.parse(os.path.join(tools.config['root_path'],
+                                     'addons/base/report/custom_new.xsl')))
+        rml = etree.tostring(
+            transform(etree.fromstring(new_doc.toxml())))
 
         self.obj = render.rml(rml)
         self.obj.render()
@@ -649,13 +648,11 @@ class report_custom(report_int):
             
         new_doc.childNodes[0].appendChild(lines)
 
-#       file('/tmp/terp.xml','w+').write(new_doc.toxml())
-
-        styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
-        style = libxslt.parseStylesheetDoc(styledoc)
-        doc = libxml2.parseDoc(new_doc.toxml())
-        rml_obj = style.applyStylesheet(doc, None)
-        rml = style.saveResultToString(rml_obj) 
+        transform = etree.XSLT(
+            etree.parse(os.path.join(tools.config['root_path'],
+                                     'addons/base/report/custom_new.xsl')))
+        rml = etree.tostring(
+            transform(etree.fromstring(new_doc.toxml())))
 
         self.obj = render.rml(rml)
         self.obj.render()

@@ -35,12 +35,6 @@ from config import config
 import logging
 
 import sys
-try:
-    from lxml import etree
-except:
-    sys.stderr.write("ERROR: pythonic binding for the libxml2 and libxslt libraries is missing\n")
-    sys.stderr.write("ERROR: Try to install python-lxml package\n")
-    sys.exit(2)
 import pickle
 
 

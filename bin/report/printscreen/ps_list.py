@@ -25,8 +25,6 @@ import pooler
 import tools
 from lxml  import etree
 from report import render
-import libxml2
-import libxslt
 import locale
 
 import time, os
@@ -236,11 +234,12 @@ class report_printscreen_list(report_int):
         lines.append(node_line)
 
         new_doc.append(lines)
-        styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
-        style = libxslt.parseStylesheetDoc(styledoc)
-        doc = libxml2.parseDoc(etree.tostring(new_doc))
-        rml_obj = style.applyStylesheet(doc, None)
-        rml = style.saveResultToString(rml_obj)
+
+        transform = etree.XSLT(
+            etree.parse(os.path.join(tools.config['root_path'],
+                                     'addons/base/report/custom_new.xsl')))
+        rml = etree.tostring(transform(new_doc))
+
         self.obj = render.rml(rml, title=self.title)
         self.obj.render()
         return True
