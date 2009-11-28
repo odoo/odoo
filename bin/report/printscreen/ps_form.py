@@ -77,19 +77,17 @@ class report_printscreen_list(report_int):
         pageSize=[297.0,210.0]
 
         new_doc = etree.Element("report")
-        config = etree.Element("config")
+        config = etree.SubElement(new_doc, 'config')
 
         # build header
         def _append_node(name, text):
-            n = etree.Element(name)
+            n = etree.SubElement(config, name)
             n.text = text
-            config.append(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
         _append_node('PageWidth', '%.2f' % (pageSize[0] * 2.8346,))
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
-
         _append_node('report-header', title)
 
         l = []
@@ -108,17 +106,15 @@ class report_printscreen_list(report_int):
                 s = fields[fields_order[pos]].get('size', 56) / 28 + 1
                 l[pos] = strmax * s / t
         _append_node('tableSize', ','.join(map(str,l)) )
-        new_doc.append(config)
-        header=etree.Element("header")
 
+        header = etree.SubElement(new_doc, 'header')
         for f in fields_order:
-            field = etree.Element("field")
+            field = etree.SubElement(header, 'field')
             field.text = fields[f]['string'] or ''
-            header.append(field)
-        new_doc.append(header)
-        lines = etree.Element("lines")
+
+        lines = etree.SubElement(new_doc, 'lines')
         for line in results:
-            node_line = etree.Element("row")
+            node_line = etree.SubElement(lines, 'row')
             for f in fields_order:
                 if fields[f]['type']=='many2one' and line[f]:
                     line[f] = line[f][1]
@@ -127,15 +123,11 @@ class report_printscreen_list(report_int):
                 if fields[f]['type'] == 'float':
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]=round(line[f],precision)
-                col = etree.Element("col")
-                col.set('tree','no')
+                col = etree.SubElement(node_line, 'col', tree='no')
                 if line[f] != None:
                      col.text = tools.ustr(line[f] or '')
                 else:
                     col.text = '/'
-                node_line.append(col)
-            lines.append(node_line)
-        new_doc.append(node_line)
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],

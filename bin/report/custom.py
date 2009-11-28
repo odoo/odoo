@@ -287,12 +287,11 @@ class report_custom(report_int):
 
         new_doc = etree.Element('report')
         
-        config = etree.Element('config')
+        config = etree.SubElement(new_doc, 'config')
 
         def _append_node(name, text):
-            n = etree.Element(name)
+            n = etree.SubElement(config, name)
             t.text = text
-            config.append(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageFormat', '%s' % report['print_format'])
@@ -312,36 +311,28 @@ class report_custom(report_int):
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 
-        new_doc.append(config)
-        header = etree.Element('header')
-        
+        header = etree.SubElement(new_doc, 'header')
         for f in fields:
-            field = etree.Element('field')
+            field = etree.SubElement(header, 'field')
             field.text = f['name']
-            header.append(field)
-        new_doc.append(header)
 
-        lines = etree.Element('lines')
+        lines = etree.SubElement(new_doc, 'lines')
         level.reverse()
         for line in results:
             shift = level.pop()
-            node_line = etree.Element('row')
+            node_line = etree.SubElement(lines, 'row')
             prefix = '+'
             for f in range(len(fields)):
-                col = etree.Element('col')
+                col = etree.SubElement(node_line, 'col')
                 if f == 0:
-                    col.set('para','yes')
-                    col.set('tree','yes')
-                    col.set('space',str(3*shift)+'mm')
+                    col.attrib.update(para='yes',
+                                      tree='yes',
+                                      space=str(3*shift)+'mm')
                 if line[f] != None:
                     col.text = prefix+str(line[f]) or ''
                 else:
                     col.text = '/'
-                node_line.append(col)
                 prefix = ''
-            lines.append(node_line)
-            
-        new_doc.append(lines)
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
@@ -584,12 +575,11 @@ class report_custom(report_int):
             pageSize=[pageSize[1],pageSize[0]]
 
         new_doc = etree.Element('report')
-        config = etree.Element('config')
+        config = etree.SubElement(new_doc, 'config')
 
         def _append_node(name, text):
-            n = etree.Element(name)
+            n = etree.SubElement(config, name)
             n.text = text
-            config.appendChild(n)
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
@@ -609,30 +599,20 @@ class report_custom(report_int):
         _append_node('report-header', '%s' % (report['title'],))
         _append_node('report-footer', '%s' % (report['footer'],))
 
-        new_doc.append(config)
-        header = etree.Element("header")
-        
+        header = etree.SubElement(new_doc, 'header')
         for f in fields:
-            field = etree.Element("field")
+            field = etree.SubElement(header, 'field')
             field.text = f['name']
-            header.append(field)
-        
-        new_doc.append(header)
 
-        lines = etree.Element("lines")
+        lines = etree.SubElement(new_doc, 'lines')
         for line in results:
-            node_line = etree.Element("row")
+            node_line = etree.SubElement(lines, 'row')
             for f in range(len(fields)):
-                col = etree.Element("col")
-                col.set('tree','no')
+                col = etree.SubElement(node_line, 'col', tree='no')
                 if line[f] != None:
                     col.text = line[f] or ''
                 else:
                     col.text = '/'
-                node_line.appendChild(col)
-            lines.append(node_line)
-            
-        new_doc.append(lines)
 
         transform = etree.XSLT(
             etree.parse(os.path.join(tools.config['root_path'],
