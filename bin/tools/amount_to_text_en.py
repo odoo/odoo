@@ -22,85 +22,66 @@
 #-------------------------------------------------------------
 #ENGLISH
 #-------------------------------------------------------------
+from tools.translate import _
 
-ones = {
-    0: '', 1:'One', 2:'Two', 3:'Three', 4:'Four', 5:'Five', 6:'Six', 7:'Seven', 8:'Eight', 9:'Nine',
-    10:'Ten', 11:'Eleven', 12:'Twelve', 13:'Thirteen', 14:'Forteen', 15:'Fifteen', 16:'Sixteen', 17:"Seventeen",18:"Eighteen",19:"Nineteen",
-}
+to_19 = ( 'Zero',  'One',   'Two',  'Three', 'Four',   'Five',   'Six',
+          'Seven', 'Eight', 'Nine', 'Ten',   'Eleven', 'Twelve', 'Thirteen',
+          'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen' )
+tens  = ( 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety')
+denom = ( '',
+          'Thousand',     'Million',         'Billion',       'Trillion',       'Quadrillion',
+          'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
+          'Decillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
+          'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Novemdecillion', 'Vigintillion' )
 
-tens = {
-    1: 'Ten', 2: 'Twenty ', 3:'Thirty', 4:'Forty', 5:'Fifty', 6: 'Sixty', 7 : 'Seventy', 8:'Eighty' ,9: 'Ninety'}
+# convert a value < 100 to English.
+def _convert_nn(val):
+    if val < 20:
+        return to_19[val]
+    for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens)):
+        if dval + 10 > val:
+            if val % 10:
+                return dcap + '-' + to_19[val % 10]
+            return dcap
 
-hundred = {
-     0:'',1: 'One Hundred', 2: 'Two Hundred', 3: 'Three Hundred', 4 :'Four Hundred', 5: 'Five Hundred', 6: 'Six Hundred', 7 :'Seven Hundred', 8:' Eight Hundred ', 9:'Nine Hundred '
-}
+# convert a value < 1000 to english, special cased because it is the level that kicks 
+# off the < 100 special case.  The rest are more general.  This also allows you to
+# get strings in the form of 'forty-five hundred' if called directly.
+def _convert_nnn(val):
+    word = ''
+    (mod, rem) = (val % 100, val // 100)
+    if rem > 0:
+        word = to_19[rem] + ' Hundred'
+        if mod > 0:
+            word = word + ' '
+    if mod > 0:
+        word = word + _convert_nn(mod)
+    return word
 
-thousands ={
-     0:'',1: 'One Thousand'
-}
-
-lacs = {
-     0:'',1: 'Lac'
-}
-
-def _100_to_text(number):
-    if number in ones:
-        return ones[number]
-    else:
-        if number%10>0:
-            return tens[number / 10]+'-'+ones[number % 10]
-        else:
-            return tens[number / 10]
-
-def _1000_to_text(number):
-    d = _100_to_text(number % 100)
-    d2 = number/100
-    if d2>0 and d:
-        return hundred[d2]+' '+d
-    elif d2>1 and not(d):
-        return hundred[d2]+'s'
-    else:
-        return hundred[d2] or d
-
-def _10000_to_text(number):
-    if number==0:
-        return 'zero'
-    part1 = _1000_to_text(number % 1000)
-    part2 = thousands.get(number / 1000,  _1000_to_text(number / 1000)+' Thousands')
-    if part2 and part1:
-        part1 = ' '+part1
-    return part2+part1
-
-def _1000000_to_text(number):
-    if number==0:
-        return 'zero'
-    part1 = _10000_to_text(number % 100000)
-    part2 = lacs.get(number / 100000,  _10000_to_text(number / 100000)+' Lacs')
-    if part2 and part1:
-        part1 = ' '+part1
-    return part2+part1
-
+def english_number(val):
+    if val < 100:
+        return _convert_nn(val)
+    if val < 1000:
+         return _convert_nnn(val)
+    for (didx, dval) in ((v - 1, 1000 ** v) for v in range(len(denom))):
+        if dval > val:
+            mod = 1000 ** didx
+            l = val // mod
+            r = val - (l * mod)
+            ret = _convert_nnn(l) + ' ' + denom[didx]
+            if r > 0:
+                ret = ret + ', ' + english_number(r)
+            return ret
 
 def amount_to_text(number, currency):
-    lacs_number = int(number)
     units_name = currency
-    if lacs_number > 1:
-        units_name += 's'
-    
-    lacs = _1000000_to_text(lacs_number)
-    lacs = lacs_number and '%s %s' % (lacs, units_name) or ''
-    
-    units_number = int(number * 10000) % 10000
-    units = _10000_to_text(units_number)
-    units = units_number and '%s %s' % (units, units_name) or ''
-    
-    cents_number = int(number * 100) % 100
-    cents_name = (cents_number > 1) and 'cents' or 'cent'
-    cents = _100_to_text(cents_number)
-    cents = cents_number and '%s %s' % (cents.lower(), cents_name) or ''
-    if cents:
-        lacs += ' and %s' % (cents, )
-    return lacs
+    list = str(number).split('.')
+    start_word = english_number(int(list[0]))
+    end_word = english_number(int(list[1]))
+    cents_number = int(list[1])
+    cents_name = (cents_number > 1) and 'Cents' or 'Cent'
+    final_result = start_word +' '+units_name+' and ' + end_word +' '+cents_name
+    return final_result
 
 
 #-------------------------------------------------------------
@@ -118,15 +99,15 @@ def amount_to_text(nbr, lang='en', currency='euro'):
         1654: thousands six cent cinquante-quatre.
     """
     import netsvc
-    if nbr > 10000000:
-        netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("Number too large '%d', can not translate it"))
-        return str(nbr)
+#    if nbr > 10000000:
+#        netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("Number too large '%d', can not translate it"))
+#        return str(nbr)
     
     if not _translate_funcs.has_key(lang):
         netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("no translation function found for lang: '%s'" % (lang,)))
         #TODO: (default should be en) same as above
         lang = 'en'
-    return _translate_funcs[lang](nbr, currency)
+    return _translate_funcs[lang](abs(nbr), currency)
 
 if __name__=='__main__':
     from sys import argv

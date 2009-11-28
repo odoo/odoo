@@ -33,6 +33,8 @@ from psycopg2 import IntegrityError
 from netsvc import Logger, LOG_ERROR
 from tools.misc import UpdateableDict
 
+from tools.translate import _
+
 module_list = []
 module_class_list = {}
 class_pool = {}
@@ -63,7 +65,7 @@ class osv_pool(netsvc.Service):
             except IntegrityError, inst:
                 for key in self._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
+                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
                 self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
             except Exception, e:
                 import traceback, sys

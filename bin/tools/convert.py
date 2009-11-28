@@ -21,7 +21,7 @@
 
 import re
 import cStringIO
-import xml.dom.minidom
+from lxml import etree
 import osv
 import ir
 import pooler
@@ -119,7 +119,6 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                             idref[id]=self.id_get(cr, False, id)
                     return s % idref
                 txt = '<?xml version="1.0"?>\n'+_process("".join([etree.tostring(i).encode("utf8") for i in node.getchildren()]), idref)
-
                 return txt
             if t in ('char', 'int', 'float'):
                 d = node.text
@@ -281,9 +280,10 @@ form: module.record_id""" % (xml_id,)
             res['header'] = eval(rec.get('header',''))
         if rec.get('report_type'):
             res['report_type'] = rec.get('report_type','')
+
         res['multi'] = rec.get('multi','') and eval(rec.get('multi',''))
-        xml_id = rec.get('id','').encode('utf8')       
-        
+        xml_id = rec.get('id','').encode('utf8')               
+
         self._test_xml_id(xml_id)
 
         if rec.get('groups'):
@@ -301,7 +301,6 @@ form: module.record_id""" % (xml_id,)
 
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
-
 
         if not rec.get('menu') or eval(rec.get('menu','')):
             keyword = str(rec.get('keyword','') or 'client_print_multi')
@@ -380,7 +379,7 @@ form: module.record_id""" % (xml_id,)
         view_id = False
         if rec.get('view'):
             view_id = self.id_get(cr, 'ir.actions.act_window', rec.get('view','').encode('utf-8'))
-        domain = rec.get('domain','').encode('utf-8')
+        domain = rec.get('domain','').encode('utf-8') or '{}'
         context = rec.get('context','').encode('utf-8') or '{}'
         res_model = rec.get('res_model','').encode('utf-8')
         src_model = rec.get('src_model','').encode('utf-8')
@@ -675,7 +674,6 @@ form: module.record_id""" % (xml_id,)
         if rec_context:
             rec_context = eval(rec_context)
         self._test_xml_id(rec_id)
-
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
             if rec_id:
@@ -701,7 +699,6 @@ form: module.record_id""" % (xml_id,)
             else:
                 # otherwise it is skipped
                 return None
-
         res = {}
         for field in [i for i in rec.getchildren() if (i.tag == "field")]:
 #TODO: most of this code is duplicated above (in _eval_xml)...
@@ -895,7 +892,6 @@ def convert_xml_export(res):
     data = etree.SubElement ( page, 'data' )
     text_node = etree.SubElement ( page, 'text' )
     text_node.text = 'Some textual content.'
-
     cr.commit()
     cr.close()
 

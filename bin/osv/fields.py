@@ -527,6 +527,8 @@ class many2many(_column):
             return
         obj = obj.pool.get(self._obj)
         for act in values:
+            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
+                continue
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2])
                 cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, idnew))

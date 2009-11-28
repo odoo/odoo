@@ -134,12 +134,18 @@ class GettextAlias(object):
         cr = frame.f_locals.get('cr')
         try:
             lang = (frame.f_locals.get('context') or {}).get('lang', False)
+            if not (cr and lang):
+                args = frame.f_locals.get('args',False)
+                if args:
+                    lang = args[-1].get('lang',False)
+                    if frame.f_globals.get('pooler',False):
+                        cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
             if not (lang and cr):
                 return source
         except:
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
+        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
