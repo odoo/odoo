@@ -767,6 +767,11 @@ class stock_picking(osv.osv):
                 tax_ids = self._get_taxes_invoice(cursor, user, move_line, type)
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
+                
+                #set UoS if it's a sale and the picking doesn't have one
+                uos_id = move_line.product_uos and move_line.product_uos.id or False
+                if not uos_id and type in ('out_invoice', 'out_refund'):
+                    uos_id = move_line.product_uom.id
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
                 notes = False
@@ -779,7 +784,7 @@ class stock_picking(osv.osv):
                     'name': name,
                     'origin': origin,
                     'invoice_id': invoice_id,
-                    'uos_id': move_line.product_uos.id,
+                    'uos_id': uos_id,
                     'product_id': move_line.product_id.id,
                     'account_id': account_id,
                     'price_unit': price_unit,
@@ -1056,15 +1061,38 @@ class stock_move(osv.osv):
                 'message': 'You are moving %.2f products but only %.2f available in this lot.' % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
-
+    
+    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
+        result = {
+                  'product_uos_qty': 0.00
+          }
+        
+        if (not product_id) or (product_qty <=0.0):
+            return {'value': result}
+            
+        product_obj = self.pool.get('product.product')
+        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+        
+        if product_uos and product_uom and (product_uom != product_uos):
+            result['product_uos_qty'] = product_qty * uos_coeff['uos_coeff']
+        else:
+            result['product_uos_qty'] = product_qty
+        
+        return {'value': result}
+    
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
             return {}
         product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+        uos_id  = product.uos_id and product.uos_id.id or False
         result = {
-            'name': product.name,
+            'name': product.partner_ref,
             'product_uom': product.uom_id.id,
+            'product_uos': uos_id,
+            'product_qty': 1.00,
+            'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
+        
         if loc_id:
             result['location_id'] = loc_id
         if loc_dest_id:

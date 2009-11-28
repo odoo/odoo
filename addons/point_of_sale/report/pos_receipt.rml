@@ -92,7 +92,7 @@
     <para style="terp_default_8">[[ setLang(o.user_id.context_lang) ]]</para>
     <para style="terp_header_Centre">[[o.user_id.company_id.name]]</para>
     <para style="terp_default_Centre_9">[[ address and address.street ]], [[ address and address.zip ]] [[ address and address.city ]]</para>
-    <para style="terp_default_Centre_9">Tel : + 32 (0) 2 231 04 35</para>
+    <para style="terp_default_Centre_9">Tel : [[ address and address.phone ]]</para>
     <para style="terp_default_Centre_9">Fax : [[ address and address.fax ]]</para>
     <para style="terp_default_Centre_9">E-mail : [[ address and address.email ]]</para>
     <para style="terp_default_Centre_9">
@@ -158,18 +158,17 @@
               </td>
             </tr>
           </blockTable>
-    <blockTable colWidths="105.0,78.0" style="Table_Amount">
-      <tr>
-        <td>
-          <para style="terp_default_2">[[ repeatIn(o.payments,'d') ]]</para>
-          <para style="terp_default_Bold_9_Right1">[[ d.journal_id.name ]]:</para>
-          </td>
-        <td>
-          <para style="terp_default_Bold_9_Right2">[[ d.amount ]]</para>
-        </td>
-      </tr>
-	</blockTable>
-
+	<blockTable colWidths="105.0,78.0" style="Table_Amount">
+	      <tr>
+	        <td>
+	          <para style="terp_default_2">[[ repeatIn(o.payments,'d') or removeParentNode('blockTable') ]]</para>
+	          <para style="terp_default_Bold_9_Right1">[[ d.journal_id.name ]]:</para>
+	        </td>
+	        <td>
+	          <para style="terp_default_Bold_9_Right2">[[ d.amount ]]</para>
+	        </td>
+	      </tr>
+		</blockTable>
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>

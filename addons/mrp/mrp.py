@@ -128,7 +128,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="Time in hours for doing one cycle."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True,
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade', 
              help="routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description')

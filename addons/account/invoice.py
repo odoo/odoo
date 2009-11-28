@@ -318,6 +318,7 @@ class account_invoice(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'reference_type': lambda *a: 'none',
+        'check_total': lambda *a: 0.0,
     }
 
     def unlink(self, cr, uid, ids, context=None):
