@@ -1493,7 +1493,11 @@
 
 
         <!-- Account Templates -->
-        <menuitem id="account_template_folder" name="Templates" parent="account.menu_finance_accounting"/>
+        <menuitem 
+            id="account_template_folder"
+            name="Templates"
+            parent="account.menu_finance_accounting"
+            groups="base.group_multi_company"/>
 
 
         <record id="view_account_template_form" model="ir.ui.view">
