@@ -311,28 +311,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
-        </record>
-
-
-        <record id="action_order_tree5" model="ir.actions.act_window">
-            <field name="name">All Quotations</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
         <record id="action_order_tree7" model="ir.actions.act_window">
-            <field name="name">My sales in shipping exception</field>
+            <field name="name">My sales in exception</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
         <record id="action_order_tree8" model="ir.actions.act_window">
@@ -342,7 +331,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
         <record id="action_order_tree9" model="ir.actions.act_window">
@@ -352,7 +341,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
         <record id="action_order_tree10" model="ir.actions.act_window">
@@ -362,7 +351,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
 		<record id="action_order_tree" model="ir.actions.act_window">
