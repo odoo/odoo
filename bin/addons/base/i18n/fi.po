@@ -1,20 +1,64 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base
+# Finnish translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-24 19:49+0000\n"
-"Last-Translator: mra (Open ERP) <mra@tinyerp.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2009-11-20 09:15+0000\n"
+"Last-Translator: NightSpirit <Unknown>\n"
+"Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-27 04:48+0000\n"
+"X-Launchpad-Export-Date: 2009-11-21 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base
+#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
+#, python-format
+msgid "new"
+msgstr "uusi"
+
+#. module: base
+#: code:addons/addons/base/module/module.py:0
+#, python-format
+msgid "This url '%s' must provide an html file with links to zip modules"
+msgstr ""
+"URL-osoitteen '%s' täytyy sisältää HTML-tiedosto, jossa on linkit zip-"
+"moduuleihin"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.ir_sequence_form
+#: view:ir.sequence:0
+#: model:ir.ui.menu,name:base.menu_ir_sequence_form
+#: model:ir.ui.menu,name:base.next_id_5
+msgid "Sequences"
+msgstr "Jaksot"
+
+#. module: base
+#: field:ir.sequence,name:0
+#: field:ir.sequence.type,name:0
+msgid "Sequence Name"
+msgstr "Jakson nimi"
+
+#. module: base
+#: field:res.roles,name:0
+msgid "Role Name"
+msgstr "Roolinimi"
+
+#. module: base
+#: selection:ir.actions.todo,start_on:0
+msgid "Auto"
+msgstr "Auto"
+
+#. module: base
+#: view:res.lang:0
+msgid "Examples"
+msgstr "Esimerkkejä"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -41,7 +85,7 @@ msgstr "%j - Vuodenpäivä desimaalilukuna [001,366]."
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product quantity"
-msgstr ""
+msgstr "Tuotemäärä"
 
 #. module: base
 #: field:ir.values,meta_unpickle:0
@@ -58,7 +102,7 @@ msgstr "Näkymäarkkitehtuuri"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not create this kind of document! (%s)"
-msgstr ""
+msgstr "Tällaista dokumenttia ei voida luoda! (%s)"
 
 #. module: base
 #: wizard_field:module.lang.import,init,code:0
@@ -81,7 +125,7 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Hungarian / Magyar"
-msgstr "Unkari / Magyar"
+msgstr "Unkarilainen"
 
 #. module: base
 #: field:ir.actions.server,wkf_model_id:0
@@ -103,12 +147,15 @@ msgid ""
 "basic methods or not.\n"
 "\"\""
 msgstr ""
+"\"\"\n"
+"Tämä testi luovatko moduuliluokat poikkeuksia kun kutsutaan perusmetodeja.\n"
+"\"\""
 
 #. module: base
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Result (/10)"
-msgstr ""
+msgstr "Tulos (/10)"
 
 #. module: base
 #: view:ir.module.module:0
@@ -135,7 +182,7 @@ msgstr "Vuotuinen"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The unlink method is not implemented on this object !"
-msgstr ""
+msgstr "Unlink-menetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -187,7 +234,7 @@ msgstr "ir.ui.view.custom"
 msgid ""
 "There is no income account defined ' \\n                                     "
 "   'for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Tulotiliä ei ole määritelty ' \\n 'tälle tuotteelle: \"%s\" (id:%d)"
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -225,12 +272,6 @@ msgstr "Yrityksen rakenne"
 #: model:ir.model,name:base.model_ir_report_custom_fields
 msgid "ir.report.custom.fields"
 msgstr "ir.report.custom.fields"
-
-#. module: base
-#: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
-#, python-format
-msgid "new"
-msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -271,6 +312,8 @@ msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
 "text editor. The file encoding is UTF-8."
 msgstr ""
+"Tallenna tämä dokumentti tiedostoon %s ja muokkaa sitä erityisellä "
+"ohjelmistolla tai tekstieditorilla. Tiedoston merkkikoodaus on UTF-8."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -281,13 +324,7 @@ msgstr "STOCK_DELETE"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password mismatch !"
-msgstr ""
-
-#. module: base
-#: code:addons/addons/base/module/module.py:0
-#, python-format
-msgid "This url '%s' must provide an html file with links to zip modules"
-msgstr ""
+msgstr "Salasanat eivät täsmää!"
 
 #. module: base
 #: selection:res.request,state:0
@@ -297,7 +334,7 @@ msgstr "aktiivinen"
 #. module: base
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
-msgstr "Ohjatun toiminnon nimi"
+msgstr "Wizardin nimi"
 
 #. module: base
 #: view:res.lang:0
@@ -324,7 +361,7 @@ msgstr "Sääntö toteutuu jos vähintään yksi testeistä on \"tosi\""
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No payment mode or payment type code invalid."
-msgstr ""
+msgstr "Ei maksutapaa tai maksutyypin koodi on virheellinen."
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -407,6 +444,8 @@ msgid ""
 "'you have defined cyclic categories ' \\n                                    "
 "'of products!"
 msgstr ""
+"Ei voitu selvittää tuoteluokkaa ' \\n ' olet määritellyt jaksottaisia "
+"tuotteiden tuoteluokkia ' \\n ' !"
 
 #. module: base
 #: wizard_view:server.action.create,init:0
@@ -418,12 +457,12 @@ msgstr "Valitse toiminnon tyyppi"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
-msgstr ""
+msgstr " Et voi jatkaa toimintoa muulloin kuin Tauko -tilassa!"
 
 #. module: base
 #: selection:ir.actions.todo,type:0
 msgid "Configure"
-msgstr "Konfiguroi"
+msgstr "Määritä"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -472,6 +511,8 @@ msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by OpenERP (updates, module installation, ...)"
 msgstr ""
+"Käyttäjää \"admin\" ei voida poistaa, koska OpenERP käyttää sitä sisäisesti "
+"luomiinsa resursseihin (päivitykset, moduulien asennus jne.)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -487,7 +528,7 @@ msgstr "Bosnia / bosanski jezik"
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Feed back About Workflow of Module"
-msgstr ""
+msgstr "Anna palautetta Moduulin toiminnasta"
 
 #. module: base
 #: help:ir.actions.report.xml,attachment_use:0
@@ -502,7 +543,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The read method is not implemented on this object !"
-msgstr ""
+msgstr "Lukumenetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -518,7 +559,7 @@ msgstr "Teksti"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Quantity"
-msgstr ""
+msgstr "Tuotemäärä"
 
 #. module: base
 #: field:res.country,name:0
@@ -548,12 +589,19 @@ msgid ""
 "\n"
 "(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''"
 msgstr ""
+"\"\n"
+"\n"
+"OpenERP on ERP+CRM -ohjelmisto pk -yrityksille.\n"
+"Lähdekoodi on julkaistu GNU Public Licencen\n"
+"alaisuudessa.\n"
+"\n"
+"(c) 2003-Tähän päivään, Fabien Pinckaers - Tiny sprl\""
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Key/value '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "Avainta/arvoa '%s' ei löytynyt valintakentästä '%s'"
 
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
@@ -562,6 +610,9 @@ msgid ""
 "You must assign a partner to this lead before converting to opportunity.\n"
 "' \\n                  'You can use the convert to partner button."
 msgstr ""
+"Sinun täytyy valita kumppani tälle kohdalle ennenkuin muunnat "
+"mahdollisuudeksi.\n"
+"' \\n 'Voit käyttää \"muunna kumppaniksi\" -painiketta."
 
 #. module: base
 #: help:res.country,code:0
@@ -580,13 +631,13 @@ msgstr "Palau"
 #. module: base
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Myynti ja hankinta"
 
 #. module: base
 #: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "Kumppanille ei ole ALV:a yhdistettynä."
 
 #. module: base
 #: view:ir.actions.wizard:0
@@ -615,7 +666,7 @@ msgstr "Laajennettu käyttöliittymä"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr ""
+msgstr "Kustomoidun kentän nimen täytyy alkaa 'x_' !"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -626,7 +677,7 @@ msgstr "Valitse suorettava toimintoikkuna, raportti tai ohjattu toiminto."
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Can't connect instance %s"
-msgstr ""
+msgstr "Ei voi yhdistää instanssiin %s"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -642,7 +693,7 @@ msgstr "Mallin kuvaus"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "You need to choose a model"
-msgstr ""
+msgstr "Sinun täytyy valita malli"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
@@ -658,13 +709,13 @@ msgstr "Jordania"
 #: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Tag Name"
-msgstr ""
+msgstr "Tagin nimi"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the model '%s' !"
-msgstr ""
+msgstr "Mallia '%s' ei voida poistaa!"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -690,25 +741,25 @@ msgstr "ir.actions.actions"
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "Et voi kirjautua sisään muulla päivämäärällä kuin nykyisellä"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "from stock: products assigned."
-msgstr ""
+msgstr "varastosta: tuotteet luovutettu."
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Too much total record found!"
-msgstr ""
+msgstr "Liikaa tietueita löydetty!"
 
 #. module: base
 #: code:addons/addons/account_budget/crossovered_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "Yleisellä budjetilla '%s' ei ole kirjanpitoa!"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -724,7 +775,7 @@ msgstr "STOCK_DIALOG_ERROR"
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is not created"
-msgstr ""
+msgstr "Laskua ei ole luotu"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -754,14 +805,6 @@ msgid "Cambodia, Kingdom of"
 msgstr "Kambodža"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.ir_sequence_form
-#: view:ir.sequence:0
-#: model:ir.ui.menu,name:base.menu_ir_sequence_form
-#: model:ir.ui.menu,name:base.next_id_5
-msgid "Sequences"
-msgstr "Sarjat"
-
-#. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #, python-format
 msgid ""
@@ -781,7 +824,7 @@ msgstr ""
 #: code:addons/addons/document_ics/document.py:0
 #, python-format
 msgid "You can not set negative Duration."
-msgstr ""
+msgstr "Et voi asettaa negatiivista kestoa."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -797,7 +840,7 @@ msgstr "Papua-Uusi-Guinea"
 #: code:addons/addons/odms/wizard/host_status.py:0
 #, python-format
 msgid "Created by the synchronization wizard"
-msgstr ""
+msgstr "Synkronoinnin ohjattu toiminto on luonut tämän"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -830,7 +873,7 @@ msgstr "Jokin kielipaketti täytyy ehkä asentaa uudelleen."
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Deliveries"
-msgstr ""
+msgstr "Tulevat toimitukset"
 
 #. module: base
 #: field:res.partner.address,mobile:0
@@ -885,7 +928,7 @@ msgstr "ylläpitosopimus-moduulit"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Not Efficient"
-msgstr ""
+msgstr "Tehoton"
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
@@ -917,7 +960,7 @@ msgstr "TGZ-paketti"
 #. module: base
 #: field:res.partner.som,factor:0
 msgid "Factor"
-msgstr "Kerroin"
+msgstr "Aiheuttaja"
 
 #. module: base
 #: view:res.lang:0
@@ -938,7 +981,7 @@ msgstr "Tyyppi"
 #: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "Malli,jolla on tämä nimi ja koodi on jo olemassa"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -949,7 +992,7 @@ msgstr "STOCK_FILE"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "Ei tarpeeksi dataa"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child2:0
@@ -987,7 +1030,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to define a Default Credit Account for your Financial Journals!\n"
-msgstr ""
+msgstr "Sinun on määritettävä oletusluottotili talouden lokeille!\n"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -1008,14 +1051,14 @@ msgstr "Tyhjä"
 #. module: base
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
 #. module: base
 #: code:addons/addons/account_analytic_analysis/account_analytic_analysis.py:0
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Yritit ohittaa käyttöoikeusrajoituksen (Dokumentin tyyppi: %s)."
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -1029,6 +1072,8 @@ msgid ""
 "The sum of the data (2nd field) is null.\n"
 "We can't draw a pie chart !"
 msgstr ""
+"Datan summa (2. kenttä) on nolla.\n"
+"Piirakkadiagrammia ei voida piirtää!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
@@ -1047,12 +1092,6 @@ msgid "invalid mode for test_state"
 msgstr ""
 
 #. module: base
-#: field:ir.sequence,name:0
-#: field:ir.sequence.type,name:0
-msgid "Sequence Name"
-msgstr "Sarjan nimi"
-
-#. module: base
 #: model:res.country,name:base.td
 msgid "Chad"
 msgstr "Tšad"
@@ -1062,7 +1101,7 @@ msgstr "Tšad"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "Syyskuu"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -1086,6 +1125,8 @@ msgid ""
 "You can not do this modification on a confirmed entry ! Please note that you "
 "can just change some non important fields !"
 msgstr ""
+"Et voi muokata tätä hyväksyttyä merkintää! Ota huomioon että voit muuttaa "
+"ainoastaan ei tärkeitä kenttiä"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -1111,6 +1152,10 @@ msgid ""
 "Mail sent to following Partners successfully, !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Posti on lähetetty onnistuneesti seuraaville kumppaneille, !\n"
+"\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1147,7 +1192,7 @@ msgstr "Testit"
 #. module: base
 #: view:ir.module.repository:0
 msgid "Repository"
-msgstr "Ohjelmalähde"
+msgstr "Sijoituspaikka"
 
 #. module: base
 #: model:res.country,name:base.gs
@@ -1164,14 +1209,14 @@ msgstr "Toiminnon URL"
 #: code:addons/addons/odms/odms_invoice.py:0
 #, python-format
 msgid "Your journal must have a default credit and debit account."
-msgstr ""
+msgstr "Lokikirjassasi täytyy olla oletus luotto ja debet tili"
 
 #. module: base
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Module Name"
-msgstr ""
+msgstr "Moduulin nimi"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1187,7 +1232,7 @@ msgstr "Marshallinsaaret"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account!"
-msgstr ""
+msgstr "Kelvoton tili!"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1209,19 +1254,19 @@ msgstr "Kumppanit kategorioittain"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr ""
+msgstr "Vastaanotettu määrä"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Pie charts need exactly two fields"
-msgstr ""
+msgstr "Piirakkadiagrammi tarvitsee kaksi kenttää"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Id is not the same than existing one: %s"
-msgstr ""
+msgstr "Id ei ole sama kuin olemassa oleva: %s"
 
 #. module: base
 #: help:wizard.module.lang.export,lang:0
@@ -1233,6 +1278,8 @@ msgstr "Viedäksesi uuden kielen, älä valitse kieltä."
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
 msgstr ""
+"Sähköpostiviestin lähettäminen epäonnistui, koska sähköpostiosoitetta ei ole "
+"määritetty!"
 
 #. module: base
 #: model:res.country,name:base.md
@@ -1249,13 +1296,13 @@ msgstr "Ominaisuudet"
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "No Analytic Journal !"
-msgstr ""
+msgstr "Ei analyyttistä lokia!"
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Unit Product Price"
-msgstr ""
+msgstr "Tuotteen kappalehinta"
 
 #. module: base
 #: field:ir.report.custom,frequency:0
@@ -1312,11 +1359,6 @@ msgstr ""
 "osoite on."
 
 #. module: base
-#: field:res.roles,name:0
-msgid "Role Name"
-msgstr "Työtehtävän nimi"
-
-#. module: base
 #: field:res.partner,user_id:0
 msgid "Dedicated Salesman"
 msgstr "Vastaava myyjä"
@@ -1327,7 +1369,7 @@ msgstr "Vastaava myyjä"
 msgid ""
 "The production is in \"%s\" state. You can not change the production "
 "quantity anymore"
-msgstr ""
+msgstr "Tuotanto on \"%s\" vaiheessa. Et voi muuttaa tuotanto määrä enää"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -1339,7 +1381,7 @@ msgstr "-"
 #: code:addons/addons/auction/wizard/wizard_aie_send_result.py:0
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "Yhdistäminen www.auction-in-europe.com -osoitteeseen epäonnistui !"
 
 #. module: base
 #: field:res.payterm,name:0
@@ -1380,7 +1422,7 @@ msgstr "Raportit"
 #. module: base
 #: field:workflow,on_create:0
 msgid "On Create"
-msgstr "Kun luotu"
+msgstr "Luo"
 
 #. module: base
 #: wizard_view:base.module.import,init:0
@@ -1394,12 +1436,14 @@ msgid ""
 "No E-Mail ID Found for your Company address or missing reply address in "
 "section!"
 msgstr ""
+"Sähköposti ID:tä ei löytyny yrityksesi osoitteistosta tai puuttuva vastaus "
+"osoite!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "O(1)"
-msgstr ""
+msgstr "O(1)"
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,user:0
@@ -1448,7 +1492,7 @@ msgstr ""
 #: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
 #, python-format
 msgid "You can't modify this order. It has already been paid"
-msgstr ""
+msgstr "Et voi muokata tätä tilausta. Se on jo maksettu"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1486,7 +1530,7 @@ msgstr "Yksinkertaisen toimialueen asetus"
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Method Test"
-msgstr ""
+msgstr "Menetelmä testi"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1500,7 +1544,7 @@ msgstr "Laskennallinen tarkkuus"
 #: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
 #, python-format
 msgid "Date to must be set between %s and %s"
-msgstr ""
+msgstr "Päiväys täytyy asettaa välille %s ja %s"
 
 #. module: base
 #: model:res.country,name:base.kg
@@ -1512,13 +1556,13 @@ msgstr "Kirgisia"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "Tuotteet: "
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No bank account for the company."
-msgstr ""
+msgstr "Ei pankkitiliä yritykselle."
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
@@ -1528,13 +1572,13 @@ msgstr "wizard.ir.model.menu.create.line"
 #. module: base
 #: field:ir.attachment,res_id:0
 msgid "Attached ID"
-msgstr "Liitetty tunnus"
+msgstr "Liitetty ID"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
-msgstr ""
+msgstr "Et voi muokata/poistaa lokikirjaa jossa merkintöjä tälle kaudelle"
 
 #. module: base
 #: view:ir.sequence:0
@@ -1545,13 +1589,13 @@ msgstr "Päivä: %(day)"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not read this document! (%s)"
-msgstr ""
+msgstr "Dokumenttia ei voida lukea! (%s)"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
 msgid "UnknownError"
-msgstr ""
+msgstr "Tuntematon virhe"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1562,7 +1606,7 @@ msgstr "STOCK_FIND_AND_REPLACE"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Relation not found: %s on '%s'"
-msgstr ""
+msgstr "Yhteyttä ei löytynyt: %s ja '%s' välille"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1588,7 +1632,7 @@ msgstr "ir.rule"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Invalid Region"
-msgstr ""
+msgstr "Virheellinen alue"
 
 #. module: base
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
@@ -1667,7 +1711,7 @@ msgstr "Liipaisimen nimi"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "unable to find a server"
-msgstr ""
+msgstr "palvelinta ei löytynyt"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
@@ -1686,7 +1730,7 @@ msgstr "Prioriteetti"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Missing info: Subscription"
-msgstr ""
+msgstr "Puuttuva tieto: Ennakkomaksu"
 
 #. module: base
 #: field:workflow.transition,act_from:0
@@ -1707,7 +1751,7 @@ msgstr "Vastaus"
 #: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "Can not remove root user!"
-msgstr ""
+msgstr "Root-käyttäjää ei voi poistaa!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1725,11 +1769,6 @@ msgid "Address Type"
 msgstr "Osoitteen tyyppi"
 
 #. module: base
-#: selection:ir.actions.todo,start_on:0
-msgid "Auto"
-msgstr "Automaattinen"
-
-#. module: base
 #: view:res.request:0
 msgid "End of Request"
 msgstr "Pyynnön loppu"
@@ -1738,7 +1777,7 @@ msgstr "Pyynnön loppu"
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "Ei määritettyä tuotantosekvenssiä"
 
 #. module: base
 #: view:res.request:0
@@ -1801,7 +1840,7 @@ msgstr ""
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented search_memory method !"
-msgstr ""
+msgstr "Search_memory-menetelmä ei käytössä!"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -1842,7 +1881,7 @@ msgstr "Uusi ikkuna"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to create your control center user"
-msgstr ""
+msgstr "Ei voinut luoda käyttäjää ohjauskeskukselle"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -1852,7 +1891,7 @@ msgstr "Bahama"
 #. module: base
 #: selection:res.partner.event,partner_type:0
 msgid "Commercial Prospect"
-msgstr "Kaupallinen mahdollisuus"
+msgstr "Kaupallinen näkymä"
 
 #. module: base
 #: code:addons/addons/base/res/partner/partner.py:0
@@ -1860,6 +1899,8 @@ msgstr "Kaupallinen mahdollisuus"
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
 msgstr ""
+"Seuraavaa tunnusta ei voida luoda koska joillakin kumppaneilla on "
+"aakkosellinen tunnus!"
 
 #. module: base
 #: view:ir.attachment:0
@@ -1874,7 +1915,7 @@ msgstr "Irlanti"
 #. module: base
 #: view:ir.sequence:0
 msgid "Year without century: %(y)s"
-msgstr "Vuosi ilman vuosisatoja: %(y)s"
+msgstr "Vuosi ilman vuosisataa: %(y)-luku"
 
 #. module: base
 #: wizard_field:module.module.update,update,update:0
@@ -1885,13 +1926,13 @@ msgstr "Päivitettyjen moduulien määrä"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented set_memory method !"
-msgstr ""
+msgstr "Set_memory-menetelmä ei ole käytössä!"
 
 #. module: base
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "Uloskirjautumisen täytyy olla heti sisäänkirjautumisen jälkeen !"
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -1913,7 +1954,7 @@ msgstr "Ryhmät"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
-msgstr ""
+msgstr "Täytä kumppanin osoitekenttä: %s."
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1924,7 +1965,7 @@ msgstr "Belize"
 #: code:addons/addons/stock/stock.py:0
 #, python-format
 msgid "Error, no partner !"
-msgstr ""
+msgstr "Virhe, ei kumppania !"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -1959,7 +2000,7 @@ msgstr ""
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "The region should be in "
-msgstr ""
+msgstr "Alueen tulisi olla "
 
 #. module: base
 #: help:ir.actions.server,expression:0
@@ -1991,7 +2032,7 @@ msgstr "STOCK_NO"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Cannot delete a point of sale which is already confirmed !"
-msgstr ""
+msgstr "Ei voi poistaa myyntipistettä joka on jo vahvistettu !"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -2022,12 +2063,12 @@ msgstr "Madagaskar"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
 
 #. module: base
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
+msgstr "Tee säännöstä yleinen, muuten se pitää laittaa ryhmään"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -2079,7 +2120,7 @@ msgstr "Vahvistus"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Enter at least one field !"
-msgstr ""
+msgstr "Syötä vähintään yksi kenttä !"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -2140,7 +2181,7 @@ msgstr "Sähköpostiosoite"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not write in this document! (%s)"
-msgstr ""
+msgstr "Et voi kirjoittaa tähän asiakirjaan! (%s)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2152,7 +2193,7 @@ msgstr "Palvelintoiminto"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "Tiliä ei ole määritetty soviteltavaksi !"
 
 #. module: base
 #: model:res.country,name:base.tt
@@ -2178,7 +2219,7 @@ msgstr "Kenttien kartoitukset"
 #: code:addons/addons/product_margin/wizard/wizard_product_margin.py:0
 #, python-format
 msgid "Product Margins"
-msgstr ""
+msgstr "Tuotemarginaalit"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -2194,7 +2235,7 @@ msgstr "Paraguay"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "Hinnan alennukselle täytyy määrittää tili !"
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -2226,7 +2267,7 @@ msgstr ""
 #: code:addons/addons/project/wizard/task_delegate.py:0
 #, python-format
 msgid "CHECK: "
-msgstr ""
+msgstr "TARKISTA: "
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2237,13 +2278,13 @@ msgstr "STOCK_PRINT_PREVIEW"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The perm_read method is not implemented on this object !"
-msgstr ""
+msgstr "Perm_read-menetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: code:addons/addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "Viesti !"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -2271,6 +2312,8 @@ msgid ""
 "You can not escalate this case.\n"
 "You are already at the top level."
 msgstr ""
+"Et voi nousta ylemmäs tältä tasolta.\n"
+"Olet jo ylimmällä tasolla."
 
 #. module: base
 #: code:addons/addons/account_budget/crossovered_budget.py:0
@@ -2283,7 +2326,7 @@ msgstr ""
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: base
 #: view:res.lang:0
@@ -2304,7 +2347,7 @@ msgstr "Iteraatiotoiminnot"
 #. module: base
 #: field:maintenance.contract,date_stop:0
 msgid "Ending Date"
-msgstr "Lopetuspäivämäärä"
+msgstr "Loppu päiväys"
 
 #. module: base
 #: model:res.country,name:base.nz
@@ -2323,7 +2366,7 @@ msgstr "Openstuff.net"
 #: code:addons/addons/account/wizard/wizard_third_party_ledger.py:0
 #, python-format
 msgid "Date not in a defined fiscal year"
-msgstr ""
+msgstr "Päivämäärä ei ole määritellyllä tilikaudella"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -2334,7 +2377,7 @@ msgstr "Norfolkinsaari"
 #: code:addons/addons/delivery/delivery.py:0
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "Yksikään rivi ei vastannut tilausta valituilla toimitustaulukoilla !"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2347,6 +2390,8 @@ msgstr "STOCK_MEDIA_PLAY"
 msgid ""
 "You can't delete this server because it acts as backup for other servers."
 msgstr ""
+"Et voi poistaa tätä palvelinta koska se toimii varmistuksena muille "
+"palvelimille."
 
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
@@ -2370,7 +2415,7 @@ msgstr "Asennus valmis"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Registration of your account"
-msgstr ""
+msgstr "Tilisi rekisteröinti"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2390,6 +2435,8 @@ msgid ""
 "You cannot make an advance on a sale order that is defined as 'Automatic "
 "Invoice after delivery'."
 msgstr ""
+"Ennakkoa ei voi tehdä myyntitilauksesta johon on määritelty \"Automaattinen "
+"lasku toimituksen jälkeen\"."
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -2415,13 +2462,13 @@ msgstr ""
 #. module: base
 #: selection:maintenance.contract,state:0
 msgid "Valid"
-msgstr "Voimassa"
+msgstr "Voimassa oleva"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not delete this document! (%s)"
-msgstr ""
+msgstr "Et voi poistaa tätä asiakirjaa (%s)"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -2450,7 +2497,7 @@ msgstr "Muut kumppanit"
 #: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr ""
+msgstr "Moduulia \"%s\" ei voi päivittää, koska sitä ei ole asennettu."
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -2471,19 +2518,19 @@ msgstr "Armenia"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Missing info: Test Instance"
-msgstr ""
+msgstr "Puuttuva tieto: Testaa instanssi"
 
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Unable to create invoice (partner has no address)."
-msgstr ""
+msgstr "Laskua ei voitu luoda (kumppanilla ei ole osoitetta)."
 
 #. module: base
 #: code:addons/addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Please select one and only one inventory !"
-msgstr ""
+msgstr "Valitse vain ja ainoastaan yksi varasto !"
 
 #. module: base
 #: view:ir.sequence:0
@@ -2531,7 +2578,7 @@ msgstr "terp-project"
 #: code:addons/addons/hr_attendance/wizard/print_attendance_error.py:0
 #, python-format
 msgid "No Data Available"
-msgstr ""
+msgstr "Ei tietoa saatavilla"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2557,6 +2604,8 @@ msgid ""
 "No fiscal year defined for this date !\n"
 "Please create one."
 msgstr ""
+"Ei tilikautta määritetty tälle päivämäärälle !\n"
+"Luo sellainen."
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
@@ -2573,7 +2622,7 @@ msgstr "Signaali (subflow.*)"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "HR sector"
-msgstr ""
+msgstr "Henkilöstösektori"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2585,7 +2634,7 @@ msgstr "Moduulin riippuvuudet"
 #: selection:maintenance.contract.wizard,state:0
 #, python-format
 msgid "Draft"
-msgstr "Luonnos"
+msgstr "Vedos"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2630,7 +2679,7 @@ msgstr "Pääyritys"
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "Missed Address !"
-msgstr ""
+msgstr "Vältetty osoite !"
 
 #. module: base
 #: field:ir.report.custom.fields,bgcolor:0
@@ -2651,7 +2700,7 @@ msgstr ""
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "January"
-msgstr ""
+msgstr "Tammikuu"
 
 #. module: base
 #: field:res.partner.address,birthdate:0
@@ -2679,7 +2728,7 @@ msgstr "workflow.activity"
 #: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
 #, python-format
 msgid "Please create an invoice for this sale."
-msgstr ""
+msgstr "Luo lasku tälle myynnille."
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -2694,7 +2743,7 @@ msgstr "Uruguay"
 #. module: base
 #: view:res.partner.event:0
 msgid "Document Link"
-msgstr "Dokumentin linkki"
+msgstr "Asiakirjan linkki"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
@@ -2730,7 +2779,7 @@ msgstr "Kenttien kartoitukset"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
 #, python-format
 msgid "Balance product needed"
-msgstr ""
+msgstr "Tuotteensaldo tarvitaan"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
@@ -2741,7 +2790,7 @@ msgstr "Herra"
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of dependancy in %"
-msgstr ""
+msgstr "Riippuvuuden tulos %:na"
 
 #. module: base
 #: wizard_button:module.upgrade,next,start:0
@@ -2762,7 +2811,7 @@ msgstr "Ranska / Français"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product supplier"
-msgstr ""
+msgstr "Tuotetoimittaja"
 
 #. module: base
 #: model:res.country,name:base.mt
@@ -2787,7 +2836,7 @@ msgstr "Moduuli"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Configuration of the server"
-msgstr ""
+msgstr "Palvelimen konfigurointi"
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -2818,7 +2867,7 @@ msgstr ""
 #: code:addons/addons/use_control/module.py:0
 #, python-format
 msgid "You are not authorized to copy module repositories"
-msgstr ""
+msgstr "Et ole valtuutettu kopioimaan moodulitietolähteitä"
 
 #. module: base
 #: field:res.users,action_id:0
@@ -2865,19 +2914,19 @@ msgstr "Mayotte"
 #. module: base
 #: wizard_view:module.lang.import,init:0
 msgid "You can also import .po files."
-msgstr "Voit myös tuoda .po-tiedostoja."
+msgstr "Voit myös tuoda .po tiedostoja."
 
 #. module: base
 #: code:addons/addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Unable to find a valid contract"
-msgstr ""
+msgstr "Ei löydy voimassa olevaa sopimusta"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify an action to launch !"
-msgstr ""
+msgstr "Määrittele toiminto joka käynnistetään!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2899,12 +2948,12 @@ msgstr "Moduulit jotka asennetaan, päivitetään tai poistetaan"
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "File name must be unique!"
-msgstr ""
+msgstr "Tiedostonimen täytyy olla ainutkertainen!"
 
 #. module: base
 #: view:res.payterm:0
 msgid "Payment Term"
-msgstr "Maksuehto"
+msgstr "Maksuehdot"
 
 #. module: base
 #: field:ir.report.custom,footer:0
@@ -2920,13 +2969,13 @@ msgstr "Oikealta vasemmalle"
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "Open"
-msgstr ""
+msgstr "Avaa"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Please check that all your lines have %d columns."
-msgstr ""
+msgstr "Tarkista että kaikissa riveissä on %d saraketta."
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -2937,7 +2986,7 @@ msgstr "Tuo kieli"
 #: code:addons/addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "No partner !"
-msgstr ""
+msgstr "Ei kumppania!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -2951,19 +3000,19 @@ msgstr "Aikataulutetut toiminnot"
 #: field:res.partner.address,title:0
 #: field:res.partner.title,name:0
 msgid "Title"
-msgstr "Arvonimi"
+msgstr "Otsikko"
 
 #. module: base
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Production Order Cannot start in [%s] state"
-msgstr ""
+msgstr "Tuotantotilaus ei voi alkaa [%s] -tilassa"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Recursivity Detected."
-msgstr ""
+msgstr "Rekursiivisyys havaittu."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2975,7 +3024,7 @@ msgstr "terp-account"
 #: code:addons/addons/base_module_merge/wizard/base_module_merge.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "Rekursiivisyysvirhe moduulien riippuvuuksissa!"
 
 #. module: base
 #: view:ir.model:0
@@ -3000,7 +3049,7 @@ msgstr "Moduulien kategoriat"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Ukrainian / украї́нська мо́ва"
-msgstr ""
+msgstr "Ukraina / украї́нська мо́ва"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -3010,7 +3059,7 @@ msgstr "Ei aloitettu"
 #. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
-msgstr "Venäjä"
+msgstr "Venäjän Federaatio"
 
 #. module: base
 #: field:res.company,name:0
@@ -3024,7 +3073,7 @@ msgstr "Yrityksen nimi"
 #: view:res.users:0
 #: field:res.users,roles_id:0
 msgid "Roles"
-msgstr "Työtehtävät"
+msgstr "Roolit"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country
@@ -3041,7 +3090,7 @@ msgstr "Tietuesäännöt"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Checking your Promotional Code"
-msgstr ""
+msgstr "Tarkistaa kampanjakoodiasi"
 
 #. module: base
 #: code:addons/addons/hr_attendance/hr_attendance.py:0
@@ -3055,7 +3104,7 @@ msgstr ""
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
-msgstr ""
+msgstr "Sinun täytyy ensin perua kaikki laskut liittynen tilaukseen."
 
 #. module: base
 #: view:res.lang:0
@@ -3111,7 +3160,7 @@ msgstr "Yhdistä toiminnot asiakasohjelman tapahtumiin"
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "No Workflow define"
-msgstr ""
+msgstr "Ei työnkulun määritystä"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -3127,7 +3176,7 @@ msgstr "Mahdollinen yhteyshenkilö"
 #: code:addons/addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Väärä lähdedokumentti !"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_wizard
@@ -3165,7 +3214,7 @@ msgstr "Lomake"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Can not define a column %s. Reserved keyword !"
-msgstr ""
+msgstr "Saraketta %s ei voi määritellä. Varattu avainsana!"
 
 #. module: base
 #: model:res.country,name:base.me
@@ -3181,7 +3230,7 @@ msgstr "STOCK_QUIT"
 #: code:addons/addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "No product in this location."
-msgstr ""
+msgstr "Ei tuotetta tässä sijainnissa."
 
 #. module: base
 #: view:ir.cron:0
@@ -3207,7 +3256,7 @@ msgstr ""
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
-msgstr "Päivitetään"
+msgstr "Tullaan päivittämään"
 
 #. module: base
 #: model:res.country,name:base.ly
@@ -3238,7 +3287,7 @@ msgstr "Liechtenstein"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Configuration of the incremental backup servers"
-msgstr ""
+msgstr "Lisävarmistuspalvelimien konfigurointi"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_ltd
@@ -3269,7 +3318,7 @@ msgstr "Portugali"
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
-msgstr ""
+msgstr "Ostajalla \"%s\" ei ole laskutusosoitetta."
 
 #. module: base
 #: selection:maintenance.contract,state:0
@@ -3295,7 +3344,7 @@ msgstr "Valitse tämä jos kumppani on asiakas."
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Asiakasta ei ole määritetty !"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_lang_act_window
@@ -3321,7 +3370,7 @@ msgstr ""
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Configuration of the DNS servers"
-msgstr ""
+msgstr "DNS palvelimien konfigurointi"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -3342,6 +3391,9 @@ msgid ""
 "spreadsheet software. The file encoding is UTF-8. You have to translate the "
 "latest column before reimporting it."
 msgstr ""
+"Tallenna tämä dokumentti CSV-tiedostoon ja avaa se "
+"taulukkolaskentaohjelmassa. Merkistön koodaus on UTF-8. Viimeinen sarake "
+"täytyy kääntää ennen tiedoston tuontia takaisin."
 
 #. module: base
 #: model:res.country,name:base.au
@@ -3353,7 +3405,7 @@ msgstr "Australia"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "August"
-msgstr ""
+msgstr "Elokuu"
 
 #. module: base
 #: help:res.partner,lang:0
@@ -3392,7 +3444,7 @@ msgstr "SXW sisältö"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "October"
-msgstr ""
+msgstr "Lokakuu"
 
 #. module: base
 #: view:ir.cron:0
@@ -3423,7 +3475,7 @@ msgstr "Oletus"
 #: field:ir.model.fields,required:0
 #: field:res.partner.bank.type.field,required:0
 msgid "Required"
-msgstr "Pakollinen"
+msgstr "Vaadittu"
 
 #. module: base
 #: field:ir.model.fields,domain:0
@@ -3441,13 +3493,13 @@ msgstr "Yhteenveto"
 #: code:addons/addons/account_date_check/account_date_check.py:0
 #, python-format
 msgid "The date of your account move is not in the defined period !"
-msgstr ""
+msgstr "Päiväystä tilinsiirrolle ei ole määritellyssä ajanjaksossa"
 
 #. module: base
 #: code:addons/addons/wiki/wizard/open_page.py:0
 #, python-format
 msgid "No action found"
-msgstr ""
+msgstr "Toimintoa ei löytynyt"
 
 #. module: base
 #: code:addons/addons/hr_holidays/hr.py:0
@@ -3456,6 +3508,7 @@ msgid ""
 "You can not cancel this holiday request. first You have to make its case in "
 "draft state."
 msgstr ""
+"Et voi perua tätä lomapyyntöä. Se täytyy ensiksi tehdä luonnostilassa."
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -3469,7 +3522,7 @@ msgstr ""
 #. module: base
 #: view:res.company:0
 msgid "Header/Footer"
-msgstr "Ylä- / alatunniste"
+msgstr "Ylätunniste / alatunniste"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -3489,7 +3542,7 @@ msgstr "Vatikaanivaltio"
 #. module: base
 #: wizard_field:base.module.import,init,module_file:0
 msgid "Module .ZIP file"
-msgstr "Moduuli ZIP-tiedosto"
+msgstr "Moduuli .zip-tiedosto"
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
@@ -3498,12 +3551,14 @@ msgid ""
 "You have to select a customer in the sale form !\n"
 "Please set one customer before choosing a product."
 msgstr ""
+"Sinun täytyy valita asiakas myyntilomakkeella !\n"
+"Aseta yksi asiakas ennen kuin valitset tuotteita."
 
 #. module: base
 #: code:addons/addons/account/project/wizard/wizard_account_analytic_line.py:0
 #, python-format
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Analyyttiset merkinnät"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
@@ -3513,7 +3568,7 @@ msgstr "Liipaisuobjekti"
 #. module: base
 #: selection:ir.report.custom,state:0
 msgid "Subscribed"
-msgstr "Käytössä"
+msgstr "Tilattu"
 
 #. module: base
 #: wizard_view:module.lang.install,init:0
@@ -3535,7 +3590,7 @@ msgstr "Suriname"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The create method is not implemented on this object !"
-msgstr ""
+msgstr "Luomismenetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: field:ir.values,key2:0
@@ -3574,6 +3629,8 @@ msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Päivitettävä moduuli on riippuvainen moduulista %s,\n"
+"mutta tämä moduuli ei ole saatavilla järjestelmässä."
 
 #. module: base
 #: view:res.partner.address:0
@@ -3589,7 +3646,7 @@ msgstr "Lisenssi"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Invalid operation"
-msgstr ""
+msgstr "Virheellinen toiminto"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3614,6 +3671,8 @@ msgid ""
 "You try to install a module that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Asennettava moduuli on riippuvainen moduulista %s,\n"
+"mutta tämä moduuli ei ole saatavilla järjestelmässä."
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -3621,7 +3680,7 @@ msgstr ""
 #: selection:ir.translation,type:0
 #: field:wizard.ir.model.menu.create.line,view_id:0
 msgid "View"
-msgstr "Näkymä"
+msgstr "Näytä"
 
 #. module: base
 #: field:ir.actions.server,write_id:0
@@ -3650,6 +3709,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"Kieltä, jonka koodi on \"%s\" ei ole määritetty järjestelmääsi !\n"
+"Määritä se järjestelmänhallinta valikosta."
 
 #. module: base
 #: code:addons/addons/project/wizard/close_task.py:0
@@ -3658,11 +3719,13 @@ msgid ""
 "Couldn't send mail because the contact for this task (%s) has no email "
 "address!"
 msgstr ""
+"Sähköpostin lähettäminen epäonnistui, koska tämän tehtävän (%s)  "
+"yhteyshenkilöllä ei ole sähköpostiosoitetta!"
 
 #. module: base
 #: field:ir.module.module,author:0
 msgid "Author"
-msgstr "Tekijä"
+msgstr "Laatija"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3677,7 +3740,7 @@ msgstr "%c - Sopiva päivämäärän ja kellonajan esitysmuoto."
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Finland / Suomi"
-msgstr ""
+msgstr "Suomi / Finland"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -3723,7 +3786,7 @@ msgstr "Säännöt"
 #: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
-msgstr ""
+msgstr "Yrität poistaa moduulia joka on asennettu tai tullaan asentamaan"
 
 #. module: base
 #: help:ir.values,key2:0
@@ -3745,7 +3808,7 @@ msgstr "Guatemala"
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "Uloskirjautumispäivämäärän täytyy olla aikaisemmin"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -3758,7 +3821,7 @@ msgstr "Työnkulut"
 #: code:addons/addons/base_module_publish/wizard/base_module_publish_all.py:0
 #, python-format
 msgid "Login failed!"
-msgstr ""
+msgstr "Kirjautuminen epäonnistui!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_wizard_form
@@ -3778,7 +3841,7 @@ msgstr ""
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "No Partner Defined !"
-msgstr ""
+msgstr "Ei kumppania määriteltynä!"
 
 #. module: base
 #: model:ir.model,name:base.model_res_roles
@@ -3791,8 +3854,8 @@ msgid ""
 "0=Very Urgent\n"
 "10=Not urgent"
 msgstr ""
-"0 = Erittäin kiireellinen\n"
-"10 = Ei kiireellinen"
+"0=Kiireellinen\n"
+"10=Ei kiireellinen"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
@@ -3807,6 +3870,8 @@ msgid ""
 "You cannot enter an attendance ' \\n                        'date outside "
 "the current timesheet dates!"
 msgstr ""
+"Et voi merkitä läsnäolopäivämäärää ' \\n ' nykyisten tuntilistojen "
+"päivämäärien ulkopuolelta!"
 
 #. module: base
 #: view:res.users:0
@@ -3826,6 +3891,7 @@ msgid ""
 "There is no expense account define ' \\n                                    "
 "'for this product: \"%s\" (id:%d)"
 msgstr ""
+"Ei ole määritettyä menotiliä ' \\n ' tälle tuotteelle: \"%s\" (id:%d)"
 
 #. module: base
 #: model:res.country,name:base.ls
@@ -3866,7 +3932,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
-msgstr ""
+msgstr "Virhe tarkistettaessa kenttiä %s: %s"
 
 #. module: base
 #: model:res.country,name:base.sm
@@ -3882,7 +3948,7 @@ msgstr "Bermuda"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Cannot delete an order line which is %s !"
-msgstr ""
+msgstr "Ei voi poistaa tilausriviä joka on %s !"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -3898,7 +3964,7 @@ msgstr "Aseta NULL"
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of Security in %"
-msgstr ""
+msgstr "Turvallisuuden tulos %:na"
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -3910,6 +3976,7 @@ msgstr "Benin"
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
 msgstr ""
+"Et voi muuttaa veroa, sinun tulisi poistaa rivit ja uudelleen luoda ne !"
 
 #. module: base
 #: view:ir.rule.group:0
@@ -3920,13 +3987,13 @@ msgstr "Sääntö täyttyy jos kaikki testit ovat tosia"
 #: code:addons/addons/proforma_followup/proforma.py:0
 #, python-format
 msgid "You can not create this kind of document"
-msgstr ""
+msgstr "Et voi luoda tämänkaltaista dokumenttia"
 
 #. module: base
 #: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
 msgid "Result (/1)"
-msgstr ""
+msgstr "Tulos (/1)"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3938,13 +4005,14 @@ msgstr "STOCK_CONNECT"
 #, python-format
 msgid "Cannot delete invoice(s) that are already opened or paid !"
 msgstr ""
+"Ei voida poistaa laskua tai laskuja jotka ovat jo avattuja tai maksettuja !"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
 #, python-format
 msgid "Couldn't find bill of material for product"
-msgstr ""
+msgstr "Ei löytynyt tuotteen materiaalilaskua"
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -4007,13 +4075,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_security
 msgid "Security"
-msgstr "Tietoturva"
+msgstr "Turvallisuus"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Using a relation field which uses an unknown object"
-msgstr ""
+msgstr "Sisältää kenttän joka käyttää tuntematonta objektia"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -4040,13 +4108,13 @@ msgstr "Senegal"
 #: code:addons/addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Invoice state"
-msgstr ""
+msgstr "Laskun tila"
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "You can not delete this case. You should better cancel it."
-msgstr ""
+msgstr "Et voi poistaa tätä kohtaa. Sinun olisi parempi peruuttaa se."
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -4057,7 +4125,7 @@ msgstr "Unkari"
 #: code:addons/addons/use_control/module.py:0
 #, python-format
 msgid "You are not authorized to write module repositories"
-msgstr ""
+msgstr "Et ole valtuutettu kirjoittamaan moduulitietolähteitä"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -4073,7 +4141,7 @@ msgstr "Brasilia"
 #: code:addons/addons/mrp_repair/mrp_repair.py:0
 #, python-format
 msgid "You have to select a partner in the repair form !"
-msgstr ""
+msgstr "Kumppani on valittava korjauslomakkeelta !"
 
 #. module: base
 #: field:ir.sequence,number_next:0
@@ -4089,7 +4157,7 @@ msgstr "Kurssit"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Albanian / Shqipëri"
-msgstr ""
+msgstr "Albania / Shqiperia"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -4125,25 +4193,25 @@ msgstr "Alakenttä 1"
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Field Selection"
-msgstr "Kenttien valinta"
+msgstr "Kentän valinta"
 
 #. module: base
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr ""
+msgstr "Toimitettu määrä"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to delete non uninstalled instances"
-msgstr ""
+msgstr "Kykenemätön poistamaan poistamattomia instansseja"
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Packing Information !"
-msgstr ""
+msgstr "Pakkaustiedot !"
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
@@ -4163,7 +4231,7 @@ msgstr "Päivämäärä"
 #. module: base
 #: field:ir.actions.report.xml,report_sxw:0
 msgid "SXW path"
-msgstr "SXW-polku"
+msgstr "SXW polku"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -4172,6 +4240,8 @@ msgid ""
 "No period defined for this date !\n"
 "Please create a fiscal year."
 msgstr ""
+"Ei jaksoa määritelty tälle päivämäärälle !\n"
+"Luo tilikausi."
 
 #. module: base
 #: view:ir.attachment:0
@@ -4204,7 +4274,7 @@ msgstr "Päävalikko"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr ""
+msgstr "Jotkut merkinnät ovat jo soviteltuja"
 
 #. module: base
 #: help:ir.actions.act_window.view,multi:0
@@ -4221,7 +4291,7 @@ msgstr ""
 #: code:addons/addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr ""
+msgstr "Liittäminen on sallittu vain luonnosvarastoille."
 
 #. module: base
 #: view:ir.attachment:0
@@ -4237,7 +4307,7 @@ msgstr "Desimaalin erotin"
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Feedback about structure of module"
-msgstr ""
+msgstr "Palaute koskien moduulin rakennetta"
 
 #. module: base
 #: view:res.partner:0
@@ -4301,6 +4371,8 @@ msgid ""
 "All emails have been successfully sent to Partners:.\n"
 "\n"
 msgstr ""
+"Kaikki sähköpostit on onnistuneesti lähetetty kumppaneille:.\n"
+"\n"
 
 #. module: base
 #: model:res.country,name:base.ni
@@ -4311,7 +4383,7 @@ msgstr "Nicaragua"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The write method is not implemented on this object !"
-msgstr ""
+msgstr "Kirjoitusmenetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: view:res.partner.event:0
@@ -4326,7 +4398,7 @@ msgstr "Myyntimahdollisuus"
 #. module: base
 #: field:ir.values,meta:0
 msgid "Meta Datas"
-msgstr "Metadata"
+msgstr "Metatiedot"
 
 #. module: base
 #: field:ir.rule,field_id:0
@@ -4338,7 +4410,7 @@ msgstr "Kenttä"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Unable to change tax !"
-msgstr ""
+msgstr "Veroa ei voida muuttaa!"
 
 #. module: base
 #: view:res.lang:0
@@ -4349,7 +4421,7 @@ msgstr "9. %j = 340"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Activation of your subscription"
-msgstr ""
+msgstr "Ennakkomaksusi aktivointi"
 
 #. module: base
 #: model:res.country,name:base.zm
@@ -4394,7 +4466,7 @@ msgstr "Peruuta päivitys"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "This feature is only available for location of type \"Amazon\""
-msgstr ""
+msgstr "Tämä ominaisuus on ainoastaan saatavilla \"Amazon\" sijaintityyppiin"
 
 #. module: base
 #: model:res.country,name:base.ci
@@ -4464,7 +4536,7 @@ msgstr "Laske keskiarvo"
 #. module: base
 #: field:ir.module.module,demo:0
 msgid "Demo data"
-msgstr "Demo-tiedot"
+msgstr "Demo tiedot"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
@@ -4487,7 +4559,7 @@ msgstr "Antarktis"
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Structure Test"
-msgstr ""
+msgstr "Rakennetesti"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_3
@@ -4509,7 +4581,7 @@ msgstr "Web"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Wed"
-msgstr ""
+msgstr "Ke"
 
 #. module: base
 #: code:addons/osv/orm.py:0
@@ -4518,6 +4590,8 @@ msgid ""
 "You try to write on an record that doesn't exist ' \\n                       "
 "                 '(Document type: %s)."
 msgstr ""
+"Yritit kirjoittaa tietueeseen jota ei ole olemassa ' \\n '(Dokumentin "
+"tyyppi: %s)."
 
 #. module: base
 #: field:res.bank,zip:0
@@ -4530,7 +4604,7 @@ msgstr "Postinumero"
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is already created."
-msgstr ""
+msgstr "Lasku on jo luotu."
 
 #. module: base
 #: field:res.partner.event,planned_revenue:0
@@ -4541,7 +4615,7 @@ msgstr "Suunniteltu tuotto"
 #: code:addons/addons/account_budget/wizard/wizard_budget_report.py:0
 #, python-format
 msgid "Insufficient Data!"
-msgstr ""
+msgstr "Riittämätön tieto!"
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -4565,19 +4639,19 @@ msgstr "%H - Tunnit (24:n tunnin kello) desimaalilukuna [00,23]."
 #. module: base
 #: view:res.roles:0
 msgid "Role"
-msgstr "Työtehtävä"
+msgstr "Rooli"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_aged_trial_balance.py:0
 #, python-format
 msgid "You must enter a period length that cannot be 0 or below !"
-msgstr ""
+msgstr "Ajanjakson keston täytyy olla suurempi kuin 0 !"
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product name"
-msgstr ""
+msgstr "Tuotenimi"
 
 #. module: base
 #: model:res.country,name:base.sj
@@ -4593,7 +4667,7 @@ msgstr "Testi"
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "Permission Denied !"
-msgstr ""
+msgstr "Lupa evätty !"
 
 #. module: base
 #: field:ir.report.custom.fields,groupby:0
@@ -4604,7 +4678,7 @@ msgstr "Ryhmittele"
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Record found after total record!"
-msgstr ""
+msgstr "Löydetty tietue kokonaistietueen jälkeen!"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
@@ -4613,12 +4687,15 @@ msgid ""
 "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
+"\"%s\" sisältää liikaa pisteitä. XML ids eivät saa sisältää pisteitä ! Näitä "
+"käytetään viittaamaan toisten moodulien tietoihin kuten module.reference_id "
+"kerrotaan"
 
 #. module: base
 #: code:addons/addons/use_control/module.py:0
 #, python-format
 msgid "The \"use_control\" module is not uninstallable"
-msgstr ""
+msgstr "Moduuli \"use_control\" ei ole poistettavissa"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4649,7 +4726,7 @@ msgstr "Poistetun arvo useammasta-yhteen kentille."
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "BNK"
-msgstr ""
+msgstr "BNK"
 
 #. module: base
 #: model:res.country,name:base.do
@@ -4670,7 +4747,7 @@ msgstr "STOCK_ITALIC"
 #: code:addons/addons/hr_timesheet/wizard/sign_in_out.py:0
 #, python-format
 msgid "No cost unit defined for this employee !"
-msgstr ""
+msgstr "Työntekijälle ei ole määritetty kustannusyksikköä !"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -4698,7 +4775,7 @@ msgstr "Pankin tyyppi"
 #: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr ""
+msgstr "Ryhmän nimi ei voi alkaa \"-\""
 
 #. module: base
 #: wizard_view:module.upgrade,end:0
@@ -4723,7 +4800,7 @@ msgstr "Käyttöönottopäivä"
 #: code:addons/addons/sale_crm/wizard/makesale.py:0
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Riittämätön tieto!"
 
 #. module: base
 #: field:workflow.activity,flow_start:0
@@ -4743,6 +4820,7 @@ msgid ""
 "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
 "defined !"
 msgstr ""
+"Toimittajan maksuehdoissa ei ole maksuehtorivejä (Iaskelmia) määritettynä !"
 
 #. module: base
 #: view:res.partner.bank:0
@@ -4774,7 +4852,7 @@ msgstr "Guadeloupe (Ranska)"
 #: code:addons/addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Käyttäjä virhe"
 
 #. module: base
 #: field:ir.report.custom.fields,cumulate:0
@@ -4785,7 +4863,7 @@ msgstr "Akkumuloi"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Tree can only be used in tabular reports"
-msgstr ""
+msgstr "Puuta voidaan käyttää vain taulukkomallisissa raporteissa"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -4811,13 +4889,13 @@ msgstr "Fontin väri"
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "not implemented"
-msgstr ""
+msgstr "ei toteutettu"
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "Global taxes defined, but are not in invoice lines !"
-msgstr ""
+msgstr "Yleisiä veroja on määritetty, mutta ne eivät ole laskuriveillä !"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4850,7 +4928,7 @@ msgstr "Kumppanien osoitteet"
 #: code:addons/addons/project/project.py:0
 #, python-format
 msgid "Task '%s' cancelled"
-msgstr ""
+msgstr "Tehtävä '%s' peruutettu"
 
 #. module: base
 #: code:addons/addons/subscription/subscription.py:0
@@ -4859,11 +4937,13 @@ msgid ""
 "Please provide another source document.\n"
 "This one does not exist !"
 msgstr ""
+"Anna toinen lähdedokumentti.\n"
+"Tätä ei ole olemassa !"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Indonesian / Bahasa Indonesia"
-msgstr ""
+msgstr "Indonesia / Indonesian"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -4877,6 +4957,8 @@ msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
 " %s"
 msgstr ""
+"Jotkin asennetut moduulit ovat riippuvaisia moduulista jonka aiot poistaa:\n"
+" %s"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
@@ -4885,6 +4967,8 @@ msgid ""
 "No bank specified on invoice:\n"
 "%s"
 msgstr ""
+"Laskulla ei ole määritelty pankkia:\n"
+"%s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -4897,7 +4981,7 @@ msgstr "Tapahtumat"
 #: model:ir.actions.act_window,name:base.action_res_roles
 #: model:ir.ui.menu,name:base.menu_action_res_roles
 msgid "Roles Structure"
-msgstr "Työtehtävien rakenne"
+msgstr "Roolien rakenne"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_url
@@ -4915,6 +4999,7 @@ msgstr "STOCK_MEDIA_STOP"
 #, python-format
 msgid "Wrong ID for the browse record, got %r, expected an integer."
 msgstr ""
+"Väärä tunnus selaustietueeseen: saatiin %r, odotettiin kokonaislukua."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4935,7 +5020,7 @@ msgstr "Lisättyjen moduulien määrä"
 #. module: base
 #: field:workflow.transition,role_id:0
 msgid "Role Required"
-msgstr "Vaadittu työtehtävä"
+msgstr "Vaadittu rooli"
 
 #. module: base
 #: view:ir.module.module:0
@@ -4946,7 +5031,7 @@ msgstr "Luodut valikot"
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Tälle tuotteelle ei ole määritetty menotiliä \"%s\" (id:%d)"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -4970,6 +5055,8 @@ msgid ""
 "Given module has no objects.Speed test can work only when new objects are "
 "created in the module along with demo data"
 msgstr ""
+"Annetulla moduulilla ei ole objekteja. Nopeustestit toimivat vain kun uusia "
+"objekteja on luotu moduulissa demotietojen kanssa"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -5002,7 +5089,7 @@ msgstr "Vastaanottaja"
 #: code:addons/addons/project/project.py:0
 #, python-format
 msgid "Operation Done"
-msgstr ""
+msgstr "Toimenpide valmis"
 
 #. module: base
 #: field:ir.actions.server,trigger_obj_id:0
@@ -5019,19 +5106,19 @@ msgstr "Fidži"
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
-msgstr ""
+msgstr "Laita kumppani keräilylistaan jos haluat luoda laskun."
 
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_partner_create.py:0
 #, python-format
 msgid "A partner is already existing with the same name."
-msgstr ""
+msgstr "Samanniminen kumppani on jo olemassa."
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "This method can be called with multiple ids"
-msgstr ""
+msgstr "Tätä metodia voidaan kutsua useillla ids:llä"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5068,7 +5155,7 @@ msgstr "Valikot"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "At least one line has no product !"
-msgstr ""
+msgstr "Vähintään yhdellä rivillä ei ole tuotetta !"
 
 #. module: base
 #: model:res.country,name:base.il
@@ -5091,7 +5178,7 @@ msgstr "Objektit"
 #: code:addons/addons/hr_timesheet_invoice/wizard/account_analytic_profit.py:0
 #, python-format
 msgid "No Records Found for Report!"
-msgstr ""
+msgstr "Ei löydettyjä tietueita raporttia varten!"
 
 #. module: base
 #: code:addons/addons/stock/stock.py:0
@@ -5104,7 +5191,7 @@ msgstr ""
 #. module: base
 #: field:res.lang,time_format:0
 msgid "Time Format"
-msgstr "Aikaformaatti"
+msgstr "Aika formaatti"
 
 #. module: base
 #: wizard_view:module.upgrade,next:0
@@ -5116,6 +5203,7 @@ msgstr "Järjestelmäsi päivitetään."
 #, python-format
 msgid "You must first cancel all packing attached to this purchase order."
 msgstr ""
+"Sinun täytyy ensin perua kaikki pakkaukset liittyen tähän tilaukseen."
 
 #. module: base
 #: view:ir.module.module:0
@@ -5163,7 +5251,7 @@ msgstr "Signaali (painikkeen nimi)"
 #: code:addons/addons/account/wizard/wizard_use_model.py:0
 #, python-format
 msgid "Unable to find a valid period !"
-msgstr ""
+msgstr "Voimassa olevaa jaksoa ei löydy"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -5182,7 +5270,7 @@ msgstr "terp-sale"
 #: code:addons/addons/use_control/module.py:0
 #, python-format
 msgid "You are not authorized to create module repositories"
-msgstr ""
+msgstr "Et ole oikeutettu luomaan moduulin tietolähteitä"
 
 #. module: base
 #: view:res.lang:0
@@ -5222,7 +5310,7 @@ msgstr "Toista ohittuneet"
 #: code:addons/addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
 msgid "Can not create the module file: %s !"
-msgstr ""
+msgstr "Ei voitu luoda moduulitiedostoa: %s !"
 
 #. module: base
 #: field:ir.server.object.lines,server_id:0
@@ -5238,7 +5326,7 @@ msgstr "Valuutan kurssi toisessa valuutassa jonka määrä on 1"
 #. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
-msgstr "Yhdistynyt kuningaskunta"
+msgstr "Iso-Britannia"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5270,7 +5358,7 @@ msgstr "Poista asennus (beta)"
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr ""
+msgstr "Kansionnimi sisältää erikoismerkkejä!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_partner
@@ -5299,7 +5387,7 @@ msgstr "Ladattavat moduulit"
 #: code:addons/addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Return lines"
-msgstr ""
+msgstr "Paluurivit"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_workitem_form
@@ -5321,7 +5409,7 @@ msgstr "ir.attachment"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to start The Open ERP server without backups"
-msgstr ""
+msgstr "OpenERP -palvelin ei voi käynnistyä ilman varmistuksia"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -5341,18 +5429,18 @@ msgstr ""
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Warning! Not enough demo data"
-msgstr ""
+msgstr "Varoitus! Ei tarpeeksi testitietoa"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Couldn't find tag '%s' in parent view !"
-msgstr ""
+msgstr "Merkintää \"%s\" ei löydy edeltävästä näkymästä!"
 
 #. module: base
 #: field:ir.ui.view,inherit_id:0
 msgid "Inherited View"
-msgstr "Periytynyt näkymä"
+msgstr "Peritty näkymä"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_translation
@@ -5368,7 +5456,7 @@ msgstr "Luxemburg"
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Object Test"
-msgstr ""
+msgstr "Objekti testi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule_group
@@ -5391,7 +5479,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The name_get method is not implemented on this object !"
-msgstr ""
+msgstr "Menetelmä \"name_get\" ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -5410,7 +5498,7 @@ msgstr ""
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No IBAN for the company bank account."
-msgstr ""
+msgstr "Ei IBAN -koodia yrityksen pankkitilille."
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
@@ -5450,7 +5538,7 @@ msgstr "Luo käyttöoikeus"
 #: code:addons/addons/use_control/module.py:0
 #, python-format
 msgid "You are not authorized to unlink module repositories"
-msgstr ""
+msgstr "Et ole oikeutettu poistamaan linkityksiä moodulin tietolähteiltä"
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -5462,7 +5550,7 @@ msgstr "Osavaltio"
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr ""
+msgstr "Varmista että listan lopullinen erotus on pienempi kuin %.2f !"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -5476,6 +5564,8 @@ msgid ""
 "Please verify the price of the invoice !\n"
 "The real total does not match the computed total."
 msgstr ""
+"Tarkista laskun loppusumma !\n"
+"Loppusumma ei täsmää laskennalliseen loppusummaan."
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5535,7 +5625,7 @@ msgstr "Allekirjoitus"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not Implemented"
-msgstr ""
+msgstr "Ei toteutettu"
 
 #. module: base
 #: field:res.partner.category,complete_name:0
@@ -5546,7 +5636,7 @@ msgstr "Koko nimi"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "Laskutus"
 
 #. module: base
 #: model:res.country,name:base.mz
@@ -5584,13 +5674,13 @@ msgstr "Suorita suunnitellut päivitykset"
 #. module: base
 #: model:ir.ui.menu,name:base.maintenance
 msgid "Maintenance"
-msgstr "Ylläpitosopimukset"
+msgstr "Ylläpito"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign out from an other date than today"
-msgstr ""
+msgstr "Et voi kirjautua ulos muulla kuin nykyisellä päivämäärällä"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -5601,13 +5691,13 @@ msgstr "Pohjois-Mariaanit"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr ""
+msgstr "Anna kumppani myyntiä varten."
 
 #. module: base
 #: code:addons/addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "Test Is Not Implemented"
-msgstr ""
+msgstr "Testiä ei ole toteutettu"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
@@ -5658,12 +5748,13 @@ msgstr ""
 #, python-format
 msgid "The opening journal must not have any entry in the new fiscal year !"
 msgstr ""
+"Avaavalla lokilla ei saa olla yhtään merkintää uudella tilikaudella !"
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "Taxes missing !"
-msgstr ""
+msgstr "Verot puuttuu !"
 
 #. module: base
 #: view:res.partner.som:0
@@ -5707,7 +5798,7 @@ msgstr "Bhutan"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Efficient"
-msgstr ""
+msgstr "Tehokas"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
@@ -5733,7 +5824,7 @@ msgstr "res.config.view"
 #: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "Tilauksen tila täytyy luonnostella toimitusrivien lisäämiseksi."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5744,7 +5835,7 @@ msgstr "STOCK_DIALOG_AUTHENTICATION"
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Field name"
-msgstr ""
+msgstr "Kentän nimi"
 
 #. module: base
 #: view:workflow.workitem:0
@@ -5769,7 +5860,7 @@ msgstr "Salasana"
 #: code:addons/addons/project/project.py:0
 #, python-format
 msgid "Task '%s' closed"
-msgstr ""
+msgstr "Tehtävä '%s' suljettu"
 
 #. module: base
 #: code:addons/addons/analytic_user_function/analytic_user_function.py:0
@@ -5777,7 +5868,7 @@ msgstr ""
 msgid ""
 "There is no expense account define ' \\n                                'for "
 "this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Ei ole menotilimääritystä ' \\n 'tälle tuotteelle: \"%s\" (id:%d)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -5796,7 +5887,7 @@ msgstr "Kentät"
 #: code:addons/addons/product/pricelist.py:0
 #, python-format
 msgid "Other Pricelist"
-msgstr ""
+msgstr "Muu hinnasto"
 
 #. module: base
 #: model:res.country,name:base.mk
@@ -5822,12 +5913,12 @@ msgstr ""
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
 msgid "acc_number"
-msgstr ""
+msgstr "acc_number"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Osoitteet"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -5838,7 +5929,7 @@ msgstr "Myanmar"
 #: code:addons/addons/stock/stock.py:0
 #, python-format
 msgid "You can not create new moves."
-msgstr ""
+msgstr "Et voi luoda uusia siirtoja."
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -5855,7 +5946,7 @@ msgstr "STOCK_MEDIA_NEXT"
 #: field:res.partner.address,street:0
 #: field:res.partner.bank,street:0
 msgid "Street"
-msgstr "Katuosoite"
+msgstr "Katu"
 
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
@@ -5866,6 +5957,10 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"Ei voi luoda automaattista sekvenssiä tälle osalle !\n"
+"\n"
+"Laita sekvenssi lokimääritykseen automaattista numerointia varten tai luo "
+"sekvenssi manuaalisesti tälle osalle."
 
 #. module: base
 #: wizard_view:module.upgrade,next:0
@@ -5886,13 +5981,13 @@ msgstr "Kanada"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Stock"
-msgstr ""
+msgstr "Tuleva varasto"
 
 #. module: base
 #: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "No analytic plan defined !"
-msgstr ""
+msgstr "Ei määritettyä analyyttistä suunnitelmaa !"
 
 #. module: base
 #: field:ir.actions.report.xml,report_name:0
@@ -5912,7 +6007,7 @@ msgstr "Muuta asetuksiani"
 #. module: base
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,text:0
@@ -5942,6 +6037,9 @@ msgid ""
 "But it's not compatible with the selected packaging.\n"
 "Here is a proposition of quantities according to the packaging: "
 msgstr ""
+"Olet valinnut määrän %d yksikköä.\n"
+"Mutta se ei ole yhteensopiva valitun pakkauksen kanssa.\n"
+"Tässä määräehdotuksia pakkauksen mukaan: "
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5962,7 +6060,7 @@ msgstr "Kustomoitu kenttä"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Speed Test"
-msgstr ""
+msgstr "Nopeustesti"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -6012,7 +6110,7 @@ msgstr "type,name,res_id,src,value"
 #: code:addons/addons/account/wizard/wizard_refund.py:0
 #, python-format
 msgid "No Period found on Invoice!"
-msgstr ""
+msgstr "Kautta ei löytynyt laskusta"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -6023,13 +6121,13 @@ msgstr "Hollanti / Nederlands"
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr ""
+msgstr "Sinulla ei ole lupaa kirjoittaa palvelimelle."
 
 #. module: base
 #: code:addons/addons/base_module_publish/wizard/module_zip.py:0
 #, python-format
 msgid "Can not export module that is not installed!"
-msgstr ""
+msgstr "Ei voi viedä moduulia jota ei ole asennettu!"
 
 #. module: base
 #: model:res.country,name:base.to
@@ -6089,13 +6187,13 @@ msgstr "Objektikenttä"
 #: code:addons/addons/account/wizard/wizard_use_model.py:0
 #, python-format
 msgid "No period found !"
-msgstr ""
+msgstr "Ajanjaksoa ei löydy!"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Records were modified in the meanwhile"
-msgstr ""
+msgstr "Tietueet muutettiin sillä välin"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6106,7 +6204,7 @@ msgstr "STOCK_NEW"
 #: code:addons/addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Please select at least two inventories."
-msgstr ""
+msgstr "Valitse vähintään kaksi varastoa."
 
 #. module: base
 #: view:ir.report.custom.fields:0
@@ -6116,13 +6214,13 @@ msgstr "Raportin kentät"
 #. module: base
 #: view:res.partner:0
 msgid "General"
-msgstr "Yleiset"
+msgstr "Yleinen"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The exists method is not implemented on this object !"
-msgstr ""
+msgstr "Käytettävää metodia ei ole toteutettu tälle objektille !"
 
 #. module: base
 #: field:workflow.transition,act_to:0
@@ -6133,7 +6231,7 @@ msgstr "Kohdetoimito"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The name_search method is not implemented on this object !"
-msgstr ""
+msgstr "Menetelmä \"name_search\" ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6152,6 +6250,8 @@ msgid ""
 "You cannot enter an attendance ' \\n                            'date "
 "outside the current timesheet dates!"
 msgstr ""
+"Et voi antaa läsnäoloilmoitusta, ' \\n 'päivämäärä ei täsmää nykyisten "
+"tuntilistojen päivämääriin!"
 
 #. module: base
 #: code:addons/addons/audittrail/audittrail.py:0
@@ -6168,13 +6268,13 @@ msgstr "STOCK_ABOUT"
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Bank Journal "
-msgstr ""
+msgstr "pankkiloki "
 
 #. module: base
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice cannot be created from Packing."
-msgstr ""
+msgstr "Pakkaukselta ei voida luoda laskua."
 
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
@@ -6206,7 +6306,7 @@ msgstr "Yhteyshenkilö"
 #: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The old fiscal year does not have any entry to reconcile!"
-msgstr ""
+msgstr "Vanhalla tilikaudella ei ole yhtään soviteltavissa olevaa merkintää!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -6225,12 +6325,15 @@ msgid ""
 "You can not do this modification on a reconciled entry ! Please note that "
 "you can just change some non important fields !"
 msgstr ""
+"Et voi tehdä tätä muokkausta sovitetulle merkinnälle! Huomioi että voit "
+"muuttaa vain joitain ei tärkeitä kenttiä!"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not deactivate an account that contains account moves."
 msgstr ""
+"Et voi ottaa sellaista tiliä pois käytöstä joka sisältää tilisiirtoja."
 
 #. module: base
 #: view:ir.module.module:0
@@ -6246,7 +6349,7 @@ msgstr "Kypros"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sale order !"
-msgstr ""
+msgstr "Myyntitilausta ei voitu peruuttaa!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -6262,7 +6365,7 @@ msgstr "Koko"
 #: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
-msgstr ""
+msgstr "Moduuli %s: virheellinen laatusertifikaatti"
 
 #. module: base
 #: model:res.country,name:base.kw
@@ -6310,12 +6413,16 @@ msgid ""
 "where you can configure your event to not send emails automaticly while "
 "registering"
 msgstr ""
+"Sinun on määritettävä vastausosoite lähettääksesi sähköpostia osalliselle. "
+"Voit tehdä tämän tapahtumasi Postitus -välilehdeltä. Huomio, että on "
+"olemassa myös paikka jossa voit konfiguroida tapahtumasi olemaan "
+"lähettämättä sähköpostia automaattisesti rekisteröitäessä."
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Insertion Failed!"
-msgstr ""
+msgstr "Lisääminen epäonnistui!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6373,7 +6480,7 @@ msgstr "Filippiinit"
 #: code:addons/addons/hr_holidays/hr.py:0
 #, python-format
 msgid "Attention!"
-msgstr ""
+msgstr "Huomio!"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -6411,13 +6518,13 @@ msgstr ""
 #: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr ""
+msgstr "Anna nimi ja koodi ennenkuin tallennat mallia !"
 
 #. module: base
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Operation is Already Cancelled  !"
-msgstr ""
+msgstr "Toiminto on jo peruutettu !"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
@@ -6476,13 +6583,13 @@ msgstr "iCal-tunnus"
 #: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "Loppusumman tulisi olla %s ja %s välillä"
 
 #. module: base
 #: code:addons/addons/sale_crm/wizard/makesale.py:0
 #, python-format
 msgid "Customer has no addresses defined!"
-msgstr ""
+msgstr "Asiakkaalle ei ole määritetty osoitetta!"
 
 #. module: base
 #: field:ir.actions.act_window,view_type:0
@@ -6505,7 +6612,7 @@ msgstr "Käyttöliittymä"
 #. module: base
 #: selection:ir.report.custom,type:0
 msgid "Pie Chart"
-msgstr "Piirakkakaavio"
+msgstr "Ympyräkaavio"
 
 #. module: base
 #: view:ir.sequence:0
@@ -6516,13 +6623,13 @@ msgstr "Sekunnit: %(sec)s"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel this sale order !"
-msgstr ""
+msgstr "Myyntitilausta ei voitu peruuttaa!"
 
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Ei voitu perua hankintatilausta"
 
 #. module: base
 #: code:addons/addons/base/module/module.py:0
@@ -6531,6 +6638,8 @@ msgid ""
 "Can not create the module file:\n"
 " %s"
 msgstr ""
+"Moduulitiedostoa ei voi luoda:\n"
+" %s"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_update
@@ -6542,7 +6651,7 @@ msgstr "Päivitä lista moduuleista"
 #: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "This version of the module is already exist on the server"
-msgstr ""
+msgstr "Tämä versio moduuleista on jo olemassa palvelimella"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -6553,13 +6662,13 @@ msgstr "Jatka"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Object %s does not exists"
-msgstr ""
+msgstr "Objektia %s ei ole olemassa"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form
 msgid "Default Properties"
-msgstr "Oletusominaisuudet"
+msgstr "Oletus ominaisuudet"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -6570,7 +6679,7 @@ msgstr "Slovenia / slovenščina"
 #: code:addons/addons/warning/warning.py:0
 #, python-format
 msgid "Alert for ' + partner.name +' !"
-msgstr ""
+msgstr "Hälytys koskien ' + partner.name +' !"
 
 #. module: base
 #: field:ir.actions.report.xml,attachment_use:0
@@ -6632,6 +6741,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
+"Sinun on määritettävä pankkitili\n"
+"lokimäärityksessä sovittelua varten."
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -6665,13 +6776,13 @@ msgstr "Täysi"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #. module: base
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "The statement balance is incorrect !\n"
-msgstr ""
+msgstr "Tiliotteen saldo on virheellinen !\n"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -6692,19 +6803,19 @@ msgstr "ALV"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "No Default Credit Account !"
-msgstr ""
+msgstr "Oletusluottotiliä ei ole !"
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "Free Reference"
-msgstr ""
+msgstr "Avoin viite"
 
 #. module: base
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "Directory name must be unique!"
-msgstr ""
+msgstr "Kansionimen tulee olla ainutkertainen!"
 
 #. module: base
 #: view:res.request.link:0
@@ -6731,7 +6842,7 @@ msgstr "Iteraatio"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Warning! Object has no demo data"
-msgstr ""
+msgstr "Varoitus! Objektilla ei ole demotietoa"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6742,13 +6853,13 @@ msgstr "terp-stock"
 #: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify the Partner Email address !"
-msgstr ""
+msgstr "Määritä kumppanin sähköpostiosoite!"
 
 #. module: base
 #: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "You could not publish a module that is not installed!"
-msgstr ""
+msgstr "Et voi julkaista moduulia, jota ei ole asennettu"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -6773,7 +6884,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "UserError"
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
@@ -6823,13 +6934,15 @@ msgstr "Salomonsaaret"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not use an inactive account!"
-msgstr ""
+msgstr "Et voi käyttää käytöstä poistettua tiliä!"
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all packing attached to this sale order."
 msgstr ""
+"Sinun täytyy ensiksi perua kaikki pakkaukset jotka ovat liitetty tähän "
+"myyntitilaukseen."
 
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
@@ -6846,13 +6959,13 @@ msgstr "8. %I:%M:%S %p = 06:25:20 PM"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The copy method is not implemented on this object !"
-msgstr ""
+msgstr "Menetelmä \"copy\" ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Integrity Error !"
-msgstr ""
+msgstr "Eheysvirhe!"
 
 #. module: base
 #: view:ir.translation:0
@@ -6874,7 +6987,7 @@ msgstr "Täytenumerot"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Virheellinen toiminto!"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -6889,6 +7002,13 @@ msgid ""
 "\n"
 "e.g. My model on %(date)s"
 msgstr ""
+"Voit määrittää vuoden, kuukauden ja päivämäärän mallin nimessä käyttäen "
+"seuraavia tunnuksia:\n"
+"%(year)s : Määrittääksesi vuoden \n"
+"%(month)s : Määrittääksesi kuukauden\n"
+"%(date)s : Nykyinen päivämäärä\n"
+"\n"
+"Esim. Oma mallini %(date)s"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -7016,7 +7136,7 @@ msgstr "Falklandinsaaret"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Fri"
-msgstr ""
+msgstr "Pe"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_todo
@@ -7048,7 +7168,7 @@ msgstr ""
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "done"
-msgstr ""
+msgstr "valmis"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7061,7 +7181,7 @@ msgstr "STOCK_GO_BACK"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "AccessError"
 
 #. module: base
 #: model:res.country,name:base.dz
@@ -7072,7 +7192,7 @@ msgstr "Algeria"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "This feature is only available for location type Amazon"
-msgstr ""
+msgstr "Tämä ominaisuus on saatavissa vain Amazon -sijaintityypille"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -7083,7 +7203,7 @@ msgstr "Belgia"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "You cannot perform this operation."
-msgstr ""
+msgstr "Et voi suorittaa tätä toimenpidettä."
 
 #. module: base
 #: field:ir.translation,lang:0
@@ -7111,13 +7231,13 @@ msgstr "Yritykset"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "You cannot Pause the Operation other then Start/Resume state !"
-msgstr ""
+msgstr "Et voi keskeyttää toimintoa muutoin kuin Start/Resume -tilasta !"
 
 #. module: base
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented get_memory method !"
-msgstr ""
+msgstr "Menetelmä \"get_memory\" ei käytössä!"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -7173,13 +7293,13 @@ msgstr ""
 #: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify server option --smtp-from !"
-msgstr ""
+msgstr "Määritä palvelinoptio \"--smtp-from\"!"
 
 #. module: base
 #: code:addons/addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Kerro palautettujen tuotteiden määrät."
 
 #. module: base
 #: model:res.country,name:base.nt
@@ -7251,7 +7371,7 @@ msgstr "STOCK_HARDDISK"
 #. module: base
 #: rml:ir.module.reference:0
 msgid "Reports :"
-msgstr "Raportit:"
+msgstr "Raportit :"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7263,7 +7383,7 @@ msgstr "STOCK_APPLY"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Thu"
-msgstr ""
+msgstr "To"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_maintenance_contract_form
@@ -7337,7 +7457,7 @@ msgstr ""
 #: code:addons/tools/translate.py:0
 #, python-format
 msgid "Bad file format"
-msgstr ""
+msgstr "Väärä tiedostomuoto"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7349,13 +7469,13 @@ msgstr "STOCK_CDROM"
 #: code:addons/addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
 #, python-format
 msgid "No employee defined for your user !"
-msgstr ""
+msgstr "Käyttäjälle ei ole määritetty työntekijää !"
 
 #. module: base
 #: code:addons/addons/project/project.py:0
 #, python-format
 msgid "Operation Not Permitted !"
-msgstr ""
+msgstr "Toimenpide ei ole sallittu !"
 
 #. module: base
 #: field:ir.model.fields,readonly:0
@@ -7367,7 +7487,7 @@ msgstr "Vain luku"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Cycles Cost"
-msgstr ""
+msgstr "Syklien kustannukset"
 
 #. module: base
 #: field:res.partner.event,type:0
@@ -7395,7 +7515,7 @@ msgstr "Perus"
 #: code:addons/addons/hr_expense/hr_expense.py:0
 #, python-format
 msgid "The employee must have a contact address"
-msgstr ""
+msgstr "Työntekijällä täytyy olla osoite"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -7406,13 +7526,13 @@ msgstr "Liberia"
 #: code:addons/addons/account_report/wizard/wizard_print_indicators.py:0
 #, python-format
 msgid "Please select maximum 8 records to fit the page-width."
-msgstr ""
+msgstr "Valitse enimmillään 8 tietuetta jotta ne sopii paperin leveyteen."
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_state_open.py:0
 #, python-format
 msgid "Invoice is already reconciled"
-msgstr ""
+msgstr "Lasku on jo sovitettu"
 
 #. module: base
 #: view:ir.attachment:0
@@ -7475,7 +7595,7 @@ msgstr "Apua"
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Couldn't create move between different companies"
-msgstr ""
+msgstr "Ei voida luoda siirtoa eri yritysten välille"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
@@ -7487,13 +7607,13 @@ msgstr ""
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Entry \"%s\" is not valid !"
-msgstr ""
+msgstr "Merkintä \"%s\" ei ole kelvollinen !"
 
 #. module: base
 #: code:addons/tools/amount_to_text_en.py:0
 #, python-format
 msgid "Number too large '%d', can not translate it"
-msgstr ""
+msgstr "Numero on liian suuri \"%d\", sitä ei voida kääntää"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7523,7 +7643,7 @@ msgstr "Kulku seis"
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Weeks"
-msgstr "Viikkoa"
+msgstr "Viikot"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -7563,12 +7683,12 @@ msgstr "Afganistan"
 #: code:addons/addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Virhe !"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
 msgid "country_id"
-msgstr ""
+msgstr "country_id"
 
 #. module: base
 #: field:ir.cron,interval_type:0
@@ -7585,7 +7705,7 @@ msgstr "Tyyppi"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "This method does not exist anymore"
-msgstr ""
+msgstr "Tätä menetelmää ei ole enää olemassa"
 
 #. module: base
 #: selection:ir.actions.todo,start_on:0
@@ -7615,6 +7735,9 @@ msgid ""
 "This test checks where object has workflow or not on it if there is a state "
 "field and several buttons on it and also checks validity of workflow xml file"
 msgstr ""
+"Tämä testi tarkistaa missä objektilla on työkulkua ja missä ei jos siinä on "
+"tilakenttä ja useita painikkeita ja tarkistaa myös työkulun kelvollisuuden "
+"xml -tiedosto"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -7654,13 +7777,13 @@ msgstr "res.request"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Configuration of your control center account"
-msgstr ""
+msgstr "Ohjauskeskustilin konfiguraatio"
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid " Quantity: "
-msgstr ""
+msgstr " Määrä: "
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -7674,6 +7797,8 @@ msgid ""
 "No E-Mail ID Found for the Responsible Partner or missing reply address in "
 "section!"
 msgstr ""
+"Ei löydettyä sähköposti ID:tä vastaavalle kumppanille tai puuttuva "
+"vastausosoite tässä osiossa!"
 
 #. module: base
 #: field:ir.default,company_id:0
@@ -7701,6 +7826,8 @@ msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
+"Sinun täytyy valita yhteistyökumppani tilauslomakkeesta!\n"
+"Valitse yksi yhteistyökumppani ennen kuin valitset tuotteen."
 
 #. module: base
 #: model:res.country,name:base.gi
@@ -7725,7 +7852,7 @@ msgstr "Ohita vaihe"
 #. module: base
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
-msgstr "Pitcairn"
+msgstr "Pitcairnsaaret"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_event_type-act
@@ -7737,7 +7864,7 @@ msgstr "Aktiiviset kumppanien tapahtumat"
 #: code:addons/addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "Ei määritettyä kumppania merkkirivillä"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_rule
@@ -7759,13 +7886,13 @@ msgstr "STOCK_SPELL_CHECK"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Sorry!"
-msgstr ""
+msgstr "Pahoittelut!"
 
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/meeting_planify.py:0
 #, python-format
 msgid "meeting"
-msgstr ""
+msgstr "kokous"
 
 #. module: base
 #: view:ir.model:0
@@ -7783,7 +7910,7 @@ msgstr "%A - Viikonpäivän koko nimi."
 #. module: base
 #: selection:ir.cron,interval_type:0
 msgid "Months"
-msgstr "Kuukautta"
+msgstr "Kuukaudet"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
@@ -7813,7 +7940,7 @@ msgstr "Liitteet"
 #: code:addons/addons/account/wizard/wizard_refund.py:0
 #, python-format
 msgid "Data Insufficient !"
-msgstr ""
+msgstr "Riittämätön tieto !"
 
 #. module: base
 #: view:maintenance.contract.wizard:0
@@ -7839,7 +7966,7 @@ msgstr "Valmis"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "error"
-msgstr ""
+msgstr "virhe"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7899,7 +8026,7 @@ msgstr ""
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Total record different from the computed!"
-msgstr ""
+msgstr "Tietueiden määrä eri kuin laskettu!"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -7915,7 +8042,7 @@ msgstr "GPL-3 tai myöhäisempi versio"
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "open"
-msgstr ""
+msgstr "avaa"
 
 #. module: base
 #: field:workflow.activity,action:0
@@ -7926,7 +8053,7 @@ msgstr "Python-toiminto"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Unknown position in inherited view %s !"
-msgstr ""
+msgstr "Tuntematon paikka periytyneessä näkymässä %s!"
 
 #. module: base
 #: field:res.partner.event,probability:0
@@ -7962,7 +8089,7 @@ msgstr "Mauritania"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "failed. Bad Promotional Code."
-msgstr ""
+msgstr "epäonnistui. Epäkelpo kampanjakoodi."
 
 #. module: base
 #: view:workflow.activity:0
@@ -7984,11 +8111,6 @@ msgstr "Määrä"
 #: model:res.country,name:base.cg
 msgid "Congo"
 msgstr "Kongo"
-
-#. module: base
-#: view:res.lang:0
-msgid "Examples"
-msgstr "Esimerkit"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8046,7 +8168,7 @@ msgstr "Sveitsi"
 #: code:addons/addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Ei hintaa saatavilla !"
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -8069,12 +8191,17 @@ msgid ""
 "\n"
 "\"\""
 msgstr ""
+"\"\"\n"
+"Tämä testi tarkistaa moduulin nopeuden. Huomaa, että tarvitaan vähintään 5 "
+"demotietoa jotta testi voidaan suorittaa.\n"
+"\n"
+"\"\""
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "Toimittajan osoitetta ei ole määritetty"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8085,7 +8212,7 @@ msgstr "STOCK_HOME"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Cannot create invoice without a partner."
-msgstr ""
+msgstr "Et voi luoda laskua ilman kumppania."
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -8115,6 +8242,7 @@ msgstr "Objektin nimi"
 #, python-format
 msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
+"Sinun täytyy ensin peruuttaa kaikki myyntitilaukseen liittyvät laskut"
 
 #. module: base
 #: help:ir.actions.server,srcmodel_id:0
@@ -8204,7 +8332,7 @@ msgstr "Alatunnukset"
 #: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
-msgstr ""
+msgstr "Ongelma palvelintoiminnon konfiguraatiossa \"Talletustunnus\"."
 
 #. module: base
 #: code:addons/addons/document/document.py:0
@@ -8212,25 +8340,25 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: base
 #: code:addons/addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "This error occurs on database %s"
-msgstr ""
+msgstr "Virhe ilmenee tietokannassa %s"
 
 #. module: base
 #: code:addons/addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "No Related Models!!"
-msgstr ""
+msgstr "Ei liittyviä malleja!!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Reading Complexity"
-msgstr ""
+msgstr "Lukemisen monimutkaisuus"
 
 #. module: base
 #: wizard_button:base.module.import,init,import:0
@@ -8243,7 +8371,7 @@ msgstr "Tuo moduuli"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "Modify line failed !"
-msgstr ""
+msgstr "Muokkausrivi epäonnistui !"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8275,12 +8403,12 @@ msgstr "Togo"
 #: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "Failed to upload the file"
-msgstr ""
+msgstr "Tiedoston lähettäminen epäonnistui."
 
 #. module: base
 #: selection:workflow.activity,kind:0
 msgid "Stop All"
-msgstr "Kaikki seis"
+msgstr "Pysäytä kaikki"
 
 #. module: base
 #: view:res.lang:0
@@ -8296,7 +8424,7 @@ msgstr "Sarjoita"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Field %d should be a figure"
-msgstr ""
+msgstr "Kentän %d pitäisi olla luku"
 
 #. module: base
 #: code:addons/addons/project_timesheet/project_timesheet.py:0
@@ -8305,6 +8433,8 @@ msgid ""
 "No product defined on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"Työntekijälle ei ole määritetty tuotetta.\n"
+"Täytä työntekijä -lomakkeen tuntilista -välilehti."
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -8331,7 +8461,7 @@ msgstr "STOCK_PREFERENCES"
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "No python file found"
-msgstr ""
+msgstr "Python -tiedostoa ei löytynyt"
 
 #. module: base
 #: field:res.country.state,name:0
@@ -8343,7 +8473,7 @@ msgstr "Valtion nimi"
 #, python-format
 msgid ""
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr ""
+msgstr "Oletettu saldo (%.2f) on erisuuri kuin laskettu. (%2f)"
 
 #. module: base
 #: field:workflow.activity,join_mode:0
@@ -8383,14 +8513,14 @@ msgstr ""
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "Historize"
-msgstr ""
+msgstr "Historioi"
 
 #. module: base
 #: code:addons/addons/account_report/wizard/wizard_print_indicators.py:0
 #: code:addons/addons/board/wizard/board_wizard.py:0
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Käyttäjävirhe!"
 
 #. module: base
 #: wizard_button:module.lang.install,init,start:0
@@ -8411,13 +8541,13 @@ msgstr "OpenERP-kumppanit"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Operation is already finished !"
-msgstr ""
+msgstr "Toiminto on jo suoritettu loppuun !"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Installation of your instance(s)"
-msgstr ""
+msgstr "Instanssisi tai intanssiesi asennus"
 
 #. module: base
 #: model:res.country,name:base.by
@@ -8457,13 +8587,13 @@ msgstr "Katuosoite2"
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "Et voi muokata merkintää vahvistetulla tuntilistalla !"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The journal must have default credit and debit account"
-msgstr ""
+msgstr "Lokikirjassa täytyy olla oletus luotto- ja debettili"
 
 #. module: base
 #: model:res.country,name:base.pr
@@ -8474,7 +8604,7 @@ msgstr "Puerto Rico"
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Sähköposti ID:tä ei löytynyt yrityksen osoitteistosta!"
 
 #. module: base
 #: code:addons/addons/base/res/res_currency.py:0
@@ -8484,6 +8614,9 @@ msgid ""
 "' \\n                    'for the currency: %s \n"
 "' \\n                    'at the date: %s"
 msgstr ""
+"Kurssia ei löytynyt \n"
+"' \\n 'valuutalle: %s \n"
+"' \\n 'päivämäärällä: %s"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
@@ -8504,6 +8637,8 @@ msgstr "Avaa ikkuna"
 msgid ""
 "Can not send mail with empty body,you should have description in the body"
 msgstr ""
+"Sähköpostia ei voi lähettää tyhjällä viesti -kentällä. Sinulla tulisi olla "
+"kuvaus viesti -kentässä"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
@@ -8520,13 +8655,13 @@ msgstr "Suodin"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account !"
-msgstr ""
+msgstr "Epäkelpo tili !"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Sales Journal"
-msgstr ""
+msgstr "Myyntiloki"
 
 #. module: base
 #: model:res.country,name:base.gd
@@ -8552,7 +8687,7 @@ msgstr "Pyöristyskerroin"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "No piece number !"
-msgstr ""
+msgstr "Ei osan numeroa !"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_central_journal.py:0
@@ -8562,13 +8697,13 @@ msgstr ""
 #: code:addons/addons/hr_attendance/wizard/print_attendance_error.py:0
 #, python-format
 msgid "No records found for your selection!"
-msgstr ""
+msgstr "Tietoja ei löydy valinnalle"
 
 #. module: base
 #: code:addons/addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "to be invoiced"
-msgstr ""
+msgstr "laskutetaan"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
@@ -8608,6 +8743,7 @@ msgstr "Konfiguroi yksinkertainen näkymä"
 msgid ""
 "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
+"Virhe. Onko pylint oikein asennettu? (http://pypi.python.org/pypi/pylint)"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -8621,6 +8757,9 @@ msgid ""
 "Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"Sähköpostia ei lehetetty seuraaville kumppaneille, Sähköposti ei ole "
+"saatavilla\n"
+"\n"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_report_custom
@@ -8642,32 +8781,32 @@ msgstr "SXW"
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Ei voitu perua tätä hankintatilausta"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Database ID doesn't exist: %s : %s"
-msgstr ""
+msgstr "Tietokanta ID:tä ei ole: %s : %s"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "key '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "avainta '%s' ei löytynyt valintakentästä '%s'"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The value \"%s\" for the field \"%s\" is not in the selection"
-msgstr ""
+msgstr "Arvo \"%s\" kentälle \"%s\" ei ole valinnassa"
 
 #. module: base
 #: field:ir.actions.report.xml,auto:0
@@ -8771,7 +8910,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
-msgstr ""
+msgstr "Tietoliikennesektori"
 
 #. module: base
 #: view:ir.module.module:0
@@ -8808,6 +8947,7 @@ msgid ""
 "These is/are model(s) (%s) in selection which is/are not related to any "
 "other model"
 msgstr ""
+"Tämä/nämä on valinnan malli(t) (%s) joka/jotka eivät liity muihin malleihin"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_som-act
@@ -8830,7 +8970,7 @@ msgstr "Käyttöoikeuksien säännöt"
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Module has no objects"
-msgstr ""
+msgstr "Moduulilla ei ole objekteja"
 
 #. module: base
 #: field:ir.default,ref_table:0
@@ -8907,6 +9047,9 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
+"Et voi muuttaa vietyä merkintää tähän päiväkirjaan!\n"
+"Sinun tulisi asettaa päiväkirja sallimaan merkintöjen poiston jos haluat "
+"tehdä tämän."
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -8943,7 +9086,7 @@ msgstr ""
 #: code:addons/addons/product/pricelist.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Varoitus !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -8959,6 +9102,8 @@ msgid ""
 "A new project has been created !\n"
 "We suggest you to close this one and work on this new project."
 msgstr ""
+"Uusi projekti on luotu !\n"
+"Suosittelemme, että suljet tämän ja alat työskentelemään uudessa projektissa."
 
 #. module: base
 #: selection:res.partner.event,partner_type:0
@@ -8969,7 +9114,7 @@ msgstr "Jälleenmyyjä"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Receptions"
-msgstr ""
+msgstr "Tulevat vastaanotot"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -8982,7 +9127,7 @@ msgstr "Taulukkomallinen"
 msgid ""
 "There is no income '\\n                        'account defined for this "
 "product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Ei määritettyä tulo '\\n'tiliä tälle tuotteelle: \"%s\" (id:%d)"
 
 #. module: base
 #: field:ir.actions.todo,start_on:0
@@ -9008,7 +9153,7 @@ msgstr "Kumppani"
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
-msgstr ""
+msgstr "Sisäänkirjautumisen täytyy tapahtua heti uloskirjautumisen jälkeen !"
 
 #. module: base
 #: model:res.country,name:base.tr
@@ -9019,13 +9164,13 @@ msgstr "Turkki"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete a sale order line which is %s !"
-msgstr ""
+msgstr "Ei voi poistaa myyntitilauksen riviä joka on %s !"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_refund.py:0
 #, python-format
 msgid "Can not %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Ei voi %s vedos/proforma/peruuttaa laskua"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -9095,7 +9240,7 @@ msgstr "Toimitus"
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "The account entries lines are not in valid state."
-msgstr ""
+msgstr "Tilin merkintärivit eivät ole hyväksytyssä tilassa."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_10
@@ -9126,7 +9271,7 @@ msgstr "Raportin viite"
 #: code:addons/addons/base_report_designer/wizard/base_report_designer_modify.py:0
 #, python-format
 msgid "Report does not contain the sxw content!"
-msgstr ""
+msgstr "Raportti ei sisällä sxw sisältöä!"
 
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
@@ -9138,7 +9283,7 @@ msgstr ""
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "Ei tietoa"
 
 #. module: base
 #: help:ir.actions.wizard,multi:0
@@ -9164,12 +9309,13 @@ msgstr "Heard ja McDonaldinsaaret"
 #, python-format
 msgid "No employee defined for this user. You must create one."
 msgstr ""
+"Käyttäkälle ei ole määritetty työntekijää. Sinun täytyy luoda sellainen."
 
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "Ei kelvollista hintalistanriviä löydetty !"
 
 #. module: base
 #: field:ir.actions.act_window,view_id:0
@@ -9202,7 +9348,7 @@ msgstr "Alatunnukset"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to delete connected server"
-msgstr ""
+msgstr "Yhdistettyä palvelinta ei voida poistaa"
 
 #. module: base
 #: field:ir.actions.act_window,type:0
@@ -9219,13 +9365,13 @@ msgstr "Toiminnon tyyppi"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "products"
-msgstr ""
+msgstr "tuotteet"
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced !"
-msgstr ""
+msgstr "Et vo perua myyntitilauksen riviä joka on jo laskutettu !"
 
 #. module: base
 #: field:res.partner.bank.type,field_ids:0
@@ -9236,7 +9382,7 @@ msgstr "Tyyppikentät"
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "You must first select a partner !"
-msgstr ""
+msgstr "Sinun täytyy ensiksi valita yhteistyökumppani!"
 
 #. module: base
 #: field:ir.module.module,category_id:0
@@ -9264,6 +9410,7 @@ msgstr "Costa Rica"
 #, python-format
 msgid "Your can't submit bug reports due to uncovered modules: %s"
 msgstr ""
+"Et voi lähettää bug-raporttia johtuen kattamattomista moduuleista: %s"
 
 #. module: base
 #: view:ir.model:0
@@ -9282,19 +9429,19 @@ msgstr "Valuutat"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "EAN: "
-msgstr ""
+msgstr "EAN: "
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "Escalate"
-msgstr ""
+msgstr "Kiihdyttää"
 
 #. module: base
 #: code:addons/addons/project_timesheet/project_timesheet.py:0
 #, python-format
 msgid "Bad Configuration !"
-msgstr ""
+msgstr "Virheellinen konfiguraatio !"
 
 #. module: base
 #: view:ir.sequence:0
@@ -9315,6 +9462,10 @@ msgid ""
 "further info.\n"
 " \"\""
 msgstr ""
+"\"\"Tämä testi käyttää Pylint:ä ja tarkistaa onko moduuli ohjelmoitu Python -"
+"standardien mukaan. Katso http://www.logilab.org/project/name/pylint "
+"saadaksesi lisätietoa.\n"
+" \"\""
 
 #. module: base
 #: model:res.country,name:base.dk
@@ -9340,7 +9491,7 @@ msgstr "10. %S = 20"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "undefined get method !"
-msgstr ""
+msgstr "Määrittelemätön \"get\" menetelmä!"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -9356,13 +9507,13 @@ msgstr "Viro"
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not validate a non-balanced entry !"
-msgstr ""
+msgstr "Et voi hyväksyä merkintää joka ei ole tasan !"
 
 #. module: base
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Workflow Test"
-msgstr ""
+msgstr "Työnkulun testi"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -9375,6 +9526,8 @@ msgstr "Alankomaat"
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
 msgstr ""
+"Et voi poistaa projektia millä on tehtäviä. Ehdotan, että poistat sen "
+"käytöstä."
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_4
@@ -9395,13 +9548,13 @@ msgstr "Ostotarjous"
 #: code:addons/addons/odms/wizard/host_status.py:0
 #, python-format
 msgid "The Host type must be Amazon to perform this action."
-msgstr ""
+msgstr "Isännän tyyppi täytyy olla Amazon toiminnon suorittamista varten."
 
 #. module: base
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Standard Price"
-msgstr ""
+msgstr "Tuotteen standardi hinta"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_values
@@ -9412,7 +9565,7 @@ msgstr "ir.values"
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not duplicate a timesheet !"
-msgstr ""
+msgstr "Et voi monistaa tuntilistaa !"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -9423,18 +9576,18 @@ msgstr "STOCK_ZOOM_FIT"
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #, python-format
 msgid "Opportunity"
-msgstr ""
+msgstr "Mahdollisuus"
 
 #. module: base
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
-msgstr "Kongon demokraattinen tasavalta"
+msgstr "Congo"
 
 #. module: base
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "The object \"%s\" has no buyer assigned."
-msgstr ""
+msgstr "Objektille \"%s\" ei ole ostajaa määrättynä."
 
 #. module: base
 #: view:res.request:0
@@ -9453,6 +9606,7 @@ msgstr "Päivää"
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
 msgstr ""
+"Kumppanilla '+ line.partner_id.name+ ' ei ole määritettyä pankkitiliä"
 
 #. module: base
 #: model:res.country,name:base.jp
@@ -9503,7 +9657,7 @@ msgstr "Lisää RML-ylätunniste"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Missing info: Partner"
-msgstr ""
+msgstr "Puuttuva tieto: Kumppani"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -9525,7 +9679,7 @@ msgstr "Kroatia / hrvatski jezik"
 #: code:addons/addons/account/wizard/wizard_reconcile_select.py:0
 #, python-format
 msgid "Reconciliation"
-msgstr ""
+msgstr "Sovitus"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -9542,7 +9696,7 @@ msgstr "Suoritettava Python-koodi"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Entries: "
-msgstr ""
+msgstr "Merkinnät: "
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
@@ -9599,13 +9753,13 @@ msgstr "Valikkotoiminto"
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
-msgstr ""
+msgstr "Ei voi poistaa tätä dokumenttia koska sitä käytetään oletuksena"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "Purchase Journal"
-msgstr ""
+msgstr "Ostoloki"
 
 #. module: base
 #: selection:wizard.module.lang.export,state:0
@@ -9617,7 +9771,7 @@ msgstr "valitse"
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Graph"
-msgstr "Kuvaaja"
+msgstr "Kaavio"
 
 #. module: base
 #: field:res.partner,child_ids:0
@@ -9629,13 +9783,13 @@ msgstr "Kumppanin viite"
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "from stock and no minimum orderpoint rule defined"
-msgstr ""
+msgstr "varastosta ja ei pienintä tilauspistettä määritetty"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Production instance"
-msgstr ""
+msgstr "Tuotantoinstanssi"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -9646,7 +9800,7 @@ msgstr "HTML HTML:stä"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr ""
+msgstr "Vahvistettuja myyntitilauksia ei voi poistaa!"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_low_workflow
@@ -9688,7 +9842,7 @@ msgstr "Käyttöoikeudet"
 #. module: base
 #: model:res.country,name:base.gl
 msgid "Greenland"
-msgstr "Grönlanti"
+msgstr "Grönlant"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
@@ -9733,12 +9887,12 @@ msgstr "Uusi-Kaledonia (Ranska)"
 #: code:addons/addons/stock/stock.py:0
 #, python-format
 msgid "You can only delete draft moves."
-msgstr ""
+msgstr "Voit ainoastaan poistaa luonnossiirtoja."
 
 #. module: base
 #: field:res.partner.function,name:0
 msgid "Function Name"
-msgstr "Ammattinimike"
+msgstr "Funktion nimi"
 
 #. module: base
 #: view:maintenance.contract.wizard:0
@@ -9755,7 +9909,7 @@ msgstr "Kategorian nimi"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sat"
-msgstr ""
+msgstr "La"
 
 #. module: base
 #: field:res.request,act_from:0
@@ -9783,7 +9937,7 @@ msgstr "terp-report"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "You cannot finish the operation without Starting/Resuming it !"
-msgstr ""
+msgstr "Et voi päättää toimintoa ilman sen käynnistämistä/jatkamista !"
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
@@ -9800,7 +9954,7 @@ msgstr "Saapuvat siirtymät"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "There is no Operation to be cancelled !"
-msgstr ""
+msgstr "Ei ole peruutettavaa toimintoa !"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -9811,7 +9965,7 @@ msgstr "Kiina"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password empty !"
-msgstr ""
+msgstr "Tyhjä salasana !"
 
 #. module: base
 #: view:res.config.view:0
@@ -9823,7 +9977,7 @@ msgstr "Aseta"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Tue"
-msgstr ""
+msgstr "Ti"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -9849,7 +10003,7 @@ msgstr "Heti"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Hours Cost"
-msgstr ""
+msgstr "Tuntikustannukset"
 
 #. module: base
 #: help:ir.actions.server,condition:0
@@ -9922,13 +10076,13 @@ msgstr "Objektin tunnus"
 #. module: base
 #: selection:ir.report.custom,print_orientation:0
 msgid "Landscape"
-msgstr "Vaakasuunta"
+msgstr "Maisema"
 
 #. module: base
 #: code:addons/addons/project_gtd/wizard/project_gtd_daily.py:0
 #, python-format
 msgid "No timebox of the type \"%s\" defined !"
-msgstr ""
+msgstr "Ei määritettyä aikalaatikon tyyppiä \"%s\" !"
 
 #. module: base
 #: field:workflow.activity,split_mode:0
@@ -9950,7 +10104,7 @@ msgstr "Hallinto"
 #: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Tilaus ei ole luonnostilassa !"
 
 #. module: base
 #: selection:ir.rule,operator:0
@@ -9961,7 +10115,7 @@ msgstr "child_of"
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "Configration Error !"
-msgstr ""
+msgstr "Konfiguraatiovirhe !"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -9976,13 +10130,13 @@ msgstr ""
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "No Invoice Address"
-msgstr ""
+msgstr "Ei laskutusosoitetta"
 
 #. module: base
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
 msgid "Result of fields in %"
-msgstr ""
+msgstr "Kenttien tulokset % :ssa"
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -10023,7 +10177,7 @@ msgstr "Irak"
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Exception"
-msgstr ""
+msgstr "Poikkeus"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -10046,7 +10200,7 @@ msgstr "Toimittajakumppanit"
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Operation is not started yet !"
-msgstr ""
+msgstr "Toimintoa ei ole vielä aloitettu !"
 
 #. module: base
 #: selection:wizard.module.lang.export,format:0
@@ -10063,7 +10217,7 @@ msgstr "Perusobjekti"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "This instance is already running the latest version of %s"
-msgstr ""
+msgstr "Tästä instanssista on jo viimeisin versio %s"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -10092,7 +10246,7 @@ msgstr "terp-partner"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Bad query."
-msgstr ""
+msgstr "Virheellinen kysely."
 
 #. module: base
 #: field:ir.model.fields,field_description:0
@@ -10103,7 +10257,7 @@ msgstr "Kentän nimiö"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "unable to find a server with a newer version"
-msgstr ""
+msgstr "palvelimesta ei ole uudempaa versiota"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -10125,7 +10279,7 @@ msgstr "Antigua ja Barbuda"
 #: field:ir.report.custom.fields,fc0_condition:0
 #: field:workflow.transition,condition:0
 msgid "Condition"
-msgstr "Ehto"
+msgstr "Kunto"
 
 #. module: base
 #: code:addons/addons/event_project/wizard/event_task.py:0
@@ -10134,6 +10288,8 @@ msgid ""
 "No project defined for this event.\n"
 "You can create one with the retro-planning button !"
 msgstr ""
+"Tälle tapahtumalle ei ole määritetty projektia.\n"
+"Voit luoda sellaisen retro-planning -painikkeella !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_management
@@ -10160,7 +10316,7 @@ msgstr "Tiedot"
 #: code:addons/addons/wiki/wizard/open_page.py:0
 #, python-format
 msgid "Open Page"
-msgstr ""
+msgstr "Avaa sivu"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -10187,7 +10343,7 @@ msgstr "Seuraava ohjattu konfiguraatio"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Already Reconciled"
-msgstr ""
+msgstr "Jo soviteltu"
 
 #. module: base
 #: selection:ir.actions.todo,type:0
@@ -10199,7 +10355,7 @@ msgstr "Muu"
 #: code:addons/addons/membership/wizard/invoice_membership.py:0
 #, python-format
 msgid "No Address defined for this partner"
-msgstr ""
+msgstr "Kumppanille ei ole määritetty osoitetta"
 
 #. module: base
 #: selection:ir.server.object.lines,type:0
@@ -10248,7 +10404,7 @@ msgstr "="
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Second field should be figures"
-msgstr ""
+msgstr "Toinen kenttä pitäisi olla luku"
 
 #. module: base
 #: code:addons/addons/product/pricelist.py:0
@@ -10257,6 +10413,8 @@ msgid ""
 "No active version for the selected pricelist !\n"
 "' \\n                                'Please create or activate one."
 msgstr ""
+"Valitulle hinnastolle ei ole aktiivista versiota !\n"
+"' \\n'Luo sellainen tai aktivoi jokin."
 
 #. module: base
 #: field:res.request,trigger_date:0
@@ -10286,18 +10444,18 @@ msgstr "Korkea"
 #: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Line number"
-msgstr ""
+msgstr "Rivinumero"
 
 #. module: base
 #: field:ir.exports.line,export_id:0
 msgid "Export"
-msgstr "Vie"
+msgstr "Vienti"
 
 #. module: base
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Qty"
-msgstr ""
+msgstr "Tuleva määrä"
 
 #. module: base
 #: help:res.bank,bic:0
@@ -10309,7 +10467,7 @@ msgstr "BIC / SWIFT-koodi"
 #: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
 msgid "Suggestion"
-msgstr ""
+msgstr "Ehdoitus"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -10351,13 +10509,13 @@ msgstr ""
 #: code:addons/report/custom.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Virhe"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "EXJ"
-msgstr ""
+msgstr "EXJ"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -10368,25 +10526,25 @@ msgstr "Saint-Pierre ja Miquelon"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the field '%s' !"
-msgstr ""
+msgstr "Kenttää \"%s\" ei voi poistaa!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/base_module_quality.py:0
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Programming Error"
-msgstr ""
+msgstr "Ohjelmointivirhe"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Tuotteelle ei ole määritelty toimittajaa !"
 
 #. module: base
 #: field:res.partner.event,document:0
 msgid "Document"
-msgstr "Dokumentti"
+msgstr "Asiakirja"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -10403,7 +10561,7 @@ msgstr "STOCK_STOP"
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Ei hinnastoa!"
 
 #. module: base
 #: view:wizard.module.update_translations:0
@@ -10415,7 +10573,7 @@ msgstr "Päivitä"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Mon"
-msgstr ""
+msgstr "Ma"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
@@ -10424,6 +10582,8 @@ msgid ""
 "No available server for this offer.\n"
 "Please contact us."
 msgstr ""
+"Tarjoukselle ei ole saatavilla palvelinta.\n"
+"Ota meihin yhteyttä."
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -10437,6 +10597,8 @@ msgid ""
 "This test checks if the module satisfies the current coding standard used by "
 "OpenERP."
 msgstr ""
+"Tämä testi tarkistaa onko moduuli tehty OpenERP:n ohjelmointistandardien "
+"mukaan."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -10499,6 +10661,8 @@ msgid ""
 "You have to select a pricelist in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Sinun täytyy valita hintalista tilauslomakkeessa!\n"
+"Valitse yksi ennen tuotteen valitsemista"
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
@@ -10534,12 +10698,14 @@ msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
 "may be uploaded to launchpad."
 msgstr ""
+"Talleta tämä dokumentti TGZ-tiedostoon. Paketti sisältää UTF-8 %s tiedostot "
+"jotka voi lähettää launchpadiin."
 
 #. module: base
 #: code:addons/addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer has no Invoice Address."
-msgstr ""
+msgstr "Ostajalla ei ole laskutusosoitetta."
 
 #. module: base
 #: wizard_button:module.upgrade,end,config:0
@@ -10551,7 +10717,7 @@ msgstr "Aloita konfiguraatio"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "N (Number of Records)"
-msgstr ""
+msgstr "N (Tietueiden määrä)"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -10562,14 +10728,14 @@ msgstr "Katalaani / Català"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Partner incomplete"
-msgstr ""
+msgstr "Keskeneräinen kumppani"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "July"
-msgstr ""
+msgstr "Heinäkuu"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -10595,7 +10761,7 @@ msgstr "Saudi-Arabia"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Bar charts need at least two fields"
-msgstr ""
+msgstr "Pylväsdiagrammi tarvitsee vähintään kaksi kenttää"
 
 #. module: base
 #: help:res.partner,supplier:0
@@ -10615,7 +10781,7 @@ msgstr "Suhdekenttä"
 #: code:addons/addons/project/project.py:0
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "Tehtävän '%s' asetus käynnissä"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -10647,6 +10813,8 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "' \\n                'Please set one before choosing a product."
 msgstr ""
+"Sinun täytyy valita hinnasto myyntilomakkeelta !\n"
+"' \\n'Aseta yksi ennen tuotteen valitsemista."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title
@@ -10658,7 +10826,7 @@ msgstr "Nimikkeet"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Result"
-msgstr ""
+msgstr "Tulos"
 
 #. module: base
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
@@ -10667,6 +10835,8 @@ msgid ""
 "Operation has already started !' 'You  can either Pause /Finish/Cancel the "
 "operation"
 msgstr ""
+"Toiminto on jo aloitettu ! ' 'Voit joko pysäyttää/Lopettaa/Peruuttaa "
+"toiminnon"
 
 #. module: base
 #: field:ir.actions.todo,start_date:0
@@ -10682,7 +10852,7 @@ msgstr "XML-polku"
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Recursive mod10 is invalid for reference: %s"
-msgstr ""
+msgstr "Toistuva mod10 on virheellinen viitteelle: %s"
 
 #. module: base
 #: model:res.country,name:base.gn
@@ -10694,13 +10864,13 @@ msgstr "Guinea"
 #: code:addons/addons/point_of_sale/wizard/wizard_pos_payment.py:0
 #, python-format
 msgid "No order lines defined for this sale."
-msgstr ""
+msgstr "Ei tilausrivejä määritetty tälle myynnille."
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "Bad total !"
-msgstr ""
+msgstr "Epäkelpo loppusumma !"
 
 #. module: base
 #: model:ir.actions.todo,note:base.config_wizard_step_user
@@ -10729,7 +10899,7 @@ msgstr "tree_but_action, client_print_multi"
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "Pending"
-msgstr ""
+msgstr "Odottaa"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -10740,7 +10910,7 @@ msgstr "El Salvador"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to delete a connected backup configuration"
-msgstr ""
+msgstr "Ei voi poistaa yhdistettyä varmistuskonfiguraatiota"
 
 #. module: base
 #: field:res.bank,phone:0
@@ -10836,6 +11006,8 @@ msgid ""
 "You have to change either the product,\" \\n                \" the quantity "
 "or the pricelist."
 msgstr ""
+"Ei voitu löytää tuotteeseen\" \\n \" täsmäävää hinnaston riviä ja määrää.\n"
+"Sinun on joko vaihdettava tuote \" \\n\", määrä tai hinnasto."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
@@ -10852,7 +11024,7 @@ msgstr "Yhdysvaltain Neitsytsaaret"
 #: code:addons/addons/crm_profiling/crm_profiling.py:0
 #, python-format
 msgid "Questionnaire"
-msgstr ""
+msgstr "Kyselylomake"
 
 #. module: base
 #: view:ir.rule:0
@@ -10864,7 +11036,7 @@ msgstr ""
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "An account already exists for this email address."
-msgstr ""
+msgstr "Tälle sähköpostiosoitteelle on jo olemassa tili."
 
 #. module: base
 #: field:ir.report.custom,field_parent:0
@@ -10887,7 +11059,7 @@ msgstr "Toiminnon käyttö"
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Pylint Test"
-msgstr ""
+msgstr "Pylint testi"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
@@ -10967,6 +11139,8 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !'\\n      "
 "          'You used %s, which is not a valid SQL table name."
 msgstr ""
+"Toinen väite monta-moneen kentässä %s täytyy olla SQL -taulu !'\\n 'Käytit "
+"%s, joka ei ole kelvollinen SQL -taulun nimi."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
@@ -11037,7 +11211,7 @@ msgstr "STOCK_FIND"
 #: code:addons/addons/product/pricelist.py:0
 #, python-format
 msgid "Partner section of the product form"
-msgstr ""
+msgstr "Tuotelomakkeen kumppaniosio"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_maintenance_contract_add_wizard
@@ -11056,7 +11230,7 @@ msgstr "Versio"
 #: code:addons/addons/base_module_quality/wizard/quality_save_report.py:0
 #, python-format
 msgid "No report to save!"
-msgstr ""
+msgstr "Ei tallennettavaa raporttia!"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
@@ -11067,7 +11241,7 @@ msgstr ""
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
-msgstr ""
+msgstr "Vietnam / Vietnam"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -11084,12 +11258,12 @@ msgstr "Työnkulku jonka malli käynnistää"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The search method is not implemented on this object !"
-msgstr ""
+msgstr "Hakumenetelmä ei ole käytössä tässä objektissa!"
 
 #. module: base
 #: model:res.country,name:base.jm
 msgid "Jamaica"
-msgstr "Jamaica"
+msgstr "Jamaika"
 
 #. module: base
 #: code:addons/addons/odms/odms_invoice.py:0
@@ -11116,7 +11290,7 @@ msgstr "Azerbaidžan"
 #: code:addons/addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varoitus"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -11127,7 +11301,7 @@ msgstr "Arabia / الْعَرَبيّة"
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The Sign-in date must be in the past"
-msgstr ""
+msgstr "Sisäänkirjautumis päivämäärän täytyy olla menneisyydessä"
 
 #. module: base
 #: selection:ir.report.custom,state:0
@@ -11158,7 +11332,7 @@ msgstr "STOCK_MEDIA_PREVIOUS"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "Sun"
-msgstr ""
+msgstr "Su"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -11186,7 +11360,7 @@ msgstr "ALV ei vaikuta olevan oikea."
 msgid ""
 "There is no expense account defined ' \\n                                "
 "'for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Ei menotiliä määritetty ' \\n 'tälle tuotteelle: \"%s\" (id:%d)"
 
 #. module: base
 #: selection:ir.report.custom.fields,operation:0
@@ -11274,7 +11448,7 @@ msgstr "Täydellinen nimi"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Entry is already reconciled"
-msgstr ""
+msgstr "Merkintä on jo soviteltu"
 
 #. module: base
 #: view:ir.report.custom:0
@@ -11289,13 +11463,13 @@ msgstr "On objekti"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
-msgstr ""
+msgstr "IT-sektori"
 
 #. module: base
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "Result in %"
-msgstr ""
+msgstr "Tulos %:na"
 
 #. module: base
 #: view:ir.report.custom:0
@@ -11307,7 +11481,7 @@ msgstr "Ota pois käytöstä"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
 
 #. module: base
 #: view:res.lang:0
@@ -11350,7 +11524,7 @@ msgstr "Aihe"
 #: code:addons/addons/account/wizard/wizard_journal.py:0
 #, python-format
 msgid "This period is already closed !"
-msgstr ""
+msgstr "Tämä jakso on jo suljettu !"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -11380,6 +11554,8 @@ msgid ""
 "You tried to sign in with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
+"Yritit kirjautua päivämäärällä joka on toisessa tapahtumassa !\n"
+"Ota yhteyttä järjestelmänvalvojaan korjataksesi läsnäolot."
 
 #. module: base
 #: view:ir.actions.report.custom:0
@@ -11394,25 +11570,26 @@ msgstr "Konfiguraation eteneminen"
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_11
 msgid "Configuration Wizards"
-msgstr "Konfiguraatioiden ohjatut toiminnot"
+msgstr "Määritä ohjattuja toimintoja"
 
 #. module: base
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
 msgid "Unable to parse the result. Check the details."
-msgstr ""
+msgstr "Ei voi jäsennellä tulosta. Tarkista yksityiskohdat."
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
 msgstr ""
+"Sinun täytyy laittaa kumppanin sähköpostiosoite käyttääksesi tätä toimintoa!"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Demo instance"
-msgstr ""
+msgstr "Demoinstanssi"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_localisation
@@ -11439,19 +11616,19 @@ msgstr "STOCK_REVERT_TO_SAVED"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "November"
-msgstr ""
+msgstr "Marraskuu"
 
 #. module: base
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Unplanned Qty"
-msgstr ""
+msgstr "Suunnittelematon määrä"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "Et voi muokata merkintää vahvistetulla tuntilistalla !"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_lang_import
@@ -11518,6 +11695,8 @@ msgid ""
 "You tried to sign out with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
+"Yritit uloskirjautua päivämäärällä joka on aiemassa tapahtumassa !\n"
+"Ota yhteyttä järjestelmänvalvojaan korjataksesi läsnäolon."
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -11555,13 +11734,13 @@ msgstr "Turks- ja Caicossaaret"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Unable to delete an active subdomain"
-msgstr ""
+msgstr "Ei voi poistaa aktiivista alitoimialuetta"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
+msgstr "Et voi poistaa listaa/listoja jotka on jo vahvistettu !"
 
 #. module: base
 #: field:res.partner.bank,owner_name:0
@@ -11579,7 +11758,7 @@ msgstr "Resurssiobjekti"
 #: field:res.partner.address,function:0
 #: selection:workflow.activity,kind:0
 msgid "Function"
-msgstr "Tehtävä"
+msgstr "Toiminto"
 
 #. module: base
 #: field:res.partner.event,som:0
@@ -11605,7 +11784,7 @@ msgstr "Kuvan esikatselu"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Produced Qty"
-msgstr ""
+msgstr "Tuotettu määrä"
 
 #. module: base
 #: model:res.country,name:base.yu
@@ -11626,14 +11805,14 @@ msgstr "Valitse asennettava kieli:"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Cannot modify a captcha"
-msgstr ""
+msgstr "Et voi muokata captchaa (tunnistusta)"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "February"
-msgstr ""
+msgstr "Helmikuu"
 
 #. module: base
 #: model:res.country,name:base.gw
@@ -11649,7 +11828,7 @@ msgstr "Työnkulun instanssit"
 #: code:addons/addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Partners: "
-msgstr ""
+msgstr "Kumppanit: "
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -11661,7 +11840,7 @@ msgstr "Pohjois-Korea"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "April"
-msgstr ""
+msgstr "Huhtikuu"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -11672,7 +11851,7 @@ msgstr "Luo objekti"
 #: code:addons/addons/base_module_quality/base_module_quality.py:0
 #, python-format
 msgid "The module has to be installed before running this test."
-msgstr ""
+msgstr "Moduulin täytyy olla asennettu ennen testin suorittamista."
 
 #. module: base
 #: field:res.bank,bic:0
@@ -11684,7 +11863,7 @@ msgstr "BIC / SWIFT-koodi"
 #: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "Data Insufficient"
-msgstr ""
+msgstr "Riittämätön tieto"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
@@ -11700,12 +11879,12 @@ msgstr "Puola / Język polski"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "No analytic journal !"
-msgstr ""
+msgstr "Ei analyyttistä lokia"
 
 #. module: base
 #: field:ir.exports,name:0
 msgid "Export Name"
-msgstr "Vientinimi"
+msgstr "Vienti nimi"
 
 #. module: base
 #: help:res.partner.address,type:0
@@ -11737,3 +11916,15 @@ msgstr "Sri Lanka"
 #: selection:module.lang.install,init,lang:0
 msgid "Russian / русский язык"
 msgstr "Venäjä / русский язык"
+
+#, python-format
+#~ msgid ""
+#~ "Some installed modules depends on the module you plan to desinstall :\n"
+#~ " %s"
+#~ msgstr ""
+#~ "Jotkin asennetut moduulit ovat riippuvaisia moduulista jonka aiot poistaa:\n"
+#~ " %s"
+
+#~ msgid "Make the rule global, otherwise it needs to be put on a group or user"
+#~ msgstr ""
+#~ "Tekee säännöstä yleisen, muuten se täytyy liittää ryhmään tai käyttäjään"
