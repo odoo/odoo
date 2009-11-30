@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,20 +15,19 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from xml.dom import minidom
+from osv.osv import osv_pool
 from osv import fields,osv
 import netsvc
 import pooler
 import string
 import tools
 
-objects_proxy = netsvc.SERVICES['object'].__class__
-
-class recording_objects_proxy(objects_proxy):
+class recording_objects_proxy(osv_pool):
     def execute(self, *args, **argv):
         if len(args) >= 6 and isinstance(args[5], dict):
             _old_args = args[5].copy()
@@ -145,7 +144,7 @@ class base_module_record(osv.osv):
                         if not newid:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         self.ids[(fields[key]['relation'], valitem[1])] = newid
-                        
+
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
@@ -198,7 +197,7 @@ class base_module_record(osv.osv):
                 if type(data[key])==type(True) or type(data[key])==type(1):
                     result[key]=data[key]
                 elif not data[key]:
-                    result[key] = False                    
+                    result[key] = False
                 else:
                     result[key]=data[key][0]
 
