@@ -82,7 +82,7 @@ class Graph(dict):
 
         ## and we update the default values with values from the database
         additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
-
+        
         for package in self.values():
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
@@ -602,6 +602,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             has_updates = True
             for kind in ('init', 'update'):
+                if package.state=='to upgrade':
+                    # upgrading the module information
+                    modobj.write(cr, 1, [mid], {
+                    'description': package.data.get('description', ''),
+                    'shortdesc': package.data.get('name', ''),
+                    'author': package.data.get('author', 'Unknown'),
+                    'website': package.data.get('website', ''),
+                    'license': package.data.get('license', 'GPL-2'),
+                    'certificate': package.data.get('certificate') or None,
+                    })
                 for filename in package.data.get('%s_xml' % kind, []):
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
                     name, ext = os.path.splitext(filename)
