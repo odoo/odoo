@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -72,7 +72,7 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
             <label string="%(company_name)s: User's Company name" colspan="2"/>
             <label string="%(company_currency)s: User's Company Currency" colspan="2"/>
             <label string="%(heading)s: Move line header" colspan="2"/>
-            <label string="%(line)s: Account Move lines" colspan="2"/>
+            <label string="%(line)s: Ledger Posting lines" colspan="2"/>
         </page>
     </notebook>
 </form>"""
@@ -168,7 +168,7 @@ class followup_all_print(wizard.interface):
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
                     body = pool.get('res.users').browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-                    
+
                 total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
@@ -268,9 +268,9 @@ class followup_all_print(wizard.interface):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
                 to_update[str(id)] = fups[followup_line_id][1]
-        
+
         message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
-        
+
         return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
 
     def _get_screen1_values(self, cr, uid, data, context):

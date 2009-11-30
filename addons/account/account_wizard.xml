@@ -85,10 +85,10 @@
 
 
         <!-- account.move validate -->
-        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Account Moves"/>
+        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Ledger Postings"/>
         <menuitem action="wizard_validate_account_moves" id="menu_validate_account_moves" parent="account.menu_finance_periodical_processing" type="wizard"/>
 
-        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Account Moves"/>
+        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Ledger Postings"/>
 
 		<!-- Use Models -->
         <wizard string="Create Entries From Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -103,7 +103,7 @@ class account_payment_term_line(osv.osv):
     _constraints = [
         (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
     ]
-    
+
 account_payment_term_line()
 
 
@@ -418,7 +418,7 @@ class account_account(osv.osv):
             line_obj = self.pool.get('account.move.line')
             account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains account moves.'))
+                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains Ledger Postings.'))
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 account_account()
 
@@ -1426,11 +1426,11 @@ class account_tax(osv.osv):
         for tax in taxes:
             if (tax.type=='percent') and not tax.include_base_amount:
                 tax_parent_tot += tax.amount
-                
+
         for tax in taxes:
             if (tax.type=='fixed') and not tax.include_base_amount:
                 cur_price_unit -= tax.amount
-                
+
         for tax in taxes:
             if tax.type=='percent':
                 if tax.include_base_amount:

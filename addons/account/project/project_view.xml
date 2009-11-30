@@ -80,7 +80,7 @@
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
         <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="account.menu_analytic_accounting"/>
-	
+
 		<record id="act_account_renew_view" model="ir.actions.act_window">
             <field name="name">Accounts to Renew</field>
             <field name="type">ir.actions.act_window</field>
@@ -88,7 +88,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date','&lt;',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
@@ -105,10 +105,10 @@
             id="account_analytic_def_chart"
             parent="account_analytic_def_account"/>
 <!--        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>-->
-	
+
 		<wizard id="wizard_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.account.chart" string="Analytic Chart of Accounts"/>
         <menuitem icon="STOCK_INDENT" action="wizard_analytic_account_chart" id="menu_action_analytic_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
-        
+
         <record id="analytic_account_form" model="ir.actions.act_window">
             <field name="name">New Analytic Account</field>
             <field name="res_model">account.analytic.account</field>
@@ -182,7 +182,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries Encoding by Line"/>
+        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Making Entries by Line"/>
         <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>
         <menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
 

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 07:37+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-11-27 12:39+0000\n"
+"Last-Translator: TeMPO <info@tempo-consulting.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:35+0000\n"
+"X-Launchpad-Export-Date: 2009-11-28 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -87,7 +87,7 @@ msgstr "Approvisionnements en Exception"
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
-msgstr "Centre de Travail d'Acheminement"
+msgstr "Postes de charges"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -98,7 +98,7 @@ msgstr "Non utilisé dans les calculs, pour information seulement."
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "Acheminements"
+msgstr "Gammes"
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -182,9 +182,9 @@ msgid ""
 "Number of operation this workcenter can do in parallel. If this workcenter "
 "represent a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Nombre d'opération que ce centre de travail peut effectuer en parallèle. Si "
-"ce centre de travail représente une équipe de 5 travailleurs, la capacité "
-"par cycle est de 5."
+"Nombre d'opérations que ce poste de charge peut faire en parallèle. si ce "
+"centre de travail représente une équipe de 5 personnes, la capacité par "
+"cycle est 5."
 
 #. module: mrp
 #: wizard_button:product.product.procurement,init,create:0
@@ -212,7 +212,7 @@ msgstr "Produits consommés"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr ""
+msgstr "Compte analyt. du cycle"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -598,7 +598,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr "Temps en heures pour effectuer un cycle."
+msgstr "Temps nécessaire à la réalisation d'un cycle"
 
 #. module: mrp
 #: field:mrp.production,date_finnished:0
@@ -636,7 +636,7 @@ msgstr "En attente"
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
-msgstr "Acheminement"
+msgstr "Gamme"
 
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
@@ -933,7 +933,7 @@ msgstr "Nom"
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycle"
-msgstr "Nombre de Cycle"
+msgstr "Nombre de cycles"
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
@@ -960,7 +960,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_efficiency:0
 msgid "Time Efficiency"
-msgstr "Éfficacité dans le temps"
+msgstr "Rendement temps"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
@@ -1059,7 +1059,7 @@ msgstr "Nombre de produits à manufacturer"
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "Emplacement où le système stoquera les produits finis."
+msgstr "Emplacement où le système stockera les produits finis."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1084,7 +1084,7 @@ msgstr "Révisions"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Product Efficiency"
-msgstr "Efficacité Produit"
+msgstr "Rendement produit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
@@ -1366,7 +1366,7 @@ msgstr "Document central pour l'approvisionnement en produits"
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action3
 msgid "Production Orders in Progress"
-msgstr "Ordres de Production en Marche"
+msgstr "Ordres de production en cours"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_stock_warehouse_orderpoint
@@ -1670,8 +1670,8 @@ msgid ""
 "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
 "production."
 msgstr ""
-"Efficacité de la production. Un facteur de 0.9 signifie une perte de 10% de "
-"la production."
+"Rendement de la production. Un facteur de 0,9 traduit une perte de "
+"production de 10 %"
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -1743,7 +1743,7 @@ msgstr "Propriété"
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "Acheminement Parent"
+msgstr "Gamme parente"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -1774,11 +1774,10 @@ msgid ""
 "operations and to plan futur loads on workcenters based on production "
 "plannification."
 msgstr ""
-"La liste des opérations (liste des centre de production) pour produire le "
-"produit fini. Le routage est principalement utilisé pour calculer les coûts "
-"des centres de production pendant les opérations et pour planifier la charge "
-"future sur les centres de production basée sur la planification de la "
-"production."
+"La liste des opérations pour fabriquer le produit fini. La gammeest "
+"principalement utilisée pour calculer les coûts des postes de charges "
+"pendant les opérations et pour planifier la charge future sur les centres de "
+"production à partir de la planification de la production."
 
 #. module: mrp
 #: selection:mrp.production,state:0

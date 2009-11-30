@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -63,7 +63,7 @@ class hr_expense_expense(osv.osv):
         'date_confirm': fields.date('Date Confirmed'),
         'date_valid': fields.date('Date Validated'),
         'user_valid': fields.many2one('res.users', 'Validation User'),
-        'account_move_id': fields.many2one('account.move', 'Account Move'),
+        'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, method=True, string='Total Amount'),
@@ -127,7 +127,7 @@ class hr_expense_expense(osv.osv):
                     acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expanse account for Product purchase, `property_account_expense_categ`'))
-                    
+
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc,
@@ -174,11 +174,11 @@ hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
-    
+
     _columns = {
                 'hr_expense_ok': fields.boolean('Can be Expensed', help="Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
-    
+
 product_product()
 
 

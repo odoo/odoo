@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,7 +64,7 @@ class account_move_line(osv.osv):
             if not journal.allow_date:
                 period=self.pool.get('account.period').browse(cr,uid,[period_id])[0]
                 if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') and time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                    raise osv.except_osv(_('Error'),_('The date of your account move is not in the defined period !'))
+                    raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
 

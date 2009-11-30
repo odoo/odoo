@@ -2,20 +2,20 @@
 <openerp>
     <data noupdate="1">
         <!--
-    Sequences for packings
+    Sequences for pickings
     -->
-        
+
         <record id="seq_type_picking" model="ir.sequence.type">
-            <field name="name">Packing</field>
+            <field name="name">Picking</field>
             <field name="code">stock.picking</field>
         </record>
 
         <record id="seq_picking" model="ir.sequence">
-            <field name="name">Packing</field>
+            <field name="name">Picking</field>
             <field name="code">stock.picking</field>
             <field name="prefix">PACK</field>
         </record>
-        
+
         <!--
     Sequences from tracking numbers
     -->
@@ -31,12 +31,12 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
-        
+
         <record id="sequence_type_tracking" model="ir.sequence.type">
             <field name="name">Stock Tracking Lots</field>
             <field name="code">stock.lot.tracking</field>
         </record>
-        
+
         <record id="sequence_tracking" model="ir.sequence">
             <field name="name">Stock Tracking Lots</field>
             <field name="code">stock.lot.tracking</field>

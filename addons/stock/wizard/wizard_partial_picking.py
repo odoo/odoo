@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,13 +27,14 @@ import pooler
 import wizard
 from osv import osv
 import tools
+from tools.translate import _
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
 
 _moves_arch_end = '''<?xml version="1.0"?>
-<form string="Packing result">
-    <label string="The packing has been successfully made !" colspan="4"/>
+<form string="Picking result">
+    <label string="The picking has been successfully made !" colspan="4"/>
     <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
 _moves_fields_end = {
@@ -54,7 +55,7 @@ def _get_moves(self, cr, uid, data, context):
     res = {}
 
     _moves_fields.clear()
-    _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make packing">']
+    _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
 
     for m in pick.move_lines:
         quantity = m.product_qty
@@ -63,7 +64,7 @@ def _get_moves(self, cr, uid, data, context):
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
-                'string': '%s - %s' % (_to_xml(m.product_id.code or '/'), _to_xml(m.product_id.name)),
+                'string': _to_xml(m.name),
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
@@ -208,7 +209,7 @@ def _do_split(self, cr, uid, data, context):
 
 def _get_default(self, cr, uid, data, context):
     if data['form']['back_order']:
-        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Picking.') % (tools.ustr(data['form']['back_order']),)
     return data['form']
 
 class partial_picking(wizard.interface):

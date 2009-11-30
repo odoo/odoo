@@ -331,25 +331,25 @@
         src_model="sale_journal.sale.journal"
         id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
 
-    <act_window name="Assigned packing"
+    <act_window name="Assigned picking"
         domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
         res_model="stock.picking"
         src_model="sale_journal.picking.journal"
         id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
 
-    <act_window name="Confirmed packing"
+    <act_window name="Confirmed picking"
         domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
         res_model="stock.picking"
         src_model="sale_journal.picking.journal"
         id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
 
-    <act_window name="Assigned packing"
+    <act_window name="Assigned picking"
         domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
         res_model="stock.picking"
         src_model="sale_journal.sale.journal"
         id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
 
-    <act_window name="Confirmed packing"
+    <act_window name="Confirmed picking"
         domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
         res_model="stock.picking"
         src_model="sale_journal.sale.journal"

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -102,11 +102,11 @@ class mrp_repair(osv.osv):
            ], "Invoice Method",
             select=True, required=True, states={'draft':[('readonly',False)]}, readonly=True, help='This field allow you to change the workflow of the repair order. If value selected is different from \'No Invoice\', it also allow you to select the pricelist and invoicing address.'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-        'picking_id': fields.many2one('stock.picking', 'Packing',readonly=True),
+        'picking_id': fields.many2one('stock.picking', 'Picking',readonly=True),
         'fees_lines' : fields.one2many('mrp.repair.fee', 'repair_id', 'Fees Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'internal_notes' : fields.text('Internal Notes'),
         'quotation_notes' : fields.text('Quotation Notes'),
-        'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a packing with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
+        'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired' : fields.boolean('Repaired', readonly=True),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),

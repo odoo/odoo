@@ -163,7 +163,7 @@ class product_product(osv.osv):
 
     _columns = {
         'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
+        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Future stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
         'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
         'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
         'track_production': fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
@@ -179,34 +179,34 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receptions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Stock')
+                        res['fields']['virtual_available']['string'] = _('Future Stock')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Deliveries')
+                        res['fields']['virtual_available']['string'] = _('Future Deliveries')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Delivered Qty')
 
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur P&L')
+                        res['fields']['virtual_available']['string'] = _('Future P&L')
                     res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Qty')
+                        res['fields']['virtual_available']['string'] = _('Future Qty')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Unplanned Qty')
 
                 if location_info.usage == 'production':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Productions')
+                        res['fields']['virtual_available']['string'] = _('Future Productions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
 
@@ -222,7 +222,7 @@ class product_template(osv.osv):
             'stock.location',
             type='many2one',
             relation='stock.location',
-            string="Procurement Location",
+            string="Requisition Location",
             method=True,
             view_load=True,
             domain=[('usage','like','procurement')],

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +41,7 @@ class wizard_report(wizard.interface):
         pool_obj = pooler.get_pool(cr.dbname)
         data_model = pool_obj.get(data['model']).browse(cr,uid,data['id'])
         if not data_model.dotation_ids:
-            raise wizard.except_wizard(_('Insufficient Data!'),_('No Dotations or Master Budget Expenses Found on Budget %s!') % data_model.name)
+            raise wizard.except_wizard(_('Insufficient Data!'),_('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
         return data['form']
 
     states = {

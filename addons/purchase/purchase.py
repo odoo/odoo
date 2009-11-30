@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -180,22 +180,22 @@ class purchase_order(osv.osv):
                 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
-        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_total': fields.function(_amount_all, method=True, string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),    
-        'company_id': fields.many2one('res.company','Company',required=True),    
+        'create_uid':  fields.many2one('res.users', 'Responsible'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
@@ -357,7 +357,7 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Could not cancel purchase order !'),
-                        _('You must first cancel all packing attached to this purchase order.'))
+                        _('You must first cancel all picking attached to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)

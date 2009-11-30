@@ -2,7 +2,7 @@
 <data>
 
 	#
-	# Packings by invoice type
+	# Pickings by invoice type
 	#
 
 	<record model="ir.ui.view" id="view_picking_invoice_type_stats_form">
@@ -10,7 +10,7 @@
 		<field name="model">sale_journal.invoice.type.stats</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Packing by invoice method">
+			<form string="Picking by invoice method">
 				<field name="name" select="1"/>
 				<field name="invoice_state" select="1"/>
 				<field name="state" select="1"/>
@@ -40,7 +40,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open">
-		<field name="name">Statistics on packing to invoice</field>
+		<field name="name">Statistics on picking to invoice</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -49,28 +49,28 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_month">
-		<field name="name">Packing by invoice method</field>
+		<field name="name">Picking by invoice method</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	
-	<menuitem name="Packing Journal" id="menu_definition_journal_reporting" parent="stock.next_id_61"/>
+
+	<menuitem name="Picking Journal" id="menu_definition_journal_reporting" parent="stock.next_id_61"/>
 	<menuitem name="This Month" id="menu_definition_journal_reporting_this" parent="menu_definition_journal_reporting"/>
-	<menuitem name="Packing by Invoice Method" id="menu_invoice_type_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_invoice_type_picking_stats_open_menu_month"/>
+	<menuitem name="Picking by Invoice Method" id="menu_invoice_type_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_invoice_type_picking_stats_open_menu_month"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_all">
-		<field name="name">Packing by invoice method</field>
+		<field name="name">Picking by invoice method</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	
+
 	<menuitem name="All Months" id="menu_definition_journal_reporting_all" parent="menu_definition_journal_reporting"/>
-	<menuitem name="Packing by Invoice Method" id="menu_invoice_type_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_invoice_type_picking_stats_open_menu_all"/>
+	<menuitem name="Picking by Invoice Method" id="menu_invoice_type_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_invoice_type_picking_stats_open_menu_all"/>
 
 	#
 	# Packing by journal
@@ -81,7 +81,7 @@
 		<field name="model">sale_journal.picking.stats</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Packing by journals">
+			<form string="Picking by journals">
 				<field name="name" select="1"/>
 				<field name="state" select="1"/>
 				<field name="journal_id" select="1"/>
@@ -97,7 +97,7 @@
 		<field name="model">sale_journal.picking.stats</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Packing by journals">
+			<tree string="Picking by journals">
 				<field name="name"/>
 				<field name="state"/>
 				<field name="journal_id"/>
@@ -110,25 +110,25 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_month">
-		<field name="name">Packing by journal</field>
+		<field name="name">Picking by journal</field>
 		<field name="res_model">sale_journal.picking.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	
-	<menuitem name="Packing by Journal" id="menu_picking_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_picking_picking_stats_open_menu_month"/>
-	
+
+	<menuitem name="Picking by Journal" id="menu_picking_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_picking_picking_stats_open_menu_month"/>
+
 	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_all">
-		<field name="name">Packing by journal</field>
+		<field name="name">Picking by journal</field>
 		<field name="res_model">sale_journal.picking.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	
-	<menuitem name="Packing by Journal" id="menu_picking_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_picking_picking_stats_open_menu_all"/>
+
+	<menuitem name="Picking by Journal" id="menu_picking_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_picking_picking_stats_open_menu_all"/>
 
 </data>
 </openerp>
