@@ -679,7 +679,7 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
-            move_id = self.pool.get('account.move').create(cr, uid, move)
+            move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
             new_move_name = self.pool.get('account.move').browse(cr, uid, move_id).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
