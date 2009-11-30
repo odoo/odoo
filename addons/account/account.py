@@ -930,7 +930,7 @@ class account_move(osv.osv):
             line_id = res[0]
         else:
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': 'Centralisation '+mode,
+                'name': _('Centralisation ') + mode,
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
