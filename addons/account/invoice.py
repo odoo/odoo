@@ -314,9 +314,7 @@ class account_invoice(osv.osv):
         'state': lambda *a: 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', c),
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
     }
@@ -1079,7 +1077,7 @@ class account_invoice_line(osv.osv):
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('invoice_id','company_id',type='many2one',object='res.company',string='Company')
+        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company')
     }
     _defaults = {
         'quantity': lambda *a: 1,

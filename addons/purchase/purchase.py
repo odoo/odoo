@@ -449,7 +449,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company')
     }
     _defaults = {
         'product_qty': lambda *a: 1.0
