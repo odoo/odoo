@@ -436,7 +436,7 @@ class stock_picking(osv.osv):
             ('confirmed', 'Confirmed'),
             ('assigned', 'Available'),
             ('done', 'Done'),
-            ('cancel', 'Canceled'),
+            ('cancel', 'Cancelled'),
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Planned Date', select=1),
@@ -959,7 +959,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Canceled')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
