@@ -454,8 +454,8 @@ class hr_attendance(osv.osv):
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
-                            AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
+                        ON (s.date_to >= date_trunc('day',a.name) \
+                            AND s.date_from <= a.name \
                             AND s.user_id = e.user_id) \
                 WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
                 GROUP BY a.id")
@@ -515,8 +515,8 @@ class hr_attendance(osv.osv):
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= a.name::date \
-                            AND s.date_from <= a.name::date \
+                        ON (s.date_to >= date_trunc(\'day\',a.name) \
+                            AND s.date_from <= a.name \
                             AND s.user_id = e.user_id) ' + \
                 qu1, qu2)
         res = cursor.fetchall()
@@ -635,8 +635,8 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                     LEFT JOIN hr_employee e
                                     ON (s.user_id = e.user_id))
                                 ON (a.employee_id = e.id
-                                    AND s.date_to >= a.name::date
-                                    AND s.date_from <= a.name::date)
+                                    AND s.date_to >= date_trunc('day',a.name)
+                                    AND s.date_from <= a.name)
                             WHERE action in ('sign_in', 'sign_out')
                             group by a.name::date, s.id
                         )) AS foo

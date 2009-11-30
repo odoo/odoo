@@ -137,13 +137,7 @@ class invoice_create(wizard.interface):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * "  # TODO optimize this
-                           "  FROM account_analytic_line"
-                           " WHERE account_id=%%s"
-                           "   AND id IN (%s)"
-                           "   AND product_id=%%s"
-                           "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])),
-                           tuple([account.id]+ data['ids']+[ product_id, factor_id]))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id = ANY (%s) AND product_id=%s and to_invoice=%s", (account.id, data['ids'], product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:
@@ -160,9 +154,9 @@ class invoice_create(wizard.interface):
                         details.append(line['name'])
                     #if data['form']['price']:
                     #   details.append(abs(line['amount']))
-                    note.append(' - '.join(map(lambda x: x or '',details)))
+                    note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
-                curr_line['note'] = "\n".join(map(lambda x: x or '',note))
+                curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
                 strids = ','.join(map(str, data['ids']))
                 cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))

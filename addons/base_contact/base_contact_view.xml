@@ -36,6 +36,7 @@
                            <field name="partner_id" invisible="1" select="1"/>
                            <field name="title" select="1"/>
                            <field name="function_id" invisible="1" select="2"/>
+                        <field name="email"/>
                            <field name="lang_id"/>
                            <field name="active"/>
                        </group>
@@ -50,6 +51,9 @@
                                    <field name="name"  colspan="4"/>
                                    <field name="address_id" colspan="4"/>
                                    <field name="function_id" colspan="4"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                    <field name="date_start" />
                                    <field name="date_stop" />
                                    <field name="state" />
@@ -163,6 +167,8 @@
                             <group string="Communication" colspan="2" col="2">    
                                 <field name="phone"/>
                                 <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email" widget="email"/>                                
                                 <field name="extension"/>
                                 <field name="other"/>
