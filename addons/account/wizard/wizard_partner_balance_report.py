@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -74,14 +74,14 @@ period_fields = {
 }
 
 class wizard_report(wizard.interface):
-    
+
     def _get_defaults(self,cr,uid,data,context):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
            company_id = user.company_id.id
         else:
            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-       
+
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
@@ -91,25 +91,24 @@ class wizard_report(wizard.interface):
         data['form']['fiscalyear'] = False
         data['form']['result_selection'] = 'all'
         return data['form']
-    
+
     def _check_state(self, cr, uid, data, context):
-      
+
         if data['form']['state'] == 'bydate'  :
            self._check_date(cr, uid, data, context)
         return data['form']
-  
+
     def _check_date(self, cr, uid, data, context):
-        
         sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date1'])
-        cr.execute(sql)
+            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
+        cr.execute(sql,(data['form']['date1'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):
                 raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
             else:
                 return 'report'
-            
+
         else:
             raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
 
@@ -118,7 +117,7 @@ class wizard_report(wizard.interface):
             'actions': [_get_defaults],
            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
         },
-        
+
         'report': {
             'actions': [_check_state],
             'result': {'type':'print', 'report':'account.partner.balance', 'state':'end'}

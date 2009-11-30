@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -56,14 +56,12 @@ def _data_save(self, cr, uid, data, context):
 
     fy_id = data['form']['fy_id']
     period_ids = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', fy_id)])
-    fy_period_set = ','.join(map(str, period_ids))
     periods_fy2 = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fy2_id'])])
-    fy2_period_set = ','.join(map(str, periods_fy2))
 
     period = pool.get('account.period').browse(cr, uid, data['form']['period_id'], context=context)
     new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'], context=context)
     old_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy_id'], context=context)
-    
+
     new_journal = data['form']['journal_id']
     new_journal = pool.get('account.journal').browse(cr, uid, new_journal, context=context)
 
@@ -87,7 +85,7 @@ def _data_save(self, cr, uid, data, context):
     ids = map(lambda x: x[0], cr.fetchall())
     for account in pool.get('account.account').browse(cr, uid, ids,
         context={'fiscalyear': fy_id}):
-        
+
         accnt_type_data = account.user_type
         if not accnt_type_data:
             continue
@@ -133,7 +131,7 @@ def _data_save(self, cr, uid, data, context):
                         })
                 offset += limit
 
-            #We have also to consider all move_lines that were reconciled 
+            #We have also to consider all move_lines that were reconciled
             #on another fiscal year, and report them too
             offset = 0
             limit = 100
@@ -147,10 +145,10 @@ def _data_save(self, cr, uid, data, context):
                         'WHERE b.account_id = %s ' \
                             'AND b.reconcile_id is NOT NULL ' \
                             'AND a.reconcile_id = b.reconcile_id ' \
-                            'AND b.period_id IN ('+fy_period_set+') ' \
-                            'AND a.period_id IN ('+fy2_period_set+') ' \
+                            'AND b.period_id =ANY(%s)'\
+                            'AND a.period_id =ANY(%s)' \
                         'ORDER BY id ' \
-                        'LIMIT %s OFFSET %s', (account.id, limit, offset))
+                        'LIMIT %s OFFSET %s', (account.id,period_ids,periods_fy2,limit, offset))
                 result = cr.dictfetchall()
                 if not result:
                     break
@@ -178,7 +176,7 @@ def _data_save(self, cr, uid, data, context):
                             'AND ' + query_line + ' ' \
                         'ORDER BY id ' \
                         'LIMIT %s OFFSET %s', (account.id, limit, offset))
-                
+
                 result = cr.dictfetchall()
                 if not result:
                     break
@@ -208,7 +206,6 @@ def _data_save(self, cr, uid, data, context):
     cr.execute('UPDATE account_fiscalyear ' \
                 'SET end_journal_period_id = %s ' \
                 'WHERE id = %s', (ids[0], old_fyear.id))
-
     return {}
 
 class wiz_journal_close(wizard.interface):

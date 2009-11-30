@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -43,7 +43,6 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
     def _lines_p(self, date1, date2):
         res = []
         acc_obj = self.pool.get('account.account')
-       # print"3333333acc_obj3333333",acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code','user_type'])
 
         for a in acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code']):
             self.cr.execute("SELECT sum(debit), sum(credit) \

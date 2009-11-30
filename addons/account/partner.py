@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -90,20 +90,20 @@ class res_partner(osv.osv):
     _description = 'Partner'
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("""select
+        cr.execute("""select
                 l.partner_id, a.type, sum(l.debit-l.credit)
             from
                 account_move_line l
             left join
                 account_account a on (l.account_id=a.id)
             where
-                a.type in ('receivable','payable') and
-                l.partner_id in (%s) and
+                a.type =ANY(%s) and
+                l.partner_id =ANY(%s) and
                 l.reconcile_id is null and
-                """ % (','.join(map(str, ids)),))+query+"""
+                """+query+"""
             group by
                 l.partner_id, a.type
-            """)
+            """,(['receivable','payable'],ids,))
         tinvert = {
             'credit': 'receivable',
             'debit': 'payable'

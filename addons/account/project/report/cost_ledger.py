@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -85,7 +85,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_balance(self, account_id, date1, date2):
-        debit = self._account_sum_debit(account_id, date1, date2) 
+        debit = self._account_sum_debit(account_id, date1, date2)
         credit = self._account_sum_credit(account_id, date1, date2)
         return (debit-credit)
 
@@ -93,7 +93,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount>0", (date1, date2))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids, date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
@@ -101,7 +101,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         if not len(ids):
             return 0.0
         ids = map(lambda x: x.id, accounts)
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount<0", (date1, date2))
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0", (ids,date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):

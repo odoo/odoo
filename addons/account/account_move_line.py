@@ -257,7 +257,7 @@ class account_move_line(osv.osv):
         cursor.execute('SELECT l.id, i.id ' \
                 'FROM account_move_line l, account_invoice i ' \
                 'WHERE l.move_id = i.move_id ' \
-                    'AND l.id in (' + ','.join([str(x) for x in ids]) + ')')
+                    'AND l.id =ANY(%s)',(ids,))
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
@@ -552,8 +552,6 @@ class account_move_line(osv.osv):
         return True
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
-        id_set = ','.join(map(str, ids))
-
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
@@ -578,10 +576,10 @@ class account_move_line(osv.osv):
 
         cr.execute('SELECT account_id, reconcile_id \
                 FROM account_move_line \
-                WHERE id IN ('+id_set+') \
-                GROUP BY account_id,reconcile_id')
+                WHERE id =ANY(%s) \
+                GROUP BY account_id,reconcile_id',(ids,))
         r = cr.fetchall()
-#TODO: move this check to a constraint in the account_move_reconcile object
+        #TODO: move this check to a constraint in the account_move_reconcile object
         if (len(r) != 1) and not context.get('fy_closing', False):
             raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:

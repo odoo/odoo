@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,7 +46,7 @@ period_form = '''<?xml version="1.0"?>
     <field name="sortbydate" required="True"/>
 
     <field name="soldeinit" invisible="1"/>
-  
+
     <field name="landscape"/>
     <field name="amount_currency"/>
     <newline/>
@@ -65,10 +65,10 @@ period_form = '''<?xml version="1.0"?>
         </group>
     </group>
 
-    
-    
-   
-    
+
+
+
+
 </form>'''
 
 period_fields = {
@@ -103,10 +103,10 @@ def _check(self, cr, uid, data, context):
         return 'report'
 
 def _check_date(self, cr, uid, data, context):
-    
+
     sql = """
-        SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date_from'])
-    cr.execute(sql)
+        SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
+    cr.execute(sql,(data['form']['date_from'],))
     res = cr.dictfetchall()
     if res:
         if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
@@ -116,14 +116,14 @@ def _check_date(self, cr, uid, data, context):
 
     else:
         raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
-    
+
 def _check_state(self, cr, uid, data, context):
 
         if data['form']['state'] == 'bydate':
            _check_date(self, cr, uid, data, context)
 #           data['form']['fiscalyear'] = 0
 #        else :
-#           
+#
 #           data['form']['fiscalyear'] = 1
         return data['form']
 
@@ -137,7 +137,7 @@ class wizard_report(wizard.interface):
             company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        
+
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
         #periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         #data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])

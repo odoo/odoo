@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -142,7 +142,8 @@ class third_party_ledger(rml_parse.rml_parse):
 		if (data['model'] == 'res.partner'):
 			## Si on imprime depuis les partenaires
 			if ids:
-				PARTNER_REQUEST =  "AND line.partner_id IN (" + ','.join(map(str, ids)) + ")"
+				#PARTNER_REQUEST =  "AND line.partner_id IN (" + ','.join(map(str, ids)) + ")"
+				PARTNER_REQUEST =  "AND line.partner_id =ANY(%s)" %ids
 		# Transformation des date
 		#
 		#
@@ -166,11 +167,11 @@ class third_party_ledger(rml_parse.rml_parse):
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
-			self.ACCOUNT_TYPE = "('receivable')"
+			self.ACCOUNT_TYPE = ['receivable']
 		elif data['form']['result_selection'] == 'customer':
-			self.ACCOUNT_TYPE = "('payable')"
+			self.ACCOUNT_TYPE = ['payable']
 		elif data['form']['result_selection'] == 'all':
-			self.ACCOUNT_TYPE = "('payable','receivable')"
+			self.ACCOUNT_TYPE = ['payable','receivable']
 
 		self.cr.execute(
 			"SELECT a.id " \
@@ -178,9 +179,9 @@ class third_party_ledger(rml_parse.rml_parse):
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
 			"WHERE a.company_id = %s " \
-				'AND a.type IN ' + self.ACCOUNT_TYPE + " " \
-				"AND a.active", (data['form']['company_id'],))
-		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
+				'AND a.type =ANY(%s)' \
+				"AND a.active", (data['form']['company_id'],self.ACCOUNT_TYPE,))
+		self.account_ids = [a for (a,) in self.cr.fetchall()]
 
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
@@ -195,11 +196,11 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.date >= %s " \
 					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
-					"AND line.account_id IN (" + self.account_ids + ") " \
+					"AND line.account_id =ANY(%s)" \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %s " \
 					"AND account.active " ,
-				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],data['form']['company_id']))
+				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],self.account_ids,data['form']['company_id'],))
 #		else:
 #
 #			self.cr.execute(
@@ -220,7 +221,8 @@ class third_party_ledger(rml_parse.rml_parse):
 			    partner_to_use.append(res_line['partner_id'])
 		new_ids = partner_to_use
 
-		self.partner_ids = ','.join(map(str, new_ids))
+		#self.partner_ids = ','.join(map(str, new_ids))
+		self.partner_ids = new_ids
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
 		super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
@@ -259,11 +261,11 @@ class third_party_ledger(rml_parse.rml_parse):
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
 				"WHERE l.partner_id = %s " \
-					"AND l.account_id IN (" + self.account_ids + ") " \
-					"AND l.date IN (" + self.date_lst_string + ") " \
+					"AND l.account_id =ANY(%s)"\
+					"AND l.date IN (" + self.date_lst_string + ")"
 					" " + RECONCILE_TAG + " "\
 					"ORDER BY l.id",
-					(partner.id,))
+					(partner.id,self.account_ids,))
 	    	res = self.cr.dictfetchall()
 	    	sum = 0.0
 	    	for r in res:
@@ -286,10 +288,10 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %s " \
-					"AND account_id IN (" + self.account_ids + ") " \
+					"AND account_id =ANY(%s)" \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
-				(partner.id, self.date_lst[0],))
+				(partner.id, self.account_ids,self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -301,10 +303,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id = %s " \
-						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id =ANY(%s)" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ") " ,
-					(partner.id,))
+						"AND date IN (" + self.date_lst_string + ")" ,
+					(partner.id,self.account_ids,))
 
 			contemp = self.cr.fetchone()
 			if contemp != None:
@@ -325,10 +327,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%s " \
-						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id =ANY(%s)" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(partner.id,self.date_lst[0],))
+					(partner.id,self.account_ids,self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -340,10 +342,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%s " \
-						"AND account_id IN (" + self.account_ids + ") " \
+						"AND account_id =ANY(%s)" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ") " ,
-					(partner.id,))
+						"AND date IN (" + self.date_lst_string + ")",
+					(partner.id,self.account_ids,))
 
 			contemp = self.cr.fetchone()
 			if contemp != None:
@@ -365,11 +367,11 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id IN (" + self.partner_ids + ") " \
-						"AND account_id IN (" + self.account_ids + ") " \
+					"WHERE partner_id =ANY(%s)" \
+						"AND account_id =ANY(%s)" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(self.date_lst[0],))
+					(self.partner_ids,self.account_ids,self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -380,12 +382,10 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id IN (" + self.partner_ids + ") " \
-						"AND account_id IN (" + self.account_ids + ") " \
+					"WHERE partner_id =ANY(%s)" \
+						"AND account_id =ANY(%s)" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ") "
-					)
-
+						"AND date IN (" + self.date_lst_string + ")",(self.partner_ids,self.account_ids,))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -408,11 +408,11 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id IN (" + self.partner_ids + ") " \
-						"AND account_id IN (" + self.account_ids + ") " \
+					"WHERE partner_id =ANY(%s)" \
+						"AND account_id =ANY(%s)" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(self.date_lst[0],))
+					(self.partner_ids,self.account_ids,self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -423,11 +423,10 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id IN (" + self.partner_ids + ") " \
-						"AND account_id IN (" + self.account_ids + ") " \
+					"WHERE partner_id  =ANY(%s)" \
+						"AND account_id =ANY(%s)" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ") "
-					)
+						"AND date IN (" + self.date_lst_string + ")",(self.partner_ids,self.account_ids,))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0

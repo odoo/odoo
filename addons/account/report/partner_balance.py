@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -166,27 +166,26 @@ class partner_balance(report_sxw.rml_parse):
         ##
         self.date_lst_string =''
         if self.date_lst:
-            self.date_lst_string = '\'' + '\',\''.join(map(str, self.date_lst)) + '\''
-
+        	self.date_lst_string = '\'' + '\',\''.join(map(str, self.date_lst)) + '\''
 
         ## Compute Code
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         #
         if (data['form']['result_selection'] == 'customer' ):
-            self.ACCOUNT_TYPE = "('receivable')"
+            self.ACCOUNT_TYPE = ['receivable']
         elif (data['form']['result_selection'] == 'supplier'):
-            self.ACCOUNT_TYPE = "('payable')"
+            self.ACCOUNT_TYPE = ['payable']
         else:
-            self.ACCOUNT_TYPE = "('payable','receivable')"
+            self.ACCOUNT_TYPE = ['payable','receivable']
         #
         self.cr.execute("SELECT a.id " \
                 "FROM account_account a " \
                 "LEFT JOIN account_account_type t " \
                     "ON (a.type = t.code) " \
                 "WHERE a.company_id = %s " \
-                    "AND a.type IN " + self.ACCOUNT_TYPE + " " \
-                    "AND a.active", (data['form']['company_id'],))
-        self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
+                    "AND a.type =ANY(%s) "\
+                    "AND a.active", (data['form']['company_id'],self.ACCOUNT_TYPE,))
+        self.account_ids = [a for (a,) in self.cr.fetchall()]
 
         super(partner_balance, self).set_context(objects, data, ids, report_type)
 
@@ -214,11 +213,11 @@ class partner_balance(report_sxw.rml_parse):
                         ") AS enlitige " \
                 "FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
                 "JOIN account_account ac ON (l.account_id = ac.id)" \
-                "WHERE ac.type IN " + self.ACCOUNT_TYPE + " " \
+                "WHERE ac.type =ANY(%s) "
                     "AND l.date IN (" + self.date_lst_string + ") " \
-                    "AND ac.company_id = "+ str(data['form']['company_id']) +" " \
+                    "AND ac.company_id = %s" \
                 "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
-                "ORDER BY l.account_id,p.name")
+                "ORDER BY l.account_id,p.name",(self.ACCOUNT_TYPE,data['form']['company_id'],))
             res = self.cr.dictfetchall()
             for r in res:
                 full_account.append(r)
@@ -355,8 +354,8 @@ class partner_balance(report_sxw.rml_parse):
             self.cr.execute(
                     "SELECT sum(debit) " \
                     "FROM account_move_line AS l " \
-                    "WHERE l.account_id IN (" + self.account_ids + ") " \
-                        "AND l.date IN (" + self.date_lst_string + ") " )
+                    "WHERE l.account_id =ANY(%s)"  \
+                        "AND l.date IN (" + self.date_lst_string + ")" ,(self.account_ids,))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
 
@@ -373,8 +372,8 @@ class partner_balance(report_sxw.rml_parse):
             self.cr.execute(
                     "SELECT sum(credit) " \
                     "FROM account_move_line AS l " \
-                    "WHERE l.account_id IN (" + self.account_ids + ") " \
-                        "AND l.date IN (" + self.date_lst_string + ") " )
+                    "WHERE l.account_id =ANY(%s)" \
+                        "AND l.date IN (" + self.date_lst_string + ")" ,(self.account_ids,))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
 
@@ -390,9 +389,9 @@ class partner_balance(report_sxw.rml_parse):
             self.cr.execute(
                     "SELECT sum(debit-credit) " \
                     "FROM account_move_line AS l " \
-                    "WHERE l.account_id IN (" + self.account_ids + ") " \
-                        "AND l.date IN (" + self.date_lst_string + ") " \
-                        "AND l.blocked=TRUE " )
+                    "WHERE l.account_id =ANY(%s)" \
+                        "AND l.date IN (" + self.date_lst_string + ")"\
+                        "AND l.blocked=TRUE " ,(self.account_ids,))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
 
@@ -411,9 +410,9 @@ class partner_balance(report_sxw.rml_parse):
                         "ELSE 0 " \
                     "END " \
                 "FROM account_move_line AS l " \
-                "WHERE l.account_id IN (" + self.account_ids + ") " \
-                    "AND l.date IN (" + self.date_lst_string + ") " \
-                "GROUP BY l.partner_id")
+                "WHERE l.account_id =ANY(%s)" \
+                    "AND l.date IN (" + self.date_lst_string + ")" \
+                "GROUP BY l.partner_id",(self.account_ids,))
             a = self.cr.fetchone()[0]
 
             if self.cr.fetchone() != None:
@@ -438,9 +437,9 @@ class partner_balance(report_sxw.rml_parse):
                         "ELSE 0 " \
                     "END " \
                 "FROM account_move_line AS l " \
-                "WHERE l.account_id IN (" + self.account_ids + ") " \
-                "AND l.date IN (" + self.date_lst_string + ") " \
-                "GROUP BY l.partner_id")
+                "WHERE l.account_id =ANY(%s)" \
+                "AND l.date IN (" + self.date_lst_string + ")" \
+                "GROUP BY l.partner_id",(self.account_ids,))
             a = self.cr.fetchone()[0] or 0.0
 
             if self.cr.fetchone() != None:

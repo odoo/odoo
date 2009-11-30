@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,15 +34,14 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Accounts'
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
 
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount<0 and a.id =ANY(%s) GROUP BY a.id",(ids,))
         r = dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
@@ -50,15 +49,13 @@ class account_analytic_account(osv.osv):
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
 
-        acc_set = ",".join(map(str, ids))
-        
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids,))
         r= dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
@@ -67,26 +64,25 @@ class account_analytic_account(osv.osv):
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
-        if not acc_set:
+
+        if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
-        
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
+        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id =ANY(%s)",(ids2,))
 
         currency= dict(cr.fetchall())
 
@@ -115,23 +111,23 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not acc_set:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
-                WHERE a.id IN ('+acc_set+') GROUP BY a.id')
+                WHERE a.id =ANY(%s) GROUP BY a.id',(ids2,))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum

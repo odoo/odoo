@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -43,7 +43,7 @@ def _remove_entries(self, cr, uid, data, context):
     period_journal = data_fyear.end_journal_period_id
     ids_move = pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
     if ids_move:
-        cr.execute('delete from account_move where id in ('+','.join(map(str, ids_move))+')')
+        cr.execute('delete from account_move where id =ANY(%s)',(ids_move,))
     #cr.execute('UPDATE account_journal_period ' \
     #        'SET state = %s ' \
     #        'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
@@ -60,17 +60,17 @@ class open_closed_fiscal(wizard.interface):
         'init' : {
             'actions' : [],
             'result': {
-                'type': 'form', 
+                'type': 'form',
                 'arch': form,
-                'fields': fields, 
+                'fields': fields,
                 'state':[('end','Cancel'),('open','Open')]
             }
         },
         'open': {
             'actions': [],
             'result': {
-                'type':'action', 
-                'action':_remove_entries, 
+                'type':'action',
+                'action':_remove_entries,
                 'state':'end'
             },
         },

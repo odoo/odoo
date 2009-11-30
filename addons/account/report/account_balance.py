@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -57,10 +57,10 @@ class account_balance(report_sxw.rml_parse):
         def get_periods(self, form):
             result=''
             if form.has_key('periods') and form['periods'][0][2]:
-                period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
-                self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
+                period_ids = form['periods'][0][2]
+                self.cr.execute("select name from account_period where id =ANY(%s)" ,(period_ids))
                 res = self.cr.fetchall()
-                len_res = len(res) 
+                len_res = len(res)
                 for r in res:
                     if (r == res[len_res-1]):
                         result+=r[0]+". "
@@ -75,10 +75,10 @@ class account_balance(report_sxw.rml_parse):
                         result+=r.name+". "
                     else:
                         result+=r.name+", "
-                
+
             return str(result and result[:-1]) or ''
 
-        
+
         def lines(self, form, ids={}, done=None, level=1):
             if not ids:
                 ids = self.ids
@@ -98,7 +98,7 @@ class account_balance(report_sxw.rml_parse):
                 ctx['periods'] = form['periods'][0][2]
             elif form['state']== 'bydate':
                 ctx['date_from'] = form['date_from']
-                ctx['date_to'] =  form['date_to'] 
+                ctx['date_to'] =  form['date_to']
             elif form['state'] == 'all' :
                 ctx['periods'] = form['periods'][0][2]
                 ctx['date_from'] = form['date_from']
@@ -165,7 +165,7 @@ class account_balance(report_sxw.rml_parse):
 #
 #                    result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
-        
+
         def _sum_credit(self):
             return self.sum_credit
 

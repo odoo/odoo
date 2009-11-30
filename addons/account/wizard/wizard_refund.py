@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -80,17 +80,14 @@ class wiz_refund(wizard.interface):
                         #in multi company mode
                         cr.execute("""SELECT id
                                       from account_period where date('%s')
-                                      between date_start AND  date_stop and company_id = %s limit 1 """%(
-                                      form['date'],
-                                      pool.get('res.users').browse(cr,uid,uid).company_id.id
-                                      ))
+                                      between date_start AND  date_stop and company_id = %s limit 1 """,
+                                      (form['date'],pool.get('res.users').browse(cr,uid,uid).company_id.id,))
                     else:
                         #in mono company mode
                         cr.execute("""SELECT id
                                       from account_period where date('%s')
-                                      between date_start AND  date_stop  limit 1 """%(
-                                        form['date'],
-                                      ))
+                                      between date_start AND  date_stop  limit 1 """,
+                                      (form['date'],))
                     res = cr.fetchone()
                     if res:
                         period = res[0]
@@ -101,10 +98,10 @@ class wiz_refund(wizard.interface):
                 description = form['description']
             else:
                 description = inv.name
-            
+
             if not period:
                 raise wizard.except_wizard(_('Data Insufficient !'), _('No Period found on Invoice!'))
-                
+
             refund_id = pool.get('account.invoice').refund(cr, uid, [inv.id],date, period, description)
             refund = pool.get('account.invoice').browse(cr, uid, refund_id[0])
             # we compute due date
@@ -112,7 +109,7 @@ class wiz_refund(wizard.interface):
             pool.get('account.invoice').write(cr, uid, [refund.id],{'date_due':date,'check_total':inv.check_total})
             # to make the taxes calculated
             pool.get('account.invoice').button_compute(cr, uid, refund_id)
-            
+
             created_inv.append(refund_id[0])
             #if inv is paid we unreconcile
             if mode in ('cancel','modify'):
