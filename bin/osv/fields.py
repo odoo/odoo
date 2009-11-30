@@ -721,7 +721,7 @@ class related(function):
                         t_id=t_data['id']
                         t_data = t_data[self.arg[i]]
                 if t_id:
-                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values})
+                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
