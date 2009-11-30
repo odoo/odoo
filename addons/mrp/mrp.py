@@ -63,12 +63,14 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
+        'company_id': fields.many2one('res.company','Company',required=True),  
     }
     _defaults = {
         'active': lambda *a: 1,
         'type': lambda *a: 'machine',
         'time_efficiency': lambda *a: 1.0,
         'capacity_per_cycle': lambda *a: 1.0,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.workcenter', c)
     }
 mrp_workcenter()
 
@@ -128,7 +130,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="Time in hours for doing one cycle."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True,
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade', 
              help="routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description')
@@ -199,7 +201,8 @@ class mrp_bom(osv.osv):
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
-        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many')
+        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
+        'company_id': fields.many2one('res.company','Company',required=True),  
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -207,6 +210,7 @@ class mrp_bom(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', c)
     }
     _order = "sequence"
     _sql_constraints = [
@@ -442,6 +446,7 @@ class mrp_production(osv.osv):
 
         'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
         'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'priority': lambda *a: '1',
@@ -449,6 +454,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', c),
     }
     _order = 'date_planned asc, priority desc';
     def unlink(self, cr, uid, ids, context=None):
@@ -825,6 +831,7 @@ class mrp_procurement(osv.osv):
             help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note' : fields.text('Note'),
+        'company_id': fields.many2one('res.company','Company',required=True),  
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -832,6 +839,7 @@ class mrp_procurement(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', c)
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1191,7 +1199,8 @@ class stock_warehouse_orderpoint(osv.osv):
             "a requisition to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The requisition quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
+        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order'),
+        'company_id': fields.many2one('res.company','Company',required=True),   
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -1199,6 +1208,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': lambda *a: 1,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', c)
     }
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:

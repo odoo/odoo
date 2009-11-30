@@ -231,19 +231,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes'),
 
-        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_total': fields.function(_amount_all, method=True, string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -256,6 +256,7 @@ class sale_order(osv.osv):
         'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', c),
         'picking_policy': lambda *a: 'direct',
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': lambda *a: 'manual',
@@ -766,7 +767,7 @@ class sale_order_line(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company')
     }
     _order = 'sequence, id'
     _defaults = {

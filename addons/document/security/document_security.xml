@@ -10,5 +10,17 @@
         <field name="groups_id" eval="[(6,0,[ref('group_document_manager')])]"/>
     </record>
 
+
+    <record model="ir.rule.group" id="document_directory_comp_rule_group">
+        <field name="name">Document Directory multi-company</field>
+        <field name="model_id" ref="model_document_directory"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="document_directory_comp_rule">
+        <field name="field_id" search="[('model','=','document.directory'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="document_directory_comp_rule_group"/>
+        <field name="domain_force">['|','|',('company_id','=',False),('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </openerp>

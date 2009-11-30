@@ -242,6 +242,7 @@ class document_directory(osv.osv):
     _description = 'Document directory'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
+        'company_id': fields.many2one('res.company', 'Company'),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -269,6 +270,7 @@ class document_directory(osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', c),
         'ressource_id': lambda *a: 0
     }
     _sql_constraints = [

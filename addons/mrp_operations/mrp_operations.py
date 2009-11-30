@@ -328,8 +328,8 @@ class mrp_operations_operation(osv.osv):
                 if not i: continue
                 if code_lst[i-1] not in ('resume','start'):
                    continue
-                a = datetime.datetime.strptime(time_lst[i-1],'%Y:%m:%d %H:%M:%S')
-                b = datetime.datetime.strptime(time_lst[i],'%Y:%m:%d %H:%M:%S')
+                a = datetime.datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
+                b = datetime.datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
                 diff += (b-a).days * 24
                 diff += (b-a).seconds / (60*60)
         return diff

@@ -133,9 +133,7 @@ class account_voucher(osv.osv):
         'type': _get_type,
         'reference_type': lambda *a: 'none',
         'journal_id':_get_journal,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher', c),
         'currency_id': _get_currency,
     }
 
