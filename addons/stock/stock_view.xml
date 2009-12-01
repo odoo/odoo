@@ -92,15 +92,6 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <record id="action_inventory_form_new" model="ir.actions.act_window">
-            <field name="name">New Periodical Inventory</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.inventory</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-
         =============================
         Lot
         =============================
@@ -1151,34 +1142,6 @@
         </record>
         <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="menu_action_picking_tree4" groups="base.group_extended"/>
 
-        <record id="action_picking_form" model="ir.actions.act_window">
-            <field name="name">New Reception Picking</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="domain">[('type','=','in')]</field>
-        </record>
-        <record id="action_picking_form_view1" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_in_tree"/>
-            <field name="act_window_id" ref="action_picking_form"/>
-        </record>
-        <record id="action_picking_form_view2" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_in_form"/>
-            <field name="act_window_id" ref="action_picking_form"/>
-        </record>
-        <record id="action_picking_form_view2_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_form"/>
-        </record>
-        <menuitem action="action_picking_form" id="menu_action_picking_form" parent="menu_action_picking_tree4"/>
-
         <record id="action_picking_tree6" model="ir.actions.act_window">
             <field name="name">Internal Moves</field>
             <field name="res_model">stock.picking</field>
@@ -1216,17 +1179,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
-
-        <record id="action_picking_tree9" model="ir.actions.act_window">
-            <field name="name">New Internal Picking</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar</field>
-            <field name="domain">[('state','=','draft'),('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-        </record>
-        <menuitem action="action_picking_tree9" id="menu_action_picking_tree9" parent="menu_action_picking_tree6"/>
 
         =============================
         Move Tracking

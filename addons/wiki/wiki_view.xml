@@ -147,18 +147,6 @@
         </record>
         <menuitem parent="menu_document" id="menu_action_wiki_wiki" string="Search a Page" action="action_wiki"/>
 
-        <!-- My Pages-->
-        <record model="ir.actions.act_window" id="action_wiki_mypages">
-            <field name="name">My Pages</field>
-            <field name="res_model">wiki.wiki</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_wiki_tree"/>
-            <field name="context">{'section':'1'}</field>
-            <field name="domain">[('create_uid','=',uid)]</field>
-            <field name="filter" eval="True"/>
-        </record>
-        
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
             <field name="name">Pages Waiting Review</field>

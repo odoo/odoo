@@ -306,15 +306,6 @@
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <menuitem action="mrp_bom_tree_action" id="menu_bom_tree" parent="menu_mrp_bom_form_action"/>
-        <record id="mrp_bom_form_action_new" model="ir.actions.act_window">
-            <field name="name">New Bill of Materials</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('bom_id','=',False)]</field>
-        </record>
-        <menuitem action="mrp_bom_form_action_new" id="menu_mrp_bom_form_action_new" parent="menu_mrp_bom_form_action"/>
 
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Components</field>
@@ -594,14 +585,6 @@
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
 
-         <record id="mrp_production_new" model="ir.actions.act_window">
-            <field name="name">New Production Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar,graph,gantt</field>
-        </record>
-
         <record id="mrp_production_lot_form_view" model="ir.ui.view">
             <field name="name">mrp.production.lot.line.form</field>
             <field name="model">mrp.production.lot.line</field>
@@ -807,14 +790,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
-        </record>
-
-         <record id="mrp_procurement_new" model="ir.actions.act_window">
-            <field name="name">New Requisition</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
         </record>
 
         <!-- Order Point -->

@@ -216,45 +216,6 @@
 			id="menu_report_account_analytic_planning_my2"
 			parent="planning_main" />
 
-		<record id="action_account_analytic_planning_form_current_my"
-			model="ir.actions.act_window">
-			<field name="name">My Current Plannings</field>
-			<field name="res_model">report_account_analytic.planning</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('date_from','&lt;=',time.strftime('%Y-%m-%d')), ('date_to','&gt;=',time.strftime('%Y-%m-%d'))]</field>
-		</record>
-		<menuitem
-			action="action_account_analytic_planning_form_current_my"
-			id="menu_report_account_analytic_planning_current_my"
-			parent="menu_report_account_analytic_planning_my2" />
-
-		<record id="action_account_analytic_planning_form_current"
-			model="ir.actions.act_window">
-			<field name="name">Current Plannings</field>
-			<field name="res_model">report_account_analytic.planning</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="domain">[('date_from','&lt;=',time.strftime('%Y-%m-%d')),('date_to','&gt;=',time.strftime('%Y-%m-%d'))]</field>
-		</record>
-		<menuitem action="action_account_analytic_planning_form_current"
-			id="menu_report_account_analytic_planning_current"
-			parent="report_analytic_planning.menu_report_account_analytic_planning" />
-
-		<record id="action_account_analytic_planning_form_new"
-			model="ir.actions.act_window">
-			<field name="name">New Planning</field>
-			<field name="res_model">report_account_analytic.planning</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-		
-		<menuitem action="action_account_analytic_planning_form_new"
-			id="menu_report_account_analytic_planning_new"
-			parent="planning_main" />
-
-
-
 		<!--
 			Planning statistics
 		-->

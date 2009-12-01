@@ -41,7 +41,7 @@
         </record>
 
         <record id="process_node_quotation0" model="process.node">
-            <field name="menu_id" ref="sale.menu_action_order_tree"/>
+            <field name="menu_id" ref="sale.menu_action_order_tree_all"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
@@ -52,7 +52,7 @@
         </record>
 
         <record id="process_node_saleorder0" model="process.node">
-            <field name="menu_id" ref="sale.menu_action_order_tree"/>
+            <field name="menu_id" ref="sale.menu_action_order_tree_all"/>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>

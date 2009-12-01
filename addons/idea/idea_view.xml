@@ -194,33 +194,6 @@
         <field name="filter" eval="True"/>        
     </record>
 
-    <record model="ir.actions.act_window" id="action_idea_idea_my_idea">
-        <field name="name">My Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
-    </record>
-    <menuitem name="My Ideas" parent="menu_ideas1" id="menu_idea_idea_my_idea" action="action_idea_idea_my_idea"/>
-
-    <record model="ir.actions.act_window" id="action_idea_idea_draft_my">
-        <field name="name">My Draft Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-
-    <record model="ir.actions.act_window" id="action_idea_idea_open_my">
-        <field name="name">My Open Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','open'),('user_id','=',uid)]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-
         <record model="ir.ui.view" id="view_idea_vote_stat_graph">
             <field name="name">idea.vote_stat.graph</field>
             <field name="model">idea.vote.stat</field>

@@ -236,54 +236,10 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_department" id="menu_act_hr_timesheet_sheet_form_my_department" parent="hr_timesheet_sheet.next_id_60" groups="base.group_extended"/>
 
-        <record id="act_hr_timesheet_sheet_form_my_confirm_department" model="ir.actions.act_window">
-            <field name="name">My Department's Timesheets to Confirm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-
-        <record id="act_hr_timesheet_sheet_form_my_validate_department" model="ir.actions.act_window">
-            <field name="name">My Department's Timesheets to Validate</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','confirm'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-        
         <wizard id="act_hr_timesheet_sheet_form_my_current" model="hr.employee" name="hr_timesheet_sheet.current.open" string="My Current Timesheet"/>
 
         <menuitem action="act_hr_timesheet_sheet_form_my_current" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" type="wizard"/>
-        
-        <record id="act_hr_timesheet_sheet_form_all_confirm" model="ir.actions.act_window">
-            <field name="name">Timesheets To Confirm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
-        <record id="act_hr_timesheet_sheet_form_all_valid" model="ir.actions.act_window">
-            <field name="name">Timesheets To Validate</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','=','confirm')]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
         
         <!--
             Company inheritancy

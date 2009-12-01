@@ -155,16 +155,6 @@
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/>
 
-        <record id="open_view_project_open" model="ir.actions.act_window">
-            <field name="name">Running projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','open')]</field>
-            <field name="view_id" ref="view_project"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_project_project_filter"/>
-        </record>
-
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
             <field name="res_model">project.project</field>
@@ -173,15 +163,6 @@
             <field name="view_id" ref="view_project"/>
         </record>
         <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>
-
-        <record id="open_view_project" model="ir.actions.act_window">
-            <field name="name">New Project</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" eval="edit_project"/>
-        </record>
-        <menuitem action="open_view_project" id="menu_open_view_project" parent="menu_all_project" sequence="50"/>
 
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
@@ -227,29 +208,8 @@
                 </tree>
             </field>
         </record>
-        <record id="open_view_my_project" model="ir.actions.act_window">
-            <field name="name">My Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('manager', '=', uid)]</field>
-            <field name="view_id" ref="view_my_project"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_project_project_filter"/>
-        </record>
-        <menuitem action="open_view_my_project" id="menu_open_view_my_project" parent="menu_all_project" groups="base.group_extended"
-            sequence="1"/>
 
-        <record id="open_view_my_project_my_run" model="ir.actions.act_window">
-            <field name="name">My Running Projects</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('manager', '=', uid),('state','=','open')]</field>
-            <field name="view_id" ref="view_my_project"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_project_project_filter"/>
-        </record>
-
-        <record id="open_view_my_project_open" model="ir.actions.act_window">
+       <record id="open_view_my_project_open" model="ir.actions.act_window">
             <field name="name">Projects Structure</field>
             <field name="res_model">project.project</field>
             <field name="view_type">tree</field>
@@ -526,18 +486,6 @@
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/>
 
-        <record id="action_view_task4" model="ir.actions.act_window">
-            <field name="name">My Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph</field>
-            <field name="domain">[('user_id', '=', uid)]</field>
-            <field name="view_id" ref="view_task_tree3"/>
-            <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_tasks" groups="base.group_extended" />
-
         <record id="action_view_task_department" model="ir.actions.act_window">
             <field name="name">My Department Tasks</field>
             <field name="res_model">project.task</field>
@@ -546,52 +494,6 @@
             <field eval="True" name="filter"/>
             <field name="domain">[('user_id', 'child_of', [uid])]</field>
             <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-        <menuitem action="action_view_task_department" id="menu_action_view_department_tasks" parent="project.menu_tasks" groups="base.group_extended"/>
-
-        <record id="action_view_task5_pending" model="ir.actions.act_window">
-            <field name="name">My Pending Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
-            <field eval="True" name="filter"/>
-            <field name="view_id" ref="my_pending_task"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_prog" model="ir.actions.act_window">
-            <field name="name">My Current Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','in',('open','draft'))]</field>
-            <field eval="True" name="filter"/>
-            <field name="view_id" ref="view_task_tree3"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_prog_prog" model="ir.actions.act_window">
-            <field name="name">My Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
-            <field name="view_id" ref="view_task_tree3"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_prog_draft" model="ir.actions.act_window">
-            <field name="name">My Draft Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', '=', uid),('state','=','draft')]</field>
-            <field name="view_id" ref="view_task_tree3"/>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
 
@@ -646,13 +548,6 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <record id="action_view_task_new" model="ir.actions.act_window">
-            <field name="name">New Task</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar,gantt,graph</field>
-        </record>
-        <menuitem action="action_view_task_new" id="menu_action_view_task_new" parent="menu_tasks"/>
 
         <record id="action_view_task6_prog" model="ir.actions.act_window">
             <field name="name">Tasks in Progress</field>

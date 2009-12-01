@@ -129,16 +129,6 @@
        
        <menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />	
 	    
-	    <record model="ir.actions.act_window" id="action_new_event_form">
-			<field name="name">New event</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">event.event</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-
-        <menuitem parent="menu_event_event" id="menu_event_new_event" action="action_new_event_form" />
-
 		<record model="ir.actions.act_window" id="action_event_view_draft">
 			<field name="name">Draft Events</field>
 			<field name="type">ir.actions.act_window</field>
@@ -280,14 +270,6 @@
 			name="All Registrations"
 			id="menu_action_registration" parent="menu_event_main"
 			action="action_registration"/>
-        <record model="ir.actions.act_window" id="action_registration_new">
-            <field name="name">New Registration</field>
-            <field name="res_model">event.registration</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-       
-        <menuitem parent="menu_action_registration" id="menu_action_registration_new" action="action_registration_new"/>			
 		
 		<record model="ir.actions.act_window" id="action_registration_draft">
 		  <field name="name">Unconfirmed Registrations</field>
