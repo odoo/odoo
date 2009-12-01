@@ -104,9 +104,10 @@ class account_move_line(osv.osv):
 
             total_new=0.00
             for i in context['lines']:
-                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                for item in i[2]:
-                        data[item]=i[2][item]
+                if i[2]:
+                    total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                    for item in i[2]:
+                            data[item]=i[2][item]
             if context['journal']:
                 journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
                 if journal_obj.type == 'purchase':
