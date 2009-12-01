@@ -206,7 +206,7 @@ class purchase_order(osv.osv):
         'invoiced': lambda *a: 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c),
     }
     _name = "purchase.order"
     _description = "Purchase order"
@@ -333,7 +333,8 @@ class purchase_order(osv.osv):
                 'origin': o.name,
                 'invoice_line': il,
                 'fiscal_position': o.partner_id.property_account_position.id,
-                'payment_term':o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'company_id': o.company_id.id,
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
@@ -385,6 +386,7 @@ class purchase_order(osv.osv):
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
+                'company_id': order.company_id.id,
             })
             for order_line in order.order_line:
                 if not order_line.product_id:
@@ -405,12 +407,14 @@ class purchase_order(osv.osv):
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'assigned',
                         'purchase_line_id': order_line.id,
+                        'company_id': order.company_id.id,
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
+
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}

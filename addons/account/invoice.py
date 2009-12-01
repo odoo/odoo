@@ -989,6 +989,7 @@ class account_invoice(osv.osv):
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and direction * amount_currency or 0.0,
+            'company_id': invoice.company_id.id,
         }
         l2 = {
             'debit': direction * pay_amount<0 and - direction * pay_amount,
@@ -999,6 +1000,7 @@ class account_invoice(osv.osv):
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and - direction * amount_currency or 0.0,
+            'company_id': invoice.company_id.id,
         }
 
         if not name:
@@ -1295,6 +1297,7 @@ class account_invoice_tax(osv.osv):
         'base_amount': fields.float('Base Code Amount', digits=(16,int(config['price_accuracy']))),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,int(config['price_accuracy']))),
+        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
 
     def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):

@@ -320,7 +320,8 @@ class account_account(osv.osv):
         'company_id': _default_company,
         'active': lambda *a: True,
         'check_history': lambda *a: True,
-        'currency_mode': lambda *a: 'current'
+        'currency_mode': lambda *a: 'current',
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', c),
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -781,7 +782,7 @@ class account_move(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
     _defaults = {
         'name': lambda *a: '/',

@@ -380,7 +380,8 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
             'fiscal_position': order.partner_id.property_account_position.id,
-            'date_invoice' : context.get('date_invoice',False)
+            'date_invoice' : context.get('date_invoice',False),
+            'company_id' : order.company_id.id,
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
@@ -578,7 +579,7 @@ class sale_order(osv.osv):
                             'address_id': order.partner_shipping_id.id,
                             'note': order.note,
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-
+                            'company_id': order.company_id.id,
                         })
 
                     move_id = self.pool.get('stock.move').create(cr, uid, {
@@ -600,6 +601,7 @@ class sale_order(osv.osv):
                         'state': 'draft',
                         #'state': 'waiting',
                         'note': line.notes,
+                        'company_id': order.company_id.id,
                     })
                     proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
                         'name': order.name,
@@ -616,6 +618,7 @@ class sale_order(osv.osv):
                         'procure_method': line.type,
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
+                        'company_id': order.company_id.id,
                     })
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -631,6 +634,7 @@ class sale_order(osv.osv):
                         'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
                         'procure_method': line.type,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
+                        'company_id': order.company_id.id,
                     })
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
@@ -768,7 +772,7 @@ class sale_order_line(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
     _order = 'sequence, id'
     _defaults = {
