@@ -401,6 +401,20 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
+        
+        <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree3"/>
+        </record>
+        
+        <record id="action_invoice_tree3_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree3"/>
+        </record>
+        
         <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
 
         <record id="action_invoice_tree3_new" model="ir.actions.act_window">
