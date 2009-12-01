@@ -310,6 +310,15 @@ class Connection(object):
     def serialized_cursor(self):
         return self.cursor(True)
 
+    def __nonzero__(self):
+        """Check if connection is possible"""
+        try:
+            cr = self.cursor()
+            cr.close()
+            return True
+        except:
+            return False
+
 
 _dsn = ''
 for p in ('host', 'port', 'user', 'password'):
