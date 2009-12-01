@@ -590,9 +590,9 @@ def get_nice_size(a):
     if isinstance(y, (int,long)):
         size = y
     elif y:
-        y = len(y)
+        size = len(y)
     else:
-        y = 0
+        size = 0
     return (x, tools.human_size(size))
 
 # ---------------------------------------------------------
