@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -49,8 +48,8 @@ def to_decode(s):
             except UnicodeError:
                 return s
 
-def start_server(root_path, port, addons_path):
-    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))
+def start_server(root_path, port, netport, addons_path):
+    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --net_port=%s --addons-path=%s' %(root_path, str(port),str(netport),addons_path))
 def clean():
     if os.path.isfile('openerp.pid'):
         ps = open('openerp.pid')
@@ -209,20 +208,23 @@ def drop_db(uri, dbname):
 def make_links(uri, uid, dbname, source, destination, module, user, pwd):
     if module in ('base','quality_integration_server'):
         return True
-    if not os.path.islink(destination + '/' + module):
-        if not os.path.isdir(destination + '/' + module):
-            for path in source:
-                if os.path.isdir(path + '/' + module):
-                    os.symlink(path + '/' + module, destination + '/' + module)
-                    obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
-                    execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
-                    module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
-                    if len(module_ids):
-                        data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
-                        dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
-                        for dep_data in dep_datas:
-                            make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
-                    return True
+    for path in source:
+        if os.path.isdir(path + '/' + module):
+            if not os.path.islink(destination + '/' + module):
+                os.symlink(path + '/' + module, destination + '/' + module)
+                obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
+                execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
+                module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
+                if len(module_ids):
+                    data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
+                    dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
+                    for dep_data in dep_datas:
+                        make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
+                break
+        else:
+            if os.path.islink(destination + '/' + module):
+               os.unlink(destination + '/' + module)
+               break
     return False
 
 def install_module(uri, dbname, modules, addons='', extra_addons='',  user='admin', pwd='admin'):
@@ -292,6 +294,7 @@ parser.add_option("--addons-path", dest="addons_path", help="specify the addons 
 parser.add_option("--quality-logs", dest="quality_logs", help="specify the path of quality logs files which has to stores")
 parser.add_option("--root-path", dest="root_path", help="specify the root path")
 parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
+parser.add_option("--net_port", dest="netport",help="specify the TCP port for netrpc")
 parser.add_option("-d", "--database", dest="db_name", help="specify the database name")
 parser.add_option("--login", dest="login", help="specify the User Login")
 parser.add_option("--password", dest="pwd", help="specify the User Password")
@@ -324,6 +327,7 @@ options = {
     'root-path' : opt.root_path or '',
     'translate-in': [],
     'port' : opt.port or 8069,
+    'netport':opt.netport or 8070,
     'database': opt.db_name or 'terp',
     'modules' : opt.modules or [],
     'login' : opt.login or 'admin',
@@ -346,7 +350,7 @@ if opt.translate_in:
 uri = 'http://localhost:' + str(options['port'])
 
 server_thread = threading.Thread(target=start_server,
-                args=(options['root-path'], options['port'], options['addons-path']))
+                args=(options['root-path'], options['port'],options['netport'], options['addons-path']))
 try:
     server_thread.start()
     if command == 'create-db':

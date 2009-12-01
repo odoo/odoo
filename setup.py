@@ -59,6 +59,7 @@ required_modules = [
     ('reportlab', 'reportlab module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
+    ('lxml', 'lxml module: pythonic libxml2 and libxslt bindings'),
 ]
 
 def check_modules():

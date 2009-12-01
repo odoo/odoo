@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -135,12 +134,18 @@ class GettextAlias(object):
         cr = frame.f_locals.get('cr')
         try:
             lang = (frame.f_locals.get('context') or {}).get('lang', False)
+            if not (cr and lang):
+                args = frame.f_locals.get('args',False)
+                if args:
+                    lang = args[-1].get('lang',False)
+                    if frame.f_globals.get('pooler',False):
+                        cr = pooler.get_db(frame.f_globals['pooler'].pool_dic.keys()[0]).cursor()
             if not (lang and cr):
                 return source
         except:
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type=%s and src=%s', (lang, 'code', source))
+        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
@@ -190,6 +195,9 @@ class TinyPoFile(object):
                 if 0 == len(self.lines):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
+            while line.startswith('#'):
+                if line.startswith('#~ '):
+                    break
                 if line.startswith('#:'):
                     if ' ' in line[2:].strip():
                         for lpart in line[2:].strip().split(' '):
@@ -620,7 +628,7 @@ def trans_generate(lang, modules, dbname=None):
             for fname in fnmatch.filter(files, '*.py'):
                 fabsolutepath = join(root, fname)
                 frelativepath = fabsolutepath[len(path):]
-                module = get_module_from_path(frelativepath)
+                module = get_module_from_path(fabsolutepath)
                 is_mod_installed = module in installed_modules
                 if (('all' in modules) or (module in modules)) and is_mod_installed:
                     code_string = tools.file_open(fabsolutepath, subdir='').read()

@@ -14,31 +14,30 @@ login := admin
 password := admin
 
 start:        
-	python $(interrogation_file) start-server --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port)
+	python $(interrogation_file) start-server --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --net_port=$(net_port)
 
 create-db:
-	python $(interrogation_file) create-db --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --login=$(login) --password=$(password)
+	python $(interrogation_file) create-db --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --net_port=$(net_port) --login=$(login) --password=$(password)
 
 drop-db:
-	python $(interrogation_file) drop-db --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port)
+	python $(interrogation_file) drop-db --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --net_port=$(net_port)
 
 install-module:	
-	python $(interrogation_file) install-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --extra-addons=$(extra-addons) --port=$(port) --login=$(login) --password=$(password)
+	python $(interrogation_file) install-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --extra-addons=$(extra-addons) --net_port=$(net_port) --port=$(port) --login=$(login) --password=$(password)
 
 upgrade-module:	
-	python $(interrogation_file) upgrade-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --login=$(login) --password=$(password)
+	python $(interrogation_file) upgrade-module --modules=$(module) --database=$(database) --root-path=$(root-path) --addons-path=$(addons-path) --port=$(port) --net_port=$(net_port) --login=$(login)  --password=$(password)
 	
 
 install-translation:    
-	python $(interrogation_file) install-translation --database=$(database) --translate-in=$(i18n-import) --port=$(port) --login=$(login) --password=$(password) --root-path=$(root-path) --addons-path=$(addons-path)
+	python $(interrogation_file) install-translation --database=$(database) --translate-in=$(i18n-import) --net_port=$(net_port) --port=$(port) --login=$(login) --password=$(password) --root-path=$(root-path) --addons-path=$(addons-path)
     
 
 version:
 	python bin/openerp-server.py --version
 
 check-quality:	
-	python $(interrogation_file) check-quality --database=$(database) --modules=$(module) --port=$(port) --login=$(login) --password=$(password) --addons-path=$(addons-path) --root-path=$(root-path)
+	python $(interrogation_file) check-quality --database=$(database) --modules=$(module)  --net_port=$(net_port)        --port=$(port) --login=$(login) --password=$(password) --addons-path=$(addons-path) --root-path=$(root-path)
 	
-
 
 

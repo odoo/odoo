@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -53,6 +52,7 @@ import fields
 import tools
 from tools.translate import _
 
+import copy
 import sys
 import copy
 
@@ -62,6 +62,7 @@ except ImportError:
     sys.stderr.write("ERROR: Import lxml module\n")
     sys.stderr.write("ERROR: Try to install the python-lxml package\n")
     sys.exit(2)
+
 
 from tools.config import config
 
@@ -535,7 +536,9 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        dt += rr.name or '' + ','
+                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
+                                        rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
+                                        dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
                                     break
                                 lines += lines2[1:]
@@ -546,7 +549,8 @@ class orm_template(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = r.name
+                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id])
+                        r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
 
@@ -855,14 +859,17 @@ class orm_template(object):
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
                 import psycopg2
+                import osv
                 if isinstance(e,psycopg2.IntegrityError):
-                    msg= _('Insertion Failed!')
+                    msg= _('Insertion Failed! ')
                     for key in self.pool._sql_error.keys():
                         if key in e[0]:
                             msg = self.pool._sql_error[key]
                             break
-                    return (-1, res,'Line ' + str(counter) +' : ' + msg,'' )
-
+                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
+                if isinstance(e, osv.orm.except_orm ):
+                    msg = _('Insertion Failed! ' + e[1])
+                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1042,10 +1049,9 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = []
+                        dom = None
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
-
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1121,8 +1127,7 @@ class orm_template(object):
                 # running -> done = signal_next (role Z)
                 # running -> cancel = signal_cancel (role Z)
 
-
-                # As we don't know the object state, in this scenario,
+                # As we don't know the object state, in this scenario, 
                 #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
                 #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
                 # The verification will be made later in workflow process...
@@ -1239,7 +1244,7 @@ class orm_template(object):
             while len(toparse):
                 node2 = toparse.pop(0)
                 if node2.tag == 'data':
-                    toparse += node2.getchildren()
+                    toparse += [ c for c in doc_dest ]
                     continue
                 node = _find(src, node2)
                 if node is not None:
@@ -1380,7 +1385,7 @@ class orm_template(object):
             result['name'] = 'default'
             result['field_parent'] = False
             result['view_id'] = 0
-    
+
         xarch, xfields = self.__view_look_dom_arch(cr, user, result['arch'], view_id, context=context)
         result['arch'] = xarch
         result['fields'] = xfields
@@ -1998,12 +2003,23 @@ class orm(orm_template):
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size' % (self._table,))
+                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    if f_pg_type != f_obj_type:
-                                        logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                    # Adding upcoming 6 lines to check whether only the size of the fields got changed or not.E.g. :(16,3) to (16,4)
+                                    field_size_change = False
+                                    if f_pg_type in ['int4','numeric','float8']:
+                                        if f.digits:
+                                            field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
+                                            if field_size != f_pg_size:
+                                                field_size_change = True
+                                                
+                                    if f_pg_type != f_obj_type or field_size_change:
+                                        if f_pg_type != f_obj_type:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        if field_size_change:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed in the size." % (k, self._table))
                                         ok = True
                                         cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
@@ -2141,7 +2157,8 @@ class orm(orm_template):
                 ok = True
                 for x,y,z,e,f,l in self.pool._store_function[object]:
                     if (x==self._name) and (y==store_field) and (e==fields2):
-                        ok = False
+                        if f==order:
+                            ok = False
                 if ok:
                     self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
                     self.pool._store_function[object].sort(lambda x,y: cmp(x[4],y[4]))
@@ -2307,7 +2324,21 @@ class orm(orm_template):
             for key, v in r.items():
                 if v == None:
                     r[key] = False
-
+                if key in self._columns.keys():
+                    type = self._columns[key]._type
+                elif key in self._inherit_fields.keys():
+                    type = self._inherit_fields[key][2]._type
+                else:
+                    continue
+                if type == 'reference' and v:
+                    model,ref_id = v.split(',')
+                    table = self.pool.get(model)._table
+                    cr.execute('select id from "%s" where id=%s' % (table,ref_id))
+                    id_exist = cr.fetchone()
+                    if not id_exist:
+                        cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
+                        r[key] = ''                    
+        
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
@@ -3273,6 +3304,4 @@ class orm(orm_template):
                     return False
         return True
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

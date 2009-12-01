@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:28:23+0000\n"
-"PO-Revision-Date: 2009-08-28 15:28:23+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-11-30 07:58+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-01 04:41+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -57,7 +58,7 @@ msgstr "Codi vista"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not create this kind of document! (%s)"
-msgstr ""
+msgstr "No podeu crear aquest tipus de document! (%s)"
 
 #. module: base
 #: wizard_field:module.lang.import,init,code:0
@@ -96,8 +97,10 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #, python-format
-msgid "\"\"\n"
-"This test checks if the module classes are raising exception when calling basic methods or not.\n"
+msgid ""
+"\"\"\n"
+"This test checks if the module classes are raising exception when calling "
+"basic methods or not.\n"
 "\"\""
 msgstr ""
 
@@ -132,7 +135,7 @@ msgstr "Anual"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The unlink method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode unlink (elimina) no està implementat en aquest objecte!"
 
 #. module: base
 #: field:ir.actions.act_window,target:0
@@ -141,12 +144,16 @@ msgstr "Destí finestra"
 
 #. module: base
 #: model:ir.actions.todo,note:base.config_wizard_simple_view
-msgid "Choose between the \"Simplified Interface\" or the extended one.\n"
-"If you are testing or using OpenERP for the first time, we suggest you to use\n"
-"the simplified interface, which has less options and fields but is easier to\n"
+msgid ""
+"Choose between the \"Simplified Interface\" or the extended one.\n"
+"If you are testing or using OpenERP for the first time, we suggest you to "
+"use\n"
+"the simplified interface, which has less options and fields but is easier "
+"to\n"
 "understand. You will be able to switch to the extended view later.\n"
 "            "
-msgstr "Escolliu entre la \"Interfície simplificada\" o \"Interfície estesa\".\n"
+msgstr ""
+"Escolliu entre la \"Interfície simplificada\" o \"Interfície estesa\".\n"
 "Si esteu examinant o utilitzant OpenERP per la primera vegada,\n"
 "us suggerim per utilitzar la interfície simplificada, que té menys\n"
 "opcions i camps però és més fàcil d'entendre. Més tard podreu\n"
@@ -178,8 +185,9 @@ msgstr "ir.ui.view.custom"
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
-msgid "There is no income account defined ' \\n"
-"                                        'for this product: \"%s\" (id:%d)"
+msgid ""
+"There is no income account defined ' \\n                                     "
+"   'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -223,7 +231,7 @@ msgstr "ir.report.custom.fields"
 #: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
 msgid "new"
-msgstr ""
+msgstr "nou"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -260,8 +268,12 @@ msgstr "Nom"
 #. module: base
 #: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid "Save this document to a %s file and edit it with a specific software or a text editor. The file encoding is UTF-8."
+msgid ""
+"Save this document to a %s file and edit it with a specific software or a "
+"text editor. The file encoding is UTF-8."
 msgstr ""
+"Deseu aquest document en un fitxer %s i editeu-lo amb un programa específic "
+"o un editor de text. La codificació del fitxer és UTF-8."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -272,13 +284,14 @@ msgstr "STOCK_DELETE"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password mismatch !"
-msgstr ""
+msgstr "La contrasenya no coincideix !"
 
 #. module: base
 #: code:addons/addons/base/module/module.py:0
 #, python-format
 msgid "This url '%s' must provide an html file with links to zip modules"
 msgstr ""
+"Aquesta url '%s' ha d'apuntar a un fitxer html amb enllaços a mòduls zip"
 
 #. module: base
 #: selection:res.request,state:0
@@ -370,8 +383,10 @@ msgstr "Nom camp"
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
-"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)\n"
+msgid ""
+"Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
+"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, "
+"context=context)\n"
 "\n"
 "    def button_dummy(self, cr, uid, ids, context={}):\n"
 "        return True\n"
@@ -391,9 +406,10 @@ msgstr "Mòduls no instal·lats"
 #. module: base
 #: code:addons/addons/product/pricelist.py:0
 #, python-format
-msgid "Could not resolve product category, ' \\n"
-"                                    'you have defined cyclic categories ' \\n"
-"                                    'of products!"
+msgid ""
+"Could not resolve product category, ' \\n                                    "
+"'you have defined cyclic categories ' \\n                                    "
+"'of products!"
 msgstr ""
 
 #. module: base
@@ -456,8 +472,12 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base/res/res_user.py:0
 #, python-format
-msgid "You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)"
+msgid ""
+"You can not remove the admin user as it is used internally for resources "
+"created by OpenERP (updates, module installation, ...)"
 msgstr ""
+"No podeu eliminar l'usuari admin ja que s'utilitza internament pels recursos "
+"creats per OpenERP (actualitzacions, instal·lació de mòduls, ...)"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -477,14 +497,18 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.report.xml,attachment_use:0
-msgid "If you check this, then the second time the user prints with same attachment name, it returns the previous report."
-msgstr "Si marca aquesta opció, quan l'usuari imprimeixi el mateix nom d'adjunt per segona vegada, tornarà l'informe anterior."
+msgid ""
+"If you check this, then the second time the user prints with same attachment "
+"name, it returns the previous report."
+msgstr ""
+"Si marca aquesta opció, quan l'usuari imprimeixi el mateix nom d'adjunt per "
+"segona vegada, tornarà l'informe anterior."
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The read method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode read (llegir) no està implementat en aquest objecte!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -520,7 +544,8 @@ msgstr "Programa actualització"
 #. module: base
 #: code:addons/service/web_services.py:0
 #, python-format
-msgid "''\n"
+msgid ""
+"''\n"
 "\n"
 "OpenERP is an ERP+CRM program for small and medium businesses.\n"
 "\n"
@@ -539,15 +564,18 @@ msgstr ""
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #, python-format
-msgid "You must assign a partner to this lead before converting to opportunity.\n' \\n"
-"                  'You can use the convert to partner button."
+msgid ""
+"You must assign a partner to this lead before converting to opportunity.\n"
+"' \\n                  'You can use the convert to partner button."
 msgstr ""
 
 #. module: base
 #: help:res.country,code:0
-msgid "The ISO country code in two chars.\n"
+msgid ""
+"The ISO country code in two chars.\n"
 "You can use this field for quick search."
-msgstr "EL codi ISO del país en dos caràcters.\n"
+msgstr ""
+"EL codi ISO del país en dos caràcters.\n"
 "Podeu utilitzar aquest camp per la cerca ràpida."
 
 #. module: base
@@ -593,7 +621,7 @@ msgstr "Interfície estesa"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr ""
+msgstr "Els camps personalitzats han de tenir un nom que comença con 'x_'!"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -642,7 +670,7 @@ msgstr ""
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the model '%s' !"
-msgstr ""
+msgstr "No podeu eliminar aquest model '%s'!"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -742,8 +770,11 @@ msgstr "Seqüències"
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #, python-format
-msgid "You did not installed the opportunities tracking when you configured the crm_configuration module.' \\n"
-"                  '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'."
+msgid ""
+"You did not installed the opportunities tracking when you configured the "
+"crm_configuration module.' \\n                  '\n"
+"I can not convert the lead to an opportunity, you must create a section with "
+"the code 'oppor'."
 msgstr ""
 
 #. module: base
@@ -836,7 +867,8 @@ msgstr "Dies feiners"
 #. module: base
 #: help:ir.values,action_id:0
 msgid "This field is not used, it only helps you to select the right action."
-msgstr "Aquest camp no s'utilitza, només us ajuda a seleccionar l'acció correcta."
+msgstr ""
+"Aquest camp no s'utilitza, només us ajuda a seleccionar l'acció correcta."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -958,7 +990,8 @@ msgstr ""
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "You have to define a Default Credit Account for your Financial Journals!\n"
+msgid ""
+"You have to define a Default Credit Account for your Financial Journals!\n"
 msgstr ""
 
 #. module: base
@@ -987,7 +1020,7 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Intenteu saltar una regla d'accés (tipus document: %s)."
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -997,13 +1030,19 @@ msgstr "Illes Caiman"
 #. module: base
 #: code:addons/report/custom.py:0
 #, python-format
-msgid "The sum of the data (2nd field) is null.\nWe can't draw a pie chart !"
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
 msgstr ""
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
-msgid "<html>O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n</html>"
+msgid ""
+"<html>O(1) means that the number of SQL requests to read the object does not "
+"depand on the number of objects we are reading. This feature is hardly "
+"wished.\n"
+"</html>"
 msgstr ""
 
 #. module: base
@@ -1048,7 +1087,9 @@ msgstr "Níger"
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
-msgid "You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !"
+msgid ""
+"You can not do this modification on a confirmed entry ! Please note that you "
+"can just change some non important fields !"
 msgstr ""
 
 #. module: base
@@ -1069,13 +1110,23 @@ msgstr ">="
 #. module: base
 #: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
-msgid "\n\nMail sent to following Partners successfully, !\n\n"
+msgid ""
+"\n"
+"\n"
+"Mail sent to following Partners successfully, !\n"
+"\n"
 msgstr ""
 
 #. module: base
 #: view:res.lang:0
-msgid "%W - Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0."
-msgstr "﻿%W - Número de setmana de l'any (Dilluns com el primer dia de la setmana) com un número decimal [00,53]. Es considera que tots els dies en un any nou que precedeixin el primer dilluns estan a la setmana 0."
+msgid ""
+"%W - Week number of the year (Monday as the first day of the week) as a "
+"decimal number [00,53]. All days in a new year preceding the first Monday "
+"are considered to be in week 0."
+msgstr ""
+"﻿%W - Número de setmana de l'any (Dilluns com el primer dia de la setmana) "
+"com un número decimal [00,53]. Es considera que tots els dies en un any nou "
+"que precedeixin el primer dilluns estan a la setmana 0."
 
 #. module: base
 #: field:res.partner.event,planned_cost:0
@@ -1169,7 +1220,7 @@ msgstr ""
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Pie charts need exactly two fields"
-msgstr ""
+msgstr "Gràfics de pastís necessiten exactament dos camps"
 
 #. module: base
 #: code:addons/osv/orm.py:0
@@ -1256,8 +1307,14 @@ msgstr "en brut"
 
 #. module: base
 #: help:ir.actions.server,email:0
-msgid "Provides the fields that will be used to fetch the email address, e.g. when you select the invoice, then `object.invoice_address_id.email` is the field which gives the correct address"
-msgstr "Indiqueu els camps que s'utilitzaran per extreure l'adreça de correu electrònic. Por ex. quan seleccioneu la factura, llavors `object.invoice_address_id.email` és el camp que conté l'adreça correcta."
+msgid ""
+"Provides the fields that will be used to fetch the email address, e.g. when "
+"you select the invoice, then `object.invoice_address_id.email` is the field "
+"which gives the correct address"
+msgstr ""
+"Indiqueu els camps que s'utilitzaran per extreure l'adreça de correu "
+"electrònic. Por ex. quan seleccioneu la factura, llavors "
+"`object.invoice_address_id.email` és el camp que conté l'adreça correcta."
 
 #. module: base
 #: field:res.roles,name:0
@@ -1272,7 +1329,9 @@ msgstr "Comercial dedicat"
 #. module: base
 #: code:addons/addons/mrp/wizard/wizard_change_production_qty.py:0
 #, python-format
-msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
+msgid ""
+"The production is in \"%s\" state. You can not change the production "
+"quantity anymore"
 msgstr ""
 
 #. module: base
@@ -1307,7 +1366,8 @@ msgstr "ir.export.línia"
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
-msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
+msgid ""
+"Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
 "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
 "\n"
 "    def copy(self, cr, uid, id, default=None,context=None):\n"
@@ -1335,7 +1395,9 @@ msgstr "Introduïu el fitxer .ZIP del mòdul a importar."
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
-msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
+msgid ""
+"No E-Mail ID Found for your Company address or missing reply address in "
+"section!"
 msgstr ""
 
 #. module: base
@@ -1369,7 +1431,8 @@ msgstr "STOCK_COPY"
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
-msgid "Model %s Does not Exist !\" % vals['relation']))\n"
+msgid ""
+"Model %s Does not Exist !\" % vals['relation']))\n"
 "                 \n"
 "            if self.pool.get(vals['model']):\n"
 "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
@@ -1487,7 +1550,7 @@ msgstr "Dia: %(day)s"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not read this document! (%s)"
-msgstr ""
+msgstr "No podeu llegir aquest document! (%s)"
 
 #. module: base
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
@@ -1535,7 +1598,8 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base_module_quality/object_test/object_test.py:0
 #, python-format
-msgid "\"\"\n"
+msgid ""
+"\"\"\n"
 "Test checks for fields, views, security rules, dependancy level\n"
 "\"\""
 msgstr ""
@@ -1587,8 +1651,12 @@ msgstr "Empreses"
 
 #. module: base
 #: help:ir.actions.server,message:0
-msgid "Specify the message. You can use the fields from the object. e.g. `Dear [[ object.partner_id.name ]]`"
-msgstr "Indiqueu el missatge. Podeu utilitzar els camps de l'objecte. per ex. `Estimat [[object.partner_id.name]]`"
+msgid ""
+"Specify the message. You can use the fields from the object. e.g. `Dear [[ "
+"object.partner_id.name ]]`"
+msgstr ""
+"Indiqueu el missatge. Podeu utilitzar els camps de l'objecte. per ex. "
+"`Estimat [[object.partner_id.name]]`"
 
 #. module: base
 #: field:ir.attachment,res_model:0
@@ -1644,7 +1712,7 @@ msgstr "Respondre"
 #: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "Can not remove root user!"
-msgstr ""
+msgstr "No es pot eliminar l'usuari principal!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1684,8 +1752,14 @@ msgstr "Referències"
 
 #. module: base
 #: view:res.lang:0
-msgid "%U - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0."
-msgstr "%U - Número de setmana de l'any (Diumenge com el primer dia de la setmana) com un número decimal [00,53]. Es considera que tots els dies en un any nou que precedeixin el primer diumenge estan a la setmana 0."
+msgid ""
+"%U - Week number of the year (Sunday as the first day of the week) as a "
+"decimal number [00,53]. All days in a new year preceding the first Sunday "
+"are considered to be in week 0."
+msgstr ""
+"%U - Número de setmana de l'any (Diumenge com el primer dia de la setmana) "
+"com un número decimal [00,53]. Es considera que tots els dies en un any nou "
+"que precedeixin el primer diumenge estan a la setmana 0."
 
 #. module: base
 #: wizard_view:module.lang.install,init:0
@@ -1712,8 +1786,10 @@ msgstr "STOCK_CLEAR"
 
 #. module: base
 #: help:res.users,password:0
-msgid "Keep empty if you don't want the user to be able to connect on the system."
-msgstr "Deixeu-lo buit ﻿si no vol que l'usuari es pugui connectar en el sistema."
+msgid ""
+"Keep empty if you don't want the user to be able to connect on the system."
+msgstr ""
+"Deixeu-lo buit ﻿si no vol que l'usuari es pugui connectar en el sistema."
 
 #. module: base
 #: field:ir.actions.act_window,view_mode:0
@@ -1731,7 +1807,7 @@ msgstr ""
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented search_memory method !"
-msgstr ""
+msgstr "El mètode search_memory no està implementat!"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -1741,8 +1817,9 @@ msgstr "Espanyol / Español"
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "There is no receivable account defined for this journal:'\\n"
-"                    ' \"%s\" (id:%d)"
+msgid ""
+"There is no receivable account defined for this journal:'\\n                 "
+"   ' \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -1786,8 +1863,11 @@ msgstr "Prospecció comercial"
 #. module: base
 #: code:addons/addons/base/res/partner/partner.py:0
 #, python-format
-msgid "Couldn't generate the next id because some partners have an alphabetic id !"
+msgid ""
+"Couldn't generate the next id because some partners have an alphabetic id !"
 msgstr ""
+"No es pot generar el següent id perquè algunes empreses tenen un id "
+"alfabètic!"
 
 #. module: base
 #: view:ir.attachment:0
@@ -1813,7 +1893,7 @@ msgstr "Número de mòduls actualitzats"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented set_memory method !"
-msgstr ""
+msgstr "El mètode set_memory no està implementat!"
 
 #. module: base
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
@@ -1877,8 +1957,12 @@ msgstr "Contracte de manteniment afegit!"
 
 #. module: base
 #: view:wizard.module.update_translations:0
-msgid "This wizard will detect new terms in the application so that you can update them manually."
-msgstr "Aquest assistent detectarà nous termes de l'aplicació per a que pugueu actualitzar-los manualment."
+msgid ""
+"This wizard will detect new terms in the application so that you can update "
+"them manually."
+msgstr ""
+"Aquest assistent detectarà nous termes de l'aplicació per a que pugueu "
+"actualitzar-los manualment."
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
@@ -1888,8 +1972,14 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,expression:0
-msgid "Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."
-msgstr "﻿Introduïu el camp/expressió que tornarà la llista. Per ex. si seleccioneu la comanda de venda en Objecte podrà realitzar un bucle sobre les línies del comanda de venda. Expressió = `object.order_line`."
+msgid ""
+"Enter the field/expression that will return the list. E.g. select the sale "
+"order in Object, and you can have loop on the sales order line. Expression = "
+"`object.order_line`."
+msgstr ""
+"﻿Introduïu el camp/expressió que tornarà la llista. Per ex. si seleccioneu "
+"la comanda de venda en Objecte podrà realitzar un bucle sobre les línies del "
+"comanda de venda. Expressió = `object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1939,8 +2029,11 @@ msgstr "Madagascar"
 
 #. module: base
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
+"especial!"
 
 #. module: base
 #: help:ir.rule.group,global:0
@@ -1973,8 +2066,9 @@ msgstr "Acció a executar"
 #. module: base
 #: code:addons/addons/stock/stock.py:0
 #, python-format
-msgid "There is no journal defined '\\n"
-"                            'on the product category: \"%s\" (id: %d)"
+msgid ""
+"There is no journal defined '\\n                            'on the product "
+"category: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -1996,15 +2090,16 @@ msgstr "Confirmació"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Enter at least one field !"
-msgstr ""
+msgstr "Introduiu almenys un camp!"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "No bank defined\n' \\n"
-"					'for the bank account: %s\n' \\n"
-"					'on the partner: %s\n' \\n"
-"					'on line: %s"
+msgid ""
+"No bank defined\n"
+"' \\n\t\t\t\t\t'for the bank account: %s\n"
+"' \\n\t\t\t\t\t'on the partner: %s\n"
+"' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -2024,8 +2119,12 @@ msgstr "Límit per defecte per la vista de llista"
 
 #. module: base
 #: help:ir.actions.server,write_id:0
-msgid "Provide the field name that the record id refers to for the write operation. If it is empty it will refer to the active id of the object."
-msgstr "Indiqueu el nom de camp al qual e refereix el id del registre per a l'operació escriure. Si esta buit es referirà al id actiu de l'objecte."
+msgid ""
+"Provide the field name that the record id refers to for the write operation. "
+"If it is empty it will refer to the active id of the object."
+msgstr ""
+"Indiqueu el nom de camp al qual e refereix el id del registre per a "
+"l'operació escriure. Si esta buit es referirà al id actiu de l'objecte."
 
 #. module: base
 #: model:res.country,name:base.zw
@@ -2052,7 +2151,7 @@ msgstr "Adreça correu electrònic"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not write in this document! (%s)"
-msgstr ""
+msgstr "No podeu escriure en aquest document! (%s)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2150,6 +2249,7 @@ msgstr "STOCK_PRINT_PREVIEW"
 #, python-format
 msgid "The perm_read method is not implemented on this object !"
 msgstr ""
+"El mètode perm_read (llegir permisos) no està implementat en aquest objecte!"
 
 #. module: base
 #: code:addons/addons/stock/wizard/wizard_inventory.py:0
@@ -2165,7 +2265,9 @@ msgstr "Eslovènia"
 #. module: base
 #: code:addons/addons/project_timesheet/project_timesheet.py:0
 #, python-format
-msgid "No journal defined on the related employee.\nFill in the timesheet tab of the employee form."
+msgid ""
+"No journal defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: base
@@ -2177,7 +2279,9 @@ msgstr "Canal"
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
-msgid "You can not escalate this case.\nYou are already at the top level."
+msgid ""
+"You can not escalate this case.\n"
+"You are already at the top level."
 msgstr ""
 
 #. module: base
@@ -2252,14 +2356,16 @@ msgstr "STOCK_MEDIA_PLAY"
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
-msgid "You can't delete this server because it acts as backup for other servers."
+msgid ""
+"You can't delete this server because it acts as backup for other servers."
 msgstr ""
 
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
-msgid "The account move (%s) for centralisation ' \\n"
-"                                        'has been confirmed!"
+msgid ""
+"The account move (%s) for centralisation ' \\n                               "
+"         'has been confirmed!"
 msgstr ""
 
 #. module: base
@@ -2292,7 +2398,9 @@ msgstr "Acció client"
 #. module: base
 #: code:addons/addons/sale/wizard/make_invoice_advance.py:0
 #, python-format
-msgid "You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."
+msgid ""
+"You cannot make an advance on a sale order that is defined as 'Automatic "
+"Invoice after delivery'."
 msgstr ""
 
 #. module: base
@@ -2325,7 +2433,7 @@ msgstr "Vàlid"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not delete this document! (%s)"
-msgstr ""
+msgstr "No podeu eliminar aquest document! (%s)"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -2457,13 +2565,16 @@ msgstr "Calendari"
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "No fiscal year defined for this date !\nPlease create one."
+msgid ""
+"No fiscal year defined for this date !\n"
+"Please create one."
 msgstr ""
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
-msgid "Selected Move lines does not have any account move enties in draft state"
+msgid ""
+"Selected Move lines does not have any account move enties in draft state"
 msgstr ""
 
 #. module: base
@@ -2540,8 +2651,12 @@ msgstr "Color de fons"
 
 #. module: base
 #: view:ir.actions.server:0
-msgid "If you use a formula type, use a python expression using the variable 'object'."
-msgstr "﻿Si utilitza un tipus fórmula, introduïu una expressió Python que inclogui la variable 'object'."
+msgid ""
+"If you use a formula type, use a python expression using the variable "
+"'object'."
+msgstr ""
+"﻿Si utilitza un tipus fórmula, introduïu una expressió Python que inclogui "
+"la variable 'object'."
 
 #. module: base
 #: code:addons/addons/hr_timesheet/report/user_timesheet.py:0
@@ -2699,10 +2814,10 @@ msgstr "Descripció"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide ' \\n"
-"							'a bank number \n' \\n"
-"							'for the partner bank: %s\n' \\n"
-"							'on line: %s"
+msgid ""
+"You must provide ' \\n\t\t\t\t\t\t\t'a bank number \n"
+"' \\n\t\t\t\t\t\t\t'for the partner bank: %s\n"
+"' \\n\t\t\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -2823,7 +2938,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Please check that all your lines have %d columns."
-msgstr ""
+msgstr "Verifiqueu que totes les línies tinguin %d columnes"
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -2872,7 +2987,7 @@ msgstr "terp-account"
 #: code:addons/addons/base_module_merge/wizard/base_module_merge.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "Error de recurrència entre dependències de mòduls!"
 
 #. module: base
 #: view:ir.model:0
@@ -2881,8 +2996,12 @@ msgstr "Crea un menú"
 
 #. module: base
 #: help:res.partner,vat:0
-msgid "Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."
-msgstr "Número CIF/NIF. Marqueu aquesta casella si l'empresa està subjecta a l'IVA. S'utilitza per a la declaració legal de l'IVA."
+msgid ""
+"Value Added Tax number. Check the box if the partner is subjected to the "
+"VAT. Used by the VAT legal statement."
+msgstr ""
+"Número CIF/NIF. Marqueu aquesta casella si l'empresa està subjecta a l'IVA. "
+"S'utilitza per a la declaració legal de l'IVA."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_category_tree
@@ -2939,7 +3058,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgid ""
+"You tried to sign with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: base
@@ -2965,11 +3086,13 @@ msgstr "%x - Representació apropiada de data."
 
 #. module: base
 #: help:ir.module.repository,filter:0
-msgid "Regexp to search module on the repository webpage:\n"
+msgid ""
+"Regexp to search module on the repository webpage:\n"
 "- The first parenthesis must match the name of the module.\n"
 "- The second parenthesis must match the whole version number.\n"
 "- The last parenthesis must match the extension of the module."
-msgstr "Expressió regular per cercar el mòdul en la pàgina web de la biblioteca:\n"
+msgstr ""
+"Expressió regular per cercar el mòdul en la pàgina web de la biblioteca:\n"
 "- El primer parèntesi ha de coincidir amb el nombre del mòdul.\n"
 "- El segon parèntesi ha de coincidir amb el número de versió complet.\n"
 "- L'últim parèntesi ha de coincidir amb l'extensió del mòdul."
@@ -3031,7 +3154,9 @@ msgstr "Nauru"
 #. module: base
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
-msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
+msgid ""
+"No analytic journal available for this employee.\n"
+"Define an employee for the selected user and assign an analytic journal."
 msgstr ""
 
 #. module: base
@@ -3051,7 +3176,7 @@ msgstr "Formulari"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Can not define a column %s. Reserved keyword !"
-msgstr ""
+msgstr "No s'ha pogut definir la columna %s. Paraula reservada !"
 
 #. module: base
 #: model:res.country,name:base.me
@@ -3083,10 +3208,10 @@ msgstr "Categories"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide ' \\n"
-"						'a Clearing Number\n' \\n"
-"						'for the partner bank: %s\n' \\n"
-"						'on line %s"
+msgid ""
+"You must provide ' \\n\t\t\t\t\t\t'a Clearing Number\n"
+"' \\n\t\t\t\t\t\t'for the partner bank: %s\n"
+"' \\n\t\t\t\t\t\t'on line %s"
 msgstr ""
 
 #. module: base
@@ -3223,8 +3348,14 @@ msgstr "Equador"
 #. module: base
 #: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid "Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it."
+msgid ""
+"Save this document to a .CSV file and open it with your favourite "
+"spreadsheet software. The file encoding is UTF-8. You have to translate the "
+"latest column before reimporting it."
 msgstr ""
+"Deseu aquest document en un fitxer .CSV i obriu-lo amb el vostre programa "
+"preferit de fulls de càlcul. La codificació del fitxer és UTF-8. Heu de "
+"traduir l'última columna abans de importar-lo de nou."
 
 #. module: base
 #: model:res.country,name:base.au
@@ -3240,8 +3371,13 @@ msgstr ""
 
 #. module: base
 #: help:res.partner,lang:0
-msgid "If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."
-msgstr "Si l'idioma seleccionat està instal·lat en el sistema, tots els documents relacionats amb aquesta empresa seran mostrats en aquest idioma. Si no, seran mostrats en anglès."
+msgid ""
+"If the selected language is loaded in the system, all documents related to "
+"this partner will be printed in this language. If not, it will be english."
+msgstr ""
+"Si l'idioma seleccionat està instal·lat en el sistema, tots els documents "
+"relacionats amb aquesta empresa seran mostrats en aquest idioma. Si no, "
+"seran mostrats en anglès."
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -3330,13 +3466,19 @@ msgstr ""
 #. module: base
 #: code:addons/addons/hr_holidays/hr.py:0
 #, python-format
-msgid "You can not cancel this holiday request. first You have to make its case in draft state."
+msgid ""
+"You can not cancel this holiday request. first You have to make its case in "
+"draft state."
 msgstr ""
 
 #. module: base
 #: help:ir.actions.server,subject:0
-msgid "Specify the subject. You can use fields from the object, e.g. `Hello [[ object.partner_id.name ]]`"
-msgstr "Indiqueu l'assumpte. Podeu utilitzar camps de l'objecte, per ex. `Hola [[object.partner_id.name]]`"
+msgid ""
+"Specify the subject. You can use fields from the object, e.g. `Hello [[ "
+"object.partner_id.name ]]`"
+msgstr ""
+"Indiqueu l'assumpte. Podeu utilitzar camps de l'objecte, per ex. `Hola "
+"[[object.partner_id.name]]`"
 
 #. module: base
 #: view:res.company:0
@@ -3366,7 +3508,9 @@ msgstr "Fitxer .ZIP del mòdul"
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
-msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
 msgstr ""
 
 #. module: base
@@ -3405,7 +3549,7 @@ msgstr "Surinam"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The create method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode create (crear) no està implementat en aquest objecte!"
 
 #. module: base
 #: field:ir.values,key2:0
@@ -3440,7 +3584,9 @@ msgstr "Tipus de seqüència"
 #. module: base
 #: code:addons/addons/base/module/module.py:0
 #, python-format
-msgid "You try to upgrade a module that depends on the module: %s.\nBut this module is not available in your system."
+msgid ""
+"You try to upgrade a module that depends on the module: %s.\n"
+"But this module is not available in your system."
 msgstr ""
 
 #. module: base
@@ -3457,7 +3603,7 @@ msgstr "Llicència"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Invalid operation"
-msgstr ""
+msgstr "L'operació no és vàlida."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3478,8 +3624,12 @@ msgstr "Model"
 #. module: base
 #: code:addons/addons/base/module/module.py:0
 #, python-format
-msgid "You try to install a module that depends on the module: %s.\nBut this module is not available in your system."
+msgid ""
+"You try to install a module that depends on the module: %s.\n"
+"But this module is not available in your system."
 msgstr ""
+"Esteu intentant d'instal·lar un mòdul que depèn del mòdul: %s.\n"
+"Però aquest mòdul no es troba disponible en el vostre sistema."
 
 #. module: base
 #: field:ir.actions.act_window.view,view_id:0
@@ -3512,13 +3662,17 @@ msgstr "Importació de mòdul"
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
-msgid "Language with code \"%s\" is not defined in your system !\nDefine it through the Administration menu."
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
 msgstr ""
 
 #. module: base
 #: code:addons/addons/project/wizard/close_task.py:0
 #, python-format
-msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
+msgid ""
+"Couldn't send mail because the contact for this task (%s) has no email "
+"address!"
 msgstr ""
 
 #. module: base
@@ -3586,10 +3740,12 @@ msgstr "Regles"
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
+"Esteu intentant d'eliminar un mòdul que està instal·lat o serà instal·lat"
 
 #. module: base
 #: help:ir.values,key2:0
-msgid "The kind of action or button in the client side that will trigger the action."
+msgid ""
+"The kind of action or button in the client side that will trigger the action."
 msgstr "Tipus d'acció o botó del costat del client que activarà l'acció."
 
 #. module: base
@@ -3630,7 +3786,9 @@ msgstr "Assistent de configuració"
 #. module: base
 #: code:addons/addons/account_report/account.py:0
 #, python-format
-msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgid ""
+"You cannot delete an indicator history record. You may have to delete the "
+"concerned Indicator!"
 msgstr ""
 
 #. module: base
@@ -3646,9 +3804,11 @@ msgstr "res.roles"
 
 #. module: base
 #: help:ir.cron,priority:0
-msgid "0=Very Urgent\n"
+msgid ""
+"0=Very Urgent\n"
 "10=Not urgent"
-msgstr "0=Molt urgent\n"
+msgstr ""
+"0=Molt urgent\n"
 "10=Sense urgència"
 
 #. module: base
@@ -3660,8 +3820,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "You cannot enter an attendance ' \\n"
-"                        'date outside the current timesheet dates!"
+msgid ""
+"You cannot enter an attendance ' \\n                        'date outside "
+"the current timesheet dates!"
 msgstr ""
 
 #. module: base
@@ -3678,8 +3839,9 @@ msgstr "Enllaços acceptats en sol·licituds"
 #. module: base
 #: code:addons/addons/analytic_user_function/analytic_user_function.py:0
 #, python-format
-msgid "There is no expense account define ' \\n"
-"                                    'for this product: \"%s\" (id:%d)"
+msgid ""
+"There is no expense account define ' \\n                                    "
+"'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -3696,7 +3858,8 @@ msgstr "Autoritza accés a menús"
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "You have to define a Default Debit Account for your Financial Journals!\n"
+msgid ""
+"You have to define a Default Debit Account for your Financial Journals!\n"
 msgstr ""
 
 #. module: base
@@ -3706,8 +3869,14 @@ msgstr "Kenia"
 
 #. module: base
 #: view:res.config.view:0
-msgid "Choose the simplified interface if you are testing OpenERP for the first time. Less used options or fields are automatically hidden. You will be able to change this, later, through the Administration menu."
-msgstr "Escolliu la interfície simplificada si esteu provant OpenERP per primera vegada. Les opcions o camps menys utilitzats s'oculten automàticament. Més tard podreu canviar-ho mitjançant el menú de Administració."
+msgid ""
+"Choose the simplified interface if you are testing OpenERP for the first "
+"time. Less used options or fields are automatically hidden. You will be able "
+"to change this, later, through the Administration menu."
+msgstr ""
+"Escolliu la interfície simplificada si esteu provant OpenERP per primera "
+"vegada. Les opcions o camps menys utilitzats s'oculten automàticament. Més "
+"tard podreu canviar-ho mitjançant el menú de Administració."
 
 #. module: base
 #: code:addons/osv/orm.py:0
@@ -4015,7 +4184,9 @@ msgstr "Ruta SXW"
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "No period defined for this date !\nPlease create a fiscal year."
+msgid ""
+"No period defined for this date !\n"
+"Please create a fiscal year."
 msgstr ""
 
 #. module: base
@@ -4035,7 +4206,8 @@ msgstr "Usuari"
 #. module: base
 #: view:res.users:0
 msgid "Groups are used to defined access rights on each screen and menu."
-msgstr "﻿Els grups s'utilitzen per definir permisos d'accés a cada pantalla i menú."
+msgstr ""
+"﻿Els grups s'utilitzen per definir permisos d'accés a cada pantalla i menú."
 
 #. module: base
 #: field:ir.ui.menu,parent_id:0
@@ -4053,8 +4225,12 @@ msgstr ""
 #: help:ir.actions.act_window.view,multi:0
 #: help:ir.actions.report.custom,multi:0
 #: help:ir.actions.report.xml,multi:0
-msgid "If set to true, the action will not be displayed on the right toolbar of a form view."
-msgstr "Si se marqueu a veritat, l'acció no es mostrarà en la barra de eines de la dreta en una vista formulari."
+msgid ""
+"If set to true, the action will not be displayed on the right toolbar of a "
+"form view."
+msgstr ""
+"Si se marqueu a veritat, l'acció no es mostrarà en la barra de eines de la "
+"dreta en una vista formulari."
 
 #. module: base
 #: code:addons/addons/stock/wizard/inventory_merge.py:0
@@ -4094,9 +4270,12 @@ msgstr ""
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
 #, python-format
-msgid "Your bank BVR adherent number must contain exactly seven' \\n"
-"                            'digits!\nPlease check your company ' \\n"
-"                            'information for the invoice:\n%s"
+msgid ""
+"Your bank BVR adherent number must contain exactly seven' \\n                "
+"            'digits!\n"
+"Please check your company ' \\n                            'information for "
+"the invoice:\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -4133,7 +4312,9 @@ msgstr "res.usuaris"
 #. module: base
 #: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
-msgid "All emails have been successfully sent to Partners:.\n\n"
+msgid ""
+"All emails have been successfully sent to Partners:.\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -4145,7 +4326,7 @@ msgstr "Nicaragua"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The write method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode write (esciure) no està implementat en aquest objecte!"
 
 #. module: base
 #: view:res.partner.event:0
@@ -4204,13 +4385,18 @@ msgstr ""
 
 #. module: base
 #: help:res.partner,user_id:0
-msgid "The internal user that is in charge of communicating with this partner if any."
-msgstr "﻿L'usuari intern que s'encarrega de comunicar-se amb aquesta empresa, si n'hi ha."
+msgid ""
+"The internal user that is in charge of communicating with this partner if "
+"any."
+msgstr ""
+"﻿L'usuari intern que s'encarrega de comunicar-se amb aquesta empresa, si "
+"n'hi ha."
 
 #. module: base
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
-msgid "\"\"\n"
+msgid ""
+"\"\"\n"
 "This test checks if the module satisfy tiny structure\n"
 "\"\""
 msgstr ""
@@ -4344,8 +4530,9 @@ msgstr ""
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
-msgid "You try to write on an record that doesn\'t exist ' \\n"
-"                                        '(Document type: %s)."
+msgid ""
+"You try to write on an record that doesn't exist ' \\n                       "
+"                 '(Document type: %s)."
 msgstr ""
 
 #. module: base
@@ -4374,8 +4561,12 @@ msgstr ""
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
-msgid "You have to import a .CSV file wich is encoded in UTF-8.  Please check that the first line of your file is one of the following:"
-msgstr "Heu d'importar un fitxer .CSV codificat en UTF-8. Comproveu que la primera línia de fitxer és una de les sigüents:"
+msgid ""
+"You have to import a .CSV file wich is encoded in UTF-8.  Please check that "
+"the first line of your file is one of the following:"
+msgstr ""
+"Heu d'importar un fitxer .CSV codificat en UTF-8. Comproveu que la primera "
+"línia de fitxer és una de les sigüents:"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -4434,7 +4625,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
-msgid "\"%s\" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id"
+msgid ""
+"\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+"used to refer to other modules data, as in module.reference_id"
 msgstr ""
 
 #. module: base
@@ -4521,7 +4714,7 @@ msgstr "Tipus de banc"
 #: code:addons/addons/base/res/res_user.py:0
 #, python-format
 msgid "The name of the group can not start with \"-\""
-msgstr ""
+msgstr "El nom del grup no pot començar amb \"-\""
 
 #. module: base
 #: wizard_view:module.upgrade,end:0
@@ -4562,7 +4755,9 @@ msgstr "Seguretat en grups"
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
-msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
 msgstr ""
 
 #. module: base
@@ -4606,7 +4801,7 @@ msgstr "Acumula"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Tree can only be used in tabular reports"
-msgstr ""
+msgstr "Àrbre es pot utilitzar només en informes tabulars"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -4676,7 +4871,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/subscription/subscription.py:0
 #, python-format
-msgid "Please provide another source document.\nThis one does not exist !"
+msgid ""
+"Please provide another source document.\n"
+"This one does not exist !"
 msgstr ""
 
 #. module: base
@@ -4692,13 +4889,19 @@ msgstr "Samoa Americana"
 #. module: base
 #: code:addons/addons/base/module/module.py:0
 #, python-format
-msgid "Some installed modules depend on the module you plan to Uninstall :\n %s"
+msgid ""
+"Some installed modules depend on the module you plan to Uninstall :\n"
+" %s"
 msgstr ""
+"Alguns mòduls instal·lats depenen del mòdul que voleu desinstal·lar:\n"
+" %s"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
 #, python-format
-msgid "No bank specified on invoice:\n%s"
+msgid ""
+"No bank specified on invoice:\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -4781,7 +4984,9 @@ msgstr "STOCK_ZOOM_OUT"
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
-msgid "Given module has no objects.Speed test can work only when new objects are created in the module along with demo data"
+msgid ""
+"Given module has no objects.Speed test can work only when new objects are "
+"created in the module along with demo data"
 msgstr ""
 
 #. module: base
@@ -4830,7 +5035,8 @@ msgstr "Fiji"
 #. module: base
 #: code:addons/addons/stock/stock.py:0
 #, python-format
-msgid "Please put a partner on the picking list if you want to generate invoice."
+msgid ""
+"Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
 
 #. module: base
@@ -4908,8 +5114,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/stock/stock.py:0
 #, python-format
-msgid "There is no stock output account defined ' \\n"
-"                                        'for this product: \"%s\" (id: %d)"
+msgid ""
+"There is no stock output account defined ' \\n                               "
+"         'for this product: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -5033,7 +5240,7 @@ msgstr "Repeteix perduts"
 #: code:addons/addons/base/module/wizard/wizard_module_import.py:0
 #, python-format
 msgid "Can not create the module file: %s !"
-msgstr ""
+msgstr "No es pot crear el fitxer de mòdul: %s!"
 
 #. module: base
 #: field:ir.server.object.lines,server_id:0
@@ -5059,7 +5266,8 @@ msgstr "Crea / Escriu"
 #. module: base
 #: help:res.partner.category,active:0
 msgid "The active field allows you to hide the category without removing it."
-msgstr "El camp actiu us permet amagar la categoria sense haver d'eliminar-la."
+msgstr ""
+"El camp actiu us permet amagar la categoria sense haver d'eliminar-la."
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -5140,8 +5348,13 @@ msgstr "﻿Lituà / Lietuvių kalba"
 
 #. module: base
 #: help:ir.actions.server,record_id:0
-msgid "Provide the field name where the record id is stored after the create operations. If it is empty, you can not track the new record."
-msgstr "Indiqueu el nom de camp on s'emmagatzema el id del registre després de les operacions de creació. Si està buit, no podrà realitzar un seguiment del registre nou."
+msgid ""
+"Provide the field name where the record id is stored after the create "
+"operations. If it is empty, you can not track the new record."
+msgstr ""
+"Indiqueu el nom de camp on s'emmagatzema el id del registre després de les "
+"operacions de creació. Si està buit, no podrà realitzar un seguiment del "
+"registre nou."
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
@@ -5153,7 +5366,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Couldn't find tag '%s' in parent view !"
-msgstr ""
+msgstr "No es pot trobar la marca '%s' a la vista pare!"
 
 #. module: base
 #: field:ir.ui.view,inherit_id:0
@@ -5198,6 +5411,7 @@ msgstr ""
 #, python-format
 msgid "The name_get method is not implemented on this object !"
 msgstr ""
+"El mètode name_get (obtenir nom) no està implementat en aquest objecte!"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -5207,7 +5421,9 @@ msgstr "Santa Llúcia"
 #. module: base
 #: code:addons/addons/hr_expense/hr_expense.py:0
 #, python-format
-msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgid ""
+"Please configure Default Expanse account for Product purchase, "
+"`property_account_expense_categ`"
 msgstr ""
 
 #. module: base
@@ -5264,7 +5480,8 @@ msgstr "Província"
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "Please verify that the total difference of the sheet is lower than %.2f !"
+msgid ""
+"Please verify that the total difference of the sheet is lower than %.2f !"
 msgstr ""
 
 #. module: base
@@ -5275,7 +5492,9 @@ msgstr "Territori Britànic de l'Oceà Índic"
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
-msgid "Please verify the price of the invoice !\nThe real total does not match the computed total."
+msgid ""
+"Please verify the price of the invoice !\n"
+"The real total does not match the computed total."
 msgstr ""
 
 #. module: base
@@ -5307,8 +5526,9 @@ msgstr "En eliminar"
 #. module: base
 #: code:addons/addons/stock/stock.py:0
 #, python-format
-msgid "There is no stock input account defined ' \\n"
-"                                        'for this product: \"%s\" (id: %d)"
+msgid ""
+"There is no stock input account defined ' \\n                                "
+"        'for this product: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: base
@@ -5335,7 +5555,7 @@ msgstr "Signatura"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not Implemented"
-msgstr ""
+msgstr "No implementat"
 
 #. module: base
 #: field:res.partner.category,complete_name:0
@@ -5574,8 +5794,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/analytic_user_function/analytic_user_function.py:0
 #, python-format
-msgid "There is no expense account define ' \\n"
-"                                'for this product: \"%s\" (id:%d)"
+msgid ""
+"There is no expense account define ' \\n                                'for "
+"this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -5615,7 +5836,9 @@ msgstr "A4"
 #. module: base
 #: view:ir.rule.group:0
 msgid "Multiple rules on same objects are joined using operator OR"
-msgstr "Sobre un mateix objecte, les regles múltiples s'associen utilitzan l'operador OR"
+msgstr ""
+"Sobre un mateix objecte, les regles múltiples s'associen utilitzan "
+"l'operador OR"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -5625,7 +5848,7 @@ msgstr "Número compte"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_partner_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Adreces"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -5658,7 +5881,11 @@ msgstr "Carrer"
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
-msgid "Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
+msgid ""
+"Can not create an automatic sequence for this piece !\n"
+"\n"
+"Put a sequence in the journal definition for automatic numbering or create a "
+"sequence manually for this piece."
 msgstr ""
 
 #. module: base
@@ -5706,7 +5933,7 @@ msgstr "Canvia les preferències"
 #. module: base
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,text:0
@@ -5731,7 +5958,10 @@ msgstr "Burquina Faso"
 #. module: base
 #: code:addons/addons/sale/sale.py:0
 #, python-format
-msgid "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: "
+msgid ""
+"You selected a quantity of %d Units.\n"
+"But it's not compatible with the selected packaging.\n"
+"Here is a proposition of quantities according to the packaging: "
 msgstr ""
 
 #. module: base
@@ -5767,8 +5997,12 @@ msgstr "ID usuari"
 
 #. module: base
 #: view:ir.actions.server:0
-msgid "Access all the fields related to the current object using expression in double brackets, i.e.[[ object.partner_id.name ]]"
-msgstr "﻿Accediu a tots els camps de l'objecte actual utilitzant una expressió en parèntesi doble, per exemple [[object.partner_id.name]]"
+msgid ""
+"Access all the fields related to the current object using expression in "
+"double brackets, i.e.[[ object.partner_id.name ]]"
+msgstr ""
+"﻿Accediu a tots els camps de l'objecte actual utilitzant una expressió en "
+"parèntesi doble, per exemple [[object.partner_id.name]]"
 
 #. module: base
 #: view:res.lang:0
@@ -5783,10 +6017,11 @@ msgstr "Camps tipus de banc"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "No bank name defined\n' \\n"
-"					'for the bank account: %s\n' \\n"
-"					'on the partner: %s\n' \\n"
-"					'on line: %s"
+msgid ""
+"No bank name defined\n"
+"' \\n\t\t\t\t\t'for the bank account: %s\n"
+"' \\n\t\t\t\t\t'on the partner: %s\n"
+"' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -5919,7 +6154,7 @@ msgstr "Activitat destí"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The name_search method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode name_search no està implementat en aquest objecte!"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5934,8 +6169,9 @@ msgstr "Connecta esdeveniments a accions"
 #. module: base
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "You cannot enter an attendance ' \\n"
-"                            'date outside the current timesheet dates!"
+msgid ""
+"You cannot enter an attendance ' \\n                            'date "
+"outside the current timesheet dates!"
 msgstr ""
 
 #. module: base
@@ -5964,8 +6200,10 @@ msgstr ""
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
 #, python-format
-msgid "Please fill in the partner and pricelist field '\n"
-"                        'in the analytic account:\n%s"
+msgid ""
+"Please fill in the partner and pricelist field '\n"
+"                        'in the analytic account:\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -6004,7 +6242,9 @@ msgstr "Taiwan"
 #. module: base
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
-msgid "You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !"
+msgid ""
+"You can not do this modification on a reconciled entry ! Please note that "
+"you can just change some non important fields !"
 msgstr ""
 
 #. module: base
@@ -6057,8 +6297,14 @@ msgstr "Instància"
 
 #. module: base
 #: help:ir.actions.report.xml,attachment:0
-msgid "This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables."
-msgstr "Aquest és el nom del fitxer de l'adjunt utilitzat per desar el resultat d'impressió. Deixeu-lo buit per no desar els informes impresos. Podeu utilitzar una expressió Python amb les variables objecte i data/hora."
+msgid ""
+"This is the filename of the attachment used to store the printing result. "
+"Keep empty to not save the printed reports. You can use a python expression "
+"with the object and time variables."
+msgstr ""
+"Aquest és el nom del fitxer de l'adjunt utilitzat per desar el resultat "
+"d'impressió. Deixeu-lo buit per no desar els informes impresos. Podeu "
+"utilitzar una expressió Python amb les variables objecte i data/hora."
 
 #. module: base
 #: code:addons/addons/sale/sale.py:0
@@ -6079,7 +6325,11 @@ msgstr "res.empresa.event"
 #. module: base
 #: code:addons/addons/event/event.py:0
 #, python-format
-msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgid ""
+"You must define a reply-to address in order to mail the participant. You can "
+"do this in the Mailing tab of your event. Note that this is also the place "
+"where you can configure your event to not send emails automaticly while "
+"registering"
 msgstr ""
 
 #. module: base
@@ -6121,7 +6371,9 @@ msgstr "Hong Kong"
 #. module: base
 #: help:ir.actions.server,name:0
 msgid "Easy to Refer action by name e.g. One Sales Order -> Many Invoices"
-msgstr "Per facilitar referir-se a les accions pel vostre nom. Per ex. Una comanda de venda -> Varies factures"
+msgstr ""
+"Per facilitar referir-se a les accions pel vostre nom. Per ex. Una comanda "
+"de venda -> Varies factures"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6157,7 +6409,9 @@ msgstr "terp-graph"
 #. module: base
 #: code:addons/addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
-msgid "Specified Journal does not have any account move entries in draft state for this period"
+msgid ""
+"Specified Journal does not have any account move entries in draft state for "
+"this period"
 msgstr ""
 
 #. module: base
@@ -6167,8 +6421,12 @@ msgstr "2. %a ,%A ==> Div, Divendres"
 
 #. module: base
 #: wizard_view:module.lang.install,start:0
-msgid "The selected language has been successfully installed. You must change the preferences of the user and open a new menu to view changes."
-msgstr "L'idioma seleccionat s'ha instal·lat correctament. Heu de canviar les preferències de l'usuari i obrir un nou menú per veure els canvis."
+msgid ""
+"The selected language has been successfully installed. You must change the "
+"preferences of the user and open a new menu to view changes."
+msgstr ""
+"L'idioma seleccionat s'ha instal·lat correctament. Heu de canviar les "
+"preferències de l'usuari i obrir un nou menú per veure els canvis."
 
 #. module: base
 #: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
@@ -6290,8 +6548,12 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base/module/module.py:0
 #, python-format
-msgid "Can not create the module file:\n %s"
+msgid ""
+"Can not create the module file:\n"
+" %s"
 msgstr ""
+"No es pot crear el fitxer del mòdul:\n"
+" %s"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_update
@@ -6389,7 +6651,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
 #, python-format
-msgid "You have to define the bank account\nin the journal definition for reconciliation."
+msgid ""
+"You have to define the bank account\n"
+"in the journal definition for reconciliation."
 msgstr ""
 
 #. module: base
@@ -6501,7 +6765,7 @@ msgstr "terp-stock"
 #: code:addons/addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify the Partner Email address !"
-msgstr ""
+msgstr "Introduïu l'adreça de correu electrònic de l'empresa!"
 
 #. module: base
 #: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
@@ -6537,7 +6801,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
-msgid "Tax base different !\nClick on compute to update tax base"
+msgid ""
+"Tax base different !\n"
+"Click on compute to update tax base"
 msgstr ""
 
 #. module: base
@@ -6603,7 +6869,7 @@ msgstr "8. %I:%M:%S %p ==> 06:25:20 PM"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The copy method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode copy (copiar) no està implementat en aquest objecte!"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -6636,15 +6902,24 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s"
+msgid ""
+"You can specify year, month and date in the name of the model using the "
+"following labels:\n"
+"\n"
+"%(year)s : To Specify Year \n"
+"%(month)s : To Specify Month \n"
+"%(date)s : Current Date\n"
+"\n"
+"e.g. My model on %(date)s"
 msgstr ""
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "No IBAN defined \n' \\n"
-"						'for the bank account: %s\n' + \\n"
-"						'on line: %s"
+msgid ""
+"No IBAN defined \n"
+"' \\n\t\t\t\t\t\t'for the bank account: %s\n"
+"' + \\n\t\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -6731,8 +7006,9 @@ msgstr "%I - Any amb centúria com un número decimal."
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "There is no default default credit account defined \n' \\n"
-"                                'on journal \"%s\""
+msgid ""
+"There is no default default credit account defined \n"
+"' \\n                                'on journal \"%s\""
 msgstr ""
 
 #. module: base
@@ -6748,7 +7024,9 @@ msgstr "Data creació"
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "You have to select a product UOM in the same category than the purchase UOM of the product"
+msgid ""
+"You have to select a product UOM in the same category than the purchase UOM "
+"of the product"
 msgstr ""
 
 #. module: base
@@ -6781,8 +7059,12 @@ msgstr "Obté fitxer"
 
 #. module: base
 #: wizard_view:module.module.update,init:0
-msgid "This function will check for new modules in the 'addons' path and on module repositories:"
-msgstr "﻿Aquesta funció cercarà nous mòduls en el directori 'addons' i en les biblioteques de mòduls:"
+msgid ""
+"This function will check for new modules in the 'addons' path and on module "
+"repositories:"
+msgstr ""
+"﻿Aquesta funció cercarà nous mòduls en el directori 'addons' i en les "
+"biblioteques de mòduls:"
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
@@ -6802,7 +7084,7 @@ msgstr "STOCK_GO_BACK"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "ErrorAccés"
 
 #. module: base
 #: model:res.country,name:base.dz
@@ -6858,7 +7140,7 @@ msgstr ""
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "Not implemented get_memory method !"
-msgstr ""
+msgstr "El mètode get_memory no està implementat!"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -6903,9 +7185,11 @@ msgstr "Cancel·la"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/wizard_bvr.py:0
 #, python-format
-msgid "Your bank BVR number should be of the form 0X-XXX-X!\n' \\n"
-"                            'Please check your company ' \\n"
-"                            'information for the invoice:\n%s"
+msgid ""
+"Your bank BVR number should be of the form 0X-XXX-X!\n"
+"' \\n                            'Please check your company ' \\n            "
+"                'information for the invoice:\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -6963,7 +7247,9 @@ msgstr "Islàndia"
 #. module: base
 #: view:res.users:0
 msgid "Roles are used to defined available actions, provided by workflows."
-msgstr "Els rols s'utilitzen per definir les accions disponibles, de les que proveeixen els fluxos."
+msgstr ""
+"Els rols s'utilitzen per definir les accions disponibles, de les que "
+"proveeixen els fluxos."
 
 #. module: base
 #: model:res.country,name:base.de
@@ -7010,8 +7296,12 @@ msgstr "Els vostres contractes de manteniment"
 
 #. module: base
 #: view:res.users:0
-msgid "Please note that you will have to logout and relog if you change your password."
-msgstr "Tingueu en compte que haureu de sortir i tornar-vos a identificar si canvieu la vostra contrasenya."
+msgid ""
+"Please note that you will have to logout and relog if you change your "
+"password."
+msgstr ""
+"Tingueu en compte que haureu de sortir i tornar-vos a identificar si canvieu "
+"la vostra contrasenya."
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -7050,8 +7340,11 @@ msgstr "Egipte"
 
 #. module: base
 #: help:ir.actions.server,model_id:0
-msgid "Select the object on which the action will work (read, write, create)."
-msgstr "Seleccioneu l'objecte sobre el qual l'acció actuarà (llegir, escriure, crear)."
+msgid ""
+"Select the object on which the action will work (read, write, create)."
+msgstr ""
+"Seleccioneu l'objecte sobre el qual l'acció actuarà (llegir, escriure, "
+"crear)."
 
 #. module: base
 #: view:ir.model:0
@@ -7068,7 +7361,7 @@ msgstr ""
 #: code:addons/tools/translate.py:0
 #, python-format
 msgid "Bad file format"
-msgstr ""
+msgstr "Format de fitxer incorrecte"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7294,7 +7587,7 @@ msgstr "Estat Islàmic d'Afganistan"
 #: code:addons/addons/stock/report_stock.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error!"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
@@ -7316,7 +7609,7 @@ msgstr "Classe"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "This method does not exist anymore"
-msgstr ""
+msgstr "Aquest mètode ja no existeix"
 
 #. module: base
 #: selection:ir.actions.todo,start_on:0
@@ -7342,7 +7635,9 @@ msgstr "Data creació"
 #. module: base
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
-msgid "This test checks where object has workflow or not on it if there is a state field and several buttons on it and also checks validity of workflow xml file"
+msgid ""
+"This test checks where object has workflow or not on it if there is a state "
+"field and several buttons on it and also checks validity of workflow xml file"
 msgstr ""
 
 #. module: base
@@ -7357,8 +7652,12 @@ msgstr "Valor per defecte"
 
 #. module: base
 #: help:ir.actions.server,loop_action:0
-msgid "Select the action that will be executed. Loop action will not be avaliable inside loop."
-msgstr "﻿Seleccioneu l'acció que s'executarà. L'acció bucle no estarà disponible dins d'un bucle."
+msgid ""
+"Select the action that will be executed. Loop action will not be avaliable "
+"inside loop."
+msgstr ""
+"﻿Seleccioneu l'acció que s'executarà. L'acció bucle no estarà disponible "
+"dins d'un bucle."
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -7395,7 +7694,9 @@ msgstr "pdf"
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
-msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
+msgid ""
+"No E-Mail ID Found for the Responsible Partner or missing reply address in "
+"section!"
 msgstr ""
 
 #. module: base
@@ -7420,7 +7721,9 @@ msgstr "Panamà"
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
 msgstr ""
 
 #. module: base
@@ -7647,7 +7950,7 @@ msgstr "Acció Python"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Unknown position in inherited view %s !"
-msgstr ""
+msgstr "Posició desconeguda en vista heretada %s!"
 
 #. module: base
 #: field:res.partner.event,probability:0
@@ -7719,9 +8022,7 @@ msgstr "STOCK_MEDIA_PAUSE"
 #. module: base
 #: help:res.country.state,code:0
 msgid "The state code in three chars.\n"
-""
 msgstr "El codi de la província de 3 caràcters.\n"
-""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -7749,13 +8050,15 @@ msgstr "Accions de finestra"
 #. module: base
 #: code:addons/addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
-msgid "There are no Analytic lines related to Account %s' % name))\n"
+msgid ""
+"There are no Analytic lines related to Account %s' % name))\n"
 "        return {}\n"
 "\n"
 "    states = {\n"
 "        'init': {\n"
 "            'actions': [],\n"
-"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, "
+"'state':[('end','Cancel"
 msgstr ""
 
 #. module: base
@@ -7783,8 +8086,10 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
-msgid "\"\"\n"
-"This test checks the speed of the module. Note that at least 5 demo data is needed in order to run it.\n"
+msgid ""
+"\"\"\n"
+"This test checks the speed of the module. Note that at least 5 demo data is "
+"needed in order to run it.\n"
 "\n"
 "\"\""
 msgstr ""
@@ -7809,8 +8114,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "There is no default default debit account defined \n' \\n"
-"                                'on journal \"%s\""
+msgid ""
+"There is no default default debit account defined \n"
+"' \\n                                'on journal \"%s\""
 msgstr ""
 
 #. module: base
@@ -7836,8 +8142,12 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,srcmodel_id:0
-msgid "Object in which you want to create / write the object. If it is empty then refer to the Object field."
-msgstr "Objecte en el qual desitgeu crear / escriure l'objecte. Si està buit llavors es refereix al camp Objecte."
+msgid ""
+"Object in which you want to create / write the object. If it is empty then "
+"refer to the Object field."
+msgstr ""
+"Objecte en el qual desitgeu crear / escriure l'objecte. Si està buit llavors "
+"es refereix al camp Objecte."
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -7926,7 +8236,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Error de Validació"
 
 #. module: base
 #: code:addons/addons/base/maintenance/maintenance.py:0
@@ -8010,12 +8320,14 @@ msgstr "En cascada"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Field %d should be a figure"
-msgstr ""
+msgstr "Camp %d ha de  ser una xifra"
 
 #. module: base
 #: code:addons/addons/project_timesheet/project_timesheet.py:0
 #, python-format
-msgid "No product defined on the related employee.\nFill in the timesheet tab of the employee form."
+msgid ""
+"No product defined on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
 msgstr ""
 
 #. module: base
@@ -8053,7 +8365,8 @@ msgstr "Nom província"
 #. module: base
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
-msgid "The expected balance (%.2f) is different than the computed one. (%.2f)"
+msgid ""
+"The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
 
 #. module: base
@@ -8079,8 +8392,16 @@ msgstr "ir.accions.informe.xml"
 
 #. module: base
 #: view:wizard.module.lang.export:0
-msgid "To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once."
-msgstr "Per millorar alguns termes de les traduccions oficials d'OpenERP, heu de modificar els termes directament en la interfície web de launchpad. Si creeu fitxers de traduccions pel vostre propi mòdul, també podeu publicar tota la vostra traducció d'un sol cop."
+msgid ""
+"To improve some terms of the official translations of OpenERP, you should "
+"modify the terms directly on the launchpad interface. If you made lots of "
+"translations for your own module, you can also publish all your translation "
+"at once."
+msgstr ""
+"Per millorar alguns termes de les traduccions oficials d'OpenERP, heu de "
+"modificar els termes directament en la interfície web de launchpad. Si creeu "
+"fitxers de traduccions pel vostre propi mòdul, també podeu publicar tota la "
+"vostra traducció d'un sol cop."
 
 #. module: base
 #: code:addons/addons/crm/crm.py:0
@@ -8144,7 +8465,10 @@ msgstr "Normal"
 #. module: base
 #: code:addons/addons/odms/wizard/host_status.py:0
 #, python-format
-msgid "The %(obj)s %(name)s has been created automatically but its architecture is unknown and has been set to the default one. Please check manually this %(obj)s."
+msgid ""
+"The %(obj)s %(name)s has been created automatically but its architecture is "
+"unknown and has been set to the default one. Please check manually this "
+"%(obj)s."
 msgstr ""
 
 #. module: base
@@ -8179,15 +8503,18 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base/res/res_currency.py:0
 #, python-format
-msgid "No rate found \n' \\n"
-"                    'for the currency: %s \n' \\n"
-"                    'at the date: %s"
+msgid ""
+"No rate found \n"
+"' \\n                    'for the currency: %s \n"
+"' \\n                    'at the date: %s"
 msgstr ""
 
 #. module: base
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
-msgid "No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet."
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
 msgstr ""
 
 #. module: base
@@ -8198,7 +8525,8 @@ msgstr "Obre finestra"
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
-msgid "Can not send mail with empty body,you should have description in the body"
+msgid ""
+"Can not send mail with empty body,you should have description in the body"
 msgstr ""
 
 #. module: base
@@ -8301,7 +8629,8 @@ msgstr "Configura mode de vista"
 #. module: base
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
-msgid "Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
+msgid ""
+"Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)"
 msgstr ""
 
 #. module: base
@@ -8312,7 +8641,9 @@ msgstr "Clients importants"
 #. module: base
 #: code:addons/addons/account_followup/wizard/wizard_followup_print.py:0
 #, python-format
-msgid "Mail not sent to following Partners, Email not available !\n\n"
+msgid ""
+"Mail not sent to following Partners, Email not available !\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -8360,7 +8691,7 @@ msgstr ""
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The value \"%s\" for the field \"%s\" is not in the selection"
-msgstr ""
+msgstr "﻿El valor \"%s\" pel camp \"%s\" no està en la selecció"
 
 #. module: base
 #: field:ir.actions.report.xml,auto:0
@@ -8448,9 +8779,11 @@ msgstr "Informació assistent"
 
 #. module: base
 #: help:ir.cron,numbercall:0
-msgid "Number of time the function is called,\n"
+msgid ""
+"Number of time the function is called,\n"
 "a negative number indicates that the function will always be called"
-msgstr "Número de vegades que la funció s'executarà,\n"
+msgstr ""
+"Número de vegades que la funció s'executarà,\n"
 "un número negatiu indica que s'executarà sempre."
 
 #. module: base
@@ -8472,7 +8805,8 @@ msgstr "Cancel·la instal·lació"
 #. module: base
 #: code:addons/addons/hr_holidays/hr.py:0
 #, python-format
-msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
+msgid ""
+"You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 
 #. module: base
@@ -8494,7 +8828,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base_report_creator/base_report_creator.py:0
 #, python-format
-msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgid ""
+"These is/are model(s) (%s) in selection which is/are not related to any "
+"other model"
 msgstr ""
 
 #. module: base
@@ -8557,7 +8893,8 @@ msgstr "Objecte"
 #. module: base
 #: code:addons/addons/crm/crm.py:0
 #, python-format
-msgid "You must define a responsible user for this case in order to use this action!"
+msgid ""
+"You must define a responsible user for this case in order to use this action!"
 msgstr ""
 
 #. module: base
@@ -8589,7 +8926,10 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that."
+msgid ""
+"You can not modify a posted entry of this journal !\n"
+"You should set the journal to allow cancelling entries if you want to do "
+"that."
 msgstr ""
 
 #. module: base
@@ -8639,7 +8979,9 @@ msgstr "Configuració"
 #. module: base
 #: code:addons/addons/project/project.py:0
 #, python-format
-msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
+msgid ""
+"A new project has been created !\n"
+"We suggest you to close this one and work on this new project."
 msgstr ""
 
 #. module: base
@@ -8661,8 +9003,9 @@ msgstr "Tabular"
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "There is no income '\\n"
-"                        'account defined for this product: \"%s\" (id:%d)"
+msgid ""
+"There is no income '\\n                        'account defined for this "
+"product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -8823,8 +9166,12 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.wizard,multi:0
-msgid "If set to true, the wizard will not be displayed on the right toolbar of a form view."
-msgstr "Si se marqueu a veritat, l'assistent no es mostrarà en la barra de eines de la dreta en una vista formulari."
+msgid ""
+"If set to true, the wizard will not be displayed on the right toolbar of a "
+"form view."
+msgstr ""
+"Si se marqueu a veritat, l'assistent no es mostrarà en la barra de eines de "
+"la dreta en una vista formulari."
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -8986,7 +9333,11 @@ msgstr "Desmarqueu el camp actiu per ocultar el contacte."
 #. module: base
 #: code:addons/addons/base_module_quality/pylint_test/pylint_test.py:0
 #, python-format
-msgid "\"\"This test uses Pylint and checks if the module satisfies the coding standard of Python. See http://www.logilab.org/project/name/pylint for further info.\n \"\""
+msgid ""
+"\"\"This test uses Pylint and checks if the module satisfies the coding "
+"standard of Python. See http://www.logilab.org/project/name/pylint for "
+"further info.\n"
+" \"\""
 msgstr ""
 
 #. module: base
@@ -9013,7 +9364,7 @@ msgstr "10. %S ==> 20"
 #: code:addons/osv/fields.py:0
 #, python-format
 msgid "undefined get method !"
-msgstr ""
+msgstr "Mètode get (obtenir) no definit!"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -9045,7 +9396,8 @@ msgstr "Països Baixos"
 #. module: base
 #: code:addons/addons/project/project.py:0
 #, python-format
-msgid "You can not delete a project with tasks. I suggest you to deactivate it."
+msgid ""
+"You can not delete a project with tasks. I suggest you to deactivate it."
 msgstr ""
 
 #. module: base
@@ -9159,8 +9511,12 @@ msgstr "STOCK_GOTO_BOTTOM"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
-msgid "Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."
-msgstr "Important en accions múltiples, l'ordre d'execució es decidirà segons aquest camp. Número baix indica prioritat més alta."
+msgid ""
+"Important when you deal with multiple actions, the execution order will be "
+"decided based on this, low number is higher priority."
+msgstr ""
+"Important en accions múltiples, l'ordre d'execució es decidirà segons aquest "
+"camp. Número baix indica prioritat més alta."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
@@ -9235,8 +9591,12 @@ msgstr "Traduïble"
 
 #. module: base
 #: view:ir.actions.server:0
-msgid "Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]"
-msgstr "﻿Accedeix a tots els camps relacionats amb l'objecte actual mitjançant una expressió en claudàtors dobles, per exemple [[ object.partner_id.name ]]"
+msgid ""
+"Access all the fields related to the current object using expression in "
+"double brackets, i.e. [[ object.partner_id.name ]]"
+msgstr ""
+"﻿Accedeix a tots els camps relacionats amb l'objecte actual mitjançant una "
+"expressió en claudàtors dobles, per exemple [[ object.partner_id.name ]]"
 
 #. module: base
 #: field:res.request.history,body:0
@@ -9261,7 +9621,8 @@ msgstr "Acció de menú"
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
-msgid "Unable to delete this document because it is used as a default property"
+msgid ""
+"Unable to delete this document because it is used as a default property"
 msgstr ""
 
 #. module: base
@@ -9355,8 +9716,10 @@ msgstr "Groenlàndia"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
-msgid "The .rml path of the file or NULL if the content is in report_rml_content"
-msgstr "La ruta del fitxer .rml o NULL si el contingut està a report_rml_content"
+msgid ""
+"The .rml path of the file or NULL if the content is in report_rml_content"
+msgstr ""
+"La ruta del fitxer .rml o NULL si el contingut està a report_rml_content"
 
 #. module: base
 #: field:res.partner.bank,acc_number:0
@@ -9376,8 +9739,14 @@ msgstr "1. %c ==> Div Des 5 18:25:20 2008"
 
 #. module: base
 #: help:ir.ui.menu,groups_id:0
-msgid "If you have groups, the visibility of this menu will be based on these groups. If this field is empty, Open ERP will compute visibility based on the related object's read access."
-msgstr "﻿Si teniu grups, la visibilitat d'aquest menú es basarà en aquests grups. Si aquest camp està buit, OpenERP calcularà visibilitat segons l'accés de lectura de l'objecte relacionat."
+msgid ""
+"If you have groups, the visibility of this menu will be based on these "
+"groups. If this field is empty, Open ERP will compute visibility based on "
+"the related object's read access."
+msgstr ""
+"﻿Si teniu grups, la visibilitat d'aquest menú es basarà en aquests grups. Si "
+"aquest camp està buit, OpenERP calcularà visibilitat segons l'accés de "
+"lectura de l'objecte relacionat."
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -9466,7 +9835,7 @@ msgstr "Xina"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Password empty !"
-msgstr ""
+msgstr "Contrasenya buida!"
 
 #. module: base
 #: view:res.config.view:0
@@ -9508,8 +9877,12 @@ msgstr ""
 
 #. module: base
 #: help:ir.actions.server,condition:0
-msgid "Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"
-msgstr "﻿Condició que s'ha de provar abans de que s'executi l'acció, per ex. object.list_price > object.cost_price"
+msgid ""
+"Condition that is to be tested before action is executed, e.g. "
+"object.list_price > object.cost_price"
+msgstr ""
+"﻿Condició que s'ha de provar abans de que s'executi l'acció, per ex. "
+"object.list_price > object.cost_price"
 
 #. module: base
 #: model:res.country,name:base.bg
@@ -9528,8 +9901,12 @@ msgstr "Territoris del Sud Francesos"
 
 #. module: base
 #: view:ir.actions.server:0
-msgid "Only one client action will be execute, last                                 clinent action will be consider in case of multiples clients actions"
-msgstr "Només s'executarà una acció de client, en cas de múltiples accions de client serà considerada l'última acció de client"
+msgid ""
+"Only one client action will be execute, last                                 "
+"clinent action will be consider in case of multiples clients actions"
+msgstr ""
+"Només s'executarà una acció de client, en cas de múltiples accions de client "
+"serà considerada l'última acció de client"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -9613,9 +9990,10 @@ msgstr ""
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide a BVR number\n'\n"
-"					'for the bank account: %s' \\n"
-"					'on line: %s"
+msgid ""
+"You must provide a BVR number\n"
+"'\n"
+"\t\t\t\t\t'for the bank account: %s' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -9645,8 +10023,9 @@ msgstr "desconegut"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "No bank account defined\n' \\n"
-"					'on line: %s"
+msgid ""
+"No bank account defined\n"
+"' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -9737,7 +10116,7 @@ msgstr "terp-partner"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Bad query."
-msgstr ""
+msgstr "Interrogació errònia."
 
 #. module: base
 #: field:ir.model.fields,field_description:0
@@ -9775,7 +10154,9 @@ msgstr "Condició"
 #. module: base
 #: code:addons/addons/event_project/wizard/event_task.py:0
 #, python-format
-msgid "No project defined for this event.\nYou can create one with the retro-planning button !"
+msgid ""
+"No project defined for this event.\n"
+"You can create one with the retro-planning button !"
 msgstr ""
 
 #. module: base
@@ -9807,8 +10188,14 @@ msgstr ""
 
 #. module: base
 #: view:wizard.module.lang.export:0
-msgid "The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."
-msgstr "﻿El paquet de traduccions oficial de tots els mòduls d'OpenERP/OpenObjects estan mantinguts a launchpad. Utilitzem la seva interfície en línia per sincronitzar tots els esforços de traducció."
+msgid ""
+"The official translations pack of all OpenERP/OpenObjects module are managed "
+"through launchpad. We use their online interface to synchronize all "
+"translations efforts."
+msgstr ""
+"﻿El paquet de traduccions oficial de tots els mòduls d'OpenERP/OpenObjects "
+"estan mantinguts a launchpad. Utilitzem la seva interfície en línia per "
+"sincronitzar tots els esforços de traducció."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
@@ -9885,13 +10272,14 @@ msgstr "="
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Second field should be figures"
-msgstr ""
+msgstr "El segon camp han de ser xifres"
 
 #. module: base
 #: code:addons/addons/product/pricelist.py:0
 #, python-format
-msgid "No active version for the selected pricelist !\n' \\n"
-"                                'Please create or activate one."
+msgid ""
+"No active version for the selected pricelist !\n"
+"' \\n                                'Please create or activate one."
 msgstr ""
 
 #. module: base
@@ -9987,7 +10375,7 @@ msgstr ""
 #: code:addons/report/custom.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
@@ -10004,7 +10392,7 @@ msgstr "Saint Pierre i Miquelon"
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the field '%s' !"
-msgstr ""
+msgstr "No podeu eliminar el camp '%s'!"
 
 #. module: base
 #: code:addons/addons/base_module_quality/base_module_quality.py:0
@@ -10056,7 +10444,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/odms/odms.py:0
 #, python-format
-msgid "No available server for this offer.\nPlease contact us."
+msgid ""
+"No available server for this offer.\n"
+"Please contact us."
 msgstr ""
 
 #. module: base
@@ -10067,7 +10457,9 @@ msgstr "Guía técnica"
 #. module: base
 #: code:addons/addons/base_module_quality/terp_test/terp_test.py:0
 #, python-format
-msgid "This test checks if the module satisfies the current coding standard used by OpenERP."
+msgid ""
+"This test checks if the module satisfies the current coding standard used by "
+"OpenERP."
 msgstr ""
 
 #. module: base
@@ -10127,7 +10519,9 @@ msgstr "Cerca avançada"
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
+msgid ""
+"You have to select a pricelist in the purchase form !\n"
+"Please set one before choosing a product."
 msgstr ""
 
 #. module: base
@@ -10145,7 +10539,8 @@ msgstr "Text original"
 #. module: base
 #: help:res.partner.address,partner_id:0
 msgid "Keep empty for a private address, not related to partner."
-msgstr "Deixeu-lo buit per una adreça privada, no relacionada amb una empresa."
+msgstr ""
+"Deixeu-lo buit per una adreça privada, no relacionada amb una empresa."
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -10160,8 +10555,12 @@ msgstr "Capçalera / Peu de pàgina interna"
 #. module: base
 #: code:addons/addons/base/module/wizard/wizard_export_lang.py:0
 #, python-format
-msgid "Save this document to a .tgz file. This archive containt UTF-8 %s files and may be uploaded to launchpad."
+msgid ""
+"Save this document to a .tgz file. This archive containt UTF-8 %s files and "
+"may be uploaded to launchpad."
 msgstr ""
+"﻿Deseu aquest document en un fitxer .tgz. Aquest fitxer contindrà %s fitxers "
+"UTF-8 i es pot pujar a launchpad."
 
 #. module: base
 #: code:addons/addons/auction/auction.py:0
@@ -10207,9 +10606,11 @@ msgstr "STOCK_COLOR_PICKER"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide the bank city '\n"
-"						'or the bic code for the partner bank: \n %d\n' + \\n"
-"						'on line: %s"
+msgid ""
+"You must provide the bank city '\n"
+"\t\t\t\t\t\t'or the bic code for the partner bank: \n"
+" %d\n"
+"' + \\n\t\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -10221,12 +10622,16 @@ msgstr "Aràbia Saudita"
 #: code:addons/addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Bar charts need at least two fields"
-msgstr ""
+msgstr "Gràfics de barres necessiten al menys dos camps"
 
 #. module: base
 #: help:res.partner,supplier:0
-msgid "Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."
-msgstr "Marqueu aquesta opció si l'empresa és un proveïdor. Si no està marcada no serà visible al introduir una comanda de compra."
+msgid ""
+"Check this box if the partner is a supplier. If it's not checked, purchase "
+"people will not see it when encoding a purchase order."
+msgstr ""
+"Marqueu aquesta opció si l'empresa és un proveïdor. Si no està marcada no "
+"serà visible al introduir una comanda de compra."
 
 #. module: base
 #: field:ir.model.fields,relation_field:0
@@ -10242,9 +10647,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide ' \\n"
-"						'a valid BVR reference number \n' \\n"
-"						'for the line: %s"
+msgid ""
+"You must provide ' \\n\t\t\t\t\t\t'a valid BVR reference number \n"
+"' \\n\t\t\t\t\t\t'for the line: %s"
 msgstr ""
 
 #. module: base
@@ -10265,8 +10670,9 @@ msgstr "https://translations.launchpad.net/openobject"
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "You have to select a pricelist in the sale form !\n' \\n"
-"                'Please set one before choosing a product."
+msgid ""
+"You have to select a pricelist in the sale form !\n"
+"' \\n                'Please set one before choosing a product."
 msgstr ""
 
 #. module: base
@@ -10284,7 +10690,9 @@ msgstr ""
 #. module: base
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
-msgid "Operation has already started !' 'You  can either Pause /Finish/Cancel the operation"
+msgid ""
+"Operation has already started !' 'You  can either Pause /Finish/Cancel the "
+"operation"
 msgstr ""
 
 #. module: base
@@ -10323,11 +10731,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.todo,note:base.config_wizard_step_user
-msgid "Create your users.\n"
-"You will be able to assign groups to users. Groups define the access rights of each users on the different objects of the system.\n"
+msgid ""
+"Create your users.\n"
+"You will be able to assign groups to users. Groups define the access rights "
+"of each users on the different objects of the system.\n"
 "            "
-msgstr "﻿Creeu els vostres usuaris.\n"
-"Podreu assignar grups a usuaris. Els grups defineixen els drets d'accés de cadascun dels seus usuaris als diferents objectes del sistema.\n"
+msgstr ""
+"﻿Creeu els vostres usuaris.\n"
+"Podreu assignar grups a usuaris. Els grups defineixen els drets d'accés de "
+"cadascun dels seus usuaris als diferents objectes del sistema.\n"
 "            "
 
 #. module: base
@@ -10366,7 +10778,11 @@ msgstr "Telèfon"
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+msgid ""
+"\"\"Couldn't create move with currency different from the secondary currency "
+"of the account \"%s - %s\". Clear the secondary currency field of the "
+"account definition if you want to accept all currencies.\"\"\" % "
+"(line.account_id.code, line.account_id.name)))\n"
 "\n"
 "            if abs(amount) < 0.0001:\n"
 "                if not len(line_draft_ids):\n"
@@ -10441,9 +10857,11 @@ msgstr "Uzbekistan"
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
-msgid "Couldn't find a pricelist line matching this product\" \\n"
-"                \" and quantity.\nYou have to change either the product,\" \\n"
-"                \" the quantity or the pricelist."
+msgid ""
+"Couldn't find a pricelist line matching this product\" \\n                \" "
+"and quantity.\n"
+"You have to change either the product,\" \\n                \" the quantity "
+"or the pricelist."
 msgstr ""
 
 #. module: base
@@ -10466,7 +10884,8 @@ msgstr ""
 #. module: base
 #: view:ir.rule:0
 msgid "If you don't force the domain, it will use the simple domain setup"
-msgstr "Si no forceu el domini, s'utilitzarà la configuració de domini simple"
+msgstr ""
+"Si no forceu el domini, s'utilitzarà la configuració de domini simple"
 
 #. module: base
 #: code:addons/addons/odms/odms.py:0
@@ -10525,7 +10944,10 @@ msgstr "Última versió"
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
-msgid "Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s"
+msgid ""
+"Please fill in the Associate Partner and Sale Pricelist fields in the "
+"Analytic Account:\n"
+"%s"
 msgstr ""
 
 #. module: base
@@ -10568,8 +10990,9 @@ msgstr "centre"
 #. module: base
 #: code:addons/osv/fields.py:0
 #, python-format
-msgid "The second argument of the many2many field %s must be a SQL table !'\\n"
-"                'You used %s, which is not a valid SQL table name."
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !'\\n      "
+"          'You used %s, which is not a valid SQL table name."
 msgstr ""
 
 #. module: base
@@ -10688,7 +11111,7 @@ msgstr "Flux per ser executat en aquest model."
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "The search method is not implemented on this object !"
-msgstr ""
+msgstr "El mètode search (cercar) no està implementat en aquest objecte!"
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -10720,7 +11143,7 @@ msgstr "Azerbaidjan"
 #: code:addons/addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avís"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -10741,10 +11164,10 @@ msgstr "No subscrit"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "You must provide ' \\n"
-"						'a post number \n' \\n"
-"						'for the partner bank: %s\n' \\n"
-"						'on line: %s"
+msgid ""
+"You must provide ' \\n\t\t\t\t\t\t'a post number \n"
+"' \\n\t\t\t\t\t\t'for the partner bank: %s\n"
+"' \\n\t\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -10787,8 +11210,9 @@ msgstr "El CIF/NIF no sembla ser correcte."
 #. module: base
 #: code:addons/addons/account/account_analytic_line.py:0
 #, python-format
-msgid "There is no expense account defined ' \\n"
-"                                'for this product: \"%s\" (id:%d)"
+msgid ""
+"There is no expense account defined ' \\n                                "
+"'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: base
@@ -10804,7 +11228,8 @@ msgstr "Dia de la setmana (0:Dilluns): %(weekday)s"
 #. module: base
 #: code:addons/addons/base_module_quality/pep8_test/pep8_test.py:0
 #, python-format
-msgid "\"\"\n"
+msgid ""
+"\"\"\n"
 "PEP-8 Test , copyright of py files check, method can not call from loops\n"
 "\"\""
 msgstr ""
@@ -10816,8 +11241,14 @@ msgstr "Illes Cook"
 
 #. module: base
 #: help:ir.actions.server,mobile:0
-msgid "Provides fields that be used to fetch the mobile number, e.g. you select the invoice, then `object.invoice_address_id.mobile` is the field which gives the correct mobile number"
-msgstr "Indiqueu els camps que s'utilitzaran per extreure el número de mòbil. Per ex. quan seleccioneu la factura, llavors `object.invoice_address_id.mobile` és el camp que conté el número de mòbil correcte."
+msgid ""
+"Provides fields that be used to fetch the mobile number, e.g. you select the "
+"invoice, then `object.invoice_address_id.mobile` is the field which gives "
+"the correct mobile number"
+msgstr ""
+"Indiqueu els camps que s'utilitzaran per extreure el número de mòbil. Per "
+"ex. quan seleccioneu la factura, llavors `object.invoice_address_id.mobile` "
+"és el camp que conté el número de mòbil correcte."
 
 #. module: base
 #: field:ir.model.data,noupdate:0
@@ -10917,8 +11348,16 @@ msgstr "El vostre logo – Utilitzeu una mida de 450x150 píxels aprox."
 
 #. module: base
 #: help:res.lang,grouping:0
-msgid "The Separator Format should be like [,n] where 0 < n :starting from Unit digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. Provided ',' as the thousand separator in each case."
-msgstr "﻿El format de separació hauria de ser com [,n] on 0 < n, començant pel dígit unitat. -1 acabarà la separació. Per ex. [3,2,-1] representarà 106500 com 1,06,500; [1,2,-1] ho representarà com 106,50,0; [3] ho representarà com 106,500. Sempre que ',' sigui el separador de mil en cada cas."
+msgid ""
+"The Separator Format should be like [,n] where 0 < n :starting from Unit "
+"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
+"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
+"106,500. Provided ',' as the thousand separator in each case."
+msgstr ""
+"﻿El format de separació hauria de ser com [,n] on 0 < n, començant pel dígit "
+"unitat. -1 acabarà la separació. Per ex. [3,2,-1] representarà 106500 com "
+"1,06,500; [1,2,-1] ho representarà com 106,50,0; [3] ho representarà com "
+"106,500. Sempre que ',' sigui el separador de mil en cada cas."
 
 #. module: base
 #: selection:ir.report.custom,print_orientation:0
@@ -10962,7 +11401,9 @@ msgstr "ir.accions.server"
 #. module: base
 #: code:addons/addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgid ""
+"You tried to sign in with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: base
@@ -11046,7 +11487,8 @@ msgstr "Importa un fitxer de traduccions"
 #. module: base
 #: help:ir.values,model_id:0
 msgid "This field is not used, it only helps you to select a good model."
-msgstr "Aquest camp no s'utilitza, només us ajudarà a seleccionar un model correcte."
+msgstr ""
+"Aquest camp no s'utilitza, només us ajudarà a seleccionar un model correcte."
 
 #. module: base
 #: field:ir.ui.view,name:0
@@ -11096,7 +11538,9 @@ msgstr "A5"
 #. module: base
 #: code:addons/addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgid ""
+"You tried to sign out with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: base
@@ -11170,9 +11614,10 @@ msgstr "Grau de satisfacció"
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
-msgid "No address defined \n' \\n"
-"					'for the partner: %s\n' \\n"
-"					'on line: %s"
+msgid ""
+"No address defined \n"
+"' \\n\t\t\t\t\t'for the partner: %s\n"
+"' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 
 #. module: base
@@ -11228,7 +11673,7 @@ msgstr "Instàncies flux"
 #: code:addons/addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Partners: "
-msgstr ""
+msgstr "Empreses: "
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -11288,13 +11733,18 @@ msgstr "Nom exportació"
 
 #. module: base
 #: help:res.partner.address,type:0
-msgid "Used to select automatically the right address according to the context in sales and purchases documents."
-msgstr "﻿Utilitzat per seleccionar automàticament l'adreça correcta segons el context en documents de vendes i compres."
+msgid ""
+"Used to select automatically the right address according to the context in "
+"sales and purchases documents."
+msgstr ""
+"﻿Utilitzat per seleccionar automàticament l'adreça correcta segons el "
+"context en documents de vendes i compres."
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+msgid ""
+"Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
 "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
 "\n"
 "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
@@ -11312,3 +11762,63 @@ msgstr "Sri Lanka"
 msgid "Russian / русский язык"
 msgstr "Rus / русский язык"
 
+#. module: base
+#: sql_constraint:res.user:0
+msgid "You cannot have two users with the same login !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.model.data:0
+msgid "You cannot have multiple records with the same id for the same module"
+msgstr ""
+
+#. module: base
+#: sql_constraint:maintenance.contract:0
+msgid "Your maintenance contract is already subscribed in the system !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:ir.module.module:0
+msgid "The name of the module must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner.function:0
+msgid "The Code of the Partner Function must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.partner:0
+msgid "The name of the Partner must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr ""
+
+#. module: base
+#: code:addons/osv/osv.py:0
+#, python-format
+msgid "Constraint Error"
+msgstr ""
+
+#. module: base
+#: selection:ir.translation,type:0
+msgid "SQL Constraint"
+msgstr ""

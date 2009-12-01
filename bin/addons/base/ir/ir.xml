@@ -1031,6 +1031,7 @@
                 <tree string="Scheduled Actions">
                     <field name="nextcall"/>
                     <field name="name"/>
+                    <field name="active"/>
                     <field name="interval_number"/>
                     <field name="interval_type"/>
                     <field name="numbercall"/>
@@ -1190,12 +1191,12 @@
 
         <record id="property_rule_group" model="ir.rule.group">
             <field name="name">Property multi-company</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+            <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
         </record>
         <record id="property_rule_group2" model="ir.rule.group">
             <field name="name">Property multi-company 2</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+            <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
         </record>
         <record id="property_rule" model="ir.rule">
