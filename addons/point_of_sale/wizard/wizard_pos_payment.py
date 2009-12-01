@@ -159,6 +159,22 @@ def _test_no_line(self, cr, uid, data, context):
     if not order.lines:
         raise wizard.except_wizard(_('Error'), _('No order lines defined for this sale.'))
 
+    if not order.lines:
+        raise wizard.except_wizard(_('Error'), _('No order lines defined for this sale.'))
+
+    return {}
+
+
+def create_invoice(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    order_obj = pool.get('pos.order')
+    order = order_obj.browse(cr, uid, data['id'], context)
+    if not order.invoice_id:
+        inv_id = order_obj.action_invoice(cr, uid, [data['id']])
+        #raise wizard.except_wizard(_('Error !'), _('Please create an invoice for this sale.'))
+#    wf_service = netsvc.LocalService("workflow")
+#    for i in data['ids']:
+#        wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
     return {}
 
 

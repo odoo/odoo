@@ -49,7 +49,7 @@ class account_budget_post(osv.osv):
     }
     _defaults = {
         'sequence': lambda *a: 1,   
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,              
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.budget.post', c)              
     }
     _order = "sequence, name"    
 

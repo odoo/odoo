@@ -802,7 +802,9 @@ class crm_case(osv.osv):
                 raise osv.except_osv(_('Error!'),("Partner Email is not specified in Case"))
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
-
+                if not src:
+                    raise osv.except_osv(_('Error!'),
+                        _("No E-Mail ID Found for the Responsible Partner or missing reply address in section!"))
                 dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:

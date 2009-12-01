@@ -131,6 +131,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
+                                            <field name="company_id" groups="base.group_multi_company"/>    
                                             <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name" select="2"/>
                                             <field name="price_unit" select="2"/>
@@ -414,7 +415,7 @@
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1" select="1"/>
                             <field name="invoiced" select="2"/>
-
+							<field name="company_id" groups="base.group_multi_company"/>			
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name" select="2"/>
                             <field name="price_unit" select="2"/>

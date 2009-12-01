@@ -63,6 +63,7 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user"/>
                             <newline/>
                             <field name="price_subtotal"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
                         </page>
                         <page string="Notes">
@@ -288,7 +289,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"  groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due" select="1"/>
