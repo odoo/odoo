@@ -34,49 +34,46 @@
             </field>
         </record>
 
+		<record id="view_report_document_user_search" model="ir.ui.view">
+            <field name="name">report.document.user.search</field>
+            <field name="model">report.document.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="All users files">
+                	<group col="8" colspan="4">
+						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Files"/>
+						<filter icon="terp-stock" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="This Months Files"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="file_title" select="1"/>
+	                    <field name="user" select="1"/>
+	                    <field name="directory" select="1"/>
+	           		</group>
+               </search>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_view_my_document_tree">
-            <field name="name">My files (This months)</field>
+            <field name="name">My files</field>
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="domain">[('user_id','=',uid),('name','=',time.strftime('%Y-%m-01'))]</field>
+            <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
         
         <menuitem name="Document Management" id="menu_action_view_my_document"/>
         <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>
-        <menuitem name="This Month" id="menu_action_view_my_document_report_this" parent="menu_action_view_my_document_report"/>
-        <menuitem name="My files" id="menu_action_view_my_document_report_this_myfile" parent="menu_action_view_my_document_report_this" action="action_view_my_document_tree"/>
-
-        <record model="ir.actions.act_window" id="action_view_my_document_tree1">
-            <field name="name">My files (All months)</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        
-        <menuitem name="All Months" id="menu_action_view_my_document_report_all" parent="menu_action_view_my_document_report"/>
-        <menuitem name="My files" id="menu_action_view_my_document_report_all_myfile" parent="menu_action_view_my_document_report_all" action="action_view_my_document_tree1"/>
-
-        <record model="ir.actions.act_window" id="action_view_all_document_tree">
-            <field name="name">All Users files (This month)</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        
-        <menuitem name="All Users files" id="menu_action_view_my_document_report_this_userfile" parent="menu_action_view_my_document_report_this" action="action_view_all_document_tree"/>
+        <menuitem name="My files" id="menu_action_view_my_document_report_this_myfile" parent="menu_action_view_my_document_report" action="action_view_my_document_tree"/>
 
         <record model="ir.actions.act_window" id="action_view_all_document_tree1">
-            <field name="name">All Users files (All months)</field>
+            <field name="name">All Users files</field>
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
         
-        <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report_all" action="action_view_all_document_tree1"/>
+        <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report" action="action_view_all_document_tree1"/>
         
 <!--        -->
         <record model="ir.ui.view" id="view_document_wall_form">

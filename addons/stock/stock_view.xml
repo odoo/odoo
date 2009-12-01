@@ -585,6 +585,26 @@
                 </form>
             </field>
         </record>
+        
+        
+        <record id="view_stock_picking_filter" model="ir.ui.view">
+            <field name="name">stock.picking.list.select</field>
+            <field name="model">stock.picking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Stock Picking">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
+                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
+                        <separator orientation="vertical"/>
+                        <field name="location_id" select="1"/>
+                        <field name="location_dest_id" select="1"/>
+                        <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
+                   </group>
+              </search>
+            </field>
+        </record>
 
         #
         # Delivery Orders
@@ -728,74 +748,6 @@
 
         <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_root" sequence="20"/>
 
-        <record id="action_picking_tree2_delivery" model="ir.actions.act_window">
-            <field name="name">Delivery Orders to Process</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-        <record id="action_picking_tree_delivery_view1_toproc" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_delivery_tree"/>
-            <field name="act_window_id" ref="action_picking_tree2_delivery"/>
-        </record>
-        <record id="action_picking_tree_delivery_view2_toproc" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_delivery_form"/>
-            <field name="act_window_id" ref="action_picking_tree2_delivery"/>
-        </record>
-        <record id="action_picking_tree_delivery_view2_toproc_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree2_delivery"/>
-        </record>
-
-        <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
-            <field name="name">Future Delivery Orders</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','confirmed'),('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-        <record id="action_picking_tree_delivery_view1_waiting" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_delivery_tree"/>
-            <field name="act_window_id" ref="action_picking_tree3_delivery"/>
-        </record>
-        <record id="action_picking_tree_delivery_view2_waiting" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_delivery_form"/>
-            <field name="act_window_id" ref="action_picking_tree3_delivery"/>
-        </record>
-        <record id="action_picking_tree_delivery_view2_waiting_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree3_delivery"/>
-        </record>
-
-       <record id="action_picking_calendar_delivery" model="ir.actions.act_window">
-            <field name="name">Calendar of Deliveries</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
-            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-        </record>
-
         #
         # Sending Products
         #
@@ -902,7 +854,6 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
         <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
@@ -923,64 +874,6 @@
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
         <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
-
-        <record id="action_picking_tree2" model="ir.actions.act_window">
-            <field name="name">Available Picking</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','assigned'),('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-        <record id="action_picking_tree2_out_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_out_tree"/>
-            <field name="act_window_id" ref="action_picking_tree2"/>
-        </record>
-        <record id="action_picking_tree2_out_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_out_form"/>
-            <field name="act_window_id" ref="action_picking_tree2"/>
-        </record>
-        <record id="action_picking_tree2_out_view2_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree2"/>
-        </record>
-
-        <record id="action_picking_tree3" model="ir.actions.act_window">
-            <field name="name">Confirmed Picking Waiting Availability</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-        <record id="action_picking_tree3_out_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_out_tree"/>
-            <field name="act_window_id" ref="action_picking_tree3"/>
-        </record>
-        <record id="action_picking_tree3_out_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_out_form"/>
-            <field name="act_window_id" ref="action_picking_tree3"/>
-        </record>
-        <record id="action_picking_tree3_out_view2_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree3"/>
-        </record>
 
         #
         # Reception of Products
@@ -1090,7 +983,6 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
@@ -1112,36 +1004,6 @@
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_root" sequence="17"/>
 
-        <record id="action_picking_tree5" model="ir.actions.act_window">
-            <field name="name">Picking to Process</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','assigned'),('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-        <record id="action_invoice_tree6_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_in_tree"/>
-            <field name="act_window_id" ref="action_picking_tree5"/>
-        </record>
-        <record id="action_invoice_tree6_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_in_form"/>
-            <field name="act_window_id" ref="action_picking_tree5"/>
-        </record>
-        <record id="action_invoice_tree6_view2_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree5"/>
-        </record>
-        <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="menu_action_picking_tree4" groups="base.group_extended"/>
-
         <record id="action_picking_tree6" model="ir.actions.act_window">
             <field name="name">Internal Moves</field>
             <field name="res_model">stock.picking</field>
@@ -1150,35 +1012,9 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
         <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_root" sequence="18"/>
-
-
-        <record id="action_picking_tree7" model="ir.actions.act_window">
-            <field name="name">Available Picking</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','assigned'),('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
-
-        <record id="action_picking_tree8" model="ir.actions.act_window">
-            <field name="name">Confirmed Picking Waiting Availability</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
-        </record>
 
         =============================
         Move Tracking
@@ -1253,34 +1089,35 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_move_search" model="ir.ui.view">
+            <field name="name">stock.move.search</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+            	<search string="Stock Moves">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-stock" string="Draft" domain="[('state','=','draft')]" help="Draft Moves"/>
+	            		<filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Available Moves"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="location_id" select="1"/>
+	                    <field name="location_dest_id" select="1"/>
+	                    <field name="product_id" select="1"/>
+                    </group>
+            	</search>
+            </field>
+        </record>
+        
         <record id="action_move_form2" model="ir.actions.act_window">
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_move_search"/>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability_low"/>
-
-        <record id="action_move_form3" model="ir.actions.act_window">
-            <field name="name">Draft Moves</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_move_form4" model="ir.actions.act_window">
-            <field name="name">Available Moves</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','assigned')]</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="filter" eval="True"/>
-        </record>
 
         <record id="action_picking_all" model="ir.actions.act_window">
             <field name="name">Picking</field>
@@ -1288,6 +1125,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_stock_picking_filter"/>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
         <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_traceability_low"/>

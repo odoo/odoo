@@ -115,8 +115,8 @@
 		    <field name="view_id" ref="board_view_created_invoice"/>
 	    </record>
 	    
-	    <menuitem id="menu_report_this_month" name="This Month" parent="account.menu_finance_reporting"/>
-	    <menuitem id="menu_report_all_months" name="All Months" parent="account.menu_finance_reporting"/>
+<!--	    <menuitem id="menu_report_this_month" name="This Month" parent="account.menu_finance_reporting"/>-->
+	    <menuitem id="menu_report_all_months" name="Sales by Account" parent="account.menu_finance_reporting"/>
 	    <!-- Report of the sales by product and account -->
 	    <record id="view_report_account_sales_tree" model="ir.ui.view">
             <field name="name">report.account.sales.tree</field>
@@ -146,26 +146,30 @@
                  </graph>
              </field>
         </record>
-
-        <record id="action_report_account_sales_tree" model="ir.actions.act_window">
-            <field name="name">Sales by Account (this month)</field>
-            <field name="res_model">report.account.sales</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
         
-        <menuitem action="action_report_account_sales_tree" id="menu_report_account_sales" parent="menu_report_this_month"/>
+        <record id="view_report_account_sales_search" model="ir.ui.view">
+            <field name="name">report.account.sales.search</field>
+            <field name="model">report.account.sales</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sales by Account">
+					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Sales by type"/>
+					<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="This Months Sales by type"/>
+					<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="month" select="1"/>
+               </search>
+            </field>
+        </record>
         
         <record id="action_report_account_sales_tree_all" model="ir.actions.act_window">
             <field name="name">Sales by Account</field>
             <field name="res_model">report.account.sales</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_report_account_sales_search"/>
         </record>        
         <menuitem action="action_report_account_sales_tree_all" id="menu_report_account_sales_all" parent="menu_report_all_months"/>
-
-        
         
         <!-- Report of the sales by product and account type -->
 	    <record id="view_report_account_type_sales_tree" model="ir.ui.view">
@@ -211,21 +215,27 @@
              </field>
         </record>
 
-        <record id="action_report_account_type_sales_tree" model="ir.actions.act_window">
-            <field name="name">Sales by Account Type (this month)</field>
-            <field name="res_model">report.account_type.sales</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+		<record id="view_report_account_type_sales_search" model="ir.ui.view">
+            <field name="name">report.account_type.sales.search</field>
+            <field name="model">report.account_type.sales</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sales by Account">
+					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Sales by type"/>
+					<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="This Months Sales by type"/>
+					<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="month" select="1"/>
+               </search>
+            </field>
         </record>
-        
-        <menuitem action="action_report_account_type_sales_tree" id="menu_report_account_type_sales" parent="menu_report_this_month"/>
-        
+
         <record id="action_report_account_type_sales_tree_all" model="ir.actions.act_window">
             <field name="name">Sales by Account Type</field>
             <field name="res_model">report.account_type.sales</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_report_account_type_sales_search"/>
         </record>        
         <menuitem action="action_report_account_type_sales_tree_all" id="menu_report_account_type_sales_all" parent="menu_report_all_months"/>
 
