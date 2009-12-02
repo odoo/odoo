@@ -194,7 +194,8 @@ class purchase_order(osv.osv):
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),        
+        'create_uid':  fields.many2one('res.users', 'Responsible'),    
+        'company_id': fields.many2one('res.company','Company',required=True),    
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
@@ -205,6 +206,7 @@ class purchase_order(osv.osv):
         'invoiced': lambda *a: 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c)
     }
     _name = "purchase.order"
     _description = "Purchase order"
@@ -447,6 +449,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
+        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
     }
     _defaults = {
         'product_qty': lambda *a: 1.0
@@ -461,13 +464,15 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False):
+            partner_id, date_order=False, fiscal_position=False, date_planned=False, 
+            name=False, price_unit=False, notes=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
             raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
-            return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
+                'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
@@ -481,7 +486,10 @@ class purchase_order_line(osv.osv):
             uom = prod_uom_po
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+        if price_unit:
+            price = price_unit
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                 product, qty or 1.0, partner_id, {
                     'uom': uom,
                     'date': date_order,
@@ -500,8 +508,9 @@ class purchase_order_line(osv.osv):
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
-        res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
-            'date_planned': dt,'notes':prod.description_purchase,
+        res = {'value': {'price_unit': price, 'name': name or prod_name, 
+            'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
+            'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
             'product_uom': uom}}
         domain = {}

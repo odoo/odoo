@@ -56,6 +56,7 @@ invoice_fields = {
     'invoice_date': {'string': 'Invoiced date', 'type':'date' }    
 }
 
+
 def _get_type(obj, cr, uid, data, context):
     picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
     usage = 'customer'

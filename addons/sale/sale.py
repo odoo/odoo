@@ -253,7 +253,8 @@ class sale_order(osv.osv):
 
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
@@ -399,7 +400,7 @@ class sale_order(osv.osv):
         # last day of the last month as invoice date
         if date_inv:
             context['date_inv'] = date_inv
-        for o in self.browse(cr,uid,ids):
+        for o in self.browse(cr, uid, ids):
             lines = []
             for line in o.order_line:
                 if (line.state in states) and not line.invoiced:
@@ -417,10 +418,10 @@ class sale_order(osv.osv):
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
-                for o,l in val:
-                    self.write(cr, uid, [o.id], {'state' : 'progress'})
-                    if o.order_policy=='picking':
-                        picking_obj.write(cr,uid,map(lambda x:x.id,o.picking_ids),{'invoice_state':'invoiced'})
+                for o, l in val:
+                    self.write(cr, uid, [o.id], {'state': 'progress'})
+                    if o.order_policy == 'picking':
+                        picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
             else:
                 for order, il in val:
@@ -766,6 +767,7 @@ class sale_order_line(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'Status', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
+        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
     }
     _order = 'sequence, id'
     _defaults = {

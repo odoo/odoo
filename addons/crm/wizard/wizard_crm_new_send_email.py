@@ -73,7 +73,6 @@ def _mass_mail_send(self, cr, uid, data, context):
     case_pool=pool.get('crm.case')
 
     case = case_pool.browse(cr,uid,data['ids'])[0]
-    case_pool._history(cr, uid, [case], _('Send'), history=True, email=False)
     case_pool.write(cr, uid, [case.id], {
                 'som': False,
                 'canal_id': False,
@@ -85,6 +84,7 @@ def _mass_mail_send(self, cr, uid, data, context):
         raise wizard.except_wizard(_('Warning!'),("Please specify user's email address"))
     if case.user_id.signature:
         body += '\n\n%s' % (case.user_id.signature)
+    case_pool._history(cr, uid, [case], _('Send'), history=True, email=False, details=body)
     flag = tools.email_send(
         case.user_id.address_id.email,
         emails,

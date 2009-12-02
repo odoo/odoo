@@ -253,7 +253,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_holiday" action="action_my_holiday" groups="base.group_extended_menu" />
+        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_holiday" action="action_my_holiday" groups="base.group_extended" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_draft">
             <field name="name">My Draft Leave Request</field>
@@ -266,7 +266,7 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_draft" action="action_my_holiday_draft" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_draft" action="action_my_holiday_draft" groups="base.group_extended" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_waiting">
             <field name="name">My Awaiting Confirmation Leave Requests</field>
@@ -278,7 +278,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_waiting" action="action_my_holiday_waiting" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_waiting" action="action_my_holiday_waiting" groups="base.group_extended" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_validate">
             <field name="name">My Validated Leave Requests</field>
@@ -290,7 +290,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_validate" action="action_my_holiday_validate" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_validate" action="action_my_holiday_validate" groups="base.group_extended" />
 
         <record model="ir.actions.act_window" id="action_my_holiday_refuse">
             <field name="name">My Refused Leave Requests</field>
@@ -302,7 +302,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_refuse" action="action_my_holiday_refuse" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_my_holiday" id="menu_action_my_holiday_refuse" action="action_my_holiday_refuse" groups="base.group_extended" />
 
 
         <record model="ir.actions.act_window" id="action_departments_my_holiday">
@@ -315,7 +315,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_departments_holiday" action="action_departments_my_holiday" groups="base.group_extended_menu"/>
+        <menuitem parent="menu_open_ask_holidays" id="menu_action_my_departments_holiday" action="action_departments_my_holiday" groups="base.group_extended"/>
 
 
         <record model="ir.actions.act_window" id="action_my_departments_holiday_waiting">
@@ -328,7 +328,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_action_my_departments_holiday" id="menu_action_my_departments_holiday_waiting" action="action_my_departments_holiday_waiting" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_my_departments_holiday" id="menu_action_my_departments_holiday_waiting" action="action_my_departments_holiday_waiting" groups="base.group_extended" />
 
 
 
@@ -342,7 +342,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
-        <menuitem parent="menu_action_all_holiday" id="menu_action_holiday_waiting" action="action_holiday_waiting" groups="base.group_extended_menu" />
+        <menuitem parent="menu_action_all_holiday" id="menu_action_holiday_waiting" action="action_holiday_waiting" groups="base.group_extended" />
 
 
     <!--  Shortcuts -->

@@ -269,10 +269,12 @@ class account_analytic_journal(osv.osv):
         'active' : fields.boolean('Active'),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: True,
         'type': lambda *a: 'general',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 account_analytic_journal()
 

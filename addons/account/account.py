@@ -478,7 +478,8 @@ class account_journal(osv.osv):
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        #'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
     }
@@ -486,6 +487,7 @@ class account_journal(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'user_id': lambda self,cr,uid,context: uid,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
@@ -520,7 +522,7 @@ class account_fiscalyear(osv.osv):
         'name': fields.char('Fiscal Year', size=64, required=True),
         'code': fields.char('Code', size=6, required=True),
         'company_id': fields.many2one('res.company', 'Company',
-            help="Keep empty if the fiscal year belongs to several companies."),
+            help="Keep empty if the fiscal year belongs to several companies.", required=True),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
@@ -529,6 +531,7 @@ class account_fiscalyear(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'draft',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -587,10 +590,12 @@ class account_period(osv.osv):
         'date_start': fields.date('Start of Period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True)
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "date_start"
 
@@ -634,7 +639,7 @@ class account_period(osv.osv):
 #CHECKME: shouldn't we check the state of the period?
         ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
         if not ids:
-            raise osv.except_osv(_('Error !'), _('No period defined for this date !\nPlease create a fiscal year.'))
+            raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create a fiscal year.')%dt)
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
@@ -671,6 +676,7 @@ class account_journal_period(osv.osv):
         'active': fields.boolean('Active', required=True),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
+        'company_id' : fields.many2one('res.company', 'Company')
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -699,6 +705,7 @@ class account_journal_period(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'active': lambda *a: True,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _order = "period_id"
 
@@ -770,6 +777,7 @@ class account_move(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'name': lambda *a: '/',
@@ -777,6 +785,7 @@ class account_move(osv.osv):
         'period_id': _get_period,
         'type' : lambda *a : 'journal_voucher',
         'date': lambda *a:time.strftime('%Y-%m-%d'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def _check_centralisation(self, cursor, user, ids):
@@ -1036,11 +1045,11 @@ class account_move(osv.osv):
                     'state': 'draft'
                 }, context, check=False)
                 ok = False
-        if ok:
-            list_ids = []
-            for tmp in move.line_id:
-                list_ids.append(tmp.id)
-            self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
+            if ok:
+                list_ids = []
+                for tmp in move.line_id:
+                    list_ids.append(tmp.id)
+                self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
         return ok
 account_move()
 
@@ -1801,11 +1810,13 @@ class account_account_template(osv.osv):
         'parent_id': fields.many2one('account.account.template','Parent Account Template', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account.template','parent_id','Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel','account_id','tax_id', 'Default Taxes'),
+	'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
     }
 
     _defaults = {
         'reconcile': lambda *a: False,
         'type' : lambda *a :'view',
+	'nocreate': lambda *a: False,
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -1836,6 +1847,67 @@ class account_account_template(osv.osv):
         return res
 
 account_account_template()
+
+class account_add_tmpl_wizard(osv.osv_memory):
+    """Add one more account from the template.
+    
+	With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
+    _name = 'account.addtmpl.wizard'
+
+    def _get_def_cparent(self, cr, uid, context):
+        acc_obj=self.pool.get('account.account')
+	tmpl_obj=self.pool.get('account.account.template')
+	#print "Searching for ",context
+        tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']],['parent_id'])
+	if not tids or not tids[0]['parent_id']:
+		return False
+	ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]],['code'])
+	if not ptids or not ptids[0]['code']:
+		raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
+        res = acc_obj.search(cr,uid,[('code','=',ptids[0]['code'])])
+	if res:
+		return res[0]
+	else:
+		return False
+
+    _columns = {
+        'cparent_id':fields.many2one('account.account', 'Parent target', help="Create an account with the selected template under this existing parent.", required=True),
+    }
+    _defaults = {
+        'cparent_id': _get_def_cparent,
+    }
+    
+    def action_create(self,cr,uid,ids,context=None):
+        acc_obj=self.pool.get('account.account')
+	tmpl_obj=self.pool.get('account.account.template')
+	data= self.read(cr,uid,ids)
+	company_id = acc_obj.read(cr,uid,[data[0]['cparent_id']],['company_id'])[0]['company_id'][0]
+	account_template = tmpl_obj.browse(cr,uid,context['tmpl_ids'])
+	#tax_ids = []
+	#for tax in account_template.tax_ids:
+	#	tax_ids.append(tax_template_ref[tax.id])
+	vals={
+		'name': account_template.name,
+		#'sign': account_template.sign,
+		'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+		'code': account_template.code,
+		'type': account_template.type,
+		'user_type': account_template.user_type and account_template.user_type.id or False,
+		'reconcile': account_template.reconcile,
+		'shortcut': account_template.shortcut,
+		'note': account_template.note,
+		'parent_id': data[0]['cparent_id'],
+		# 'tax_ids': [(6,0,tax_ids)], todo!!
+		'company_id': company_id,
+		}
+	# print "Creating:", vals
+	new_account = acc_obj.create(cr,uid,vals)
+	return {'type':'state', 'state': 'end' }
+	
+    def action_cancel(self,cr,uid,ids,context=None):
+	return { 'type': 'state', 'state': 'end' }
+
+account_add_tmpl_wizard()
 
 class account_tax_code_template(osv.osv):
 
@@ -2132,7 +2204,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
 
-        children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
+        children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
         children_acc_template.sort()
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
             tax_ids = []

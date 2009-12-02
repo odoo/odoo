@@ -32,7 +32,6 @@ from tools.translate import _
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
     _description = "Leave Types"
-
     def get_days(self, cr, uid, ids, employee_id, return_false, context={}):
         res = {}
         for record in self.browse(cr, uid, ids, context):
@@ -82,6 +81,48 @@ class hr_holidays_status(osv.osv):
         'active' : lambda *a: True,
     }
 hr_holidays_status()
+
+class hr_holidays_per_user(osv.osv):
+    _name = "hr.holidays.per.user"
+    _description = "Holidays Per User"
+    _rec_name = "user_id"
+
+    def _get_remaining_leaves(self, cr, uid, ids, field_name, arg=None, context={}):
+        obj_holiday = self.pool.get('hr.holidays')
+        result = {}
+        for holiday_user in self.browse(cr, uid, ids):
+            days = 0.0
+            ids_request = obj_holiday.search(cr, uid, [('employee_id', '=', holiday_user.employee_id.id),('state', '=', 'validate'),('holiday_status', '=', holiday_user.holiday_status.id)])
+            if ids_request:
+                holidays = obj_holiday.browse(cr, uid, ids_request)
+                for holiday in holidays:
+                    days += holiday.number_of_days
+            days = holiday_user.max_leaves - days
+            result[holiday_user.id] = days
+        return result
+
+    _columns = {
+        'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
+        'user_id' : fields.many2one('res.users','User'),
+        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
+        'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
+        'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
+        'active' : fields.boolean('Active'),
+        'notes' : fields.text('Notes'),
+        'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
+        'holiday_ids': fields.one2many('hr.holidays', 'holiday_user_id', 'Holidays')
+    }
+    _defaults = {
+        'active' : lambda *a: True,
+    }
+
+    def create(self, cr, uid, vals, *args, **kwargs):
+        if vals['employee_id']:
+            obj_emp=self.pool.get('hr.employee').browse(cr,uid,vals['employee_id'])
+            vals.update({'user_id': obj_emp.user_id.id})
+        return super(osv.osv,self).create(cr, uid, vals, *args, **kwargs)
+
+hr_holidays_per_user()
 
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
@@ -311,6 +352,3 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

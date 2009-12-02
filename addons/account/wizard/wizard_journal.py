@@ -60,7 +60,8 @@ def _action_open_window(self, cr, uid, data, context):
         state = pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [form['period_id']])[0]['state']
         if state == 'done':
             raise wizard.except_wizard(_('UserError'), _('This period is already closed !'))
-        jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id']})
+        company = pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [form['period_id']])[0]['company_id'][0]
+        jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id'], 'company_id':company})
     ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
     jp = jp.browse(cr, uid, ids, context=context)[0]
     name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')

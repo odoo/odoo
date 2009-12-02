@@ -47,40 +47,40 @@ class idea_idea(osv.osv):
         if not len(ids):
             return {}
 
-        sql = """select i.id, avg(v.score::integer)
-                   from idea_idea i left outer join idea_vote v on i.id = v.idea_id
-                    where i.id in (%s)
-                    group by i.id
-                """ % ','.join(['%s']*len(ids))
+        sql = """SELECT i.id, avg(v.score::integer) 
+                   FROM idea_idea i LEFT OUTER JOIN idea_vote v ON i.id = v.idea_id
+                    WHERE i.id = ANY(%s)
+                    GROUP BY i.id
+                """
 
-        cr.execute(sql, ids)
+        cr.execute(sql, (ids,))
         return dict(cr.fetchall())
 
     def _vote_count(self,cr,uid,ids,name,arg,context=None):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1)
-                   from idea_idea i left outer join idea_vote v on i.id = v.idea_id
-                    where i.id in (%s)
-                    group by i.id
-                """ % ','.join(['%s']*len(ids))
+        sql = """SELECT i.id, COUNT(1) 
+                   FROM idea_idea i LEFT OUTER JOIN idea_vote v ON i.id = v.idea_id
+                    WHERE i.id = ANY(%s)
+                    GROUP BY i.id
+                """
 
-        cr.execute(sql, ids)
+        cr.execute(sql, (ids,))
         return dict(cr.fetchall())
 
     def _comment_count(self,cr,uid,ids,name,arg,context=None):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1)
-                   from idea_idea i left outer join idea_comment c on i.id = c.idea_id
-                    where i.id in (%s)
-                    group by i.id
-                """ % ','.join(['%s']*len(ids))
+        sql = """SELECT i.id, COUNT(1) 
+                   FROM idea_idea i LEFT OUTER JOIN idea_comment c ON i.id = c.idea_id
+                    WHERE i.id = ANY(%s)
+                    GROUP BY i.id
+                """
 
 
-        cr.execute(sql,ids)
+        cr.execute(sql,(ids,))
         return dict(cr.fetchall())
 
     def _vote_read(self, cr, uid, ids, name, arg, context = None):
@@ -193,19 +193,18 @@ class idea_vote_stat(osv.osv):
         cr -- the cursor
         """
         cr.execute("""
-            create or replace view idea_vote_stat as (
-                select
-                    min(v.id) as id,
-                    i.id as idea_id,
+            CREATE OR REPLACE VIEW idea_vote_stat AS (
+                SELECT
+                    MIN(v.id) AS id,
+                    i.id AS idea_id,
                     v.score,
-                    count(1) as nbr
-                from
+                    COUNT(1) AS nbr
+                FROM
                     idea_vote v
-                    left join
-                    idea_idea i on (v.idea_id=i.id)
-                group by
-                    i.id, v.score, i.id
-        )""")
+                    LEFT JOIN idea_idea i ON (v.idea_id = i.id)
+                GROUP BY
+                    i.id, v.score, i.id )
+        """)
 idea_vote_stat()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

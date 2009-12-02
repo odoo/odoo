@@ -19,6 +19,13 @@
 #
 ##############################################################################
 
+import content_index
+import std_index
+import document_storage
+import document_directory
+import directory_content
+import directory_report
+import doc_conf_wizard
 import document
 import ftpserver
 

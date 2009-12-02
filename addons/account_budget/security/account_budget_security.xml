@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><openerp><data noupdate="0">
+    <record id="budget_post_comp_rule_group" model="ir.rule.group">
+        <field name="name">Budget post multi-company</field>
+        <field model="ir.model" name="model_id" search="[('model','=','account.budget.post')]"/>
+        <field eval="True" name="global"/>
+    </record>
+    <record id="budget_post_comp_rule" model="ir.rule">
+        <field model="ir.model.fields" name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]"/>
+        <field name="operator">child_of</field>
+        <field name="operand">user.company_id.id</field>
+        <field name="rule_group" ref="budget_post_comp_rule_group"/>
+    </record>
+    <record id="budget_post_comp_rule_false" model="ir.rule">
+        <field model="ir.model.fields" name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]"/>
+        <field name="operator">=</field>
+        <field name="operand">False</field>
+        <field name="rule_group" ref="budget_post_comp_rule_group"/>
+    </record>
+</data></openerp>

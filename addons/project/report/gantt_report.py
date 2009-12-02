@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from sets import Set
 from mx.DateTime import *
 
 import StringIO

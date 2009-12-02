@@ -239,6 +239,7 @@ class hr_timesheet_sheet(osv.osv):
         'total_difference': fields.function(_total, method=True, string='Difference', multi="_total_sheet"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def _default_date_from(self,cr, uid, context={}):
@@ -269,6 +270,7 @@ class hr_timesheet_sheet(osv.osv):
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': lambda *a: 'new',
+         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', c)
     }
 
     def _sheet_date(self, cr, uid, ids):
@@ -452,8 +454,8 @@ class hr_attendance(osv.osv):
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
-                            AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
+                        ON (s.date_to >= date_trunc('day',a.name) \
+                            AND s.date_from <= a.name \
                             AND s.user_id = e.user_id) \
                 WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
                 GROUP BY a.id")
@@ -513,8 +515,8 @@ class hr_attendance(osv.osv):
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= a.name::date \
-                            AND s.date_from <= a.name::date \
+                        ON (s.date_to >= date_trunc(\'day\',a.name) \
+                            AND s.date_from <= a.name \
                             AND s.user_id = e.user_id) ' + \
                 qu1, qu2)
         res = cursor.fetchall()
@@ -633,8 +635,8 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                     LEFT JOIN hr_employee e
                                     ON (s.user_id = e.user_id))
                                 ON (a.employee_id = e.id
-                                    AND s.date_to >= a.name::date
-                                    AND s.date_from <= a.name::date)
+                                    AND s.date_to >= date_trunc('day',a.name)
+                                    AND s.date_from <= a.name)
                             WHERE action in ('sign_in', 'sign_out')
                             group by a.name::date, s.id
                         )) AS foo

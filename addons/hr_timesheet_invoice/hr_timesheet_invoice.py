@@ -82,18 +82,19 @@ class account_analytic_line(osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self._check(cr, uid, ids)
+        self._check_inv(cr, uid, ids,vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check(self, cr, uid, ids):
+    def _check_inv(self, cr, uid, ids,vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        for line in self.browse(cr, uid, select):
-            if line.invoice_id:
-                raise osv.except_osv(_('Error !'),
-                        _('You can not modify an invoiced analytic line!'))
+	if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+		for line in self.browse(cr, uid, select):
+		    if line.invoice_id:
+			raise osv.except_osv(_('Error !'),
+				_('You can not modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):

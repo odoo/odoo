@@ -1,0 +1,310 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* audittrail
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-09-08 14:56+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-11-17 05:16+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: audittrail
+#: model:ir.module.module,shortdesc:audittrail.module_meta_information
+msgid "Audit Trail"
+msgstr ""
+
+#. module: audittrail
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
+
+#. module: audittrail
+#: field:audittrail.log.line,log_id:0
+msgid "Log"
+msgstr "Journal"
+
+#. module: audittrail
+#: selection:audittrail.rule,state:0
+msgid "Subscribed"
+msgstr "S'abonner"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Ancienne valeur "
+
+#. module: audittrail
+#: selection:audittrail.log,method:0
+msgid "Create"
+msgstr "Créer"
+
+#. module: audittrail
+#: wizard_view:audittrail.view.log,init:0
+msgid "Audit Logs"
+msgstr "Journaux d'audits"
+
+#. module: audittrail
+#: field:audittrail.rule,state:0
+msgid "State"
+msgstr "État"
+
+#. module: audittrail
+#: selection:audittrail.rule,state:0
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: audittrail
+#: field:audittrail.log.line,old_value:0
+msgid "Old Value"
+msgstr "Ancienne valeur"
+
+#. module: audittrail
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: audittrail
+#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+msgid "View log"
+msgstr "Voir le journal"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "audittrail.log.line"
+msgstr "audittrail.log.line"
+
+#. module: audittrail
+#: field:audittrail.log,method:0
+msgid "Method"
+msgstr "Méthode"
+
+#. module: audittrail
+#: wizard_field:audittrail.view.log,init,from:0
+msgid "Log From"
+msgstr "Journal de"
+
+#. module: audittrail
+#: field:audittrail.log.line,log:0
+msgid "Log ID"
+msgstr "ID Journal"
+
+#. module: audittrail
+#: field:audittrail.log,res_id:0
+msgid "Resource Id"
+msgstr "Id de la ressource"
+
+#. module: audittrail
+#: selection:audittrail.log,method:0
+msgid "Write"
+msgstr "Ecrire"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
+msgid "Audittrails"
+msgstr "Audittrails"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Log Lines"
+msgstr "Lignes de journal"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Subscribe"
+msgstr "S'inscrire"
+
+#. module: audittrail
+#: selection:audittrail.log,method:0
+msgid "Read"
+msgstr "Lire"
+
+#. module: audittrail
+#: field:audittrail.log,object_id:0
+#: field:audittrail.rule,object_id:0
+msgid "Object"
+msgstr "Objet"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "AuditTrail Rule"
+msgstr "Règle AuditTrail"
+
+#. module: audittrail
+#: wizard_field:audittrail.view.log,init,to:0
+msgid "Log To"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "New Value Text: "
+msgstr "Nouvelle valeur texte: "
+
+#. module: audittrail
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"Allows the administrator to track every user operations on all objects of "
+"the system.\n"
+"    Subscribe Rules for read, write, create and delete on objects and check "
+"logs"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.log,timestamp:0
+msgid "Date"
+msgstr "Date"
+
+#. module: audittrail
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr "Ancienne valeur texte : "
+
+#. module: audittrail
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML non valide pour l'architecture de la vue"
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: audittrail
+#: field:audittrail.log,line_ids:0
+msgid "Log lines"
+msgstr "Lignes de journal"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
+msgid "Subscribed Rules"
+msgstr "Enregistrer les règles"
+
+#. module: audittrail
+#: field:audittrail.log.line,field_id:0
+msgid "Fields"
+msgstr "Champs"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "AuditTrail Rules"
+msgstr "Règles AuditTrail"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "audittrail.rule"
+msgstr "audittrail.rule"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "UnSubscribe"
+msgstr "Se désabonner"
+
+#. module: audittrail
+#: field:audittrail.rule,log_write:0
+msgid "Log writes"
+msgstr "Ecritures du journal"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "audittrail.log"
+msgstr "audittrail.log"
+
+#. module: audittrail
+#: field:audittrail.log.line,field_description:0
+msgid "Field Description"
+msgstr "Description du champ"
+
+#. module: audittrail
+#: selection:audittrail.log,method:0
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: audittrail
+#: wizard_button:audittrail.view.log,init,open:0
+msgid "Open Logs"
+msgstr "Ouvrir les journaux"
+
+#. module: audittrail
+#: field:audittrail.log.line,new_value_text:0
+msgid "New value Text"
+msgstr "Nouvelle valeur texte"
+
+#. module: audittrail
+#: field:audittrail.rule,name:0
+msgid "Rule Name"
+msgstr "Nom de la règle"
+
+#. module: audittrail
+#: field:audittrail.rule,log_read:0
+msgid "Log reads"
+msgstr "Lectures des journaux"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+msgid "Logs"
+msgstr "Journaux"
+
+#. module: audittrail
+#: field:audittrail.log.line,new_value:0
+msgid "New Value"
+msgstr "Nouvelle valeur"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
+msgid "View Logs"
+msgstr "Visualiser les journaux"
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log creates"
+msgstr "Créations des journaux"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "AuditTrail Logs"
+msgstr "Journaux AuditTrail"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Règles"
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "New Value : "
+msgstr "Nouvelle valeur : "
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: audittrail
+#: field:audittrail.log.line,old_value_text:0
+msgid "Old value Text"
+msgstr "Ancienne valeur texte"
+
+#. module: audittrail
+#: wizard_button:audittrail.view.log,init,end:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: audittrail
+#: field:audittrail.rule,log_unlink:0
+msgid "Log deletes"
+msgstr "Supprimer les journaux"

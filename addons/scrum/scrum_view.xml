@@ -126,7 +126,7 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_product_backlog_form_draft" id="menu_action_product_backlog_form_draft" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_product_backlog_form_draft" id="menu_action_product_backlog_form_draft" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended"/>
         
         <record id="action_product_backlog_form_open" model="ir.actions.act_window">
             <field name="name">Opened Backlogs</field>
@@ -136,7 +136,7 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_product_backlog_form_open" id="menu_action_product_backlog_form_open" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_product_backlog_form_open" id="menu_action_product_backlog_form_open" parent="scrum.menu_action_product_backlog_form" groups="base.group_extended"/>
         
         <!--
               Scrum Sprint
@@ -218,7 +218,7 @@
             <field name="domain">[('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree" id="menu_action_sprint_open_tree" parent="scrum.menu_action_sprint_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree" id="menu_action_sprint_open_tree" parent="scrum.menu_action_sprint_form" groups="base.group_extended"/>
         <record id="action_sprint_open_tree2" model="ir.actions.act_window">
             <field name="name">Draft Sprints</field>
             <field name="res_model">scrum.sprint</field>
@@ -226,7 +226,7 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree2" id="menu_action_sprint_open_tree2" parent="scrum.menu_action_sprint_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree2" id="menu_action_sprint_open_tree2" parent="scrum.menu_action_sprint_form" groups="base.group_extended"/>
         <record id="action_sprint_open_tree3" model="ir.actions.act_window">
             <field name="name">Sprints Done</field>
             <field name="res_model">scrum.sprint</field>
@@ -234,7 +234,7 @@
             <field name="domain">[('state','=','done')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree3" id="menu_action_sprint_open_tree3" parent="scrum.menu_action_sprint_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree3" id="menu_action_sprint_open_tree3" parent="scrum.menu_action_sprint_form" groups="base.group_extended"/>
         
         <record id="action_sprint_open_tree4" model="ir.actions.act_window">
             <field name="name">My Sprints (Product Owner)</field>
@@ -243,7 +243,7 @@
             <field name="domain">[('product_owner_id','=',uid)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree4" id="menu_action_sprint_open_tree4" parent="scrum.menu_action_sprint_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree4" id="menu_action_sprint_open_tree4" parent="scrum.menu_action_sprint_form" groups="base.group_extended"/>
         <record id="action_sprint_open_tree5" model="ir.actions.act_window">
             <field name="name">My Sprints (Scrum Master)</field>
             <field name="res_model">scrum.sprint</field>
@@ -251,7 +251,7 @@
             <field name="domain">[('scrum_master_id','=',uid)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree5" id="menu_action_sprint_open_tree5" parent="scrum.menu_action_sprint_form" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree5" id="menu_action_sprint_open_tree5" parent="scrum.menu_action_sprint_form" groups="base.group_extended"/>
         
         <record id="action_sprint_open_tree6" model="ir.actions.act_window">
             <field name="name">My opened sprints (Product Owner)</field>
@@ -260,7 +260,7 @@
             <field name="domain">[('product_owner_id','=',uid),('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree6" id="menu_action_sprint_open_tree6" parent="scrum.menu_action_sprint_open_tree4" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree6" id="menu_action_sprint_open_tree6" parent="scrum.menu_action_sprint_open_tree4" groups="base.group_extended"/>
         <record id="action_sprint_open_tree7" model="ir.actions.act_window">
             <field name="name">My opened sprints (Scrum Master)</field>
             <field name="res_model">scrum.sprint</field>
@@ -268,7 +268,7 @@
             <field name="domain">[('scrum_master_id','=',uid),('state','=','open')]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_sprint_open_tree7" id="menu_action_sprint_open_tree7" parent="scrum.menu_action_sprint_open_tree5" groups="base.group_extended_menu"/>
+        <menuitem action="action_sprint_open_tree7" id="menu_action_sprint_open_tree7" parent="scrum.menu_action_sprint_open_tree5" groups="base.group_extended"/>
         
         <!--
               Daily Meeting
@@ -438,7 +438,7 @@
             <field name="domain">[('user_id', '=', uid),('scrum','=',1)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="scrum.menu_action_view_task" groups="base.group_extended_menu"/>
+        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="scrum.menu_action_view_task" groups="base.group_extended"/>
         
         <record id="action_view_task5" model="ir.actions.act_window">
             <field name="name">My opened tasks</field>
@@ -448,7 +448,7 @@
             <field name="domain">[('user_id','=',uid),('state','=','open'),('scrum','=',1)]</field>
             <field name="filter" eval="True"/>            
         </record>
-        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="scrum.menu_action_view_task4" groups="base.group_extended_menu"/>
+        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="scrum.menu_action_view_task4" groups="base.group_extended"/>
         
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Opened tasks</field>

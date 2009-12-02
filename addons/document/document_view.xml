@@ -3,6 +3,48 @@
     <menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
     <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>
 
+    <record model="ir.ui.view" id="view_document_storage_form">
+        <field name="name">document.storage</field>
+        <field name="model">document.storage</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Storage Media">
+                <field name="name" select="1" colspan="4"/>
+                <field name="user_id"/>
+                <field name="type" />
+                <field name="online" />
+                <field name="readonly" />
+                <field name="path" />
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_document_storage_tree">
+        <field name="name">document.storage</field>
+        <field name="model">document.storage</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Storage Media" toolbar="1">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="online"/>
+                <field name="readonly"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_storage_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.storage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        name="Storage Media"
+        action="action_document_storage_form"
+        id="menu_document_storage_media"
+        parent="menu_document_configuration"/>
+
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
@@ -12,6 +54,7 @@
                 <field name="name" select="1" colspan="4"/>
                 <field name="user_id"/>
                 <field name="parent_id"/>
+                <field name="storage_id" />
                 <notebook colspan="4">
                 <page string="Definition">
                     <separator string="Directory Type" colspan="4"/>
@@ -20,14 +63,17 @@
                     <newline/>
                     <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <field name="ressource_tree"/>
+                    <field name="resource_field"/>
                     <field name="ressource_id" select="2" readonly="1"/>
                     <field name="ressource_parent_type_id"/>
-
-                    <separator string="Auto-Generated Files" colspan="4"/>
+                </page>
+                <page string="Generated Files">
+                    <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
                     <field name="content_ids" nolabel="1" colspan="4">
                         <form string="Contents">
                             <field name="name"/>
                             <field name="sequence"/>
+                            <field name="prefix"/>
                             <field name="suffix"/>
                             <field name="extension"/>
                             <field name="include_name"/>
@@ -41,7 +87,20 @@
                             <field name="extension"/>
                         </tree>
                     </field>
-                </page><page string="Security">
+                </page>
+                <page string="Dynamic context">
+                    <field name="dctx_ids" nolabel="1" colspan="4">
+                        <tree string="Fields" editable="bottom">
+                            <field name="field"/>
+                            <field name="expr"/>
+                        </tree>
+                        <form string="Fields">
+                            <field name="field"/>
+                            <field name="expr"/>
+                        </form>
+                    </field>
+                </page>
+                <page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
                 </page>
                 </notebook>
@@ -151,7 +210,7 @@
                     <group colspan="2" col="2">
                         <separator string="File Information" colspan="2"/>
                         <field name="file_size" readonly="1"/>
-                        <field name="parent_id" readonly="1" select="2"/>
+                        <field name="parent_id" select="2"/>
                     </group>
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
@@ -277,6 +336,11 @@
             <field name="note">This wizard will configure the URL of the server of the document management system.</field>
             <field name="action_id" ref="action_config_auto_directory"/>
         </record>
+
+        <act_window domain="[('partner_id', '=', active_id)]"
+            id="act_res_partner_document" name="Related Documents"
+            res_model="ir.attachment"
+            src_model="res.partner"/>
 
 </data>
 </openerp>
