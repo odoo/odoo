@@ -54,8 +54,6 @@ py_short_version = '%s.%s' % sys.version_info[:2]
 required_modules = [
     ('psycopg2', 'PostgreSQL module'),
     ('xml', 'XML Tools for python'),
-    ('libxml2', 'libxml2 python bindings'),
-    ('libxslt', 'libxslt python bindings'),
     ('reportlab', 'reportlab module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),

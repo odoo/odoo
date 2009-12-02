@@ -302,7 +302,7 @@ class rml_parse(object):
             rml_head = rml_head.replace('<image','<!--image')
             rml_head = rml_head.replace('</image>','</image-->')
         head_dom = etree.XML(rml_head)
-        for tag in head_dom.getchildren():
+        for tag in head_dom:
             found = rml_dom.find('.//'+tag.tag)
             if found is not None and len(found):
                 if tag.get('position'):
@@ -466,13 +466,14 @@ class report_sxw(report_rml, preprocess.report):
         for pe in elements:
             if pe.get(rml_parser.localcontext['name_space']["meta"]+"name"):
                 if pe.get(rml_parser.localcontext['name_space']["meta"]+"name") == "Info 3":
-                    pe.getchildren()[0].text=data['id']
+                    pe[0].text=data['id']
                 if pe.get(rml_parser.localcontext['name_space']["meta"]+"name") == "Info 4":
-                    pe.getchildren()[0].text=data['model']
-        meta = etree.tostring(rml_dom_meta)
+                    pe[0].text=data['model']
+        meta = etree.tostring(rml_dom_meta, encoding='utf-8',
+                              xml_declaration=True)
 
         rml_dom =  etree.XML(rml)
-        body = rml_dom.getchildren()[-1]
+        body = rml_dom[-1]
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"]+"p"
         key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
@@ -486,7 +487,7 @@ class report_sxw(report_rml, preprocess.report):
                     pp=de.getparent()
                     if de.text or de.tail:
                         pe.text = de.text or de.tail
-                    for cnd in de.getchildren():
+                    for cnd in de:
                         if cnd.text or cnd.tail:
                             if pe.text:
                                 pe.text +=  cnd.text or cnd.tail
@@ -512,12 +513,11 @@ class report_sxw(report_rml, preprocess.report):
 
         rml_dom = self.preprocess_rml(rml_dom,report_type)
         create_doc = self.generators[report_type]
-        odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
+        odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext),
+                             encoding='utf-8', xml_declaration=True)
         sxw_z = zipfile.ZipFile(sxw_io, mode='a')
-        sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
-                odt)
-        sxw_z.writestr('meta.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
-                meta)
+        sxw_z.writestr('content.xml', odt)
+        sxw_z.writestr('meta.xml', meta)
 
         if report_xml.header:
             #Add corporate header/footer
@@ -532,9 +532,9 @@ class report_sxw(report_rml, preprocess.report):
             odt = create_doc(rml_dom,rml_parser.localcontext)
             if report_xml.header:
                 rml_parser._add_header(odt)
-            odt = etree.tostring(odt)
-            sxw_z.writestr('styles.xml',"<?xml version='1.0' encoding='UTF-8'?>" + \
-                    odt)
+            odt = etree.tostring(odt, encoding='utf-8',
+                                 xml_declaration=True)
+            sxw_z.writestr('styles.xml', odt)
         sxw_z.close()
         final_op = sxw_io.getvalue()
         sxw_io.close()

@@ -375,9 +375,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
 
 def trans_parse_xsl(de):
     res = []
-    for n in [i for i in de.getchildren()]:
+    for n in de:
         if n.get("t"):
-            for m in [j for j in n.getchildren() if j.text]:
+            for m in [j for j in n if j.text]:
                 l = m.text.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
@@ -386,8 +386,8 @@ def trans_parse_xsl(de):
 
 def trans_parse_rml(de):
     res = []
-    for n in [i for i in de.getchildren()]:
-        for m in [j for j in n.getchildren() if j.text]:
+    for n in de:
+        for m in [j for j in n if j.text]:
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
             for s in string_list:
                 if s:
@@ -398,14 +398,10 @@ def trans_parse_rml(de):
 def trans_parse_view(de):
     res = []
     if de.get("string"):
-        s = de.get('string')
-        if s:
-            res.append(s.encode("utf8"))
+        res.append(de.get('string').encode("utf8"))
     if de.get("sum"):
-        s = de.get('sum')
-        if s:
-            res.append(s.encode("utf8"))
-    for n in [i for i in de.getchildren()]:
+        res.append(de.get('sum').encode("utf8"))
+    for n in de:
         res.extend(trans_parse_view(n))
     return res
 
