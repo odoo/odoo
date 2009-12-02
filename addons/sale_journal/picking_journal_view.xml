@@ -70,17 +70,6 @@
 
 	<menuitem name="Picking by Journal" id="menu_definition_journal_picking_byjournal" parent="stock.menu_stock_root" action="action_definition_picking_journal_tree"/>
 
-	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_my">
-		<field name="name">My open packing journals</field>
-		<field name="res_model">sale_journal.picking.journal</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
-        <field name="filter" eval="True"/>
-	</record>
-
-	<menuitem name="My Open Journals" id="menu_definition_journal_picking_byjournal_my" parent="menu_definition_journal_picking_byjournal" action="action_definition_picking_journal_tree_my"  groups="base.group_extended"/>
-
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_all">
 		<field name="name">Picking by journal</field>
 		<field name="res_model">sale_journal.picking.journal</field>

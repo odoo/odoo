@@ -303,27 +303,36 @@
             </form>
         </field>
     </record>
-
-    <record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_month">
-        <field name="name">Sales by journal (this month)</field>
-        <field name="res_model">sale_journal.sale.stats</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+    
+    <record model="ir.ui.view" id="view_sale_journal_sale_stats_search">
+        <field name="name">sale_journal.sale.stats.search</field>
+        <field name="model">sale_journal.sale.stats</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Sales by Journal">
+            	<group col="8" colspan="4">
+	            	<filter icon="terp-sale" string="This Year" domain="[('name','!=','')]" help="Sale journal in this year"/>
+	               	<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Sale journal in this month"/>
+	               	<separator orientation="vertical"/>
+	                <field name="name" select="1"/>
+	                <field name="state" select="1"/>
+	                <field name="journal_id" select="1"/>
+				</group>
+            </search>
+        </field>
     </record>
-
-    <menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>
-    <menuitem name="Sales by Journal (This Month)" id="menu_sale_sale_stats_open_menu" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_month"/>
 
     <record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_all">
+    	<field name="name">Sales by Journal</field>
         <field name="res_model">sale_journal.sale.stats</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sale_journal_sale_stats_search"/>
     </record>
     
-    <menuitem name="Sales by Journal (All Months)" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
+	<menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>    
+    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
 
     <act_window name="Monthly sales"
         domain="[('journal_id', '=', active_id)]"

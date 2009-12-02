@@ -128,22 +128,6 @@
        </record>
        
        <menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />	
-	    
-		<record model="ir.actions.act_window" id="action_event_view_draft">
-			<field name="name">Draft Events</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">event.event</field>
-			<field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>			
-		</record>
-
-		<record model="ir.actions.act_window" id="action_event_view_confirm">
-			<field name="name">Confirmed Events</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">event.event</field>
-			<field name="domain">[('state','=','confirm')]</field>
-            <field name="filter" eval="True"/>			
-		</record>
 
 	<!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -271,23 +255,6 @@
 			id="menu_action_registration" parent="menu_event_main"
 			action="action_registration"/>
 		
-		<record model="ir.actions.act_window" id="action_registration_draft">
-		  <field name="name">Unconfirmed Registrations</field>
-		  <field name="res_model">event.registration</field>
-		  <field name="view_type">form</field>
-		  <field name="domain">[('state','=','draft')]</field>
-		  <field name="view_mode">tree,form</field>
-          <field name="filter" eval="True"/>		  
-		</record>
-
-		<record model="ir.actions.act_window" id="action_registration_confirm">
-		  <field name="name">Confirmed Registrations</field>
-		  <field name="res_model">event.registration</field>
-		  <field name="view_type">form</field>
-		  <field name="domain">[('state','in',('open','done'))]</field>
-          <field name="filter" eval="True"/>		  
-		</record>
-
 	<!-- report , event on registration... start -->
 		<record model="ir.ui.view" id="report_event_registration_tree">
 			<field name="name">report.event.registration.tree</field>
