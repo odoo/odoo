@@ -1,24 +1,4 @@
-# -*- coding: utf-8 -*-
-##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
-#
-##############################################################################
-
+# -*- encoding: utf-8 -*-
 import os
 import time
 from tarfile import filemode
@@ -141,8 +121,8 @@ class abstracted_fs:
     # Ok
     def db_list(self):
         #return pooler.pool_dic.keys()
-        s = netsvc.LocalService('db')
-        result = s.list()
+        s = netsvc.ExportService.getService('db')
+        result = s.exp_list()
         self.db_name_list = []
         for db_name in result:
             db, cr = None, None
@@ -222,13 +202,18 @@ class abstracted_fs:
 
     # Ok
     def fs2ftp(self, node):        
-        res='/'
+        res = '/'
         if node:
-            res=os.path.normpath(node.path)
+            path = node.path
+            print '**********', path
+            if isinstance(path,list):
+                path = '/'.join(path)
+            res = os.path.normpath(path)
             res = res.replace("\\", "/")        
             while res[:2] == '//':
                 res = res[1:]
-            res='/' + node.cr.dbname + '/' + _to_decode(res)            
+            if len(node.path):
+                res = '/' + node.path[0] + '/' + _to_decode(res)            
             
         #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
