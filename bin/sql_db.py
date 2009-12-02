@@ -170,6 +170,7 @@ class Cursor(object):
                 sqllogs[type].clear()
             sum = timedelta(microseconds=sum)
             log("SUM %s:%s/%d [%d]" % (type, str(sum), self.sql_log_count, sql_counter))
+            sqllogs[type].clear()
         process('from')
         process('into')
         self.sql_log_count = 0
@@ -314,6 +315,15 @@ class Connection(object):
 
     def serialized_cursor(self):
         return self.cursor(True)
+
+    def __nonzero__(self):
+        """Check if connection is possible"""
+        try:
+            cr = self.cursor()
+            cr.close()
+            return True
+        except:
+            return False
 
 
 _dsn = ''
