@@ -28,13 +28,7 @@ import netsvc
 import re
 import copy
 import sys
-
-try:
-    from xml import dom, xpath
-except ImportError:
-    sys.stderr.write("ERROR: Import xpath module\n")
-    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.exit(2)
+from xml import dom
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
