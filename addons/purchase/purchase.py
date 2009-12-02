@@ -480,12 +480,7 @@ class purchase_order_line(osv.osv):
             uom = prod_uom_po
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                product, qty or 1.0, partner_id, {
-                    'uom': uom,
-                    'date': date_order,
-                    })[pricelist]
-
+        
         qty = qty or 1.0
         seller_delay = 0
         for s in prod.seller_ids:
@@ -495,6 +490,11 @@ class purchase_order_line(osv.osv):
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
 
+        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+                product, qty or 1.0, partner_id, {
+                    'uom': uom,
+                    'date': date_order,
+                    })[pricelist]
         dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = prod.partner_ref
 
