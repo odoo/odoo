@@ -50,22 +50,36 @@
                 </tree>
             </field>
         </record>
-
-        <record id="action_order_product_tree" model="ir.actions.act_window">
-            <field name="name">Purchases by Products (this month)</field>
-            <field name="res_model">report.purchase.order.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+        
+        <record id="view_order_product_search" model="ir.ui.view">
+            <field name="name">report.purchase.order.product.search</field>
+            <field name="model">report.purchase.order.product</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Purchases by products">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-purchase" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Purchases by products during this year"/>
+	            		<filter icon="terp-purchase" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Purchases by products during this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="product_id" select="1"/>
+	                    <field name="state" select="1"/>
+            		</group>
+            	</search>
+            </field>
         </record>
-        <menuitem id="next_id_73" name="Reporting" parent="purchase.menu_purchase_root"/><menuitem id="next_id_74" name="This Month" parent="next_id_73"/><menuitem action="action_order_product_tree" id="menu_report_order_product" parent="next_id_74"/>
+	
         <record id="action_order_product_tree_all" model="ir.actions.act_window">
             <field name="name">Purchases by Products</field>
             <field name="res_model">report.purchase.order.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_order_product_search"/>
         </record>
-        <menuitem id="next_id_75" name="All Months" parent="report_purchase.next_id_73"/><menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_75"/>
+
+        <menuitem id="next_id_73" name="Reporting" parent="purchase.menu_purchase_root"/>
+        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_73"/>
 
         <!-- Purchases by category by month -->
 
@@ -117,21 +131,33 @@
             </field>
         </record>
 
-        <record id="action_order_category_tree" model="ir.actions.act_window">
-            <field name="name">Purchases by Category of Product (this month)</field>
-            <field name="res_model">report.purchase.order.category</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+		<record id="view_order_category_search" model="ir.ui.view">
+            <field name="name">report.purchase.order.category.search</field>
+            <field name="model">report.purchase.order.category</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Purchases by category of products">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-purchase" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Purchases by categories of products during this year"/>
+	            		<filter icon="terp-purchase" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Purchases by categories of products during this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="category_id" select="1"/>
+	                    <field name="state" select="1"/>
+            		</group>
+            	</search>
+            </field>
         </record>
-        <menuitem action="action_order_category_tree" id="menu_report_order_category" parent="report_purchase.next_id_74"/>
+
         <record id="action_order_category_tree_all" model="ir.actions.act_window">
             <field name="name">Purchases by Category of Products</field>
             <field name="res_model">report.purchase.order.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_order_category_search"/>
         </record>
-        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_purchase.next_id_75"/>
+        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_purchase.next_id_73"/>
 
         <act_window domain="[('product_id', '=', active_id)]" id="act_product_product_2_report_purchases_order_product" name="Monthly purchases" res_model="report.purchase.order.product" src_model="product.product"/>
 

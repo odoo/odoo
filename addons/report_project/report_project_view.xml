@@ -41,22 +41,34 @@
                 </tree>
             </field>
         </record>
-        <record id="action_project_task_user_tree_month" model="ir.actions.act_window">
-            <field name="name">Tasks finished by project and user (this month)</field>
-            <field name="res_model">report.project.task.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+        
+        <record id="view_task_project_user_search" model="ir.ui.view">
+            <field name="name">report.project.task.user.search</field>
+            <field name="model">report.project.task.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Tasks by projects and users">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+	            		<filter icon="terp-project" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Tasks performed in this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="user_id" select="1"/>
+	                    <field name="project_id" select="1"/>
+            		</group>
+            	</search>
+            </field>
         </record>
-        <menuitem id="next_id_63" name="This Month" parent="report_task.next_id_57"/><menuitem action="action_project_task_user_tree_month" id="menu_project_task_user_tree_month" parent="next_id_63"/>
         
         <record id="action_project_task_user_tree" model="ir.actions.act_window">
             <field name="name">Tasks Closed by Project and User</field>
             <field name="res_model">report.project.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
         </record>
-        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="report_task.next_id_58"/>
+        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="report_task.next_id_57"/>
         
         <!-- Tasks by projects -->
         
@@ -94,22 +106,34 @@
                 </tree>
             </field>
         </record>
-        <record id="action_project_task_tree_month" model="ir.actions.act_window">
-            <field name="name">Tasks finished by project (this month)</field>
-            <field name="res_model">report.project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+        
+        <record id="view_task_project_search" model="ir.ui.view">
+            <field name="name">report.project.task.search</field>
+            <field name="model">report.project.task</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Tasks by projects">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+	            		<filter icon="terp-project" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Tasks performed in this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="project_id" select="1"/>
+	                    <field name="task_closed" select="1"/>
+	                </group>
+            	</search>
+            </field>
         </record>
-        <menuitem action="action_project_task_tree_month" id="menu_project_task_tree_month" parent="report_project.next_id_63"/>
         
         <record id="action_project_task_tree" model="ir.actions.act_window">
             <field name="name">Tasks Closed by Project</field>
             <field name="res_model">report.project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_task_project_search"/>
         </record>
-        <menuitem action="action_project_task_tree" id="menu_project_task_tree" parent="report_task.next_id_58"/>
+        <menuitem action="action_project_task_tree" id="menu_project_task_tree" parent="report_task.next_id_57"/>
         
     </data>
 </openerp>

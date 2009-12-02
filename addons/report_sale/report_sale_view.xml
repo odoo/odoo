@@ -48,22 +48,36 @@
                  </graph>
              </field>
         </record>
-
-        <record id="action_order_product_tree" model="ir.actions.act_window">
-            <field name="name">Sale Orders by Product (this month)</field>
-            <field name="res_model">report.sale.order.product</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        <menuitem id="next_id_80" name="Reporting" parent="sale.menu_sale_root"/><menuitem id="next_id_81" name="This Month" parent="next_id_80"/><menuitem action="action_order_product_tree" id="menu_report_order_product" parent="next_id_81"/>
+        
+        <record id="view_order_product_search" model="ir.ui.view">
+            <field name="name">report.sale.order.product.search</field>
+            <field name="model">report.sale.order.product</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sale Orders by Product">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale orders during this year"/>
+	                	<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m'))]" help="Sale orders during this month"/>
+	                	<separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="product_id" select="1"/>
+	                    <field name="state" select="1"/>
+                	</group>
+                </search>
+            </field>
+        </record> 
+        
         <record id="action_order_product_tree_all" model="ir.actions.act_window">
             <field name="name">Sale Orders by Product</field>
             <field name="res_model">report.sale.order.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_order_product_search"/>
         </record>
-        <menuitem id="next_id_82" name="All Months" parent="report_sale.next_id_80"/><menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_82"/>
+
+        <menuitem id="next_id_80" name="Reporting" parent="sale.menu_sale_root"/>
+        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_80"/>
 
         <!-- Sales by category by month -->
 
@@ -113,21 +127,34 @@
                 </graph>
             </field>
         </record>
-        <record id="action_order_category_tree" model="ir.actions.act_window">
-            <field name="name">Sale Orders by Category of Product (this month)</field>
-            <field name="res_model">report.sale.order.category</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
-        </record>
-        <menuitem action="action_order_category_tree" id="menu_report_order_category" parent="report_sale.next_id_81"/>
+
+		<record id="view_order_category_search" model="ir.ui.view">
+            <field name="name">report.sale.order.category.search</field>
+            <field name="model">report.sale.order.category</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Sale Orders by Category of Products">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale orders during this year"/>
+	                	<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Sale orders during this month"/>
+	                	<separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="category_id" select="1"/>
+	                    <field name="state" select="1"/>
+					</group>
+                </search>
+            </field>
+        </record> 
+
         <record id="action_order_category_tree_all" model="ir.actions.act_window">
             <field name="name">Sale Orders by Category of Products</field>
             <field name="res_model">report.sale.order.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_order_category_search"/>
         </record>
-        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_sale.next_id_82"/>
+        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_sale.next_id_80"/>
 
         <!-- Sales of the month -->
         <record id="view_order_graph" model="ir.ui.view">
@@ -148,7 +175,7 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
-        <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_81"/>
+        <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_80"/>
 
 		<record id="view_so_pipeline_graph" model="ir.ui.view">
              <field name="name">sale.order.dashboard.graph</field>
