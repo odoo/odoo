@@ -793,7 +793,7 @@ class stock_picking(osv.osv):
                 ids2 = [move.id for move in pick.move_lines]
                 self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
             else:
-                continue    
+                continue
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
 stock_picking()
