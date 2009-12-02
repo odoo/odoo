@@ -428,7 +428,7 @@ class actions_server(osv.osv):
         result = cr.fetchall() or []
         res = []
         for rs in result:
-            if not rs[0] == None and not rs[1] == None:
+            if rs[0] is not None and rs[1] is not None:
                 res.append(rs)
         return res
 
@@ -576,8 +576,8 @@ class actions_server(osv.osv):
             if action.state=='client_action':
                 if not action.action_id:
                     raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
-                result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
-                return result
+                return self.pool.get(action.action_id.type)\
+                    .read(cr, uid, action.action_id.id, context=context)
 
             if action.state == 'code':
                 localdict = {
@@ -767,67 +767,77 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     _name='ir.actions.configuration.wizard'
     def next_configuration_action(self,cr,uid,context={}):
         item_obj = self.pool.get('ir.actions.todo')
-        item_ids = item_obj.search(cr, uid, [('type','=','configure'),('state', '=', 'open'),('active','=',True)], limit=1, context=context)
-        if item_ids and len(item_ids):
-            item = item_obj.browse(cr, uid, item_ids[0], context=context)
-            return item
+        item_ids = item_obj.search(cr, uid,
+                                   [('type','=','configure'),
+                                    ('state', '=', 'open'),
+                                    ('active','=',True)],
+                                   limit=1, context=context)
+        if item_ids:
+            return item_obj.browse(cr, uid, item_ids[0], context=context)
         return False
     def _get_action_name(self, cr, uid, context={}):
-        next_action=self.next_configuration_action(cr,uid,context=context)
+        next_action = self.next_configuration_action(cr,uid,context=context)
         if next_action:
             return next_action.note
         else:
             return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
-        return False
 
     def _get_action(self, cr, uid, context={}):
-        next_action=self.next_configuration_action(cr,uid,context=context)
+        next_action = self.next_configuration_action(cr, uid, context=context)
         if next_action:
             return next_action.id
-        return False
+        return
 
-    def _progress_get(self,cr,uid, context={}):
-        total = self.pool.get('ir.actions.todo').search_count(cr, uid, [], context)
-        todo = self.pool.get('ir.actions.todo').search_count(cr, uid, [('type','=','configure'),('active','=',True),('state','<>','open')], context)
+    def _progress_get(self, cr, uid, context=None):
+        total = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [], context)
+        todo = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid,[('type','=','configure'),
+                                   ('active','=',True),
+                                   ('state','<>','open')],
+                          context)
         if total > 0.0:
-            return max(5.0,round(todo*100/total))
+            return max(5.0, round(todo*100/total))
         else:
             return 100.0
 
     _columns = {
-        'name': fields.text('Next Wizard',readonly=True),
+        'name': fields.text('Next Wizard', readonly=True),
         'progress': fields.float('Configuration Progress', readonly=True),
-        'item_id':fields.many2one('ir.actions.todo', 'Next Configuration Wizard',invisible=True, readonly=True),
+        'item_id': fields.many2one('ir.actions.todo',
+                                  'Next Configuration Wizard',
+                                  invisible=True, readonly=True),
     }
     _defaults={
         'progress': _progress_get,
-        'item_id':_get_action,
-        'name':_get_action_name,
+        'item_id': _get_action,
+        'name': _get_action_name,
     }
     def button_next(self,cr,uid,ids,context=None):
-        user_action=self.pool.get('res.users').browse(cr,uid,uid)
-        act_obj=self.pool.get(user_action.menu_id.type)
-        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
-        action_open=act_obj.browse(cr,uid,action_ids)[0]
-        if context.get('menu',False):
-            return{
+        user_action = self.pool.get('res.users').browse(cr,uid,uid)
+        act_obj = self.pool.get(user_action.menu_id.type)
+        action_ids = act_obj.search(cr,uid,[
+                ('name', '=', user_action.menu_id.name)])
+        action_open = act_obj.browse(cr, uid, action_ids)[0]
+        if context and 'menu' in context:
+            return {
                 'view_type': action_open.view_type,
-                'view_id':action_open.view_id and [action_open.view_id.id] or False,
+                'view_id': action_open.view_id and [action_open.view_id.id] or False,
                 'res_model': action_open.res_model,
                 'type': action_open.type,
-                'domain':action_open.domain
+                'domain': action_open.domain
             }
-        return {'type':'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def button_skip(self,cr,uid,ids,context=None):
         item_obj = self.pool.get('ir.actions.todo')
-        item_id=self.read(cr,uid,ids)[0]['item_id']
+        item_id = self.read(cr,uid,ids)[0]['item_id']
         if item_id:
             item = item_obj.browse(cr, uid, item_id, context=context)
             item_obj.write(cr, uid, item.id, {
                 'state': 'skip',
                 }, context=context)
-            return{
+            return {
                 'view_type': 'form',
                 "view_mode": 'form',
                 'res_model': 'ir.actions.configuration.wizard',
@@ -838,13 +848,13 @@ class ir_actions_configuration_wizard(osv.osv_memory):
 
     def button_continue(self, cr, uid, ids, context=None):
         item_obj = self.pool.get('ir.actions.todo')
-        item_id=self.read(cr,uid,ids)[0]['item_id']
+        item_id = self.read(cr,uid,ids)[0]['item_id']
         if item_id:
             item = item_obj.browse(cr, uid, item_id, context=context)
             item_obj.write(cr, uid, item.id, {
                 'state': 'done',
                 }, context=context)
-            return{
+            return {
                   'view_mode': item.action_id.view_mode,
                   'view_type': item.action_id.view_type,
                   'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
