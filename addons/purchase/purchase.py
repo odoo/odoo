@@ -319,7 +319,10 @@ class purchase_order(osv.osv):
                 il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
+            if not journal_ids:
+                raise osv.except_osv(_('Error !'),
+                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
                 'reference': "P%dPO%d" % (o.partner_id.id, o.id),
