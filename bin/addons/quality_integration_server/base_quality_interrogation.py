@@ -49,8 +49,8 @@ def to_decode(s):
             except UnicodeError:
                 return s
 
-def start_server(root_path, port, addons_path):
-    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --no-netrpc --addons-path=%s' %(root_path, str(port), addons_path))
+def start_server(root_path, port, netport, addons_path):
+    os.system('python2.5 %sopenerp-server.py  --pidfile=openerp.pid  --port=%s --net_port=%s --addons-path=%s' %(root_path, str(port),str(netport),addons_path))
 def clean():
     if os.path.isfile('openerp.pid'):
         ps = open('openerp.pid')
@@ -292,6 +292,7 @@ parser.add_option("--addons-path", dest="addons_path", help="specify the addons 
 parser.add_option("--quality-logs", dest="quality_logs", help="specify the path of quality logs files which has to stores")
 parser.add_option("--root-path", dest="root_path", help="specify the root path")
 parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
+parser.add_option("--net_port", dest="netport",help="specify the TCP port for netrpc")
 parser.add_option("-d", "--database", dest="db_name", help="specify the database name")
 parser.add_option("--login", dest="login", help="specify the User Login")
 parser.add_option("--password", dest="pwd", help="specify the User Password")
@@ -324,6 +325,7 @@ options = {
     'root-path' : opt.root_path or '',
     'translate-in': [],
     'port' : opt.port or 8069,
+    'netport':opt.netport or 8070,
     'database': opt.db_name or 'terp',
     'modules' : opt.modules or [],
     'login' : opt.login or 'admin',
@@ -346,7 +348,7 @@ if opt.translate_in:
 uri = 'http://localhost:' + str(options['port'])
 
 server_thread = threading.Thread(target=start_server,
-                args=(options['root-path'], options['port'], options['addons-path']))
+                args=(options['root-path'], options['port'],options['netport'], options['addons-path']))
 try:
     server_thread.start()
     if command == 'create-db':
