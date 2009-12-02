@@ -524,7 +524,7 @@ class sale_order(osv.osv):
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
                     #if one of the related order lines is in state draft, auto or confirmed
                     #this order line is not yet delivered
-                    if move.state in ('draft', 'auto', 'confirmed'):
+                    if move.state in ('draft', 'waiting', 'confirmed'):
                         pending_deliveries = True
                 # Reason => if there are no move lines,the following condition will always set to be true,and will set SO to 'DONE'.
                 # Added move_ids check to SOLVE.
@@ -967,7 +967,7 @@ class sale_order_line(osv.osv):
             partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id])[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

@@ -920,7 +920,10 @@ class account_move(osv.osv):
             amount+= (line.debit - line.credit)
         return amount
 
-    def _centralise(self, cr, uid, move, mode):
+    def _centralise(self, cr, uid, move, mode, context=None):
+        if context is None:
+            context = {}
+
         if mode=='credit':
             account_id = move.journal_id.default_debit_account_id.id
             mode2 = 'debit'
@@ -943,8 +946,9 @@ class account_move(osv.osv):
         if res:
             line_id = res[0]
         else:
+            context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': 'Centralisation '+mode,
+                'name': _t(cr, None, 'selection', context.get('lang'), source=(mode.capitalize()+' Centralisation')) or (mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
@@ -953,7 +957,7 @@ class account_move(osv.osv):
                 'date': move.period_id.date_stop,
                 'debit': 0.0,
                 'credit': 0.0,
-            }, {'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
+            }, context)
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
@@ -1035,8 +1039,8 @@ class account_move(osv.osv):
                 #
                 continue
             if journal.centralisation:
-                self._centralise(cr, uid, move, 'debit')
-                self._centralise(cr, uid, move, 'credit')
+                self._centralise(cr, uid, move, 'debit', context=context)
+                self._centralise(cr, uid, move, 'credit', context=context)
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'state': 'valid'
                 }, context, check=False)
