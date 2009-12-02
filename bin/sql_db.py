@@ -53,6 +53,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 import tools
 from tools.func import wraps
 from datetime import datetime as mdt
+from datetime import timedelta
 import threading
 
 import re
@@ -128,18 +129,21 @@ class Cursor(object):
             raise
 
         if self.sql_log:
+            delay = mdt.now() - now
+            delay = delay.seconds * 1E6 + delay.microseconds
+
             log("query: %s" % self._obj.query)
             self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += mdt.now() - now
+                self.sql_from_log[res_from.group(1)][1] += delay
             res_into = re_into.match(query.lower())
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
-                self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
+                self.sql_into_log[res_into.group(1)][1] += delay
         return res
 
     def print_log(self):
@@ -155,9 +159,11 @@ class Cursor(object):
             sum = 0
             log("SQL LOG %s:" % (type,))
             for r in sqllogitems:
-                log("table: %s: %s/%s" %(r[0], str(r[1][1]), r[1][0]))
+                delay = timedelta(microseconds=r[1][1])
+                log("table: %s: %s/%s" %(r[0], str(delay), r[1][0]))
                 sum+= r[1][1]
-            log("SUM:%s/%d" % (sum, self.sql_log_count))
+            sum = timedelta(microseconds=sum)
+            log("SUM:%s/%d" % (str(sum), self.sql_log_count))
             sqllogs[type].clear()
         process('from')
         process('into')
@@ -235,7 +241,7 @@ class ConnectionPool(object):
 
         result = None
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx.dsn == dsn:
+            if not used and dsn_are_equals(cnx.dsn, dsn):
                 self._debug('Existing connection found at index %d' % i)
 
                 self._connections.pop(i)
@@ -276,7 +282,7 @@ class ConnectionPool(object):
     @locked
     def close_all(self, dsn):
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if cnx.dsn == dsn:
+            if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
                 self._connections.pop(i)
 
@@ -295,6 +301,7 @@ class Connection(object):
 
     def __del__(self):
         if self._unique:
+            close_db(self.dbname)
             self.__LOCKS[self.dbname].release()
 
     def cursor(self, serialized=False):
@@ -302,6 +309,15 @@ class Connection(object):
 
     def serialized_cursor(self):
         return self.cursor(True)
+
+    def __nonzero__(self):
+        """Check if connection is possible"""
+        try:
+            cr = self.cursor()
+            cr.close()
+            return True
+        except:
+            return False
 
 
 _dsn = ''
@@ -312,6 +328,13 @@ for p in ('host', 'port', 'user', 'password'):
 
 def dsn(db_name):
     return '%sdbname=%s' % (_dsn, db_name)
+
+def dsn_are_equals(first, second):
+    def key(dsn):
+        k = dict(x.split('=', 1) for x in dsn.strip().split())
+        k.pop('password', None) # password is not relevant
+        return k
+    return key(first) == key(second)
 
 
 _Pool = ConnectionPool(int(tools.config['db_maxconn']))

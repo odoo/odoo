@@ -721,7 +721,7 @@ class related(function):
                         t_id=t_data['id']
                         t_data = t_data[self.arg[i]]
                 if t_id:
-                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values})
+                    obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
@@ -744,7 +744,7 @@ class related(function):
                 except:
                     t_data = False
                     break
-                if field_detail['type'] in ('one2many', 'many2many'):
+                if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
                     t_data = t_data[self.arg[i]][0]
                 else:
                     t_data = t_data[self.arg[i]]
@@ -760,6 +760,12 @@ class related(function):
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
+        elif self._type in ('one2many', 'many2many'):
+            for r in res:
+                if res[r]:
+                    res[r] = [x.id for x in res[r]]
+
+            
         return res
 
     def __init__(self, *arg, **args):
