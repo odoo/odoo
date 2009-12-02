@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-30 14:52+0000\n"
-"Last-Translator: Jeroen Vet <Unknown>\n"
+"PO-Revision-Date: 2009-12-01 15:34+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-01 04:45+0000\n"
+"X-Launchpad-Export-Date: 2009-12-02 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -390,12 +390,12 @@ msgid ""
 "            return {}\n"
 "        part_id = self.pool.get('res.partner.address"
 msgstr ""
-"无法删除处于 %s State!' % s['state']))状态的采购订单\n"
-"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, "
+"无法删除在%s状态的采购订单！' % s['state']))\n"
+"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, \n"
 "context=context)\n"
 "\n"
 "    def button_dummy(self, cr, uid, ids, context={}):\n"
-"        return True\n"
+"        return True\\n\n"
 "\n"
 "    def onchange_dest_address_id(self, cr, uid, ids, adr_id):\n"
 "        if not adr_id:\n"
@@ -703,7 +703,7 @@ msgstr ""
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
 msgid "from stock: products assigned."
-msgstr ""
+msgstr "来自库存：产品已分配"
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
@@ -731,7 +731,7 @@ msgstr "STOCK_DIALOG_ERROR"
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice is not created"
-msgstr ""
+msgstr "没有创建发票"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -743,7 +743,7 @@ msgstr "STOCK_INDEX"
 #: code:addons/addons/base_module_quality/structure_test/structure_test.py:0
 #, python-format
 msgid "File Name"
-msgstr ""
+msgstr "文件名"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -837,7 +837,7 @@ msgstr "你可能需要重新安装一些语言包"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Futur Deliveries"
-msgstr ""
+msgstr "计划交货"
 
 #. module: base
 #: field:res.partner.address,mobile:0
@@ -1069,7 +1069,7 @@ msgstr "乍得"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -1213,7 +1213,7 @@ msgstr "业务伙伴分类"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr ""
+msgstr "已接收数量"
 
 #. module: base
 #: code:addons/addons/base/ir/ir_report_custom.py:0
@@ -1236,7 +1236,7 @@ msgstr "如果要导出新语言，这里请不要选择语言"
 #: code:addons/addons/project/wizard/close_task.py:0
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
-msgstr ""
+msgstr "不能发送邮件因为您的邮件地址没有配置！"
 
 #. module: base
 #: model:res.country,name:base.md
@@ -1259,7 +1259,7 @@ msgstr ""
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Unit Product Price"
-msgstr ""
+msgstr "产品单价"
 
 #. module: base
 #: field:ir.report.custom,frequency:0
@@ -1329,7 +1329,7 @@ msgstr "业务专员"
 msgid ""
 "The production is in \"%s\" state. You can not change the production "
 "quantity anymore"
-msgstr ""
+msgstr "产品状态为 \"%s\"，您不能再更改产品数量"
 
 #. module: base
 #: rml:ir.module.reference:0
@@ -1514,7 +1514,7 @@ msgstr "吉尔吉斯斯坦"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "产品列表： "
 
 #. module: base
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
@@ -1553,7 +1553,7 @@ msgstr "您不能读取文档 %s！"
 #: code:addons/addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
 msgid "UnknownError"
-msgstr ""
+msgstr "未知错误"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1620,7 +1620,7 @@ msgstr "STOCK_YES"
 #: code:addons/addons/stock/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "益损数量"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_custom
@@ -1738,7 +1738,7 @@ msgstr "请求结束"
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "无生产序列定义"
 
 #. module: base
 #: view:res.request:0
@@ -1792,7 +1792,7 @@ msgstr "视图模式"
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Cost Structure"
-msgstr ""
+msgstr "产品成本构成"
 
 #. module: base
 #: code:addons/osv/fields.py:0
@@ -1888,7 +1888,7 @@ msgstr "尚未实现“set_memory”方法!"
 #: code:addons/addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "签入时间必须在签出之后！"
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -1921,7 +1921,7 @@ msgstr "伯利兹"
 #: code:addons/addons/stock/stock.py:0
 #, python-format
 msgid "Error, no partner !"
-msgstr ""
+msgstr "错误，无业务伙伴！"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -2170,7 +2170,7 @@ msgstr "字段映射"
 #: code:addons/addons/product_margin/wizard/wizard_product_margin.py:0
 #, python-format
 msgid "Product Margins"
-msgstr ""
+msgstr "产品利润"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -2186,7 +2186,7 @@ msgstr "巴拉圭"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "您必须指定一个坏账准备科目"
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -2235,7 +2235,7 @@ msgstr "该对象尚未实现“perm_read”方法！"
 #: code:addons/addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "消息！"
 
 #. module: base
 #: model:res.country,name:base.si
@@ -2262,7 +2262,7 @@ msgstr "渠道"
 msgid ""
 "You can not escalate this case.\n"
 "You are already at the top level."
-msgstr ""
+msgstr "您不能提升已在最高层次的案例。"
 
 #. module: base
 #: code:addons/addons/account_budget/crossovered_budget.py:0
@@ -2275,7 +2275,7 @@ msgstr ""
 #: code:addons/addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "错误！"
 
 #. module: base
 #: view:res.lang:0
@@ -2694,7 +2694,7 @@ msgstr "res.partner.title"
 #. module: base
 #: field:ir.sequence,prefix:0
 msgid "Prefix"
-msgstr "??"
+msgstr "前缀"
 
 #. module: base
 #: field:ir.actions.server,loop_action:0
