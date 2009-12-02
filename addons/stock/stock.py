@@ -784,6 +784,17 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
+    
+    def unlink(self, cr, uid, ids, context=None):
+        for pick in self.browse(cr, uid, ids, context=context):
+            if pick.state in ['done','cancel']:
+                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
+            elif pick.state in ['confirmed','assigned']:
+                ids2 = [move.id for move in pick.move_lines]
+                self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+            else:
+                continue    
+        return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
 stock_picking()
 
