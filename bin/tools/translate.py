@@ -188,7 +188,12 @@ class TinyPoFile(object):
                     raise StopIteration()
                 line = self.lines.pop(0).strip()
                 if line.startswith('#:'): 
-                    tmp_tnrs.append( line[2:].strip().split(':') )
+                    for item in line[2:].strip().split(' '):
+                        value = item.split(':')
+                        if len(value) == 3:
+                            if value[2].endswith(','):
+                                value[2] = value[2][:-1]
+                            tmp_tnrs.append( value )
                 if line.startswith('#'):
                     line = None
 
