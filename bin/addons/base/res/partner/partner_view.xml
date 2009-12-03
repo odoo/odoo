@@ -317,14 +317,14 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                   		<filter string="My Partners" icon="terp-partner" domain="[('parent_id','!=',False)]"/>
-                       	<separator orientation="vertical"/>
-                       	<filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
-                       	<filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <filter string="My Partners" icon="terp-partner" domain="[('parent_id','!=',False)]"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select='1'/>
-                        <field name="country" select='1'/>
-                        <field name="address" select="1"/>
+                        <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
+                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="country"/>
+                        <field name="category_id"/>
                    </group>
                </search>
             </field>
