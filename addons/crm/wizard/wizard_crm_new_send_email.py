@@ -46,7 +46,7 @@ email_send_form = '''<?xml version="1.0"?>
     <field name="doc2" />
     <newline/>
     <field name="doc3" />
-    <separator colspan="4" string="State of Case"/>
+    <separator colspan="4" string="Set case state to"/>
     <newline/>
     <field name="state" />
 </form>'''
@@ -81,7 +81,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     emails = filter(None, emails)
     body = data['form']['text']
     if not case.user_id.address_id.email:
-        raise wizard.except_wizard(_('Warning!'),("Please specify user's email address"))
+        raise wizard.except_wizard(_('Warning!'),_("Please specify user's email address !"))
     if case.user_id.signature:
         body += '\n\n%s' % (case.user_id.signature)
     case_pool._history(cr, uid, [case], _('Send'), history=True, email=False, details=body)
@@ -103,10 +103,8 @@ def _mass_mail_send(self, cr, uid, data, context):
         elif data['form']['state'] == 'pending':
             case_pool.case_pending(cr, uid, data['ids'])
         cr.commit()
-        raise wizard.except_wizard(_('Message!'),("Email Successfully Sent..!!"))
-        
     else:
-        raise wizard.except_wizard(_('Warning!'),("Email is not sent Successfully"))
+        raise wizard.except_wizard(_('Warning!'),_("Email not sent !"))
     return {}
 
 def _get_info(self, cr, uid, data, context):
@@ -114,11 +112,11 @@ def _get_info(self, cr, uid, data, context):
         return {}
     pool = pooler.get_pool(cr.dbname)
     case = pool.get('crm.case').browse(cr,uid,data['ids'])[0]
-    if not case.email_from:
-        raise wizard.except_wizard(_('Error'),_('You must put a Partner eMail to use this action!'))
+    #if not case.email_from:
+    #    raise wizard.except_wizard(_('Error'),_('You must put a Partner eMail to use this action!'))
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
-    return {'to': case.email_from,'subject': '['+str(case.id)+'] '+case.name,'cc': case.email_cc or ''}
+    return {'to': case.email_from,'subject': case.name,'cc': case.email_cc or ''}
     
 class wizard_send_mail(wizard.interface):
     states = {
