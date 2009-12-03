@@ -290,6 +290,9 @@ class db(netsvc.Service):
         return bool(sql_db.db_connect(db_name))
 
     def list(self):
+        if not tools.config['list_db']:
+            raise Exception('AccessDenied')
+
         db = sql_db.db_connect('template1')
         cr = db.cursor()
         try:

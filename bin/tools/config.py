@@ -79,6 +79,7 @@ class configmanager(object):
             'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
             'cache_timeout': 100000,
             'login_message': False,
+            'list_db': True,
         }
 
         hasSSL = check_ssl()
@@ -115,6 +116,8 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
             group.add_option("-S", "--secure", dest="secure",
@@ -228,7 +231,7 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog']
+                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
 
         if hasSSL and not  self.options['secure']:
             keys.append('secure')
