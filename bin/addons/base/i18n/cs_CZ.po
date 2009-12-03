@@ -365,16 +365,7 @@ msgstr "Název pole"
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
-"        return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)\n"
-"\n"
-"    def button_dummy(self, cr, uid, ids, context={}):\n"
-"        return True\n"
-"\n"
-"    def onchange_dest_address_id(self, cr, uid, ids, adr_id):\n"
-"        if not adr_id:\n"
-"            return {}\n"
-"        part_id = self.pool.get('res.partner.address"
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr ""
 
 #. module: base
@@ -1301,14 +1292,7 @@ msgstr ""
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
-msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
-"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-"\n"
-"    def copy(self, cr, uid, id, default=None,context=None):\n"
-"        if not default:\n"
-"            default = {}\n"
-"        default.update({\n"
-"            'name': self.pool.get('ir.sequence"
+msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
 
 #. module: base
@@ -1363,21 +1347,7 @@ msgstr ""
 #. module: base
 #: code:addons/addons/base/ir/ir_model.py:0
 #, python-format
-msgid "Model %s Does not Exist !\" % vals['relation']))\n"
-"                 \n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
-"                \n"
-"        return res\n"
-"ir_model_fields()\n"
-"\n"
-"class ir_model_access(osv.osv):\n"
-"    _name = 'ir.model.access'\n"
-"    _columns = {\n"
-"        'name': fields.char('Name', size=64, required=True),\n"
-"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
-"        'group_id': fields.many2one('res.groups', 'Group"
+msgid "Model %s Does not Exist !"
 msgstr ""
 
 #. module: base
@@ -7738,13 +7708,7 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
-msgid "There are no Analytic lines related to Account %s' % name))\n"
-"        return {}\n"
-"\n"
-"    states = {\n"
-"        'init': {\n"
-"            'actions': [],\n"
-"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgid "There are no Analytic lines related to Account %s"
 msgstr ""
 
 #. module: base
@@ -10352,12 +10316,7 @@ msgstr ""
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 0.0001:\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies."
 msgstr ""
 
 #. module: base
@@ -11280,12 +11239,7 @@ msgstr ""
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
 #, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-"\n"
-"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-"        if product_id:\n"
-"            w=self.pool.get('product.product"
+msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr ""
 
 #. module: base
