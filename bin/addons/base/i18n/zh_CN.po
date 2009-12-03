@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-01 15:34+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2009-12-03 04:27+0000\n"
+"Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-02 04:54+0000\n"
+"X-Launchpad-Export-Date: 2009-12-03 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -92,7 +92,7 @@ msgstr "工作流作用于"
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "The Bank type %s of the bank account: %s is not supported"
-msgstr "银行帐号：%s所属的银行类型：%s 无效"
+msgstr "不支持银行类型%s（银行账户%s）"
 
 #. module: base
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
@@ -206,12 +206,12 @@ msgstr "STOCK_CANCEL"
 #. module: base
 #: field:ir.report.custom,sortby:0
 msgid "Sorted By"
-msgstr "排序项"
+msgstr "排序方式"
 
 #. module: base
 #: field:ir.sequence,number_increment:0
 msgid "Increment Number"
-msgstr "编号增量"
+msgstr "增量编号"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_tree
@@ -255,7 +255,7 @@ msgstr "最大尺寸"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not use this general account in this journal !"
-msgstr "无法对该分类帐使用总账科目"
+msgstr "在此日记帐您不能用该总账科目！"
 
 #. module: base
 #: field:res.partner.address,name:0
@@ -306,7 +306,7 @@ msgstr "%y - 不包含世纪的十进制年份数 [00,99]。"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr "不能在已结的分类帐中添加/修改凭证"
+msgstr "在已结帐的日记帐中您不能加/改分录了。"
 
 #. module: base
 #: selection:maintenance.contract.wizard,state:0
@@ -555,12 +555,17 @@ msgid ""
 "\n"
 "(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''"
 msgstr ""
+"OpenERP系统是一个针对中小型企业的企业资源计划（ERP）和客户关系管理（CRM）程序。\n"
+"\n"
+"整个源代码是根据GNU通用公共许可证的条款分布。\n"
+"\n"
+"(c) 2003-今天，Fabien Pinckaers - Tiny sprl"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Key/value '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "键/值对 '%s' 并未包含在选定的字段 '%s' 中"
 
 #. module: base
 #: code:addons/addons/crm_configuration/wizard/wizard_opportunity_set.py:0
@@ -569,6 +574,8 @@ msgid ""
 "You must assign a partner to this lead before converting to opportunity.\n"
 "' \\n                  'You can use the convert to partner button."
 msgstr ""
+"你必须在线索转换为商机前指定一名业务伙伴。\n"
+"'\\n'您可以使用转换为为业务伙伴按钮。"
 
 #. module: base
 #: help:res.country,code:0
@@ -593,7 +600,7 @@ msgstr "销售与采购"
 #: code:addons/addons/l10n_be/wizard/partner_vat_listing.py:0
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "无指定增值税编码的业务伙伴"
 
 #. module: base
 #: view:ir.actions.wizard:0
@@ -633,7 +640,7 @@ msgstr "选择要执行的动作窗口、报表或向导。"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "Can't connect instance %s"
-msgstr ""
+msgstr "无法连接实例 %s"
 
 #. module: base
 #: view:wizard.module.lang.export:0
@@ -649,7 +656,7 @@ msgstr "域说明"
 #: code:addons/addons/odms/odms.py:0
 #, python-format
 msgid "You need to choose a model"
-msgstr ""
+msgstr "您需要选择一个模型"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
@@ -697,7 +704,7 @@ msgstr "ir.actions.actions"
 #: code:addons/addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "你只能用今天的日期登入系统"
 
 #. module: base
 #: code:addons/addons/mrp/mrp.py:0
@@ -709,13 +716,13 @@ msgstr "来自库存：产品已分配"
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Too much total record found!"
-msgstr ""
+msgstr "读取太多总计记录"
 
 #. module: base
 #: code:addons/addons/account_budget/crossovered_budget.py:0
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "总预算’%s‘未设定科目！"
 
 #. module: base
 #: selection:ir.report.custom,type:0
@@ -777,18 +784,20 @@ msgid ""
 "I can not convert the lead to an opportunity, you must create a section with "
 "the code 'oppor'."
 msgstr ""
+"您在配置crm_configuration模块时未安装商机跟踪。'\\n'\n"
+"我无法将索线转换为商机，您必须创建一个章节含有'oppor'代码。"
 
 #. module: base
 #: code:addons/addons/project_gtd/project_gtd.py:0
 #, python-format
 msgid "Eff. Hours"
-msgstr ""
+msgstr "有效小时数"
 
 #. module: base
 #: code:addons/addons/document_ics/document.py:0
 #, python-format
 msgid "You can not set negative Duration."
-msgstr ""
+msgstr "您无法设定负性期限。"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -804,13 +813,13 @@ msgstr "巴布亚新几内亚"
 #: code:addons/addons/odms/wizard/host_status.py:0
 #, python-format
 msgid "Created by the synchronization wizard"
-msgstr ""
+msgstr "由同步向导创建"
 
 #. module: base
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "SAJ"
-msgstr ""
+msgstr "SAJ"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -896,7 +905,7 @@ msgstr ""
 #: code:addons/addons/mrp/report/price.py:0
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "总计"
 
 #. module: base
 #: view:ir.values:0
@@ -943,7 +952,7 @@ msgstr "类型"
 #: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "有该名称和代码的模块已经存在！"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -954,7 +963,7 @@ msgstr "STOCK_FILE"
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "No enough data"
-msgstr ""
+msgstr "没有足够的数据"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child2:0
@@ -985,14 +994,14 @@ msgstr "STOCK_OK"
 #: code:addons/addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "The properties account payable account receivable"
-msgstr ""
+msgstr "应付账款和应收账款属性"
 
 #. module: base
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid ""
 "You have to define a Default Credit Account for your Financial Journals!\n"
-msgstr ""
+msgstr "您需要设定财务日记账的默认贷方科目！\n"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -1118,6 +1127,10 @@ msgid ""
 "Mail sent to following Partners successfully, !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"如下业务伙伴的邮件已发送成功！\n"
+"\n"
 
 #. module: base
 #: view:res.lang:0
@@ -1175,7 +1188,7 @@ msgstr ""
 #: code:addons/addons/base_module_quality/workflow_test/workflow_test.py:0
 #, python-format
 msgid "Module Name"
-msgstr ""
+msgstr "模块名称"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1191,7 +1204,7 @@ msgstr "马绍尔群岛"
 #: code:addons/addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account!"
-msgstr ""
+msgstr "无效科目！"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1450,7 +1463,7 @@ msgstr ""
 #: code:addons/addons/point_of_sale/wizard/wizard_get_sale.py:0
 #, python-format
 msgid "You can't modify this order. It has already been paid"
-msgstr ""
+msgstr "您不能修改此订单，它已经付款。"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1488,7 +1501,7 @@ msgstr "简单域设置"
 #: code:addons/addons/base_module_quality/method_test/method_test.py:0
 #, python-format
 msgid "Method Test"
-msgstr ""
+msgstr "方法测试"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1520,7 +1533,7 @@ msgstr "产品列表： "
 #: code:addons/addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "No bank account for the company."
-msgstr ""
+msgstr "此公司没有银行帐号。"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
@@ -1667,7 +1680,7 @@ msgstr "触发器名称"
 #: code:addons/addons/odms/portal.py:0
 #, python-format
 msgid "unable to find a server"
-msgstr ""
+msgstr "无法找到服务器"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
@@ -1910,7 +1923,7 @@ msgstr "组"
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
-msgstr ""
+msgstr "请填写业务伙伴 %s 的地址字段"
 
 #. module: base
 #: model:res.country,name:base.bz
