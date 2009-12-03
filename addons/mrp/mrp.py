@@ -202,7 +202,7 @@ class mrp_bom(osv.osv):
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
-        'company_id': fields.many2one('res.company','Company',required=True),  
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -657,6 +657,7 @@ class mrp_production(osv.osv):
                 'state': 'auto',
                 'address_id': address_id,
                 'auto_picking': self._get_auto_picking(cr, uid, production),
+                'company_id': production.company_id.id,
             })
 
             source = production.product_id.product_tmpl_id.property_stock_production.id
@@ -671,7 +672,8 @@ class mrp_production(osv.osv):
                 'location_id': source,
                 'location_dest_id': production.location_dest_id.id,
                 'move_dest_id': production.move_prod_id.id,
-                'state': 'waiting'
+                'state': 'waiting',
+                'company_id': production.company_id.id,
             }
             res_final_id = self.pool.get('stock.move').create(cr, uid, data)
 
@@ -693,6 +695,7 @@ class mrp_production(osv.osv):
                         'location_dest_id': source,
                         'move_dest_id': res_final_id,
                         'state': 'waiting',
+                        'company_id': production.company_id.id,
                     })
                     moves.append(res_dest_id)
                     move_id = self.pool.get('stock.move').create(cr, uid, {
@@ -708,6 +711,7 @@ class mrp_production(osv.osv):
                         'location_id': production.location_src_id.id,
                         'location_dest_id': routing_loc or production.location_src_id.id,
                         'state': 'waiting',
+                        'company_id': production.company_id.id,
                     })
                 proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
                     'name': (production.origin or '').split(':')[0] + ':' + production.name,
@@ -721,6 +725,7 @@ class mrp_production(osv.osv):
                     'location_id': production.location_src_id.id,
                     'procure_method': line.product_id.procure_method,
                     'move_id': move_id,
+                    'company_id': production.company_id.id,
                 })
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -1007,6 +1012,7 @@ class mrp_procurement(osv.osv):
                         'product_uom': procurement.product_uom.id,
                         'date_planned': procurement.date_planned,
                         'state':'confirmed',
+                        'company_id': procurement.company_id.id,
                     })
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
@@ -1059,6 +1065,7 @@ class mrp_procurement(osv.osv):
                 'bom_id': procurement.bom_id and procurement.bom_id.id or False,
                 'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_prod_id': res_id,
+                'company_id': procurement.company_id.id,
             })
             self.write(cr, uid, [procurement.id], {'state':'running'})
             bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
@@ -1117,6 +1124,7 @@ class mrp_procurement(osv.osv):
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
                 'order_line': [(0,0,line)],
+                'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
@@ -1257,6 +1265,7 @@ class StockMove(osv.osv):
                 if move.state=='assigned':
                     state='assigned'
                 for line in res[0]:
+                    print 'Line :',line
                     valdef = {
                         'picking_id': move.picking_id.id,
                         'product_id': line['product_id'],
@@ -1270,7 +1279,7 @@ class StockMove(osv.osv):
                         'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],
-                        'procurements': []
+                        'procurements': [],
                     }
                     mid = self.pool.get('stock.move').copy(cr, uid, move.id, default=valdef)
                     prodobj = self.pool.get('product.product').browse(cr, uid, line['product_id'], context=context)
@@ -1286,6 +1295,7 @@ class StockMove(osv.osv):
                         'location_id': move.location_id.id,
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
+                        'company_id': line['company_id'],
                     })
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)

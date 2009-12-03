@@ -72,6 +72,39 @@
         <field name="project_id" ref="project.project_project_22"/>
         <field name="name">Validation + latest modifications.</field>
       </record> 
+	
+	<record id="project.project_task_116" model="project.task">
+        <field name="planned_hours">38.0</field>
+        <field name="remaining_hours">38.0</field>
+        <field name="timebox_id" ref="timebox_daily"/>
+        <field name="context_id" ref="context_office"/>
+        <field name="type" ref="project.project_tt_feature"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="project_id" ref="project.project_project_22"/>
+        <field name="name">Specific adaptation to MRP</field>
+    </record>
+   
+     <record id="project.project_task_201" model="project.task">
+        <field name="sequence">40</field>
+        <field name="planned_hours">32.0</field>
+        <field name="remaining_hours">32.0</field>
+        <field name="timebox_id" ref="timebox_monthly"/>
+        <field name="context_id" ref="context_home"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="project_id" ref="project.project_project_23"/>
+        <field name="name">In house training</field>
+      </record>
 
+      <record id="project.project_task_202" model="project.task">
+        <field name="sequence">50</field>
+        <field name="planned_hours">24.0</field>
+        <field name="remaining_hours">24.0</field>
+        <field name="timebox_id" ref="timebox_weekly"/>
+      	<field name="context_id" ref="context_office"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="project_id" ref="project.project_project_22"/>
+        <field name="name">Validation + latest modifications.</field>
+      </record> 
+    
 	</data>
 </openerp>

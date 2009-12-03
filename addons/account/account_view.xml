@@ -75,7 +75,7 @@
                     <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company,base.group_extended"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
@@ -340,7 +340,6 @@
                                     <field name="date"/>
                                     <field name="ref"/>
                                     <field name="name"/>
-                                    <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
@@ -351,7 +350,6 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                     <field name="account_id"/>
                                     <field name="type"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
@@ -792,9 +790,9 @@
                 </form>
             </field>
         </record>
-
-        <record id="view_account_move_line_filter" model="ir.ui.view">
-            <field name="name">account.move.line.select</field>
+		
+		<record id="view_account_move_line_filter" model="ir.ui.view">
+            <field name="name">Entry Lines</field>
             <field name="model">account.move.line</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -1479,8 +1477,28 @@
         </record>
 
 
+        <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
+            <field name="name">Account Add wizard</field>
+            <field name="model">account.addtmpl.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Add">
+                    <separator col="4" colspan="4" string="Select the common parent for the accounts"/>
+                    <field name="cparent_id"/>
+                    <group col="2" colspan="2">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-
+        <act_window domain="[]" id="action_account_addtmpl_wizard_form"
+            name="Add account Wizard"
+            res_model="account.addtmpl.wizard"
+            context="{'tmpl_ids': active_id}"
+            src_model="account.account.template"
+	    view_type="form" view_mode="form"/>
 
         <!-- register configuration wizard -->
 
@@ -1493,7 +1511,11 @@
 
 
         <!-- Account Templates -->
-        <menuitem id="account_template_folder" name="Templates" parent="account.menu_finance_accounting"/>
+        <menuitem 
+            id="account_template_folder"
+            name="Templates"
+            parent="account.menu_finance_accounting"
+            groups="base.group_multi_company"/>
 
 
         <record id="view_account_template_form" model="ir.ui.view">

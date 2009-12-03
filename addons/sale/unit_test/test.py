@@ -115,17 +115,17 @@ class sale_order_test_case(unittest.TestCase):
             self.fail(e)
 
     def test_5_PrintOrder(self):
-        try:
+        try:            
             self.failUnless(order_id,"No Sale Order Created !")
-            report_service = netsvc.LocalService("report")
+            report_service = netsvc.ExportService.getService('report')
             model_obj = self.pool.get('ir.model.data')
             passwd = self.pool.get('res.users').browse(cr,uid,uid).password
             report = model_obj._get_id(cr, uid, 'sale', 'report_sale_order')
-            report_id = model_obj.browse(cr, uid, report).res_id
-            report_service.report(cr.dbname, uid, passwd, 'sale.order', [order_id])
-        except osv.except_osv,e:
+            report_id = model_obj.browse(cr, uid, report).res_id            
+            report_service.exp_report(cr.dbname, uid, 'sale.order', [order_id])
+        except osv.except_osv,e:                    
             self.fail(e.name + e.value)
-        except Exception,e:
+        except Exception,e:                          
             self.fail(e)
 
     def test_6_CancelOrder(self):

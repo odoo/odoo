@@ -366,6 +366,11 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
+        journal_obj = self.pool.get('account.journal')
+        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error !'), 
+                _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -373,6 +378,7 @@ class sale_order(osv.osv):
             'reference': "P%dSO%d" % (order.partner_id.id, order.id),
             'account_id': a,
             'partner_id': order.partner_id.id,
+            'journal_id': journal_ids[0],
             'address_invoice_id': order.partner_invoice_id.id,
             'address_contact_id': order.partner_order_id.id,
             'invoice_line': [(6, 0, lines)],
@@ -380,11 +386,12 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
             'fiscal_position': order.partner_id.property_account_position.id,
-            'date_invoice' : context.get('date_invoice',False)
+            'date_invoice' : context.get('date_invoice',False),
+            'company_id' : order.company_id.id,
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
-        inv_id = inv_obj.create(cr, uid, inv)
+        inv_id = inv_obj.create(cr, uid, inv, context)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
         if data.get('value', False):
             inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
@@ -401,7 +408,7 @@ class sale_order(osv.osv):
         # last day of the last month as invoice date
         if date_inv:
             context['date_inv'] = date_inv
-        for o in self.browse(cr,uid,ids):
+        for o in self.browse(cr, uid, ids):
             lines = []
             for line in o.order_line:
                 if (line.state in states) and not line.invoiced:
@@ -419,10 +426,10 @@ class sale_order(osv.osv):
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
-                for o,l in val:
-                    self.write(cr, uid, [o.id], {'state' : 'progress'})
-                    if o.order_policy=='picking':
-                        picking_obj.write(cr,uid,map(lambda x:x.id,o.picking_ids),{'invoice_state':'invoiced'})
+                for o, l in val:
+                    self.write(cr, uid, [o.id], {'state': 'progress'})
+                    if o.order_policy == 'picking':
+                        picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
             else:
                 for order, il in val:
@@ -523,7 +530,7 @@ class sale_order(osv.osv):
                 for move in stock_move_obj.browse( cr, uid, move_ids ):
                     #if one of the related order lines is in state draft, auto or confirmed
                     #this order line is not yet delivered
-                    if move.state in ('draft', 'auto', 'confirmed'):
+                    if move.state in ('draft', 'waiting', 'confirmed'):
                         pending_deliveries = True
                 # Reason => if there are no move lines,the following condition will always set to be true,and will set SO to 'DONE'.
                 # Added move_ids check to SOLVE.
@@ -578,7 +585,7 @@ class sale_order(osv.osv):
                             'address_id': order.partner_shipping_id.id,
                             'note': order.note,
                             'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-
+                            'company_id': order.company_id.id,
                         })
 
                     move_id = self.pool.get('stock.move').create(cr, uid, {
@@ -600,6 +607,7 @@ class sale_order(osv.osv):
                         'state': 'draft',
                         #'state': 'waiting',
                         'note': line.notes,
+                        'company_id': order.company_id.id,
                     })
                     proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
                         'name': order.name,
@@ -616,6 +624,7 @@ class sale_order(osv.osv):
                         'procure_method': line.type,
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
+                        'company_id': order.company_id.id,
                     })
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -631,6 +640,7 @@ class sale_order(osv.osv):
                         'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
                         'procure_method': line.type,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
+                        'company_id': order.company_id.id,
                     })
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
@@ -768,7 +778,7 @@ class sale_order_line(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
     _order = 'sequence, id'
     _defaults = {
@@ -963,7 +973,7 @@ class sale_order_line(osv.osv):
             partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id])[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

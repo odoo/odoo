@@ -101,10 +101,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id not in ('+location_ids_str+') '\
-                'and location_dest_id in ('+location_ids_str+') '\
+                'where ' +\
+		(location_ids_str and 'location_id not in ('+location_ids_str+') ' \
+                'and location_dest_id in ('+location_ids_str+') ' or 'true ') +\
                 'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
+                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or ' ') +''\
                 'group by product_id,product_uom'
             )
             results = cr.fetchall()
@@ -113,8 +114,9 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id in ('+location_ids_str+') '\
-                'and location_dest_id not in ('+location_ids_str+') '\
+                'where ' +\
+		(location_ids_str and 'location_id in ('+location_ids_str+') '\
+                'and location_dest_id not in ('+location_ids_str+') ' or 'true ') +\
                 'and product_id in ('+prod_ids_str+') '\
                 'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
                 'group by product_id,product_uom'

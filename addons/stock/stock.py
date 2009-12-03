@@ -130,7 +130,6 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'company_id': fields.many2one('res.company','Company',required=True),
         'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
 
@@ -181,7 +180,6 @@ class stock_location(osv.osv):
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
         'icon': lambda *a: False,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location', c)
     }
 
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
@@ -487,7 +485,6 @@ class stock_picking(osv.osv):
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock_picking', c)
-        
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
@@ -733,7 +730,8 @@ class stock_picking(osv.osv):
                     'comment': comment,
                     'payment_term': payment_term_id,
                     'fiscal_position': partner.property_account_position.id,
-                    'date_invoice':context.get('date_inv',False)
+                    'date_invoice': context.get('date_inv',False),
+                    'company_id': picking.company_id.id,
                     }
                 cur_id = self.get_currency_id(cursor, user, picking)
                 if cur_id:
@@ -890,6 +888,7 @@ class stock_production_lot(osv.osv):
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -913,6 +912,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
 
     _defaults = {
@@ -1383,7 +1383,6 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft': [('readonly', False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'company_id': fields.many2one('res.company','Company',required=True),
         'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
         'company_id': fields.many2one('res.company','Company',required=True),
     }

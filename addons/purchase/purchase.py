@@ -206,7 +206,7 @@ class purchase_order(osv.osv):
         'invoiced': lambda *a: 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c),
     }
     _name = "purchase.order"
     _description = "Purchase order"
@@ -319,7 +319,10 @@ class purchase_order(osv.osv):
                 il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
+            if not journal_ids:
+                raise osv.except_osv(_('Error !'),
+                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
                 'reference': "P%dPO%d" % (o.partner_id.id, o.id),
@@ -333,7 +336,8 @@ class purchase_order(osv.osv):
                 'origin': o.name,
                 'invoice_line': il,
                 'fiscal_position': o.partner_id.property_account_position.id,
-                'payment_term':o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'company_id': o.company_id.id,
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
@@ -385,6 +389,7 @@ class purchase_order(osv.osv):
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
+                'company_id': order.company_id.id,
             })
             for order_line in order.order_line:
                 if not order_line.product_id:
@@ -405,12 +410,14 @@ class purchase_order(osv.osv):
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'assigned',
                         'purchase_line_id': order_line.id,
+                        'company_id': order.company_id.id,
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
+
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -464,13 +471,15 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False):
+            partner_id, date_order=False, fiscal_position=False, date_planned=False, 
+            name=False, price_unit=False, notes=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
             raise osv.except_osv(_('No Partner!'), _('You have to select a partner in the purchase form !\nPlease set one partner before choosing a product.'))
         if not product:
-            return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
+                'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
@@ -484,7 +493,10 @@ class purchase_order_line(osv.osv):
             uom = prod_uom_po
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+        if price_unit:
+            price = price_unit
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                 product, qty or 1.0, partner_id, {
                     'uom': uom,
                     'date': date_order,
@@ -503,8 +515,9 @@ class purchase_order_line(osv.osv):
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
-        res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
-            'date_planned': dt,'notes':prod.description_purchase,
+        res = {'value': {'price_unit': price, 'name': name or prod_name, 
+            'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
+            'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
             'product_uom': uom}}
         domain = {}

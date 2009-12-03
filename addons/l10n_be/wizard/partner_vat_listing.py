@@ -21,6 +21,8 @@
 import time
 import datetime
 import base64
+from tools.translate import _
+import tools
 
 import wizard
 import pooler
@@ -101,6 +103,7 @@ class wizard_vat(wizard.interface):
         partners = []
         records = []
         for obj_partner in pool.get('res.partner').browse(cr, uid, p_id_list):
+        
             record = {} # this holds record per partner
 
             #This listing is only for customers located in belgium, that's the

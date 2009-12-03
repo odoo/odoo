@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,19 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from xml.dom import minidom
+from osv.osv import osv_pool
 from osv import fields,osv
 import netsvc
 import pooler
 import string
 import tools
 
-objects_proxy = netsvc.SERVICES['object'].__class__
-
+objects_proxy = netsvc.ExportService.getService('object').__class__
 class recording_objects_proxy(objects_proxy):
     def execute(self, *args, **argv):
         if len(args) >= 6 and isinstance(args[5], dict):
@@ -55,6 +55,22 @@ class recording_objects_proxy(objects_proxy):
 
 recording_objects_proxy()
 
+class xElement(minidom.Element):
+    """dom.Element with compact print
+    The Element in minidom has a problem: if printed, adds whitespace
+    around the text nodes. The standard will not ignore that whitespace.
+    This class simply prints the contained nodes in their compact form, w/o
+    added spaces.
+    """
+    def writexml(self, writer, indent="", addindent="", newl=""):
+        writer.write(indent)
+        minidom.Element.writexml(self, writer, indent='', addindent='', newl='')
+        writer.write(newl)
+
+def doc_createXElement(xdoc, tagName):
+        e = xElement(tagName)
+        e.ownerDocument = xdoc
+        return e
 
 class base_module_record(osv.osv):
     _name = "ir.module.record"
@@ -145,7 +161,7 @@ class base_module_record(osv.osv):
                         if not newid:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         self.ids[(fields[key]['relation'], valitem[1])] = newid
-                        
+
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
@@ -165,15 +181,11 @@ class base_module_record(osv.osv):
                         field.setAttribute("eval", "[(6,0,["+','.join(map(lambda x: "ref('%s')" % (x,), res))+'])]')
                         record.appendChild(field)
             else:
-                field = doc.createElement('field')
+                field = doc_createXElement(doc, 'field')
                 field.setAttribute("name", key)
-
-                if not isinstance(val, basestring):
-                    val = str(val)
-
-                val = val and ('"""%s"""' % val.replace('\\', '\\\\').replace('"', '\"')) or 'False'
-                field.setAttribute(u"eval",  tools.ustr(val))
+                field.appendChild(doc.createTextNode(val))
                 record.appendChild(field)
+
         return record_list, noupdate
 
     def get_copy_data(self, cr, uid, model, id, result):
@@ -198,7 +210,7 @@ class base_module_record(osv.osv):
                 if type(data[key])==type(True) or type(data[key])==type(1):
                     result[key]=data[key]
                 elif not data[key]:
-                    result[key] = False                    
+                    result[key] = False
                 else:
                     result[key]=data[key][0]
 
