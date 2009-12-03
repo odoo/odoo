@@ -504,9 +504,7 @@ class sale_order(osv.osv):
         notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
-        stock_move_obj = self.pool.get('stock.move')
         for order in self.browse(cr, uid, ids, context={}):
-            print order.name, mode
             for line in order.order_line:
                 if (not line.procurement_id) or (line.procurement_id.state=='done'):
                     if line.state != 'done':
@@ -525,7 +523,6 @@ class sale_order(osv.osv):
         if write_cancel_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_cancel_ids, {'state': 'exception'})
 
-        print finished
         if mode == 'finished':
             return finished
         elif mode == 'canceled':
