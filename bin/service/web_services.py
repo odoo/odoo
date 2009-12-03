@@ -287,11 +287,8 @@ class db(netsvc.ExportService):
         return True
 
     def exp_db_exist(self, db_name):
-        try:
-            db = sql_db.db_connect(db_name)
-            return True
-        except:
-            return False
+        ## Not True: in fact, check if connection to database is possible. The database may exists
+        return bool(sql_db.db_connect(db_name))
 
     def exp_list(self):
         db = sql_db.db_connect('template1')

@@ -628,7 +628,7 @@ def trans_generate(lang, modules, dbname=None):
             for fname in fnmatch.filter(files, '*.py'):
                 fabsolutepath = join(root, fname)
                 frelativepath = fabsolutepath[len(path):]
-                module = get_module_from_path(frelativepath)
+                module = get_module_from_path(fabsolutepath)
                 is_mod_installed = module in installed_modules
                 if (('all' in modules) or (module in modules)) and is_mod_installed:
                     code_string = tools.file_open(fabsolutepath, subdir='').read()
