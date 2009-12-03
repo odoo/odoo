@@ -255,22 +255,11 @@ class users(osv.osv):
         return dataobj.browse(cr, uid, data_id, context).res_id
 
     def action_next(self,cr,uid,ids,context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
+        return self.pool.get('ir.actions.configurator').next(cr, uid)
 
     def action_continue(self,cr,uid,ids,context={}):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
+        return self.pool.get('ir.actions.configurator').next(cr, uid)
+
     def action_new(self,cr,uid,ids,context={}):
         return {
                 'view_type': 'form',
@@ -301,13 +290,7 @@ class res_config_view(osv.osv_memory):
     }
 
     def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
+        return self.pool.get('ir.actions.configurator').next(cr, uid)
     def action_set(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         users_obj = self.pool.get('res.users')
@@ -318,14 +301,7 @@ class res_config_view(osv.osv_memory):
                 users_obj.write(cr, uid, [uid],{
                                 'groups_id':[(4,group_ids[0])]
                             }, context=context)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-            }
-
+        return self.pool.get('ir.actions.configurator').next(cr, uid)
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

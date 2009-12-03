@@ -847,6 +847,9 @@ class ir_actions_configurator(osv.osv_memory):
                 'type': action.type,
                 'target': action.target,
                 }
+        self.logger.notifyChannel(
+            'actions', netsvc.LOG_INFO,
+            'all configuration actions have been executed')
         return {'type': 'ir.actions.act_window_close'}
 ir_actions_configurator()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
