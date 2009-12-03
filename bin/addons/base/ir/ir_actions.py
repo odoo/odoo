@@ -812,45 +812,5 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         return self.button_next(cr, uid, ids, context)
 ir_actions_configuration_wizard()
 
-class ir_actions_configurator(osv.osv_memory):
-    _name = 'ir.actions.configurator'
-    logger = netsvc.Logger()
-    def next_action(self, cr, uid, context=None):
-        todos = self.pool.get('ir.actions.todo')
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next %s' % todos)
-        active_todos = todos.search(cr, uid,
-                                [('type','=','configure'),
-                                 ('state', '=', 'open'),
-                                 ('active','=',True)],
-                                limit=1, context=None)
-        if active_todos:
-            return todos.browse(cr, uid, active_todos[0], context=None)
-        return None
-
-    def next(self, cr, uid):
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next operation')
-        next = self.next_action(cr, uid)
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'next action is %s' % next)
-        if next:
-            self.pool.get('ir.actions.todo').write(cr, uid, next.id, {
-                    'state':'done',
-                    }, context=None)
-            action = next.action_id
-            return {
-                'view_mode': action.view_mode,
-                'view_type': action.view_type,
-                'view_id': action.view_id and [action.view_id.id] or False,
-                'res_model': action.res_model,
-                'type': action.type,
-                'target': action.target,
-                }
-        self.logger.notifyChannel(
-            'actions', netsvc.LOG_INFO,
-            'all configuration actions have been executed')
-        return {'type': 'ir.actions.act_window_close'}
-ir_actions_configurator()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

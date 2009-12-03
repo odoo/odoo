@@ -25,6 +25,7 @@ import country
 import bank
 import res_lang
 import partner
+import res_config
 import res_currency
 import res_company
 import res_user

@@ -120,7 +120,6 @@ def _companies_get(self,cr, uid, context={}):
 class users(osv.osv):
     __admin_ids = {}
     _name = "res.users"
-    #_log_access = False
     
     def get_current_company(self, cr, uid):
         res=[]
@@ -255,10 +254,10 @@ class users(osv.osv):
         return dataobj.browse(cr, uid, data_id, context).res_id
 
     def action_next(self,cr,uid,ids,context=None):
-        return self.pool.get('ir.actions.configurator').next(cr, uid)
+        return self.pool.get('res.configurable').next(cr, uid)
 
     def action_continue(self,cr,uid,ids,context={}):
-        return self.pool.get('ir.actions.configurator').next(cr, uid)
+        return self.pool.get('res.configurable').next(cr, uid)
 
     def action_new(self,cr,uid,ids,context={}):
         return {
@@ -281,6 +280,7 @@ groups2()
 
 class res_config_view(osv.osv_memory):
     _name='res.config.view'
+    _inherit='res.configurable'
     _columns = {
         'name':fields.char('Name', size=64),
         'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),
@@ -290,7 +290,7 @@ class res_config_view(osv.osv_memory):
     }
 
     def action_cancel(self,cr,uid,ids,conect=None):
-        return self.pool.get('ir.actions.configurator').next(cr, uid)
+        return self.next(cr, uid)
     def action_set(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         users_obj = self.pool.get('res.users')
@@ -301,7 +301,7 @@ class res_config_view(osv.osv_memory):
                 users_obj.write(cr, uid, [uid],{
                                 'groups_id':[(4,group_ids[0])]
                             }, context=context)
-        return self.pool.get('ir.actions.configurator').next(cr, uid)
+        return self.next(cr, uid)
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
