@@ -150,9 +150,9 @@ class purchase_order(osv.osv):
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Partner Ref.', size=64),
-        'date_order':fields.date('Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="Date on which this document has been created."),
+        'date_order':fields.date('Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1),
-        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
+        'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True, states={'posted':[('readonly',True)]}),
 
         'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]},
@@ -162,10 +162,10 @@ class purchase_order(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Destination', required=True),
 
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
         'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
-        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)]}),
+        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
@@ -480,12 +480,7 @@ class purchase_order_line(osv.osv):
             uom = prod_uom_po
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
-        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
-                product, qty or 1.0, partner_id, {
-                    'uom': uom,
-                    'date': date_order,
-                    })[pricelist]
-
+        
         qty = qty or 1.0
         seller_delay = 0
         for s in prod.seller_ids:
@@ -495,6 +490,11 @@ class purchase_order_line(osv.osv):
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
 
+        price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+                product, qty or 1.0, partner_id, {
+                    'uom': uom,
+                    'date': date_order,
+                    })[pricelist]
         dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = prod.partner_ref
 

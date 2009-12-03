@@ -941,7 +941,7 @@ class sale_order_line(osv.osv):
             partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
         if not flag:
-            result['name'] = product_obj.partner_ref
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

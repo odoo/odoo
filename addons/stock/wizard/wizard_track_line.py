@@ -48,6 +48,13 @@ fields = {
         }
 }
 
+def _check_picking(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    move_obj = pool.get('stock.move').browse(cr, uid, data['id'])
+    if not move_obj.picking_id:
+        raise wizard.except_wizard(_('Caution!'), _('Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation.'))
+    return data['form']    
+
 def _track_lines(self, cr, uid, data, context):
     move_id = data['id']
 
@@ -116,7 +123,7 @@ def _track_lines(self, cr, uid, data, context):
 class wizard_track_move(wizard.interface):
     states = {
         'init': {
-            'actions': [],
+            'actions': [_check_picking],
             'result': {'type': 'form', 'arch': track_form, 'fields': fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('track', 'Ok', 'gtk-ok')]},
             },
         'track': {

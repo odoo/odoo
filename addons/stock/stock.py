@@ -436,7 +436,7 @@ class stock_picking(osv.osv):
             ('confirmed', 'Confirmed'),
             ('assigned', 'Available'),
             ('done', 'Done'),
-            ('cancel', 'Canceled'),
+            ('cancel', 'Cancelled'),
             ], 'Status', readonly=True, select=True),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Planned Date', select=1),
@@ -784,6 +784,17 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
+    
+    def unlink(self, cr, uid, ids, context=None):
+        for pick in self.browse(cr, uid, ids, context=context):
+            if pick.state in ['done','cancel']:
+                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
+            elif pick.state in ['confirmed','assigned']:
+                ids2 = [move.id for move in pick.move_lines]
+                self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+            else:
+                continue
+        return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
 stock_picking()
 
@@ -959,7 +970,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Canceled')], 'Status', readonly=True, select=True),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }

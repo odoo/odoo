@@ -113,7 +113,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
-        <menuitem action="expense_all_draft" id="menu_expense_all_draft" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_draft" id="menu_expense_all_draft" parent="menu_expense_all"/>
         <record id="expense_all_confirm" model="ir.actions.act_window">
             <field name="name">Expenses waiting validation</field>
             <field name="res_model">hr.expense.expense</field>
@@ -121,7 +121,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirm')]</field>
         </record>
-        <menuitem action="expense_all_confirm" id="menu_expense_all_confirm" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_confirm" id="menu_expense_all_confirm" parent="menu_expense_all"/>
         <record id="expense_all_valid" model="ir.actions.act_window">
             <field name="name">Expenses waiting invoice</field>
             <field name="res_model">hr.expense.expense</field>
@@ -129,7 +129,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','accepted')]</field>
         </record>
-        <menuitem action="expense_all_valid" id="menu_expense_all_valid" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_valid" id="menu_expense_all_valid" parent="menu_expense_all"/>
         <record id="expense_all_invoiced" model="ir.actions.act_window">
             <field name="name">Expenses waiting payment</field>
             <field name="res_model">hr.expense.expense</field>
@@ -137,7 +137,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','invoiced')]</field>
         </record>
-        <menuitem action="expense_all_invoiced" id="menu_expense_all_invoiced" parent="hr_expense.menu_expense_all"/>
+        <menuitem action="expense_all_invoiced" id="menu_expense_all_invoiced" parent="menu_expense_all"/>
         
         <!--
 		My expenses menu
