@@ -198,8 +198,8 @@
         </record>
 
         <record id="view_users_configuration_form" model="ir.ui.view">
-            <field name="name">res.users.confirm.form</field>
-            <field name="model">res.users</field>
+            <field name="name">res.config.users.confirm.form</field>
+            <field name="model">res.config.users</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure User">
@@ -239,7 +239,7 @@
         <record id="action_config_user_form" model="ir.actions.act_window">
             <field name="name">Configure User</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
+            <field name="res_model">res.config.users</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_users_configuration_form"/>

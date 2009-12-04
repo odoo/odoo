@@ -247,28 +247,45 @@ class users(osv.osv):
             if k.startswith('context_'):
                 result[k[8:]] = getattr(user,k)
         return result
-
-    def action_get(self, cr, uid, context={}):
-        dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
-        return dataobj.browse(cr, uid, data_id, context).res_id
-
-    def action_next(self,cr,uid,ids,context=None):
-        return self.pool.get('res.configurable').next(cr, uid)
-
-    def action_continue(self,cr,uid,ids,context={}):
-        return self.pool.get('res.configurable').next(cr, uid)
-
-    def action_new(self,cr,uid,ids,context={}):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'res.users',
-                'view_id':self.pool.get('ir.ui.view').search(cr,uid,[('name','=','res.users.confirm.form')]),
-                'type': 'ir.actions.act_window',
-                'target':'new',
-               }
 users()
+
+class config_users(osv.osv_memory):
+    _name = 'res.config.users'
+    _table = 'res_users'
+    _inherit = 'res.configurable'
+
+    _columns = users._columns
+    _defaults = users._defaults
+
+    def user_data(self, cr, uid, context=None):
+        ''' Gets the purely user part of the current config_user
+        instance, without the fields inherited from res.configurable
+        '''
+        return self.read(cr, uid, uid,
+                         users._columns.keys(),
+                         context=context)
+    def create_user(self, cr, uid, context=None):
+        ''' create a new res.user instance from the data stored
+        in the current res.config.users
+        '''
+        self.pool.get('res.users').create(
+            cr, uid, self.user_data(cr, uid, context), context)
+    
+    def action_next(self, cr, uid, ids, context=None):
+        return self.next(cr, uid)
+
+    def action_new(self, cr, uid, ids, context=None):
+        self.create_user(cr, uid, context=context)
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'res.config.users',
+            'view_id':self.pool.get('ir.ui.view')\
+                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
+            'type': 'ir.actions.act_window',
+            'target':'new',
+            }
+config_users()
 
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
@@ -277,10 +294,9 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     }
 groups2()
 
-
 class res_config_view(osv.osv_memory):
-    _name='res.config.view'
-    _inherit='res.configurable'
+    _name = 'res.config.view'
+    _inherit = 'res.configurable'
     _columns = {
         'name':fields.char('Name', size=64),
         'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),
