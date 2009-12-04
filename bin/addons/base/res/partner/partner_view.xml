@@ -322,9 +322,10 @@
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
                         <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="country"/>
-                        <field name="category_id"/>
+                        <field name="name" select="1"/>
+                        <field name="country" select="1"/>
+                        <field name="address" select="1"/>
+                        <field name="category_id" select="1"/>
                    </group>
                </search>
             </field>
