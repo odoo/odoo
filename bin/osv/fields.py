@@ -744,7 +744,7 @@ class related(function):
                 except:
                     t_data = False
                     break
-                if field_detail['type'] in ('one2many', 'many2many'):# and i != len(self.arg) - 1:
+                if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
                     t_data = t_data[self.arg[i]][0]
                 else:
                     t_data = t_data[self.arg[i]]
@@ -760,10 +760,10 @@ class related(function):
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
-#        elif self._type in ('one2many', 'many2many'):
-#            for r in res:
-#                if res[r]:
-#                    res[r] = [x.id for x in res[r]]
+        elif self._type in ('one2many', 'many2many'):
+            for r in res:
+                if res[r]:
+                    res[r] = [x.id for x in res[r]]
 
             
         return res
