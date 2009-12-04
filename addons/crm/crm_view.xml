@@ -706,5 +706,42 @@
         </record>
         <menuitem id="crm_email_gateway_server_menu" name="Email Gateway Server" parent="next_id_51" action="crm_email_gateway_server_act" />
 
+        <!-- Caldav configartion view -->
+
+        <record id="view_config_crm_caldav_menu" model="ir.ui.view">
+            <field name="name">Configure Menu for Caldav Properites</field>
+            <field name="model">crm.calendar.config_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure view for Caldav Properites">
+                    <separator colspan="4" string=""/>
+                    <label colspan="4" align="0.0" string="This will provide a detailed view for caldav properties configuration"/>
+                    <newline/>
+                    <field name="caldav"/>
+                    <separator colspan="4" string=""/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
+                        <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_config_crm_caldav_menu" model="ir.actions.act_window">
+            <field name="name">Configure Menu for Caldav Properites</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.calendar.config_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- register configuration wizard -->
+        <record id="config_wizard_step_cam_caldav_menu" model="ir.actions.todo">
+            <field name="name">Configure Menu for Caldav Properites</field>
+            <field name="note">This Configuration step use to provide a detailed view for caldav properties configuration</field>
+            <field name="action_id" ref="action_view_config_crm_caldav_menu"/>
+        </record>
+
     </data>
 </openerp>

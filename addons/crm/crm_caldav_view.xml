@@ -1,0 +1,101 @@
+<openerp>
+	<data>
+	
+	 <record id="caldav_attendee_form_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.attendee</field>
+            <field name="model">caldav.attendee</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Atendee details">
+					<field name="cutype" select="1"/>
+					<field name="member"/>
+					<field name="role" select="1"/>
+					<field name="partstat"/>
+					<field name="rsvp"/>
+					<field name="delegated_to" select="1"/>
+					<field name="delegated_from" select="1"/>
+					<field name="sent_by"/>
+					<field name="cn" select="1"/>
+					<field name="dir"/>
+					<field name="language"/>
+				</form>
+            </field>
+        </record>
+
+	 <record id="caldav_attendee_tree_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.attendee</field>
+            <field name="model">caldav.attendee</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            	<tree string="Atendee details">
+					<field name="cutype" select="1"/>
+					<field name="member"/>
+					<field name="role" select="1"/>
+					<field name="partstat"/>
+					<field name="rsvp"/>
+					<field name="delegated_to" select="1"/>
+					<field name="delegated_from" select="1"/>
+					<field name="sent_by"/>
+					<field name="cn" select="1"/>
+					<field name="dir"/>
+					<field name="language"/>
+				</tree>
+            </field>
+        </record>
+        
+		<record id="caldav_crm_case_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.form</field>
+            <field name="model">crm.case</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.crm_case-view"/>
+            <field name="arch" type="xml">
+            	<notebook position="inside">
+            		<page string="CalDav Properties">
+            			<field name="class"/>
+            			<field name="transparent"/>
+            			<field name="caldav_url" widget="url"/>
+            			<newline/>
+            			<separator string="Event Location" colspan="4"/>
+            			<field name="location" colspan="4" nolabel="1"/>
+            			<separator string="Freebusy Value" colspan="4"/>
+            			<field name="freebusy" colspan="4" nolabel="1"/>
+            			<separator string="Attendee Details" colspan="4"/>
+            			<field name="attendee" colspan="4" nolabel="1"/>
+            			<separator string="RRule Details" colspan="4"/>
+            			<field name="rrule" colspan="4" nolabel="1"/>
+            			<separator string="Recurrenet Dates" colspan="4"/>
+            			<field name="rdates" colspan="4" nolabel="1"/>
+            		</page>
+            		<page string="Attendee">
+            			<separator string="Attendee" colspan="4"/>
+            			<field name="attendees" colspan="4" nolabel="1"/>
+            		</page>
+            	</notebook>
+            </field>
+        </record>
+        
+        <record id="caldav_crm_case_view1" model="ir.ui.view">
+            <field name="name">crm.case.caldav.form1</field>
+            <field name="model">crm.case</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.crm_case-view"/>
+            <field name="arch" type="xml">
+           			<field name="categ_id" position="replace">
+           			</field>
+            </field>
+        </record>
+        
+         <record id="caldav_crm_case_view2" model="ir.ui.view">
+            <field name="name">crm.case.caldav.tree1</field>
+            <field name="model">crm.case</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="crm.crm_case_tree-view"/>
+            <field name="arch" type="xml">
+           			<field name="id" position="replace">
+           				<field name="id" widget="char"/>
+        			</field>
+            </field>
+        </record>
+        
+	</data>
+</openerp>
