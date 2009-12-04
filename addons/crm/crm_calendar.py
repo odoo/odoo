@@ -46,8 +46,8 @@ class crm_section(osv.osv):
         # get all property of CalDAV
 crm_section()
 
-class caldav_attendee(osv.osv):
-    _name = 'caldav.attendee'
+class crm_caldav_attendee(osv.osv):
+    _name = 'crm.caldav.attendee'
     _description = 'Attendee information'
     _rec_name = 'cutype'
     
@@ -82,7 +82,7 @@ class caldav_attendee(osv.osv):
                 'language' : fields.char('LANGUAGE', size=124), 
                 }
 
-caldav_attendee()
+crm_caldav_attendee()
 
 class crm_case(osv.osv):
     _name = 'crm.case'
@@ -153,19 +153,16 @@ class crm_case(osv.osv):
         return res
     
     _columns = {
-        'categ_id': fields.many2many('crm.case.categ', 'crm_category_rel', 'case_id', 'category_id', 'Categories'), 
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
                  ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
         'location' : fields.function(_get_location, method=True, store = True, string='Location', type='text'), 
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=34), 
-#        'attachment_ids' : function ("one2many from ir.attachemnt"), 
-        'attendee' :  fields.text('Attendee'), #TODO : display dynamic view from text value
         'rrule' : fields.text('Recurrent Rule'), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
-       'attendees': fields.many2many('caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
+       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
     }
     
     _defaults = {
@@ -178,10 +175,13 @@ class crm_case(osv.osv):
         crm_data = self.read(cr, uid, ids, [])
         ical = vobject.iCalendar()
         event_obj = self.pool.get('caldav.event')
+        uid_val = ''
         for crm in crm_data:
-            ical.add('vevent')
-            vevent = ical.vevent
+            vevent = ical.add('vevent')
             for key, val in self.__attribute__.items():
+                if key == 'uid':
+                    uid_val += str(crm[val['field']])
+                    continue
                 if val == None or key == 'rrule':  
                     continue
                 if val.has_key('field') and val.has_key('sub-field') and crm[val['field']] and crm[val['field']]:
@@ -197,8 +197,8 @@ class crm_case(osv.osv):
                     startdate = datetime.now()
                 rset1 = rrulestr(str(crm[event_obj.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
                 vevent.rruleset = rset1
-            
-        return ical.serialize().replace(vobject.icalendar.CRLF, vobject.icalendar.LF).strip()
+            vevent.add('uid').value = uid_val
+        return ical.serialize()#.replace(vobject.icalendar.CRLF, vobject.icalendar.LF).strip()
 
     def import_cal(self, cr, uid, ids, data, context={}):
         file_content = base64.decodestring(data['form']['file_path'])
@@ -238,6 +238,10 @@ class crm_case(osv.osv):
         return res
     
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
+        if not type(select) == list :
+            # Called from code
+            id = int(str(select).split('-')[0])
+            return super(crm_case, self).browse(cr, uid, id, context, list_class, fields_process)
         select = map(lambda x:int(str(x).split('-')[0]), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
@@ -247,13 +251,21 @@ class crm_case(osv.osv):
          example : 123-20091111170822"""
         if context and context.has_key('read'):
             return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        ids = map(lambda x:int(str(x).split('-')[0]), ids)
+        if not type(ids) == list :
+            # Called from code
+            ids = int(str(ids).split('-')[0])
+            res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            return res
+        else:
+            ids = map(lambda x:int(str(x).split('-')[0]), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        result =  res + []
         read_ids = ",".join([str(x) for x in ids])
         cr.execute('select id,rrule,rdates from crm_case where id in (%s)' % read_ids)
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
+        if not rrules:
+            return res
+        result =  res + []
         for data in rrules:
             if data['rrule'] and data['rdates']: # delete 2nd condition at last
                 rdates = eval(data['rdates'])

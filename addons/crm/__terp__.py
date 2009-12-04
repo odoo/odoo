@@ -45,15 +45,30 @@ between mails and Open ERP.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base',
-                        'caldav'
+                        'caldav',
+                        'process'
                     ],
-    'init_xml': ['crm_data.xml'],
+    'init_xml': ['crm_data.xml'
+    ],
     'update_xml': [
         'crm_wizard.xml',
+        'crm_configuration_wizard.xml',
         'crm_view.xml',
+        'crm_config_view.xml',
+        'crm_bugs_view.xml',
+        'crm_jobs_view.xml',
+        'crm_lead_view.xml',
+        'crm_meeting_view.xml',
+        'crm_opportunity_view.xml',
+        'crm_fund_view.xml',
+        'crm_claims_view.xml',
+        'crm_phonecall_view.xml',
+        'crm_report_view.xml',
+        'crm_helpdesk_view.xml',
         'crm_report.xml',        
         'security/crm_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'process/crm_configuration_process.xml'
     ],
     'demo_xml': ['crm_demo.xml'],
     'installable': True,

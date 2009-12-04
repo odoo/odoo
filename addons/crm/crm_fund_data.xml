@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+    <record model="crm.case.section" id="section_support4">
+        <field name="name">Fund Raising</field>
+        <field name="code">funds</field>
+    </record>
+
+        <!--    CASE CATEGORY(categ_id)        -->
+        
+    <record model="crm.case.categ" id="categ_fund1">
+        <field name="name">Social Rehabilitation And Rural Upliftment</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>
+    
+    <record model="crm.case.categ" id="categ_fund2">
+        <field name="name">Learning And Education</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>    
+    
+    <record model="crm.case.categ" id="categ_fund3">
+        <field name="name">Healthcare</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>        
+    
+    <record model="crm.case.categ" id="categ_fund4">
+        <field name="name">Arts And Culture</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>    
+
+        <!--    CASE CATEGORY2(category2_id)        -->
+        
+    <record model="crm.case.category2" id="categ2_fund1">
+        <field name="name">Cash</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>
+    
+    <record model="crm.case.category2" id="categ2_fund2">
+        <field name="name">Cheque</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>        
+
+    <record model="crm.case.category2" id="categ2_fund3">
+        <field name="name">Credit Card</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>
+    
+    <record model="crm.case.category2" id="categ2_fund4">
+        <field name="name">Demand Draft</field>
+        <field name="section_id" ref="section_support4"/>
+    </record>    
+
+</data>
+</openerp>

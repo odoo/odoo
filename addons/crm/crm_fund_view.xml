@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    # ------------------------------------------------------ 
+    # Fund Raising
+    # ------------------------------------------------------ 
+    <record model="ir.ui.view" id="crm_case_tree_view_fund">
+        <field name="name">CRM - Funds Tree</field>
+        <field name="model">crm.case</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Funds Tree"  colors="red:state=='open'">
+                <field name="id"/>
+                <field name="name" string="Funds"/>
+                <field name="categ_id"/>
+                <field name="category2_id" string="Payment Mode"/>
+                <field name="planned_cost" string="Amount"/>
+                <field name="probability"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
+                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
+                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>                
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_form_view_fund">
+        <field name="name">CRM - Funds Form</field>
+        <field name="model">crm.case</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Funds Form">
+                <group colspan="4" col="6">
+                    <field name="name" select="1" string="Name" colspan="2"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
+                    <newline/>
+                    <field name="date" string="Next Meeting"/>
+                    <field name="duration"/>
+                    <field name="category2_id" select="1" string="Payment Mode"/>
+                </group>
+                <notebook colspan="4">
+                <page string="Funds">
+                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                    <newline/>
+                    <field name="email_from" colspan="2"/>
+                    <field name="user_id" select="2" string="Responsible"/>
+                    <separator colspan="4" string="Estimates"/>
+                    <field name="planned_cost"/>
+                    <field name="planned_revenue"/>
+                    <field name="probability"/>
+                    <separator colspan="4" string="Description Information"/>
+                        <field name="description" nolabel="1" colspan="4"/>
+                    <separator colspan="4"/>
+                    <group col="8" colspan="4">
+                        <field name="state" select="2"/> 
+                        <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
+                        <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
+                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                        <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
+                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
+                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
+                    </group>
+                </page>
+                <page string="History">
+                    <field name="id" select="1"/>
+                    <field name="active"/>
+                    <field name="priority" string="Priority"/>
+                    <newline/>
+                    <field name="canal_id"/>
+                    <field name="som"/>                    
+                    <separator colspan="4" string="Dates"/>
+                    <field name="create_date"/>
+                    <field name="date_closed"/>
+                    <field name="date_action_last"/>
+                    <field name="date_action_next"/>
+                    <separator colspan="4" string="References"/>
+                    <field name="ref" colspan="4"/>
+                    <field name="ref2" colspan="4"/>
+                
+                    <field name="log_ids" nolabel="1" colspan="4">
+                        <form string="Actions">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="som"/>
+                            <field name="canal_id"/>
+                        </form>
+                    </field>
+                </page>
+                 <page string="Emails">
+                   <group colspan="4">
+                       <field colspan="4" name="email_cc" string="CC"/>
+                   </group>
+                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                       <form string="Communication history">
+                            <group col="7" colspan="4">
+                                <field name="date"/>
+                                <field name="email"/>
+                                <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								    icon="gtk-add" type="action"/>
+                            </group>
+                            <newline/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                        </form>
+                        <tree string="Communication history">
+                            <field name="description"/>
+                            <field name="email"/>
+                            <field name="date"/>
+                        </tree>
+                    </field>
+                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                 </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_calendar_view_fund">
+        <field name="name">CRM - Funds Calendar</field>
+        <field name="model">crm.case</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Funds" date_start="date" color="user_id" date_delay="duration">
+                <field name="name"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_graph_view_fund">
+        <field name="name">CRM - Funds Graph</field>
+        <field name="model">crm.case</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Funds by Categories" type="bar" orientation="horizontal">
+                <field name="categ_id"/>
+                <field name="planned_cost" operator="+"/>
+                <field name="state" group="True"/>
+            </graph>
+        </field>
+    </record>
+    
+    <record id="view_crm_case_fund_filter" model="ir.ui.view">
+            <field name="name">crm.case.fund.select</field>
+            <field name="model">crm.case</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Funds">
+                   <group col='6' colspan='4'>
+                       <filter icon="terp-partner" string="My Funds"
+                       	default="1" domain="[('user_id','=',uid)]"
+                       	separator="1"
+                       	help="Funds Related to Current User"
+                       />
+                       <field name="state" select="1">
+                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Funds"/>
+                           <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Funds"/>
+                           <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
+                       </field>
+                       <field name="name" select='1'/>
+                       <field name="user_id" select="1" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+        
+</data>
+</openerp>

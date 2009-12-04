@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+    <record model="crm.case.section" id="section_support3">
+        <field name="name">Opportunities</field>
+        <field name="code">oppor</field>
+    </record>
+
+    <record model="crm.case.categ" id="categ_oppor1">
+        <field name="name">Existing Customer</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.categ" id="categ_oppor2">
+        <field name="name">Self Generated</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+    <record model="crm.case.categ" id="categ_oppor3">
+        <field name="name">Employee</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.categ" id="categ_oppor4">
+        <field name="name">Partner</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.categ" id="categ_oppor5">
+        <field name="name">Campaign</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+    <record model="crm.case.categ" id="categ_oppor6">
+        <field name="name">Website</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+    <record model="crm.case.categ" id="categ_oppor7">
+        <field name="name">Word of mouth</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+    <record model="crm.case.categ" id="categ_oppor8">
+        <field name="name">Other</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+
+<!--        CASE STATUS(stage_id)        -->
+    <record model="crm.case.stage" id="stage_oppor1">
+        <field name="name">Prospecting</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor2">
+        <field name="name">Needs Analysis</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor3">
+        <field name="name">Value Proposition</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor4">
+        <field name="name">Proposal/Price Quote</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor5">
+        <field name="name">Negotiation/Review</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor6">
+        <field name="name">Closed Won</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+    <record model="crm.case.stage" id="stage_oppor7">
+        <field name="name">Closed Lost</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+
+<!--        CASE CATEGORY2(category2_id)        -->
+    <record model="crm.case.category2" id="category_oppor1">
+        <field name="name">Existing Business</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>    
+    <record model="crm.case.category2" id="category_oppor2">
+        <field name="name">New Business</field>
+        <field name="section_id" ref="section_support3"/>
+    </record>
+
+</data>
+</openerp>

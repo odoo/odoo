@@ -3,7 +3,7 @@
 	
 	 <record id="caldav_attendee_form_view" model="ir.ui.view">
             <field name="name">crm.case.caldav.attendee</field>
-            <field name="model">caldav.attendee</field>
+            <field name="model">crm.caldav.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
@@ -24,7 +24,7 @@
 
 	 <record id="caldav_attendee_tree_view" model="ir.ui.view">
             <field name="name">crm.case.caldav.attendee</field>
-            <field name="model">caldav.attendee</field>
+            <field name="model">crm.caldav.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             	<tree string="Atendee details">
@@ -59,8 +59,6 @@
             			<field name="location" colspan="4" nolabel="1"/>
             			<separator string="Freebusy Value" colspan="4"/>
             			<field name="freebusy" colspan="4" nolabel="1"/>
-            			<separator string="Attendee Details" colspan="4"/>
-            			<field name="attendee" colspan="4" nolabel="1"/>
             			<separator string="RRule Details" colspan="4"/>
             			<field name="rrule" colspan="4" nolabel="1"/>
             			<separator string="Recurrenet Dates" colspan="4"/>

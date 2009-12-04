@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    # ------------------------------------------------------ 
+    # Jobs
+    # ------------------------------------------------------ 
+
+    <record model="ir.ui.view" id="crm_case_tree_view_job">
+        <field name="name">CRM - Jobs Requests Tree</field>
+        <field name="model">crm.case</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Jobs - Recruitment Tree"  colors="red:state=='open'">
+                <field name="id"/>
+                <field name="name" string="Description"/>
+                <field name="partner_name" string="Name"/>
+                <field name="email_from" string="Candidate Email"/>
+                <field name="partner_phone" string="Candidate Phone"/>
+                <field name="categ_id" string="Applied Job" select="1"/>
+                <field name="stage_id"/>
+                <field name="priority" string="Appreciation"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>                
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_form_view_job">
+        <field name="name">CRM - Jobs Requests Form</field>
+        <field name="model">crm.case</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Jobs - Recruitment Form">
+                <group colspan="4" col="7">
+                    <field name="name" string="Description" colspan="2"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="user_id" string="Responsible" select="2"/>
+                	<button string="Schedule a Phone Call"
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
+                    <newline/>
+                        <label string="Stage: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
+                    <field name="date" string="Next Interview"/>
+                    <field name="duration" widget="float_time"/>
+                    <button name="set_meeting" string="Schedule Meeting" icon="terp-crm"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Job Info">
+                        <field name="partner_name" string="Candidate Name"/>
+                        <field name="partner_name2" string="Candidate Name2"/>
+                        <newline/>
+                        <field name="partner_phone"/>
+                        <field name="partner_mobile"/>
+                        <field name="email_from" string="Candidate Email"/>
+                        <newline/>
+                        <group col="6" colspan="4">
+                        <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                        <button name="set_partner" string="Convert to Partner" icon="terp-partner"/>
+                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                        </group>
+                        <separator colspan="4" string="Contract Data"/>
+                        <field name="probability" string="Availability (weeks)"/>
+                        <newline/>
+                        <field name="planned_cost" string="Expected Salary"/>
+                        <field name="planned_revenue" string="Proposed Salary"/>
+                        <field name="categ_id" string="Applied Job" select="1" on_change="onchange_categ_id(categ_id)"/>
+                        <field name="category2_id" string="Degree" select="1"/>
+                        <separator colspan="4" string="Qualication"/>
+                        <field name="priority" string="Appreciation" select="2"/>
+
+                        <separator colspan="4" string="Status"/>
+                        <group col="8" colspan="4">
+                            <field name="state" select="1"/> 
+                            <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
+                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                            <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                            <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                        </group>
+                   </page>
+                   <page string="Internal Notes">
+                       <field name="description" nolabel="1" colspan="4"/>
+                   </page>
+                   <page string="History">
+                       <field name="id" select="1"/>
+                       <field name="active"/>
+                       <field name="canal_id"/>
+                       <separator colspan="4" string="Dates"/>
+                       <field name="create_date"/>
+                       <field name="date_closed"/>
+                       <field name="date_action_last"/>
+                       <field name="date_action_next"/>
+                       <separator colspan="4" string="References"/>
+                       <field name="ref" colspan="4"/>
+                       <field name="ref2" colspan="4"/>
+                   
+                       <field name="log_ids" nolabel="1" colspan="4">
+                           <form string="Actions">
+                               <separator string="Action Information" colspan="4"/>
+                               <field name="name" colspan="4"/>
+                               <field name="date"/>
+                               <field name="user_id"/>
+                               <field name="som"/>
+                               <field name="canal_id"/>
+                           </form>
+                       </field>
+                   </page>
+                   <page string="Emails" groups="base.group_extended">
+                       <group colspan="4">
+                           <field colspan="4" name="email_cc" string="CC"/>
+                       </group>
+                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                        <form string="Communication history">
+                            <group col="7" colspan="4">
+                                <field name="date"/>
+                                <field name="email"/>
+                                <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								   name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								   icon="gtk-add" type="action"/>
+                            </group>
+                            <newline/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
+                        </form>
+                        <tree string="Communication history">
+                           <field name="description"/>
+                           <field name="email"/>
+                           <field name="date"/>
+                        </tree>
+                    </field>
+                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                 </page>                   
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_calendar_view_job">
+        <field name="name">CRM - Jobs Requests Calendar</field>
+        <field name="model">crm.case</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Meeting With Candidates" date_start="date" color="user_id" date_delay="duration">
+                <field name="name"/>
+                <field name="partner_name"/>
+                <field name="partner_name2"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
+            <field name="name">crm.case.jobs.select</field>
+            <field name="model">crm.case</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Jobs">
+                   <group col="7" colspan="1">
+	                   <filter icon="gtk-home" string="   Today   "
+	                   	separator="1"
+	                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+	                   	help="Todays's Jobs"
+	                   />
+	                   <filter icon="gtk-media-rewind"
+	                   	string="    7 Days    " separator="1"
+	                   	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                   	help="Jobs during last 7 days"
+	                   />
+	                   <separator orientation="vertical"/>
+	                   <filter icon="gtk-new" string="New Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('stage_id.name','=','Initial Jobs Demand')]"
+	                   	separator="1" help="All Initial Jobs"
+	                   />
+	                   <filter icon="gtk-yes" string="Open Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','open')]"
+	                   	separator="1" help="Open Jobs"
+	                   />
+	                   <filter icon="gtk-media-pause" string="Pending Jobs"
+	                   	domain="[('section_id.name','=','Jobs'),('state','=','pending')]"
+	                   	separator="1" help="Pending Jobs"
+	                   />
+                   </group>
+                   <separator orientation="vertical"/>
+                   <group col="4" colspan="2">
+                   		<field name="name" select='1' string="Name"/>
+                   		<field name="email_from" select='1' string="Email"/>
+                       <field name="user_id" select="1" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+    </data>
+</openerp>

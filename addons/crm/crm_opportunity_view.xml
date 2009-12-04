@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    # ------------------------------------------------------ 
+    # Opportunities
+    # ------------------------------------------------------ 
+
+	<act_window
+        id="crm_case_categ_meet_opportunity"
+        name="Schedule a Meeting"
+        res_model="crm.case"
+        src_model="crm.case"
+        view_mode="calendar,tree,form,gantt"
+        context="{'default_case_id': active_id, 'default_duration': 4.0}"
+        domain="[('section_id','=','Meetings')]"/>
+
+    <record model="ir.ui.view" id="crm_case_form_view_oppor">
+        <field name="name">CRM - Opportunities Form</field>
+        <field name="model">crm.case</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Opportunities">
+                <group colspan="4" col="7">
+                    <field name="name" select="1" string="Opportunity" colspan="2"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="user_id" select="2" string="Responsible"/>
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />                    
+                        <newline/>
+                        <label string="Sales Stage: " align="1.0"/>
+                        <group colspan="1" col="2">
+                        <field name="stage_id" select="1" nolabel="1"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
+                    <field name="date" string="Deadline"/>
+                    <group colspan="2">
+                        <field name="case_id" select="1"/>
+                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                    </group>
+                    <button string="Schedule Meeting" icon="terp-crm" name="%(crm_case_categ_meet_opportunity)d" type="action"/>
+                </group>
+                <notebook colspan="4">
+                <page string="Description">
+                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                    <field name="email_from" colspan="2"/>
+                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Source"/>
+                    <field name="priority" string="Priority"/>
+                    <field name="category2_id" select="1" string="Category"/>
+                    <separator colspan="4" string="Estimates"/>
+                    <field name="planned_revenue"/>
+                    <field name="planned_cost"/>
+                    <field name="probability"/>
+                    <separator colspan="4" string="Description Information"/>
+                        <field name="description" nolabel="1" colspan="4"/>
+
+                    <separator colspan="4"/>
+                    <group col="8" colspan="4">
+                        <field name="state" select="2"/> 
+                        <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
+                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    </group>
+                </page>
+
+                <page string="History">
+                    <field name="active"/>
+                    <field name="canal_id"/>
+                    <field name="som"/>
+                    
+                    <separator colspan="4" string="Dates"/>
+                    <field name="create_date"/>
+                    <field name="date_closed"/>
+                    <field name="date_action_last"/>
+                    <field name="date_action_next"/>
+                    <separator colspan="4" string="References"/>
+                    <field name="ref" colspan="4"/>
+                    <field name="ref2" colspan="4"/>
+                
+                    <field name="log_ids" nolabel="1" colspan="4">
+                        <form string="Actions">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="som"/>
+                            <field name="canal_id"/>
+                        </form>
+                    </field>
+                </page>
+                 <page string="Events">
+                   <field name="child_ids" colspan="4" nolabel="1">
+                       <tree string="Related Cases">
+                           <field name="id"/>
+                           <field name="date"/>
+                           <field name="name"/>
+                           <field name="partner_id"/>
+                           <field name="user_id"/>
+                           <field name="section_id" widget="selection"/>
+                           <field name="state"/>
+                       </tree>
+                    </field>
+                 </page>
+                 <page string="Emails">
+                   <group colspan="4">
+                       <field colspan="4" name="email_cc" string="CC"/>
+                   </group>
+                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                        <form string="Communication history">
+                            <group col="7" colspan="4">
+                                <field name="date"/>
+                                <field name="email"/>
+                                <field name="canal_id"/>
+                                <button
+								   string="Add a CC"
+								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+								    icon="gtk-add" type="action"/>
+                            </group>
+                            <newline/>
+                            <field name="description" colspan="4" nolabel="1"/>
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                        </form>
+                        <tree string="Communication history">
+                            <field name="description"/>
+                            <field name="email"/>
+                            <field name="date"/>
+                        </tree>
+                    </field>
+                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                 </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_tree_view_oppor">
+        <field name="name">CRM - Opportunities Tree</field>
+        <field name="model">crm.case</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Opportunities Tree"  colors="red:state=='open'">
+                <field name="id"/>
+                <field name="name" string="Opportunities"/>
+                <field name="stage_id"  string="Sales Stage"/>
+                <field name="partner_id" string="Partner"/>
+                <field name="planned_revenue"/>
+                <field name="probability"/>
+                <field name="date" string="Deadline"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
+                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
+        <field name="name">crm.case.opportunities.select</field>
+        <field name="model">crm.case</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Opportunities">
+           		<group col="3" colspan="1">
+                <filter icon="gtk-home" string="   Today   "
+                	separator="1"
+                	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                	help="Todays's Opportunities"
+                />
+                <filter icon="gtk-media-rewind" string="    7 Days    "
+                	separator="1" help="Opportunities during last 7 days"
+                	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                />
+           		</group>
+               <separator orientation="vertical"/>
+               <group col="5" colspan="2">
+                   <field name="name" select="1" string="Opportunity"/>
+                   <field name="user_id" select="1" widget="selection">
+                   	<filter icon="terp-partner"
+                   		domain="[('user_id','=',uid)]"
+                   		help="My Opportunities" default="1"
+                   	/>
+                   	<filter icon="terp-crm"
+                   		domain="[('user_id','child_of',[uid])]"
+                   		help="My department's Opportunities"
+                   	/>
+                   </field>
+                   <field name="partner_id" select="1"/>
+                   <field name="state" select="1">
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                   </field>
+               </group>
+           </search>
+        </field>
+    </record>
+</data>
+</openerp>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- configartion view -->
+
+        <record id="view_config_crm_menu" model="ir.ui.view">
+            <field name="name">Configure Menu for Sections</field>
+            <field name="model">crm.menu.config_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure CRM Sections">
+                    <separator colspan="4" string="Install Pre-Configured Features"/>
+                    <label colspan="4" align="0.0" string="The CRM module of OpenERP is able to manage any kind of relationship. But, as to help you to start quickly on the system, we configured a few of them for you."/>
+                    <newline/>
+                    <field name="meeting"/>
+                    <field name="opportunity"/>
+                    <field name="phonecall"/>
+                    <field name="lead"/>
+                    <field name="claims"/>
+                    <field name="bugs"/>
+                    <field name="helpdesk"/>
+                    <field name="jobs"/>
+                    <field name="fund"/>
+                    <separator colspan="4" string="Calendar Sharing"/>
+                    <field name="document_ics"/>
+                    <newline/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
+                        <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_config_crm_menu" model="ir.actions.act_window">
+            <field name="name">Configure Menu for CRM case Section</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.menu.config_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- register configuration wizard -->
+        <record id="config_wizard_step_case_section_menu" model="ir.actions.todo">
+            <field name="name">Create Menu for CRM Case Section</field>
+            <field name="note">This Configuration step use to create Menu for Case Sections</field>
+            <field name="action_id" ref="action_view_config_crm_menu"/>
+        </record>
+        
+        <!-- graph view -->
+        <record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
+            <field name="name">CRM -Graph</field>
+            <field name="model">crm.case</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
+                    <field name="stage_id"/>
+                    <field name="planned_cost" operator="+"/>
+                    <field name="planned_revenue" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- calendar view -->
+        <record id="crm_case_calendar_section-view" model="ir.ui.view">
+            <field name="name">crm.case.calendar.section</field>
+            <field name="model">crm.case</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar color="section_id" date_start="date" date_stop="date_deadline" day_length="12" string="Cases">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="state"/>
+                </calendar>
+            </field>
+        </record>
+
+    # ------------------------------------------------------ 
+    # Stage
+    # ------------------------------------------------------ 
+    <record model="ir.ui.view" id="crm_case_stage_tree">
+        <field name="name">crm.case.stage.tree</field>
+        <field name="model">crm.case.stage</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Stages">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="crm_case_stage_form">
+        <field name="name">crm.case.stage.form</field>
+        <field name="model">crm.case.stage</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Stage">
+            	<field name="name" select="1"/>
+                <field name="section_id" select="1" widget="selection"/>
+                <field name="sequence"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_case_stage_act" model="ir.actions.act_window">
+        <field name="name">Stages</field>
+        <field name="res_model">crm.case.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_case_stage_tree"/>
+    </record>
+    <menuitem action="crm_case_stage_act" id="menu_crm_case_stage_act" parent="crm.next_id_51"/>
+    
+    
+     <record model="ir.ui.view" id="crm_generic_wizard">
+        <field name="name">crm.generic_wizard.form</field>
+        <field name="model">crm.generic_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Generic Wizard">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="crm_generic_wizard_act" model="ir.actions.act_window">
+        <field name="name">Generic Wizard</field>
+        <field name="res_model">crm.generic_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_generic_wizard"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+        
+    </data>
+</openerp>
