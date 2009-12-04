@@ -19,12 +19,31 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 import netsvc
 
 class res_config_configurable(osv.osv_memory):
     _name = 'res.config'
     logger = netsvc.Logger()
+
+    def _progress(self, cr, uid, context=None):
+        total = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid, [], context)
+        open = self.pool.get('ir.actions.todo')\
+            .search_count(cr, uid,[('type','=','configure'),
+                                   ('active','=',True),
+                                   ('state','<>','open')],
+                          context)
+        if total:
+            return round(open*100./total)
+        return 100.
+
+    _columns = dict(
+        progress=fields.float('Configuration Progress', readonly=True),
+        )
+    _defaults = dict(
+        progress=_progress
+        )
 
     def _next_action(self, cr, uid):
         todos = self.pool.get('ir.actions.todo')
