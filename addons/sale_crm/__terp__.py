@@ -39,7 +39,7 @@ crm_configuration modules.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['sale', 'crm_configuration'],
+    'depends': ['sale', 'crm'],
     'init_xml': [],
     'update_xml': ['sale_crm_wizard.xml', 'sale_crm_view.xml', 'process/sale_crm_process.xml'],
     'demo_xml': [],

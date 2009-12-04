@@ -12,7 +12,7 @@
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Convert opportunity to quotation&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
+            <field name="process_id" ref="crm.process_process_contractprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
@@ -22,7 +22,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;CRM Opportunity&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The CRM Opportunity can lead to a quotation.&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="crm_configuration.process_process_contractprocess0"/>
+            <field name="subflow_id" ref="crm.process_process_contractprocess0"/>
             <field name="process_id" ref="sale.process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'open', 'pending', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -34,7 +34,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Analytic account&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Reflect the contract made with customer&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
+            <field name="process_id" ref="crm.process_process_contractprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
 
@@ -44,7 +44,7 @@
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Contract Pricelist&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Contract Volume (pricelist)&quot;&quot;&quot;" name="note"/>
-            <field name="process_id" ref="crm_configuration.process_process_contractprocess0"/>
+            <field name="process_id" ref="crm.process_process_contractprocess0"/>
             <field eval="0" name="flow_start"/>
         </record>
 
@@ -69,7 +69,7 @@
             <field eval="&quot;&quot;&quot;Opportunity Quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Opportunity convert into quotation&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_crmquotation0"/>
-            <field model="process.node" name="source_node_id" ref="crm_configuration.process_node_opportunities0"/>
+            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
         <record id="process_transition_opportunitypricelist0" model="process.transition">
@@ -78,7 +78,7 @@
             <field eval="&quot;&quot;&quot;Opportunity Pricelist&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Opporunity convert to the Pricelist&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_contractpricelist0"/>
-            <field model="process.node" name="source_node_id" ref="crm_configuration.process_node_opportunities0"/>
+            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
         <record id="process_transition_opportunityanalytic0" model="process.transition">
@@ -87,7 +87,7 @@
             <field eval="&quot;&quot;&quot;Opportunity Analytic&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic Account&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_contractanalytic0"/>
-            <field model="process.node" name="source_node_id" ref="crm_configuration.process_node_opportunities0"/>
+            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
     </data>

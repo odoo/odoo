@@ -1,14 +1,14 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-		<record id="crm_configuration.menu_crm_case_category_act_meetings" model="ir.ui.menu">
+		<record id="crm.menu_crm_case_category_act_meetings" model="ir.ui.menu">
 			<field eval="&quot;Calendar of Meetings&quot;" name="name"/>
 			<field eval="&quot;terp-calendar&quot;" name="icon"/>
 			<field eval="False" name="parent_id"/>
 		</record>
 		<!-- short cut -->
 	<record id="ir_ui_view_sc_mymeetings0" model="ir.ui.view_sc">
-			<field ref="crm_configuration.menu_crm_case_categ_meet_my" name="res_id"/>
+			<field ref="crm.menu_crm_case_categ_meet_my" name="res_id"/>
 			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
 			<field eval="&quot;My Meetings&quot;" name="name"/>
 			<field name="user_id" ref="base.user_root"/>

@@ -34,7 +34,7 @@ This module implements a dashboard for CRM that includes:
     * Jobs Tracking (graph)
     """,
     'author': 'Tiny',
-    'depends': ['board', 'crm_configuration'],
+    'depends': ['board', 'crm', 'report_crm'],
     'update_xml': ['board_crm_statistical_view.xml', 'board_crm_view.xml'],
     'demo_xml': ['board_crm_demo.xml'],
     'installable': True,
