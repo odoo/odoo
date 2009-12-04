@@ -203,6 +203,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure User">
+                  <label colspan="4" align="0.0"
+                         string='You will be able to assign groups to users.
+                    Groups define the access rights of each users on the
+                    different objects of the system.'/>
                     <separator string="Define New Users" colspan="4"/>
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
@@ -255,10 +259,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure simple view">
+                  <label colspan="4" align="0.0" string='
+                    Choose between the "Simplified Interface" or the extended one.
+                    If you are testing or using OpenERP for the first time, we suggest you to use
+                    the simplified interface, which has less options and fields but is easier to
+                    understand. You will be able to switch to the extended view later.
+                  '/>
                     <separator string="Choose Your Mode" colspan="4"/>
                     <field colspan="2" name="view"/>
-                    <label string="Choose the simplified interface if you are testing OpenERP for the first time. Less used options or fields are automatically hidden. You will be able to change this, later, through the Administration menu." colspan="4" align="0.0"/>
-                    <newline/>
                     <separator string="" colspan="4"/>
 
                     <field name="progress" widget="progressbar" nolabel="1"
@@ -287,21 +295,11 @@
     </data>
     <data noupdate="1">
         <record id="config_wizard_step_user" model="ir.actions.todo">
-            <field name="name">Create User</field>
-            <field name="note">Create your users.
-You will be able to assign groups to users. Groups define the access rights of each users on the different objects of the system.
-            </field>
             <field name="action_id" ref="action_config_user_form"/>
             <field name="sequence">10</field>
         </record>
 
         <record id="config_wizard_simple_view" model="ir.actions.todo">
-            <field name="name">Select Your Interface</field>
-            <field name="note">Choose between the "Simplified Interface" or the extended one.
-If you are testing or using OpenERP for the first time, we suggest you to use
-the simplified interface, which has less options and fields but is easier to
-understand. You will be able to switch to the extended view later.
-            </field>
             <field name="action_id" ref="action_config_simple_view_form"/>
             <field name="sequence">5</field>
         </record>
