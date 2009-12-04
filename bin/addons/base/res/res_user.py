@@ -252,14 +252,14 @@ users()
 class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _table = 'res_users'
-    _inherit = 'res.configurable'
+    _inherit = 'res.config'
 
     _columns = users._columns
     _defaults = users._defaults
 
     def user_data(self, cr, uid, context=None):
         ''' Gets the purely user part of the current config_user
-        instance, without the fields inherited from res.configurable
+        instance, without the fields inherited from res.config
         '''
         return self.read(cr, uid, uid,
                          users._columns.keys(),
@@ -296,7 +296,7 @@ groups2()
 
 class res_config_view(osv.osv_memory):
     _name = 'res.config.view'
-    _inherit = 'res.configurable'
+    _inherit = 'res.config'
     _columns = {
         'name':fields.char('Name', size=64),
         'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),

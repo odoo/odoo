@@ -23,7 +23,7 @@ from osv import osv
 import netsvc
 
 class res_config_configurable(osv.osv_memory):
-    _name = 'res.configurable'
+    _name = 'res.config'
     logger = netsvc.Logger()
 
     def _next_action(self, cr, uid):
