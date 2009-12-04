@@ -68,8 +68,6 @@ class account_invoice(osv.osv):
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
                                             ('company_id', '=', company_id)],
                                                 limit=1)
-        print "XXX",context
-        print "XXX",res
         if res:
             return res[0]
         else:
@@ -1104,7 +1102,7 @@ class account_invoice_line(osv.osv):
                 price_unit = price_unit - tax['amount']
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
             context = {}
         company_id = context.get('company_id',False)
@@ -1214,10 +1212,21 @@ class account_invoice_line(osv.osv):
             res2 = res.uom_id.category_id.id
             if res2 :
                 domain = {'uos_id':[('category_id','=',res2 )]}
-                
+        
         prod_pool=self.pool.get('product.product')            
-        result['categ_id'] = res.categ_id.id       
-        return {'value':result, 'domain':domain}
+        result['categ_id'] = res.categ_id.id
+        res_final = {'value':result, 'domain':domain}
+        
+        if not company_id and not currency_id:
+            return res_final
+        
+        company = self.pool.get('res.company').browse(cr, uid, company_id)
+        currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
+        
+        if company.currency_id.id != currency.id and currency.company_id.id == company.id:
+            new_price = res_final['value']['price_unit'] * currency.rate
+            res_final['value']['price_unit'] = new_price
+        return res_final
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
