@@ -209,11 +209,11 @@ class Event(CalDAV, osv.osv_memory):
             startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S", timezone=True)
 #            datetime_obj_utc = datetime_obj.replace(tzinfo=timezone('UTC'))
             rset1._exdate.append(datetime_obj)
         re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
+        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S', timezone=True), re_dates)
         return recurrent_dates
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
