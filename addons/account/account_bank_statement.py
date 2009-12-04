@@ -144,6 +144,7 @@ class account_bank_statement(osv.osv):
     }
 
     def button_confirm(self, cr, uid, ids, context=None):
+        context = context or {}
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -176,6 +177,8 @@ class account_bank_statement(osv.osv):
             # In line we get reconcile_id on bank.ste.rec.
             # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
+                context.update({'date':move.date})
+                
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,

@@ -1099,5 +1099,46 @@ class crm_email_add_cc_wizard(osv.osv_memory):
 
 crm_email_add_cc_wizard()
 
+
+class crm_calendar_config_wizard(osv.osv_memory):
+    _name = 'crm.calendar.config_wizard'
+    _columns = {
+        'name': fields.char('Name', size=64),
+        'caldav': fields.boolean('Caldav Properties View', help="Manages the fields required for Caldav Properties.")
+    }
+    
+    def action_create(self, cr, uid, ids, context=None):
+        res = self.read(cr, uid, ids)[0]
+        idref = {}
+        if res['caldav']:
+            for fname in ('view', 'wizard'):
+                try:
+                    fp = tools.file_open(os.path.join('crm',  'crm_caldav_' + fname + '.xml'))
+                except IOError, e:
+                    fp = None
+                if fp:
+                    tools.convert_xml_import(cr, 'crm', fp, idref, 'init', noupdate=True)
+            cr.commit()
+
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+         }
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.actions.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+         }
+
+crm_calendar_config_wizard()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

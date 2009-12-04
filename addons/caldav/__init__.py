@@ -19,15 +19,6 @@
 #
 ##############################################################################
 
-import crm
-import crm_segmentation
-import crm_calendar
-
-import report
-import wizard
-
-
-
+import calendar
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

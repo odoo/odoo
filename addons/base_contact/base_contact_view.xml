@@ -189,20 +189,7 @@
         </field>
     </record>
     
-    <record id="view_res_partner_filter" model="ir.ui.view">
-	    <field name="name">res.partner.select</field>
-	    <field name="model">res.partner</field>
-	    <field name="type">search</field>
-	    <field name="inherit_id" ref="base.view_res_partner_filter"/>
-	    <field name="arch" type="xml">
-	        <search string="Search Partner">
-	        	<field name="address" mode="tree,form" select="1">
-	                <field name="job_ids" select="1" string="Contacts" />
-		        </field>
-	       </search>
-	    </field>
-    </record>
-
+    
 <!-- don't display the categories, since it is displayed in an other tab-->
         <record model="ir.ui.view" id="view_partner_form_inherit2">
             <field name="name">res.partner.form</field>
@@ -363,7 +350,7 @@
 	    <field name="arch" type="xml">
 	        <search string="Search Contact">
                	<field name="job_ids" select='1'/>
-	       </search>
+			</search>
 	    </field>
     </record>
     

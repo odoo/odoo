@@ -19,15 +19,29 @@
 #
 ##############################################################################
 
-import crm
-import crm_segmentation
-import crm_calendar
 
-import report
-import wizard
-
-
-
+{
+    "name" : "CalDAV",
+    "version" : "1.0",
+    "depends" : [
+                    "base",
+                ],
+     'description': """
+ To develop a full featured caldav system that support:
+  - access through webdav (based on xrg code)
+  - alerts (create requests)
+  - recurring events (*)
+  - invitations to others people (exactly like sunbird)
+  - availabilities of users/calendars
+  - full day events""", 
+    "author" : "Tiny",
+    "init_xml" : [],
+    
+    "update_xml" : [
+                    'security/ir.model.access.csv'
+                    ],
+    "installable" : True,
+    "active" : False,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -35,14 +35,14 @@
                     <field name="partner_mobile"/>
                     <field name="email_from" string="Prospect Email"/>
                     <newline/>
-					 <group colspan="2" col="4">
-						 <label string="Partner:"  colspan="1" align="1.0"/>
-						 <field name="partner_id" nolabel="1"  colspan="2"/>
-						  <button string="Convert to Partner"
-						  	icon="terp-partner" name="%(wizard_crm_partner_create)d"
-						  	type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
-						  />
-					 </group>
+                     <label string="Partner:"  colspan="1" align="1.0"/>
+                     <group colspan="2" col="2">
+                         <field name="partner_id" nolabel="1" colspan="1"/>
+                          <button string="Convert to Partner"
+                              icon="terp-partner" name="%(wizard_crm_partner_create)d"
+                              type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
+                          />
+                     </group>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
 
                     <field name="priority" string="Priority"/>
@@ -116,9 +116,9 @@
                                 <field name="email"/>
                                 <field name="canal_id"/>
                                 <button
-								   string="Add a CC"
-								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-								    icon="gtk-add" type="action"/>
+                                   string="Add a CC"
+                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -173,7 +173,7 @@
     </record>
 
 
-	<record id="view_crm_case_leads_filter" model="ir.ui.view">
+    <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">crm.case.leads.select</field>
         <field name="model">crm.case</field>
         <field name="type">search</field>
@@ -181,27 +181,27 @@
             <search string="Search Prospects">
                <group col="3" colspan="1">
                 <filter icon="gtk-home" string="   Today   "
-                	separator="1"
-                	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
-                	help="Todays's Prospects"
+                    separator="1"
+                    domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                    help="Todays's Prospects"
                 />
                 <filter icon="gtk-media-rewind" string="    7 Days    "
-                	separator="1" help="Prospects during last 7 days"
-                	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                    separator="1" help="Prospects during last 7 days"
+                    domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                 />
                </group>
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
                    <field name="name" select="1"/>
                    <field name="user_id" select="1" widget="selection">
-	                   	<filter icon="terp-partner"
-	                   		domain="[('user_id','=',uid)]" help="My Prospects"
-	                   		default="1"
-	                   	/>
-	                   	<filter icon="terp-crm"
-	                   		domain="[('user_id','child_of',[uid])]"
-	                   		help="My department's Prospects"
-	                   	/>
+                           <filter icon="terp-partner"
+                               domain="[('user_id','=',uid)]" help="My Prospects"
+                               default="1"
+                           />
+                           <filter icon="terp-crm"
+                               domain="[('user_id','child_of',[uid])]"
+                               help="My department's Prospects"
+                           />
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Prospects"/>
