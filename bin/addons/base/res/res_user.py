@@ -305,9 +305,9 @@ class res_config_view(osv.osv_memory):
         'view':lambda *args: 'simple',
     }
 
-    def action_cancel(self,cr,uid,ids,conect=None):
+    def action_skip(self,cr,uid,ids,conect=None):
         return self.next(cr, uid)
-    def action_set(self, cr, uid, ids, context=None):
+    def action_next(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         users_obj = self.pool.get('res.users')
         group_obj=self.pool.get('res.groups')

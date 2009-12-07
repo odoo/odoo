@@ -236,8 +236,10 @@
                            nolabel="1" colspan='1'/>
                     <label string='' colspan='1'/>
                     <group col="4" colspan="2">
-                        <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip'/>
-                        <button name='action_new' icon='gtk-ok' type='object' string='Add User'/>
+                        <button name="action_skip" icon="gtk-cancel" special="cancel"
+                                string='Skip' type='object'/>
+                        <button name='action_next' icon='gtk-ok'
+                                string='Add User' type='object'/>
                     </group>
                 </form>
             </field>
@@ -273,7 +275,8 @@
                            colspan="1" />
                     <label string='' colspan='1'/>
                     <group colspan="2" col="2">
-                        <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
+                        <button name="action_next" icon="gtk-ok"
+                                string="Set" type="object"/>
                     </group>
                 </form>
             </field>
