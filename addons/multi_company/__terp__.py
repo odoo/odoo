@@ -27,7 +27,7 @@
     'description': """This module add the possibility to easily manage 
     the default value for each object
     """,
-    'author': 'Tiny',
+    'author': 'Tiny,SYLEAM',
     'website': 'http://www.openerp.com/',
     'depends': [
         'base',
