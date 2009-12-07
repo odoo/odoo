@@ -225,6 +225,13 @@ class crm_email_gateway_server(osv.osv):
         'server_type':lambda * a:'pop',
         'active':lambda * a:True,
     }
+    def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
+        port = 0
+        if server_type == 'pop':
+            port = ssl and 995 or 110
+        elif server_type == 'imap':
+            port = ssl and 993 or 143
+        return {'value':{'port':port}}
 crm_email_gateway_server()
 
 

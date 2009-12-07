@@ -708,12 +708,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Gateway Server">                    
-                    <field name="server_type" colspan="4"/>
+                    <field name="server_type" colspan="4" on_change="onchange_server_type(server_type,ssl)"/>
                     <field name="name"/>
                     <field name="port" />
                     <field name="login" />
                     <field name="password" password="True"/>
-                    <field name="ssl" />
+                    <field name="ssl" on_change="onchange_server_type(server_type,ssl)"/>
                     <field name="active" />
 
                 </form>
