@@ -9,12 +9,13 @@
         src_model="res.partner"
         view_mode="calendar,tree,form,gantt"
         context="{'default_partner_id': active_id, 'default_duration': 4.0}"
-        domain="[('section_id','=','Meetings')]"/>
+        domain="[('section_id','=',ref('section_support1'))]"/>
+
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
         <field name="context" eval="{'default_state':'open'}"/>
-    </record>
+    </record>    
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_partner">
         <field name="sequence" eval="1"/>
