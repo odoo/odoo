@@ -66,44 +66,44 @@ class document_directory_content(osv.osv):
     }
     
     def _file_get(self,cr,node, nodename, content, context=None):
-	""" return the nodes of a <node> parent having a <content> content
-	    The return value MUST be false or a list of node_class objects.
-	"""
-	
-	# TODO: respect the context!
-	if content.include_name and not node.object2:
-		return False
-	
-	res2 = []
-	tname = ''
-	if content.include_name:
-		content_name = node.object2.name
-		obj = pool.get(node.object.ressource_type_id.model)
-		name_for = obj._name.split('.')[-1]
-		if content_name  and content_name.find(name_for) == 0  :
-			content_name = content_name.replace(name_for,'')
-			tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
-	else:
-		tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
-	if tname.find('/'):
-		tname=tname.replace('/', '_')
-	if not nodename:
-		n = nodes.node_content(tname, node, node.context,content)
-		res2.append( n)
-	else:
-		if nodename == tname:
-			n = nodes.node_content(tname, node, node.context,content)
-			n.fill_fields(cr)
-			res2.append(n)
-	return res2
+        """ return the nodes of a <node> parent having a <content> content
+            The return value MUST be false or a list of node_class objects.
+        """
+    
+        # TODO: respect the context!
+        if content.include_name and not node.object2:
+            return False
+        
+        res2 = []
+        tname = ''
+        if content.include_name:
+            content_name = node.object2.name
+            obj = pool.get(node.object.ressource_type_id.model)
+            name_for = obj._name.split('.')[-1]
+            if content_name  and content_name.find(name_for) == 0  :
+                content_name = content_name.replace(name_for,'')
+                tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
+        else:
+            tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
+        if tname.find('/'):
+            tname=tname.replace('/', '_')
+        if not nodename:
+            n = nodes.node_content(tname, node, node.context,content)
+            res2.append( n)
+        else:
+            if nodename == tname:
+                n = nodes.node_content(tname, node, node.context,content)
+                n.fill_fields(cr)
+                res2.append(n)
+        return res2
 
     def process_write(self, cr, uid, node, data):
-	if node.extension != '.pdf':
-		raise Exception("Invalid content: %s" % node.extension)
+        if node.extension != '.pdf':
+            raise Exception("Invalid content: %s" % node.extension)
         return True
     def process_read(self, cr, uid, node):
-	if node.extension != '.pdf':
-		raise Exception("Invalid content: %s" % node.extension)
+        if node.extension != '.pdf':
+            raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.content.report_id.id)
         srv = netsvc.LocalService('report.'+report.report_name)
         pdf,pdftype = srv.create(cr, uid, [node.object.id], {}, {})

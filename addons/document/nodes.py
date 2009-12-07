@@ -42,42 +42,42 @@ import time
 #
 
 def get_node_context(cr, uid, context):
-	return node_context(cr,uid,context)
+    return node_context(cr,uid,context)
 
 class node_context(object):
     """ This is the root node, representing access to some particular
-	context """
+        context """
     cached_roots = {}
 
     def __init__(self, cr, uid, context=None):
-	# we don't cache the cr!
-	#self.cr = cr
-	self.uid = uid
-	self.context = context
-	self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
-	assert self._dirobj
-	self.rootdir = self._dirobj._get_root_directory(cr,uid,context)
+        # we don't cache the cr!
+        #self.cr = cr
+        self.uid = uid
+        self.context = context
+        self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
+        assert self._dirobj
+        self.rootdir = self._dirobj._get_root_directory(cr,uid,context)
 
     def get_uri(self, cr,  uri):
-	""" Although this fn passes back to doc.dir, it is needed since
-	it is a potential caching point """
-	
-	(ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)
-	
-	while duri:
-	    ndir = ndir.child(cr, duri[0])
-	    if not ndir:
-		return False
-	    duri = duri[1:]
-	return ndir
+        """ Although this fn passes back to doc.dir, it is needed since
+        it is a potential caching point """
+    
+        (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)
+    
+        while duri:
+            ndir = ndir.child(cr, duri[0])
+            if not ndir:
+                return False
+            duri = duri[1:]
+        return ndir
 
 
 class node_database():
     """ A node representing the database directory
-	Useless?
-	"""
+        Useless?
+        """
     def __init__(self,ncontext):
-	self.nctx = ncontext
+        self.nctx = ncontext
 
 
 
@@ -85,108 +85,108 @@ class node_database():
 class node_class(object):
     """ this is a superclass for our inodes
         It is an API for all code that wants to access the document files. 
-	Nodes have attributes which contain usual file properties
-	"""
+        Nodes have attributes which contain usual file properties
+        """
     our_type = 'baseclass'
     def __init__(self, path, parent, context):
-	assert isinstance(context,node_context)
-	assert (not parent ) or isinstance(parent,node_class)
+        assert isinstance(context,node_context)
+        assert (not parent ) or isinstance(parent,node_class)
         self.path = path
         self.context = context
         self.type=self.our_type
-	self.parent = parent
-	self.mimetype = 'application/octet-stream'
-	self.create_date = None
-	self.write_date = None
-	self.content_length = 0
-	# dynamic context:
-	self.dctx = {}
-	if parent:
-	    self.dctx = parent.dctx.copy()
-	self.displayname = 'Object'
-	
+        self.parent = parent
+        self.mimetype = 'application/octet-stream'
+        self.create_date = None
+        self.write_date = None
+        self.content_length = 0
+        # dynamic context:
+        self.dctx = {}
+        if parent:
+            self.dctx = parent.dctx.copy()
+        self.displayname = 'Object'
+    
     def full_path(self):
-	if self.parent:
-	    s = self.parent.full_path()
-	else:
-	    s = []
-	if isinstance(self.path,list):
-		s+=self.path
-	else:
-		s.append(self.path)
-	return s
+        if self.parent:
+            s = self.parent.full_path()
+        else:
+            s = []
+        if isinstance(self.path,list):
+            s+=self.path
+        else:
+            s.append(self.path)
+        return s
 
     def children(self, cr):
         print "node_class.children()"
-	return [] #stub
+        return [] #stub
 
     def child(self,cr, name):
-	print "node_class.child()"
+        print "node_class.child()"
         return None
 
     def path_get(self):
-	print "node_class.path_get()"
-	return False
-	
+        print "node_class.path_get()"
+        return False
+    
     def get_data(self,cr):
-	raise TypeError('no data for %s'% self.type)
+        raise TypeError('no data for %s'% self.type)
 
     def _get_storage(self,cr):
-	raise RuntimeError("no storage for base class")
+        raise RuntimeError("no storage for base class")
 
     def get_etag(self,cr):
         """ Get a tag, unique per object + modification.
-	
-	    see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
-	return self._get_ttag(cr) + ':' + self._get_wtag(cr)
+    
+            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
+        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
 
     def _get_wtag(self,cr):
-	""" Return the modification time as a unique, compact string """
-	if self.write_date:
-		wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
-	else: wtime = time.time()
-	return str(wtime)
+        """ Return the modification time as a unique, compact string """
+        if self.write_date:
+            wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
+        else: wtime = time.time()
+        return str(wtime)
     
     def _get_ttag(self,cr):
-	""" Get a unique tag for this type/id of object.
-	    Must be overriden, so that each node is uniquely identified.
-	"""
-	print "node_class.get_ttag()",self
-	raise RuntimeError("get_etag stub()")
-	
+        """ Get a unique tag for this type/id of object.
+            Must be overriden, so that each node is uniquely identified.
+        """
+        print "node_class.get_ttag()",self
+        raise RuntimeError("get_etag stub()")
+    
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
-	its capabilities """
-	return {}
+        its capabilities """
+        return {}
 
     def get_dav_eprop(self,cr,ns,prop):
-	return None
+        return None
 
 class node_dir(node_class):
     our_type = 'collection'
     def __init__(self,path, parent, context, dirr, dctx=None):
-	super(node_dir,self).__init__(path, parent,context)
-	self.dir_id = dirr.id
-	#todo: more info from dirr
-	self.mimetype = 'application/x-directory'
-		# 'httpd/unix-directory'
-	self.create_date = dirr.create_date
-	# TODO: the write date should be MAX(file.write)..
-	self.write_date = dirr.write_date or dirr.create_date
-	self.content_length = 0
-	if dctx:
-	    self.dctx.update(dctx)
-	dc2 = self.context.context
-	dc2.update(self.dctx)
-	dc2['dir_id'] = self.dir_id
-	self.displayname = dirr.name
-	for dfld in dirr.dctx_ids:
-	    try:
-		self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-	    except Exception,e:
-	        print "Cannot eval %s" % dfld.expr
-		print e
-		pass
+        super(node_dir,self).__init__(path, parent,context)
+        self.dir_id = dirr.id
+        #todo: more info from dirr
+        self.mimetype = 'application/x-directory'
+            # 'httpd/unix-directory'
+        self.create_date = dirr.create_date
+        # TODO: the write date should be MAX(file.write)..
+        self.write_date = dirr.write_date or dirr.create_date
+        self.content_length = 0
+        if dctx:
+            self.dctx.update(dctx)
+        dc2 = self.context.context
+        dc2.update(self.dctx)
+        dc2['dir_id'] = self.dir_id
+        self.displayname = dirr.name
+        for dfld in dirr.dctx_ids:
+            try:
+                self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
+            except Exception,e:
+                print "Cannot eval %s" % dfld.expr
+                print e
+                pass
 
     def children(self,cr):
         return self._child_get(cr) + self._file_get(cr)
@@ -201,132 +201,132 @@ class node_dir(node_class):
         return None
 
     def _file_get(self,cr, nodename=False):
-	res = []
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        res = []
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    res3 = cntobj._file_get(cr,self,nodename,content)
-	    if res3:
-		res.extend(res3)
+            res3 = cntobj._file_get(cr,self,nodename,content)
+            if res3:
+                res.extend(res3)
 
-	return res
+        return res
 
     def get_dav_props(self, cr):
-	res = {}
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        res = {}
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    if content.extension == '.ics': # FIXME: call the content class!
-		res['http://groupdav.org/'] = ('resourcetype',)
-		break
-	return res
+            if content.extension == '.ics': # FIXME: call the content class!
+                res['http://groupdav.org/'] = ('resourcetype',)
+                break
+        return res
 
     def get_dav_eprop(self,cr,ns,prop):
-	if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-	    print "Who asked for %s:%s?" % (ns,prop)
-	    return None
-	res = {}
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        if ns != 'http://groupdav.org/' or prop != 'resourcetype':
+            print "Who asked for %s:%s?" % (ns,prop)
+            return None
+        res = {}
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    if content.extension == '.ics': # FIXME: call the content class!
-	        return ('vevent-collection','http://groupdav.org/')
-	return None
+            if content.extension == '.ics': # FIXME: call the content class!
+                return ('vevent-collection','http://groupdav.org/')
+        return None
 
     def _child_get(self,cr,name = None):
-	dirobj = self.context._dirobj
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('parent_id','=',self.dir_id) ]
-	if name:
-		where.append(('name','=',name))
-	ids = dirobj.search(cr, uid, where,context=ctx)
-	res = []
-	if ids:
-	    for dirr in dirobj.browse(cr,uid,ids,context=ctx):
-	        if dirr.type == 'directory':
-			res.append(node_dir(dirr.name,self,self.context,dirr))
-		elif dirr.type == 'ressource':
-			res.append(node_res_dir(dirr.name,self,self.context,dirr))
-		
-	fil_obj=dirobj.pool.get('ir.attachment')
-	#where2 = where # + [('res_model', '=', None)]
-	ids = fil_obj.search(cr,uid,where,context=ctx)
-	if ids:
-	    for fil in fil_obj.browse(cr,uid,ids,context=ctx):
-		res.append(node_file(fil.name,self,self.context,fil))
-	
-	return res
-	
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('parent_id','=',self.dir_id) ]
+        if name:
+            where.append(('name','=',name))
+        ids = dirobj.search(cr, uid, where,context=ctx)
+        res = []
+        if ids:
+            for dirr in dirobj.browse(cr,uid,ids,context=ctx):
+                if dirr.type == 'directory':
+                    res.append(node_dir(dirr.name,self,self.context,dirr))
+                elif dirr.type == 'ressource':
+                    res.append(node_res_dir(dirr.name,self,self.context,dirr))
+        
+        fil_obj=dirobj.pool.get('ir.attachment')
+        #where2 = where # + [('res_model', '=', None)]
+        ids = fil_obj.search(cr,uid,where,context=ctx)
+        if ids:
+            for fil in fil_obj.browse(cr,uid,ids,context=ctx):
+                res.append(node_file(fil.name,self,self.context,fil))
+    
+        return res
+    
     def create_child(self,cr,path,data):
-	""" API function to create a child file object and node
-	    Return the node_* created
-	"""
-	dirobj = self.context._dirobj
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	fil_obj=dirobj.pool.get('ir.attachment')
-	val = {
-		'name': path,
-		'datas_fname': path,
-		'parent_id': self.dir_id,
-		# Datas are not set here
-	}
+        """ API function to create a child file object and node
+            Return the node_* created
+        """
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        fil_obj=dirobj.pool.get('ir.attachment')
+        val = {
+            'name': path,
+            'datas_fname': path,
+            'parent_id': self.dir_id,
+            # Datas are not set here
+        }
 
-	fil_id = fil_obj.create(cr,uid, val, context=ctx)
-	fil = fil_obj.browse(cr,uid,fil_id,context=ctx)
-	fnode = node_file(path,self,self.context,fil)
-	fnode.set_data(cr,data,fil)
-	return fnode
-	
+        fil_id = fil_obj.create(cr,uid, val, context=ctx)
+        fil = fil_obj.browse(cr,uid,fil_id,context=ctx)
+        fnode = node_file(path,self,self.context,fil)
+        fnode.set_data(cr,data,fil)
+        return fnode
+    
     def _get_ttag(self,cr):
-	return 'dir-%d' % self.dir_id
+        return 'dir-%d' % self.dir_id
 
 class node_res_dir(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
-	All folders should be of type node_res_obj and merely behave like
-	node_dirs (with limited domain).
-	"""
+        All folders should be of type node_res_obj and merely behave like
+        node_dirs (with limited domain).
+    """
     our_type = 'collection'
     def __init__(self,path, parent, context, dirr, dctx=None ):
-	super(node_res_dir,self).__init__(path, parent,context)
-	self.dir_id = dirr.id
-	#todo: more info from dirr
-	self.mimetype = 'application/x-directory'
-		# 'httpd/unix-directory'
-	self.create_date = dirr.create_date
-	# TODO: the write date should be MAX(file.write)..
-	self.write_date = dirr.write_date or dirr.create_date
-	self.content_length = 0
-	self.res_model = dirr.ressource_type_id.model
-	self.resm_id = dirr.ressource_id
-	self.namefield = dirr.resource_field or 'name'
-	self.displayname = dirr.name
-	# Important: the domain is evaluated using the *parent* dctx!
-	self.domain = safe_eval(dirr.domain,self.dctx)
-	# and then, we add our own vars in the dctx:
-	if dctx:
-	    self.dctx.update(dctx)
-	
-	# and then, we prepare a dctx dict, for deferred evaluation:
-	self.dctx_dict = {}
-	for dfld in dirr.dctx_ids:
-	    self.dctx_dict['dctx_' + dfld.field] = dfld.expr
+        super(node_res_dir,self).__init__(path, parent,context)
+        self.dir_id = dirr.id
+        #todo: more info from dirr
+        self.mimetype = 'application/x-directory'
+                        # 'httpd/unix-directory'
+        self.create_date = dirr.create_date
+        # TODO: the write date should be MAX(file.write)..
+        self.write_date = dirr.write_date or dirr.create_date
+        self.content_length = 0
+        self.res_model = dirr.ressource_type_id.model
+        self.resm_id = dirr.ressource_id
+        self.namefield = dirr.resource_field or 'name'
+        self.displayname = dirr.name
+        # Important: the domain is evaluated using the *parent* dctx!
+        self.domain = safe_eval(dirr.domain,self.dctx)
+        # and then, we add our own vars in the dctx:
+        if dctx:
+            self.dctx.update(dctx)
+    
+        # and then, we prepare a dctx dict, for deferred evaluation:
+        self.dctx_dict = {}
+        for dfld in dirr.dctx_ids:
+            self.dctx_dict['dctx_' + dfld.field] = dfld.expr
 
     def children(self,cr):
         return self._child_get(cr)
@@ -339,81 +339,81 @@ class node_res_dir(node_class):
 
     def _child_get(self,cr,name = None):
         """ return virtual children of resource, based on the
-	    foreign object.
-	    
-	    Note that many objects use NULL for a name, so we should
-	    better call the name_search(),name_get() set of methods
-	"""
-	obj = self.context._dirobj.pool.get(self.res_model)
-	if not obj:
-		print "couldn't find model", self.res_model
-		return []
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = []
-	if self.domain:
-		where.append(self.domain)
-	if self.resm_id:
-		where.append(('id','=',self.resm_id))
-	
-	if name:
-		where.append((self.namefield,'=',name))
-	# print "Where clause for %s" % self.res_model, where
-	
-	resids = obj.search(cr,uid, where, context=ctx)
-	res = []
-	for bo in obj.browse(cr,uid,resids,context=ctx):
-		if not bo:
-			continue
-		name = getattr(bo,self.namefield)
-		if not name:
-			continue
-			# Yes! we can't do better but skip nameless records.
-		res.append(node_res_obj(name,self,self.context,self.res_model, bo))
-	return res
+            foreign object.
+        
+            Note that many objects use NULL for a name, so we should
+            better call the name_search(),name_get() set of methods
+        """
+        obj = self.context._dirobj.pool.get(self.res_model)
+        if not obj:
+            print "couldn't find model", self.res_model
+            return []
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = []
+        if self.domain:
+            where.append(self.domain)
+        if self.resm_id:
+            where.append(('id','=',self.resm_id))
+    
+        if name:
+            where.append((self.namefield,'=',name))
+        # print "Where clause for %s" % self.res_model, where
+    
+        resids = obj.search(cr,uid, where, context=ctx)
+        res = []
+        for bo in obj.browse(cr,uid,resids,context=ctx):
+            if not bo:
+                continue
+            name = getattr(bo,self.namefield)
+            if not name:
+                continue
+                # Yes! we can't do better but skip nameless records.
+            res.append(node_res_obj(name,self,self.context,self.res_model, bo))
+        return res
 
     def _get_ttag(self,cr):
-	return 'rdir-%d' % self.dir_id
+        return 'rdir-%d' % self.dir_id
 
 class node_res_obj(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
-	All folders should be of type node_res_obj and merely behave like
-	node_dirs (with limited domain).
-	"""
+        All folders should be of type node_res_obj and merely behave like
+        node_dirs (with limited domain).
+        """
     our_type = 'collection'
     def __init__(self,path, parent, context, res_model, res_bo, res_id = None):
-	super(node_res_obj,self).__init__(path, parent,context)
-	assert parent
-	#todo: more info from dirr
-	self.dir_id = parent.dir_id
-	self.mimetype = 'application/x-directory'
-		# 'httpd/unix-directory'
-	self.create_date = parent.create_date
-	# TODO: the write date should be MAX(file.write)..
-	self.write_date = parent.write_date
-	self.content_length = 0
-	self.res_model = res_model
-	self.domain = parent.domain
-	self.displayname = path
+        super(node_res_obj,self).__init__(path, parent,context)
+        assert parent
+        #todo: more info from dirr
+        self.dir_id = parent.dir_id
+        self.mimetype = 'application/x-directory'
+                        # 'httpd/unix-directory'
+        self.create_date = parent.create_date
+        # TODO: the write date should be MAX(file.write)..
+        self.write_date = parent.write_date
+        self.content_length = 0
+        self.res_model = res_model
+        self.domain = parent.domain
+        self.displayname = path
 
-	if res_bo:
-	    self.res_id = res_bo.id
-	    dc2 = self.context.context
-	    dc2.update(self.dctx)
-	    dc2['res_model'] = res_model
-	    dc2['res_id'] = res_bo.id
-	    dc2['this'] = res_bo
-	    for fld,expr in parent.dctx_dict.items():
-	        try:
-		    self.dctx[fld] = safe_eval(expr,dc2)
-	        except Exception,e:
-	            print "Cannot eval %s for %s" % (expr, fld)
-		    print e
-		    pass
-	else:
-	   self.res_id = res_id
+        if res_bo:
+            self.res_id = res_bo.id
+            dc2 = self.context.context
+            dc2.update(self.dctx)
+            dc2['res_model'] = res_model
+            dc2['res_id'] = res_bo.id
+            dc2['this'] = res_bo
+            for fld,expr in parent.dctx_dict.items():
+                try:
+                    self.dctx[fld] = safe_eval(expr,dc2)
+                except Exception,e:
+                    print "Cannot eval %s for %s" % (expr, fld)
+                    print e
+                    pass
+        else:
+            self.res_id = res_id
 
     def children(self,cr):
         return self._child_get(cr) + self._file_get(cr)
@@ -428,172 +428,172 @@ class node_res_obj(node_class):
         return None
 
     def _file_get(self,cr, nodename=False):
-	res = []
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	#if self.domain:
-	#	where.extend(self.domain)
-	# print "res_obj file_get clause", where
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        res = []
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        #if self.domain:
+        #    where.extend(self.domain)
+        # print "res_obj file_get clause", where
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    res3 = cntobj._file_get(cr,self,nodename,content, context=ctx)
-	    if res3:
-		res.extend(res3)
+            res3 = cntobj._file_get(cr,self,nodename,content, context=ctx)
+            if res3:
+                res.extend(res3)
 
-	return res
+        return res
 
     def get_dav_props(self, cr):
-	res = {}
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        res = {}
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    if content.extension == '.ics': # FIXME: call the content class!
-		res['http://groupdav.org/'] = ('resourcetype',)
-	return res
+            if content.extension == '.ics': # FIXME: call the content class!
+                res['http://groupdav.org/'] = ('resourcetype',)
+        return res
 
     def get_dav_eprop(self,cr,ns,prop):
-	if ns != 'http://groupdav.org/' or prop != 'resourcetype':
-	    print "Who asked for %s:%s?" % (ns,prop)
-	    return None
-	res = {}
-	cntobj = self.context._dirobj.pool.get('document.directory.content')
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('directory_id','=',self.dir_id) ]
-	ids = cntobj.search(cr,uid,where,context=ctx)
+        if ns != 'http://groupdav.org/' or prop != 'resourcetype':
+            print "Who asked for %s:%s?" % (ns,prop)
+            return None
+        res = {}
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr,uid,where,context=ctx)
         for content in cntobj.browse(cr,uid,ids,context=ctx):
-	    if content.extension == '.ics': # FIXME: call the content class!
-	        return ('vevent-collection','http://groupdav.org/')
-	return None
+            if content.extension == '.ics': # FIXME: call the content class!
+                return ('vevent-collection','http://groupdav.org/')
+        return None
 
     def _child_get(self,cr,name = None):
-	dirobj = self.context._dirobj
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	where = [('parent_id','=',self.dir_id) ]
-	if name:
-		where.append(('name','=',name))
-	ids = dirobj.search(cr, uid, where,context=ctx)
-	res = []
-	if ids:
-	    for dirr in dirobj.browse(cr,uid,ids,context=ctx):
-	        if dirr.type == 'directory':
-		    res.append(node_res_obj(dirr.name,self,self.context,self.res_model,res_bo = None, res_id = self.res_id))
-		elif dirr.type == 'ressource':
-		    # child resources can be controlled by properly set dctx
-		    res.append(node_res_dir(dirr.name,self,self.context,dirr))
-		
-	fil_obj=dirobj.pool.get('ir.attachment')
-	where2 = where  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
-	# print "where clause for dir_obj", where2
-	ids = fil_obj.search(cr,uid,where2,context=ctx)
-	if ids:
-	    for fil in fil_obj.browse(cr,uid,ids,context=ctx):
-		res.append(node_file(fil.name,self,self.context,fil))
-	
-	return res
-	
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('parent_id','=',self.dir_id) ]
+        if name:
+            where.append(('name','=',name))
+        ids = dirobj.search(cr, uid, where,context=ctx)
+        res = []
+        if ids:
+            for dirr in dirobj.browse(cr,uid,ids,context=ctx):
+                if dirr.type == 'directory':
+                    res.append(node_res_obj(dirr.name,self,self.context,self.res_model,res_bo = None, res_id = self.res_id))
+                elif dirr.type == 'ressource':
+                    # child resources can be controlled by properly set dctx
+                    res.append(node_res_dir(dirr.name,self,self.context,dirr))
+        
+        fil_obj=dirobj.pool.get('ir.attachment')
+        where2 = where  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
+        # print "where clause for dir_obj", where2
+        ids = fil_obj.search(cr,uid,where2,context=ctx)
+        if ids:
+            for fil in fil_obj.browse(cr,uid,ids,context=ctx):
+                res.append(node_file(fil.name,self,self.context,fil))
+    
+        return res
+    
     def create_child(self,cr,path,data):
-	""" API function to create a child file object and node
-	    Return the node_* created
-	"""
-	dirobj = self.context._dirobj
-	uid = self.context.uid
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	fil_obj=dirobj.pool.get('ir.attachment')
-	val = {
-		'name': path,
-		'datas_fname': path,
-		'parent_id': self.dir_id,
-		'res_model': self.res_model,
-		'res_id': self.res_id,
-		# Datas are not set here
-	}
+        """ API function to create a child file object and node
+            Return the node_* created
+        """
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        fil_obj=dirobj.pool.get('ir.attachment')
+        val = {
+            'name': path,
+            'datas_fname': path,
+            'parent_id': self.dir_id,
+            'res_model': self.res_model,
+            'res_id': self.res_id,
+            # Datas are not set here
+        }
 
-	fil_id = fil_obj.create(cr,uid, val, context=ctx)
-	fil = fil_obj.browse(cr,uid,fil_id,context=ctx)
-	fnode = node_file(path,self,self.context,fil)
-	fnode.set_data(cr,data,fil)
-	return fnode
+        fil_id = fil_obj.create(cr,uid, val, context=ctx)
+        fil = fil_obj.browse(cr,uid,fil_id,context=ctx)
+        fnode = node_file(path,self,self.context,fil)
+        fnode.set_data(cr,data,fil)
+        return fnode
 
     def _get_ttag(self,cr):
-	return 'rodir-%d-%d' % (self.dir_id,self.res_id)
+        return 'rodir-%d-%d' % (self.dir_id,self.res_id)
 
 class node_file(node_class):
     our_type = 'file'
     def __init__(self,path, parent, context, fil):
-	super(node_file,self).__init__(path, parent,context)
-	self.file_id = fil.id
-	#todo: more info from ir_attachment
-	if fil.file_type and '/' in fil.file_type:
-		self.mimetype = fil.file_type
-	self.create_date = fil.create_date
-	self.write_date = fil.write_date or fil.create_date
-	self.content_length = fil.file_size
-	self.displayname = fil.name
-	
-	# This only propagates the problem to get_data. Better
-	# fix those files to point to the root dir.
-	if fil.parent_id:
-		self.storage_id = fil.parent_id.storage_id.id
-	else:
-		self.storage_id = None
-	
+        super(node_file,self).__init__(path, parent,context)
+        self.file_id = fil.id
+        #todo: more info from ir_attachment
+        if fil.file_type and '/' in fil.file_type:
+            self.mimetype = fil.file_type
+        self.create_date = fil.create_date
+        self.write_date = fil.write_date or fil.create_date
+        self.content_length = fil.file_size
+        self.displayname = fil.name
+        
+        # This only propagates the problem to get_data. Better
+        # fix those files to point to the root dir.
+        if fil.parent_id:
+            self.storage_id = fil.parent_id.storage_id.id
+        else:
+            self.storage_id = None
+    
     def get_data(self, cr, fil_obj = None):
-	""" Retrieve the data for some file. 
-	    fil_obj may optionally be specified, and should be a browse object
-	    for the file. This is useful when the caller has already initiated
-	    the browse object. """
-	# this is where storage kicks in..
-	stor = self.storage_id
-	assert stor
-	stobj = self.context._dirobj.pool.get('document.storage')
-	return stobj.get_data(cr,self.context.uid,stor, self,self.context.context, fil_obj)
+        """ Retrieve the data for some file. 
+            fil_obj may optionally be specified, and should be a browse object
+            for the file. This is useful when the caller has already initiated
+            the browse object. """
+        # this is where storage kicks in..
+        stor = self.storage_id
+        assert stor
+        stobj = self.context._dirobj.pool.get('document.storage')
+        return stobj.get_data(cr,self.context.uid,stor, self,self.context.context, fil_obj)
 
     def get_data_len(self, cr, fil_obj = None):
-	# TODO: verify with the storage object!
-	return self.content_length
+        # TODO: verify with the storage object!
+        return self.content_length
 
     def set_data(self, cr, data, fil_obj = None):
-	""" Store data at some file. 
-	    fil_obj may optionally be specified, and should be a browse object
-	    for the file. This is useful when the caller has already initiated
-	    the browse object. """
-	# this is where storage kicks in..
-	stor = self.storage_id
-	assert stor
-	stobj = self.context._dirobj.pool.get('document.storage')
-	return stobj.set_data(cr,self.context.uid,stor, self, data, self.context.context, fil_obj)
+        """ Store data at some file. 
+            fil_obj may optionally be specified, and should be a browse object
+            for the file. This is useful when the caller has already initiated
+            the browse object. """
+        # this is where storage kicks in..
+        stor = self.storage_id
+        assert stor
+        stobj = self.context._dirobj.pool.get('document.storage')
+        return stobj.set_data(cr,self.context.uid,stor, self, data, self.context.context, fil_obj)
 
     def _get_ttag(self,cr):
-	return 'file-%d' % self.file_id
+        return 'file-%d' % self.file_id
 
 class node_content(node_class):
     our_type = 'content'
     def __init__(self,path, parent, context, cnt, dctx = None, act_id=None):
-	super(node_content,self).__init__(path, parent,context)
-	self.cnt_id = cnt.id
-	self.create_date = False
-	self.write_date = False
-	self.content_length = False
-	self.extension = cnt.extension
-	self.report_id = cnt.report_id and cnt.report_id.id
-	#self.mimetype = cnt.extension.
-	self.displayname = path
-	if dctx:
-	   self.dctx.update(dctx)
-	self.act_id = act_id
-	
+        super(node_content,self).__init__(path, parent,context)
+        self.cnt_id = cnt.id
+        self.create_date = False
+        self.write_date = False
+        self.content_length = False
+        self.extension = cnt.extension
+        self.report_id = cnt.report_id and cnt.report_id.id
+        #self.mimetype = cnt.extension.
+        self.displayname = path
+        if dctx:
+           self.dctx.update(dctx)
+        self.act_id = act_id
+    
     def fill_fields(self,cr,dctx = None):
         """ Try to read the object and fill missing fields, like mimetype,
             dates etc.
@@ -610,17 +610,17 @@ class node_content(node_class):
 
     def get_data(self, cr, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
-	ctx = self.context.context.copy()
-	ctx.update(self.dctx)
-	data = cntobj.process_read(cr,self.context.uid,self,ctx)
-	if data:
-		self.content_length = len(data)
-	return data
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        data = cntobj.process_read(cr,self.context.uid,self,ctx)
+        if data:
+            self.content_length = len(data)
+        return data
 
     def get_data_len(self, cr, fil_obj = None):
-	if not self.content_length:
-		self.get_data(cr,fil_obj)
-	return self.content_length
+        if not self.content_length:
+            self.get_data(cr,fil_obj)
+        return self.content_length
 
     def set_data(self, cr, data, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
@@ -651,9 +651,9 @@ class old_class():
         if nodename:
             where.append( (fobj._rec_name,'=',nodename) )
         for content in self.object.content_ids:
-	    res3 = content._table._file_get(self,nodename,content)
-	    if res3:
-		res2.extend(res3)
+            res3 = content._table._file_get(self,nodename,content)
+            if res3:
+                res2.extend(res3)
 
         ids = fobj.search(self.cr, self.uid, where+[ ('parent_id','=',self.object and self.object.id or False) ])
         if self.object and self.root and (self.object.type=='ressource'):

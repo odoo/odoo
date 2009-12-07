@@ -40,7 +40,7 @@ class document_directory(osv.osv):
         'file_type': fields.char('Content Type', size=32),
         'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
         'user_id': fields.many2one('res.users', 'Owner'),
-	'storage_id': fields.many2one('document.storage', 'Storage'),
+        'storage_id': fields.many2one('document.storage', 'Storage'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'parent_id': fields.many2one('document.directory', 'Parent Item'),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
@@ -118,8 +118,8 @@ class document_directory(osv.osv):
             path.append(self.pool.get(directory.ressource_type_id.model).browse(cr,uid,res_id).name)
             #user=self.pool.get('res.users').browse(cr,uid,uid)
             #return "ftp://%s:%s@localhost:%s/%s/%s"%(user.login,user.password,config.get('ftp_server_port',8021),cr.dbname,'/'.join(path))
-	    # No way we will return the password!
-	    return "ftp://user:pass@host:port/test/this"
+            # No way we will return the password!
+            return "ftp://user:pass@host:port/test/this"
         return False
 
     def _check_recursion(self, cr, uid, ids):

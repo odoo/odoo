@@ -148,7 +148,7 @@ class document_configuration_wizard(osv.osv_memory):
                 'ressource_tree': 1
         })
 
-	# Update the action for FTP browse.
+        # Update the action for FTP browse.
         aid = objid._get_id(cr, uid, 'document', 'action_document_browse')
         aid = objid.browse(cr, uid, aid, context=context).res_id
         self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
