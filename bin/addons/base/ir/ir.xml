@@ -1346,7 +1346,6 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
@@ -1360,12 +1359,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
                     <field name="action_id" select="1"/>
                     <field name="sequence"/>
                     <field name="state"/>
-                    <field colspan="4" name="note"/>
+                    <field name="active" select="1"/>
                 </form>
             </field>
         </record>
