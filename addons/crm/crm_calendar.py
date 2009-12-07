@@ -84,6 +84,41 @@ class crm_caldav_attendee(osv.osv):
 
 crm_caldav_attendee()
 
+
+class crm_caldav_alarm(osv.osv):
+    _name = 'crm.caldav.alarm'
+    _description = 'Event alarm information'
+    
+    __attribute__ = {
+    }
+     
+    _columns = {
+                'name' : fields.char('Summary', size=124), 
+                'action' : fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
+                        ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action' , required=True), 
+                'description' : fields.text('Description'), 
+                'attendee': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', 'alarm_id', 'attendee_id', 'Attendees'),
+                'trigger_related' : fields.selection([('BEFORE', 'BEFORE'),('AFTER', 'AFTER')]\
+                                                 , 'Trigger time', required=True), 
+                'trigger_duration' : fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
+                        ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
+                'trigger_interval' :  fields.integer('TIme' , required=True), 
+                'trigger_occurs' :  fields.selection([('starts', 'The event starts'),('ends', 'The event ends')],\
+                                              'Trigger Occures at', required=True),
+                'duration' : fields.integer('Duration'), 
+                'repeat' : fields.integer('Repeat'), # TODO 
+                'attach' : fields.binary('Attachment'), 
+                }
+    _defaults = {
+        'action' :  lambda *x: 'EMAIL', 
+        'trigger_interval' :  lambda *x: 5, 
+        'trigger_duration' : lambda *x: 'MINUTES',
+        'trigger_related' : lambda *x: 'BEFORE',
+        'trigger_occurs' : lambda *x: 'starts',
+                 }
+    
+crm_caldav_alarm()
+
 class crm_case(osv.osv):
     _name = 'crm.case'
     _inherit = 'crm.case'
@@ -162,7 +197,8 @@ class crm_case(osv.osv):
         'rrule' : fields.text('Recurrent Rule'), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
-       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
+       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'),
+       'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'),  
     }
     
     _defaults = {
@@ -172,7 +208,7 @@ class crm_case(osv.osv):
         }
      
     def export_cal(self, cr, uid, ids, context={}):
-        crm_data = self.read(cr, uid, ids, [])
+        crm_data = self.read(cr, uid, ids, [], context ={'read' :True})
         ical = vobject.iCalendar()
         event_obj = self.pool.get('caldav.event')
         uid_val = ''
@@ -182,11 +218,26 @@ class crm_case(osv.osv):
                 if key == 'uid':
                     uid_val += str(crm[val['field']])
                     continue
-                if val == None or key == 'rrule':  
+                if val == None or key == 'rrule' or not val.has_key('field') or not crm[val['field']]:  
                     continue
-                if val.has_key('field') and val.has_key('sub-field') and crm[val['field']] and crm[val['field']]:
+                if key == "attendee":
+                    attendee_object = self.pool.get('crm.caldav.attendee')
+                    for attendee in attendee_object.read(cr, uid, crm[val['field']], []):
+                        attendee_add = vevent.add('attendee')
+                        for a_key, a_val in attendee_object.__attribute__.items():
+                            if attendee[a_val['field']]:
+                                if a_val['type'] == 'text':
+                                    attendee_add.params[a_key] = [str(attendee[a_val['field']])]
+                                elif a_val['type'] == 'boolean':
+                                    attendee_add.params[a_key] = [str(attendee[a_val['field']])]
+                    
+                elif val.has_key('sub-field'):
                     vevent.add(key).value = crm[val['field']][1]
-                elif val.has_key('field') and crm[val['field']]:
+                elif val.has_key('mapping'):
+                    for key1, val1 in val['mapping'].items():
+                        if val1 == crm[val['field']]:
+                            vevent.add(key).value = key1
+                else:
                     if val['type'] == "text":
                         vevent.add(key).value = str(crm[val['field']])
                     elif val['type'] == 'datetime' and crm[val['field']]:
@@ -195,7 +246,7 @@ class crm_case(osv.osv):
                 startdate = datetime.strptime(crm['date'], "%Y-%m-%d %H:%M:%S")
                 if not startdate:
                     startdate = datetime.now()
-                rset1 = rrulestr(str(crm[event_obj.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
+                rset1 = rrulestr(str(crm[self.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
                 vevent.rruleset = rset1
             vevent.add('uid').value = uid_val
         return ical.serialize()#.replace(vobject.icalendar.CRLF, vobject.icalendar.LF).strip()

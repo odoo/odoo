@@ -43,6 +43,45 @@
             </field>
         </record>
         
+        <record id="caldav_alarm_form_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.alarm</field>
+            <field name="model">crm.caldav.alarm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Alarm details">
+            		<field name="action"/>
+					<field name="name" select="1" attrs="{'required' : [('action','in',('EMAIL', 'DISPLAY'))]}"/>
+					<separator string="Description" colspan="4"/>
+           			<field name="description" colspan="4" nolabel="1" attrs="{'required' : [('action','in',('EMAIL'))]}"/>
+           			<group string="Reminder details" col="4" colspan="4">
+	           			<field name="trigger_interval" nolabel="1" />
+						<field name="trigger_duration" nolabel="1"/>
+						<field name="trigger_related" nolabel="1"/>
+						<field name="trigger_occurs" nolabel="1"/>
+					</group>
+					<field name="duration"/>
+					<field name="repeat"/>
+					<field name="attach" colspan="4" attrs="{'required' : [('action','in',('AUDIO', 'PROCEDURE'))]}"/>
+				</form>
+            </field>
+        </record>
+
+	 <record id="caldav_alarm_tree_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.alarm</field>
+            <field name="model">crm.caldav.alarm</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            	<tree string="Alarm details">
+					<field name="name" select="1"/>
+					<field name="action"/>
+					<field name="trigger_interval" select="1"/>
+					<field name="trigger_duration" select="1"/>
+					<field name="trigger_related" select="1"/>
+					<field name="trigger_occurs" select="1"/>
+				</tree>
+            </field>
+        </record>
+        
 		<record id="caldav_crm_case_view" model="ir.ui.view">
             <field name="name">crm.case.caldav.form</field>
             <field name="model">crm.case</field>
@@ -54,6 +93,7 @@
             			<field name="class"/>
             			<field name="transparent"/>
             			<field name="caldav_url" widget="url"/>
+            			<field name="alarm_id"/>
             			<newline/>
             			<separator string="Event Location" colspan="4"/>
             			<field name="location" colspan="4" nolabel="1"/>
