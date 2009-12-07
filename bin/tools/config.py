@@ -202,6 +202,10 @@ class configmanager(object):
         die(opt.translate_out and (not opt.db_name),
             "the i18n-export option cannot be used without the database (-d) option")
 
+        # Check if the config file exists (only if -c used, and not -s argument)
+        die(not opt.save and opt.config and not os.path.exists(opt.config),
+            "The config file define with (-c) doesn't exists, use (-s) if you want to create it")
+
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
