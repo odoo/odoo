@@ -109,7 +109,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                         return eval(a_eval, idref2)
                 except:
                         logger = netsvc.Logger()
-                        logger.notifyChannel("init", netsvc.LOG_WARNING, 'could eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.getAttribute('name'),context))
+                        logger.notifyChannel("init", netsvc.LOG_WARNING, 'could eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.get('name'),context))
                         return ""
             if t == 'xml':
                 def _process(s, idref):
