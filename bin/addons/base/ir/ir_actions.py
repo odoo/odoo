@@ -679,30 +679,24 @@ class act_window_close(osv.osv):
 act_window_close()
 
 # This model use to register action services.
-# if action type is 'configure', it will be start on configuration wizard.
-# if action type is 'service',
-#                - if start_type= 'at once', it will be start at one time on start date
-#                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
-#                - if start_type="manual", it will start and stop on manually
+TODO_STATES = [('open', 'Not Started'),
+               ('done', 'Done'),
+               ('skip','Skipped'),
+               ('cancel','Cancel')]
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
     _columns={
-        'start_date': fields.datetime('Start Date'),
-        'end_date': fields.datetime('End Date'),
-        'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
-        'sequence':fields.integer('Sequence'),
+        'action_id': fields.many2one(
+            'ir.actions.act_window', 'Action', select=True, required=True,
+            ondelete='cascade'),
+        'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
-        'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
-        'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
-        'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
-        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
+        'state': fields.selection(TODO_STATES, string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-        'active':lambda *a:True,
-        'type':lambda *a:'configure'
+        'active': lambda *a: True,
     }
     _order="sequence"
 ir_actions_todo()
@@ -712,10 +706,8 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     _name='ir.actions.configuration.wizard'
     def next_configuration_action(self,cr,uid,context={}):
         item_obj = self.pool.get('ir.actions.todo')
-        item_ids = item_obj.search(cr, uid,
-                                   [('type','=','configure'),
-                                    ('state', '=', 'open'),
-                                    ('active','=',True)],
+        item_ids = item_obj.search(cr, uid, [('state','=','open'),
+                                             ('active','=',True)],
                                    limit=1, context=context)
         if item_ids:
             return item_obj.browse(cr, uid, item_ids[0], context=context)
@@ -737,8 +729,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         total = self.pool.get('ir.actions.todo')\
             .search_count(cr, uid, [], context)
         todo = self.pool.get('ir.actions.todo')\
-            .search_count(cr, uid,[('type','=','configure'),
-                                   ('active','=',True),
+            .search_count(cr, uid,[('active','=',True),
                                    ('state','<>','open')],
                           context)
         if total > 0.0:

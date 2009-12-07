@@ -30,9 +30,8 @@ class res_config_configurable(osv.osv_memory):
         total = self.pool.get('ir.actions.todo')\
             .search_count(cr, uid, [], context)
         open = self.pool.get('ir.actions.todo')\
-            .search_count(cr, uid,[('type','=','configure'),
-                                   ('active','=',True),
-                                   ('state','<>','open')],
+            .search_count(cr, uid, [('active','=',True),
+                                    ('state','<>','open')],
                           context)
         if total:
             return round(open*100./total)
@@ -49,11 +48,9 @@ class res_config_configurable(osv.osv_memory):
         todos = self.pool.get('ir.actions.todo')
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
                                   'getting next %s' % todos)
-        active_todos = todos.search(cr, uid,
-                                [('type','=','configure'),
-                                 ('state', '=', 'open'),
-                                 ('active','=',True)],
-                                limit=1, context=None)
+        active_todos = todos.search(cr, uid, [('state','=','open'),
+                                              ('active','=',True)],
+                                    limit=1, context=None)
         if active_todos:
             return todos.browse(cr, uid, active_todos[0], context=None)
         return None
