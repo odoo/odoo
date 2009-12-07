@@ -70,6 +70,12 @@ logger = netsvc.Logger()
 #-----------------------------------------------------------------------
 import tools
 
+# Check if the connection to PostgreSQL don't use postgres user
+if tools.config['db_user'] == 'postgres':
+    sys.stderr.write("Attempted to connected database with postgres user." \
+            " This is a security flaws, aborting.\n")
+    sys.exit(1)
+
 logger.notifyChannel("server", netsvc.LOG_INFO, "version - %s" % release.version )
 for name, value in [('addons_path', tools.config['addons_path']),
                     ('database hostname', tools.config['db_host'] or 'localhost'),
