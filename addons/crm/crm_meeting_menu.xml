@@ -15,7 +15,8 @@
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
         <field name="context" eval="{'default_state':'open'}"/>
-    </record>    
+    </record>
+
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_partner">
         <field name="sequence" eval="1"/>
@@ -40,6 +41,45 @@
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="crm_case_gantt_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
+    </record>
+
+    <act_window
+        id="crm_case_categ_meet_case"
+        name="Schedule a Meeting"
+        res_model="crm.case"
+        src_model="crm.case"
+        view_mode="calendar,tree,form,gantt"
+        context="{'default_case_id': active_id, 'default_duration': 4.0}"
+        domain="[('section_id','=',ref('section_support1'))]"/>	
+
+    <record model="ir.actions.act_window" id="crm_case_categ_meet_case">
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+    </record>    
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_case">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm_case_calendar_view_meet"/>
+        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_meet_case">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm_case_tree_view_meet"/>
+        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_tag_form_meet_case">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_case_form_view_meet"/>
+        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
+    </record>
+	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_case">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">gantt</field>
+        <field name="view_id" ref="crm_case_gantt_view_meet"/>
+        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet">

@@ -6,19 +6,7 @@
     # Opportunities
     # ------------------------------------------------------ 
 
-    <act_window
-        id="crm_case_categ_meet_case"
-        name="Schedule a Meeting"
-        res_model="crm.case"
-        src_model="crm.case"
-        view_mode="calendar,tree,form,gantt"
-        context="{'default_case_id': active_id, 'default_duration': 4.0}"
-        domain="[('section_id','=',ref('section_support1'))]"/>	
-
-    <record model="ir.actions.act_window" id="crm_case_categ_meet_case">
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
-        <field name="context" eval="{'default_state':'open'}"/>
-    </record>
+    
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities Form</field>
@@ -42,8 +30,7 @@
                     <group colspan="2">
                         <field name="case_id" select="1"/>
                         <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>
-                    <button string="Schedule Meeting" icon="terp-crm" name="%(crm_case_categ_meet_case)d" type="action"/>
+                    </group>                    
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
