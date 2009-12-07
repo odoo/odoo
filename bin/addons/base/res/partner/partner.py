@@ -163,6 +163,7 @@ class res_partner(osv.osv):
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
         'category_id': _default_category,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', c),
     }
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
@@ -295,6 +296,7 @@ class res_partner_address(osv.osv):
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
+        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
     _defaults = {
         'active': lambda *a: 1,

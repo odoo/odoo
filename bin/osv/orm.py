@@ -211,6 +211,8 @@ class browse_record(object):
                 raise except_orm('NoDataError', 'Field %s in %s%s'%(name,self._table_name,str(ids)))
             # create browse records for 'remote' objects
             for data in datas:
+                if len(str(data['id']).split('-')) > 1:
+                    data['id'] = int(str(data['id']).split('-')[0]) 
                 for n, f in ffields:
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
