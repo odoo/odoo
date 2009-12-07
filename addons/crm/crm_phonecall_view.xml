@@ -10,6 +10,26 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
+            <tree string="Phone Calls" colors="red:state=='open'">
+                <field name="date" string="Date"/>
+                <field name="name" string="Call Summary"/>                
+                <field name="partner_id" string="Partner"/>
+                <field name="partner_address_id" string="Contact"/>
+                <field name="case_id"/>                
+                <button string="Opportunity" name="%(wizard_crm_opportunity_set)d"  type="action"/>
+                <button string="Meeting"
+                        name="%(wizard_crm_reschedule_phone_call)d"  type="action" />
+                <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_phone_incomming_tree_view">
+        <field name="name">CRM - Phone Calls Tree</field>
+        <field name="model">crm.case</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
             <tree string="Phone Calls"  editable="bottom" colors="red:state=='open'">
                 <field name="date" string="Date"/>
                 <field name="name" string="Call Summary"/>                
