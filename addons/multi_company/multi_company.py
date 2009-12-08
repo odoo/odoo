@@ -33,7 +33,7 @@ class multi_company_default(osv.osv):
     """
     _name = 'multi_company.default'
     _description = 'Default multi company'
-    _order = 'company_id,company_dest_id,sequence,id'
+    _order = 'company_id,sequence,id'
 
     _columns = {
         'sequence': fields.integer('Sequence'),

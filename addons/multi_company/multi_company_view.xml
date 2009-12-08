@@ -8,12 +8,12 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Multi Company">
-                    <field name="sequence"/>
-                    <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="company_dest_id"/>
                     <field name="object_id"/>
                     <field name="expression" />
+                    <field name="sequence"/>
+                    <field name="company_dest_id"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
@@ -24,12 +24,16 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="company_dest_id"/>
-                    <field name="object_id"/>
-                    <field name="expression" />
+                    <group col="6" colspan="4">
+                        <field name="name" colspan="6"/>
+                        <separator string="Matching" colspan="6"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="object_id"/>
+                        <field name="company_dest_id"/>
+                        <separator string="Condition" colspan="6"/>
+                        <field name="expression" colspan="4"/>
+                        <field name="sequence"/>
+                    </group>
                 </form>
             </field>
         </record>
