@@ -245,7 +245,7 @@ class product_template(osv.osv):
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."),
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
@@ -266,7 +266,7 @@ class product_template(osv.osv):
         'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
-            help='Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
+            help='Used by companies that manages two unit of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
             help='Coefficient to convert UOM to UOS\n'
             ' uom = uos * coeff'),
