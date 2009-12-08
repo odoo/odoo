@@ -388,7 +388,7 @@ class purchase_order(osv.osv):
                     continue
                 if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     dest = order.location_id.id
-                    self.pool.get('stock.move').create(cr, uid, {
+                    move = self.pool.get('stock.move').create(cr, uid, {
                         'name': 'PO:'+order_line.name,
                         'product_id': order_line.product_id.id,
                         'product_qty': order_line.product_qty,
@@ -400,11 +400,13 @@ class purchase_order(osv.osv):
                         'location_dest_id': dest,
                         'picking_id': picking_id,
                         'move_dest_id': order_line.move_dest_id.id,
-                        'state': 'assigned',
+                        'state': 'draft',
                         'purchase_line_id': order_line.id,
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
+                    self.pool.get('stock.move').action_confirm(cr, uid, [move])
+                    self.pool.get('stock.move').force_assign(cr,uid, [move])
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
