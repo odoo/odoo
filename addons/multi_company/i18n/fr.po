@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-08 10:15:44+0000\n"
-"PO-Revision-Date: 2009-12-08 11:16+0100\n"
+"POT-Creation-Date: 2009-12-08 11:46:41+0000\n"
+"PO-Revision-Date: 2009-12-08 12:48+0100\n"
 "Last-Translator: Christophe Chauvet <christophe.chauvet@syleam.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -59,9 +59,7 @@ msgid "Object"
 msgstr "Objet"
 
 #. module: multi_company
-#: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 #: view:multi_company.default:0
 msgid "Multi Company"
 msgstr "Multi société"
@@ -123,6 +121,11 @@ msgid "Name it to easily find a record"
 msgstr "La nommer facilement de façon a trouver l'enregistrement"
 
 #. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
+msgid "Multi company"
+msgstr "Multi société"
+
+#. module: multi_company
 #: model:ir.model,name:multi_company.model_multi_company_default
 msgid "multi_company.default"
 msgstr "multi_company.default"
@@ -131,6 +134,11 @@ msgstr "multi_company.default"
 #: help:multi_company.default,company_id:0
 msgid "Company where the user is connected"
 msgstr "Société dans laquelle l'utilisateur est connectée"
+
+#. module: multi_company
+#: model:ir.actions.act_window,name:multi_company.action_inventory_form
+msgid "Default Company per Object"
+msgstr "Société par défaut par objet"
 
 #. module: multi_company
 #: field:multi_company.default,expression:0
@@ -161,6 +169,11 @@ msgstr "Erreur: code EAN invalide"
 #: help:multi_company.default,expression:0
 msgid "Expression, must be True to match"
 msgstr "L'expression doit être à True pour correspondre"
+
+#. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
+msgid "Default company per Object"
+msgstr "Société par défaut par objet"
 
 #. module: multi_company
 #: code:addons/multi_company/multi_company.py:0
