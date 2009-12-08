@@ -3,11 +3,11 @@
 <data noupdate="1">
 <!--        CASE SECTION        -->
     <record model="crm.case.section" id="section_support2">
-        <field name="name">Prospects</field>
-        <field name="code">prospects</field>
+        <field name="name">Leads</field>
+        <field name="code">leads</field>
     </record>
 
-<!--        CASE CATEGORY(categ_id)        -->    
+<!--        CASE CATEGORY(categ_id)        -->
     <record model="crm.case.categ" id="categ_lead1">
         <field name="name">Existing Customer</field>
         <field name="section_id" ref="section_support2"/>
@@ -15,7 +15,7 @@
     <record model="crm.case.categ" id="categ_lead2">
         <field name="name">Self Generated</field>
         <field name="section_id" ref="section_support2"/>
-    </record>    
+    </record>
     <record model="crm.case.categ" id="categ_lead3">
         <field name="name">Employee</field>
         <field name="section_id" ref="section_support2"/>
@@ -27,15 +27,15 @@
     <record model="crm.case.categ" id="categ_lead6">
         <field name="name">Website</field>
         <field name="section_id" ref="section_support2"/>
-    </record>    
+    </record>
     <record model="crm.case.categ" id="categ_lead7">
         <field name="name">Word of mouth</field>
         <field name="section_id" ref="section_support2"/>
-    </record>    
+    </record>
     <record model="crm.case.categ" id="categ_lead8">
         <field name="name">Other</field>
         <field name="section_id" ref="section_support2"/>
-    </record>    
+    </record>
 
 <!--        CASE STATUS(stage_id)        -->
     <record model="crm.case.stage" id="stage_lead1">
@@ -63,11 +63,11 @@
         <field name="section_id" ref="section_support2"/>
     </record>
 
-<!--        CASE CATEGORY2(category2_id)        -->    
+<!--        CASE CATEGORY2(category2_id)        -->
     <record model="crm.case.category2" id="category_lead1">
         <field name="name">Telesales</field>
         <field name="section_id" ref="section_support2"/>
-    </record>        
+    </record>
     <record model="crm.case.category2" id="category_lead2">
         <field name="name">Mail</field>
         <field name="section_id" ref="section_support2"/>
@@ -79,7 +79,7 @@
     <record model="crm.case.category2" id="category_lead4">
         <field name="name">Print</field>
         <field name="section_id" ref="section_support2"/>
-    </record>        
+    </record>
     <record model="crm.case.category2" id="category_lead5">
         <field name="name">Web</field>
         <field name="section_id" ref="section_support2"/>
@@ -96,6 +96,6 @@
         <field name="name">Newsletter</field>
         <field name="section_id" ref="section_support2"/>
     </record>
-    
+
 </data>
 </openerp>
