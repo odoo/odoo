@@ -51,7 +51,7 @@ class node_context(object):
 
     def __init__(self, cr, uid, context=None):
         # we don't cache the cr!
-        #self.cr = cr
+        self.dbname = cr.dbname
         self.uid = uid
         self.context = context
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
@@ -114,7 +114,7 @@ class node_class(object):
             s+=self.path
         else:
             s.append(self.path)
-        return s
+        return map(lambda x: '/' +x, s)
 
     def children(self, cr):
         print "node_class.children()"
@@ -318,6 +318,7 @@ class node_res_dir(node_class):
         self.namefield = dirr.resource_field or 'name'
         self.displayname = dirr.name
         # Important: the domain is evaluated using the *parent* dctx!
+        self.dctx.update({'active_id': self.context.context['dir_id']})
         self.domain = safe_eval(dirr.domain,self.dctx)
         # and then, we add our own vars in the dctx:
         if dctx:
@@ -353,14 +354,13 @@ class node_res_dir(node_class):
         ctx.update(self.dctx)
         where = []
         if self.domain:
-            where.append(self.domain)
+            where += self.domain
         if self.resm_id:
             where.append(('id','=',self.resm_id))
     
         if name:
             where.append((self.namefield,'=',name))
-        # print "Where clause for %s" % self.res_model, where
-    
+        # print "Where clause for %s" % self.res_model, where        
         resids = obj.search(cr,uid, where, context=ctx)
         res = []
         for bo in obj.browse(cr,uid,resids,context=ctx):
@@ -396,8 +396,7 @@ class node_res_obj(node_class):
         self.content_length = 0
         self.res_model = res_model
         self.domain = parent.domain
-        self.displayname = path
-
+        self.displayname = path        
         if res_bo:
             self.res_id = res_bo.id
             dc2 = self.context.context
@@ -415,10 +414,10 @@ class node_res_obj(node_class):
         else:
             self.res_id = res_id
 
-    def children(self,cr):
+    def children(self,cr):        
         return self._child_get(cr) + self._file_get(cr)
 
-    def child(self,cr, name):
+    def child(self,cr, name):        
         res = self._child_get(cr,name)
         if res:
             return res[0]
@@ -481,7 +480,7 @@ class node_res_obj(node_class):
         ctx.update(self.dctx)
         where = [('parent_id','=',self.dir_id) ]
         if name:
-            where.append(('name','=',name))
+            where.append(('name','=',name))        
         ids = dirobj.search(cr, uid, where,context=ctx)
         res = []
         if ids:

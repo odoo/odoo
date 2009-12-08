@@ -176,9 +176,9 @@ class document_directory(osv.osv):
         did = root_id
         duri = uri
         path = []
-        context = ncontext.context
-        while len(duri):
-            nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','directory')], context=context)
+        context = ncontext.context        
+        while len(duri):            
+            nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','directory')], context=context)            
             if not nid:
                 break
             if len(nid)>1:

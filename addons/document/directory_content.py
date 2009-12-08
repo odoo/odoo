@@ -24,8 +24,10 @@ from osv import osv, fields
 from osv.orm import except_orm
 import urlparse
 
+import netsvc
 import os
 import nodes
+import StringIO
 
 class document_directory_content_type(osv.osv):
     _name = 'document.directory.content.type'
@@ -71,17 +73,16 @@ class document_directory_content(osv.osv):
         """
     
         # TODO: respect the context!
-        if content.include_name and not node.object2:
+        model = node.res_model
+        if content.include_name and not model:
             return False
         
         res2 = []
         tname = ''
         if content.include_name:
-            content_name = node.object2.name
-            obj = pool.get(node.object.ressource_type_id.model)
-            name_for = obj._name.split('.')[-1]
-            if content_name  and content_name.find(name_for) == 0  :
-                content_name = content_name.replace(name_for,'')
+            content_name = node.displayname or ''
+            obj = node.context._dirobj.pool.get(model)
+            if content_name:
                 tname = (content.prefix or '') + content_name + (content.suffix or '') + (content.extension or '')
         else:
             tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
@@ -101,12 +102,13 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
+    
     def process_read(self, cr, uid, node):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.content.report_id.id)
-        srv = netsvc.LocalService('report.'+report.report_name)
-        pdf,pdftype = srv.create(cr, uid, [node.object.id], {}, {})
+        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
+        srv = netsvc.Service._services['report.'+report.report_name]
+        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})
         s = StringIO.StringIO(pdf)
         s.name = node
         return s

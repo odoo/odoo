@@ -190,11 +190,12 @@ class document_storage(osv.osv):
             path = boo.path
             try:
                 flag = None
-                # This can be improved
-                for dirs in os.listdir(path):
-                    if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
-                        flag = dirs
-                        break
+                # This can be improved  
+                if os.path.isdir(path):              
+                    for dirs in os.listdir(path):
+                        if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
+                            flag = dirs
+                            break
                 flag = flag or create_directory(path)
                 filename = random_name()
                 fname = os.path.join(path, flag, filename)
