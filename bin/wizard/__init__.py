@@ -54,7 +54,7 @@ class interface(netsvc.Service):
                 trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.get('string').encode('utf8'))
                 if trans:
                     node.set('string', trans)
-            for n in node.getchildren():
+            for n in node:
                 self.translate_view(cr, n, state, lang)
 
     def execute_cr(self, cr, uid, data, state='init', context=None):

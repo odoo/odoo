@@ -88,7 +88,7 @@ class _rml_styles(object,):
 
     def _table_style_get(self, style_node):
         styles = []
-        for node in style_node.getchildren():
+        for node in style_node:
             start = utils.tuple_int_get(node, 'start', (0,0) )
             stop = utils.tuple_int_get(node, 'stop', (-1,-1) )
             if node.tag=='blockValign':
@@ -166,7 +166,7 @@ class _rml_doc(object):
 
     def _textual_image(self, node):
         rc = ''
-        for n in node.getchildren():
+        for n in node:
             rc +=( etree.tostring(n) or '') + n.tail
         return base64.decodestring(node.tostring())
 
@@ -749,7 +749,8 @@ class _rml_template(object):
                     frame.lastFrame = True
                 frames.append( frame )
             try :
-                gr = pt.findall('pageGraphics') or pt.getchildren()[1].findall('pageGraphics')
+                gr = pt.findall('pageGraphics')\
+                    or pt[1].findall('pageGraphics')
             except :
                 gr=''
             if len(gr):
