@@ -98,12 +98,37 @@ account_analytic_default()
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _description = 'account invoice line'
+    
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, context={}):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition, price_unit, address_invoice_id, context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec:
             res_prod['value'].update({'account_analytic_id':rec.analytic_id.id})
+        else:
+            res_prod['value'].update({'account_analytic_id':False})       
         return res_prod
 account_invoice_line()
+
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    _description = "Packing List"
+    
+    def action_invoice_create(self, cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None):
+        invoice_obj = self.pool.get('account.invoice')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        res = super(stock_picking,self).action_invoice_create(cr, uid, ids, journal_id, group, type, context)
+        if type == 'out_invoice':
+            for inv in invoice_obj.browse(cr, uid, res.values(), context=context):
+                for ol in inv.invoice_line:
+                    rec = self.pool.get('account.analytic.default').account_get(cr, uid, ol.product_id.id, inv.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+                    if ol.product_id:
+                        if rec:
+                            invoice_line_obj.write(cr, uid, ol.id, {'account_analytic_id': rec.analytic_id.id})
+        return res
+
+stock_picking()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
