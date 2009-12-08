@@ -72,13 +72,16 @@ class db(netsvc.Service):
         self.actions[id] = {'clean': False}
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
+        db.lock()
         try:
-            cr.autocommit(True) # avoid transaction block
-            cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
+            cr = db.cursor()
+            try:
+                cr.autocommit(True) # avoid transaction block
+                cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
+            finally:
+                cr.close()
         finally:
-            cr.close()
-            del db
+            db.release()
 
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
@@ -154,20 +157,24 @@ class db(netsvc.Service):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
-        cr.autocommit(True) # avoid transaction block
+        db.lock()
         try:
+            cr = db.cursor()
+            cr.autocommit(True) # avoid transaction block
             try:
-                cr.execute('DROP DATABASE "%s"' % db_name)
-            except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'DROP DB: %s failed:\n%s' % (db_name, e))
-                raise Exception("Couldn't drop database %s: %s" % (db_name, e))
-            else:
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'DROP DB: %s' % (db_name))
+                try:
+                    cr.execute('DROP DATABASE "%s"' % db_name)
+                except Exception, e:
+                    logger.notifyChannel("web-services", netsvc.LOG_ERROR,
+                            'DROP DB: %s failed:\n%s' % (db_name, e))
+                    raise Exception("Couldn't drop database %s: %s" % (db_name, e))
+                else:
+                    logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                        'DROP DB: %s' % (db_name))
+            finally:
+                cr.close()
         finally:
-            cr.close()
+            db.release()
         return True
 
     def _set_pg_psw_env_var(self):
@@ -221,13 +228,16 @@ class db(netsvc.Service):
             raise Exception, "Database already exists"
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
-        cr.autocommit(True) # avoid transaction block
+        db.lock()
         try:
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % db_name)
+            cr = db.cursor()
+            cr.autocommit(True) # avoid transaction block
+            try:
+                cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % db_name)
+            finally:
+                cr.close()
         finally:
-            cr.close()
-            del db
+            db.release()
 
         cmd = ['pg_restore', '--no-owner']
         if tools.config['db_user']:
@@ -266,23 +276,27 @@ class db(netsvc.Service):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
+        db.lock()
         try:
+            cr = db.cursor()
             try:
-                cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
-            except Exception, e:
-                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                        'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
-                raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
-            else:
-                fs = os.path.join(tools.config['root_path'], 'filestore')
-                if os.path.exists(os.path.join(fs, old_name)):
-                    os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
+                try:
+                    cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
+                except Exception, e:
+                    logger.notifyChannel("web-services", netsvc.LOG_ERROR,
+                            'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
+                    raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
+                else:
+                    fs = os.path.join(tools.config['root_path'], 'filestore')
+                    if os.path.exists(os.path.join(fs, old_name)):
+                        os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
 
-                logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                    'RENAME DB: %s -> %s' % (old_name, new_name))
+                    logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                        'RENAME DB: %s -> %s' % (old_name, new_name))
+            finally:
+                cr.close()
         finally:
-            cr.close()
+            db.release()
         return True
 
     def db_exist(self, db_name):
@@ -294,26 +308,30 @@ class db(netsvc.Service):
             raise Exception('AccessDenied')
 
         db = sql_db.db_connect('template1')
-        cr = db.cursor()
+        db.lock()
         try:
+            cr = db.cursor()
             try:
-                db_user = tools.config["db_user"]
-                if not db_user and os.name == 'posix':
-                    import pwd
-                    db_user = pwd.getpwuid(os.getuid())[0]
-                if not db_user:
-                    cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
-                    res = cr.fetchone()
-                    db_user = res and str(res[0])
-                if db_user:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
-                else:
-                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
-                res = [str(name) for (name,) in cr.fetchall()]
-            except:
-                res = []
+                try:
+                    db_user = tools.config["db_user"]
+                    if not db_user and os.name == 'posix':
+                        import pwd
+                        db_user = pwd.getpwuid(os.getuid())[0]
+                    if not db_user:
+                        cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
+                        res = cr.fetchone()
+                        db_user = res and str(res[0])
+                    if db_user:
+                        cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
+                    else:
+                        cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
+                    res = [str(name) for (name,) in cr.fetchall()]
+                except:
+                    res = []
+            finally:
+                cr.close()
         finally:
-            cr.close()
+            db.release()
         res.sort()
         return res
 

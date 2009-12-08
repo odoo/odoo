@@ -294,17 +294,31 @@ class Connection(object):
         self.dbname = dbname
         self._pool = pool
         self._unique = unique
-        if unique:
-            if dbname not in self.__LOCKS:
-                self.__LOCKS[dbname] = threading.Lock()
-            self.__LOCKS[dbname].acquire()
 
-    def __del__(self):
+    def __enter__(self):
         if self._unique:
-            close_db(self.dbname)
-            self.__LOCKS[self.dbname].release()
+            self.lock()
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        if self._unique:
+            self.release()
+
+    def lock(self):
+        if self.dbname not in self.__LOCKS:
+            self.__LOCKS[self.dbname] = threading.Lock()
+        self.__LOCKS[self.dbname].acquire()
+        
+    def release(self):
+        close_db(self.dbname)
+        self.__LOCKS[self.dbname].release()
 
     def cursor(self, serialized=False):
+        if self._unique:
+            lock = self.__LOCKS.get(self.dbname, None)
+            if not (lock and lock.locked()):
+                netsvc.Logger().notifyChannel('Connection', netsvc.LOG_WARNING, 'Unprotected connection to %s' % (self.dbname,))
+
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):
