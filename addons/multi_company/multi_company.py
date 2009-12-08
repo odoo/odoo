@@ -26,6 +26,7 @@ for each company
 
 from osv import osv
 from osv import fields
+from tools.translate import _
 
 class multi_company_default(osv.osv):
     """
@@ -52,6 +53,19 @@ class multi_company_default(osv.osv):
         'expression': lambda *a: 'True',
         'sequence': lambda *a: 100,
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Add (copy) in the name when duplicate record
+        """
+        if not context:
+            context = {}
+        if not default:
+            default = {}
+        company = self.browse(cr, uid, id, context=context)
+        default = default.copy()
+        default['name'] = company.name + _(' (copy)')
+        return super(multi_company_default, self).copy(cr, uid, id, default, context=context)
 
 multi_company_default()
 
