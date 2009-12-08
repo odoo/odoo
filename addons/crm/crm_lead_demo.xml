@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!-- 
+        ((((((((((( Demo Cases ))))))))))) 
+    -->
+
+    <!--For Leads-->
+        <record id="crm_case_itisatelesalescampaign0" model="crm.case">
+            <field name="category2_id" ref="crm.category_lead1"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Exhibition ERP 2009&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Michel Lafont&quot;" name="partner_name2"/>
+            <field eval="&quot;(726) 782-0636&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_lead6"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field eval="&quot;The Oil Company&quot;" name="partner_name"/>
+            <field eval="&quot;(769) 703-274&quot;" name="partner_phone"/>
+        </record>
+        <record id="crm_case_electonicgoodsdealer0" model="crm.case">
+            <field name="category2_id" ref="crm.category_lead7"/>
+            <field eval="&quot;4&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Exhibition ERP 2009&quot;" name="name"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Luc Latour&quot;" name="partner_name2"/>
+            <field eval="&quot;(392) 895-7917&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_lead2"/>
+            <field name="stage_id" ref="crm.stage_lead2"/>
+            <field eval="&quot;Le Club SARL&quot;" name="partner_name"/>
+            <field eval="&quot;(956) 293-2595&quot;" name="partner_phone"/>
+        </record>
+        <record id="crm_case_developingwebapplications0" model="crm.case">
+            <field name="category2_id" ref="crm.category_lead5"/>
+            <field eval="&quot;2&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="&quot;Exhibition ERP 2009&quot;" name="name"/>
+            <field eval="&quot;done&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Mike Gardner&quot;" name="partner_name2"/>
+            <field eval="&quot;(820) 167-3208&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_lead4"/>
+            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="&quot;TheKompany&quot;" name="partner_name"/>
+            <field eval="&quot;(079) 681-2139&quot;" name="partner_phone"/>
+            <field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
+        </record>
+        <record id="crm_case_qrecorp0" model="crm.case">
+            <field name="category2_id" ref="crm.category_lead8"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Exhibition ERP 2009&quot;" name="name"/>
+            <field eval="&quot;draft&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;(077) 582-4035&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_lead1"/>
+            <field name="stage_id" ref="crm.stage_lead1"/>
+            <field eval="&quot;The Gas Company&quot;" name="partner_name"/>
+            <field eval="&quot;(514) 698-4118&quot;" name="partner_phone"/>
+        </record>
+        <record id="crm_case_itdeveloper0" model="crm.case">
+            <field name="category2_id" ref="crm.category_lead4"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Carrie Helle&quot;" name="name"/>
+            <field eval="&quot;pending&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Sam Stone&quot;" name="partner_name2"/>
+            <field eval="&quot;(333) 715-1450&quot;" name="partner_mobile"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_lead6"/>
+            <field name="stage_id" ref="crm.stage_lead3"/>
+            <field eval="&quot;Stonage IT&quot;" name="partner_name"/>
+            <field eval="&quot;(855) 924-4364&quot;" name="partner_phone"/>
+        </record>
+        <record id="crm_case_mgroperations0" model="crm.case">
+            <field name="partner_address_id" ref="base.res_partner_address_1"/>
+            <field eval="1" name="active"/>
+            <field name="category2_id" ref="crm.category_lead3"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Tina Pinero&quot;" name="name"/>
+            <field eval="&quot;cancel&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Benoit Mortier&quot;" name="partner_name2"/>
+            <field eval="&quot;(468) 017-2684&quot;" name="partner_mobile"/>
+            <field name="categ_id" ref="crm.categ_lead8"/>
+            <field name="stage_id" ref="crm.stage_lead6"/>
+            <field eval="&quot;Opensides SPRL&quot;" name="partner_name"/>
+            <field eval="&quot;(373) 907-1009&quot;" name="partner_phone"/>
+            <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+        </record>
+        <record id="crm_case_vpoperations0" model="crm.case">
+            <field eval="1" name="active"/>
+            <field name="category2_id" ref="crm.category_lead8"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;Wendi Baltz&quot;" name="name"/>
+            <field eval="&quot;done&quot;" name="state"/>
+            <field name="section_id" ref="crm.section_support2"/>
+            <field eval="&quot;Will Smith&quot;" name="partner_name2"/>
+            <field eval="&quot;(463) 014-1208&quot;" name="partner_mobile"/>
+            <field name="categ_id" ref="crm.categ_lead4"/>
+            <field name="stage_id" ref="crm.stage_lead4"/>
+            <field eval="&quot;Gardner Group&quot;" name="partner_name"/>
+            <field eval="&quot;(282) 603-7489&quot;" name="partner_phone"/>
+        </record>
+    </data>
+</openerp>

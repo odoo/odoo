@@ -219,17 +219,7 @@ class AccountMove(osv.osv):
     _inherit = "account.move"
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'voucher_type': fields.selection([
-            ('pay_voucher','Cash Payment Voucher'),
-            ('bank_pay_voucher','Bank Payment Voucher'),
-            ('rec_voucher','Cash Receipt Voucher'),
-            ('bank_rec_voucher','Bank Receipt Voucher'),
-            ('cont_voucher','Contra Voucher'),
-            ('journal_sale_vou','Journal Sale Voucher'),
-            ('journal_pur_voucher','Journal Purchase Voucher'),
-            ('journal_voucher','Journal Voucher'),
-            ],'Voucher Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
-        'narration':fields.text('Narration'),
+        'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
 
 AccountMove()

@@ -21,6 +21,8 @@
 
 import crm
 import crm_segmentation
+import crm_calendar
+import crm_config
 
 import report
 import wizard

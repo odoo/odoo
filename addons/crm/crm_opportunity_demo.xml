@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+    <!-- 
+        ((((((((((( Demo Cases ))))))))))) 
+    -->
+
+    <!--For Opportunity-->
+
+        <record id="crm_case_construstazunits0" model="crm.case">
+            <field eval="60" name="probability"/>
+            <field name="partner_address_id" ref="base.res_partner_address_zen"/>
+            <field eval="1" name="active"/>
+            <field eval="17.0" name="duration"/>
+            <field name="category2_id" ref="crm.category_oppor1"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field eval="75000.0" name="planned_cost"/>
+            <field eval="85000.0" name="planned_revenue"/>
+            <field name="section_id" ref="crm.section_support3"/>
+            <field eval="time.strftime('%Y-%m-07 10:05:15')" name="date"/>
+            <field name="categ_id" ref="crm.categ_oppor1"/>
+            <field name="stage_id" ref="crm.stage_oppor3"/>
+            <field eval="&quot;CONS TRUST (AZ) 529701 - 1000 units&quot;" name="name"/>
+        </record>
+        <record id="crm_case_rdroundfundingunits0" model="crm.case">
+            <field name="partner_address_id" ref="base.res_partner_address_15"/>
+            <field eval="1" name="active"/>
+            <field name="category2_id" ref="crm.category_oppor2"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;draft&quot;" name="state"/>
+            <field eval="30000.0" name="planned_cost"/>
+            <field eval="45000.0" name="planned_revenue"/>
+            <field eval="50" name="probability"/>
+            <field eval="8.0" name="duration"/>
+            <field name="section_id" ref="crm.section_support3"/>
+            <field eval="time.strftime('%Y-%m-05 12:25:15')" name="date"/>
+            <field name="categ_id" ref="crm.categ_oppor5"/>
+            <field name="stage_id" ref="crm.stage_oppor1"/>
+            <field eval="&quot;3rd Round Funding - 1000 units &quot;" name="name"/>
+        </record>
+        <record id="crm_case_mediapoleunits0" model="crm.case">
+            <field eval="10" name="probability"/>
+            <field name="partner_address_id" ref="base.res_partner_address_3"/>
+            <field eval="1" name="active"/>
+            <field name="category2_id" ref="crm.category_oppor1"/>
+            <field name="partner_id" ref="base.res_partner_8"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;pending&quot;" name="state"/>
+            <field eval="50000.0" name="planned_cost"/>
+            <field eval="55000.0" name="planned_revenue"/>
+            <field eval="70" name="probability"/>
+            <field eval="10.0" name="duration"/>
+            <field name="section_id" ref="crm.section_support3"/>
+            <field eval="time.strftime('%Y-%m-14 13:55:10')" name="date"/>
+            <field name="categ_id" ref="crm.categ_oppor7"/>
+            <field name="stage_id" ref="crm.stage_oppor5"/>
+            <field eval="&quot;Mediapole - 5000 units&quot;" name="name"/>
+            <field eval="&quot;info@mediapole.net&quot;" name="email_from"/>
+        </record>
+        <record id="crm_case_abcfuelcounits0" model="crm.case">
+            <field eval="40" name="probability"/>
+            <field name="partner_address_id" ref="base.res_partner_address_1"/>
+            <field eval="1" name="active"/>
+            <field name="category2_id" ref="crm.category_oppor1"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field eval="&quot;open&quot;" name="state"/>
+            <field eval="50000.0" name="planned_cost"/>
+            <field eval="45000.0" name="planned_revenue"/>
+            <field eval="24.0" name="duration"/>
+            <field name="section_id" ref="crm.section_support3"/>
+            <field eval="time.strftime('%Y-%m-23 16:32:23')" name="date"/>
+            <field name="categ_id" ref="crm.categ_oppor5"/>
+            <field name="stage_id" ref="crm.stage_oppor4"/>
+            <field eval="&quot;ABC FUEL CO 829264 - 1000 units &quot;" name="name"/>
+            <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
+        </record>
+        <record id="crm_case_dirtminingltdunits0" model="crm.case">
+            <field eval="80" name="probability"/>
+            <field name="partner_address_id" ref="base.res_partner_address_wong"/>
+            <field eval="1" name="active"/>
+            <field eval="2.25" name="duration"/>
+            <field name="partner_id" ref="base.res_partner_maxtor"/>
+            <field eval="&quot;3&quot;" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;done&quot;" name="state"/>
+            <field eval="25000.0" name="planned_cost"/>
+            <field eval="42000.0" name="planned_revenue"/>
+            <field name="section_id" ref="crm.section_support3"/>
+            <field eval="time.strftime('%Y-%m-25 16:05:15')" name="date"/>
+            <field name="categ_id" ref="crm.categ_oppor2"/>
+            <field name="stage_id" ref="crm.stage_oppor6"/>
+            <field eval="&quot;Dirt Mining Ltd 271742 - 1000 units&quot;" name="name"/>
+        </record>
+    </data>
+</openerp>

@@ -138,11 +138,6 @@
                             <separator string="Base Prices" colspan="4"/>
                             <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
-                            <field name="standard_price_multi"/>
-                            <field name="list_price_multi"/>
-                            <newline/>
-                            <field name="standard_price_ids" nolabel="1" colspan="2"/>
-                            <field name="list_price_ids" nolabel="1" colspan="2"/>
                             <newline/>
                             <field name="price_margin" select="1"/>
                             <field name="price_extra" select="1"/>
@@ -595,57 +590,6 @@
         <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_main_product" sequence="2"
                   groups="product.group_product_variant" />
 
-        <record id="company_wise_cost_price_form_view" model="ir.ui.view">
-            <field name="name">company.wise.cost.price.form</field>
-            <field name="model">company.wise.cost.price</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Company Wise Cost Prices">
-                    <field name="company_id" on_change="company_cost_onchange(company_id)" groups="base.group_multi_company"/>
-                    <field name="standard_price"/>
-                    <field name="currency_id"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="company_wise_cost_price_tree_view" model="ir.ui.view">
-            <field name="name">company.wise.cost.price.tree</field>
-            <field name="model">company.wise.cost.price</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Company Wise Cost Prices">
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="standard_price"/>
-                    <field name="currency_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="company_wise_sale_price_form_view" model="ir.ui.view">
-            <field name="name">company.wise.sale.price.form</field>
-            <field name="model">company.wise.sale.price</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Company Wise Sale Prices">
-                    <field name="company_id" on_change="company_sale_onchange(company_id)" groups="base.group_multi_company"/>
-                    <field name="list_price"/>
-                    <field name="currency_id"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="company_wise_sale_price_tree_view" model="ir.ui.view">
-            <field name="name">company.wise.sale.price.tree</field>
-            <field name="model">company.wise.sale.price</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Company Wise Sale Prices">
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="list_price"/>
-                    <field name="currency_id"/>
-                </tree>
-            </field>
-        </record>
 
     </data>
 </openerp>

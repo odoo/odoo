@@ -141,10 +141,14 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
         # note: will call product_id_change_unit_price_inv with context...
-        if context is None:
-            context = {}
-        context.update({'price_type': context.get('price_type','tax_excluded')})
-        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context=context)
+
+        # Temporary trap, for bad context that came from koo: 
+        # if isinstance(context, str):
+        #       print "str context:", context
+
+        ctx = (context and context.copy()) or {}
+        ctx.update({'price_type': ctx.get('price_type','tax_excluded')})
+        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context=ctx)
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):

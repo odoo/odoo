@@ -46,7 +46,7 @@ def _get_returns(self, cr, uid, data, context):
     for m in [line for line in pick.move_lines]:
         quantity=m.product_qty
         arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
-        fields['return%s' % m.id]={'string':m.product_id.name, 'type':'float', 'required':True, 'default':make_default(quantity)}
+        fields['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True, 'default':make_default(quantity)}
         res.setdefault('returns', []).append(m.id)
     arch_lst.append('<field name="invoice_state"/>\n<newline/>')
     if pick.invoice_state=='invoiced':

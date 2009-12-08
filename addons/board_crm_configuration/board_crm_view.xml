@@ -21,7 +21,7 @@
 			<field name="res_model">crm.case</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="crm_configuration.crm_case_tree_view_leads"/>
+			<field name="view_id" ref="crm.crm_case_tree_view_leads"/>
             <field name="domain">[('section_id.name', '=', 'Prospects'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 
@@ -29,7 +29,7 @@
 			<field name="res_model">crm.case</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="crm_configuration.crm_case_tree_view_meet"/>
+			<field name="view_id" ref="crm.crm_case_tree_view_meet"/>
 			<field name="domain">[('section_id.name', '=', 'Meetings'),('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
 			

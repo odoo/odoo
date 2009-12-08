@@ -130,7 +130,7 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Requisition'), ('production', 'Production')], 'Location Type', required=True),
+        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
@@ -167,6 +167,7 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -174,10 +175,11 @@ class stock_location(osv.osv):
         'allocation_method': lambda *a: 'fifo',
         'chained_location_type': lambda *a: 'none',
         'chained_auto_packing': lambda *a: 'manual',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.location', c),
         'posx': lambda *a: 0,
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
-        'icon': lambda *a: False
+        'icon': lambda *a: False,
     }
 
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
@@ -472,6 +474,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -481,6 +484,7 @@ class stock_picking(osv.osv):
         'type': lambda *a: 'in',
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock_picking', c)
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
@@ -726,7 +730,8 @@ class stock_picking(osv.osv):
                     'comment': comment,
                     'payment_term': payment_term_id,
                     'fiscal_position': partner.property_account_position.id,
-                    'date_invoice':context.get('date_inv',False)
+                    'date_invoice': context.get('date_inv',False),
+                    'company_id': picking.company_id.id,
                     }
                 cur_id = self.get_currency_id(cursor, user, picking)
                 if cur_id:
@@ -765,6 +770,11 @@ class stock_picking(osv.osv):
                 tax_ids = self._get_taxes_invoice(cursor, user, move_line, type)
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
+                
+                #set UoS if it's a sale and the picking doesn't have one
+                uos_id = move_line.product_uos and move_line.product_uos.id or False
+                if not uos_id and type in ('out_invoice', 'out_refund'):
+                    uos_id = move_line.product_uom.id
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
                 notes = False
@@ -777,7 +787,7 @@ class stock_picking(osv.osv):
                     'name': name,
                     'origin': origin,
                     'invoice_id': invoice_id,
-                    'uos_id': move_line.product_uos.id,
+                    'uos_id': uos_id,
                     'product_id': move_line.product_id.id,
                     'account_id': account_id,
                     'price_unit': price_unit,
@@ -878,6 +888,7 @@ class stock_production_lot(osv.osv):
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -901,6 +912,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
 
     _defaults = {
@@ -988,6 +1000,7 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
+        'company_id': fields.many2one('res.company', 'Company', required=True),      
     }
     _constraints = [
         (_check_tracking,
@@ -1027,6 +1040,7 @@ class stock_move(osv.osv):
         'product_qty': lambda *a: 1.0,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', c)
     }
 
     def _auto_init(self, cursor, context):
@@ -1054,15 +1068,38 @@ class stock_move(osv.osv):
                 'message': 'You are moving %.2f products but only %.2f available in this lot.' % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
-
+    
+    def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
+        result = {
+                  'product_uos_qty': 0.00
+          }
+        
+        if (not product_id) or (product_qty <=0.0):
+            return {'value': result}
+            
+        product_obj = self.pool.get('product.product')
+        uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
+        
+        if product_uos and product_uom and (product_uom != product_uos):
+            result['product_uos_qty'] = product_qty * uos_coeff['uos_coeff']
+        else:
+            result['product_uos_qty'] = product_qty
+        
+        return {'value': result}
+    
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
             return {}
         product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+        uos_id  = product.uos_id and product.uos_id.id or False
         result = {
-            'name': product.name,
+            'name': product.partner_ref,
             'product_uom': product.uom_id.id,
+            'product_uos': uos_id,
+            'product_qty': 1.00,
+            'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
+        
         if loc_id:
             result['location_id'] = loc_id
         if loc_dest_id:
@@ -1347,10 +1384,12 @@ class stock_inventory(osv.osv):
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft': [('readonly', False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
         'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': lambda *a: 'draft',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', c)
     }
 
     #
@@ -1417,7 +1456,8 @@ class stock_inventory_line(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_qty': fields.float('Quantity')
+        'product_qty': fields.float('Quantity'),
+        'company_id': fields.related('inventory_id','company_id',type='many2one',object='res.company',string='Company')
     }
 
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
@@ -1442,12 +1482,15 @@ class stock_warehouse(osv.osv):
     _columns = {
         'name': fields.char('Name', size=60, required=True),
 #       'partner_id': fields.many2one('res.partner', 'Owner'),
+        'company_id': fields.many2one('res.company','Company',required=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
         'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True),
         'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True),
         'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True),
     }
-
+    _defaults = {
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', c),
+    }
 stock_warehouse()
 
 

@@ -25,5 +25,17 @@
         <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule.group" id="sale_order_line_comp_rule_group">
+        <field name="name">Sale Order Line multi-company</field>
+        <field name="model_id" ref="model_sale_order_line"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="sale_order_line_comp_rule">
+        <field name="field_id" search="[('model','=','sale.order.line'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="sale_order_line_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
 </data>
 </openerp>

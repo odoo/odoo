@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 14:41+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-12-04 11:56+0000\n"
+"Last-Translator: TeMPO <info@tempo-consulting.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 04:58+0000\n"
+"X-Launchpad-Export-Date: 2009-12-05 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -67,11 +67,6 @@ msgstr "Imprimer le journal"
 #: wizard_field:account.fiscalyear.close,init,fy2_id:0
 msgid "New Fiscal Year"
 msgstr "Nouvel exercice fiscal"
-
-#. module: account
-#: wizard_field:account.open_closed_fiscalyear,init,fyear_id:0
-msgid "Fiscal Year to Open"
-msgstr "Exercice fiscal à ouvrir"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
@@ -1346,6 +1341,11 @@ msgstr ""
 "uniquement les taxes des comptes (ou des produits) du même groupe."
 
 #. module: account
+#: wizard_field:account.open_closed_fiscalyear,init,fyear_id:0
+msgid "Fiscal Year to Open"
+msgstr "Exercice fiscal à ouvrir"
+
+#. module: account
 #: view:account.config.wizard:0
 msgid "Select Chart of Accounts"
 msgstr "Sélectionner un plan de compte"
@@ -2274,7 +2274,7 @@ msgstr "Pas de filtre"
 #. module: account
 #: field:account.payment.term.line,days:0
 msgid "Number of Days"
-msgstr "Nombre de jour"
+msgstr "Nombre de jours"
 
 #. module: account
 #: help:account.invoice,reference:0
@@ -4432,7 +4432,7 @@ msgstr "Facture"
 #: wizard_button:account.open_closed_fiscalyear,init,open:0
 #: wizard_button:account_use_models,create,open_move:0
 msgid "Open"
-msgstr "Ouvrir"
+msgstr "Ouverte"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_29

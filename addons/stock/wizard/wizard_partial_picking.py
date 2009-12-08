@@ -27,6 +27,7 @@ import pooler
 import wizard
 from osv import osv
 import tools
+from tools.translate import _
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
@@ -63,7 +64,7 @@ def _get_moves(self, cr, uid, data, context):
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
-                'string': '%s - %s' % (_to_xml(m.product_id.code or '/'), _to_xml(m.product_id.name)),
+                'string': _to_xml(m.name),
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
