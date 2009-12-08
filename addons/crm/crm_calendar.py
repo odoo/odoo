@@ -311,6 +311,8 @@ class crm_case(osv.osv):
             ids = map(lambda x:int(str(x).split('-')[0]), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
+        if not read_ids:
+            return []
         cr.execute('select id,rrule,rdates from crm_case where id in (%s)' % read_ids)
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
