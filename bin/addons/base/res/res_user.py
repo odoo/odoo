@@ -271,9 +271,6 @@ class config_users(osv.osv_memory):
         self.pool.get('res.users').create(
             cr, uid, self.user_data(cr, uid, context), context)
     
-    def action_next(self, cr, uid, ids, context=None):
-        return self.next(cr, uid)
-
     def action_new(self, cr, uid, ids, context=None):
         self.create_user(cr, uid, context=context)
         return {
