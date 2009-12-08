@@ -281,7 +281,7 @@
         <field name="inherit_id" ref="base.view_partner_address_form1"/>
         <field name='type'>form</field>
         <field name='arch' type='xml'>
-            <field name="email" position="replace">
+            <field name="email" position="after">
                 <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>

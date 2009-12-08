@@ -77,7 +77,10 @@ class account_payment_term_line(osv.osv):
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value',required=True),
+        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value', required=True, help="""Example: 14 days 2%, 30 days net
+1. Line 1: percent 0.02 14 days
+2. Line 2: balance 30 days"""),
+
         'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
@@ -90,6 +93,17 @@ class account_payment_term_line(osv.osv):
         'days2': lambda *a: 0,
     }
     _order = "sequence"
+
+    def _check_percent(self, cr, uid, ids, context={}):
+        obj = self.browse(cr, uid, ids[0])
+        if obj.value == 'procent' and ( obj.value_amount < 0.0 or obj.value_amount > 1.0):
+            return False
+        return True
+
+    _constraints = [
+        (_check_percent, _('Percentages for Payment Term Line must be between 0 and 1, Example: 0.02 for 2% '), ['value_amount']),
+    ]
+    
 account_payment_term_line()
 
 
@@ -892,7 +906,10 @@ class account_move(osv.osv):
             amount+= (line.debit - line.credit)
         return amount
 
-    def _centralise(self, cr, uid, move, mode):
+    def _centralise(self, cr, uid, move, mode, context=None):
+        if context is None:
+            context = {}
+
         if mode=='credit':
             account_id = move.journal_id.default_debit_account_id.id
             mode2 = 'debit'
@@ -915,8 +932,9 @@ class account_move(osv.osv):
         if res:
             line_id = res[0]
         else:
+            context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': 'Centralisation '+mode,
+                'name': _t(cr, None, 'selection', context.get('lang'), source=(mode.capitalize()+' Centralisation')) or (mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
@@ -925,7 +943,7 @@ class account_move(osv.osv):
                 'date': move.period_id.date_stop,
                 'debit': 0.0,
                 'credit': 0.0,
-            }, {'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
+            }, context)
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
@@ -1007,8 +1025,8 @@ class account_move(osv.osv):
                 #
                 continue
             if journal.centralisation:
-                self._centralise(cr, uid, move, 'debit')
-                self._centralise(cr, uid, move, 'credit')
+                self._centralise(cr, uid, move, 'debit', context=context)
+                self._centralise(cr, uid, move, 'credit', context=context)
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'state': 'valid'
                 }, context, check=False)

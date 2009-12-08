@@ -259,8 +259,8 @@ class report_creator(osv.osv):
                 ret_str = ret_str[0:len(ret_str)-3]
             if ret_str.endswith('or'):
                 ret_str = ret_str[0:len(ret_str)-2]
-            ret_str = ret_str.strip()    
-        return ret_str
+            ret_str = ret_str.strip()
+        return ret_str % {'uid' : uid}
 
     def _id_get(self, cr, uid, id, context):
 #       return 'min(sale_order_line.id)'

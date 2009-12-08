@@ -25,6 +25,7 @@ import netsvc
 import pooler
 import time
 from tools.translate import _
+import tools
 
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
@@ -37,7 +38,7 @@ pay_form = '''<?xml version="1.0"?>
 </form>'''
 
 pay_fields = {
-    'amount': {'string': 'Amount paid', 'type':'float', 'required':True},
+    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,int(tools.config['price_accuracy']))},
     'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
     'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
     'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
@@ -53,18 +54,24 @@ def _pay_and_reconcile(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     cur_obj = pool.get('res.currency')
     amount = form['amount']
+    context['analytic_id'] = form.get('analytic_id', False)
 
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
+    # Compute the amount in company's currency, with the journal currency (which is equal to payment currency) 
+    # when it is needed :  If payment currency (according to selected journal.currency) is <> from company currency
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
-
+        currency_id = journal.currency.id
+        # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
+        
     # Take the choosen date
     if form.has_key('comment'):
-        context={'date_p':form['date'],'comment':form['comment']}
+        context.update({'date_p':form['date'],'comment':form['comment']})
     else:
-        context={'date_p':form['date'],'comment':False}
+        context.update({'date_p':form['date'],'comment':False})      
 
     acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
     if not acc_id:
@@ -78,31 +85,53 @@ def _wo_check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
-    if invoice.company_id.currency_id.id <> invoice.currency_id.id:
-        return 'addendum'
-    if journal.currency and (journal.currency.id <> invoice.currency_id.id):
-        return 'addendum'
-    if pool.get('res.currency').is_zero(cr, uid, invoice.currency_id,
-            (data['form']['amount'] - invoice.amount_total)):
+    cur_obj = pool.get('res.currency')
+    # Here we need that:
+    #    The invoice total amount in company's currency <> paid amount in company currency
+    #    (according to the correct day rate, invoicing rate and payment rate are may be different)
+    #    => Ask to a write-off of the difference. This could happen even if both amount are equal,
+    #    because if the currency rate
+    # Get the amount in company currency for the invoice (according to move lines)
+    inv_amount_company_currency=invoice.move_id.amount
+    # Get the current amount paid in company currency
+    if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
+        ctx = {'date':data['form']['date']}
+        amount_paid = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, data['form']['amount'], round=True, context=ctx)
+    else:
+        amount_paid = data['form']['amount']
+    # Get the old payment if there are some
+    if invoice.payment_ids:
+        debit=credit=0.0
+        for payment in invoice.payment_ids:
+            debit+=payment.debit
+            credit+=payment.credit
+        amount_paid+=abs(debit-credit)
+        
+    # Test if there is a difference according to currency rouding setting
+    if pool.get('res.currency').is_zero(cr, uid, invoice.company_id.currency_id,
+            (amount_paid - inv_amount_company_currency)):
         return 'reconcile'
     return 'addendum'
 
 _transaction_add_form = '''<?xml version="1.0"?>
 <form string="Information addendum">
     <separator string="Write-Off Move" colspan="4"/>
-    <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
     <field name="writeoff_journal_id"/>
+    <field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
     <field name="comment"/>
+    <separator string="Analytic" colspan="4"/>
+    <field name="analytic_id"/>
 </form>'''
 
 _transaction_add_fields = {
     'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
     'writeoff_journal_id': {'string': 'Write-Off journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
-    'comment': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
+    'comment': {'string': 'Comment', 'type':'char', 'size': 64 , 'required':True},
+    'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'},
 }
 
 def _get_value_addendum(self, cr, uid, data, context={}):
-    return {}
+    return {'comment': _('Write-Off')}
 
 def _get_period(self, cr, uid, data, context={}):
     pool = pooler.get_pool(cr.dbname)

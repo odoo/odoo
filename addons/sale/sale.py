@@ -225,7 +225,7 @@ class sale_order(osv.osv):
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
-        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
+        'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packing', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped': fields.boolean('Picked', readonly=True),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
@@ -234,19 +234,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes'),
 
-        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_total': fields.function(_amount_all, method=True, string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -504,23 +504,9 @@ class sale_order(osv.osv):
         notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
-        stock_move_obj = self.pool.get('stock.move')
-
         for order in self.browse(cr, uid, ids, context={}):
-            
-            #check for pending deliveries 
-            pending_deliveries = False
-            
-            for line in order.order_line:    
-                move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
-                for move in stock_move_obj.browse( cr, uid, move_ids ):
-                    #if one of the related order lines is in state draft, auto or confirmed
-                    #this order line is not yet delivered
-                    if move.state in ('draft', 'auto', 'confirmed'):
-                        pending_deliveries = True
-                
-                if ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
-#                    finished = True
+            for line in order.order_line:
+                if (not line.procurement_id) or (line.procurement_id.state=='done'):
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
@@ -532,7 +518,6 @@ class sale_order(osv.osv):
                             write_cancel_ids.append(line.id)
                     else:
                         notcanceled = True
-
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -818,6 +803,9 @@ class sale_order_line(osv.osv):
                             int(config['price_accuracy']))
                 fpos = line.order_id.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
+                if not a:
+                    raise osv.except_osv(_('Error !'),
+                                _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name': line.name,
                     'origin': line.order_id.name,
@@ -951,7 +939,7 @@ class sale_order_line(osv.osv):
             partner = partner_obj.browse(cr, uid, partner_id)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
         if not flag:
-            result['name'] = product_obj.partner_ref
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id

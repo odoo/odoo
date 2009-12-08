@@ -34,6 +34,13 @@ class res_partner_contact(osv.osv):
         res = [(r['shortcut'], r['name']) for r in res if r['domain']=='contact']
         return res
 
+    def _main_job(self, cr, uid, ids, fields, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for contact in self.browse(cr, uid, ids, context):
+            if contact.job_ids:
+                res[contact.id] = contact.job_ids[0].name_get()[0]
+        return res
+
     _columns = {
         'name': fields.char('Last Name', size=30,required=True),
         'first_name': fields.char('First Name', size=30),
@@ -47,7 +54,7 @@ class res_partner_contact(osv.osv):
         'active' : fields.boolean('Active'),
         'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
         'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Function'),
-        'job_id':fields.related('job_ids',type='many2one', relation='res.partner.job', string='Main Job'),
+        'job_id': fields.function(_main_job, method=True, type='many2one', relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
     }
     _defaults = {

@@ -129,7 +129,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="A cycle is defined in the workcenter definition."),
         'hour_nbr': fields.float('Number of Hours', required=True),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade'),
         'note': fields.text('Description')
     }
     _defaults = {
@@ -362,6 +362,8 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
+                    #TODO: fix me sale module can not be used here, 
+                    #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name=='client_order_ref':
@@ -976,6 +978,8 @@ class mrp_procurement(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
+            if procurement.product_qty <= 0.00:
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -1074,11 +1078,13 @@ class mrp_procurement(osv.osv):
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             newdate = newdate - procurement.product_id.seller_ids[0].delay
 
-            context.update({'lang':partner.lang})
+            #Passing partner_id to context for purchase order line integrity of Line name
+            context.update({'lang':partner.lang, 'partner_id':partner_id})
+            
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 
             line = {
-                'name': product.name,
+                'name': product.partner_ref,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
