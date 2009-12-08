@@ -259,26 +259,28 @@
             <field name="name">res.users.confirm.simple_view</field>
             <field name="model">res.config.view</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Configure simple view">
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Select your Interface</attribute>
+                </form>
+
+                <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0" string='
-                    Choose between the "Simplified Interface" or the extended one.
-                    If you are testing or using OpenERP for the first time, we suggest you to use
+                    Choose between the simplified interface and the extended one.
+                    If you are testing or using OpenERP for the first time, we suggest you use
                     the simplified interface, which has less options and fields but is easier to
                     understand. You will be able to switch to the extended view later.
-                  '/>
-                    <separator string="Choose Your Mode" colspan="4"/>
-                    <field colspan="2" name="view"/>
-                    <separator string="" colspan="4"/>
-
-                    <field name="progress" widget="progressbar" nolabel="1"
-                           colspan="1" />
-                    <label string='' colspan='1'/>
-                    <group colspan="2" col="2">
-                        <button name="action_next" icon="gtk-ok"
-                                string="Set" type="object"/>
-                    </group>
-                </form>
+                    '/>
+                  <separator string="Choose Your Mode" colspan="4"/>
+                  <field colspan="2" name="view"/>
+                </group>
+                <xpath expr='//button[@name="action_skip"]' position='replace'/>
+                <xpath expr='//button[@name="action_next"]' position='attributes'>
+                  <attribute name='string'>Set</attribute>
+                </xpath>
+              </data>
             </field>
         </record>
 
@@ -287,6 +289,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.view</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="view_confirm_simple_view_form"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

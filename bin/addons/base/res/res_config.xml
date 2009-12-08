@@ -1,0 +1,24 @@
+<openerp>
+  <data>
+    <record id="res_config_view_base" model="ir.ui.view">
+      <field name="name">res.config.view.base</field>
+      <field name="model">res.config</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+          <group string="res_config_contents">
+          </group>
+          <separator string="" colspan="4"/>
+          <field name="progress" widget="progressbar" nolabel="1" colspan="1"/>
+          <label string="" colspan="1"/>
+          <group colspan="2" col="4">
+            <button name="action_skip" icon="gtk-cancel" special="cancel"
+                    type="object" string="Skip"/>
+            <button name="action_next" icon="gtk-ok"
+                    type="object" string="Record"/>
+          </group>
+        </form>
+      </field>
+    </record>
+  </data>
+</openerp>
