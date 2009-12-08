@@ -80,6 +80,8 @@ class res_config_configurable(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
     def next(self, cr, uid, *args, **kwargs):
         return self._next(cr, uid)
+    def action_skip(self, cr, uid, *args, **kwargs):
+        return self._next(cr, uid)
 res_config_configurable()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
