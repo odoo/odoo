@@ -251,28 +251,27 @@ users()
 
 class config_users(osv.osv_memory):
     _name = 'res.config.users'
-    _table = 'res_users'
     _inherit = 'res.config'
 
     _columns = users._columns
     _defaults = users._defaults
 
-    def user_data(self, cr, uid, context=None):
+    def user_data(self, cr, uid, new_id, context=None):
         ''' Gets the purely user part of the current config_user
         instance, without the fields inherited from res.config
         '''
-        return self.read(cr, uid, uid,
+        return self.read(cr, uid, new_id,
                          users._columns.keys(),
                          context=context)
-    def create_user(self, cr, uid, context=None):
+    def create_user(self, cr, uid, new_id, context=None):
         ''' create a new res.user instance from the data stored
         in the current res.config.users
         '''
         self.pool.get('res.users').create(
-            cr, uid, self.user_data(cr, uid, context), context)
+            cr, uid, self.user_data(cr, uid, new_id, context), context)
     
-    def action_new(self, cr, uid, ids, context=None):
-        self.create_user(cr, uid, context=context)
+    def action_next(self, cr, uid, ids, context=None):
+        self.create_user(cr, uid, ids[0], context=context)
         return {
             'view_type': 'form',
             "view_mode": 'form',
