@@ -326,29 +326,31 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode or False
-        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode'], context)
-        word = 'Hours'
-        if tm:
-            word = dict(f['project_time_mode']['selection'])[tm]
+        obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
-        if (not tm) or (tm=='hours'):
+
+        if tm in ['Hours','Hour']:
             return res
-        tm = tm.name
-        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode_id'], context)        
+
         eview = etree.fromstring(res['arch'])
-        def _check_rec(eview, tm):
-            if eview.attrib.get('widget',False) == 'float_time':
+        
+        def _check_rec(eview):
+            if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
             for child in eview:
-                _check_rec(child, tm)
+                _check_rec(child)
             return True
-        _check_rec(eview, tm)
+        
+        _check_rec(eview)
+        
         res['arch'] = etree.tostring(eview)
+        
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+        
         return res
 
     def do_close(self, cr, uid, ids, *args):
@@ -441,6 +443,7 @@ class project_work(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
+        'company_id': fields.related('task_id','company_id',type='many2one',relation='res.company',string='Company')
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,

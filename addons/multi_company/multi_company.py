@@ -48,9 +48,9 @@ class res_company(osv.osv):
  
     def _company_default_get(self, cr, uid, object=False, context={}):
         proxy = self.pool.get('multi_company.default')
-        ids = proxy.search(cr, uid, [('object_id.name', '=', object)])
+        ids = proxy.search(cr, uid, [('object_id.model', '=', object)])
         for rule in proxy.browse(cr, uid, ids, context):
-            user = self.pool.get('res.user').browse(cr, uid, uid)
+            user = self.pool.get('res.users').browse(cr, uid, uid)
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
         return super(res_company, self)._company_default_get(cr, uid, object, context)

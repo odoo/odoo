@@ -35,11 +35,11 @@ It also add a shortcut on one or several partners.
 This shortcut allows you to generate a CRM case for the partners.
 
 We suggest you to install this module if you installed both the sale and the
-crm_configuration modules.
+crm modules.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['sale', 'crm_configuration'],
+    'depends': ['sale', 'crm'],
     'init_xml': [],
     'update_xml': ['sale_crm_wizard.xml', 'sale_crm_view.xml', 'process/sale_crm_process.xml'],
     'demo_xml': [],

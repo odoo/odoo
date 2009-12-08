@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@
     'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-prospects, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
+leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -44,14 +44,31 @@ The CRM module has a email gateway for the synchronisation interface
 between mails and Open ERP.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['crm_data.xml'],
+    'depends': ['base',
+                        'caldav',
+                        'process'
+                    ],
+    'init_xml': ['crm_data.xml'
+    ],
     'update_xml': [
         'crm_wizard.xml',
+        'crm_configuration_wizard.xml',
         'crm_view.xml',
+        'crm_config_view.xml',
+        'crm_bugs_view.xml',
+        'crm_jobs_view.xml',
+        'crm_lead_view.xml',
+        'crm_meeting_view.xml',
+        'crm_opportunity_view.xml',
+        'crm_fund_view.xml',
+        'crm_claims_view.xml',
+        'crm_phonecall_view.xml',
+        'crm_report_view.xml',
+        'crm_helpdesk_view.xml',
         'crm_report.xml',        
         'security/crm_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'process/crm_configuration_process.xml'
     ],
     'demo_xml': ['crm_demo.xml'],
     'installable': True,

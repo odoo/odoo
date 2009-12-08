@@ -130,7 +130,6 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'company_id': fields.many2one('res.company','Company',required=True),
         'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
 
@@ -168,6 +167,7 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -179,7 +179,7 @@ class stock_location(osv.osv):
         'posx': lambda *a: 0,
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
-        'icon': lambda *a: False
+        'icon': lambda *a: False,
     }
 
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
@@ -474,6 +474,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -483,6 +484,7 @@ class stock_picking(osv.osv):
         'type': lambda *a: 'in',
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock_picking', c)
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
@@ -728,7 +730,8 @@ class stock_picking(osv.osv):
                     'comment': comment,
                     'payment_term': payment_term_id,
                     'fiscal_position': partner.property_account_position.id,
-                    'date_invoice':context.get('date_inv',False)
+                    'date_invoice': context.get('date_inv',False),
+                    'company_id': picking.company_id.id,
                     }
                 cur_id = self.get_currency_id(cursor, user, picking)
                 if cur_id:
@@ -885,6 +888,7 @@ class stock_production_lot(osv.osv):
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -908,6 +912,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company'),
     }
 
     _defaults = {
@@ -995,6 +1000,7 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
+        'company_id': fields.many2one('res.company', 'Company', required=True),      
     }
     _constraints = [
         (_check_tracking,
@@ -1034,6 +1040,7 @@ class stock_move(osv.osv):
         'product_qty': lambda *a: 1.0,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', c)
     }
 
     def _auto_init(self, cursor, context):
@@ -1482,7 +1489,7 @@ class stock_warehouse(osv.osv):
         'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', c),
     }
 stock_warehouse()
 

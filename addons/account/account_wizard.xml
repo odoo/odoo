@@ -114,6 +114,7 @@
 
         <wizard id="wizard_general_journal" menu="False" model="account.journal.period" name="account.general.journal.report" string="Print General Journal" />
 		<menuitem icon="STOCK_PRINT" action="wizard_general_journal" id="menu_general_journal" parent="account.menu_generic_report" type="wizard" />
-
+        
+        <wizard id="wizard_invoice_currency_change" model="account.invoice" name="account.invoice.currency_change" string="Change Currency" groups="base.group_user"/>
     </data>
 </openerp>

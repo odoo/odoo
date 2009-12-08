@@ -36,6 +36,7 @@
                            <field name="partner_id" invisible="1" select="1"/>
                            <field name="title" select="1"/>
                            <field name="function_id" invisible="1" select="2"/>
+                        <field name="email"/>
                            <field name="lang_id"/>
                            <field name="active"/>
                        </group>
@@ -50,6 +51,9 @@
                                    <field name="name"  colspan="4"/>
                                    <field name="address_id" colspan="4"/>
                                    <field name="function_id" colspan="4"/>
+                                <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                    <field name="date_start" />
                                    <field name="date_stop" />
                                    <field name="state" />
@@ -163,6 +167,8 @@
                             <group string="Communication" colspan="2" col="2">    
                                 <field name="phone"/>
                                 <field name="fax"/>
+                                <field name="extension"/>
+                                <field name="other"/>
                                 <field name="email" widget="email"/>                                
                                 <field name="extension"/>
                                 <field name="other"/>
@@ -183,20 +189,7 @@
         </field>
     </record>
     
-    <record id="view_res_partner_filter" model="ir.ui.view">
-	    <field name="name">res.partner.select</field>
-	    <field name="model">res.partner</field>
-	    <field name="type">search</field>
-	    <field name="inherit_id" ref="base.view_res_partner_filter"/>
-	    <field name="arch" type="xml">
-	        <search string="Search Partner">
-	        	<field name="address" mode="tree,form" select="1">
-	                <field name="job_ids" select="1" string="Contacts" />
-		        </field>
-	       </search>
-	    </field>
-    </record>
-
+    
 <!-- don't display the categories, since it is displayed in an other tab-->
         <record model="ir.ui.view" id="view_partner_form_inherit2">
             <field name="name">res.partner.form</field>
@@ -357,7 +350,7 @@
 	    <field name="arch" type="xml">
 	        <search string="Search Contact">
                	<field name="job_ids" select='1'/>
-	       </search>
+			</search>
 	    </field>
     </record>
     

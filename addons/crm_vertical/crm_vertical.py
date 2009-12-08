@@ -38,7 +38,7 @@ class crm_menu_config_wizard(osv.osv_memory):
                 if res[section]:
                     file_name = 'crm_'+section+'_vertical_view.xml'
                     try:
-                        tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_vertical',file_name )),  {}, 'init', *args)
+                        tools.convert_xml_import(cr, 'crm', tools.file_open(os.path.join('crm_vertical',file_name )),  {}, 'init', *args)
                     except Exception, e:
                         raise osv.except_osv(_('Error !'), str(e))
         return res

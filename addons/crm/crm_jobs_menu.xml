@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+    <menuitem icon="terp-hr" id="menu_hr" name="Human Resources"/>
+
+    ######################## JOB OPPORTUNITIES (menu) ###########################
+     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
+        <field name="name">All Jobs Requests</field>
+        <field name="res_model">crm.case</field>
+        <field name="view_mode">tree,calendar,form,graph</field>
+        <field name="view_id" ref="crm_case_tree_view_job"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support0)+')]'"/>
+        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="search_view_id" ref="crm.view_crm_case_jobs_filter"/>        
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act_job">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm_case_tree_view_job"/>
+        <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act_job">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="crm_case_calendar_view_job"/>
+        <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act_job">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_case_form_view_job"/>
+        <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_graph_view_act_job">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="crm_case_graph_view_stage_cost"/>
+        <field name="act_window_id" ref="crm_case_categ0_act_job"/>
+    </record>
+    <menuitem
+        name="Jobs - Hiring Process" 
+        id="menu_crm_case_job_req_main" 
+        parent="menu_hr"/>
+
+ <!-- 
+        ALL JOBS REQUESTS 
+    -->
+    <menuitem parent="menu_crm_case_job_req_main" id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job"/>    
+    
+</data>
+</openerp>

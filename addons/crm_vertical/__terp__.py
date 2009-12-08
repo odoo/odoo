@@ -27,7 +27,7 @@
     'description': """Simplification of the interface for CRM.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['crm_configuration'],
+    'depends': ['crm'],
     'init_xml': [],
     'update_xml': [],
     'demo_xml': [],

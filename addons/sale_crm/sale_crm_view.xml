@@ -6,7 +6,7 @@
         <field name="name">CRM - Opportunities - Quote Inherit</field>
         <field name="model">crm.case</field>
         <field name="type">form</field>
-        <field name="inherit_id" ref="crm_configuration.crm_case_form_view_oppor"/>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
                 <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>

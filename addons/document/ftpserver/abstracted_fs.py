@@ -141,8 +141,8 @@ class abstracted_fs:
     # Ok
     def db_list(self):
         #return pooler.pool_dic.keys()
-        s = netsvc.LocalService('db')
-        result = s.list()
+        s = netsvc.ExportService.getService('db')
+        result = s.exp_list()
         self.db_name_list = []
         for db_name in result:
             db, cr = None, None
