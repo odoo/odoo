@@ -444,7 +444,7 @@ class stock_picking(osv.osv):
         'date_done': fields.datetime('Date Done'),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Planned Date', select=2),
-        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines', states={'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Packing'),
         'address_id': fields.many2one('res.partner.address', 'Partner'),
         'invoice_state': fields.selection([
@@ -743,7 +743,7 @@ class stock_picking(osv.osv):
                 tax_ids = self._get_taxes_invoice(cursor, user, move_line, type)
                 account_analytic_id = self._get_account_analytic_invoice(cursor,
                         user, picking, move_line)
-                
+
                 #set UoS if it's a sale and the picking doesn't have one
                 uos_id = move_line.product_uos and move_line.product_uos.id or False
                 if not uos_id and type in ('out_invoice', 'out_refund'):
@@ -784,7 +784,7 @@ class stock_picking(osv.osv):
                 if move.state not in ('cancel',):
                     return False
         return True
-    
+
     def unlink(self, cr, uid, ids, context=None):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
@@ -926,8 +926,8 @@ class stock_move(osv.osv):
                ( \
                    (move.product_id.track_production and move.location_id.usage=='production') or \
                    (move.product_id.track_production and move.location_dest_id.usage=='production') or \
-                   (move.product_id.track_incoming and move.location_id.usage=='supplier') or \
-                   (move.product_id.track_outgoing and move.location_dest_id.usage=='customer') \
+                   (move.product_id.track_incoming and move.location_id.usage in ('supplier','internal')) or \
+                   (move.product_id.track_outgoing and move.location_dest_id.usage in ('customer','internal')) \
                )):
                 return False
         return True
@@ -1039,25 +1039,25 @@ class stock_move(osv.osv):
                 'message': 'You are moving %.2f products but only %.2f available in this lot.' % (product_qty, prodlot.stock_available or 0.0)
             }
         return {'warning': warning}
-    
+
     def onchange_quantity(self, cr, uid, ids, product_id, product_qty, product_uom, product_uos):
         result = {
                   'product_uos_qty': 0.00
           }
-        
+
         if (not product_id) or (product_qty <=0.0):
             return {'value': result}
-            
+
         product_obj = self.pool.get('product.product')
         uos_coeff = product_obj.read(cr, uid, product_id, ['uos_coeff'])
-        
+
         if product_uos and product_uom and (product_uom != product_uos):
             result['product_uos_qty'] = product_qty * uos_coeff['uos_coeff']
         else:
             result['product_uos_qty'] = product_qty
-        
+
         return {'value': result}
-    
+
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
         if not prod_id:
             return {}
@@ -1070,7 +1070,7 @@ class stock_move(osv.osv):
             'product_qty': 1.00,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
-        
+
         if loc_id:
             result['location_id'] = loc_id
         if loc_dest_id:
@@ -1177,8 +1177,8 @@ class stock_move(osv.osv):
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
-                    #in the same order. This is e.g. the case when using the button 'split in two' of 
-                    #the stock outgoing form                    
+                    #in the same order. This is e.g. the case when using the button 'split in two' of
+                    #the stock outgoing form
                     self.write(cr, uid, move.id, {'state':'assigned'})
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
