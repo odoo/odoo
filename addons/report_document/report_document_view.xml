@@ -53,17 +53,8 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_view_my_document_tree">
-            <field name="name">My files</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="search_view_id" ref="view_report_document_user_search"/>
-        </record>
-        
         <menuitem name="Document Management" id="menu_action_view_my_document"/>
         <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>
-        <menuitem name="My files" id="menu_action_view_my_document_report_this_myfile" parent="menu_action_view_my_document_report" action="action_view_my_document_tree"/>
 
         <record model="ir.actions.act_window" id="action_view_all_document_tree1">
             <field name="name">All Users files</field>

@@ -204,18 +204,6 @@
 		<menuitem action="action_account_analytic_planning_form"
 			id="menu_report_account_analytic_planning" parent="planning_main" />
 
-		<record id="action_account_analytic_planning_form_my" model="ir.actions.act_window">
-			<field name="name">My Plannings</field>
-			<field name="res_model">report_account_analytic.planning</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="domain">[('user_id','=',uid)]</field>
-		</record>
-		
-		<menuitem action="action_account_analytic_planning_form_my"
-			id="menu_report_account_analytic_planning_my2"
-			parent="planning_main" />
-
 		<!--
 			Planning statistics
 		-->
@@ -277,33 +265,6 @@
 		<menuitem action="action_account_analytic_planning_stat_form"
 			id="menu_report_account_analytic_planning_stat" parent="next_id_85" />
 
-		<record id="action_account_analytic_planning_stat_my_form"
-			model="ir.actions.act_window">
-			<field name="name">My Planning Statistics</field>
-			<field name="res_model">report_account_analytic.planning.stat</field>
-			<field name="view_type">form</field>
-			<field name="domain">[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]</field>
-			<field name="view_mode">graph,tree</field>
-		</record>
-		
-		<menuitem action="action_account_analytic_planning_stat_my_form"
-			id="menu_report_account_analytic_planning_stat_my"
-			parent="report_analytic_planning.next_id_85" />
-
-		<record
-			id="action_account_analytic_planning_stat_my_manager_form" model="ir.actions.act_window">
-			<field name="name">Planning Statistics of My Projects</field>
-			<field name="res_model">report_account_analytic.planning.stat</field>
-			<field name="view_type">form</field>
-			<field name="domain">[('manager_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]</field>
-			<field name="view_mode">graph,tree</field>
-		</record>
-		
-		<menuitem
-			action="action_account_analytic_planning_stat_my_manager_form"
-			id="menu_report_account_analytic_planning_stat_my_manager"
-			parent="report_analytic_planning.next_id_85" />
-		
 <!--		Analytic account Form -->
 
         <record id="view_project_planning_form" model="ir.ui.view">

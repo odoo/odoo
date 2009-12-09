@@ -343,25 +343,6 @@
         
         <menuitem action="action_view_task" id="menu_action_view_task" parent="scrum.next_id_67"/>
         
-        <record id="action_view_task4" model="ir.actions.act_window">
-            <field name="name">My tasks</field>
-            <field name="res_model">scrum.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id', '=', uid),('scrum','=',1)]</field>
-            <field name="filter" eval="True"/>            
-        </record>
-        <menuitem action="action_view_task4" id="menu_action_view_task4" parent="scrum.next_id_67" groups="base.group_extended"/>
-        
-        <record id="action_view_task5" model="ir.actions.act_window">
-            <field name="name">My opened tasks</field>
-            <field name="res_model">scrum.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('state','=','open'),('scrum','=',1)]</field>
-            <field name="filter" eval="True"/>            
-        </record>
-        
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Opened tasks</field>
             <field name="res_model">scrum.task</field>
