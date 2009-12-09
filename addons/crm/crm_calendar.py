@@ -288,9 +288,9 @@ class crm_case(osv.osv):
                     if val['type'] == "text":
                         vevent.add(key).value = str(crm[val['field']])
                     elif val['type'] == 'datetime' and crm[val['field']]:
-                        vevent.add(key).value = datetime.strptime(crm[val['field']], "%Y-%m-%d %H:%M:%S")
+                        vevent.add(key).value = datetime.datetime.strptime(crm[val['field']], "%Y-%m-%d %H:%M:%S")
             if crm[self.__attribute__['rrule']['field']]:
-                startdate = datetime.strptime(crm['date'], "%Y-%m-%d %H:%M:%S")
+                startdate = datetime.datetime.strptime(crm['date'], "%Y-%m-%d %H:%M:%S")
                 if not startdate:
                     startdate = datetime.now()
                 rset1 = rrulestr(str(crm[self.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
