@@ -4,26 +4,27 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:53:01+0000\n"
-"PO-Revision-Date: 2009-08-28 15:53:01+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 13:57+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr ""
+msgstr "Potrjeni stroški"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
 msgid "Expense Line"
-msgstr ""
+msgstr "Postavka izdatkov"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
@@ -39,82 +40,84 @@ msgstr ""
 #. module: hr_expense
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Napačno ime modela v definiciji dejanja."
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
 msgid "Date Confirmed"
-msgstr ""
+msgstr "Datum potrditve"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Waiting confirmation"
-msgstr ""
+msgstr "Čaka na potrditev"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Preklopi v pripravo"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my_confirm
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my_confirm
 msgid "My expenses waiting validation"
-msgstr ""
+msgstr "Moji stroški ki čakajo na potrditev"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 msgid "All expenses"
-msgstr ""
+msgstr "Vsi stroški"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
-msgstr ""
+msgstr "Odobreno"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "ME"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
 msgid "Refuse"
-msgstr ""
+msgstr "Zavrni"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Notes"
-msgstr ""
+msgstr "Opombe"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Validation"
-msgstr ""
+msgstr "Preverjanje veljavnosti"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
-msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgid ""
+"Determine if the product can be visible in the list of product within a "
+"selection from an HR expense sheet line."
 msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Sprejeto"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Sklic"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -129,7 +132,7 @@ msgstr ""
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr ""
+msgstr "Zavrni strošek"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -143,15 +146,23 @@ msgid "The accoutant validates the sheet"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid ""
+"Please configure Default Expanse account for Product purchase, "
+"`property_account_expense_categ`"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analitični konto"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
 #: model:process.transition,name:hr_expense.process_transition_approveinvoice0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Račun dobavitelja"
 
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
@@ -162,17 +173,17 @@ msgstr ""
 #: rml:hr.expense:0
 #: field:hr.expense.expense,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Zaposlenec"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Qty"
-msgstr ""
+msgstr "Kol."
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Total Price"
-msgstr ""
+msgstr "Skupna cena"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
@@ -180,15 +191,21 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Error !"
+msgstr "Napaka!"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my
 msgid "My Expenses"
-msgstr ""
+msgstr "Moji stroški"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
 msgid "Sheet ID"
-msgstr ""
+msgstr "Oznaka lista"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
@@ -222,10 +239,16 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Neveljaven XML za arhitekturo pogleda."
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a contact address"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
-msgstr ""
+msgstr "Strošek"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -237,7 +260,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -247,7 +270,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Zaračunano"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -257,7 +280,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
 msgid "Note"
-msgstr ""
+msgstr "Opomba"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
@@ -267,12 +290,14 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Osnutek"
 
 #. module: hr_expense
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -287,7 +312,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Skupni znesek"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
@@ -297,19 +322,19 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Uporabnik"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Total:"
-msgstr ""
+msgstr "Skupaj:"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -363,17 +388,17 @@ msgstr ""
 #: field:hr.expense.expense,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Cancel"
-msgstr ""
+msgstr "Prekliči"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
-msgstr ""
+msgstr "Ponovno zaračunaj"
 
 #. module: hr_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
@@ -383,7 +408,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Other Info"
-msgstr ""
+msgstr "Ostale informacije"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_draft
@@ -394,18 +419,18 @@ msgstr ""
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_confirmexpense0
 msgid "Confirm expense"
-msgstr ""
+msgstr "Potrdi storšek"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_approveexpense0
 msgid "Approve expense"
-msgstr ""
+msgstr "Odobri strošek"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_accept0
 msgid "Accept"
-msgstr ""
+msgstr "Sprejmi"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -415,13 +440,13 @@ msgstr ""
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
 msgid "Expense is refused."
-msgstr ""
+msgstr "Strošek je zavrnjen"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Cena enote"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_valid
@@ -432,12 +457,12 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: hr_expense
 #: field:hr.expense.line,description:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -448,7 +473,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
 msgid "Quantities"
-msgstr ""
+msgstr "Količine"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_refused0
@@ -463,7 +488,7 @@ msgstr ""
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Ref."
-msgstr ""
+msgstr "Sklic"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
@@ -478,12 +503,12 @@ msgstr ""
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Short Description"
-msgstr ""
+msgstr "Kratek opis"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -498,26 +523,25 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Zaporedje"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
 msgid "Expense is confirmed."
-msgstr ""
+msgstr "Strošek je potrjen."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 msgid "Expenses"
-msgstr ""
+msgstr "Stroški"
 
 #. module: hr_expense
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
-msgstr ""
+msgstr "Skupaj"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr ""
-

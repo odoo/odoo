@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-08-28 10:58+0000\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -221,6 +221,7 @@ msgstr ""
 #: rml:account.journal.period.print:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Entry label"
 msgstr "Anekcum label"
 
@@ -773,10 +774,8 @@ msgstr ""
 #. module: account
 #: field:account.analytic.account,line_ids:0
 #: view:account.analytic.line:0
-#: code:addons/account/project/wizard/wizard_account_analytic_line.py:0
 #: model:ir.actions.act_window,name:account.action_account_analytic_line_form
 #: model:ir.ui.menu,name:account.next_id_41
-#, python-format
 msgid "Analytic Entries"
 msgstr ""
 
@@ -2030,7 +2029,7 @@ msgstr ""
 #: wizard_button:account.general.ledger.report,checktype,checkreport:0
 #: wizard_button:account.partner.balance.report,init,report:0
 #: wizard_button:account.print.journal.report,init,print:0
-#: wizard_button:account.third_party_ledger.report,init,report:0
+#: wizard_button:account.third_party_ledger.report,init,checkreport:0
 msgid "Print"
 msgstr ""
 
@@ -2238,6 +2237,7 @@ msgstr ""
 #: field:account.move,partner_id:0
 #: wizard_field:account.partner.balance.report,init,result_selection:0
 #: wizard_field:account.third_party_ledger.report,init,result_selection:0
+#: field:wizard.company.setup,partner_id:0
 msgid "Partner"
 msgstr ""
 
@@ -2526,6 +2526,7 @@ msgstr ""
 #: field:account.subscription.line,date:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: xsl:account.transfer:0
 msgid "Date"
 msgstr ""
@@ -2796,6 +2797,7 @@ msgstr ""
 #: wizard_button:account.third_party_ledger.report,init,end:0
 #: wizard_button:account.vat.declaration,init,end:0
 #: wizard_button:account_use_models,init_form,end:0
+#: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
 msgid "Cancel"
 msgstr ""
@@ -2956,6 +2958,7 @@ msgstr ""
 #. module: account
 #: rml:account.analytic.account.journal:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "-"
 msgstr ""
 
@@ -3018,6 +3021,7 @@ msgstr ""
 #. module: account
 #: field:account.account,name:0
 #: field:account.account.template,name:0
+#: rml:account.analytic.account.inverted.balance:0
 #: field:account.bank.statement,name:0
 #: field:account.bank.statement.line,name:0
 #: field:account.chart.template,name:0
@@ -3160,13 +3164,12 @@ msgstr ""
 #: rml:account.account.balance:0
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.journal:0
 #: rml:account.general.ledger:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "1cm 27.7cm 20cm 27.7cm"
 msgstr ""
@@ -3235,11 +3238,9 @@ msgstr ""
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 #: wizard_view:account.move.line.reconcile.select,init:0
-#: code:addons/account/wizard/wizard_reconcile_select.py:0
 #: model:ir.ui.menu,name:account.next_id_20
 #: model:process.node,name:account.process_node_reconciliation0
 #: model:process.node,name:account.process_node_supplierreconciliation0
-#, python-format
 msgid "Reconciliation"
 msgstr ""
 
@@ -3494,6 +3495,7 @@ msgstr ""
 #: view:account.account.template:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement.line,note:0
+#: field:account.fiscal.position,note:0
 #: view:account.invoice.line:0
 #: field:account.invoice.line,note:0
 msgid "Notes"
@@ -3554,7 +3556,6 @@ msgstr ""
 #: field:account.journal,code:0
 #: rml:account.partner.balance:0
 #: field:account.period,code:0
-#: rml:account.vat.declaration:0
 msgid "Code"
 msgstr ""
 
@@ -3607,6 +3608,7 @@ msgstr ""
 #. module: account
 #: field:account.tax,name:0
 #: field:account.tax.template,name:0
+#: rml:account.vat.declaration:0
 msgid "Tax Name"
 msgstr ""
 
@@ -3709,6 +3711,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Third Party Ledger"
 msgstr ""
 
@@ -3748,6 +3751,7 @@ msgstr ""
 
 #. module: account
 #: view:account.invoice:0
+#: view:wizard.company.setup:0
 #: view:wizard.multi.charts.accounts:0
 msgid "Create"
 msgstr ""
@@ -3845,6 +3849,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Balance brought forward"
 msgstr ""
 
@@ -4353,8 +4358,10 @@ msgstr ""
 #: rml:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
+#: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 #: field:report.hr.timesheet.invoice.journal,cost:0
 msgid "Credit"
@@ -4591,7 +4598,6 @@ msgstr ""
 #: field:account.analytic.account,name:0
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
 #: rml:account.central.journal:0
 msgid "Account Name"
 msgstr ""
@@ -4819,6 +4825,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "JNRL"
 msgstr ""
 
@@ -4991,6 +4998,7 @@ msgstr ""
 #: field:account.tax.code,company_id:0
 #: wizard_field:account.third_party_ledger.report,init,company_id:0
 #: wizard_field:account.vat.declaration,init,company_id:0
+#: field:wizard.company.setup,company_id:0
 #: field:wizard.multi.charts.accounts,company_id:0
 msgid "Company"
 msgstr ""
@@ -5123,6 +5131,7 @@ msgstr ""
 #: field:account.model.line,ref:0
 #: field:account.move.line,ref:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Ref."
 msgstr ""
 
@@ -5344,8 +5353,10 @@ msgstr ""
 #: rml:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
+#: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 #: field:report.hr.timesheet.invoice.journal,revenue:0
 msgid "Debit"
@@ -5415,6 +5426,7 @@ msgstr ""
 
 #. module: account
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "/"
 msgstr ""
 
@@ -5794,13 +5806,12 @@ msgstr ""
 #: rml:account.account.balance:0
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.journal:0
 #: rml:account.general.ledger:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 #: rml:account.vat.declaration:0
 msgid "Page"
 msgstr ""
@@ -5940,6 +5951,7 @@ msgstr ""
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax,type:0
 #: rml:account.third_party_ledger:0
+#: rml:account.third_party_ledger_other:0
 msgid "Balance"
 msgstr ""
 
@@ -6493,5 +6505,6 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
+#: view:res.company:0
 msgid "Overdue Payments"
 msgstr ""

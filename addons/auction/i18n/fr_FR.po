@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
-"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-07-20 07:21+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
 #: field:report.deposit.border,total_marge:0
@@ -286,7 +287,9 @@ msgstr "Dates"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que l'Unité de Mesure."
+msgstr ""
+"Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que "
+"l'Unité de Mesure."
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -345,6 +348,12 @@ msgstr ""
 #: field:auction.lots,sel_inv_id:0
 msgid "Seller Invoice"
 msgstr "Facture du vendeur"
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer \"%s\" has no Invoice Address."
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -457,7 +466,8 @@ msgstr "Vendu"
 #. module: auction
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Erreur ! Vous ne pouvez pas créer de hiérarchie d'employés récursives."
+msgstr ""
+"Erreur ! Vous ne pouvez pas créer de hiérarchie d'employés récursives."
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -472,7 +482,7 @@ msgstr "Comptes des dépenses"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_wizard_emporte
 msgid "Deliveries Management"
-msgstr ""
+msgstr "Gestion des livraisons"
 
 #. module: auction
 #: field:auction.lots,obj_desc:0
@@ -567,7 +577,7 @@ msgstr "Comptabilité"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view2
 msgid "Buyer's Revenues"
-msgstr ""
+msgstr "Chiffre d'affaires de l'acheteur"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_adjudication
@@ -597,7 +607,7 @@ msgstr "Envoi de SMS Par Lots"
 #. module: auction
 #: wizard_view:auction.taken,init:0
 msgid "Select lots which are Sold"
-msgstr ""
+msgstr "Sélectionnez les lots qui sont vendus"
 
 #. module: auction
 #: field:auction.lots,statement_id:0
@@ -659,7 +669,8 @@ msgstr "Erreur: code EAN invalide"
 
 #. module: auction
 #: model:ir.module.module,description:auction.module_meta_information
-msgid "This module provides functionality to \n"
+msgid ""
+"This module provides functionality to \n"
 "     manage artists, articles, sellers, buyers and auction.\n"
 "     Manage bids, track of sold, paid and unpaid objects.\n"
 "     Delivery Management. \n"
@@ -674,7 +685,7 @@ msgstr ""
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_allmonth_view1
 msgid "Auction's Summary"
-msgstr ""
+msgstr "Résumé de l'enchère"
 
 #. module: auction
 #: rml:buyer.list:0
@@ -722,7 +733,7 @@ msgstr "Listes des vendeurs"
 #. module: auction
 #: field:auction.lots,is_ok:0
 msgid "Buyer's payment"
-msgstr ""
+msgstr "Paiement de l'acheteur"
 
 #. module: auction
 #: view:auction.dates:0
@@ -788,7 +799,7 @@ msgstr ""
 #. module: auction
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer des comptes récursifs."
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
@@ -866,6 +877,12 @@ msgstr "Type de  document"
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_estimation_adj_category
 msgid "comparaison estimate/adjudication "
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The object \"%s\" has no buyer assigned."
 msgstr ""
 
 #. module: auction
@@ -956,6 +973,12 @@ msgstr "Objets inclassifiés"
 #: wizard_view:auction.lots.make_invoice_buyer,init:0
 msgid "(Keep empty for automatic number)"
 msgstr "(Laisser vide pour une numérotation automatique)"
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "No Invoice Address"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -1115,10 +1138,10 @@ msgid "Detailed lots"
 msgstr "Lots détaillés"
 
 #. module: auction
-#: view:report.object.encoded:0
-#: view:report.object.encoded.manager:0
-msgid "Objects statistics"
-msgstr "Statistiques des Objets"
+#: field:report.object.encoded.manager,obj_margin:0
+#: field:report.seller.auction2,net_margin:0
+msgid "Net margin"
+msgstr "Marge Nette"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1163,7 +1186,7 @@ msgstr "Facturer les objets de l'acheteur"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_seller_allmonth_view2
 msgid "Seller's Revenues"
-msgstr ""
+msgstr "Chiffre d'affaires des vendeurs"
 
 #. module: auction
 #: xsl:flagey.huissier:0
@@ -1202,9 +1225,16 @@ msgid "Create Date"
 msgstr "Date de création"
 
 #. module: auction
+#: code:addons/auction/wizard/wizard_aie_send.py:0
+#: code:addons/auction/wizard/wizard_aie_send_result.py:0
+#, python-format
+msgid "Connection to WWW.Auction-in-Europe.com failed !"
+msgstr ""
+
+#. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
 msgid "Buyer's Summary"
-msgstr ""
+msgstr "Résumé des acheteurs"
 
 #. module: auction
 #: xsl:report.auction.ach_bordereau:0
@@ -1226,10 +1256,16 @@ msgid "Depositer Inventory"
 msgstr "Inventaire de dépôt"
 
 #. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer has no Invoice Address."
+msgstr ""
+
+#. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_deposit_tree_m
 #: model:ir.ui.menu,name:auction.menu_report_deposit_tree_member
 msgid "Depositer's Statistics"
-msgstr ""
+msgstr "Statistiques du dépositaire"
 
 #. module: auction
 #: view:report.object.encoded.manager:0
@@ -1355,7 +1391,7 @@ msgstr "Résultats de l'Enchère"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_allmonth_view2
 msgid "Auction's Revenues"
-msgstr ""
+msgstr "Les revenus de la vente aux enchères"
 
 #. module: auction
 #: view:report.object.encoded.manager:0
@@ -1571,8 +1607,11 @@ msgstr "Créer les factures"
 
 #. module: auction
 #: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même catégorie."
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
+"catégorie."
 
 #. module: auction
 #: xsl:report.auction.vnd_bordereau:0
@@ -1663,10 +1702,10 @@ msgid "Document Number"
 msgstr "Numéro du Document"
 
 #. module: auction
-#: field:report.object.encoded.manager,obj_margin:0
-#: field:report.seller.auction2,net_margin:0
-msgid "Net margin"
-msgstr "Marge Nette"
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
+msgid "Objects statistics"
+msgstr "Statistiques des Objets"
 
 #. module: auction
 #: wizard_button:auction.lots.numerotate,search,set_number:0
@@ -1677,6 +1716,12 @@ msgstr "Numéroter"
 #: xsl:report.auction.lots.list.landscape:0
 msgid "Buyer, Price"
 msgstr "Prix de l'Acheteur"
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed buyer !"
+msgstr ""
 
 #. module: auction
 #: rml:auction.code_bar_lot:0
@@ -1705,8 +1750,11 @@ msgstr ""
 
 #. module: auction
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1727,7 +1775,7 @@ msgstr "Artiste/Auteur 2"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_seller_allmonth_view1
 msgid "Seller's Summary"
-msgstr ""
+msgstr "Résumé du vendeur"
 
 #. module: auction
 #: view:report.seller.auction:0
@@ -1986,7 +2034,8 @@ msgstr "Premier jour de l'exposition"
 
 #. module: auction
 #: wizard_view:auction.lots.auction_move,init:0
-msgid "Warning, this will erase the object adjudication price and its buyer !"
+msgid ""
+"Warning, this will erase the object adjudication price and its buyer !"
 msgstr "Attention, cela effacera l'adjudication de l'objet et son acheteur !"
 
 #. module: auction
@@ -2005,9 +2054,9 @@ msgid "TEL:"
 msgstr "TÉL :"
 
 #. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
-msgstr "Compte des entrées"
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
+msgstr "Objets à vendre"
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
@@ -2150,7 +2199,7 @@ msgstr "Configuration"
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_outils_menu
 msgid "Tools Bar Codes"
-msgstr ""
+msgstr "Outils de codes à barres"
 
 #. module: auction
 #: field:auction.deposit.cost,deposit_id:0
@@ -2225,7 +2274,8 @@ msgstr "Coûts du dépot"
 #. module: auction
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+msgstr ""
+"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: auction
 #: selection:auction.dates,state:0
@@ -2293,6 +2343,12 @@ msgid "Unplanned Objects"
 msgstr "Objets Non Prévus"
 
 #. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed Address !"
+msgstr ""
+
+#. module: auction
 #: field:report.buyer.auction2,gross_revenue:0
 msgid "Gross Revenue"
 msgstr "Revenu brut"
@@ -2327,6 +2383,13 @@ msgstr "Numérotation automatique"
 #: rml:auction.total.rml:0
 msgid "Auction Date:"
 msgstr "Date de l'Enchère :"
+
+#. module: auction
+#: code:addons/auction/wizard/wizard_aie_send.py:0
+#: code:addons/auction/wizard/wizard_aie_send_result.py:0
+#, python-format
+msgid "Error"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,ach_inv_id:0
@@ -2431,9 +2494,9 @@ msgid "Adjudication price"
 msgstr "Prix d'adjudication"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
-msgstr "Objets à vendre"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
+msgstr "Compte des entrées"
 
 #. module: auction
 #: xsl:flagey.huissier:0
@@ -2552,4 +2615,3 @@ msgstr "Historique de la vente"
 #: xsl:report.auction.lots.list.landscape:0
 msgid "Orders"
 msgstr "Commandes"
-

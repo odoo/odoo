@@ -4,21 +4,25 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:27:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:27:14+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 13:02+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
+"символи!"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -33,7 +37,13 @@ msgstr "Автор"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Основен модул на таблото"
+
+#. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Потребителска грешка !"
 
 #. module: board
 #: view:board.note:0
@@ -119,6 +129,12 @@ msgid "Notes"
 msgstr "Бележки"
 
 #. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Моля въведете изглед(и) на табло"
+
+#. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "board.note.type"
 msgstr "board.note.type"
@@ -133,7 +149,7 @@ msgstr "Табло"
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr ""
+msgstr "Основен модул на всички табла"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -143,7 +159,7 @@ msgstr "Позиция."
 #. module: board
 #: model:ir.actions.act_window,name:board.dashboard_open
 msgid "Open Dashboard"
-msgstr ""
+msgstr "Отваряне на табло"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_name:0
@@ -163,7 +179,7 @@ msgstr "Отляво"
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr ""
+msgstr "Изглед на табло"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -215,4 +231,3 @@ msgstr "board.board.line"
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Тема"
-

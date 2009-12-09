@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:47:59+0000\n"
-"PO-Revision-Date: 2009-08-28 15:47:59+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 11:42+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -164,6 +165,12 @@ msgid "Start membership date"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
 msgstr ""
@@ -214,7 +221,9 @@ msgstr ""
 #. module: membership
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: Unidade de venda precisa ser de categoria diferente da unidade de medida"
+msgstr ""
+"Erro: Unidade de venda precisa ser de categoria diferente da unidade de "
+"medida"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_membership_products
@@ -276,8 +285,10 @@ msgstr ""
 
 #. module: membership
 #: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erro: A unidade padrão e a unidade de compra presisam ser da mesma categoria."
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+"Erro: A unidade padrão e a unidade de compra presisam ser da mesma categoria."
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -434,8 +445,11 @@ msgstr ""
 
 #. module: membership
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter especial!"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+"especial!"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -452,6 +466,12 @@ msgstr ""
 #: model:product.price.type,name:membership.product_price_type_memberprice
 #: field:product.template,member_price:0
 msgid "Member Price"
+msgstr ""
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
 msgstr ""
 
 #. module: membership
@@ -518,4 +538,3 @@ msgstr ""
 #: field:res.partner,membership_state:0
 msgid "Current membership state"
 msgstr ""
-

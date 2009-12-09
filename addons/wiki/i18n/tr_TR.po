@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:58:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:58:04+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 11:55+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -22,7 +23,8 @@ msgstr ""
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: wiki
@@ -186,6 +188,12 @@ msgid "Pages"
 msgstr ""
 
 #. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Görüntüleme mimarisi için Geçersiz XML"
@@ -252,6 +260,12 @@ msgstr ""
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
+#, python-format
+msgid "No action found"
 msgstr ""
 
 #. module: wiki
@@ -325,6 +339,12 @@ msgid "Table of Contents"
 msgstr ""
 
 #. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0
 #: wizard_button:wiki.make.index,init,end:0
 msgid "Cancel"
@@ -339,4 +359,3 @@ msgstr ""
 #: field:wiki.wiki,review:0
 msgid "Need Review"
 msgstr ""
-

@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:29:33+0000\n"
-"PO-Revision-Date: 2009-08-28 15:29:33+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 14:12+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:07+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
@@ -28,12 +29,12 @@ msgstr "重建需求分析"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "确认报价"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr ""
+msgstr "交货单"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -43,22 +44,24 @@ msgstr ""
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "操作定义中使用了无效的模式名称。"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "等待安排"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
-msgid "If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"
+msgid ""
+"If you don't have enough stock available to deliver all at once, do you "
+"accept partial shipments or not?"
 msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr ""
+msgstr "来自库存"
 
 #. module: sale
 #: field:sale.config.picking_policy,step:0
@@ -69,12 +72,12 @@ msgstr ""
 #: wizard_field:sale.advance_payment_inv,init,qtty:0
 #: rml:sale.order:0
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "You invoice has been successfully created !"
-msgstr ""
+msgstr "您的发票已成功创建！"
 
 #. module: sale
 #: view:sale.order:0
@@ -96,31 +99,34 @@ msgstr "设置为草稿"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "发票例外项"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
-msgid "This is the list of picking list that have been generated for this invoice"
+msgid ""
+"This is the list of picking list that have been generated for this invoice"
 msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr ""
+msgstr "发货，从仓库到客户。"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
+#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
+msgid ""
+"This Configuration step use to set default picking policy when make sale "
+"order"
 msgstr ""
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr ""
+msgstr "审核"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Make Invoice"
+#: model:process.node,note:sale.process_node_order0
+msgid "After confirming order, Create the invoice."
 msgstr ""
 
 #. module: sale
@@ -130,7 +136,9 @@ msgstr "小计"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid "Whenever confirm button is clicked, the draft state is moved to manual. that is, quotation is moved to  sale order."
+msgid ""
+"Whenever confirm button is clicked, the draft state is moved to manual. that "
+"is, quotation is moved to  sale order."
 msgstr ""
 
 #. module: sale
@@ -142,12 +150,12 @@ msgstr "取消订单"
 #. module: sale
 #: field:sale.order.line,move_ids:0
 msgid "Inventory Moves"
-msgstr ""
+msgstr "库存变动"
 
 #. module: sale
 #: view:sale.order.line:0
 msgid "Manual Designation"
-msgstr ""
+msgstr "手工指定"
 
 #. module: sale
 #: view:sale.order:0
@@ -169,9 +177,14 @@ msgid "Taxes"
 msgstr "?"
 
 #. module: sale
+#: field:sale.order,name:0
+msgid "Order Reference"
+msgstr ""
+
+#. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "总净重："
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -180,14 +193,8 @@ msgstr "发运策略"
 
 #. module: sale
 #: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
-msgid "Cancelled"
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "发货例外项"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -207,7 +214,7 @@ msgstr "发票地址"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "发出货品"
 
 #. module: sale
 #: view:sale.order:0
@@ -233,7 +240,7 @@ msgstr "分析科目"
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "增值税："
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -248,7 +255,7 @@ msgstr "额外信息"
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "传真："
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -268,7 +275,19 @@ msgstr ""
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
-msgid "The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks."
+msgid ""
+"The sale order will automatically create the invoice proposition (draft "
+"invoice). Ordered and delivered quantities may not be the same. You have to "
+"choose if you invoice based on ordered or shipped quantities. If the product "
+"is a service, shipped quantities means hours spent on the associated tasks."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
+msgid ""
+"You cannot make an advance on a sale order that is defined as 'Automatic "
+"Invoice after delivery'."
 msgstr ""
 
 #. module: sale
@@ -290,12 +309,26 @@ msgstr "所有销售订单"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_confirm0
 msgid "Confirm"
+msgstr "确认"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
 msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
 msgstr "发运地址"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid ""
+"You have to select a customer in the sale form !\n"
+"Please set one customer before choosing a product."
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -311,7 +344,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sale Shop"
-msgstr ""
+msgstr "销售点"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -321,7 +354,7 @@ msgstr "仓库"
 #. module: sale
 #: rml:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "单号"
 
 #. module: sale
 #: field:sale.order,order_line:0
@@ -332,7 +365,7 @@ msgstr "订单行"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "折扣（％）"
 
 #. module: sale
 #: view:sale.order:0
@@ -344,7 +377,7 @@ msgstr "发票明细"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "强制指定"
 
 #. module: sale
 #: view:sale.order:0
@@ -353,7 +386,9 @@ msgstr "未完税金额"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
-msgid "Packing list is created when 'Assign' is being clicked after confirming the sale order. This transaction moves the sale order to packing list."
+msgid ""
+"Packing list is created when 'Assign' is being clicked after confirming the "
+"sale order. This transaction moves the sale order to packing list."
 msgstr ""
 
 #. module: sale
@@ -369,7 +404,15 @@ msgstr "货运地址："
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
-msgid "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it will automatic create after delivery."
+msgid ""
+"When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+"will automatic create after delivery."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: sale
@@ -385,13 +428,19 @@ msgstr "详细说明"
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "数量（计量单位）"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
+msgstr "销售单细目"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all invoices attached to this sale order."
 msgstr ""
 
 #. module: sale
@@ -407,12 +456,12 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "挑选"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Total :"
-msgstr ""
+msgstr "总计："
 
 #. module: sale
 #: view:sale.order:0
@@ -420,8 +469,9 @@ msgid "Confirm Order"
 msgstr "审核订单"
 
 #. module: sale
-#: field:sale.order,name:0
-msgid "Order Reference"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Invalid action !"
 msgstr ""
 
 #. module: sale
@@ -450,7 +500,7 @@ msgstr ""
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效的 XML 视图结构"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -465,11 +515,16 @@ msgstr ""
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "错误：销售单位必须和计量单位在不同的分类。"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_config_picking_policy
+msgid "sale.config.picking_policy"
 msgstr ""
 
 #. module: sale
@@ -481,7 +536,7 @@ msgstr "销售订单"
 #: model:process.node,name:sale.process_node_saleprocurement0
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr ""
+msgstr "请料单"
 
 #. module: sale
 #: view:sale.shop:0
@@ -491,13 +546,13 @@ msgstr "账号付款"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "发票草稿"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -509,7 +564,7 @@ msgstr "发票分类"
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 #: model:ir.ui.menu,name:sale.menu_action_order_tree5
 msgid "All Quotations"
-msgstr ""
+msgstr "所有报价单"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -525,7 +580,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_tree3
 msgid "Sales Order To Be Invoiced"
-msgstr ""
+msgstr "要开票的销售订单"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -541,7 +596,7 @@ msgstr "我的报价单"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "发票列表"
 
 #. module: sale
 #: view:sale.order:0
@@ -556,23 +611,28 @@ msgstr ""
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Manages the delivery and invoicing progress"
-msgstr ""
+msgstr "管理运输与开票进度"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
+msgstr "默认发货策略"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel sale order !"
 msgstr ""
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "包装"
 
 #. module: sale
-#: model:ir.module.module,shortdesc:sale.module_meta_information
-#: model:ir.ui.menu,name:sale.menu_sale_root
-msgid "Sales Management"
-msgstr "销售管理"
+#: selection:sale.order.line,state:0
+msgid "Canceled"
+msgstr "已取消"
 
 #. module: sale
 #: field:sale.order.line,order_id:0
@@ -591,19 +651,21 @@ msgstr "业务员"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleorderprocurement0
-msgid "In sale order , procuerement for each line and it comes into the procurement order"
+msgid ""
+"In sale order , procuerement for each line and it comes into the procurement "
+"order"
 msgstr ""
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "税："
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "已开票"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
@@ -622,8 +684,24 @@ msgid "Uninvoiced Lines"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
-msgid "This Configuration step use to set default picking policy when make sale order"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "No Customer Defined !"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+"  - The 'Pay before delivery' choice will first generate the invoice and "
+"then generate the packing order after the payment of this invoice.\n"
+"  - The 'Shipping & Manual Invoice' will create the packing order directly "
+"and wait for the user to manually click on the 'Invoice' button to generate "
+"the draft invoice.\n"
+"  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
+"invoice based on sale order after all packing lists have been finished.\n"
+"  - The 'Invoice from the packing' choice is used to create an invoice "
+"during the packing process."
 msgstr ""
 
 #. module: sale
@@ -641,8 +719,9 @@ msgstr "创建发票"
 
 #. module: sale
 #: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "错误：默认计量单位和采购计量单位必须在同一分类下。"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
@@ -664,7 +743,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr ""
+msgstr "订货型生产"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -718,6 +797,12 @@ msgid "Product sales"
 msgstr "货品销售"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "invalid mode for test_state"
+msgstr ""
+
+#. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
 msgstr ""
@@ -739,6 +824,15 @@ msgid "Sales Orders"
 msgstr ""
 
 #. module: sale
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_saleorder0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#: field:stock.picking,sale_id:0
+msgid "Sale Order"
+msgstr "销售订单"
+
+#. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
 msgstr ""
@@ -746,7 +840,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "Direct Delivery"
-msgstr ""
+msgstr "直接交货"
 
 #. module: sale
 #: view:sale.order:0
@@ -768,7 +862,9 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
-msgid "Invoice is created when 'Create Invoice' is being clicked after confirming the sale order. This transaction moves the sale order to invoices."
+msgid ""
+"Invoice is created when 'Create Invoice' is being clicked after confirming "
+"the sale order. This transaction moves the sale order to invoices."
 msgstr ""
 
 #. module: sale
@@ -781,7 +877,7 @@ msgstr "计算"
 #: model:ir.ui.menu,name:sale.menu_action_shop_form
 #: field:sale.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "销售点"
 
 #. module: sale
 #: rml:sale.order:0
@@ -795,6 +891,12 @@ msgid "Sales Order in Progress"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/wizard/make_invoice_advance.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
 msgstr ""
@@ -805,13 +907,9 @@ msgid "History"
 msgstr "历史记录"
 
 #. module: sale
-#: help:sale.order,order_policy:0
-msgid "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.\n"
-"  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.\n"
-"  - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all packing lists have been finished.\n"
-"  - The 'Invoice from the packing' choice is used to create an invoice during the packing process."
-msgstr ""
+#: view:sale.order:0
+msgid "Make Invoice"
+msgstr "生成发票"
 
 #. module: sale
 #: rml:sale.order:0
@@ -892,7 +990,12 @@ msgstr "取消"
 
 #. module: sale
 #: help:sale.order,state:0
-msgid "Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'."
+msgid ""
+"Gives the state of the quotation or sale order. The exception state is "
+"automatically set when a cancel operation occurs in the invoice validation "
+"(Invoice Exception) or in the packing list process (Shipping Exception). The "
+"'Waiting Schedule' state is set when the invoice is confirmed but waiting "
+"for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
 
 #. module: sale
@@ -908,7 +1011,15 @@ msgstr ""
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
-msgid "Confirming the packing list moves them to delivery order. This can be done by clicking on 'Validate' button."
+msgid ""
+"Confirming the packing list moves them to delivery order. This can be done "
+"by clicking on 'Validate' button."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced !"
 msgstr ""
 
 #. module: sale
@@ -923,7 +1034,8 @@ msgstr ""
 
 #. module: sale
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: sale
@@ -1011,6 +1123,12 @@ msgid "Description"
 msgstr "说明"
 
 #. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+#: model:ir.ui.menu,name:sale.menu_sale_root
+msgid "Sales Management"
+msgstr "销售管理"
+
+#. module: sale
 #: rml:sale.order:0
 msgid "Price"
 msgstr ""
@@ -1036,6 +1154,12 @@ msgid "Quotation N°"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Could not cancel this sale order !"
+msgstr ""
+
+#. module: sale
 #: field:stock.move,sale_line_id:0
 msgid "Sale Order Line"
 msgstr "销售订单明细"
@@ -1058,7 +1182,8 @@ msgstr "创建发票"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
-msgid "The name and address of the contact that requested the order or quotation."
+msgid ""
+"The name and address of the contact that requested the order or quotation."
 msgstr ""
 
 #. module: sale
@@ -1073,13 +1198,10 @@ msgid "Purchase Pricelists"
 msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
-#: field:stock.picking,sale_id:0
-msgid "Sale Order"
-msgstr "销售订单"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1125,7 +1247,11 @@ msgstr ""
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
-msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
+msgid ""
+"By default, Open ERP is able to manage complex routing and paths of products "
+"in your warehouse and partner locations. This will configure the most common "
+"and simple methods to deliver products to the customer in one or two "
+"operations by the worker."
 msgstr ""
 
 #. module: sale
@@ -1175,7 +1301,10 @@ msgstr ""
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
-msgid "This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."
+msgid ""
+"This is the list of invoices that have been generated for this sale order. "
+"The same sale order may have been invoiced in several times (by line for "
+"example)."
 msgstr ""
 
 #. module: sale
@@ -1188,11 +1317,6 @@ msgstr "??"
 #: field:sale.order.line,th_weight:0
 msgid "Weight"
 msgstr "重量"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "After confirming order, Create the invoice."
-msgstr ""
 
 #. module: sale
 #: constraint:product.product:0
@@ -1230,4 +1354,3 @@ msgstr "我的销售订单"
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
 msgstr "订单明细"
-

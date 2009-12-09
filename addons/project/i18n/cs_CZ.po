@@ -4,51 +4,67 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:33:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:33:04+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 12:46+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned tasks"
-msgstr ""
+msgstr "Přiřazené úkoly"
 
 #. module: project
 #: model:process.process,name:project.process_process_tasksprocess0
 msgid "Tasks Process"
-msgstr ""
+msgstr "Průběh úkolů"
 
 #. module: project
 #: help:project.task.delegate,init,name:0
 msgid "New title of the task delegated to the user."
-msgstr ""
+msgstr "Nový název delegovaného úkolu"
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid ""
+"Couldn't send mail because the contact for this task (%s) has no email "
+"address!"
+msgstr "Nemohu odeslat, kontakt pro úkol (%s) nemá zadanou e-mail adresu!"
 
 #. module: project
 #: view:config.compute.remaining:0
 msgid "Change Remaining Hours"
-msgstr ""
+msgstr "Změnit počet zbývajícíh hodin."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_close_task
 msgid "Close Task"
-msgstr ""
+msgstr "Ukončit úkol"
 
 #. module: project
 #: view:project.task:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projektové úkoly"
 
 #. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr ""
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Not Permitted !"
+msgstr "Operace není povolena!"
+
+#. module: project
+#: code:addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
+msgstr "Kontrola: "
 
 #. module: project
 #: constraint:ir.actions.act_window:0
@@ -58,64 +74,68 @@ msgstr ""
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr ""
+msgstr "Hodiny ke schválení"
 
 #. module: project
 #: field:project.project,progress_rate:0
 msgid "Progress"
-msgstr ""
+msgstr "Průběh"
 
 #. module: project
 #: help:config.compute.remaining,remaining_hours:0
 #: help:project.task,remaining_hours:0
-msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
+msgid ""
+"Total remaining time, can be re-estimated periodically by the assignee of "
+"the task."
 msgstr ""
 
 #. module: project
 #: field:project.project,child_id:0
 msgid "Subproject"
-msgstr ""
+msgstr "Podprojekt"
 
 #. module: project
 #: field:project.project,members:0
 msgid "Project Members"
-msgstr ""
+msgstr "Členové projektu"
 
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr ""
+msgstr "Úkoly dle delegace"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project_my_run
 #: model:ir.ui.menu,name:project.menu_open_view_my_project_my_run
 msgid "My Running Projects"
-msgstr ""
+msgstr "Moje probíhající projekty"
 
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr ""
+msgstr "Delegované ůkoly"
 
 #. module: project
 #: help:project.project,warn_header:0
-msgid "Header added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgid ""
+"Header added at the beginning of the email for the warning message sent to "
+"the customer when a task is closed."
 msgstr ""
 
 #. module: project
 #: field:project.task,priority:0
 msgid "Importance"
-msgstr ""
+msgstr "Důležitost"
 
 #. module: project
 #: view:config.compute.remaining:0
 msgid "Update"
-msgstr ""
+msgstr "Aktualizace"
 
 #. module: project
 #: help:project.task.delegate,init,user_id:0
 msgid "User you want to delegate this task to."
-msgstr ""
+msgstr "Delegovat úkol"
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_attachment_task
@@ -125,7 +145,13 @@ msgstr ""
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr ""
+msgstr "Nastavit nevyřízené"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task7
+#: model:ir.ui.menu,name:project.menu_action_view_task7
+msgid "Unassigned Tasks"
+msgstr "Nepřiřazené úkoly"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -136,31 +162,32 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_task_types
 msgid "Task Types"
-msgstr ""
+msgstr "Typ úkolu"
 
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr ""
+msgstr "Nový projekt na základě šablony"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "Projektové úkoly"
 
 #. module: project
 #: selection:project.task,priority:0
 msgid "Very urgent"
-msgstr ""
+msgstr "Naléhavé"
 
 #. module: project
 #: wizard_button:project.task.delegate,init,valid:0
 msgid "Validate"
-msgstr ""
+msgstr "Schválit"
 
 #. module: project
 #: model:ir.module.module,description:project.module_meta_information
-msgid "Project management module that track multi-level projects, tasks,\n"
+msgid ""
+"Project management module that track multi-level projects, tasks,\n"
 "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
 "    "
 msgstr ""
@@ -169,27 +196,29 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog_prog
 msgid "My Tasks in Progress"
-msgstr ""
+msgstr "Moje aktivní úkoly"
 
 #. module: project
 #: view:project.project:0
 msgid "Set as Template"
-msgstr ""
+msgstr "Nastavit jako šablonu"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
 msgid "Draft task"
-msgstr ""
+msgstr "Náčrt úkolu"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
 #: field:project.task.work,task_id:0
 msgid "Task"
-msgstr ""
+msgstr "Úkol"
 
 #. module: project
 #: help:project.task.delegate,init,planned_hours_me:0
-msgid "Estimated time for you to validate the work done by the user to whom you delegate this task."
+msgid ""
+"Estimated time for you to validate the work done by the user to whom you "
+"delegate this task."
 msgstr ""
 
 #. module: project
@@ -198,17 +227,17 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Days"
-msgstr ""
+msgstr "Dnů"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
 msgid "Analysis"
-msgstr ""
+msgstr "Analýza"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -216,40 +245,41 @@ msgstr ""
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project
 #: view:project.task:0
 msgid "Start Task"
-msgstr ""
+msgstr "Začít úkol"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_draft
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog_draft
 msgid "My Draft Tasks"
-msgstr ""
+msgstr "Moje náčrty úkolů"
 
 #. module: project
 #: view:project.project:0
-msgid "Automatic variables for headers and footer. Use exactly the same notation."
+msgid ""
+"Automatic variables for headers and footer. Use exactly the same notation."
 msgstr ""
 
 #. module: project
 #: selection:project.project,state:0
 #: selection:project.task,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,warn_header:0
 msgid "Mail Header"
-msgstr ""
+msgstr "Hlavička e-mailu"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
-msgstr ""
+msgstr "Hotové úkoly"
 
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
@@ -259,7 +289,17 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
+msgstr "Úkol je kompletní"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid ""
+"A new project has been created !\n"
+"We suggest you to close this one and work on this new project."
 msgstr ""
+"Nový projekt vytvořen!\n"
+"Doporučujeme tento zavřít a pokračovat na tomto novém projektu!"
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -268,7 +308,9 @@ msgstr ""
 
 #. module: project
 #: help:project.project,warn_customer:0
-msgid "If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."
+msgid ""
+"If you check this, the user will have a popup when closing a task that "
+"propose a message to send by email to the customer."
 msgstr ""
 
 #. module: project
@@ -279,46 +321,46 @@ msgstr ""
 #. module: project
 #: field:project.project,category_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: project
 #: field:project.task.work,user_id:0
 msgid "Done by"
-msgstr ""
+msgstr "Udělal"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
 msgid "All Tasks"
-msgstr ""
+msgstr "Všechny úkoly"
 
 #. module: project
 #: view:project.task:0
 msgid "Planning"
-msgstr ""
+msgstr "Plánování"
 
 #. module: project
 #: view:project.task:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Další informace"
 
 #. module: project
 #: field:project.project,partner_id:0
 #: field:project.task,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: project
 #: field:project.task,planned_hours:0
 #: wizard_field:project.task.delegate,init,planned_hours:0
 msgid "Planned Hours"
-msgstr ""
+msgstr "Plánované hodiny"
 
 #. module: project
 #: view:project.project:0
 msgid "Task: %(name)s"
-msgstr ""
+msgstr "Úkoly: %(name)s"
 
 #. module: project
 #: view:project.project:0
@@ -328,23 +370,24 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Delegations"
-msgstr ""
+msgstr "Delegováno"
 
 #. module: project
 #: help:project.project,members:0
-msgid "Project's member. Not used in any computation, just for information purpose."
-msgstr ""
+msgid ""
+"Project's member. Not used in any computation, just for information purpose."
+msgstr "Členové projektu. Není použito pro výpočty, pouze pro informaci."
 
 #. module: project
 #: view:project.project:0
 msgid "My projects"
-msgstr ""
+msgstr "Mé projekty"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 msgid "All projects"
-msgstr ""
+msgstr "Všechny projekty"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -354,7 +397,7 @@ msgstr ""
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Delegated Task"
-msgstr ""
+msgstr "Delegované úkoly"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -374,7 +417,7 @@ msgstr ""
 #. module: project
 #: field:project.project,parent_id:0
 msgid "Parent Project"
-msgstr ""
+msgstr "Výchozí projekt"
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -385,46 +428,46 @@ msgstr ""
 #: field:project.task,type:0
 #: field:project.task.type,name:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Weeks"
-msgstr ""
+msgstr "Týdnů"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog
 msgid "My Current Tasks"
-msgstr ""
+msgstr "Mé aktuální úkoly"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project
 #: model:ir.ui.menu,name:project.menu_open_view_project
 msgid "New Project"
-msgstr ""
+msgstr "Nový projekt"
 
 #. module: project
 #: selection:project.task,priority:0
 msgid "Medium"
-msgstr ""
+msgstr "Střední"
 
 #. module: project
 #: view:config.compute.remaining:0
 #: field:config.compute.remaining,remaining_hours:0
 #: field:project.task,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Zbývající hodiny"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 msgid "Project task type"
-msgstr ""
+msgstr "Typ projektového úkolu"
 
 #. module: project
 #: field:project.project,planned_hours:0
 msgid "Planned Time"
-msgstr ""
+msgstr "Plánovaný čas"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -436,7 +479,7 @@ msgstr ""
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Hours"
-msgstr ""
+msgstr "Hodin"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_pending
@@ -452,9 +495,9 @@ msgid "Tasks in Progress"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task7
-#: model:ir.ui.menu,name:project.menu_action_view_task7
-msgid "Unassigned Tasks"
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Done"
 msgstr ""
 
 #. module: project
@@ -476,7 +519,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,state:0
 msgid "Template"
-msgstr ""
+msgstr "Šablona"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
@@ -488,23 +531,23 @@ msgstr "Konfigurace"
 #: field:project.project,date_start:0
 #: field:project.task,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_all_project
 #: view:project.project:0
 msgid "Projects"
-msgstr ""
+msgstr "Projekty"
 
 #. module: project
 #: view:project.task:0
 msgid "Dates"
-msgstr ""
+msgstr "Datumy"
 
 #. module: project
 #: field:project.task,history:0
 msgid "Task Details"
-msgstr ""
+msgstr "Podrobnosti úkolů"
 
 #. module: project
 #: model:process.node,name:project.process_node_triggerinvoice0
@@ -524,12 +567,12 @@ msgstr ""
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Hodin zpožděno"
 
 #. module: project
 #: field:project.project,contact_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_delegate0
@@ -547,30 +590,30 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_main
 #: view:res.company:0
 msgid "Project Management"
-msgstr ""
+msgstr "Správa projektů"
 
 #. module: project
 #: field:project.project,effective_hours:0
 #: field:project.task.work,hours:0
 msgid "Time Spent"
-msgstr ""
+msgstr "Strávený čas"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks
 #: view:project.task:0
 msgid "Tasks"
-msgstr ""
+msgstr "Úkoly"
 
 #. module: project
 #: view:project.task.type:0
 msgid "Task type"
-msgstr ""
+msgstr "Druh úkolu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_new
 #: model:ir.ui.menu,name:project.menu_action_view_task_new
 msgid "New Task"
-msgstr ""
+msgstr "Nový úkol"
 
 #. module: project
 #: help:project.project,timesheet_id:0
@@ -578,14 +621,20 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Project's members"
-msgstr ""
+msgstr "Členové projektu"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_taskinvoice0
 msgid "After task is completed, Create its invoice."
-msgstr ""
+msgstr "Po dokončení úkolu vytvoř jeho soupis."
 
 #. module: project
 #: help:project.task,progress:0
@@ -596,12 +645,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task4
 #: model:ir.ui.menu,name:project.menu_action_view_task4
 msgid "My Tasks"
-msgstr ""
+msgstr "Mé úkoly"
 
 #. module: project
 #: view:project.project:0
 msgid "Status: %(state)s"
-msgstr ""
+msgstr "Stav: %(state)s"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
+msgstr "Úkol '%s' zrušen"
 
 #. module: project
 #: view:project.task:0
@@ -621,7 +676,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Information"
-msgstr ""
+msgstr "Informace"
 
 #. module: project
 #: view:project.task:0
@@ -631,12 +686,12 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Administration"
-msgstr ""
+msgstr "Administrace"
 
 #. module: project
 #: wizard_field:project.task.close,mail_ask,email:0
 msgid "E-Mails"
-msgstr ""
+msgstr "e-maily"
 
 #. module: project
 #: model:process.node,note:project.process_node_triggerinvoice0
@@ -648,7 +703,7 @@ msgstr ""
 #: view:project.task:0
 #: selection:project.task,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -667,7 +722,7 @@ msgstr ""
 #: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Nevyřízené"
 
 #. module: project
 #: field:project.task,state:0
@@ -676,7 +731,9 @@ msgstr ""
 
 #. module: project
 #: help:project.task.delegate,init,state:0
-msgid "New state of your own task. Pending will be reopened automatically when the delegated task is closed."
+msgid ""
+"New state of your own task. Pending will be reopened automatically when the "
+"delegated task is closed."
 msgstr ""
 
 #. module: project
@@ -688,7 +745,7 @@ msgstr ""
 #: field:project.project,complete_name:0
 #: field:project.project,name:0
 msgid "Project Name"
-msgstr ""
+msgstr "Jméno projektu"
 
 #. module: project
 #: wizard_button:project.task.close,mail_ask,mail_send:0
@@ -698,22 +755,22 @@ msgstr "Poslat zprávu"
 #. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
-msgstr ""
+msgstr "Celkový čas"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_bug
 msgid "Bug"
-msgstr ""
+msgstr "Chyba"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_quote
 msgid "Quotation"
-msgstr ""
+msgstr "Plánovaný rozpočet"
 
 #. module: project
 #: view:project.task:0
@@ -722,7 +779,9 @@ msgstr ""
 
 #. module: project
 #: help:project.task,delay_hours:0
-msgid "Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."
+msgid ""
+"Computed as: Total Time - Estimated Time. It gives the difference of the "
+"time estimated by the project manager and the real time to close the task."
 msgstr ""
 
 #. module: project
@@ -752,8 +811,16 @@ msgstr ""
 
 #. module: project
 #: help:res.company,project_time_mode:0
-msgid "This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects (project_timesheet module), "
+"don't forget to setup the right unit of measure in your employees."
+msgstr ""
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: project
@@ -769,6 +836,12 @@ msgstr ""
 #. module: project
 #: selection:project.task,priority:0
 msgid "Urgent"
+msgstr ""
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because your email address is not configured!"
 msgstr ""
 
 #. module: project
@@ -793,7 +866,9 @@ msgstr ""
 
 #. module: project
 #: help:project.task,planned_hours:0
-msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
+msgid ""
+"Estimated time to do the task, usually set by the project manager when the "
+"task is in draft state."
 msgstr ""
 
 #. module: project
@@ -803,7 +878,9 @@ msgstr ""
 
 #. module: project
 #: help:project.task,project_id:0
-msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
+msgid ""
+"If you have [?] in the project name, it means there are no analytic account "
+"linked to this project."
 msgstr ""
 
 #. module: project
@@ -844,7 +921,10 @@ msgstr ""
 
 #. module: project
 #: help:project.project,category_id:0
-msgid "Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."
+msgid ""
+"Link this project to an analytic account if you need financial management on "
+"projects. It enables you to connect projects with budgets, planning, cost "
+"and revenue analysis, timesheets on projects, etc."
 msgstr ""
 
 #. module: project
@@ -878,6 +958,13 @@ msgid "Open"
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid ""
+"You can not delete a project with tasks. I suggest you to deactivate it."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "ID: %(task_id)s"
 msgstr ""
@@ -889,7 +976,8 @@ msgstr ""
 
 #. module: project
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: project
@@ -977,7 +1065,9 @@ msgstr ""
 
 #. module: project
 #: help:project.project,parent_id:0
-msgid "If you have [?] in the name, it means there are no analytic account linked to project."
+msgid ""
+"If you have [?] in the name, it means there are no analytic account linked "
+"to project."
 msgstr ""
 
 #. module: project
@@ -992,12 +1082,20 @@ msgstr ""
 
 #. module: project
 #: help:project.project,warn_manager:0
-msgid "If you check this field, the project manager will receive a request each time a task is completed by his team."
+msgid ""
+"If you check this field, the project manager will receive a request each "
+"time a task is completed by his team."
 msgstr ""
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_feature
 msgid "New Feature"
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
 msgstr ""
 
 #. module: project
@@ -1021,6 +1119,11 @@ msgid "Hours Spent"
 msgstr ""
 
 #. module: project
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr ""
+
+#. module: project
 #: field:project.task,total_hours:0
 msgid "Total Hours"
 msgstr ""
@@ -1039,7 +1142,9 @@ msgstr ""
 
 #. module: project
 #: help:project.project,warn_footer:0
-msgid "Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."
+msgid ""
+"Footer added at the beginning of the email for the warning message sent to "
+"the customer when a task is closed."
 msgstr ""
 
 #. module: project
@@ -1103,4 +1208,3 @@ msgstr ""
 #: model:ir.ui.menu,name:project.menu_open_view_project_open
 msgid "Running projects"
 msgstr ""
-

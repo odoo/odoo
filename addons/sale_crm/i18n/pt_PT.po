@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:49:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:49:14+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-09-24 15:15+0000\n"
+"Last-Translator: Tiago Silva <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:06+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_crmopportunityquotation
@@ -21,9 +22,9 @@ msgid "Crm opportunity quotation"
 msgstr ""
 
 #. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
-msgid "Opportunity Analytic"
-msgstr ""
+#: wizard_field:crm.case.make_order,init,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,partner_id:0
@@ -58,6 +59,18 @@ msgstr "Conta da Contabilidade Analítica"
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmquotation0
 msgid "Convert opportunity to quotation"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Customer has no addresses defined!"
 msgstr ""
 
 #. module: sale_crm
@@ -122,11 +135,6 @@ msgid "Check this to close the case after having created the sale order."
 msgstr ""
 
 #. module: sale_crm
-#: wizard_field:crm.case.make_order,init,partner_id:0
-msgid "Customer"
-msgstr ""
-
-#. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
 msgid "Opporunity convert to the Pricelist"
 msgstr ""
@@ -139,6 +147,11 @@ msgstr "Utilizador Responsável"
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
+msgstr ""
+
+#. module: sale_crm
+#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
+msgid "Opportunity Analytic"
 msgstr ""
 
 #. module: sale_crm
@@ -203,4 +216,3 @@ msgstr "Cancelar"
 #: wizard_field:sale_crm.make_case,init,section:0
 msgid "Case Section"
 msgstr ""
-

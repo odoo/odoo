@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 12:29+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_review0
@@ -22,9 +23,11 @@ msgstr "Nachbetrachtung Tagesende auf Vollständigkeit"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
-msgid "You can not have 2 timesheets that overlaps !\n"
+msgid ""
+"You can not have 2 timesheets that overlaps !\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr "Sie können keine zeitliche Überschneidungen bei der Zeiterfassung haben!\n"
+msgstr ""
+"Sie können keine zeitliche Überschneidungen bei der Zeiterfassung haben!\n"
 "Bitte benutzen Sie das Menü \"Meine offenen Zeiterfassungen\""
 
 #. module: hr_timesheet_sheet
@@ -36,9 +39,15 @@ msgid "Sheet"
 msgstr "Tabelle"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#, python-format
+msgid "No employee defined for your user !"
+msgstr "Kein Mitarbeiter für diesen Benutzer definiert!"
+
+#. module: hr_timesheet_sheet
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -113,6 +122,12 @@ msgid "Present"
 msgstr "Anwesend"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "UserError"
+msgstr "BenutzerFehler"
+
+#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
 msgid "Refuse"
@@ -127,6 +142,14 @@ msgstr "Bestätigte Zeiterfassung"
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date wich is in the timesheet dates !"
 msgstr "Sie müssen ein gültiges Datum für die Zeiterfassung auswählen !"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign in from an other date than today"
+msgstr ""
+"Sie können sich nicht an einem anderen Tag als heute für Ihre Arbeit "
+"Anmelden (Sign In)"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -144,14 +167,25 @@ msgid "Timesheet by Day"
 msgstr "Zeiterfassung nach Tagen"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warnung"
+
+#. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Defines the task work entry into timesheet line"
 msgstr "Definiert die Aufgabenerfassung in Positionen der Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
-msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "Erlaubte Differenz zwischen Sign In / Out und der Durchführung der Zeiterfassung (Timesheet). Setze dieses auf 0, falls Sie diesen Wert nicht vorgeben wollen."
+msgid ""
+"Allowed difference between the sign in/out and the timesheet computation for "
+"one sheet. Set this to 0 if you do not want any control."
+msgstr ""
+"Erlaubte Differenz zwischen Sign In / Out und der Durchführung der "
+"Zeiterfassung (Timesheet). Setze dieses auf 0, falls Sie diesen Wert nicht "
+"vorgeben wollen."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -237,6 +271,13 @@ msgid "Timesheet sheet confirm at the end of the period"
 msgstr "Zeiterfassung Tabelle bestätigt am Ende der Periode"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#, python-format
+msgid "Error !"
+msgstr "Fehler !"
+
+#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
 msgid "Total Time"
 msgstr "Gesamtzeit"
@@ -247,6 +288,15 @@ msgid "Timesheet Lines"
 msgstr "Zeiterfassung Positionen"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid ""
+"Please verify that the total difference of the sheet is lower than %.2f !"
+msgstr ""
+"Bitte verifiziere eine Differenz bei der Zeiterfassung, die geringer ist als "
+"%.2f !"
+
+#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
 msgid "Confirm timesheet at the end of the period"
 msgstr "Bestätige Zeiterfassung am Ende der Periode."
@@ -255,6 +305,12 @@ msgstr "Bestätige Zeiterfassung am Ende der Periode."
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "No employee defined"
 msgstr "Kein Mitarbeiter definiert"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "Fehlerhafte Aktion !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -363,6 +419,14 @@ msgid "Timesheets To Confirm"
 msgstr "Zeiterfassung (zu bestätigen)"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign out from an other date than today"
+msgstr ""
+"Sie können sich nicht an einem anderen Tag als heute für Ihre Arbeit "
+"Abmelden (Sign Out)"
+
+#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr "Status"
@@ -376,6 +440,12 @@ msgstr "Bis"
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
 msgstr "Aktueller Status"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet !"
+msgstr "Sie können EInträge in bestätigen Stundennachweisen nicht ändern"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -396,6 +466,14 @@ msgstr "Zeiterfassung nach Konto"
 #: field:hr_timesheet_sheet.sheet.day,name:0
 msgid "Date"
 msgstr "Datum"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not modify an entry in a confirmed timesheet !"
+msgstr ""
+"Sie können keinen Eintrag einer bereits bestätigten Zeiterfassung "
+"modifizieren !"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -451,13 +529,23 @@ msgstr "Zeiterfassung nach Konten"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
+"beinhalten"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Cannot delete Sheet(s) which are already confirmed !"
+msgstr "Bestätigte Aufzeichungen können nicht gelöscht werden"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
-msgstr "Zeiterfassung wird durch Projektmanager akzeptiert (validiert / genehmigt)."
+msgstr ""
+"Zeiterfassung wird durch Projektmanager akzeptiert (validiert / genehmigt)."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
@@ -496,6 +584,12 @@ msgstr "Beschreibung"
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
 msgstr "Sign Out"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not duplicate a timesheet !"
+msgstr "Arbeitszeitaufzeichung können nicht dupliziert werden"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -591,4 +685,3 @@ msgstr "Betrag gesammt"
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_validate
 msgid "My Department's Timesheet to Validate"
 msgstr "Meine Abteilung Zeiterfassung (zu bestätigen)"
-

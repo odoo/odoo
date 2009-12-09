@@ -1,24 +1,32 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* stock
+# Finnish translation for openobject-addons
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:37:49+0000\n"
-"PO-Revision-Date: 2009-08-28 15:37:49+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-06-26 12:30+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Stock"
+msgstr "Tuleva varasto"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
 msgid "LIFO"
-msgstr ""
+msgstr "LIFO"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -49,7 +57,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
 msgid "Stock Management"
-msgstr ""
+msgstr "Varastonhallinta"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -59,16 +67,11 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
 msgid "Revision"
-msgstr ""
+msgstr "Tarkistus"
 
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_FORWARD"
-msgstr ""
-
-#. module: stock
-#: rml:lot.location:0
-msgid "Total :"
 msgstr ""
 
 #. module: stock
@@ -105,6 +108,12 @@ msgid "Packing list"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/report_stock.py:0
+#, python-format
+msgid "You cannot delete any record!"
+msgstr ""
+
+#. module: stock
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Amount"
@@ -113,6 +122,12 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Products Received"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Productions"
 msgstr ""
 
 #. module: stock
@@ -125,6 +140,12 @@ msgstr ""
 #: field:stock.picking,name:0
 #: field:stock.tracking,serial:0
 msgid "Reference"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Receptions"
 msgstr ""
 
 #. module: stock
@@ -171,8 +192,8 @@ msgid "Internal Location"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PRINT"
+#: view:stock.inventory:0
+msgid "Confirm Inventory"
 msgstr ""
 
 #. module: stock
@@ -213,6 +234,12 @@ msgid "STOCK_QUIT"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr ""
+
+#. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
 msgstr ""
@@ -238,6 +265,12 @@ msgid "Location Type"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice cannot be created from Packing."
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-purchase"
 msgstr ""
@@ -258,11 +291,6 @@ msgid "Products Sent"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_FIRST"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 msgid "Internal Moves"
@@ -279,10 +307,8 @@ msgid "Order(Origin)"
 msgstr ""
 
 #. module: stock
-#: rml:lot.location:0
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-msgid "Grand Total:"
+#: field:stock.production.lot,name:0
+msgid "Serial"
 msgstr ""
 
 #. module: stock
@@ -318,8 +344,8 @@ msgid "Location Name"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNINDENT"
+#: view:stock.inventory:0
+msgid "Posted Inventory"
 msgstr ""
 
 #. module: stock
@@ -498,7 +524,15 @@ msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
-msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"
+msgid ""
+"For the current product (template), this stock location will be used, "
+"instead of the default one, as the source location for stock moves generated "
+"when you do an inventory"
+msgstr ""
+
+#. module: stock
+#: field:stock.move,date_planned:0
+msgid "Scheduled Date"
 msgstr ""
 
 #. module: stock
@@ -513,7 +547,8 @@ msgstr ""
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
-msgid "This journal will be used for the accounting move generated by stock move"
+msgid ""
+"This journal will be used for the accounting move generated by stock move"
 msgstr ""
 
 #. module: stock
@@ -668,7 +703,14 @@ msgstr ""
 
 #. module: stock
 #: help:stock.move,tracking_id:0
-msgid "Tracking lot is the code that will be put on the logistical unit/pallet"
+msgid ""
+"Tracking lot is the code that will be put on the logistical unit/pallet"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Deliveries"
 msgstr ""
 
 #. module: stock
@@ -692,8 +734,21 @@ msgid "Packing List:"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_RECORD"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can only delete draft moves."
 msgstr ""
 
 #. module: stock
@@ -704,11 +759,6 @@ msgstr ""
 #. module: stock
 #: wizard_field:stock.location.products,init,from_date:0
 msgid "From"
-msgstr ""
-
-#. module: stock
-#: rml:stock.picking.list:0
-msgid "weight"
 msgstr ""
 
 #. module: stock
@@ -889,8 +939,14 @@ msgid "This account will be used to value the input stock"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Invoice state"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_INFO"
+msgid "STOCK_UNDO"
 msgstr ""
 
 #. module: stock
@@ -931,6 +987,12 @@ msgid "Counter-Part Locations Properties"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Delivered Qty"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_FILL"
 msgstr ""
@@ -964,6 +1026,24 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_APPLY"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is not created"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/inventory_merge.py:0
+#, python-format
+msgid "Merging is only allowed on draft inventories."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/inventory_merge.py:0
+#, python-format
+msgid "Please select at least two inventories."
 msgstr ""
 
 #. module: stock
@@ -1002,6 +1082,17 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-partner"
+msgstr ""
+
+#. module: stock
+#: rml:stock.picking.list:0
+msgid "Qty"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not remove a lot line !"
 msgstr ""
 
 #. module: stock
@@ -1047,6 +1138,12 @@ msgid "Information"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Provide the quantities of the returned products."
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MISSING_IMAGE"
 msgstr ""
@@ -1075,7 +1172,9 @@ msgstr ""
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
-msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
+msgid ""
+"This stock location will be used, instead of the default one, as the source "
+"location for goods you receive from the current partner"
 msgstr ""
 
 #. module: stock
@@ -1097,6 +1196,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_move_form4
 #: model:ir.ui.menu,name:stock.menu_action_move_form4
 msgid "Available Moves"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
 msgstr ""
 
 #. module: stock
@@ -1149,6 +1254,12 @@ msgid "STOCK_COPY"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur Qty"
+msgstr ""
+
+#. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Refund"
 msgstr ""
@@ -1180,6 +1291,19 @@ msgid "STOCK_CDROM"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is already created."
+msgstr ""
+
+#. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Packing"
 msgstr ""
@@ -1202,6 +1326,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_REFRESH"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Products: "
 msgstr ""
 
 #. module: stock
@@ -1299,6 +1429,12 @@ msgid "Fill From Unreceived Products"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "P&L Qty"
+msgstr ""
+
+#. module: stock
 #: field:stock.move,move_dest_id:0
 msgid "Dest. Move"
 msgstr ""
@@ -1350,11 +1486,6 @@ msgid "Invoice Status"
 msgstr ""
 
 #. module: stock
-#: rml:lot.location:0
-msgid "Units"
-msgstr ""
-
-#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_LEFT"
 msgstr ""
@@ -1370,9 +1501,18 @@ msgid "Future Stock Forecast"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/report_stock.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
-msgid "OpenERP Stock Management module can manage multi-warehouses, multi and structured stock locations.\n"
-"Thanks to the double entry management, the inventory controlling is powerful and flexible:\n"
+msgid ""
+"OpenERP Stock Management module can manage multi-warehouses, multi and "
+"structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful "
+"and flexible:\n"
 "* Moves history and planning,\n"
 "* Different inventory methods (FIFO, LIFO, ...)\n"
 "* Stock valuation (standard or average price, ...)\n"
@@ -1391,12 +1531,19 @@ msgstr ""
 
 #. module: stock
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: stock
 #: field:stock.picking,min_date:0
 msgid "Planned Date"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "No production sequence defined"
 msgstr ""
 
 #. module: stock
@@ -1590,17 +1737,17 @@ msgid "Properties"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Error, no partner !"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
 #: model:ir.model,name:stock.model_stock_incoterms
 #: model:ir.ui.menu,name:stock.menu_action_incoterms_tree
 #: view:stock.incoterms:0
 msgid "Incoterms"
-msgstr ""
-
-#. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-msgid "Total:"
 msgstr ""
 
 #. module: stock
@@ -1639,8 +1786,8 @@ msgid "STOCK_SELECT_COLOR"
 msgstr ""
 
 #. module: stock
-#: view:stock.inventory:0
-msgid "Confirm Inventory"
+#: selection:stock.location,icon:0
+msgid "STOCK_PRINT"
 msgstr ""
 
 #. module: stock
@@ -1672,7 +1819,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_REDO"
+msgid "STOCK_GOTO_FIRST"
 msgstr ""
 
 #. module: stock
@@ -1683,6 +1830,13 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
 
 #. module: stock
@@ -1797,7 +1951,7 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_UNDO"
+msgid "STOCK_DIALOG_INFO"
 msgstr ""
 
 #. module: stock
@@ -1808,11 +1962,6 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-sale"
-msgstr ""
-
-#. module: stock
-#: field:stock.production.lot,name:0
-msgid "Serial"
 msgstr ""
 
 #. module: stock
@@ -1856,6 +2005,12 @@ msgid "Track Outging Lots"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "Return lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.model,name:stock.model_report_stock_lines_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
@@ -1874,14 +2029,24 @@ msgid "STOCK_FIND"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "Message !"
+msgstr ""
+
+#. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
 msgstr ""
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
-msgid "This is used only if you selected a chained location type.\n"
-"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgid ""
+"This is used only if you selected a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
 msgstr ""
 
 #. module: stock
@@ -1902,12 +2067,20 @@ msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
-msgid "This account will be used, instead of the default one, to value input stock"
+msgid ""
+"This account will be used, instead of the default one, to value input stock"
 msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: stock
@@ -1926,11 +2099,6 @@ msgid "Max. Planned Date"
 msgstr ""
 
 #. module: stock
-#: view:stock.inventory:0
-msgid "Posted Inventory"
-msgstr ""
-
-#. module: stock
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
 msgstr ""
@@ -1946,6 +2114,13 @@ msgid "STOCK_MEDIA_PLAY"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/inventory_merge.py:0
+#: code:addons/stock/wizard/inventory_merge_zero.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree_delivery
 msgid "Delivery Orders"
@@ -1958,7 +2133,9 @@ msgstr ""
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
-msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
 msgstr ""
 
 #. module: stock
@@ -2001,7 +2178,8 @@ msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
-msgid "This account will be used, instead of the default one, to value output stock"
+msgid ""
+"This account will be used, instead of the default one, to value output stock"
 msgstr ""
 
 #. module: stock
@@ -2036,6 +2214,12 @@ msgid "Configuration"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/inventory_merge_zero.py:0
+#, python-format
+msgid "Please select one and only one inventory !"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-project"
 msgstr ""
@@ -2066,6 +2250,11 @@ msgid "Virtual Stock Value"
 msgstr ""
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_UNINDENT"
+msgstr ""
+
+#. module: stock
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Canceled"
@@ -2088,7 +2277,10 @@ msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_production:0
-msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by production orders"
+msgid ""
+"For the current product (template), this stock location will be used, "
+"instead of the default one, as the source location for stock moves generated "
+"by production orders"
 msgstr ""
 
 #. module: stock
@@ -2157,6 +2349,12 @@ msgid "Track Production Lots"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Unplanned Qty"
+msgstr ""
+
+#. module: stock
 #: view:stock.picking:0
 msgid "Split in Two"
 msgstr ""
@@ -2167,8 +2365,17 @@ msgid "Future Stock Moves"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Futur P&L"
+msgstr ""
+
+#. module: stock
 #: help:product.template,property_stock_procurement:0
-msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by procurements"
+msgid ""
+"For the current product (template), this stock location will be used, "
+"instead of the default one, as the source location for stock moves generated "
+"by procurements"
 msgstr ""
 
 #. module: stock
@@ -2200,14 +2407,15 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_location_form
-#: model:ir.ui.menu,name:stock.menu_action_location_form
-msgid "Locations"
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "to be invoiced"
 msgstr ""
 
 #. module: stock
-#: help:stock.move,date_planned:0
-msgid "Scheduled date for the movement of the products or real date if the move is done."
+#: model:ir.actions.act_window,name:stock.action_location_form
+#: model:ir.ui.menu,name:stock.menu_action_location_form
+msgid "Locations"
 msgstr ""
 
 #. module: stock
@@ -2291,6 +2499,12 @@ msgid "Upstream traceability"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Produced Qty"
+msgstr ""
+
+#. module: stock
 #: field:product.category,property_stock_account_input_categ:0
 #: field:product.template,property_stock_account_input:0
 msgid "Stock Input Account"
@@ -2344,7 +2558,11 @@ msgid "Move State"
 msgstr ""
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_REDO"
+msgstr ""
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
 msgstr ""
-

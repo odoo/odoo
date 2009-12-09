@@ -4,21 +4,25 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
-"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 14:21+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków specjalnych !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+"specjalnych !"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -28,12 +32,12 @@ msgstr ""
 #. module: document_ics
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć rekurencyjnych katalogów."
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,jobs:0
 msgid "Jobs Hiring Process"
-msgstr ""
+msgstr "Proces zatrudniania"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -48,12 +52,12 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "Open ERP Field"
-msgstr ""
+msgstr "Pole OpenERP"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Next"
-msgstr ""
+msgstr "Następne"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -63,17 +67,17 @@ msgstr "Zawartość"
 #. module: document_ics
 #: field:document.ics.crm.wizard,meeting:0
 msgid "Calendar of Meetings"
-msgstr ""
+msgstr "Kalendarz spotkań"
 
 #. module: document_ics
 #: model:crm.case.section,name:document_ics.section_meeting
 msgid "Shared Calendar Meetings"
-msgstr ""
+msgstr "Spotkania we współdzielonym kalendarzu"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
@@ -87,7 +91,9 @@ msgstr ""
 
 #. module: document_ics
 #: model:ir.actions.todo,note:document_ics.config_wizard_step_case_section_menu
-msgid "This Configuration step use to create Calendars in document for all Case Sections"
+msgid ""
+"This Configuration step use to create Calendars in document for all Case "
+"Sections"
 msgstr ""
 
 #. module: document_ics
@@ -96,13 +102,22 @@ msgid "dtend"
 msgstr ""
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,jobs:0
-msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
+#: help:document.ics.crm.wizard,jobs:0
+msgid ""
+"Help you to organise the jobs hiring process: evaluation, meetings, email "
+"integration..."
+msgstr ""
+
+#. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: document_ics
@@ -117,7 +132,8 @@ msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,fund:0
-msgid "This may help associations in their fund raising process and tracking."
+msgid ""
+"This may help associations in their fund raising process and tracking."
 msgstr ""
 
 #. module: document_ics
@@ -131,6 +147,11 @@ msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "opis"
+
+#. module: document_ics
 #: field:document.directory.content,ics_object_id:0
 msgid "Object"
 msgstr "Obiekt"
@@ -138,7 +159,7 @@ msgstr "Obiekt"
 #. module: document_ics
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych sekcji."
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information
@@ -172,7 +193,9 @@ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,lead:0
-msgid "Allows you to track and manage prospects which are pre-sales requests or contacts, the very first contact with a customer request."
+msgid ""
+"Allows you to track and manage prospects which are pre-sales requests or "
+"contacts, the very first contact with a customer request."
 msgstr ""
 
 #. module: document_ics
@@ -192,13 +215,15 @@ msgstr "Domena"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,claims:0
-msgid "Manages the supplier and customers claims, including your corrective or preventive actions."
+msgid ""
+"Manages the supplier and customers claims, including your corrective or "
+"preventive actions."
 msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "last-modified"
-msgstr ""
+msgstr "ostatnia modyfikacja"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -222,7 +247,9 @@ msgstr ""
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,phonecall:0
-msgid "Help you to encode the result of a phone call or to planify a list of phone calls to process."
+msgid ""
+"Help you to encode the result of a phone call or to planify a list of phone "
+"calls to process."
 msgstr ""
 
 #. module: document_ics
@@ -243,7 +270,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "categories"
-msgstr "Kategorie"
+msgstr "kategorie"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -258,17 +285,17 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "created"
-msgstr ""
+msgstr "utworzony"
 
 #. module: document_ics
 #: field:crm.case,code:0
 msgid "Calendar Code"
-msgstr ""
+msgstr "Kod kalendarza"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "summary"
-msgstr ""
+msgstr "podsumowanie"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
@@ -288,7 +315,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.content,ics_field_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "Mapowanie pól"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -304,4 +331,3 @@ msgstr ""
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstamp"
 msgstr ""
-

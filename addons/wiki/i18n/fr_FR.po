@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
-"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-06-12 13:53+0000\n"
+"Last-Translator: Olivier (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -22,8 +23,11 @@ msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
+"spéciaux !"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
@@ -86,7 +90,7 @@ msgstr "Configuration du wiki"
 #. module: wiki
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom du Modèle non valide dans la définition de l'action."
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -186,6 +190,12 @@ msgid "Pages"
 msgstr "Pages"
 
 #. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
@@ -253,6 +263,12 @@ msgstr "wiki: Différences"
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
 msgstr "ID Wiki"
+
+#. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
+#, python-format
+msgid "No action found"
+msgstr "Aucune Action trouvée"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
@@ -325,6 +341,12 @@ msgid "Table of Contents"
 msgstr "Table des matières"
 
 #. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0
 #: wizard_button:wiki.make.index,init,end:0
 msgid "Cancel"
@@ -339,4 +361,3 @@ msgstr "Comparer"
 #: field:wiki.wiki,review:0
 msgid "Need Review"
 msgstr "Besoin d'une relecture"
-

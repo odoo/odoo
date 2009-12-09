@@ -4,16 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:26:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:26:04+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-10-13 01:44+0000\n"
+"Last-Translator: Miro Glavić <glavicmiro@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -23,13 +24,13 @@ msgstr ""
 #. module: membership
 #: model:process.process,name:membership.process_process_membershipprocess0
 msgid "Membership Process"
-msgstr ""
+msgstr "Proces Učlanjivanja"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Paid Member"
-msgstr ""
+msgstr "Plaćeni član"
 
 #. module: membership
 #: constraint:ir.actions.act_window:0
@@ -40,7 +41,7 @@ msgstr ""
 #: field:report.partner_member.year,currency:0
 #: field:report.partner_member.year_new,currency:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
@@ -50,12 +51,12 @@ msgstr ""
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
 msgid "Invoice is be paid."
-msgstr ""
+msgstr "Faktura treba biti plaćena"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
 msgid "Define membership product."
-msgstr ""
+msgstr "Definiraj članski proizvod"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
@@ -65,7 +66,7 @@ msgstr ""
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
 msgid "Waiting to invoice"
-msgstr ""
+msgstr "Čekanje za fakturiranje"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_producttomember0
@@ -75,17 +76,17 @@ msgstr ""
 #. module: membership
 #: field:res.partner,associate_member:0
 msgid "Associate member"
-msgstr ""
+msgstr "Udruženi član"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
-msgstr ""
+msgstr "Član je udružen"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr ""
+msgstr "Udruženi partner"
 
 #. module: membership
 #: constraint:account.account:0
@@ -105,13 +106,13 @@ msgstr ""
 #. module: membership
 #: field:membership.membership_line,partner:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_free
 #: model:ir.ui.menu,name:membership.menu_members_free
 msgid "Free members"
-msgstr ""
+msgstr "Slobodni članovi"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetopaid0
@@ -121,12 +122,12 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "Partners"
-msgstr ""
+msgstr "Partneri"
 
 #. module: membership
 #: field:membership.membership_line,date_from:0
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. module: membership
 #: constraint:membership.membership_line:0
@@ -136,12 +137,12 @@ msgstr ""
 #. module: membership
 #: wizard_button:wizard_invoice_membership,init,ok:0
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdi"
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr ""
+msgstr "Kreiraj"
 
 #. module: membership
 #: constraint:ir.ui.view:0
@@ -156,7 +157,7 @@ msgstr ""
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: membership
 #: field:res.partner,membership_start:0
@@ -164,9 +165,15 @@ msgid "Start membership date"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr "Greška !"
+
+#. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
-msgstr ""
+msgstr "Plaćeni član"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_partner_member_year
@@ -178,12 +185,12 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Izvještavanje"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Members"
-msgstr ""
+msgstr "Članovi"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -194,12 +201,12 @@ msgstr ""
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
 msgid "Open invoice."
-msgstr ""
+msgstr "Otvorena faktira."
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_conf
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguracija"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -248,7 +255,7 @@ msgstr ""
 #: field:report.partner_member.year_new,canceled_amount:0
 #: field:report.partner_member.year_new,canceled_number:0
 msgid "Canceled"
-msgstr ""
+msgstr "Poništeno"
 
 #. module: membership
 #: model:product.pricelist,name:membership.list1m
@@ -261,13 +268,13 @@ msgstr ""
 #: field:report.partner_member.year_new,invoiced_amount:0
 #: field:report.partner_member.year_new,invoiced_number:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fakturisano"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr ""
+msgstr "Besplatni Član"
 
 #. module: membership
 #: model:product.pricelist.version,name:membership.ver1m
@@ -276,7 +283,8 @@ msgstr ""
 
 #. module: membership
 #: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: membership
@@ -287,7 +295,7 @@ msgstr ""
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
-msgstr ""
+msgstr "Udruženi član"
 
 #. module: membership
 #: constraint:account.invoice:0
@@ -315,7 +323,7 @@ msgstr ""
 #: field:report.partner_member.year_new,paid_amount:0
 #: field:report.partner_member.year_new,paid_number:0
 msgid "Paid"
-msgstr ""
+msgstr "Plaćeno"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -331,7 +339,7 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,member_lines:0
 msgid "Membership"
-msgstr ""
+msgstr "Članstvo"
 
 #. module: membership
 #: help:product.product,membership:0
@@ -347,13 +355,13 @@ msgstr ""
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
 msgid "Association Partner"
-msgstr ""
+msgstr "Udruženi Partner"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_invoiced
 #: model:ir.ui.menu,name:membership.menu_members_invoiced
 msgid "Invoiced members"
-msgstr ""
+msgstr "Fakturisani članovi"
 
 #. module: membership
 #: constraint:product.pricelist.version:0
@@ -364,12 +372,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:membership.action_membership_members_old
 #: model:ir.ui.menu,name:membership.menu_members_old
 msgid "Old members"
-msgstr ""
+msgstr "Stari članovi"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
-msgstr ""
+msgstr "Iznos članarine"
 
 #. module: membership
 #: wizard_view:wizard_invoice_membership,init:0
@@ -380,7 +388,7 @@ msgstr ""
 #: selection:membership.membership_line,state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr ""
+msgstr "Stari Član"
 
 #. module: membership
 #: field:membership.membership_line,date_to:0
@@ -393,7 +401,7 @@ msgstr ""
 #: field:report.partner_member.year_new,waiting_amount:0
 #: field:report.partner_member.year_new,waiting_number:0
 msgid "Waiting"
-msgstr ""
+msgstr "Čekanje"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -403,29 +411,29 @@ msgstr ""
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_waiting
 msgid "Future members"
-msgstr ""
+msgstr "Budući članovi"
 
 #. module: membership
 #: wizard_button:wizard_invoice_membership,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Poništi"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_associated
 #: model:ir.ui.menu,name:membership.menu_members_associated
 msgid "Associated members"
-msgstr ""
+msgstr "Udruženi članovi"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_paid
 #: model:ir.ui.menu,name:membership.menu_members_paid
 msgid "Paid members"
-msgstr ""
+msgstr "Plaćeni članovi"
 
 #. module: membership
 #: view:product.product:0
 msgid "Information"
-msgstr ""
+msgstr "Informacije"
 
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
@@ -434,8 +442,10 @@ msgstr ""
 
 #. module: membership
 #: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Naziv Objekta mora počinjati sa x_ i ne smije sadržavati specijalne znakove!"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -455,6 +465,12 @@ msgid "Member Price"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
+
+#. module: membership
 #: field:res.partner,free_member:0
 msgid "Free member"
 msgstr ""
@@ -468,7 +484,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
 msgid "Current members"
-msgstr ""
+msgstr "Aktivni članovi"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_partner_member_year_new
@@ -512,10 +528,9 @@ msgstr ""
 #: field:report.partner_member.year,year:0
 #: field:report.partner_member.year_new,year:0
 msgid "Year"
-msgstr ""
+msgstr "Godina"
 
 #. module: membership
 #: field:res.partner,membership_state:0
 msgid "Current membership state"
 msgstr ""
-
