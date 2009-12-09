@@ -1086,7 +1086,7 @@ class account_invoice_line(osv.osv):
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company')
+        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'quantity': lambda *a: 1,
@@ -1312,7 +1312,7 @@ class account_invoice_tax(osv.osv):
         'base_amount': fields.float('Base Code Amount', digits=(16,int(config['price_accuracy']))),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits=(16,int(config['price_accuracy']))),
-        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
 
     def base_change(self, cr, uid, ids, base,currency_id=False,company_id=False,date_invoice=False):
