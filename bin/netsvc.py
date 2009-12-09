@@ -225,7 +225,7 @@ class Logger(object):
 
         try:
             msg = tools.ustr(msg).strip()
-            if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',True):
+            if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',False):
                 msg = common().exp_get_server_environment() + "\n" + msg
 
             result = msg.split('\n')

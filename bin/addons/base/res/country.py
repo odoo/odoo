@@ -40,7 +40,7 @@ class Country(osv.osv):
     ]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike',
-            context=None, limit=80):
+            context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -81,7 +81,7 @@ class CountryState(osv.osv):
             help='The state code in three chars.\n', required=True),
     }
     def name_search(self, cr, user, name='', args=None, operator='ilike',
-            context=None, limit=80):
+            context=None, limit=100):
         if not args:
             args = []
         if not context:

@@ -1133,8 +1133,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules">
-                    <field name="model_id"/>
-                    <field name="global"/>
+                    <field name="model_id" select="1"/>
+                    <field name="global" select="1"/>
                     <field colspan="4" name="name"/>
                     <group col="6" colspan="4" expand="1">
                         <field colspan="6" name="rules" nolabel="1"/>

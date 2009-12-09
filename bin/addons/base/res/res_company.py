@@ -70,8 +70,7 @@ multi_company_default()
 
 class res_company(osv.osv):
     _name = "res.company"
-    _description = 'List of Company'
-
+    _description = 'Companies'
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -84,7 +83,8 @@ class res_company(osv.osv):
         'rml_header2' : fields.text('RML Internal Header'),
         'logo' : fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency')
+        'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
+        'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users')
     }
 
 

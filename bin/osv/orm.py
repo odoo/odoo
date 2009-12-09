@@ -1051,9 +1051,11 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = None
+                        dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
+                        dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
+                        print dom, node.get('name')
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1453,7 +1455,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -2317,7 +2319,7 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
-            select = map(int,ids)
+            select = ids
 
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
@@ -3165,6 +3167,7 @@ class orm(orm_template):
                     ','.join(tables) +qu1 + limit_str + offset_str, qu2)
             res = cr.fetchall()
             return res[0][0]
+
         # execute the "main" query to fetch the ids we were searching for
         cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
         res = cr.fetchall()
@@ -3191,7 +3194,7 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
         if not context:
