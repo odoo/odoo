@@ -119,7 +119,7 @@ class scrum_product_backlog(osv.osv):
     _name = 'scrum.product.backlog'
     _description = 'Product Backlog'
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
