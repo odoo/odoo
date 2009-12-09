@@ -69,13 +69,12 @@ class CalDAV(object):
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
                 if cal_data.name.lower() == 'attendee':
-                    # This is possible only if Attendee does not inherit osv_memory
-                    attendee = Attendee()
+                    attendee = self.pool.get('caldav.attendee')
                     attendee.import_ical(cr, uid, cal_data)
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         return True
-
+    
 class Calendar(CalDAV, osv.osv_memory):
     _name = 'caldav.calendar'
     __attribute__ = {
@@ -209,11 +208,11 @@ class Event(CalDAV, osv.osv_memory):
             startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S", timezone=True)
+            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
 #            datetime_obj_utc = datetime_obj.replace(tzinfo=timezone('UTC'))
             rset1._exdate.append(datetime_obj)
         re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S', timezone=True), re_dates)
+        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
         return recurrent_dates
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
@@ -294,8 +293,7 @@ class Alarm(CalDAV):
             if self.__attribute__.has_key(val.name.lower()):
                 self.__attribute__[val.name] = val.value
 
-class Attendee(CalDAV):
-#  Also inherit osv_memory
+class Attendee(CalDAV, osv.osv_memory):
     _name = 'caldav.attendee'
     __attribute__ = {
     'cutype' : None, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
@@ -310,7 +308,7 @@ class Attendee(CalDAV):
     'dir' : None, # Use: 0-1    Specify reference to a directory entry associated with the calendar user specified by the property.
     'language' : None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
-
+        
     def import_ical(self, cr, uid, ical_data):
         if ical_data.value:
             self.__attribute__['sent-by'] = ical_data.value

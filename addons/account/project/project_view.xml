@@ -17,6 +17,25 @@
                 </tree>
             </field>
         </record>
+        
+        <record id="view_account_analytic_account_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Analytic Account">
+            		<group col="8" colspan="4">
+	            		<filter icon="gtk-execute" string="My Accounts" domain="[('user_id','=',uid)]" help="My Analytic Accounts"/>
+	            		<filter icon="gtk-execute" string="Current" domain="[('user_id','=',uid),('state','=','open')]" help="My Current Accounts"/>
+	            		<filter icon="gtk-execute" string="Pending" domain="[('user_id','=',uid),('state','=','pending')]" help="My Pending Accounts"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="code" select="1"/>
+						<field name="partner_id" select="1"/>			       	
+            		</group>
+            	</search>
+            </field>
+        </record> 
 
         <record id="view_account_analytic_account_tree" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
@@ -77,6 +96,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
         <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="account.menu_analytic_accounting"/>
@@ -367,7 +387,6 @@
         <menuitem id="next_id_43" name="This Month" parent="account.next_id_40"/><menuitem action="report_account_analytic_journal_tree_month" id="report_account_analytic_journal_print_month" parent="next_id_43"/>
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" name="All Analytic Entries" res_model="account.analytic.line" src_model="account.analytic.account" view_mode="tree,form" view_type="form"/>
-
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal" name="Costs &amp; Revenues" res_model="report.hr.timesheet.invoice.journal" src_model="account.analytic.account" view_mode="graph,tree,form" view_type="form"/>
 

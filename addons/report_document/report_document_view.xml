@@ -40,7 +40,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="All users files">
-                	<group col="8" colspan="4">
+                	<group col="10" colspan="4">
+                		<filter icon="terp-stock" string="My" domain="[('user','=',uid)]" help="My Files"/>
+						<separator orientation="vertical"/>
 						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="All Months Files"/>
 						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This Months Files"/>
 						<separator orientation="vertical"/>

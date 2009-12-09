@@ -349,7 +349,7 @@ class stock_tracking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
         if not context:
@@ -912,7 +912,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
-        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
 
     _defaults = {
@@ -1457,7 +1457,7 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',object='res.company',string='Company')
+        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
 
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):

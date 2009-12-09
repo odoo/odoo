@@ -122,7 +122,7 @@ class account_analytic_plan_instance(osv.osv):
             res.append((inst.id, name))
         return res
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         args= args or []
         if name:
             ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context or {})

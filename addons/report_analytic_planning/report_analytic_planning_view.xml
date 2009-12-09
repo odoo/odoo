@@ -154,6 +154,24 @@
 				</form>
 			</field>
 		</record>
+		
+		<record id="account_analytic_planning_view_search" model="ir.ui.view">
+			<field name="name">report.account.analytic.planning.search</field>
+			<field name="model">report_account_analytic.planning</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Planning by Account">
+					<group col="8" colspan="4">
+						<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Plannings"/>
+			        	<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="code" select="1"/>
+						<field name="user_id" select="1"/>
+						<field name="state" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
 
         <!-- Planning Line -->
 
@@ -196,6 +214,7 @@
 			<field name="res_model">report_account_analytic.planning</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="search_view_id" ref="account_analytic_planning_view_search"/>
 		</record>
 		
 		<menuitem id="planning_main" name="Long Term Planning"
@@ -252,6 +271,23 @@
 			</field>
 		</record>
 
+		<record id="account_analytic_planning_stat_view_search" model="ir.ui.view">
+			<field name="name">report_account_analytic.planning.stat.search</field>
+			<field name="model">report_account_analytic.planning.stat</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Planning statistics">
+					<group col="10" colspan="4">
+						<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]" help="My Plannings Statistics"/>
+						<filter icon="gtk-execute" string="My Project" domain="[('manager_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]" help="Planning Statistics of My Projects"/>
+			        	<separator orientation="vertical"/>
+						<field name="planning_id" select="1"/>
+						<field name="user_id" select="1"/>
+						<field name="account_id" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
 
 
 		<record id="action_account_analytic_planning_stat_form" model="ir.actions.act_window">
@@ -259,6 +295,7 @@
 			<field name="res_model">report_account_analytic.planning.stat</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
+			<field name="search_view_id" ref="account_analytic_planning_stat_view_search"/>
 		</record>
 		<menuitem id="next_id_85" name="Planning"
 			parent="hr.menu_hr_reporting" />

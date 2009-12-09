@@ -111,10 +111,32 @@
                 </form>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="view_scrum_product_backlog_search">
+			<field name="name">scrum.product.backlog.search</field>
+			<field name="model">scrum.product.backlog</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Product Backlogs">
+					<group col="10" colspan="4">
+						<filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
+						<filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+                        <field name="project_id" select="1"/>
+                        <field name="sprint_id" select="1"/>
+                        <field name="user_id" select="1"/>
+                        <field name="state" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
         <record id="action_product_backlog_form" model="ir.actions.act_window">
             <field name="name">Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
             <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem action="action_product_backlog_form" id="menu_action_product_backlog_form" parent="scrum.next_id_67"/>
         
@@ -174,12 +196,33 @@
             </field>
         </record>
         
+        <record model="ir.ui.view" id="view_scrum_sprint_search">
+			<field name="name">scrum.sprint.search</field>
+			<field name="model">scrum.sprint</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Sprints">
+					<group col="10" colspan="4">
+						<filter icon="gtk-execute" string="My" domain="[('scrum_master_id','=',uid)]" help="My Sprints"/>
+						<separator orientation="vertical"/>
+						<filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
+						<filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
+						<filter icon="terp-project" string="Done" domain="[('state','=','done')]" help="Done Sprints"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+                        <field name="date_start" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
+		
         <record id="action_sprint_all_tree" model="ir.actions.act_window">
             <field name="name">Sprints</field>
             <field name="res_model">scrum.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
+            <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="scrum.next_id_67"/>        
 
@@ -318,6 +361,18 @@
                 </field>
             </field>
         </record>
+        
+        <record id="view_task_search_form" model="ir.ui.view">
+            <field name="name">scrum.task.search</field>
+            <field name="model">scrum.task</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="project.view_task_search_form"/>
+            <field name="arch" type="xml">
+            	<field name="project_id" position="after">
+            		<field name="product_backlog_id" select="1"/>
+            	</field>
+            </field>
+        </record>
 
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">All Tasks</field>
@@ -325,6 +380,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('scrum','=',1)]</field>
+            <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         
         <record id="action_view_scrum_task_tree_view" model="ir.actions.act_window.view">

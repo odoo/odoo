@@ -349,7 +349,7 @@ class account_account(osv.osv):
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
         if not context:
@@ -479,7 +479,7 @@ class account_journal(osv.osv):
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        #'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company"),
+        #'company_id': fields.related('default_credit_account_id','company_id',type='many2one', relation="res.company", string="Company",store=True),
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
@@ -503,7 +503,7 @@ class account_journal(osv.osv):
 #           })
         return journal_id
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -782,7 +782,7 @@ class account_move(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
-        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
         'name': lambda *a: '/',

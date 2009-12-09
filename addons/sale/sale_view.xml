@@ -252,16 +252,6 @@
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
 
-        <record id="action_order_tree_all" model="ir.actions.act_window">
-            <field name="name">All Sales Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-        <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order" groups="base.group_extended"/>
-
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
             <field name="type">ir.actions.act_window</field>
@@ -327,7 +317,6 @@
                 </graph>
             </field>
         </record>
-
 
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>

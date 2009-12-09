@@ -500,7 +500,7 @@ class product_product(osv.osv):
         result = map(_name_get, self.read(cr, user, ids, ['variants','name','default_code'], context))
         return result
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:

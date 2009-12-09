@@ -117,6 +117,25 @@
 				</tree>
 			</field>
 		</record>
+		
+		<record model="ir.ui.view" id="view_event_search">
+			<field name="name">Events</field>
+			<field name="model">event.event</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Events">
+					<group col="8" colspan="4">
+						<filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
+						<filter icon="terp-calendar" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
+						<separator orientation="vertical"/>
+						<field name="name" string="Event" select="1"/>
+						<field name="user_id" select="1"/>
+						<field name="date_begin" select="1"/>
+						<field name="state" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
 
 	<!-- Events Organisation/CONFIGURATION/EVENTS  -->
        <record model="ir.actions.act_window" id="action_event_view">
@@ -125,6 +144,7 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
+           <field name="search_view_id" ref="view_event_search"/>
        </record>
        
        <menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />	
@@ -243,12 +263,33 @@
 			</field>
 		</record>
 
+		<record model="ir.ui.view" id="view_registration_search">
+			<field name="name">Registrations</field>
+			<field name="model">event.registration</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Event Registration">
+					<group col="10" colspan="4">
+						<filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
+						<filter icon="terp-calendar" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
+						<separator orientation="vertical"/>
+						<field name="event_id" select="1"/>
+						<field name="user_id" select="1"/>
+						<field name="partner_id" select="1"/>
+						<field name="state" select="1"/>
+						<field name="invoice_label" select="1"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
 		<record model="ir.actions.act_window" id="action_registration">
 		  <field name="name">Registrations</field>
 		  <field name="res_model">event.registration</field>
 		  <field name="view_type">form</field>
 		  <field name="domain"></field>
 		  <field name="view_mode">tree,form</field>
+		  <field name="search_view_id" ref="view_registration_search"/>
 		</record>
 		<menuitem
 			name="All Registrations"
