@@ -36,7 +36,7 @@ class multi_company_default(osv.osv):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Name', size=32, required=True, help='Name it to easily find a record'),
+        'name': fields.char('Name', size=256, required=True, help='Name it to easily find a record'),
         'company_id': fields.many2one('res.company', 'Main Company', required=True,
             help='Company where the user is connected'),
         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
