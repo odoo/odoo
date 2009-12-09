@@ -451,7 +451,7 @@ class abstracted_fs:
                 except osv.except_osv:          
                     pass
             return result
-        cr = pooler.get_db(path.context.dbname).cursor()
+        cr = pooler.get_db(path.context.dbname).cursor()        
         return path.children(cr)
 
     # Ok

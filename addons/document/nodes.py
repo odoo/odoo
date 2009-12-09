@@ -64,7 +64,7 @@ class node_context(object):
     
         (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)
     
-        while duri:
+        while duri:            
             ndir = ndir.child(cr, duri[0])
             if not ndir:
                 return False
@@ -320,6 +320,7 @@ class node_res_dir(node_class):
         # Important: the domain is evaluated using the *parent* dctx!
         self.dctx.update({'active_id': self.context.context['dir_id']})
         self.domain = safe_eval(dirr.domain,self.dctx)
+        self.ressource_tree = dirr.ressource_tree
         # and then, we add our own vars in the dctx:
         if dctx:
             self.dctx.update(dctx)
@@ -349,6 +350,7 @@ class node_res_dir(node_class):
         if not obj:
             print "couldn't find model", self.res_model
             return []
+        dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -360,16 +362,24 @@ class node_res_dir(node_class):
     
         if name:
             where.append((self.namefield,'=',name))
-        # print "Where clause for %s" % self.res_model, where        
+        # print "Where clause for %s" % self.res_model, where
+        if self.ressource_tree:
+            object2 = False
+            if self.resm_id:
+                object2 = dirobj.pool.get(self.res_model).browse(cr, uid, self.resm_id) or False                
+            if obj._parent_name in obj.fields_get(cr, uid):                    
+                where.append((obj._parent_name,'=',object2 and object2.id or False))
+                
         resids = obj.search(cr,uid, where, context=ctx)
-        res = []
+        res = []        
         for bo in obj.browse(cr,uid,resids,context=ctx):
             if not bo:
                 continue
             name = getattr(bo,self.namefield)
             if not name:
                 continue
-                # Yes! we can't do better but skip nameless records.
+                # Yes! we can't do better but skip nameless records.     
+             
             res.append(node_res_obj(name,self,self.context,self.res_model, bo))
         return res
 
@@ -386,7 +396,7 @@ class node_res_obj(node_class):
     def __init__(self,path, parent, context, res_model, res_bo, res_id = None):
         super(node_res_obj,self).__init__(path, parent,context)
         assert parent
-        #todo: more info from dirr
+        #todo: more info from dirr        
         self.dir_id = parent.dir_id
         self.mimetype = 'application/x-directory'
                         # 'httpd/unix-directory'
@@ -396,15 +406,16 @@ class node_res_obj(node_class):
         self.content_length = 0
         self.res_model = res_model
         self.domain = parent.domain
-        self.displayname = path        
-        if res_bo:
-            self.res_id = res_bo.id
+        self.displayname = path  
+        self.dctx_dict = parent.dctx_dict      
+        if res_bo:            
+            self.res_id = res_bo.id            
             dc2 = self.context.context
             dc2.update(self.dctx)
             dc2['res_model'] = res_model
             dc2['res_id'] = res_bo.id
-            dc2['this'] = res_bo
-            for fld,expr in parent.dctx_dict.items():
+            dc2['this'] = res_bo            
+            for fld,expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr,dc2)
                 except Exception,e:
@@ -478,10 +489,27 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=',self.dir_id) ]
+        directory = dirobj.browse(cr, uid, self.dir_id)
+        obj = dirobj.pool.get(self.res_model)
+        where = []
         if name:
-            where.append(('name','=',name))        
-        ids = dirobj.search(cr, uid, where,context=ctx)
+            where.append(('name','=',name)) 
+        if self.res_id and directory.ressource_tree:            
+            if obj._parent_name in obj.fields_get(cr, uid):                    
+                where.append((obj._parent_name, '=', self.res_id))            
+            resids = obj.search(cr,uid, where, context=ctx)
+            res = []            
+            for bo in obj.browse(cr,uid,resids,context=ctx):
+                namefield = directory.resource_field or 'name'
+                if not bo:
+                    continue
+                name = getattr(bo, namefield)
+                if not name:
+                    continue                
+                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo))
+            return res
+        where = [('parent_id','=',self.dir_id) ]               
+        ids = dirobj.search(cr, uid, where,context=ctx)        
         res = []
         if ids:
             for dirr in dirobj.browse(cr,uid,ids,context=ctx):
