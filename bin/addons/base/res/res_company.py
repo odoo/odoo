@@ -19,13 +19,58 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import osv
+from osv import fields
 import os
 import tools
+from tools.translate import _
+
+
+class multi_company_default(osv.osv):
+    """
+    Manage multi company default value
+    """
+    _name = 'multi_company.default'
+    _description = 'Default multi company'
+    _order = 'company_id,sequence,id'
+
+    _columns = {
+        'sequence': fields.integer('Sequence'),
+        'name': fields.char('Name', size=32, required=True, help='Name it to easily find a record'),
+        'company_id': fields.many2one('res.company', 'Main Company', required=True,
+            help='Company where the user is connected'),
+        'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
+            help='Company to store the current record'),
+        'object_id': fields.many2one('ir.model', 'Object', required=True,
+            help='Object affect by this rules'),
+        'expression': fields.char('Expression', size=32, required=True,
+            help='Expression, must be True to match'),
+    }
+
+    _defaults = {
+        'expression': lambda *a: 'True',
+        'sequence': lambda *a: 100,
+    }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Add (copy) in the name when duplicate record
+        """
+        if not context:
+            context = {}
+        if not default:
+            default = {}
+        company = self.browse(cr, uid, id, context=context)
+        default = default.copy()
+        default['name'] = company.name + _(' (copy)')
+        return super(multi_company_default, self).copy(cr, uid, id, default, context=context)
+
+multi_company_default()
+
 
 class res_company(osv.osv):
     _name = "res.company"
-
+    _description = 'Companies'
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -41,11 +86,22 @@ class res_company(osv.osv):
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users')
     }
-    
-    
-    def _company_default_get(self, cr, uid, object=False, context={}):
+
+
+    def _company_default_get(self, cr, uid, object=False, context=None):
+        """
+        Check if the object for this company have a default value
+        """
+        if not context:
+            context = {}
+        proxy = self.pool.get('multi_company.default')
+        ids = proxy.search(cr, uid, [('object_id.model', '=', object)])
+        for rule in proxy.browse(cr, uid, ids, context):
+            user = self.pool.get('res.users').browse(cr, uid, uid)
+            if eval(rule.expression, {'context': context, 'user': user}):
+                return rule.company_dest_id.id
         return self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-    
+
     def _get_child_ids(self, cr, uid, uid2, context={}):
         company = self.pool.get('res.users').company_get(cr, uid, uid2)
         ids = self._get_company_children(cr, uid, company)
@@ -95,7 +151,7 @@ class res_company(osv.osv):
             return self.pool.get('res.currency').search(cr, uid, [])[0]
         except:
             return False
-    
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -105,7 +161,7 @@ class res_company(osv.osv):
                 return False
             level -= 1
         return True
-    
+
     def _get_header2(self,cr,uid,ids):
         return """
         <header>
@@ -175,7 +231,6 @@ class res_company(osv.osv):
     ]
 
 res_company()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
