@@ -2317,7 +2317,7 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
-            select = map(int,ids)
+            select = ids
 
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
