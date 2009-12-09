@@ -3167,7 +3167,6 @@ class orm(orm_template):
             return res[0][0]
 
         # execute the "main" query to fetch the ids we were searching for
-        print 'select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2
         cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
         res = cr.fetchall()
         return [x[0] for x in res]
