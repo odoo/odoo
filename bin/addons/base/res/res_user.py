@@ -221,7 +221,7 @@ class users(osv.osv):
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
         return super(users, self).unlink(cr, uid, ids, context=context)
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
