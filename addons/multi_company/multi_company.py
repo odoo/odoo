@@ -18,35 +18,69 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-from mx import DateTime
-import time
-import netsvc
-from osv import fields, osv
-from tools import config
+
+"""
+The multicompany module add management to easily custom value by default
+for each company
+"""
+
+from osv import osv
+from osv import fields
 from tools.translate import _
-import tools
 
 class multi_company_default(osv.osv):
+    """
+    Manage multi company default value
+    """
     _name = 'multi_company.default'
-    _order = 'sequence,id'
+    _description = 'Default multi company'
+    _order = 'company_id,sequence,id'
+
     _columns = {
-         'sequence': fields.integer('Sequence'),
-         'name': fields.char('Name', size=32, required=True),
-         'company_id': fields.many2one('res.company', 'Main Company', required=True),
-         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True),
-         'object_id': fields.many2one('ir.model', 'Object', required=True),
-         'expression': fields.char('Expression', size=32, required=True),
- }
+        'sequence': fields.integer('Sequence'),
+        'name': fields.char('Name', size=32, required=True, help='Name it to easily find a record'),
+        'company_id': fields.many2one('res.company', 'Main Company', required=True,
+            help='Company where the user is connected'),
+        'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
+            help='Company to store the current record'),
+        'object_id': fields.many2one('ir.model', 'Object', required=True,
+            help='Object affect by this rules'),
+        'expression': fields.char('Expression', size=32, required=True,
+            help='Expression, must be True to match'),
+    }
+
     _defaults = {
-     'expression': lambda *a: 'True',
-     'sequence': lambda *a: 1
-                 }
+        'expression': lambda *a: 'True',
+        'sequence': lambda *a: 100,
+    }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Add (copy) in the name when duplicate record
+        """
+        if not context:
+            context = {}
+        if not default:
+            default = {}
+        company = self.browse(cr, uid, id, context=context)
+        default = default.copy()
+        default['name'] = company.name + _(' (copy)')
+        return super(multi_company_default, self).copy(cr, uid, id, default, context=context)
+
 multi_company_default()
 
 class res_company(osv.osv):
+    """
+    Change method to retrieve the company by default
+    """
     _inherit = 'res.company'
- 
-    def _company_default_get(self, cr, uid, object=False, context={}):
+
+    def _company_default_get(self, cr, uid, object=False, context=None):
+        """
+        Check if the object for this company have a default value
+        """
+        if not context:
+            context = {}
         proxy = self.pool.get('multi_company.default')
         ids = proxy.search(cr, uid, [('object_id.model', '=', object)])
         for rule in proxy.browse(cr, uid, ids, context):
@@ -54,7 +88,7 @@ class res_company(osv.osv):
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
         return super(res_company, self)._company_default_get(cr, uid, object, context)
- 
+
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

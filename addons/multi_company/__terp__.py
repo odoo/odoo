@@ -24,13 +24,24 @@
     'name': 'Multi Company',
     'version': '1.0',
     'category': 'Custom',
-    'description': " ",
-    'author': 'Tiny',
-    'depends': ['base','sale','project'],
+    'description': """This module add the possibility to easily manage 
+    the default value for each object
+    """,
+    'author': 'Tiny,SYLEAM',
+    'website': 'http://www.openerp.com/',
+    'depends': [
+        'base',
+        'sale',
+        'project'
+    ],
+    'init_xml': [],
     'update_xml': [
+        'security/ir.model.access.csv',
         'multi_company_view.xml',
     ],
-    'demo_xml': ['multi_company_demo.xml'],
+    'demo_xml': [
+        'multi_company_demo.xml'
+    ],
     'installable': True,
     'active': False,
 }
