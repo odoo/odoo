@@ -27,7 +27,7 @@ import base64
 import vobject
 from dateutil.rrule import *
 from dateutil import parser
-from datetime import datetime
+import  datetime
 from time import strftime
 from pytz import timezone
 import tools
@@ -81,7 +81,10 @@ class crm_caldav_attendee(osv.osv):
                 'dir' : fields.char('DIR', size=124), 
                 'language' : fields.char('LANGUAGE', size=124), 
                 }
-
+    _defaults = {
+        'cn' :  lambda *x: 'MAILTO:', 
+        }
+    
 crm_caldav_attendee()
 
 
@@ -108,6 +111,7 @@ class crm_caldav_alarm(osv.osv):
                 'duration' : fields.integer('Duration'), 
                 'repeat' : fields.integer('Repeat'), # TODO 
                 'attach' : fields.binary('Attachment'), 
+                'active' : fields.boolean('Active'), 
                 }
     _defaults = {
         'action' :  lambda *x: 'EMAIL', 
@@ -190,7 +194,7 @@ class crm_case(osv.osv):
     _columns = {
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
                  ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
-        'location' : fields.function(_get_location, method=True, store = True, string='Location', type='text'), 
+        'location' : fields.function(_get_location, method=True, store=True, string='Location', type='text'), 
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=34), 
@@ -206,7 +210,50 @@ class crm_case(osv.osv):
              'class': lambda *a: 'PUBLIC', 
              'transparent': lambda *a: 'OPAQUE', 
         }
-     
+    
+    
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+        if not context:
+            context={}
+        cr.execute('select c.id as id, c.date as date, alarm.id as alarm_id, alarm.name as name,\
+                                alarm.trigger_interval, alarm.trigger_duration, alarm.trigger_related, \
+                                alarm.trigger_occurs from crm_case c \
+                                   join crm_caldav_alarm alarm on (alarm.id=c.alarm_id) \
+                               where alarm_id is not null and alarm.active=True' )
+        case_with_alarm = cr.dictfetchall() 
+        case_obj = self.pool.get('crm.case')
+        attendee_obj = self.pool.get('crm.caldav.attendee')
+        mail_to = []
+        for alarmdata in case_with_alarm:
+            dtstart = datetime.datetime.strptime(alarmdata['date'], "%Y-%m-%d %H:%M:%S")
+            if alarmdata['trigger_duration'] == 'DAYS':
+                delta = datetime.timedelta(days=alarmdata['trigger_interval'])
+            if alarmdata['trigger_duration'] == 'HOURS':
+                delta = datetime.timedelta(hours=alarmdata['trigger_interval'])
+            if alarmdata['trigger_duration'] == 'MINUTES':
+                delta = datetime.timedelta(minutes=alarmdata['trigger_interval'])
+            alarm_time =  dtstart + ( alarmdata['trigger_related']== 'AFTER' and delta or -delta)
+            if datetime.datetime.now() >= alarm_time:
+                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)
+                for att in case_val.attendees:
+                    if att.cn[7:]:
+                        mail_to.append(att.cn[7:])
+                if mail_to:
+                    sub = 'Event Reminder for ' +  case_val.name or '' 
+                    body = (case_val.name or '' )+ '\n\t' + ( case_val.description or '') + '\n\nEvent time: ' \
+                                    +(case_val.date) + '\n\nLocation: ' + (case_val.location or '' ) + \
+                                    '\n\nMembers Details: ' + '\n'.join(mail_to)
+                    tools.email_send(
+                        case_val.user_id.address_id.email,
+                        mail_to,
+                        sub,
+                        body
+                    )
+                cr.execute('update crm_caldav_alarm set active=False\
+                         where id = %s' % alarmdata['alarm_id'])
+                cr.commit()
+        return True
+
     def export_cal(self, cr, uid, ids, context={}):
         crm_data = self.read(cr, uid, ids, [], context ={'read' :True})
         ical = vobject.iCalendar()

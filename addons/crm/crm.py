@@ -1118,7 +1118,7 @@ class crm_calendar_config_wizard(osv.osv_memory):
         res = self.read(cr, uid, ids)[0]
         idref = {}
         if res['caldav']:
-            for fname in ('view', 'wizard'):
+            for fname in ('view', 'wizard', 'data'):
                 try:
                     fp = tools.file_open(os.path.join('crm',  'crm_caldav_' + fname + '.xml'))
                 except IOError, e:
