@@ -1051,9 +1051,11 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = None
+                        dom = []
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
+                        dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
+                        print dom, node.get('name')
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
