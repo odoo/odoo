@@ -62,13 +62,12 @@ class node_context(object):
         """ Although this fn passes back to doc.dir, it is needed since
         it is a potential caching point """
     
-        (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)
-    
+        (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)        
         while duri:            
             ndir = ndir.child(cr, duri[0])
             if not ndir:
-                return False
-            duri = duri[1:]
+                return False            
+            duri = duri[1:]            
         return ndir
 
 
@@ -506,11 +505,11 @@ class node_res_obj(node_class):
                 name = getattr(bo, namefield)
                 if not name:
                     continue                
-                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo))
-            return res
+                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo))            
+        if name:
+            where.append(('name','=',name)) 
         where = [('parent_id','=',self.dir_id) ]               
-        ids = dirobj.search(cr, uid, where,context=ctx)        
-        res = []
+        ids = dirobj.search(cr, uid, where,context=ctx)                
         if ids:
             for dirr in dirobj.browse(cr,uid,ids,context=ctx):
                 if dirr.type == 'directory':
