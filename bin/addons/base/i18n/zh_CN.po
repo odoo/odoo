@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-07 16:59+0000\n"
+"PO-Revision-Date: 2009-12-09 04:23+0000\n"
 "Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-08 04:38+0000\n"
+"X-Launchpad-Export-Date: 2009-12-09 04:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -5179,7 +5179,7 @@ msgstr "信号（按钮名称）"
 #: code:addons/addons/account/wizard/wizard_use_model.py:0
 #, python-format
 msgid "Unable to find a valid period !"
-msgstr "无法找到有效的时期！"
+msgstr "无法找到有效的时间段！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -5713,7 +5713,7 @@ msgstr "关闭"
 #: code:addons/addons/account/wizard/wizard_fiscalyear_close_state.py:0
 #, python-format
 msgid "Closing of states cancelled, please check the box !"
-msgstr "已取消状态关闭，请在复选框里打勾！"
+msgstr "已取消状态关闭过程，请在复选框里打勾！"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -5884,7 +5884,7 @@ msgid ""
 msgstr ""
 "无法自动创建该分录的序号。\n"
 "\n"
-"为自动编号，请在日记账设定放一个序列或者手动创建一个序列。"
+"为自动编号，请在日记账设定中建一个序列或者手动创建一个序列。"
 
 #. module: base
 #: wizard_view:module.upgrade,next:0
@@ -5963,7 +5963,7 @@ msgid ""
 msgstr ""
 "您已指定%d单位数量。\n"
 "但该数量不符合选定的包装。\n"
-"如下是数量符合包装的方案： "
+"以下是数量符合包装的方案： "
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6023,9 +6023,9 @@ msgid ""
 "' \\n\t\t\t\t\t'on line: %s"
 msgstr ""
 "未定义银行名称\n"
-"' \\n\t\t\t\t\t'银行账户： %s\n"
-"' \\n\t\t\t\t\t'业务伙伴： %s\n"
-"' \\n\t\t\t\t\t'行： %s"
+"' \\n\t\t\t\t\t'相关银行账户： %s\n"
+"' \\n\t\t\t\t\t'相关业务伙伴： %s\n"
+"' \\n\t\t\t\t\t'行号： %s"
 
 #. module: base
 #: wizard_view:module.lang.import,init:0
@@ -6036,7 +6036,7 @@ msgstr "type,name,res_id,src,value"
 #: code:addons/addons/account/wizard/wizard_refund.py:0
 #, python-format
 msgid "No Period found on Invoice!"
-msgstr "发票无时期！"
+msgstr "发票无指定时间段！"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -6047,7 +6047,7 @@ msgstr "荷兰语 / Nederlands"
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "You do not permissions to write on the server side."
-msgstr "您未被授权在服务器写入"
+msgstr "您未被授权在服务器端写入"
 
 #. module: base
 #: code:addons/addons/base_module_publish/wizard/module_zip.py:0
@@ -6113,7 +6113,7 @@ msgstr "对象字段"
 #: code:addons/addons/account/wizard/wizard_use_model.py:0
 #, python-format
 msgid "No period found !"
-msgstr "无时期！"
+msgstr "未找到时间段！"
 
 #. module: base
 #: code:addons/osv/orm.py:0
@@ -6175,7 +6175,7 @@ msgstr "把事件关联到动作"
 msgid ""
 "You cannot enter an attendance ' \\n                            'date "
 "outside the current timesheet dates!"
-msgstr "您不能输入现有工作时间记录表日期之外的出勤记录！"
+msgstr "您不能输入现有工作时间表日期之外的出勤记录！"
 
 #. module: base
 #: code:addons/addons/audittrail/audittrail.py:0
@@ -6198,7 +6198,7 @@ msgstr "银行日记账 "
 #: code:addons/addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Invoice cannot be created from Packing."
-msgstr "不可从分拣单创建发票"
+msgstr "不可根据分拣单创建发票"
 
 #. module: base
 #: code:addons/addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
@@ -6232,7 +6232,7 @@ msgstr "联系人"
 #: code:addons/addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The old fiscal year does not have any entry to reconcile!"
-msgstr "老会计年度无可对帐的分录！"
+msgstr "老会计年度没有可对帐的分录！"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -6258,7 +6258,7 @@ msgstr ""
 #: code:addons/addons/account/account.py:0
 #, python-format
 msgid "You can not deactivate an account that contains account moves."
-msgstr "您不能使包含分录的科目无效。"
+msgstr "您不能使已包含分录的科目无效。"
 
 #. module: base
 #: view:ir.module.module:0
@@ -6314,7 +6314,7 @@ msgstr "这是用于存储打印结果的附件的文件名。如果不想保存
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid " Type of ul: "
-msgstr ""
+msgstr " 货运单位类型： "
 
 #. module: base
 #: model:res.country,name:base.ng
@@ -6335,12 +6335,14 @@ msgid ""
 "where you can configure your event to not send emails automaticly while "
 "registering"
 msgstr ""
+"为能够发电邮给参加者您必须指定回复地址。您在事件的电邮选页卡可完成上述操作。\r\n"
+"在这儿您也可以设定事件登录的时候不自动发电邮的行为。"
 
 #. module: base
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Insertion Failed!"
-msgstr ""
+msgstr "插入失败！"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -6396,7 +6398,7 @@ msgstr "菲律宾"
 #: code:addons/addons/hr_holidays/hr.py:0
 #, python-format
 msgid "Attention!"
-msgstr ""
+msgstr "注意！"
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -6414,7 +6416,7 @@ msgstr "terp-graph"
 msgid ""
 "Specified Journal does not have any account move entries in draft state for "
 "this period"
-msgstr ""
+msgstr "指定的日记账没有此时间段作为高草状态的分录"
 
 #. module: base
 #: view:res.lang:0
@@ -6432,13 +6434,13 @@ msgstr "您选择的语言已经成功安装。您必须在用户偏好中修改
 #: code:addons/addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr ""
+msgstr "保存模式之前，请输入名称和编码！"
 
 #. module: base
 #: code:addons/addons/mrp_operations/mrp_operations.py:0
 #, python-format
 msgid "Operation is Already Cancelled  !"
-msgstr ""
+msgstr "操作已取消！"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
@@ -6450,7 +6452,7 @@ msgstr "ir.sequence"
 #: model:ir.ui.menu,name:base.next_id_14
 #: view:res.partner.event:0
 msgid "Partner Events"
-msgstr "业务伙伴活动"
+msgstr "业务伙伴事件"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_transition
@@ -6465,7 +6467,7 @@ msgstr "%a - 星期缩写"
 #. module: base
 #: rml:ir.module.reference:0
 msgid "Introspection report on objects"
-msgstr ""
+msgstr "对象自身信息"
 
 #. module: base
 #: model:res.country,name:base.pf
@@ -6497,13 +6499,13 @@ msgstr "iCal 标识符"
 #: code:addons/addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "合计应该在%s和%s之间"
 
 #. module: base
 #: code:addons/addons/sale_crm/wizard/makesale.py:0
 #, python-format
 msgid "Customer has no addresses defined!"
-msgstr ""
+msgstr "客户无定义地址！"
 
 #. module: base
 #: field:ir.actions.act_window,view_type:0
@@ -6537,13 +6539,13 @@ msgstr "秒：%(sec)s"
 #: code:addons/addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel this sale order !"
-msgstr ""
+msgstr "无法取消该销售订单！"
 
 #. module: base
 #: code:addons/addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "无法取消采购订单！"
 
 #. module: base
 #: code:addons/addons/base/module/module.py:0
@@ -6565,7 +6567,7 @@ msgstr "更新模块列表"
 #: code:addons/addons/base_module_publish/wizard/base_module_publish.py:0
 #, python-format
 msgid "This version of the module is already exist on the server"
-msgstr ""
+msgstr "此模块版本在服务器已经存在！"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -6576,7 +6578,7 @@ msgstr "继续"
 #: code:addons/osv/orm.py:0
 #, python-format
 msgid "Object %s does not exists"
-msgstr ""
+msgstr "对象%s不存在"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -6593,7 +6595,7 @@ msgstr "斯洛文尼亚语 / slovenščina"
 #: code:addons/addons/warning/warning.py:0
 #, python-format
 msgid "Alert for ' + partner.name +' !"
-msgstr ""
+msgstr "给'+partner.name+'的警戒!"
 
 #. module: base
 #: field:ir.actions.report.xml,attachment_use:0
@@ -6646,7 +6648,7 @@ msgstr "%b - 月份缩写。"
 #: code:addons/addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid avaible !"
-msgstr ""
+msgstr "无可用的交货格子！"
 
 #. module: base
 #: code:addons/addons/account/wizard/wizard_bank_reconcile.py:0
@@ -6655,6 +6657,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
+"为能够对帐，您必须在日记账设定中\n"
+"定义一个银行账户"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -6688,13 +6692,13 @@ msgstr "完全"
 #: code:addons/addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
 msgid "March"
-msgstr ""
+msgstr "三月"
 
 #. module: base
 #: code:addons/addons/account/account_bank_statement.py:0
 #, python-format
 msgid "The statement balance is incorrect !\n"
-msgstr ""
+msgstr "银行结单馀额不对！\n"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -6715,19 +6719,19 @@ msgstr "增值税"
 #: code:addons/addons/point_of_sale/pos.py:0
 #, python-format
 msgid "No Default Credit Account !"
-msgstr ""
+msgstr "无默认贷方科目！"
 
 #. module: base
 #: code:addons/addons/account/invoice.py:0
 #, python-format
 msgid "Free Reference"
-msgstr ""
+msgstr "自由参考"
 
 #. module: base
 #: code:addons/addons/document/document.py:0
 #, python-format
 msgid "Directory name must be unique!"
-msgstr ""
+msgstr "目录名必须唯一！"
 
 #. module: base
 #: view:res.request.link:0
@@ -6748,7 +6752,7 @@ msgstr "国家全名"
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Iteration"
-msgstr ""
+msgstr "重复"
 
 #. module: base
 #: code:addons/addons/base_module_quality/speed_test/speed_test.py:0
