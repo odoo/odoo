@@ -111,11 +111,13 @@ class project_work(osv.osv):
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        timesheet_id = self.pool.get('project.task.work').browse(cr, uid, ids)[0].hr_analytic_timesheet_id
-#         delete entry from timesheet too while deleting entry to task.
-        list_avail_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [])
-        if timesheet_id in list_avail_ids:
-            obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id], *args, **kwargs)
+        pool_analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for work_id in ids:
+            timesheet_id = self.read(cr, uid, work_id, ['hr_analytic_timesheet_id'])['hr_analytic_timesheet_id']
+#            delete entry from timesheet too while deleting entry to task.
+            list_avail_ids = pool_analytic_timesheet.search(cr, uid, [])
+            if timesheet_id in list_avail_ids:
+                obj = pool_analytic_timesheet.unlink(cr, uid, [timesheet_id], *args, **kwargs)
 
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
@@ -129,6 +131,14 @@ class task(osv.osv):
     _inherit = "project.task"
     _description = "Tasks"
 
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
+            if task_obj.work_ids:
+                work_ids = [x.id for x in task_obj.work_ids]
+                self.pool.get('project.task.work').unlink(cr, uid, work_ids, *args, **kwargs)
+        
+        return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
+    
     def write(self, cr, uid, ids,vals,context={}):
         if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
             vals_line = {}
@@ -138,16 +148,16 @@ class task(osv.osv):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'])
                 acc_id = project_obj.category_id.id
 
-            for task in task_obj_l:
-                if len(task.work_ids):
-                    for task_work in task.work_ids:
+            for task_obj in task_obj_l:
+                if len(task_obj.work_ids):
+                    for task_work in task_obj.work_ids:
                         line_id = task_work.hr_analytic_timesheet_id
                         if (vals.has_key('project_id') and vals['project_id']):
                             vals_line['account_id'] = acc_id
                         if (vals.has_key('name') and vals['name']):
                             vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
-        return super(osv.osv,self).write(cr, uid, ids, vals, context)
+        return super(task,self).write(cr, uid, ids, vals, context)
 
 task()
 
