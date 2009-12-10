@@ -251,8 +251,9 @@ class node_dir(node_class):
         ctx.update(self.dctx)
         where = [('parent_id','=',self.dir_id) ]
         if name:
-            where.append(('name','=',name))
-        ids = dirobj.search(cr, uid, where,context=ctx)
+            where.append(('name','=',name))               
+
+        ids = dirobj.search(cr, uid, where + [('ressource_parent_type_id','=',False)],context=ctx)
         res = []
         if ids:
             for dirr in dirobj.browse(cr,uid,ids,context=ctx):
@@ -316,9 +317,8 @@ class node_res_dir(node_class):
         self.resm_id = dirr.ressource_id
         self.namefield = dirr.resource_field or 'name'
         self.displayname = dirr.name
-        # Important: the domain is evaluated using the *parent* dctx!
-        self.dctx.update({'active_id': self.context.context['dir_id']})
-        self.domain = safe_eval(dirr.domain,self.dctx)
+        # Important: the domain is evaluated using the *parent* dctx!        
+        self.domain = dirr.domain
         self.ressource_tree = dirr.ressource_tree
         # and then, we add our own vars in the dctx:
         if dctx:
@@ -355,12 +355,13 @@ class node_res_dir(node_class):
         ctx.update(self.dctx)
         where = []
         if self.domain:
-            where += self.domain
+            where += safe_eval(self.domain, self.dctx)
         if self.resm_id:
             where.append(('id','=',self.resm_id))
     
         if name:
             where.append((self.namefield,'=',name))
+        
         # print "Where clause for %s" % self.res_model, where
         if self.ressource_tree:
             object2 = False
@@ -491,13 +492,16 @@ class node_res_obj(node_class):
         directory = dirobj.browse(cr, uid, self.dir_id)
         obj = dirobj.pool.get(self.res_model)
         where = []
-        res = []
+        res = []        
         if name:
-            where.append(('name','=',name))         
-        if self.res_id and directory.ressource_tree:            
+            where.append(('name','=',name))   
+       
+        # Directory Structure display in tree structure
+        if self.res_id and directory.ressource_tree:  
+            where1 = where      
             if obj._parent_name in obj.fields_get(cr, uid):                    
-                where.append((obj._parent_name, '=', self.res_id))            
-            resids = obj.search(cr,uid, where, context=ctx)                        
+                where1 += [(obj._parent_name, '=', self.res_id)]
+            resids = obj.search(cr,uid, where1, context=ctx)                        
             for bo in obj.browse(cr,uid,resids,context=ctx):
                 namefield = directory.resource_field or 'name'
                 if not bo:
@@ -505,9 +509,15 @@ class node_res_obj(node_class):
                 name = getattr(bo, namefield)
                 if not name:
                     continue                
-                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo))            
-        if name:
-            where.append(('name','=',name)) 
+                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo)) 
+
+        # Get Child Ressource Directories 
+        where12 = [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
+        dirids = dirobj.search(cr,uid, where12)
+        for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
+            if dirr.type == 'ressource':
+                res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
+        
         where = [('parent_id','=',self.dir_id) ]               
         ids = dirobj.search(cr, uid, where,context=ctx)                
         if ids:
@@ -516,7 +526,7 @@ class node_res_obj(node_class):
                     res.append(node_res_obj(dirr.name,self,self.context,self.res_model,res_bo = None, res_id = self.res_id))
                 elif dirr.type == 'ressource':
                     # child resources can be controlled by properly set dctx
-                    res.append(node_res_dir(dirr.name,self,self.context,dirr))
+                    res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
         
         fil_obj=dirobj.pool.get('ir.attachment')
         where2 = where  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
