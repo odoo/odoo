@@ -1411,7 +1411,7 @@
           <field name="name">Start Configuration</field>
           <field name="model_id" ref="model_res_config"/>
           <field name="state">code</field>
-          <field name="code">action = self.next(cr, uid)</field>
+          <field name="code">action = self.next(cr, uid, [])</field>
         </record>
         <menuitem action="action_start_configurator" id="menu_configurator_module" parent="next_id_11" type="server"/>
     </data>
