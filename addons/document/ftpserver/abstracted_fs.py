@@ -205,7 +205,7 @@ class abstracted_fs:
     def fs2ftp(self, node):        
         res='/'
         if node:
-            res=os.path.normpath(''.join(node.full_path()))
+            res = os.path.normpath(''.join(node.full_path()))
             res = res.replace("\\", "/")        
             while res[:2] == '//':
                 res = res[1:]
@@ -231,18 +231,19 @@ class abstracted_fs:
 
     # Ok
     def create(self, node, objname, mode):
-        objname = _to_unicode(objname)
-        uid = node.context.uid
-        pool = pooler.get_pool(node.context.dbname)
-        cr = pooler.get_db(node.context.dbname).cursor()
-        child = node.child(cr, objname)
-        if child:
-            if child.type in ('collection','database'):
-                raise OSError(1, 'Operation not permited.')
-            if child.type == 'content':
-                s = content_wrapper(node.context.dbname, uid, pool, child)
-                return s
+        objname = _to_unicode(objname) 
+        cr = None       
         try:
+            uid = node.context.uid
+            pool = pooler.get_pool(node.context.dbname)
+            cr = pooler.get_db(node.context.dbname).cursor()
+            child = node.child(cr, objname)
+            if child:
+                if child.type in ('collection','database'):
+                    raise OSError(1, 'Operation not permited.')
+                if child.type == 'content':
+                    s = content_wrapper(node.context.dbname, uid, pool, child)
+                    return s
             fobj = pool.get('ir.attachment')
             ext = objname.find('.') >0 and objname.split('.')[1] or False
 
@@ -298,6 +299,9 @@ class abstracted_fs:
         except Exception,e:
             log(e)
             raise OSError(1, 'Operation not permited.')
+        finally:
+            if cr:
+                cr.close()
 
     # Ok
     def open(self, node, mode):
@@ -315,13 +319,15 @@ class abstracted_fs:
             else:
                 s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
             s.name = node
+            cr.close()
             return s
         elif node.type=='content':
-#            cr = node.cr
             uid = node.context.uid
             cr = pooler.get_db(node.context.dbname).cursor()
             pool = pooler.get_pool(node.context.dbname)
-            return getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
+            res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
+            cr.close()
+            return res
         else:
             raise OSError(1, 'Operation not permited.')
 
@@ -371,6 +377,9 @@ class abstracted_fs:
             return None        
         if path.type in ('collection','database'):
             self.cwd = self.fs2ftp(path)
+        elif path.type in ('file'):            
+            parent_path = path.full_path()[:-1]            
+            self.cwd = os.path.normpath(''.join(parent_path))
         else:
             raise OSError(1, 'Operation not permited.')
 
@@ -452,7 +461,9 @@ class abstracted_fs:
                     pass
             return result
         cr = pooler.get_db(path.context.dbname).cursor()        
-        return path.children(cr)
+        res = path.children(cr)
+        cr.close()
+        return res
 
     # Ok
     def rmdir(self, node):
