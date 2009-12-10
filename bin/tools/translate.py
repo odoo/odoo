@@ -152,7 +152,11 @@ _ = GettextAlias()
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
+        self.logger = netsvc.Logger()
         self.buffer = buffer
+
+    def warn(self, msg):
+        self.logger.notifyChannel("i18n", netsvc.LOG_WARNING, msg)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -228,6 +232,10 @@ class TinyPoFile(object):
                     self.tnrs.append((t, n, r, source, trad))
 
         self.first = False
+
+        if name is None:
+            self.warn('Missing "#:" formated comment for the following source:\n\t%s' % (source,))
+            return self.next()
         return type, name, res_id, source, trad
 
     def write_infos(self, modules):
