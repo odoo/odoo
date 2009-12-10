@@ -491,13 +491,13 @@ class node_res_obj(node_class):
         directory = dirobj.browse(cr, uid, self.dir_id)
         obj = dirobj.pool.get(self.res_model)
         where = []
+        res = []
         if name:
-            where.append(('name','=',name)) 
+            where.append(('name','=',name))         
         if self.res_id and directory.ressource_tree:            
             if obj._parent_name in obj.fields_get(cr, uid):                    
                 where.append((obj._parent_name, '=', self.res_id))            
-            resids = obj.search(cr,uid, where, context=ctx)
-            res = []            
+            resids = obj.search(cr,uid, where, context=ctx)                        
             for bo in obj.browse(cr,uid,resids,context=ctx):
                 namefield = directory.resource_field or 'name'
                 if not bo:
