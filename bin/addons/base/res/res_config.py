@@ -23,6 +23,12 @@ from osv import osv, fields
 import netsvc
 
 class res_config_configurable(osv.osv_memory):
+    ''' Base classes for new-style configuration items
+
+    Configuration items should inherit from this class, implement
+    the execute method (and optionally the cancel one) and have
+    their view inherit from the related res_config_view_base view.
+    '''
     _name = 'res.config'
     logger = netsvc.Logger()
 
