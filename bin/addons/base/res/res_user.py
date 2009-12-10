@@ -270,7 +270,7 @@ class config_users(osv.osv_memory):
         self.pool.get('res.users').create(
             cr, uid, self.user_data(cr, uid, new_id, context), context)
     
-    def action_next(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         self.create_user(cr, uid, ids[0], context=context)
         return {
             'view_type': 'form',
@@ -301,7 +301,7 @@ class res_config_view(osv.osv_memory):
         'view':lambda *args: 'simple',
     }
 
-    def action_next(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         users_obj = self.pool.get('res.users')
         group_obj=self.pool.get('res.groups')
@@ -311,7 +311,6 @@ class res_config_view(osv.osv_memory):
                 users_obj.write(cr, uid, [uid],{
                                 'groups_id':[(4,group_ids[0])]
                             }, context=context)
-        return self.next(cr, uid)
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

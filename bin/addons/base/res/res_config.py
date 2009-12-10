@@ -80,7 +80,21 @@ class res_config_configurable(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
     def next(self, cr, uid, *args, **kwargs):
         return self._next(cr, uid)
-    def action_skip(self, cr, uid, *args, **kwargs):
+
+    def execute(self, cr, uid, ids, context=None):
+        raise NotImplementedError(
+            'Configuration items need to implement execute')
+    def cancel(self, cr, uid, ids, context=None):
+        pass
+
+    def action_next(self, cr, uid, ids, context=None):
+        next = self.execute(cr, uid, ids, context=None)
+        if next: return next
+        return self._next(cr, uid)
+        
+    def action_skip(self, cr, uid, ids, context=None):
+        next = self.cancel(cr, uid, ids, context=None)
+        if next: return next
         return self._next(cr, uid)
 res_config_configurable()
 
