@@ -61,10 +61,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
-                   <group col='12' colspan='4'>
-                   		<filter string="Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+                   <group col="12" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
                        	<separator orientation="vertical"/>
-						<filter string="Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
@@ -143,10 +143,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by categories and Sections">
-                   <group col='12' colspan='4'>
-                   		<filter string="Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+                   <group col="12" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
                        	<separator orientation="vertical"/>
-						<filter string="Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
@@ -215,10 +215,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by Section">
-                   <group col='4' colspan='4'>
-                   		<filter string="Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+                   <group col="4" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
                        	<separator orientation="vertical"/>
-						<filter string="Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="section_id" select="1"/>
+	                    <field name="nbr_cases" select="1"/>
                    </group>
                </search>
             </field>
