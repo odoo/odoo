@@ -109,7 +109,7 @@ class Calendar(CalDAV, osv.osv_memory):
             elif child_name == "vtimezone":
                 timezone = Timezone()
                 timezone.import_ical(cr, uid, child)
-        return True        
+        return True
 
     def export_ical(self, cr, uid, ids):
         # Read openobject data in ical format
@@ -182,7 +182,7 @@ class Event(CalDAV, osv.osv_memory):
         'transp' : None, # Use: O-1, Type: TEXT,            Defines whether an event is transparent or not to busy time searches.
         'uid' : None, # Use: O-1, Type: TEXT,            Defines the persistent, globally unique identifier for the calendar component.
         'url' : None, # Use: O-1, Type: URL,          Defines a Uniform Resource Locator (URL) associated with the iCalendar object.
-        'recurid' : None, 
+        'recurid' : None,
         'attach' : None, # Use: O-n, Type: BINARY,       Provides the capability to associate a document object with a calendar component.
         'attendee' : None, # Use: O-n, Type: CAL-ADDRESS,    Defines an "Attendee" within a calendar component.
         'categories' : None, # Use: O-n,    Type: TEXT,            Defines the categories for a calendar component.
@@ -190,13 +190,13 @@ class Event(CalDAV, osv.osv_memory):
         'contact' : None, # Use: O-n,    Type: TEXT,         Used to represent contact information or alternately a  reference to contact information associated with the calendar component.
         'exdate'  : None, # Use: O-n,    Type: DATE-TIME,    Defines the list of date/time exceptions for a recurring calendar component.
         'exrule'  : None, # Use: O-n,    Type: RECUR,        Defines a rule or repeating pattern for an exception to a recurrence set.
-        'rstatus' : None, 
+        'rstatus' : None,
         'related' : None, # Use: O-n,                     Specify the relationship of the alarm trigger with respect to the start or end of the calendar component.
                                 #                               like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;RELATED=END:PT5M
         'resources' : None, # Use: O-n, Type: TEXT,            Defines the equipment or resources anticipated for an activity specified by a calendar entity like RESOURCES:EASEL,PROJECTOR,VCR, LANGUAGE=fr:1 raton-laveur
         'rdate' : None, # Use: O-n,    Type: DATE-TIME,    Defines the list of date/times for a recurrence set.
         'rrule' : None, # Use: O-n,    Type: RECUR,        Defines a rule or repeating pattern for recurring events, to-dos, or time zone definitions.
-        'x-prop' : None, 
+        'x-prop' : None,
         'duration' : None, # Use: O-1,    Type: DURATION,        Specifies a positive duration of time.
         'dtend' : None, # Use: O-1,    Type: DATE-TIME,    Specifies the date and time that a calendar component ends.
     }
@@ -209,14 +209,14 @@ class Event(CalDAV, osv.osv_memory):
             startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S", timezone=True)
+            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
 #            datetime_obj_utc = datetime_obj.replace(tzinfo=timezone('UTC'))
             rset1._exdate.append(datetime_obj)
         re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S', timezone=True), re_dates)
+        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
         return recurrent_dates
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         # put logic for recurrent event
         # example : 123-20091111170822
@@ -243,7 +243,7 @@ class Journal(CalDAV):
     }
 
 class FreeBusy(CalDAV):
-    __attribute__ = {    
+    __attribute__ = {
     'contact' : None, # Use: O-1, Type: Text,         Represent contact information or alternately a  reference to contact information associated with the calendar component.
     'dtstart' : None, # Use: O-1, Type: DATE-TIME,    Specifies when the calendar component begins.
     'dtend' : None, # Use: O-1, Type: DATE-TIME,    Specifies the date and time that a calendar component ends.
@@ -255,8 +255,8 @@ class FreeBusy(CalDAV):
     'attendee' : None, # Use: O-n, Type: CAL-ADDRESS,  Defines an "Attendee" within a calendar component.
     'comment' : None, # Use: O-n, Type: TEXT,         Specifies non-processing information intended to provide a comment to the calendar user.
     'freebusy' : None, # Use: O-n, Type: PERIOD,       Defines one or more free or busy time intervals.
-    'rstatus' : None, 
-    'X-prop' : None, 
+    'rstatus' : None,
+    'X-prop' : None,
     }
 
 class Timezone(CalDAV):
@@ -277,7 +277,7 @@ class Timezone(CalDAV):
 
 class Alarm(CalDAV):
     __attribute__ = {
-    
+
     'action' : None, # Use: R-1, Type: Text,        defines the action to be invoked when an alarm is triggered LIKE "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"
     'description' : None, #      Type: Text,        Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property. Use:- R-1 for DISPLAY,Use:- R-1 for EMAIL,Use:- R-1 for PROCEDURE
     'summary' : None, # Use: R-1, Type: Text        Which contains the text to be used as the message subject. Use for EMAIL
@@ -286,9 +286,9 @@ class Alarm(CalDAV):
     'duration' : None, #           Type: DURATION,    Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'repeat' : None, #           Type: INTEGER,    Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'attach' : None, # Use:- O-n : which MUST point to a sound resource, which is rendered when the alarm is triggered for AUDIO, Use:- O-n : which are intended to be sent as message attachments for EMAIL, Use:- R-1:which MUST point to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
-    'x-prop' : None, 
+    'x-prop' : None,
     }
-    
+
     def import_ical(self, cr, uid, ical_data):
         for val in ical_data.getChildren():
             if self.__attribute__.has_key(val.name.lower()):
