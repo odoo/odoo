@@ -1384,38 +1384,6 @@
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
 
-        <record id="view_config_wizard_form" model="ir.ui.view">
-            <field name="name">Main Configuration Wizard</field>
-            <field name="model">ir.actions.configuration.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Next Configuration Step">
-                    <image name="gtk-dialog-info"/>
-                    <group>
-                        <separator string="Next Configuration Step" colspan="4"/>
-                        <field name="name" nolabel="1" colspan="4" width="500"/>
-                        <field name="progress" widget="progressbar"/>
-                        <separator colspan="4" string=""/>
-                        <label string="" colspan="2"/>
-                        <group colspan="2" col="2">
-                            <button icon="gtk-cancel" name="button_skip" string="Skip Step" type="object"/>
-                            <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_config_wizard_form" model="ir.actions.act_window">
-            <field name="name">Configuration Wizard</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.actions.configuration.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-        <menuitem action="action_config_wizard_form" id="menu_config_module" parent="base.next_id_11"/>
-
         <record id="action_start_configurator" model="ir.actions.server">
           <field name="name">Start Configuration</field>
           <field name="model_id" ref="model_res_config"/>
