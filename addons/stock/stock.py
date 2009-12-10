@@ -509,8 +509,8 @@ class stock_picking(osv.osv):
     def force_assign(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
-#           move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
-            move_ids = [x.id for x in pick.move_lines]
+            move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed','auto']]
+#            move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
