@@ -123,7 +123,7 @@ class res_currency(osv.osv):
             else:
                 return (from_amount * rate)
 
-    def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
+    def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=100):
         args2 = args[:]
         if name:
             args += [('name', operator, name)]

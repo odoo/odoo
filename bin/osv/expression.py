@@ -58,7 +58,8 @@ class expression(object):
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
                                '  WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
-                               subids)                                         
+                               subids)
+                    res.extend([r[0] for r in cr.fetchall()])                                     
         else:
             cr.execute('SELECT distinct("%s")'    \
                            '  FROM "%s" where "%s" is not null'  % (s, f, s)),

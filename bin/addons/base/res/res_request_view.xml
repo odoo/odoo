@@ -57,12 +57,22 @@
             </field>
         </record>
         <record id="res_request-act" model="ir.actions.act_window">
-            <field name="name">Requests</field>
+            <field name="name">My Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/><menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12"/>
+        <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/>
+        <menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12"/>
+        
+        <record id="res_request-closed" model="ir.actions.act_window">
+            <field name="name">My Closed Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.request</field>
+            <field name="domain">[('active','=',False)]</field>
+            <field name="view_id" eval="False"/>
+        </record>
+        <menuitem action="res_request-closed" id="next_id_12_close" parent="menu_res_request_act"/>
         
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
