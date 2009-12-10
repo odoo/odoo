@@ -31,6 +31,13 @@ from datetime import datetime
 from time import strftime
 from pytz import timezone
 import tools
+from service import web_services
+
+def str2int(string_id = None):
+    if string_id:
+        if isinstance(string_id,str):
+            return int(string_id.split('-')[0])
+        return string_id
 
 class crm_section(osv.osv):
     _name = 'crm.case.section'
@@ -50,7 +57,7 @@ class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'
     _description = 'Attendee information'
     _rec_name = 'cutype'
-    
+
     __attribute__ = {
         'cutype' : {'field':'cutype', 'type':'text'}, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
         'member' : {'field':'member', 'type':'text'}, # Use: 0-1    Specify the group or list membership of the calendar user specified by the property.
@@ -64,22 +71,22 @@ class crm_caldav_attendee(osv.osv):
         'dir' : {'field':'dir', 'type':'text'}, # Use: 0-1    Specify reference to a directory entry associated with the calendar user specified by the property.
         'language' : {'field':'language', 'type':'text'}, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
-     
+
     _columns = {
                 'cutype' : fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
-                        ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'), 
-                'member' : fields.char('Member', size=124), 
+                        ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'),
+                'member' : fields.char('Member', size=124),
                 'role' : fields.selection([('CHAIR', 'CHAIR'), ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
-                        ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'), 
+                        ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'),
                 'partstat' : fields.selection([('NEEDS-ACTION', 'NEEDS-ACTION'), ('ACCEPTED', 'ACCEPTED'), \
-                        ('DECLINED', 'DECLINED'), ('TENTATIVE', 'TENTATIVE'), ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
-                'rsvp' :  fields.boolean('RSVP'), 
-                'delegated_to' : fields.char('DELEGATED-TO', size=124), 
-                'delegated_from' : fields.char('DELEGATED-FROM', size=124), 
-                'sent_by' : fields.char('SENT-BY', size=124), 
-                'cn' : fields.char('CN', size=124), 
-                'dir' : fields.char('DIR', size=124), 
-                'language' : fields.char('LANGUAGE', size=124), 
+                        ('DECLINED', 'DECLINED'), ('TENTATIVE', 'TENTATIVE'), ('DELEGATED', 'DELEGATED')], 'PARTSTAT'),
+                'rsvp' :  fields.boolean('RSVP'),
+                'delegated_to' : fields.char('DELEGATED-TO', size=124),
+                'delegated_from' : fields.char('DELEGATED-FROM', size=124),
+                'sent_by' : fields.char('SENT-BY', size=124),
+                'cn' : fields.char('CN', size=124),
+                'dir' : fields.char('DIR', size=124),
+                'language' : fields.char('LANGUAGE', size=124),
                 }
 
 crm_caldav_attendee()
@@ -88,44 +95,44 @@ class crm_case(osv.osv):
     _name = 'crm.case'
     _inherit = 'crm.case'
     _description = 'Cases'
-    
+
     __attribute__ = {
-        'class' : {'field':'class', 'type':'text'}, 
+        'class' : {'field':'class', 'type':'text'},
         'created' : {'field':'create_date', 'type':'datetime'}, # keep none for now
-        'description' : {'field':'description', 'type':'text'}, 
-        'dtstart' : {'field':'date', 'type':'datetime'}, 
-        #'last-mod' : {'field':'write_date', 'type':'datetime'}, 
-        'location' : {'field':'location', 'type':'text'}, 
-        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
-        'priority' : {'field':'priority', 'type':'int'}, 
-        'dtstamp'  : {'field':'date', 'type':'datetime'}, 
-        'seq' : None, 
+        'description' : {'field':'description', 'type':'text'},
+        'dtstart' : {'field':'date', 'type':'datetime'},
+        #'last-mod' : {'field':'write_date', 'type':'datetime'},
+        'location' : {'field':'location', 'type':'text'},
+        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'},
+        'priority' : {'field':'priority', 'type':'int'},
+        'dtstamp'  : {'field':'date', 'type':'datetime'},
+        'seq' : None,
         'status' : {'field':'state', 'type':'selection', 'mapping' : {'TENTATIVE' : 'draft', \
-                                                  'CONFIRMED' : 'open' , 'CANCELLED' : 'cancel'}}, 
-        'summary' : {'field':'name', 'type':'text'}, 
-        'transp' : {'field':'transparent', 'type':'text'}, 
-        'uid' : {'field':'id', 'type':'text'}, 
-        'url' : {'field':'caldav_url', 'type':'text'}, 
-        'recurid' : None, 
-#        'attach' : {'field':'attachment_ids', 'sub-field':'datas', 'type':'list'}, 
-        'attendee' : {'field':'attendees', 'type':'text'}, 
+                                                  'CONFIRMED' : 'open' , 'CANCELLED' : 'cancel'}},
+        'summary' : {'field':'name', 'type':'text'},
+        'transp' : {'field':'transparent', 'type':'text'},
+        'uid' : {'field':'id', 'type':'text'},
+        'url' : {'field':'caldav_url', 'type':'text'},
+        'recurid' : None,
+#        'attach' : {'field':'attachment_ids', 'sub-field':'datas', 'type':'list'},
+        'attendee' : {'field':'attendees', 'type':'text'},
 #        'categories' : {'field':'categ_id', 'sub-field':'name'},
 #        'categories' : {'field':None , 'sub-field':'name', 'type':'text'}, # keep none for now
-        'comment' : None, 
-        'contact' : None, 
-        'exdate'  : None, 
-        'exrule'  : None, 
-        'rstatus' : None, 
-        'related' : None, 
-        'resources' : None, 
-        'rdate' : None, 
-        'rrule' : {'field':'rrule', 'type':'text'}, 
-        'x-openobject-id' : {'field':'id', 'type':'text'}, 
-        'x-openobject-model' : {'value':_name, 'type':'text'}, 
-#        'duration' : {'field':'duration'}, 
-        'dtend' : {'field':'date_closed', 'type':'datetime'}, 
+        'comment' : None,
+        'contact' : None,
+        'exdate'  : None,
+        'exrule'  : None,
+        'rstatus' : None,
+        'related' : None,
+        'resources' : None,
+        'rdate' : None,
+        'rrule' : {'field':'rrule', 'type':'text'},
+        'x-openobject-id' : {'field':'id', 'type':'text'},
+        'x-openobject-model' : {'value':_name, 'type':'text'},
+#        'duration' : {'field':'duration'},
+        'dtend' : {'field':'date_closed', 'type':'datetime'},
     }
-    
+
     def _get_location(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for case in self.browse(cr, uid, ids):
@@ -140,7 +147,7 @@ class crm_case(osv.osv):
             else:
                 res[case.id] = ''
         return res
-    
+
     def _get_rdates(self, cr, uid, ids, name, arg, context=None):
         res = {}
         context.update({'read':True})
@@ -151,26 +158,26 @@ class crm_case(osv.osv):
                 event_obj = self.pool.get('caldav.event')
                 res[case['id']] = str(event_obj.get_recurrent_dates(str(rule), exdate, case['date']))
         return res
-    
+
     _columns = {
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
-                 ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
-        'location' : fields.function(_get_location, method=True, store = True, string='Location', type='text'), 
-        'freebusy' : fields.text('FreeBusy'), 
-        'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
-        'caldav_url' : fields.char('Caldav URL', size=34), 
-        'rrule' : fields.text('Recurrent Rule'), 
+                 ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'),
+        'location' : fields.function(_get_location, method=True, store = True, string='Location', type='text'),
+        'freebusy' : fields.text('FreeBusy'),
+        'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'),
+        'caldav_url' : fields.char('Caldav URL', size=34),
+        'rrule' : fields.text('Recurrent Rule'),
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
-                                   store=True, type='text'), 
-       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
+                                   store=True, type='text'),
+       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'),
     }
-    
+
     _defaults = {
-             'caldav_url': lambda *a: 'http://localhost:8080', 
-             'class': lambda *a: 'PUBLIC', 
-             'transparent': lambda *a: 'OPAQUE', 
+             'caldav_url': lambda *a: 'http://localhost:8080',
+             'class': lambda *a: 'PUBLIC',
+             'transparent': lambda *a: 'OPAQUE',
         }
-     
+
     def export_cal(self, cr, uid, ids, context={}):
         crm_data = self.read(cr, uid, ids, [])
         ical = vobject.iCalendar()
@@ -182,7 +189,7 @@ class crm_case(osv.osv):
                 if key == 'uid':
                     uid_val += str(crm[val['field']])
                     continue
-                if val == None or key == 'rrule':  
+                if val == None or key == 'rrule':
                     continue
                 if val.has_key('field') and val.has_key('sub-field') and crm[val['field']] and crm[val['field']]:
                     vevent.add(key).value = crm[val['field']][1]
@@ -195,7 +202,7 @@ class crm_case(osv.osv):
                 startdate = datetime.strptime(crm['date'], "%Y-%m-%d %H:%M:%S")
                 if not startdate:
                     startdate = datetime.now()
-                rset1 = rrulestr(str(crm[event_obj.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
+                rset1 = rrulestr(str(crm[self.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
                 vevent.rruleset = rset1
             vevent.add('uid').value = uid_val
         return ical.serialize()#.replace(vobject.icalendar.CRLF, vobject.icalendar.LF).strip()
@@ -227,25 +234,29 @@ class crm_case(osv.osv):
         case_id = self.create(cr, uid, vals)
         return
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        res = super(crm_case, self).search(cr, uid, args, offset, 
+        res = super(crm_case, self).search(cr, uid, args, offset,
                 limit, order, context, count)
         return res
-    
+
     def write(self, cr, uid, ids, vals, context=None):
-        res = super(crm_case, self).write(cr, uid, ids, vals, context=context)
+        new_ids = []
+        for id in ids:
+            id = str2int(id)
+            if not id in new_ids:
+                new_ids.append(id)
+        if 'case_id' in vals :
+            vals['case_id'] = str2int(vals['case_id'])
+        res = super(crm_case, self).write(cr, uid, new_ids, vals, context=context)
         return res
-    
+
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
-        if not type(select) == list :
-            # Called from code
-            id = int(str(select).split('-')[0])
-            return super(crm_case, self).browse(cr, uid, id, context, list_class, fields_process)
-        select = map(lambda x:int(str(x).split('-')[0]), select)
+        if not isinstance(select,list): select = [select]
+        select = map(lambda x:str2int(x), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
-    def read(self, cr, uid, ids, fields=None, context={}, 
+    def read(self, cr, uid, ids, fields=None, context={},
             load='_classic_read'):
         """         logic for recurrent event
          example : 123-20091111170822"""
@@ -253,11 +264,9 @@ class crm_case(osv.osv):
             return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         if not type(ids) == list :
             # Called from code
-            ids = int(str(ids).split('-')[0])
-            res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-            return res
+            return super(crm_case, self).read(cr, uid, str2int(ids), fields=fields, context=context, load=load)
         else:
-            ids = map(lambda x:int(str(x).split('-')[0]), ids)
+            ids = map(lambda x:str2int(x), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         cr.execute('select id,rrule,rdates from crm_case where id in (%s)' % read_ids)
@@ -283,18 +292,27 @@ class crm_case(osv.osv):
                 val['id'] = id + '-' + ''.join(idval)
                 val1 = val.copy()
                 result += [val1]
-        return result 
-    
+        return result
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        return super(crm_case, self).copy(cr, uid, str2int(id), default, context)
+
     def unlink(self, cr, uid, ids, context=None):
         #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [str(id).split('-')[0]], ['date', 'rdates', 'rrule']):
+                for record in self.read(cr, uid, [str2int(id)], ['date', 'rdates', 'rrule']):
                     if record['date'] == date_new:
-                        self.write(cr, uid, [int(str(id).split('-')[0])], {'rrule' : record['rrule'] +"\n" + str(date_new)})
+                        self.write(cr, uid, [str2int(id)], {'rrule' : record['rrule'] +"\n" + str(date_new)})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
+
+    def create(self, cr, uid, vals, context={}):
+        if 'case_id' in vals:
+            vals['case_id'] = str2int(vals['case_id'])
+        return super(crm_case, self).create(cr, uid, vals, context)
+
 crm_case()
 
 
@@ -308,4 +326,61 @@ class ir_attachment(osv.osv):
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        new_args = []
+        if len(args) > 1:
+            new_args = [args[0]]
+            if args[1][0] == 'res_id':
+                new_args.append((args[1][0],args[1][1],str2int(args[1][2])))
+        if new_args:
+            args = new_args
+        return super(ir_attachment, self).search(cr, uid, args, offset=offset,
+                                                limit=limit, order=order,
+                                                context=context, count=False)
 ir_attachment()
+
+class ir_values(osv.osv):
+    _inherit = 'ir.values'
+
+    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
+        new_model = []
+        for data in models:
+            if isinstance(data,tuple):
+                new_model.append((data[0],str2int(data[1])))
+            else:
+                new_model.append(data)
+        return super(ir_values,self).set(cr, uid, key, key2, name, new_model, value, replace, isobject, meta, preserve_user, company)
+
+    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
+        new_model = []
+        for data in models:
+            if isinstance(data,tuple):
+                new_model.append((data[0],str2int(data[1])))
+            else:
+                new_model.append(data)
+        return super(ir_values,self).get(cr, uid, key, key2, new_model, meta, context, res_id_req, without_user, key2_req)
+
+ir_values()
+
+class virtual_report_spool(web_services.report_spool):
+    def exp_report(self, db, uid, object, ids, datas=None, context=None):
+        new_ids = []
+        for id in ids:
+            new_ids.append(str2int(id))
+        datas['id'] = str2int(datas['id'])
+        res=super(virtual_report_spool,self).exp_report( db, uid, object, new_ids, datas, context)
+        return res
+virtual_report_spool()
+
+class virtual_wizard(web_services.wizard):
+    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
+        new_ids = []
+        if 'id' in datas:
+            datas['id'] = str2int(datas['id'])
+            for id in datas['ids']:
+               new_ids.append(str2int(id))
+            datas['ids'] = new_ids
+        res=super(virtual_wizard,self).exp_execute(db, uid, wiz_id, datas, action, context)
+        return res
+virtual_wizard()
