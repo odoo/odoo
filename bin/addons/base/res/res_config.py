@@ -84,7 +84,7 @@ class res_config_configurable(osv.osv_memory):
             'actions', netsvc.LOG_INFO,
             'all configuration actions have been executed')
         return {'type': 'ir.actions.act_window_close'}
-    def next(self, cr, uid, *args, **kwargs):
+    def next(self, cr, uid, ids, context=None):
         return self._next(cr, uid)
 
     def execute(self, cr, uid, ids, context=None):
@@ -96,12 +96,12 @@ class res_config_configurable(osv.osv_memory):
     def action_next(self, cr, uid, ids, context=None):
         next = self.execute(cr, uid, ids, context=None)
         if next: return next
-        return self._next(cr, uid)
-        
+        return self.next(cr, uid, ids, context=context)
+
     def action_skip(self, cr, uid, ids, context=None):
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
-        return self._next(cr, uid)
+        return self.next(cr, uid, ids, context=context)
 res_config_configurable()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
