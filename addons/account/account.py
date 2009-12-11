@@ -934,7 +934,7 @@ class account_move(osv.osv):
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': _t(cr, None, 'selection', context.get('lang'), source=(mode.capitalize()+' Centralisation')) or (mode.capitalize()+' Centralisation'),
+                'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
