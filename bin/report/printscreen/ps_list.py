@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -53,7 +53,7 @@ class report_printscreen_list(report_int):
         try:
             dom = etree.XML(view.encode('utf-8'))
         except:
-            dom = etree.XML(view)   
+            dom = etree.XML(view)
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
@@ -76,14 +76,14 @@ class report_printscreen_list(report_int):
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
         ids2 = [x['id'] for x in rows] # getting the ids from read result
-        
+
         if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
             rows_new = []
             for id in datas['ids']:
                 element = [elem for elem in rows if elem['id']==id]
                 rows_new.append(element[0])
             rows = rows_new
-        
+
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -138,7 +138,6 @@ class report_printscreen_list(report_int):
         new_doc.append(config)
         header=etree.Element("header")
 
-
         for f in fields_order:
             field = etree.Element("field")
             field.text = tools.ustr(fields[f]['string'] or '')
@@ -150,7 +149,7 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-            
+
         for line in results:
             node_line = etree.Element("row")
             count = -1
@@ -181,30 +180,28 @@ class report_printscreen_list(report_int):
                     d1= mx.DateTime.strptime(line[f],'%Y-%m-%d')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 if fields[f]['type'] == 'time' and line[f]:
                     format = str(locale.nl_langinfo(locale.T_FMT))
                     d1= mx.DateTime.strptime(line[f],'%H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 if fields[f]['type'] == 'datetime' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
                     d1= mx.DateTime.strptime(line[f],'%Y-%m-%d %H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 col = etree.Element("col")
                 col.set('para','yes')
                 col.set('tree','no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
-                       col.set('tree','float') 
-                    if temp[count] == 1:
+                       col.set('tree','float')
+                    if f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
-                        
-                        
                 else:
                      col.text = '/'
                 node_line.append(col)
