@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-12-10 16:01+0000\n"
-"PO-Revision-Date: 2009-12-10 07:54+0000\n"
+"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"PO-Revision-Date: 2009-11-30 08:19+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -737,6 +737,12 @@ msgstr "מדומה"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML לא בתוקף להצגת ארכיטקטורה"
+
+#. module: base
+#: code:addons/osv/orm.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
+msgstr "אתה מנסה לעקוף הוראת גישה (מסוג מסמך: %s)"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -2556,6 +2562,16 @@ msgid "Sequence Type"
 msgstr "סוג ערך"
 
 #. module: base
+#: code:addons/addons/base/module/module.py:0
+#, python-format
+msgid ""
+"You try to upgrade a module that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+"אתה מנסה לשדרג מודול שתלוי במודול :%s.\n"
+"אבל מודול זה לא זמין במערכת שלך."
+
+#. module: base
 #: view:res.partner.address:0
 msgid "Partner Address"
 msgstr "כתובת שותף"
@@ -3425,7 +3441,6 @@ msgstr "קביעת תצורה לפעולות לקוח"
 #: view:res.partner.address:0
 msgid "Partner Addresses"
 msgstr "כתובת שותף"
-msgstr ""
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
@@ -4601,6 +4616,16 @@ msgid "Seconde: %(sec)s"
 msgstr "שניה: %(שניה)ות"
 
 #. module: base
+#: code:addons/addons/base/module/module.py:0
+#, python-format
+msgid ""
+"Can not create the module file:\n"
+" %s"
+msgstr ""
+"לא ניתן ליצור את קובץ המודול\n"
+"%s"
+
+#. module: base
 #: model:ir.actions.wizard,name:base.wizard_update
 #: model:ir.ui.menu,name:base.menu_module_update
 msgid "Update Modules List"
@@ -4806,6 +4831,11 @@ msgstr "תרגום"
 #: field:ir.sequence,padding:0
 msgid "Number padding"
 msgstr ""
+
+#. module: base
+#: model:res.country,name:base.ua
+msgid "Ukraine"
+msgstr "Ukraine"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -5617,6 +5647,11 @@ msgid "Window Actions"
 msgstr "פעולות חלון"
 
 #. module: base
+#: model:res.country,name:base.ch
+msgid "Switzerland"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Saint Kitts & Nevis Anguilla"
@@ -6195,7 +6230,6 @@ msgstr "שותף"
 #: model:res.country,name:base.tr
 msgid "Turkey"
 msgstr "Turkey"
-
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
