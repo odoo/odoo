@@ -33,11 +33,11 @@ from pytz import timezone
 import tools
 from service import web_services
 
-def str2int(string_id = None):
-    if string_id:
-        if isinstance(string_id,str):
-            return int(string_id.split('-')[0])
-        return string_id
+def caldevIDs2readIDs(caldev_ID = None):
+    if caldev_ID:
+        if isinstance(caldev_ID,str):
+            return int(caldev_ID.split('-')[0])
+        return caldev_ID
 
 class crm_section(osv.osv):
     _name = 'crm.case.section'
@@ -243,17 +243,17 @@ class crm_case(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         new_ids = []
         for id in ids:
-            id = str2int(id)
+            id = caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
         if 'case_id' in vals :
-            vals['case_id'] = str2int(vals['case_id'])
+            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
         res = super(crm_case, self).write(cr, uid, new_ids, vals, context=context)
         return res
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
         if not isinstance(select,list): select = [select]
-        select = map(lambda x:str2int(x), select)
+        select = map(lambda x:caldevIDs2readIDs(x), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
     def read(self, cr, uid, ids, fields=None, context={},
@@ -264,9 +264,9 @@ class crm_case(osv.osv):
             return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         if not type(ids) == list :
             # Called from code
-            return super(crm_case, self).read(cr, uid, str2int(ids), fields=fields, context=context, load=load)
+            return super(crm_case, self).read(cr, uid, caldevIDs2readIDs(ids), fields=fields, context=context, load=load)
         else:
-            ids = map(lambda x:str2int(x), ids)
+            ids = map(lambda x:caldevIDs2readIDs(x), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         cr.execute('select id,rrule,rdates from crm_case where id in (%s)' % read_ids)
@@ -295,22 +295,22 @@ class crm_case(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(crm_case, self).copy(cr, uid, str2int(id), default, context)
+        return super(crm_case, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
 
     def unlink(self, cr, uid, ids, context=None):
         #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [str2int(id)], ['date', 'rdates', 'rrule']):
+                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], ['date', 'rdates', 'rrule']):
                     if record['date'] == date_new:
-                        self.write(cr, uid, [str2int(id)], {'rrule' : record['rrule'] +"\n" + str(date_new)})
+                        self.write(cr, uid, [caldevIDs2readIDs(id)], {'rrule' : record['rrule'] +"\n" + str(date_new)})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
-            vals['case_id'] = str2int(vals['case_id'])
+            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
         return super(crm_case, self).create(cr, uid, vals, context)
 
 crm_case()
@@ -332,7 +332,7 @@ class ir_attachment(osv.osv):
         if len(args) > 1:
             new_args = [args[0]]
             if args[1][0] == 'res_id':
-                new_args.append((args[1][0],args[1][1],str2int(args[1][2])))
+                new_args.append((args[1][0],args[1][1],caldevIDs2readIDs(args[1][2])))
         if new_args:
             args = new_args
         return super(ir_attachment, self).search(cr, uid, args, offset=offset,
@@ -347,7 +347,7 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if isinstance(data,tuple):
-                new_model.append((data[0],str2int(data[1])))
+                new_model.append((data[0],caldevIDs2readIDs(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values,self).set(cr, uid, key, key2, name, new_model, value, replace, isobject, meta, preserve_user, company)
@@ -356,30 +356,42 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if isinstance(data,tuple):
-                new_model.append((data[0],str2int(data[1])))
+                new_model.append((data[0],caldevIDs2readIDs(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values,self).get(cr, uid, key, key2, new_model, meta, context, res_id_req, without_user, key2_req)
 
 ir_values()
 
+class ir_model(osv.osv):
+    _inherit = 'ir.model'
+    def read(self, cr, uid, ids, fields=None, context={},
+            load='_classic_read'):
+        data = super(ir_model, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        if data:
+            for val in data:
+                val['id'] = caldevIDs2readIDs(val['id'])
+        return data
+
 class virtual_report_spool(web_services.report_spool):
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
+        if object == 'printscreen.list':
+            return super(virtual_report_spool,self).exp_report( db, uid, object, ids, datas, context)
         new_ids = []
         for id in ids:
-            new_ids.append(str2int(id))
-        datas['id'] = str2int(datas['id'])
-        res=super(virtual_report_spool,self).exp_report( db, uid, object, new_ids, datas, context)
-        return res
+            new_ids.append(caldevIDs2readIDs(id))
+        datas['id'] = caldevIDs2readIDs(datas['id'])
+        super(virtual_report_spool,self).exp_report( db, uid, object, new_ids, datas, context)
+        return super(virtual_report_spool,self).exp_report( db, uid, object, new_ids, datas, context)
 virtual_report_spool()
 
 class virtual_wizard(web_services.wizard):
     def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
         new_ids = []
         if 'id' in datas:
-            datas['id'] = str2int(datas['id'])
+            datas['id'] = caldevIDs2readIDs(datas['id'])
             for id in datas['ids']:
-               new_ids.append(str2int(id))
+               new_ids.append(caldevIDs2readIDs(id))
             datas['ids'] = new_ids
         res=super(virtual_wizard,self).exp_execute(db, uid, wiz_id, datas, action, context)
         return res
