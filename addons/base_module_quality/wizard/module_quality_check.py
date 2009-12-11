@@ -22,6 +22,7 @@
 import os
 
 import wizard
+from tools.translate import _
 import pooler
 from osv import osv, fields
 
