@@ -131,7 +131,7 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
-                                            <field name="company_id" groups="base.group_multi_company"/>    
+                                            <field name="company_id" groups="base.group_multi_company"/>
                                             <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name" select="2"/>
                                             <field name="price_unit" select="2"/>
@@ -253,36 +253,6 @@
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
 
-        <record id="action_order_tree" model="ir.actions.act_window">
-            <field name="name">My Sales Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-        <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order" groups="base.group_extended"/>
-
-        <record id="action_order_tree_all" model="ir.actions.act_window">
-            <field name="name">All Sales Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-        <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order" groups="base.group_extended"/>
-
-        <record id="action_order_tree_new" model="ir.actions.act_window">
-            <field name="name">New Quotation</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar,graph</field>
-        </record>
-        <menuitem action="action_order_tree_new" id="menu_action_order_tree_new" parent="sale.menu_sale_order"/>
-
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
             <field name="type">ir.actions.act_window</field>
@@ -312,47 +282,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
 
-        <record id="action_order_tree7" model="ir.actions.act_window">
-            <field name="name">My sales in exception</field>
+
+        <record id="action_order_tree5" model="ir.actions.act_window">
+            <field name="name">All Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-
-        <record id="action_order_tree8" model="ir.actions.act_window">
-            <field name="name">My sales order waiting Invoice</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-
-        <record id="action_order_tree9" model="ir.actions.act_window">
-            <field name="name">My sales order in progress</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-
-        <record id="action_order_tree10" model="ir.actions.act_window">
-            <field name="name">My Quotations</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>            
         </record>
 
 		<record id="action_order_tree" model="ir.actions.act_window">
@@ -377,7 +318,6 @@
                 </graph>
             </field>
         </record>
-
 
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>
@@ -415,7 +355,7 @@
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1" select="1"/>
                             <field name="invoiced" select="2"/>
-							<field name="company_id" groups="base.group_multi_company"/>			
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name" select="2"/>
                             <field name="price_unit" select="2"/>

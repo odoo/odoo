@@ -17,7 +17,6 @@
             </field>
         </record>
         
-        
         <record id="view_timesheet_user_form" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.user.form</field>
             <field name="model">report_timesheet.user</field>
@@ -30,7 +29,6 @@
                 </form>
             </field>
         </record>
-        
         
         <record id="view_timesheet_user_tree" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.user.tree</field>
@@ -46,15 +44,6 @@
             </field>
         </record>
         
-        <record id="action_timesheet_user_stat" model="ir.actions.act_window">
-            <field name="name">Timesheet by user (this month)</field>
-            <field name="res_model">report_timesheet.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        <menuitem id="next_id_69" name="This Month" parent="hr.menu_hr_reporting"/><menuitem action="action_timesheet_user_stat" id="menu_report_timesheet_user" parent="next_id_69"/>
-        
         <record id="view_timesheet_account_date_graph_account" model="ir.ui.view">
             <field name="name">report_timesheet.account.date.graph</field>
             <field name="model">report_timesheet.account.date</field>
@@ -68,26 +57,32 @@
             </field>
         </record>
         
-        
-        
-        <record id="action_timesheet_user_stat_my" model="ir.actions.act_window">
-            <field name="name">My Timesheet of the Month</field>
-            <field name="res_model">report_timesheet.account.date</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_timesheet_account_date_graph_account"/>
-            <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01')), ('user_id','=',uid)]</field>
+        <record id="view_timesheet_user_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.user.search</field>
+            <field name="model">report_timesheet.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by user">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
+		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
+						<separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="user_id" select="1"/>
+                	</group>
+                </search>
+            </field>
         </record>
-        <menuitem action="action_timesheet_user_stat_my" id="menu_report_timesheet_user_my" parent="next_id_69"/>
-        
         
         <record id="action_timesheet_user_stat_all" model="ir.actions.act_window">
             <field name="name">Timesheet by User</field>
             <field name="res_model">report_timesheet.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_timesheet_user_search"/>
         </record>
-        <menuitem id="next_id_70" name="All Months" parent="hr.menu_hr_reporting"/><menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="next_id_70"/>
+        <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/>
         
         <!-- Statistics report on timesheets to invoice -->
         
@@ -103,7 +98,6 @@
             </field>
         </record>
         
-        
         <record id="view_timesheet_invoice_form" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.invoice.form</field>
             <field name="model">report_timesheet.invoice</field>
@@ -116,7 +110,6 @@
                 </form>
             </field>
         </record>
-        
         
         <record id="view_timesheet_invoice_tree" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.invoice.tree</field>
@@ -139,16 +132,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="next_id_70"/>
-        
-        <record id="action_timesheet_invoice_stat_my" model="ir.actions.act_window">
-            <field name="name">My timesheets to invoice</field>
-            <field name="res_model">report_timesheet.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('manager_id','=',uid)]</field>
-        </record>
-        <menuitem action="action_timesheet_invoice_stat_my" id="menu_report_timesheet_invoice_my" parent="next_id_69"/>
+        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/>
         
         <!-- Statistics report on daily timesheets per account -->
         
@@ -178,7 +162,6 @@
             </field>
         </record>
         
-        
         <record id="view_timesheet_account_date_form" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.account.date.form</field>
             <field name="model">report_timesheet.account.date</field>
@@ -194,22 +177,33 @@
             </field>
         </record>
         
+        <record id="view_timesheet_account_date_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.date.search</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Daily timesheet by account">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
+		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="account_id" select="1"/>
+	                    <field name="user_id" select="1"/>
+					</group>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_timesheet_account_date_stat_all" model="ir.actions.act_window">
             <field name="name">Daily Timesheet by Account</field>
             <field name="res_model">report_timesheet.account.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_timesheet_account_date_search"/>
         </record>
-        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="next_id_70"/>
-        
-        <record id="action_timesheet_account_date_stat_my" model="ir.actions.act_window">
-            <field name="name">My daily timesheets by account</field>
-            <field name="res_model">report_timesheet.account.date</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        <menuitem action="action_timesheet_account_date_stat_my" id="menu_report_timesheet_account_date_my" parent="next_id_69"/>
+        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>
         
         <!-- Statistics report on timesheets per account -->
         
@@ -239,8 +233,6 @@
             </field>
         </record>
         
-        
-        
         <record id="view_timesheet_account_form" model="ir.ui.view">
             <field name="name">report_timesheet.timesheet.account.form</field>
             <field name="model">report_timesheet.account</field>
@@ -256,22 +248,34 @@
             </field>
         </record>
         
+        <record id="view_timesheet_account_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.search</field>
+            <field name="model">report_timesheet.account</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by account">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
+		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="account_id" select="1"/>
+	                    <field name="user_id" select="1"/>
+					</group>
+                </form>
+            </field>
+        </record>
+        
+        
         <record id="action_timesheet_account_stat_all" model="ir.actions.act_window">
             <field name="name">Timesheet by Account</field>
             <field name="res_model">report_timesheet.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_timesheet_account_search"/>
         </record>
-        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="next_id_70"/>
-        
-        <record id="action_timesheet_account_stat_my" model="ir.actions.act_window">
-            <field name="name">My timesheets by account</field>
-            <field name="res_model">report_timesheet.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        <menuitem action="action_timesheet_account_stat_my" id="menu_report_timesheet_account_my" parent="next_id_69"/>
+        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="hr.menu_hr_reporting"/>
         
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timesheet_user" name="Timesheets per day" res_model="report_timesheet.user" src_model="res.users"/>
         

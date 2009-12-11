@@ -164,6 +164,26 @@
         </tree>
         </field>
     </record>
+    
+    <record model="ir.ui.view" id="view_idea_idea_search">
+        <field name="name">idea.idea.search</field>
+        <field name="model">idea.idea</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+	        <search string="Ideas">
+	        	<group col="10" colspan="4">
+		        	<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Ideas"/>
+		        	<separator orientation="vertical"/>
+		        	<filter icon="gtk-execute" string="Draft" domain="[('state','=','draft')]" help="Draft Ideas"/>
+		        	<filter icon="gtk-execute" string="Open" domain="[('state','=','open')]" help="Open Ideas"/>
+		        	<separator orientation="vertical"/>
+		            <field name="title" select="1"/>
+		            <field name="category_id" select="1"/>
+		            <field name="user_id" select="1"/>
+				</group>
+	        </search>
+        </field>
+    </record>
 
     <record model="ir.ui.view" id="view_idea_comment_tree">
         <field name="name">idea.comment.tree</field>
@@ -182,6 +202,7 @@
         <field name="res_model">idea.idea</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_idea_idea_search"/>
     </record>
     <menuitem name="All Ideas" parent="menu_ideas1" id="menu_idea_idea" action="action_idea_idea"/>
 
@@ -191,33 +212,6 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','open')]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-
-    <record model="ir.actions.act_window" id="action_idea_idea_my_idea">
-        <field name="name">My Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id', '=', uid)]</field>
-    </record>
-    <menuitem name="My Ideas" parent="menu_ideas1" id="menu_idea_idea_my_idea" action="action_idea_idea_my_idea"/>
-
-    <record model="ir.actions.act_window" id="action_idea_idea_draft_my">
-        <field name="name">My Draft Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-
-    <record model="ir.actions.act_window" id="action_idea_idea_open_my">
-        <field name="name">My Open Ideas</field>
-        <field name="res_model">idea.idea</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','open'),('user_id','=',uid)]</field>
         <field name="filter" eval="True"/>        
     </record>
 

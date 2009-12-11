@@ -69,22 +69,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
+            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
-        <menuitem action="act_hr_timesheet_line_me_all_form" id="menu_act_hr_timesheet_line_me_all_form" parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"/>
 
-        <record id="act_hr_timesheet_line_evry1_today_form_my" model="ir.actions.act_window">
-            <field name="name">My Working Hours of The Day</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.analytic.timesheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid),('date', '=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="hr_timesheet_line_search"/>                        
-        </record>
- 
-        
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
             <field name="name">Working Hours</field>
             <field name="type">ir.actions.act_window</field>
@@ -99,17 +87,6 @@
             parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"
             groups="hr.group_hr_manager"/>
 
-        <record id="act_hr_timesheet_line_evry1_today_form" model="ir.actions.act_window">
-            <field name="name">Working Hours of The Day</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.analytic.timesheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('date', '=', time.strftime('%Y-%m-%d'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="hr_timesheet_line_search"/>
-        </record>
-       
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
             <field name="model">hr.employee</field>

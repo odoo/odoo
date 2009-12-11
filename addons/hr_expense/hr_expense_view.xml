@@ -132,26 +132,6 @@
         <menuitem action="expense_all" id="menu_expense_all"
         	parent="next_id_49" groups="hr.group_hr_manager"/>
         	
-        <!--
-        	My expenses menu
-        -->
-        
-        
-        <record id="expense_my" model="ir.actions.act_window">
-            <field name="name">My Expenses</field>
-            <field name="res_model">hr.expense.expense</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_expense_filter"/>
-        </record>
-        
-        <menuitem action="expense_my" id="menu_expense_my"
-        	parent="hr_expense.next_id_49" groups="base.group_extended"
-        />
-        
-        
         <record id="view_product_hr_expense_form" model="ir.ui.view">
 			<field name="name">product.product.expense.form</field>
 			<field name="model">product.product</field>
