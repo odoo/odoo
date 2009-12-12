@@ -49,13 +49,31 @@
 			</tree>
 		</field>
 	</record>
+	
+	<record model="ir.ui.view" id="view_picking_journal_search">
+		<field name="name">sale_journal.picking.journal.search</field>
+		<field name="model">sale_journal.picking.journal</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Picking Journal">
+				<group col="8" colspan="4">
+					<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Picking Journals"/>
+					<filter icon="terp-hr" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
+					<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="code" select="1"/>
+					<field name="user_id" select="1" widget="selection"/>
+					<field name="date" select="1"/>
+				</group>
+			</search>
+		</field>
+	</record>
 	<record model="ir.actions.act_window" id="action_definition_picking_journal">
 		<field name="name">Picking journals</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-
 
 	<menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
 
@@ -65,6 +83,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
+		<field name="search_view_id" ref="view_picking_journal_search"/>
 	</record>
 
 

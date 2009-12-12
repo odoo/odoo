@@ -711,8 +711,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Delivery">
-                    <group col='8' colspan='4'>
+                    <group col="10" colspan="4">
                         <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders"/>
+                        <filter icon="terp-stock" string="Future Orders" domain="[('state','=','confirmed')]" help="Future Orders"/>
                         <filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <separator orientation="vertical"/>
                         <field name="address_id" select="1"/>
@@ -751,7 +752,18 @@
             <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
 
+       <record id="action_picking_calendar_delivery" model="ir.actions.act_window">
+            <field name="name">Calendar of Deliveries</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
+        </record>
+		
         <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_root" sequence="20"/>
+        <menuitem action="action_picking_calendar_delivery" id="menu_action_picking_calendar_delivery" parent="menu_action_picking_tree_delivery"/>
 
         #
         # Sending Products
@@ -851,7 +863,25 @@
                 </form>
             </field>
         </record>
-
+		
+		<record id="view_picking_out_search" model="ir.ui.view">
+            <field name="name">stock.picking.out.search</field>
+            <field name="model">stock.picking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Picking list">
+                	<group col="8" colspan="4">
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Outgoing Orders"/>
+                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Orders"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
+                        <field name="company_id" select="1"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+	
         <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Outgoing Products</field>
             <field name="res_model">stock.picking</field>
@@ -860,7 +890,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
+            <field name="search_view_id" ref="view_picking_out_search"/>
         </record>
         <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -981,6 +1011,25 @@
                 </form>
             </field>
         </record>
+		
+		<record id="view_picking_in_search" model="ir.ui.view">
+            <field name="name">stock.picking.in.search</field>
+            <field name="model">stock.picking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Input Picking List">
+                	<group col="8" colspan="4">
+                        <filter icon="terp-stock" string="To Process" domain="[('state','=','assigned')]" help="Assigned Incoming Orders"/>
+                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Incoming Orders"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
+                        <field name="company_id" select="1"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
             <field name="name">Incoming Products</field>
@@ -990,7 +1039,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
+            <field name="search_view_id" ref="view_picking_in_search"/>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -1011,6 +1060,24 @@
         </record>
         <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_root" sequence="17"/>
 
+		<record id="view_picking_internal_search" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search</field>
+            <field name="model">stock.picking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Internal Picking List">
+                	<group col="8" colspan="4">
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
+                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
+                        <field name="company_id" select="1"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_picking_tree6" model="ir.actions.act_window">
             <field name="name">Internal Moves</field>
             <field name="res_model">stock.picking</field>
@@ -1019,7 +1086,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
-            <field name="search_view_id" ref="view_stock_delivery_filter"/>
+            <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
         <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_root" sequence="18"/>
 

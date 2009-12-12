@@ -48,6 +48,25 @@
             </field>
         </record>
         
+        <record id="view_task_project_search" model="ir.ui.view">
+            <field name="name">report.project.task.search</field>
+            <field name="model">report.project.task</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Tasks by User">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="user_id" select="1"/>
+	                    <field name="project_id" select="1"/>
+            		</group>
+            	</search>
+            </field>
+        </record>
+        
         <record id="action_project_task" model="ir.actions.act_window">
             <field name="name">Tasks by User</field>
             <field name="res_model">report.task.user.pipeline.open</field>
