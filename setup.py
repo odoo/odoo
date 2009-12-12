@@ -107,10 +107,8 @@ def data_files():
     '''Build list of data files to be installed'''
     files = []
     if os.name == 'nt':
-        os.chdir('bin')
-        for (dp,dn,names) in os.walk('addons'):
-            files.append((dp, map(lambda x: join('bin', dp, x), names)))
-        os.chdir('..')
+        for (dp,dn,names) in os.walk(join('bin','addons')):
+            files.append((dp, map(lambda x: join(dp, x), names)))
         for (dp,dn,names) in os.walk('doc'):
             files.append((dp, map(lambda x: join(dp, x), names)))
         files.append(('.', [join('bin', 'import_xml.rng'),
