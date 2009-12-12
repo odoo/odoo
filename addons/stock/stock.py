@@ -1000,7 +1000,10 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
-        'company_id': fields.many2one('res.company', 'Company', required=True),      
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'purchase_id': fields.related('picking_id','purchase_id',type='many2one', relation="purchase.order", string="Purchase Orders"),
+        'supplier_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Supplier"),
+        'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),      
     }
     _constraints = [
         (_check_tracking,

@@ -1138,6 +1138,83 @@
         </record>
         <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_traceability_low"/>
 
+		====================================
+        Reception Picking (By Stock Move)
+        ====================================
+        
+		<record id="view_move_tree_reception_picking" model="ir.ui.view">
+            <field name="name">stock.move.tree2</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <tree color="grey:state=='cancel' or state=='done'" string="Moves">
+                	<field name="picking_id" string="Reference"/>
+                	<field name="purchase_id"/>
+                	<field name="supplier_id"/>
+                	<field name="product_id"/>
+                	<field name="product_qty" />
+                    <field name="product_uom" string="UOM"/>
+                    <field name="prodlot_id" string="Lot"/>
+                    <field name="date_planned"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
+                    <button name="action_done" states="done" string="Done" type="object" icon="gtk-close"/>
+                    <button name="%(partial_move)d" string="Partial" type="action" icon="gtk-justify-fill"/>
+                    <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+                </tree>
+            </field>
+        </record>
+	
+		<record id="view_move_form_reception_picking" model="ir.ui.view">
+            <field name="name">stock.move.form2</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Moves">
+                	<field name="picking_id"/>
+                	<field name="product_id"/>
+                	<field name="product_qty" />
+                    <field name="product_uom" string="UOM"/>
+                    <field name="prodlot_id"/>
+                    <field name="date_planned"/>
+                    <field name="state"/>
+                </form>
+            </field>
+        </record>
+	
+		<record id="view_move_search_reception_picking" model="ir.ui.view">
+            <field name="name">stock.move.search2</field>
+            <field name="model">stock.move</field>
+            <field name="type">search</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+            	<search string="Stock Moves">
+            		<group col="8" colspan="4">
+	            		<filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
+	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
+	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned','=',time.strftime('%%m-%%d-%%Y %%H:%%M:%%S')))]" help="Orders planned for today"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="supplier_id" select="1"/>
+	                    <field name="product_id" select="1"/>
+	                    <field name="purchase_id" select="1"/>
+                    </group>
+            	</search>
+            </field>
+        </record>
+
+		<record id="action_reception_picking_move" model="ir.actions.act_window">
+            <field name="name">Reception Picking Stock Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="search_view_id" ref="view_move_search_reception_picking"/>
+        </record>
+        <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_root"/>
+		
 
         # -------------------------------------------------------------
         # Stock incoterms
