@@ -81,10 +81,7 @@ def find_addons():
     #look for extra modules
     try:
         empath = os.getenv('EXTRA_MODULES_PATH','../addons/')
-        f = open(join(empath,'server_modules.list'),'r')
-        # print 'Getting modules from:' , join(empath,'server_modules.list')
-        mods = f.readlines()
-        for mname in mods:
+        for mname in open(join(empath,'server_modules.list')):
             mname = mname.strip()
             if not mname:
                 continue
