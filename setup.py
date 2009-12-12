@@ -73,7 +73,7 @@ def check_modules():
         print '\n'.join(errors)
         sys.exit(1)
 
-def _find_addons():
+def find_addons():
     for (dp, dn, names) in os.walk(join('bin', 'addons')):
         if '__terp__.py' in names:
             modname = os.path.basename(dp)
@@ -94,14 +94,6 @@ def _find_addons():
                 print "Module %s specified, but no valid path." % mname
     except:
         pass
-
-__found_addons = None
-
-# Cache the results of _find_addons() and return them
-def find_addons(found_addons = None):
-    if not found_addons:
-        found_addons = _find_addons()
-    return found_addons
 
 def data_files():
     '''Build list of data files to be installed'''
