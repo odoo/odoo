@@ -29,6 +29,7 @@
 import imp
 import sys
 import os
+from os.path import join
 import glob
 
 from distutils.core import setup, Command
@@ -39,11 +40,9 @@ if os.name == 'nt':
     import py2exe
     has_py2exe = True
 
-sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), "bin"))
+sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
-opj = os.path.join
-
-execfile(opj('bin', 'release.py'))
+execfile(join('bin', 'release.py'))
 
 if sys.argv[1] == 'bdist_rpm':
     version = version.split('-')[0]
@@ -75,22 +74,22 @@ def check_modules():
         sys.exit(1)
 
 def _find_addons():
-    for (dp, dn, names) in os.walk(opj('bin', 'addons')):
+    for (dp, dn, names) in os.walk(join('bin', 'addons')):
         if '__terp__.py' in names:
             modname = os.path.basename(dp)
             yield (modname, dp)
     #look for extra modules
     try:
         empath = os.getenv('EXTRA_MODULES_PATH','../addons/')
-        f = open(opj(empath,'server_modules.list'),'r')
-        # print 'Getting modules from:' , opj(empath,'server_modules.list')
+        f = open(join(empath,'server_modules.list'),'r')
+        # print 'Getting modules from:' , join(empath,'server_modules.list')
         mods = f.readlines()
         for mname in mods:
             mname = mname.strip()
             if not mname:
                 continue
-            if os.path.exists(opj(empath,mname,'__terp__.py')):
-                yield ( mname, opj(empath,mname) )
+            if os.path.exists(join(empath,mname,'__terp__.py')):
+                yield ( mname, join(empath,mname) )
             else:
                 print "Module %s specified, but no valid path." % mname
     except:
@@ -110,42 +109,42 @@ def data_files():
     if os.name == 'nt':
         os.chdir('bin')
         for (dp,dn,names) in os.walk('addons'):
-            files.append((dp, map(lambda x: opj('bin', dp, x), names)))
+            files.append((dp, map(lambda x: join('bin', dp, x), names)))
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
-            files.append((dp, map(lambda x: opj(dp, x), names)))
-        files.append(('.', [opj('bin', 'import_xml.rng'),
-                            opj('bin', 'server.pkey'),
-                            opj('bin', 'server.cert')]))
+            files.append((dp, map(lambda x: join(dp, x), names)))
+        files.append(('.', [join('bin', 'import_xml.rng'),
+                            join('bin', 'server.pkey'),
+                            join('bin', 'server.cert')]))
     else:
-        man_directory = opj('share', 'man')
-        files.append((opj(man_directory, 'man1'), ['man/openerp-server.1']))
-        files.append((opj(man_directory, 'man5'), ['man/openerp_serverrc.5']))
+        man_directory = join('share', 'man')
+        files.append((join(man_directory, 'man1'), ['man/openerp-server.1']))
+        files.append((join(man_directory, 'man5'), ['man/openerp_serverrc.5']))
 
-        doc_directory = opj('share', 'doc', 'openerp-server-%s' % version)
+        doc_directory = join('share', 'doc', 'openerp-server-%s' % version)
         files.append((doc_directory, [f for f in glob.glob('doc/*') if os.path.isfile(f)]))
-        files.append((opj(doc_directory, 'migrate', '3.3.0-3.4.0'), [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
-        files.append((opj(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
+        files.append((join(doc_directory, 'migrate', '3.3.0-3.4.0'), [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
+        files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
 
-        openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+        openerp_site_packages = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
 
-        files.append((openerp_site_packages, [opj('bin', 'import_xml.rng'),
-                                              opj('bin', 'server.pkey'),
-                                              opj('bin', 'server.cert')]))
+        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),
+                                              join('bin', 'server.pkey'),
+                                              join('bin', 'server.cert')]))
 
         if sys.version_info[0:2] == (2,5):
-            files.append((openerp_site_packages, [ opj('python25-compat','BaseHTTPServer.py'),
-                                                   opj('python25-compat','SimpleXMLRPCServer.py'),
-                                                   opj('python25-compat','SocketServer.py')]))
+            files.append((openerp_site_packages, [ join('python25-compat','BaseHTTPServer.py'),
+                                                   join('python25-compat','SimpleXMLRPCServer.py'),
+                                                   join('python25-compat','SocketServer.py')]))
 
         for (addonname, add_path) in find_addons():
-            addon_path = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
+            addon_path = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
-                    res = os.path.normpath(opj(addon_path, root.replace(opj(add_path), '.')))
-                    pathfiles.extend(((res, map(lambda fil: opj(root, fil), innerfiles)),))
+                    res = os.path.normpath(join(addon_path, root.replace(join(add_path), '.')))
+                    pathfiles.extend(((res, map(lambda fil: join(root, fil), innerfiles)),))
             files.extend(pathfiles)
 
     # for tup in files:
@@ -170,7 +169,7 @@ def find_package_dirs():
 class openerp_server_install(install):
     def run(self):
         # create startup script
-        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (opj(self.install_libbase, "openerp-server"), sys.executable)
+        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (join(self.install_libbase, "openerp-server"), sys.executable)
         # write script
         f = open('openerp-server', 'w')
         f.write(start_script)
@@ -246,15 +245,15 @@ if has_py2exe:
   # Make sure the layout of pytz hasn't changed
   assert (pytz.__file__.endswith('__init__.pyc') or
           pytz.__file__.endswith('__init__.py')), pytz.__file__
-  zoneinfo_dir = os.path.join(os.path.dirname(pytz.__file__), 'zoneinfo')
+  zoneinfo_dir = join(os.path.dirname(pytz.__file__), 'zoneinfo')
   # '..\\Lib\\pytz\\__init__.py' -> '..\\Lib'
   disk_basedir = os.path.dirname(os.path.dirname(pytz.__file__))
-  zipfile_path = os.path.join(options['py2exe']['dist_dir'], 'library.zip')
+  zipfile_path = join(options['py2exe']['dist_dir'], 'library.zip')
   z = zipfile.ZipFile(zipfile_path, 'a')
   for absdir, directories, filenames in os.walk(zoneinfo_dir):
     assert absdir.startswith(disk_basedir), (absdir, disk_basedir)
     zip_dir = absdir[len(disk_basedir):]
     for f in filenames:
-      z.write(os.path.join(absdir, f), os.path.join(zip_dir, f))
+      z.write(join(absdir, f), join(zip_dir, f))
   z.close()
 
