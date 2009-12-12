@@ -62,15 +62,16 @@ required_modules = [
 ]
 
 def check_modules():
-    ok = True
+    errors = []
     for modname, desc in required_modules:
         try:
             imp.find_module(modname)
         except ImportError:
-            ok = False
-            print 'Error: python module %s (%s) is required' % (modname, desc)
+            errors.append(
+                'Error: python module %s (%s) is required' % (modname, desc))
 
-    if not ok:
+    if errors:
+        print '\n'.join(errors)
         sys.exit(1)
 
 def _find_addons():
