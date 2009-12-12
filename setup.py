@@ -29,7 +29,7 @@
 import imp
 import sys
 import os
-from os.path import join
+from os.path import join, isfile
 import glob
 
 from distutils.core import setup, Command
@@ -122,9 +122,11 @@ def data_files():
         files.append((join(man_directory, 'man5'), ['man/openerp_serverrc.5']))
 
         doc_directory = join('share', 'doc', 'openerp-server-%s' % version)
-        files.append((doc_directory, [f for f in glob.glob('doc/*') if os.path.isfile(f)]))
-        files.append((join(doc_directory, 'migrate', '3.3.0-3.4.0'), [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
-        files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
+        files.append((doc_directory, filter(isfile, glob.glob('doc/*'))))
+        files.append((join(doc_directory, 'migrate', '3.3.0-3.4.0'),
+                      filter(isfile, glob.glob('doc/migrate/3.3.0-3.4.0/*'))))
+        files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'),
+                      filter(isfile, glob.glob('doc/migrate/3.4.0-4.0.0/*'))))
 
         openerp_site_packages = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
 
