@@ -34,12 +34,8 @@ _moves_fields = UpdateableDict()
 
 _moves_arch_end = '''<?xml version="1.0"?>
 <form string="Picking result">
-    <label string="The picking has been successfully made !" colspan="4"/>
-    <field name="back_order_notification" colspan="4" nolabel="1"/>
+    <label string="Move(s) have been successfully Done !" colspan="4"/>    
 </form>'''
-_moves_fields_end = {
-    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
-                     }
 
 def make_default(val):
     def fct(uid, data, state):
@@ -51,145 +47,142 @@ def _to_xml(s):
 
 def _get_moves(self, cr, uid, data, context):
     move_obj = pooler.get_pool(cr.dbname).get('stock.move')
-    move_lines = move_obj.browse(cr, uid, [data['id']], context)
+    move_lines = move_obj.browse(cr, uid, data['ids'], context)
     res = {}
 
     _moves_fields.clear()
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Partial Stock Moves">']
 
-    for m in move_lines:
-        quantity = m.product_qty
-        if m.state<>'assigned':
+    for move in move_lines:
+        quantity = move.product_qty
+        if move.state <> 'assigned':
             quantity = 0
 
-        _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
-        _moves_fields['move%s' % m.id] = {
-                'string': _to_xml(m.name),
+        _moves_arch_lst.append('<field name="move%s" />' % (move.id,))
+        _moves_fields['move%s' % move.id] = {
+                'string': _to_xml(move.name),
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
-        if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
-            price=0
-            if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                price=m.purchase_line_id.price_unit
+        if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
+            price = 0
+            if hasattr(move, 'purchase_line_id') and move.purchase_line_id:
+                price = move.purchase_line_id.price_unit
 
-            currency=0
-            if hasattr(m.picking_id, 'purchase_id') and m.purchase_id:
-                currency=m.purchase_id.pricelist_id.currency_id.id
+            currency = 0
+            if hasattr(move.picking_id, 'purchase_id') and move.picking_id.purchase_id:
+                currency = move.picking_id.purchase_id.pricelist_id.currency_id.id
 
             _moves_arch_lst.append('<group col="6"><field name="uom%s" nolabel="1"/>\
-                    <field name="price%s"/>' % (m.id,m.id,))
+                    <field name="price%s"/>' % (move.id, move.id,))
 
-            _moves_fields['price%s' % m.id] = {'string': 'Unit Price',
+            _moves_fields['price%s' % move.id] = {'string': 'Unit Price',
                     'type': 'float', 'required': True, 'default': make_default(price)}
 
-            _moves_fields['uom%s' % m.id] = {'string': 'UOM', 'type': 'many2one',
+            _moves_fields['uom%s' % move.id] = {'string': 'UOM', 'type': 'many2one',
                     'relation': 'product.uom', 'required': True,
-                    'default': make_default(m.product_uom.id)}
+                    'default': make_default(move.product_uom.id)}
 
-            _moves_arch_lst.append('<field name="currency%d" nolabel="1"/></group>' % (m.id,))
+            _moves_arch_lst.append('<field name="currency%d" nolabel="1"/></group>' % (move.id,))
             _moves_fields['currency%s' % m.id] = {'string': 'Currency',
                     'type': 'many2one', 'relation': 'res.currency',
                     'required': True, 'default': make_default(currency)}
 
         _moves_arch_lst.append('<newline/>')
-        res.setdefault('moves', []).append(m.id)
+        res.setdefault('moves', []).append(move.id)
 
     _moves_arch_lst.append('</form>')
     _moves_arch.string = '\n'.join(_moves_arch_lst)
     return res
 
 def _do_split(self, cr, uid, data, context):
-    move_obj = pooler.get_pool(cr.dbname).get('stock.move')
-    pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-    move_lines = move_obj.browse(cr, uid, data['id'])
-    pick = pick_obj.browse(cr, uid, [move_lines.picking_id.id])[0]
     pool = pooler.get_pool(cr.dbname)
-    complete, too_few, too_many = False, False, False
-    states = []
+    move_obj = pool.get('stock.move')
+    pick_obj = pool.get('stock.picking')
+    product_obj = pool.get('product.product')
+    currency_obj = pool.get('res.currency')
+    users_obj = pool.get('res.users')
+    uom_obj = pool.get('product.uom')
+    move_lines = move_obj.browse(cr, uid, data['ids'])
+    wf_service = netsvc.LocalService("workflow")
+    complete, too_few, too_many = [], [], []
+    for move in move_lines:        
+        states = []
     
-    if move_lines.product_qty == data['form']['move%s' % data['id']]:
-        complete = move_lines
-    elif move_lines.product_qty > data['form']['move%s' % data['id']]:
-        too_few = move_lines
-    else:
-        too_many = move_lines
-        
+        if move.product_qty == data['form']['move%s' % move.id]:
+            complete.append(move)
+        elif move.product_qty > data['form']['move%s' % move.id]:
+            too_few.append(move)
+        else:
+            too_many.append(move)        
         # Average price computation
-    if (move_lines.picking_id.type == 'in') and (move_lines.product_id.cost_method == 'average'):
-        product_obj = pool.get('product.product')
-        currency_obj = pool.get('res.currency')
-        users_obj = pool.get('res.users')
-        uom_obj = pool.get('product.uom')
+        if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
+            product = move.product_id
+            user = users_obj.browse(cr, uid, uid)
+            qty = data['form']['move%s' % move.id]
+            uom = data['form']['uom%s' % move.id]
+            price = data['form']['price%s' % move.id]
+            currency = data['form']['currency%s' % move.id]
 
-        product = product_obj.browse(cr, uid, [move_lines.product_id.id])[0]
-        user = users_obj.browse(cr, uid, [uid])[0]
+            qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
 
-        qty = data['form']['move%s' % move_lines.id]
-        uom = data['form']['uom%s' % move_lines.id]
-        price = data['form']['price%s' % move_lines.id]
-        currency = data['form']['currency%s' % move_lines.id]
+            if (qty > 0):
+                new_price = currency_obj.compute(cr, uid, currency,
+                        user.company_id.currency_id.id, price)
+                new_price = uom_obj._compute_price(cr, uid, uom, new_price,
+                        product.uom_id.id)
+                if product.qty_available<=0:
+                    new_std_price = new_price
+                else:
+                    new_std_price = ((product.standard_price * product.qty_available)\
+                        + (new_price * qty))/(product.qty_available + qty)
 
-        qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
+                product_obj.write(cr, uid, [product.id],
+                        {'standard_price': new_std_price})
+                move_obj.write(cr, uid, move.id, {'price_unit': new_price})        
 
-        if (qty > 0):
-            new_price = currency_obj.compute(cr, uid, currency,
-                    user.company_id.currency_id.id, price)
-            new_price = uom_obj._compute_price(cr, uid, uom, new_price,
-                    product.uom_id.id)
-            if product.qty_available<=0:
-                new_std_price = new_price
-            else:
-                new_std_price = ((product.standard_price * product.qty_available)\
-                    + (new_price * qty))/(product.qty_available + qty)
-
-            product_obj.write(cr, uid, [product.id],
-                    {'standard_price': new_std_price})
-            move_obj.write(cr, uid, [move_lines.id], {'price_unit': new_price})
-    if complete:
-        move_obj.write(cr, uid, [complete.id],{
-                    'product_qty': data['form']['move%s' % complete.id],
-                    'product_uos_qty': data['form']['move%s' % complete.id],
-                    'state':'done' })
-        for move in pick.move_lines:
-            if move.state == 'done':
-                states.append(True)
-            else:
-                states.append(False)
-        if False not in states:
-            pick_obj.write(cr, uid, complete.picking_id.id, {
-                            'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
-                            'state':'done' })
-        return {'back_order':False}
-    if too_few:
-        pick_obj.write(cr, uid, too_few.picking_id.id, {
-                        'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
-                        'move_lines' : [],
-                        'state':'assigned' })
-        if data['form']['move%s' % too_few.id] <> 0:
-            new_obj = move_obj.copy(cr, uid, too_few.id,
+    for move in too_few:        
+        if data['form']['move%s' % move.id] <> 0:
+            new_move = move_obj.copy(cr, uid, move.id,
                 {
-                    'product_qty' : data['form']['move%s' % too_few.id],
-                    'product_uos_qty':data['form']['move%s' % too_few.id],
-                    'picking_id' : too_few.picking_id.id,
+                    'product_qty' : data['form']['move%s' % move.id],
+                    'product_uos_qty':data['form']['move%s' % move.id],
+                    'picking_id' : move.picking_id.id,
+                    'state': 'assigned',
                     'move_dest_id': False,
-                    'price_unit': too_few.price_unit,
+                    'price_unit': move.price_unit,
                 })
-            move_obj.write(cr, uid, [new_obj],{'state':'done'})
-        move_obj.write(cr, uid, [too_few.id],{
-                    'product_qty' : move_lines.product_qty - data['form']['move%s' % too_few.id],
-                    'product_uos_qty':move_lines.product_qty - data['form']['move%s' % too_few.id],
-                    'state':'assigned' })
-    if too_many:
-        move_obj.write(cr, uid, [too_many.id],{
-                    'product_qty': data['form']['move%s' % too_many.id],
-                    'product_uos_qty': data['form']['move%s' % too_many.id],
-                    'state':'assigned' })
-    return {'back_order':False}
+            complete.append(move_obj.browse(cr, uid, new_move))
+        move_obj.write(cr, uid, move.id,
+                {
+                    'product_qty' : move.product_qty - data['form']['move%s' % move.id],
+                    'product_uos_qty':move.product_qty - data['form']['move%s' % move.id],
+                })
+        
+    
+    for move in too_many:
+        move_obj.write(cr, uid, move.id,
+                {
+                    'product_qty': data['form']['move%s' % move.id],
+                    'product_uos_qty': data['form']['move%s' % move.id]
+                })
+        complete.append(move) 
 
-def _get_default(self, cr, uid, data, context):
-    if data['form']['back_order']:
-        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Picking.') % (tools.ustr(data['form']['back_order']),)
-    return data['form']
+    for move in complete:
+        move_obj.action_done(cr, uid, [move.id])
+
+        # TOCHECK : Done picking if all moves are done
+        cr.execute('select move.id from stock_picking pick \
+                    right join stock_move move on move.picking_id = pick.id and move.state = ''%s'' where pick.id = %s',
+                    ('done', move.picking_id.id))
+        res = cr.fetchall()        
+        if len(res) == len(move.picking_id.move_lines):                       
+            pick_obj.action_done(cr, uid, [move.picking_id.id])            
+            #wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
+            #wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+
+    return {}
+
+
 
 class partial_move(wizard.interface):
 
@@ -208,9 +201,9 @@ class partial_move(wizard.interface):
             'result': {'type': 'state', 'state': 'end2'},
         },
         'end2': {
-            'actions': [ _get_default ],
+            'actions': [],
             'result': {'type': 'form', 'arch': _moves_arch_end,
-                'fields': _moves_fields_end,
+                'fields': {},
                 'state': (
                     ('end', 'Close'),
                 )

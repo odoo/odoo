@@ -26,8 +26,8 @@
             	<search string="Analytic Account">
             		<group col="8" colspan="4">
 	            		<filter icon="gtk-execute" string="My Accounts" domain="[('user_id','=',uid)]" help="My Analytic Accounts"/>
-	            		<filter icon="gtk-execute" string="Current" domain="[('user_id','=',uid),('state','=','open')]" help="My Current Accounts"/>
-	            		<filter icon="gtk-execute" string="Pending" domain="[('user_id','=',uid),('state','=','pending')]" help="My Pending Accounts"/>
+	            		<filter icon="gtk-execute" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+	            		<filter icon="gtk-execute" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>

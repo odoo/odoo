@@ -1216,9 +1216,9 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree color="grey:state=='cancel' or state=='done'" string="Moves">
-                	<field name="picking_id" string="Reference"/>
-                	<field name="purchase_id"/>
-                	<field name="supplier_id"/>
+                	<field name="picking_id" string="Reference"/> 
+                    <field name="origin" string="Purchase Order"/>               	
+                	<field name="partner_id" string="Supplier"/>
                 	<field name="product_id"/>
                 	<field name="product_qty" />
                     <field name="product_uom" string="UOM"/>
@@ -1240,7 +1240,7 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Moves">
-                	<field name="picking_id"/>
+                	<field name="picking_id"/>                    
                 	<field name="product_id"/>
                 	<field name="product_qty" />
                     <field name="product_uom" string="UOM"/>
@@ -1263,9 +1263,9 @@
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned','=',time.strftime('%%m-%%d-%%Y %%H:%%M:%%S')))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
-	            		<field name="supplier_id" select="1"/>
-	                    <field name="product_id" select="1"/>
-	                    <field name="purchase_id" select="1"/>
+                        <field name="origin" string="Purchase Order"/> 
+	            		<field name="partner_id" string="Supplier"/>
+	                    <field name="product_id"/>	                    
                     </group>
             	</search>
             </field>
@@ -1277,6 +1277,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
