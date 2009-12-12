@@ -141,7 +141,9 @@ if not os.getenv('NO_CHECK_MODULES') :
 
 f = file('openerp-server','w')
 f.write("""#!/bin/sh
-echo "OpenERP Setup - The content of this file is generated at the install stage\n"
+echo "Error: the content of this file should have been replaced during "
+echo "installation\n"
+exit 1
 """)
 f.close()
 
