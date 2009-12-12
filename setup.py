@@ -162,7 +162,7 @@ class openerp_server_install(install):
         f = open('openerp-server', 'w')
         f.write(start_script)
         f.close()
-        super(openerp_server_install, self).run()
+        install.run(self)
 
 options = {
     "py2exe": {
@@ -213,7 +213,7 @@ setup(name             = name,
                           'openerp-server.wizard',
                           'openerp-server.workflow'] + \
                           [('openerp-server.addons.' + name)
-                           for name, _ in find_addons()]
+                           for name, _ in find_addons()],
       package_dir      = find_package_dirs(),
       console = [{"script": join("bin", "openerp-server.py"),
                   "icon_resources": [(1,join("pixmaps","openerp-icon.ico"))]
