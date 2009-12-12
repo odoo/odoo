@@ -65,7 +65,7 @@ def check_modules():
     ok = True
     for modname, desc in required_modules:
         try:
-            exec('import %s' % modname)
+            imp.find_module(modname)
         except ImportError:
             ok = False
             print 'Error: python module %s (%s) is required' % (modname, desc)
