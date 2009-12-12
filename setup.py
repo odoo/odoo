@@ -74,18 +74,18 @@ def check_modules():
         sys.exit(1)
 
 def find_addons():
-    for dp, dn, names in os.walk(join('bin', 'addons')):
+    for root, _, names in os.walk(join('bin', 'addons')):
         if '__terp__.py' in names:
-            yield basename(dp), dp
+            yield basename(root), root
     #look for extra modules
     try:
-        empath = os.getenv('EXTRA_MODULES_PATH','../addons/')
-        for mname in open(join(empath,'server_modules.list')):
+        empath = os.getenv('EXTRA_MODULES_PATH', '../addons/')
+        for mname in open(join(empath, 'server_modules.list')):
             mname = mname.strip()
             if not mname:
                 continue
-            if os.path.exists(join(empath,mname,'__terp__.py')):
-                yield mname, join(empath,mname)
+            if os.path.exists(join(empath, mname, '__terp__.py')):
+                yield mname, join(empath, mname)
             else:
                 print "Module %s specified, but no valid path." % mname
     except:
@@ -95,10 +95,10 @@ def data_files():
     '''Build list of data files to be installed'''
     files = []
     if os.name == 'nt':
-        for dp,dn,names in os.walk(join('bin','addons')):
-            files.append((dp, map(lambda x: join(dp, x), names)))
-        for dp,dn,names in os.walk('doc'):
-            files.append((dp, map(lambda x: join(dp, x), names)))
+        for root, _, names in os.walk(join('bin','addons')):
+            files.append((root, [join(root, name) for name in names]))
+        for root, _, names in os.walk('doc'):
+            files.append((root, [join(root, name) for name in names]))
         files.append(('.', [join('bin', 'import_xml.rng'),
                             join('bin', 'server.pkey'),
                             join('bin', 'server.cert')]))
@@ -148,21 +148,21 @@ exit 1
 f.close()
 
 def find_package_dirs():
-    res = {}
+    package_dirs = {'openerp-server': 'bin'}
     for mod, path in find_addons():
-        res ['openerp-server.addons.'+ mod ] = path
-    res ['openerp-server'] = 'bin'
-    return res
+        package_dirs['openerp-server.addons.' + mod] = path
+    return package_dirs
 
 class openerp_server_install(install):
     def run(self):
         # create startup script
-        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n" % (join(self.install_libbase, "openerp-server"), sys.executable)
+        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n"\
+            % (join(self.install_libbase, "openerp-server"), sys.executable)
         # write script
         f = open('openerp-server', 'w')
         f.write(start_script)
         f.close()
-        install.run(self)
+        super(openerp_server_install, self).run()
 
 options = {
     "py2exe": {
@@ -171,9 +171,9 @@ options = {
         "dist_dir": 'dist',
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
-                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing",
-                     "pydot","asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select"],
+                     "encodings","mx.DateTime","wizard","pychart","PIL",
+                     "pyparsing", "pydot","asyncore","asynchat", "reportlab",
+                     "vobject", "HTMLParser", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
@@ -212,9 +212,12 @@ setup(name             = name,
                           'openerp-server.tools',
                           'openerp-server.wizard',
                           'openerp-server.workflow'] + \
-                          list(map( lambda (a, p): 'openerp-server.addons.'+ a ,find_addons())),
+                          [('openerp-server.addons.' + name)
+                           for name, _ in find_addons()]
       package_dir      = find_package_dirs(),
-      console = [ { "script" : "bin\\openerp-server.py", "icon_resources" : [ (1,"pixmaps\\openerp-icon.ico") ] } ],
+      console = [{"script": join("bin", "openerp-server.py"),
+                  "icon_resources": [(1,join("pixmaps","openerp-icon.ico"))]
+                  }],
       options = options,
       )
 
