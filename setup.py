@@ -29,7 +29,7 @@
 import imp
 import sys
 import os
-from os.path import join, isfile
+from os.path import join, isfile, basename
 import glob
 
 from distutils.core import setup, Command
@@ -74,10 +74,9 @@ def check_modules():
         sys.exit(1)
 
 def find_addons():
-    for (dp, dn, names) in os.walk(join('bin', 'addons')):
+    for dp, dn, names in os.walk(join('bin', 'addons')):
         if '__terp__.py' in names:
-            modname = os.path.basename(dp)
-            yield (modname, dp)
+            yield basename(dp), dp
     #look for extra modules
     try:
         empath = os.getenv('EXTRA_MODULES_PATH','../addons/')
@@ -86,7 +85,7 @@ def find_addons():
             if not mname:
                 continue
             if os.path.exists(join(empath,mname,'__terp__.py')):
-                yield ( mname, join(empath,mname) )
+                yield mname, join(empath,mname)
             else:
                 print "Module %s specified, but no valid path." % mname
     except:
@@ -96,9 +95,9 @@ def data_files():
     '''Build list of data files to be installed'''
     files = []
     if os.name == 'nt':
-        for (dp,dn,names) in os.walk(join('bin','addons')):
+        for dp,dn,names in os.walk(join('bin','addons')):
             files.append((dp, map(lambda x: join(dp, x), names)))
-        for (dp,dn,names) in os.walk('doc'):
+        for dp,dn,names in os.walk('doc'):
             files.append((dp, map(lambda x: join(dp, x), names)))
         files.append(('.', [join('bin', 'import_xml.rng'),
                             join('bin', 'server.pkey'),
@@ -126,31 +125,29 @@ def data_files():
                                                    join('python25-compat','SimpleXMLRPCServer.py'),
                                                    join('python25-compat','SocketServer.py')]))
 
-        for (addonname, add_path) in find_addons():
+        for addonname, add_path in find_addons():
             addon_path = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
-            pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
                     res = os.path.normpath(join(addon_path, root.replace(join(add_path), '.')))
-                    pathfiles.extend(((res, map(lambda fil: join(root, fil), innerfiles)),))
-            files.extend(pathfiles)
+                    files.extend(((res, map(lambda fil: join(root, fil),
+                                            innerfiles)),))
 
-    # for tup in files:
-    #    print "Files:", tup[0], tup[1]
     return files
 
-if not os.getenv('NO_CHECK_MODULES',False) :
+if not os.getenv('NO_CHECK_MODULES') :
     check_modules()
 
 f = file('openerp-server','w')
-start_script = """#!/bin/sh\necho "OpenERP Setup - The content of this file is generated at the install stage\n" """
-f.write(start_script)
+f.write("""#!/bin/sh
+echo "OpenERP Setup - The content of this file is generated at the install stage\n"
+""")
 f.close()
 
 def find_package_dirs():
     res = {}
-    for (mod, path) in find_addons():
+    for mod, path in find_addons():
         res ['openerp-server.addons.'+ mod ] = path
     res ['openerp-server'] = 'bin'
     return res
