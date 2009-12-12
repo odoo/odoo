@@ -53,9 +53,11 @@ py_short_version = '%s.%s' % sys.version_info[:2]
 
 required_modules = [
     ('lxml', 'lxml module: pythonic libxml2 and libxslt bindings'),
+    ('mx', "egenix's mx library for its extended DateTime module"),
     ('psycopg2', 'PostgreSQL module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
+    ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
 ]
 
