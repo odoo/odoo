@@ -241,8 +241,9 @@ class wizard_base_setup(wizard.interface):
         return 'charts'
 
     def _config(self, cr, uid, data, context=None):
-        users_obj=pooler.get_pool(cr.dbname).get('res.users')
-        action_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        pool = pooler.get_pool(cr.dbname)
+        users_obj=pool.get('res.users')
+        action_obj=pool.get('ir.actions.act_window')
 
         ids=action_obj.search(cr, uid, [('name', '=', 'Menu')])
         menu=action_obj.browse(cr, uid, ids)[0]
