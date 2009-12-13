@@ -252,14 +252,8 @@ class wizard_base_setup(wizard.interface):
         users_obj.write(cr, uid, ids, {'action_id': menu.id})
         ids=users_obj.search(cr, uid, [('menu_id', '=', 'Setup')])
         users_obj.write(cr, uid, ids, {'menu_id': menu.id})
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'context':{'menu':True},
-                'target':'new',
-         }
+
+        return pool.get('res.config').next(cr, uid, [], context=context)
 
     fields={
         'profile':{
