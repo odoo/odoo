@@ -57,7 +57,7 @@
 		<field name="arch" type="xml">
 			<search string="Picking Journal">
 				<group col="8" colspan="4">
-					<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Picking Journals"/>
+					<filter icon="terp-hr" string="My Picking Journals" domain="[('user_id','=',uid)]" help="My Picking Journals"/>
 					<filter icon="terp-hr" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
 					<separator orientation="vertical"/>
 					<field name="name" select="1"/>

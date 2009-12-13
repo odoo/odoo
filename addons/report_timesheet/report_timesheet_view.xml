@@ -64,7 +64,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                 	<group col="10" colspan="4">
-                		<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Timesheets"/>
+                		<filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets"/>
 						<separator orientation="vertical"/>
 	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
 		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
@@ -119,7 +119,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by invoice">
-                	<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Timesheets to invoice"/>
+                	<filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets to invoice"/>
 					<separator orientation="vertical"/>
                     <field name="account_id" select="1"/>
                     <field name="manager_id" select="1"/>
@@ -202,7 +202,7 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                 	<group col="10" colspan="4">
-                		<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Daily Timesheets by account"/>
+                		<filter icon="terp-hr" string="My Daily Timesheets" domain="[('user_id','=',uid)]" help="My Daily Timesheets by account"/>
 						<separator orientation="vertical"/>
 	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
 		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
@@ -275,7 +275,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
                 	<group col="10" colspan="4">
-                		<filter icon="terp-hr" string="My" domain="[('user_id','=',uid)]" help="My Timesheets by account"/>
+                		<filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets by account"/>
 						<separator orientation="vertical"/>
 	                	<filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
 		            	<filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>

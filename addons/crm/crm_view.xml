@@ -521,7 +521,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             	<search string="Search Histories">
-               		<filter icon="terp-crm" string="My" domain="[('user_id','=',uid)]" help="My Histories"/>
+               		<filter icon="terp-crm" string="My Histories" domain="[('user_id','=',uid)]" help="My Histories"/>
                		<separator orientation="vertical"/>
                		<field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
