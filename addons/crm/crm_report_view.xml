@@ -66,7 +66,6 @@
                 <search string="Cases by Section and Type">
                    <group col="10" colspan="4">
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" help="Cases by Section and Type for this year"/>
-                   		<separator orientation="vertical"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]" help="Cases by Section and Type for this month"/>
 						<separator orientation="vertical"/>
 						<field name="section_id" select="1" widget="selection"/>
@@ -146,7 +145,6 @@
                 <search string="Cases by Section and Stage">
                    <group col="8" colspan="4">
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" help="Cases by Section and Stage for this year"/>
-                   		<separator orientation="vertical"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]" help="Cases by Section and Stage for this month"/>
 						<separator orientation="vertical"/>
 						<field name="section_id" select="1" widget="selection"/>
@@ -214,7 +212,6 @@
                 <search string="Cases by Section, Category and Stage">
                    <group col='8' colspan='4'>
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" help="Cases by Section, Category and Stage for this year"/>
-                   		<separator orientation="vertical"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]" help="Cases by Section, Category and Stage for this month"/>
 						<separator orientation="vertical"/>
 						<field name="section_id" select="1" widget="selection"/>
@@ -296,7 +293,6 @@
                 <search string="Search Cases by User">
                    <group col='12' colspan='4'>
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" help="Cases by User for this year"/>
-                   		<separator orientation="vertical"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]" help="Cases by User for this month"/>
 						<separator orientation="vertical"/>
 						<field name="section_id" select="1" widget="selection"/>
