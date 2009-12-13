@@ -20,6 +20,8 @@
 ##############################################################################
 
 import os
+import datetime
+
 from os.path import join
 import fnmatch
 import csv, re
@@ -29,7 +31,6 @@ import ir
 import netsvc
 from tools.misc import UpdateableStr
 import inspect
-import mx.DateTime as mxdt
 import tempfile
 import tarfile
 import codecs
@@ -279,7 +280,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
+                              'now': datetime.datetime.now().isoformat(' '),
                             }
                           )
 

@@ -87,10 +87,10 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
             a_eval = node.get('eval','')
             if len(a_eval):
                 import time
-                from mx import DateTime
+                import datetime
                 idref2 = idref.copy()
                 idref2['time'] = time
-                idref2['DateTime'] = DateTime
+                idref2['DateTime'] = datetime
                 import release
                 idref2['version'] = release.major_version
                 idref2['ref'] = lambda x: self.id_get(cr, False, x)

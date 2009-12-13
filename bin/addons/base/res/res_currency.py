@@ -26,9 +26,6 @@ import ir
 from tools.misc import currency
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context={}):
         res={}
