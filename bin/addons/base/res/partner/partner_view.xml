@@ -96,7 +96,6 @@
                     <field name="function"/>
                     <newline/>
                       <group string="Postal Address" colspan="2" col="2">
-                        <field name="type" select="2" />
                         <field name="street" select="2"/>
                         <field name="street2"/>
                         <field name="zip" select="2"/>
@@ -105,6 +104,7 @@
                         <field name="state_id" select="2"/>
                       </group>
                       <group string="Communication" colspan="2" col="2">
+                        <field name="type" select="2" />
                         <field name="phone"/>
                         <field name="fax"/>
                         <field name="mobile" select="2"/>
@@ -255,12 +255,14 @@
                         <page string="General">
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
-                                    <field name="name" select="2"/>
-                                    <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
-                                    <field name="function"/>
+                                    <group colspan="4" col="4">
+                                        <field name="name" select="2"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
+                                        <field name="function"/>
+                                        <field name="type" select="2" colspan="4"/>
+                                    </group>
                                     <newline/>
                                       <group string="Postal Address" colspan="2" col="4">
-                                        <field name="type" select="2" colspan="4"/>
                                         <field name="street" select="2" colspan="4"/>
                                         <field name="street2" colspan="4"/>
                                         <field name="zip" select="2"/>
@@ -295,7 +297,7 @@
                             <field name="website" widget="url"/>
                             <field name="date" select="2"/>
                             <field name="parent_id"/>
-                            <field name="company_id" groups="base.group_extended" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
                         <page string="History">
