@@ -1476,6 +1476,12 @@
             <field name="target">new</field>
         </record>
 
+        <!-- register configuration wizard -->
+        <record id="config_fiscalyear" model="ir.actions.todo">
+            <field name="name">Account Configure Wizard</field>
+            <field name="note">Define Fiscal Years and Select Charts of Account</field>
+            <field name="action_id" ref="action_account_config_wizard_form"/>
+        </record>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Account Add wizard</field>
@@ -1499,16 +1505,6 @@
             context="{'tmpl_ids': active_id}"
             src_model="account.account.template"
 	    view_type="form" view_mode="form"/>
-
-        <!-- register configuration wizard -->
-
-        <record id="config_fiscalyear" model="ir.actions.todo">
-            <field name="name">Account Configure Wizard</field>
-            <field name="note">Define Fiscal Years and Select Charts of Account</field>
-            <field name="action_id" ref="action_account_config_wizard_form"/>
-        </record>
-
-
 
         <!-- Account Templates -->
         <menuitem 
