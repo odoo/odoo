@@ -718,6 +718,7 @@ document_file()
 class document_configuration_wizard(osv.osv_memory):
     _name='document.configuration.wizard'
     _description = 'Auto Directory configuration'
+    _inherit = 'res.config'
     _rec_name = 'host'
     _columns = {
         'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
@@ -746,16 +747,7 @@ class document_configuration_wizard(osv.osv_memory):
         'port': get_ftp_server_port,
     }
 
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-
-    def action_config(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         conf = self.browse(cr, uid, ids[0], context)
         obj=self.pool.get('document.directory')
         objid=self.pool.get('ir.model.data')
@@ -828,15 +820,6 @@ class document_configuration_wizard(osv.osv_memory):
         config['ftp_server_address'] = conf.host
         config['ftp_server_port'] = conf.port
         config.save()
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-        }
-
 document_configuration_wizard()
 
 
