@@ -176,9 +176,8 @@ def _do_split(self, cr, uid, data, context):
                     ('done', move.picking_id.id))
         res = cr.fetchall()        
         if len(res) == len(move.picking_id.move_lines):                       
-            pick_obj.action_done(cr, uid, [move.picking_id.id])            
-            #wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
-            #wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
+            pick_obj.action_move(cr, uid, [move.picking_id.id])            
+            wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
     return {}
 
