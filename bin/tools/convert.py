@@ -87,7 +87,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
             a_eval = node.get('eval','')
             if len(a_eval):
                 import time
-                import datetime
+                from datetime import datetime
                 idref2 = idref.copy()
                 idref2['time'] = time
                 idref2['DateTime'] = datetime

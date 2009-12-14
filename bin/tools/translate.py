@@ -20,7 +20,7 @@
 ##############################################################################
 
 import os
-import datetime
+from datetime import datetime
 
 from os.path import join
 import fnmatch
@@ -280,7 +280,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': datetime.datetime.now().isoformat(' ')[0:-7] + '+0000',
+                              'now': datetime.now().isoformat(' ')[0:-7] + '+0000',
                             }
                           )
 

@@ -25,7 +25,7 @@ import cStringIO
 import base64
 import copy
 import locale
-import datetime
+from datetime import datetime
 import os
 import re
 import time
@@ -109,7 +109,7 @@ class _date_format(str, _format):
     def __str__(self):
         if self.val:
             if hasattr(self,'name') and (self.name):
-                date = datetime.datetime.strptime(self.name, DT_FORMAT)
+                date = datetime.strptime(self.name, DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
 
@@ -266,7 +266,7 @@ class rml_parse(object):
                 except:# sometimes it takes converted values into value, so we dont need conversion.
                     return str(value)
             else:
-                date = datetime.datetime(*value.timetuple()[:6])
+                date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
         return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 

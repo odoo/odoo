@@ -21,7 +21,7 @@
 ##############################################################################
 
 import time
-import datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import netsvc
 import tools
@@ -101,10 +101,10 @@ class ir_cron(osv.osv, netsvc.Agent):
         cr = db.cursor()
         try:
             if not pool._init:
-                now = datetime.datetime.now()
+                now = datetime.now()
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
-                    nextcall = datetime.datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
+                    nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
                     numbercall = job['numbercall']
                 
                     ok = False
