@@ -21,11 +21,11 @@
 
 
 {
-    "name" : "CalDAV",
-    "version" : "1.0",
+    "name" : "CalDAV", 
+    "version" : "1.0", 
     "depends" : [
-                    "base",
-                ],
+                    "base", 
+                ], 
      'description': """
  To develop a full featured caldav system that support:
   - access through webdav (based on xrg code)
@@ -34,14 +34,16 @@
   - invitations to others people (exactly like sunbird)
   - availabilities of users/calendars
   - full day events""", 
-    "author" : "Tiny",
-    "init_xml" : [],
-    
+    "author" : "Tiny", 
+    'category': 'Generic Modules/Others', 
+    'website': 'http://www.openerp.com', 
+    "init_xml" : [], 
+    "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv'
-                    ],
-    "installable" : True,
-    "active" : False,
+                    ], 
+    "installable" : True, 
+    "active" : False, 
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

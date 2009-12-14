@@ -30,11 +30,38 @@ from dateutil import parser
 from datetime import datetime
 from time import strftime
 from pytz import timezone
+import re
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
 # R-n  Required and can come more than once
+
+def map_data(cr, uid, obj):
+    vals = {}
+    for map_dict in obj.__attribute__:
+        map_val = obj.ical_get(map_dict, 'value')
+        field = obj.ical_get(map_dict, 'field')
+        field_type = obj.ical_get(map_dict, 'type')
+        if field and map_val:
+            if field_type == 'selection':
+                mapping =obj.__attribute__[map_dict].get('mapping', False)
+                if mapping:
+                    map_val = mapping[map_val]
+            if field_type == 'many2many':
+                ids = []
+                model = obj.__attribute__[map_dict].get('object', False)
+                modobj = obj.pool.get(model)
+                for map_vall in map_val:
+                    id = modobj.create(cr, uid, map_vall)
+                    ids.append(id)
+                vals[field] = [(6, 0, ids)]
+                continue
+            if field_type == 'many2one':
+                # TODO: Map field value to many2one object
+                continue # For now
+            vals[field] = map_val
+    return vals
 
 class CalDAV(object):
     __attribute__= {
@@ -66,14 +93,19 @@ class CalDAV(object):
 
     def import_ical(self, cr, uid, ical_data):
         parsedCal = vobject.readOne(ical_data)
+        att_data = []
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
                 if cal_data.name.lower() == 'attendee':
                     attendee = self.pool.get('caldav.attendee')
-                    attendee.import_ical(cr, uid, cal_data)
+                    att_data.append(attendee.import_ical(cr, uid, cal_data))
+                    self.ical_set(cal_data.name.lower(), att_data , 'value')
+                    continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
-        return True
+        vals = map_data(cr, uid, self)
+        return vals        
+
     
 class Calendar(CalDAV, osv.osv_memory):
     _name = 'caldav.calendar'
@@ -94,6 +126,7 @@ class Calendar(CalDAV, osv.osv_memory):
 
     def import_ical(self, cr, uid, ical_data):
         # Write openobject data from ical_data
+        
         ical = vobject.readOne(ical_data)
         for child in ical.getChildren():
             child_name = child.name.lower()
@@ -205,7 +238,7 @@ class Event(CalDAV, osv.osv_memory):
         if not startdate:
             startdate = datetime.now()
         else:
-            startdate = todate(startdate)
+            startdate = todate(''.join((re.compile('\d')).findall(startdate)) + 'Z')
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
             datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
@@ -310,14 +343,12 @@ class Attendee(CalDAV, osv.osv_memory):
     }
         
     def import_ical(self, cr, uid, ical_data):
-        if ical_data.value:
-            self.__attribute__['sent-by'] = ical_data.value
-        for key, val in ical_data.params.items():
-            if self.__attribute__.has_key(key.lower()):
-                if type(val) == type([]):
-                    self.__attribute__[key] = val[0]
-                else:
-                    self.__attribute__[key] = val
-        return
+        for para in ical_data.params:
+            if para.lower() == 'cn':
+                self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
+            else:
+                self.ical_set(para.lower(), ical_data.params[para][0], 'value')
+        vals = map_data(cr, uid, self)
+        return vals
 
 Attendee()

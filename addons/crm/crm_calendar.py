@@ -54,7 +54,7 @@ class crm_caldav_attendee(osv.osv):
     __attribute__ = {
         'cutype' : {'field':'cutype', 'type':'text'}, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
         'member' : {'field':'member', 'type':'text'}, # Use: 0-1    Specify the group or list membership of the calendar user specified by the property.
-        'role' : {'field':'role', 'type':'text'}, # Use: 0-1    Specify the participation role for the calendar user specified by the property like "CHAIR"/"REQ-PARTICIPANT"/"OPT-PARTICIPANT"/"NON-PARTICIPANT"
+        'role' : {'field':'role', 'type':'selection'}, # Use: 0-1    Specify the participation role for the calendar user specified by the property like "CHAIR"/"REQ-PARTICIPANT"/"OPT-PARTICIPANT"/"NON-PARTICIPANT"
         'partstat' : {'field':'partstat', 'type':'text'}, # Use: 0-1    Specify the participation status for the calendar user specified by the property. like use for VEVENT :- "NEEDS-ACTION"/"ACCEPTED"/"DECLINED"/"TENTATIVE"/"DELEGATED", use for VTODO :-"NEEDS-ACTION"/"ACCEPTED"/"DECLINED"/"TENTATIVE"/"DELEGATED"/"COMPLETED"/"IN-PROCESS" and use for VJOURNAL :- "NEEDS-ACTION"/"ACCEPTED"/"DECLINED".
         'rsvp' : {'field':'rsvp', 'type':'boolean'}, # Use: 0-1    Specify whether there is an expectation of a favor of a reply from the calendar user specified by the property value like TRUE / FALSE.
         'delegated-to' : {'field':'delegated_to', 'type':'char'}, # Use: 0-1    Specify the calendar users to whom the calendar user specified by the property has delegated participation.
@@ -147,7 +147,7 @@ class crm_case(osv.osv):
         'url' : {'field':'caldav_url', 'type':'text'}, 
         'recurid' : None, 
 #        'attach' : {'field':'attachment_ids', 'sub-field':'datas', 'type':'list'}, 
-        'attendee' : {'field':'attendees', 'type':'text'}, 
+        'attendee' : {'field':'attendees', 'type':'many2many', 'object' : 'crm.caldav.attendee'}, 
 #        'categories' : {'field':'categ_id', 'sub-field':'name'},
 #        'categories' : {'field':None , 'sub-field':'name', 'type':'text'}, # keep none for now
         'comment' : None, 
@@ -302,21 +302,12 @@ class crm_case(osv.osv):
         file_content = base64.decodestring(data['form']['file_path'])
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
-        event_obj.import_ical(cr, uid, file_content)
-        vals = {}
-        for map_dict in event_obj.__attribute__:
-            map_val = event_obj.ical_get(map_dict, 'value')
-            field = event_obj.ical_get(map_dict, 'field')
-            field_type = event_obj.ical_get(map_dict, 'type')
-            if field and map_val:
-                if field_type == 'selection':
-                    mapping =event_obj.__attribute__[map_dict].get('mapping', False)
-                    if mapping:
-                        map_val = mapping[map_val]
-                if field_type == 'many2one':
-                    # TODO: Map field value to many2one object
-                    continue # For now
-                vals[field] = map_val
+        
+        attendee_obj = self.pool.get('caldav.attendee')
+        crm_attendee = self.pool.get('crm.caldav.attendee')
+        attendee_obj.__attribute__.update(crm_attendee.__attribute__)
+        
+        vals = event_obj.import_ical(cr, uid, file_content)
         # TODO: Select proper section
         section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
         vals.update({'section_id' : section_id})
@@ -395,6 +386,7 @@ class crm_case(osv.osv):
                         self.write(cr, uid, [int(str(id).split('-')[0])], {'rrule' : record['rrule'] +"\n" + str(date_new)})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
+
 crm_case()
 
 
