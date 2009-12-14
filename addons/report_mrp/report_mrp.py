@@ -24,12 +24,12 @@ from osv import fields,osv
 
 class report_workcenter_load(osv.osv):
     _name="report.workcenter.load"
-    _description="Workcenter Load"
+    _description="Work Center Load"
     _auto = False
     _log_access = False
     _columns = {
         'name': fields.char('Week', size=64, required=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Nbr of cycle'),
         'hour': fields.float('Nbr of hour'),
     }

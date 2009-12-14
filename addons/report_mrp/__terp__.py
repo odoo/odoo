@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """A module that adds new reports based on MRP cases.
-    Workcenter loads, Weekly Stock value variation""",
+    Work Center loads, Weekly Stock value variation""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['mrp'],

@@ -28,7 +28,7 @@
     This module creates a dashboards for Manufaturing that includes:
     * List of next production orders
     * List of deliveries (out packing)
-    * Graph of workcenter load
+    * Graph of work center load
     * List of procurement in exception
     """,
     'author': 'Tiny',
