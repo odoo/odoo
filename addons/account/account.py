@@ -411,15 +411,27 @@ class account_account(osv.osv):
             default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
+    def _check_moves(self, cr, uid, ids, method, context):
+        line_obj = self.pool.get('account.move.line')
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+            if method == 'write':
+                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
+            elif method == 'unlink':
+                raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        return True
+    
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}
         if 'active' in vals and not vals['active']:
-            line_obj = self.pool.get('account.move.line')
-            account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains account moves.'))
+            self._check_moves(cr, uid, ids, "write", context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, context={}):
+        self._check_moves(cr, uid, ids, "unlink", context)
+        return super(account_account, self).unlink(cr, uid, ids, context)
+    
 account_account()
 
 class account_journal_view(osv.osv):
