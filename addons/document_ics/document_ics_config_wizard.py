@@ -50,6 +50,8 @@ ICS_TAGS = {
 
 class document_ics_crm_wizard(osv.osv_memory):
     _name='document.ics.crm.wizard'
+    _inherit = 'res.config'
+
     _columns = {
         'name':fields.char('Name', size=64),
         'meeting' : fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
@@ -69,7 +71,7 @@ class document_ics_crm_wizard(osv.osv_memory):
         'phonecall': lambda *args: True,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         data=self.read(cr, uid, ids, [])[0]
         dir_obj = self.pool.get('document.directory')
         dir_cont_obj = self.pool.get('document.directory.content')
@@ -110,23 +112,6 @@ class document_ics_crm_wizard(osv.osv_memory):
                                 'content_id': content_id ,
                                   }
                         ics_obj.create(cr, uid, vals_ics)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-    def action_cancel(self, cr, uid, ids, conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-
 document_ics_crm_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
