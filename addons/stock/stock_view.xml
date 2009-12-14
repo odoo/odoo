@@ -1263,8 +1263,8 @@
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned','=',time.strftime('%%m-%%d-%%Y %%H:%%M:%%S')))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
-                        <field name="origin" string="Purchase Order"/> 
-	            		<field name="partner_id" string="Supplier"/>
+                        <field name="origin" string="Purchase Order" select="1"/> 
+	            		<field name="partner_id" string="Supplier" select="1"/>
 	                    <field name="product_id"/>	                    
                     </group>
             	</search>
