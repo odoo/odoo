@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -60,6 +60,7 @@ required_modules = [
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
     ('lxml', 'lxml module: pythonic libxml2 and libxslt bindings'),
+    ('mako','Mako templating library'),
 ]
 
 def check_modules():
@@ -185,7 +186,7 @@ options = {
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
                      "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
                      "encodings","dateutil","wizard","pychart","PIL", "pyparsing",
-                     "pydot","asyncore","asynchat", "reportlab", "vobject",
+                     "pydot","asyncore","asynchat", "reportlab", "vobject","mako",
                      "HTMLParser", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
@@ -219,6 +220,7 @@ setup(name             = name,
                           'openerp-server.report.render.rml2html',
                           'openerp-server.report.render.rml2txt',
                           'openerp-server.report.render.html2html',
+                          'openerp-server.report.render.makohtml2html',
                           'openerp-server.wizard',
                           'openerp-server.report.render.odt2odt',
                           'openerp-server.workflow'] + \
