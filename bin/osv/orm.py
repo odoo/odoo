@@ -843,7 +843,6 @@ class orm_template(object):
             except Exception, e:
                 import psycopg2
                 import osv
-                #Needed to rollback the cursor for letting the _('text') work
                 cr.rollback()
                 if isinstance(e,psycopg2.IntegrityError):
                     msg= _('Insertion Failed! ')
