@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:13+0000\n"
-"Last-Translator: Boris <boris.ivanov@obseg.com>\n"
+"PO-Revision-Date: 2009-12-14 03:31+0000\n"
+"Last-Translator: Antoan Georgiev <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:36+0000\n"
+"X-Launchpad-Export-Date: 2009-12-14 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr "Вътрешно име"
 #. module: account
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Код на сметка за данъци"
+msgstr "Код на данъчна сметка"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
@@ -40,7 +40,7 @@ msgstr "Кодиране на записи"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "Определи съобщението за доклад на просрочените плащания."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -73,6 +73,8 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
+"Тази сметка ще се използва за оценка на постъпващата стока за текущата "
+"продуктова категория"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -99,18 +101,18 @@ msgstr "Основен код"
 #. module: account
 #: view:account.account:0
 msgid "Account Statistics"
-msgstr ""
+msgstr "Статистики за сметка"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_vat_declaration
 #: model:ir.ui.menu,name:account.menu_wizard_vat_declaration
 msgid "Print Taxes Report"
-msgstr "Печат на справка за данъци"
+msgstr "Отпечатване на справка за данъци"
 
 #. module: account
 #: field:account.account,parent_id:0
 msgid "Parent"
-msgstr "Родител"
+msgstr "Основна"
 
 #. module: account
 #: selection:account.move,type:0
@@ -128,18 +130,18 @@ msgstr ""
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr "Знак на базовия код"
+msgstr "Означение на основния код"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Връщане приравняване на записи"
+msgstr "Несъгласувани записи"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr ""
+msgstr "Грешка ! Продължителността на периода(те) е(са) невалиден(и). "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -168,16 +170,19 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"Ден от месеца, изберете -1 за последния ден от текущия месец. Ако е "
+"положително, показва деня от следващия месец. Изберете 0 за календарни дни "
+"(в противен случай като стойност(начало) ще бъде прието началото на месеца)"
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr ""
+msgstr "Общо кредит"
 
 #. module: account
 #: field:account.config.wizard,charts:0
 msgid "Charts of Account"
-msgstr ""
+msgstr "Графики на сметка"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_move_line_select
@@ -310,7 +315,7 @@ msgstr "Произход"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Смяна на име"
 
 #. module: account
 #: xsl:account.transfer:0
