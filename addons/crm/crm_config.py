@@ -118,6 +118,8 @@ crm_cases()
 
 class crm_menu_config_wizard(osv.osv_memory):
     _name = 'crm.menu.config_wizard'
+    _inherit = 'res.config'
+
     _columns = {
         'name': fields.char('Name', size=64),
         'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
@@ -137,7 +139,7 @@ class crm_menu_config_wizard(osv.osv_memory):
         'phonecall': lambda *args: True,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         module_proxy = self.pool.get('ir.module.module')
         modid = module_proxy.search(cr, uid, [('name', '=', 'crm')])
         moddemo = module_proxy.browse(cr, uid, modid[0]).demo
@@ -167,24 +169,6 @@ class crm_menu_config_wizard(osv.osv_memory):
             module_proxy.button_install(cr, uid, ids, context=context)
             cr.commit()
             db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
 crm_menu_config_wizard()
 
 
