@@ -1708,6 +1708,7 @@ account_subscription_line()
 
 class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
+    _inherit = 'res.config'
 
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
@@ -1732,15 +1733,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
     }
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
     def install_account_chart(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
             chart_id = res['charts']
@@ -1750,7 +1742,7 @@ class account_config_wizard(osv.osv_memory):
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
-    def action_create(self, cr, uid,ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
             if 'date1' in res and 'date2' in res:
                 res_obj = self.pool.get('account.fiscalyear')
@@ -1769,16 +1761,6 @@ class account_config_wizard(osv.osv_memory):
                 elif res['period']=='3months':
                     res_obj.create_period3(cr,uid,[new_id])
         self.install_account_chart(cr,uid,ids)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-
-
 account_config_wizard()
 
 
@@ -2117,6 +2099,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         * generates all accounting properties and assigns them correctly
     """
     _name='wizard.multi.charts.accounts'
+    _inherit = 'res.config'
 
     _columns = {
         'company_id':fields.many2one('res.company','Company',required=True),
@@ -2137,7 +2120,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits': lambda *a:6,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr,uid,ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
@@ -2400,24 +2383,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 'position_id' : new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):

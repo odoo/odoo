@@ -42,6 +42,7 @@ class company_setup(osv.osv_memory):
         * Insert a suitable message for Overdue Payment Report.
     """
     _name='wizard.company.setup'
+    _inherit = 'res.config'
 
     _columns = {
         'company_id':fields.many2one('res.company','Company',required=True),
@@ -72,27 +73,9 @@ class company_setup(osv.osv_memory):
         
         return {'value': res }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         content_wiz = self.pool.get('wizard.company.setup').read(cr,uid,ids,['company_id','overdue_msg'])
         if content_wiz:
             wiz_data = content_wiz[0]
             self.pool.get('res.company').write(cr, uid, [wiz_data['company_id']], {'overdue_msg':wiz_data['overdue_msg']})
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
 company_setup()
