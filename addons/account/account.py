@@ -760,6 +760,23 @@ class account_move(osv.osv):
         for id in ids:
             result.setdefault(id, 0.0)
         return result
+    
+    def _search_amount(self, cr, uid, obj, name, args):
+        ids = []
+        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
+        result = dict(cr.fetchall())
+
+        for item in args:
+            if item[1] == '>=':
+                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+            else:
+                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]    
+            ids += res
+
+        if not ids:    
+            return [('id', '>', '0')]
+
+        return ids
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -770,7 +787,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy']))),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy'])), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
