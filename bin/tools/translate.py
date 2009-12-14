@@ -280,7 +280,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': datetime.datetime.now().isoformat(' '),
+                              'now': datetime.datetime.now().isoformat(' ')[0:-7] + '+0000',
                             }
                           )
 
