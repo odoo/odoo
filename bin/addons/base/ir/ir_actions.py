@@ -29,12 +29,7 @@ import re
 import copy
 import sys
 
-try:
-    from xml import dom, xpath
-except ImportError:
-    sys.stderr.write("ERROR: Import xpath module\n")
-    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
-    sys.exit(2)
+from xml import dom
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -350,7 +345,7 @@ class ir_model_fields(osv.osv):
         'complete_name': fields.char('Complete Name', size=64, select=1),
     }
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
 #        def get_fields(cr, uid, field, rel):
 #            result = []
