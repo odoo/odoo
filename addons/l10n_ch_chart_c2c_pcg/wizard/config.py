@@ -30,13 +30,13 @@ class Tax_template(osv.osv):
             .search(cr,uid,[])[self._inner_steps]
 
     def _get_collected(self, cr, uid, ctx):
-        self._ensure_steps()
+        self._ensure_step()
         if self._inner_steps == 'done' :
             return False
         return self._current_tax_template(cr, uid).account_collected_id.id
 
     def _get_paid(self, cr, uid, ctx):
-        self._ensure_steps()
+        self._ensure_step()
         if self._inner_steps == 'done' :
             return False
         return self._current_tax_template(cr, uid).account_paid_id.id
