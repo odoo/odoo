@@ -99,8 +99,19 @@ crm_caldav_attendee()
 class crm_caldav_alarm(osv.osv):
     _name = 'crm.caldav.alarm'
     _description = 'Event alarm information'
-    
+
     __attribute__ = {
+            'action': {'field': 'action', 'type': 'text'},
+            'description': {'field': 'name', 'type': 'text'},
+            'summary': {'field': 'description', 'type': 'text'},
+            'attendee': {'field': 'attendee', 'type': 'text'},
+            'trigger_related': {'field': 'trigger_related', 'type': 'text'}, # Check with separated fields
+            'trigger_duration': {'field': 'trigger_duration', 'type': 'text'},
+            'trigger_occurs': {'field': 'trigger_occurs', 'type': 'text'}, 
+            'trigger_interval': {'field': 'trigger_interval', 'type': 'text'}, 
+            'duration': {'field': 'duration', 'type': 'text'},
+            'repeat': {'field': 'repeat', 'type': 'text'},
+            'attach': {'field': 'attach', 'type': 'text'},
     }
      
     _columns = {
@@ -115,7 +126,7 @@ class crm_caldav_alarm(osv.osv):
                 'trigger_duration' : fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
                         ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
                 'trigger_interval' :  fields.integer('TIme' , required=True), 
-                'trigger_occurs' :  fields.selection([('starts', 'The event starts'), ('ends', \
+                'trigger_occurs' :  fields.selection([('start', 'The event starts'), ('end', \
                                                'The event ends')], 'Trigger Occures at', required=True), 
                 'duration' : fields.integer('Duration'), 
                 'repeat' : fields.integer('Repeat'), # TODO 
@@ -144,7 +155,7 @@ class crm_case(osv.osv):
         'dtstart' : {'field':'date', 'type':'datetime'}, 
         #'last-mod' : {'field':'write_date', 'type':'datetime'},
         'location' : {'field':'location', 'type':'text'}, 
-        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
+#        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
         'priority' : {'field':'priority', 'type':'int'}, 
         'dtstamp'  : {'field':'date', 'type':'datetime'}, 
         'seq' : None, 
@@ -172,6 +183,7 @@ class crm_case(osv.osv):
         'x-openobject-model' : {'value':_name, 'type':'text'}, 
 #        'duration' : {'field':'duration'},
         'dtend' : {'field':'date_closed', 'type':'datetime'}, 
+        'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'}, 
     }
 
     def _get_location(self, cr, uid, ids, name, arg, context=None):
@@ -320,6 +332,10 @@ class crm_case(osv.osv):
         attendee_obj = self.pool.get('caldav.attendee')
         crm_attendee = self.pool.get('crm.caldav.attendee')
         attendee_obj.__attribute__.update(crm_attendee.__attribute__)
+        
+        alarm_obj = self.pool.get('caldav.alarm')
+        crm_alarm = self.pool.get('crm.caldav.alarm')
+        alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         
         vals = event_obj.import_ical(cr, uid, file_content)
         # TODO: Select proper section
