@@ -189,13 +189,13 @@ class abstracted_fs:
 
     # Ok
     def ftp2fs(self, path_orig, data):
-        path = self.ftpnorm(path_orig)
+        path = self.ftpnorm(path_orig)        
         if not data or (path and path=='/'):
             return None               
         path2 = filter(None,path.split('/'))[1:]
         (cr, uid, pool) = data
         if len(path2):     
-            path2[-1]=_to_unicode(path2[-1])
+            path2[-1]=_to_unicode(path2[-1])        
         res = pool.get('document.directory').get_object(cr, uid, path2[:])
         if not res:
             raise OSError(2, 'Not such file or directory.')
@@ -209,7 +209,7 @@ class abstracted_fs:
             res = res.replace("\\", "/")        
             while res[:2] == '//':
                 res = res[1:]
-            res='/' + node.context.dbname + '/' + _to_decode(res)            
+            res = '/' + node.context.dbname + '/' + _to_decode(res)            
             
         #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
@@ -403,11 +403,11 @@ class abstracted_fs:
             val = {
                 'name': basename,
                 'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False
+                'ressource_id': object2 and object2.id or False,
+                'parent_id' : False
             }
-            #if (obj and (obj.type in ('directory'))) or not object2:                
-            #    val['parent_id'] =  obj and obj.id or False
-            val['parent_id'] = node.dir_id
+            if (obj and (obj.type in ('directory'))) or not object2:                
+                val['parent_id'] =  obj and obj.id or False            
             # Check if it alreayd exists !
             pool.get('document.directory').create(cr, uid, val)
             cr.commit()            
@@ -523,8 +523,7 @@ class abstracted_fs:
         try:
             dst_basename = _to_unicode(dst_basename)
             cr = pooler.get_db(src.context.dbname).cursor()
-            uid = src.context.uid           
-
+            uid = src.context.uid                       
             if src.type == 'collection':
                 obj2 = False
                 dst_obj2 = False
@@ -534,40 +533,39 @@ class abstracted_fs:
                 obj = src.context._dirobj.browse(cr, uid, src.dir_id)                 
                 if isinstance(dst_basedir, node_res_obj):
                     dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False
-                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)                
+                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)                 
                 if obj._table_name <> 'document.directory':
                     raise OSError(1, 'Operation not permited.')
                 result = {
                     'directory': [],
                     'attachment': []
                 }
-                # Compute all childs to set the new ressource ID
+                # Compute all childs to set the new ressource ID                
                 child_ids = [src]
                 while len(child_ids):
                     node = child_ids.pop(0)                    
-                    child_ids += node.children(cr)
-                    object2 = node and hasattr(node, "res_model") and node.res_model or False
-                    object = node.context._dirobj.browse(cr, uid, node.dir_id)
+                    child_ids += node.children(cr)                        
                     if node.type == 'collection':
+                        object2 = False                                            
+                        if isinstance(node, node_res_obj):                  
+                            object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False                           
+                        object = node.context._dirobj.browse(cr, uid, node.dir_id)                         
                         result['directory'].append(object.id)
                         if (not object.ressource_id) and object2:
                             raise OSError(1, 'Operation not permited.')
                     elif node.type == 'file':
                         result['attachment'].append(object.id)
-
                 
                 if obj2 and not obj.ressource_id:
                     raise OSError(1, 'Operation not permited.')
-                val = {
-                    'name':dst_basename,
-                }
+                
                 if (dst_obj and (dst_obj.type in ('directory'))) or not dst_obj2:
-                    val['parent_id'] = dst_obj and dst_obj.id or False
+                    parent_id = dst_obj and dst_obj.id or False
                 else:
-                    val['parent_id'] = False
-                res = pool.get('document.directory').write(cr, uid, [obj.id], val)
-
-                if dst_obj2:
+                    parent_id = False              
+                
+                
+                if dst_obj2:                    
                     ressource_type_id = pool.get('ir.model').search(cr, uid, [('model','=',dst_obj2._name)])[0]
                     ressource_id = dst_obj2.id
                     title = dst_obj2.name
@@ -575,17 +573,18 @@ class abstracted_fs:
                     if dst_obj2._name == 'res.partner':
                         partner_id = dst_obj2.id
                     else:                                                
-                        partner_id= pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
+                        partner_id = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
                 else:
                     ressource_type_id = False
                     ressource_id = False
                     ressource_model = False
                     partner_id = False
-                    title = False
-
+                    title = False                
                 pool.get('document.directory').write(cr, uid, result['directory'], {
+                    'name' : dst_basename,
                     'ressource_id': ressource_id,
-                    'ressource_type_id': ressource_type_id
+                    'ressource_parent_type_id': ressource_type_id,
+                    'parent_id' : parent_id
                 })
                 val = {
                     'res_id': ressource_id,
@@ -598,12 +597,13 @@ class abstracted_fs:
                     cr.execute('update ir_attachment set res_id=NULL where id in ('+','.join(map(str,result['attachment']))+')')
 
                 cr.commit()
+
             elif src.type == 'file':    
                 pool = pooler.get_pool(src.context.dbname)                
                 obj = pool.get('ir.attachment').browse(cr, uid, src.file_id)                
-                dst_obj2 = False
-                if isinstance(dst_basedir, node_res_dir):                    
-                    dst_obj2 = dst_basedir and dst_basedir.res_model or False
+                dst_obj2 = False                     
+                if isinstance(dst_basedir, node_res_obj):
+                    dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False            
                 dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)  
              
                 val = {
@@ -627,7 +627,7 @@ class abstracted_fs:
                     if dst_obj2._name == 'res.partner':
                         val['partner_id'] = dst_obj2.id
                     else:                        
-                        val['partner_id'] = pool.get(dst_obj2._name).fields_get(src.cr, src.uid, ['partner_id']) and dst_obj2.partner_id.id or False
+                        val['partner_id'] = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
                 elif obj.res_id:
                     # I had to do that because writing False to an integer writes 0 instead of NULL
                     # change if one day we decide to improve osv/fields.py

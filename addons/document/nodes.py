@@ -60,14 +60,13 @@ class node_context(object):
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
-        it is a potential caching point """
-    
-        (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)        
-        while duri:            
-            ndir = ndir.child(cr, duri[0])
+        it is a potential caching point """        
+        (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)          
+        while duri:                    
+            ndir = ndir.child(cr, duri[0])            
             if not ndir:
                 return False            
-            duri = duri[1:]            
+            duri = duri[1:] 
         return ndir
 
 
@@ -190,7 +189,7 @@ class node_dir(node_class):
     def children(self,cr):
         return self._child_get(cr) + self._file_get(cr)
 
-    def child(self,cr, name):
+    def child(self,cr, name):        
         res = self._child_get(cr,name)
         if res:
             return res[0]
@@ -332,7 +331,7 @@ class node_res_dir(node_class):
     def children(self,cr):
         return self._child_get(cr)
 
-    def child(self,cr, name):
+    def child(self,cr, name):        
         res = self._child_get(cr,name)
         if res:
             return res[0]
@@ -380,7 +379,7 @@ class node_res_dir(node_class):
                 continue
                 # Yes! we can't do better but skip nameless records.     
              
-            res.append(node_res_obj(name,self,self.context,self.res_model, bo))
+            res.append(node_res_obj(name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
     def _get_ttag(self,cr):
@@ -393,11 +392,11 @@ class node_res_obj(node_class):
         node_dirs (with limited domain).
         """
     our_type = 'collection'
-    def __init__(self,path, parent, context, res_model, res_bo, res_id = None):
+    def __init__(self, path, dir_id, parent, context, res_model, res_bo, res_id = None):
         super(node_res_obj,self).__init__(path, parent,context)
         assert parent
-        #todo: more info from dirr        
-        self.dir_id = parent.dir_id
+        #todo: more info from dirr            
+        self.dir_id = dir_id
         self.mimetype = 'application/x-directory'
                         # 'httpd/unix-directory'
         self.create_date = parent.create_date
@@ -428,8 +427,8 @@ class node_res_obj(node_class):
     def children(self,cr):        
         return self._child_get(cr) + self._file_get(cr)
 
-    def child(self,cr, name):        
-        res = self._child_get(cr,name)
+    def child(self,cr, name):            
+        res = self._child_get(cr,name)                
         if res:
             return res[0]
         res = self._file_get(cr,name)
@@ -484,7 +483,7 @@ class node_res_obj(node_class):
                 return ('vevent-collection','http://groupdav.org/')
         return None
 
-    def _child_get(self,cr,name = None):
+    def _child_get(self,cr,name = None):        
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -498,44 +497,53 @@ class node_res_obj(node_class):
        
         # Directory Structure display in tree structure
         if self.res_id and directory.ressource_tree:  
-            where1 = where      
+            where1 = []                 
             if obj._parent_name in obj.fields_get(cr, uid):                    
-                where1 += [(obj._parent_name, '=', self.res_id)]
+                where1 = where + [(obj._parent_name, '=', self.res_id)]
             resids = obj.search(cr,uid, where1, context=ctx)                        
             for bo in obj.browse(cr,uid,resids,context=ctx):
                 namefield = directory.resource_field or 'name'
                 if not bo:
                     continue
-                name = getattr(bo, namefield)
-                if not name:
+                res_name = getattr(bo, namefield)
+                if not res_name:
                     continue                
-                res.append(node_res_obj(name, self, self.context, self.res_model, res_bo = bo)) 
+                res.append(node_res_obj(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))        
+        
+        
+        where2 = where + [('parent_id','=',self.dir_id) ]        
+        ids = dirobj.search(cr, uid, where2, context=ctx) 
+        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
+            if dirr.type == 'directory':
+                res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+            elif dirr.type == 'ressource':
+                # child resources can be controlled by properly set dctx
+                res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
+        
 
-        # Get Child Ressource Directories 
-        where12 = [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
-        dirids = dirobj.search(cr,uid, where12)
-        for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
-            if dirr.type == 'ressource':
-                res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
+       
         
-        where = [('parent_id','=',self.dir_id) ]               
-        ids = dirobj.search(cr, uid, where,context=ctx)                
-        if ids:
-            for dirr in dirobj.browse(cr,uid,ids,context=ctx):
-                if dirr.type == 'directory':
-                    res.append(node_res_obj(dirr.name,self,self.context,self.res_model,res_bo = None, res_id = self.res_id))
-                elif dirr.type == 'ressource':
-                    # child resources can be controlled by properly set dctx
-                    res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
-        
-        fil_obj=dirobj.pool.get('ir.attachment')
-        where2 = where  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
+        fil_obj = dirobj.pool.get('ir.attachment')
+        where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
         # print "where clause for dir_obj", where2
-        ids = fil_obj.search(cr,uid,where2,context=ctx)
+        ids = fil_obj.search(cr, uid, where3, context=ctx)
         if ids:
-            for fil in fil_obj.browse(cr,uid,ids,context=ctx):
-                res.append(node_file(fil.name,self,self.context,fil))
+            for fil in fil_obj.browse(cr, uid, ids, context=ctx):
+                res.append(node_file(fil.name, self, self.context, fil))
     
+        
+        # Get Child Ressource Directories                
+        if directory.ressource_type_id and directory.ressource_type_id.id:              
+            where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]            
+            where5 = where4 + [('ressource_id','=',0)]
+            dirids = dirobj.search(cr,uid, where5)            
+            where5 = where4 + [('ressource_id','=',self.res_id)]
+            dirids = dirids + dirobj.search(cr,uid, where5)            
+            for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
+                if dirr.type == 'directory' and not dirr.parent_id:
+                    res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
+                if dirr.type == 'ressource':
+                    res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))                
         return res
     
     def create_child(self,cr,path,data):

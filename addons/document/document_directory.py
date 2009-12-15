@@ -27,6 +27,7 @@ import urlparse
 
 import os
 import nodes
+from tools.translate import _
 
 class document_directory(osv.osv):
     _name = 'document.directory'
