@@ -150,8 +150,12 @@
                 <tree string="Sequences">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="active"/>
                     <field name="company_id"/>
+					<field name="number_next"/>
+					<field name="number_increment"/>
+					<field name="prefix"/>
+					<field name="padding"/>
+					<field name="active"/>
                 </tree>
             </field>
         </record>
@@ -428,6 +432,11 @@
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
 
         <!-- Companies -->
+        <menuitem id="menu_res_company_global" 
+            parent="base.menu_administration"
+            name="Companies"
+            sequence="5"/>
+
         <record id="action_res_company_tree" model="ir.actions.act_window">
             <field name="name">Company's Structure</field>
             <field name="type">ir.actions.act_window</field>
@@ -435,7 +444,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
         </record>
-        <menuitem action="action_res_company_tree" id="menu_action_res_company_tree" parent="base.menu_users" sequence="16"/>
+        <menuitem action="action_res_company_tree" id="menu_action_res_company_tree" parent="base.menu_res_company_global" sequence="16"/>
 
         <record id="action_res_company_form" model="ir.actions.act_window">
             <field name="name">Companies</field>
@@ -443,7 +452,7 @@
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="menu_action_res_company_tree"/>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
 
         <!-- User Roles -->
         <record id="action_res_users" model="ir.actions.act_window">
@@ -1128,8 +1137,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules">
-                    <field name="model_id"/>
-                    <field name="global"/>
+                    <field name="model_id" select="1"/>
+                    <field name="global" select="1"/>
                     <field colspan="4" name="name"/>
                     <group col="6" colspan="4" expand="1">
                         <field colspan="6" name="rules" nolabel="1"/>

@@ -785,6 +785,9 @@ class related(function):
         self.arg = arg
         self._relations = []
         super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
+        if self.store is True:
+            # TODO: improve here to change self.store = {...} according to related objects
+            pass
 
     def _field_get2(self, cr, uid, obj, context={}):
         if self._relations:

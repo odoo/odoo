@@ -140,8 +140,8 @@ class users(osv.osv):
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
         'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),        
+        'company_id': fields.many2one('res.company', 'Company', help="The company this user is currently working on.", required=True),
+        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
         'company': fields.selection(_companies_get,  'Company', size=64),        
@@ -209,9 +209,6 @@ class users(osv.osv):
                     ok=False
             if ok:
                 uid = 1
-        context_company=values.get('company',False)
-        if context_company:
-            values.update({'company_id':context_company})                
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
@@ -224,7 +221,7 @@ class users(osv.osv):
             raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
         return super(users, self).unlink(cr, uid, ids, context=context)
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -280,6 +277,16 @@ class users(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target':'new',
                }
+
+    def _check_company(self, cursor, user, ids):
+        for user in self.browse(cursor, user, ids):
+            if user.company_ids and (user.company_id.id not in map(lambda x: x.id, user.company_ids)):
+                return False
+        return True
+
+    _constraints = [
+        (_check_company, 'This user can not connect using this company !', ['company_id']),
+    ]
 users()
 
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?

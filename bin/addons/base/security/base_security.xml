@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="0">
+    <data noupdate="0">
 
 <!--
  Users Groups
@@ -30,7 +30,7 @@
     </record>
 
     <record model="res.groups" id="group_multi_company">
-        <field name="name">MultiCompany/Manager</field>
+        <field name="name">Multi Companies</field>
     </record>
 
 <!--
@@ -45,36 +45,71 @@
     </record>
 
 
-	<!-- Set accesses to menu -->
-	<record model="ir.ui.menu" id="base.menu_administration">
-		<field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
-	</record>
+    <!-- Set accesses to menu -->
+    <record model="ir.ui.menu" id="base.menu_administration">
+        <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+    </record>
 
-	<record id="base.menu_security" model="ir.ui.menu">
-		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_security" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+    </record>
 
-	<record id="base.menu_users" model="ir.ui.menu">
-		<field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_users" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('base.group_erp_manager')])]" name="groups_id"/>
+    </record>
 
-	<record id="base.menu_action_currency_form" model="ir.ui.menu">
-		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_action_currency_form" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+    </record>
 
-	<record id="base.menu_custom" model="ir.ui.menu">
-		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_custom" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+    </record>
 
-	<record id="base.menu_translation" model="ir.ui.menu">
-		<!-- FIXME: a "Usability / Translations" group ?? -->
-		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_translation" model="ir.ui.menu">
+        <!-- FIXME: a "Usability / Translations" group ?? -->
+        <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+    </record>
 
-	<record id="base.menu_management" model="ir.ui.menu">
-		<field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
-	</record>
+    <record id="base.menu_management" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
+    </record>
 
-</data>
+
+    <record model="ir.rule.group" id="res_partner_address_rule_group">
+        <field name="name">res.partner.address company</field>
+        <field name="model_id" ref="model_res_partner_address"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="res_partner_address_comp_rule">
+        <field name="field_id" search="[('model','=','res.partner.address'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="res_partner_address_rule_group"/>
+        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule.group" id="res_partner_rule_group">
+        <field name="name">res.partner company</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="res_partner_comp_rule">
+        <field name="field_id" search="[('model','=','res.partner'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="res_partner_rule_group"/>
+        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+
+    <record model="ir.rule.group" id="multi_company_default_rule_group">
+        <field name="name">Multi_company_default company</field>
+        <field name="model_id" ref="model_multi_company_default"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="multi_company_default_comp_rule">
+        <field name="field_id" search="[('model','=','multi_company.default'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="multi_company_default_rule_group"/>
+        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    </data>
 </openerp>
 

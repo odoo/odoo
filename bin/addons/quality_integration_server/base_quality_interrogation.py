@@ -208,20 +208,19 @@ def drop_db(uri, dbname):
 def make_links(uri, uid, dbname, source, destination, module, user, pwd):
     if module in ('base','quality_integration_server'):
         return True
-    if not os.path.islink(destination + '/' + module):
-        if not os.path.isdir(destination + '/' + module):
-            for path in source:
-                if os.path.isdir(path + '/' + module):
-                    os.symlink(path + '/' + module, destination + '/' + module)
-                    obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
-                    execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
-                    module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
-                    if len(module_ids):
-                        data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
-                        dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
-                        for dep_data in dep_datas:
-                            make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
-                    return True
+    if os.path.islink(destination + '/' + module):
+        os.unlink(destination + '/' + module)                
+    for path in source:
+        if os.path.isdir(path + '/' + module):
+            os.symlink(path + '/' + module, destination + '/' + module)
+            obj_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/object')
+            execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'update_list')
+            module_ids = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'search', [('name','=',module)])
+            if len(module_ids):
+                data = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module', 'read', module_ids[0],['name','dependencies_id'])
+                dep_datas = execute(obj_conn, 'execute', dbname, uid, pwd, 'ir.module.module.dependency', 'read', data['dependencies_id'],['name'])
+                for dep_data in dep_datas:
+                    make_links(uri, uid, dbname, source, destination, dep_data['name'], user, pwd)
     return False
 
 def install_module(uri, dbname, modules, addons='', extra_addons='',  user='admin', pwd='admin'):
