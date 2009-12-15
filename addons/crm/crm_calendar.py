@@ -346,7 +346,7 @@ class ir_values(osv.osv):
     def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         new_model = []
         for data in models:
-            if isinstance(data,tuple):
+            if type(data) in (list,tuple):
                 new_model.append((data[0],caldevIDs2readIDs(data[1])))
             else:
                 new_model.append(data)
@@ -355,7 +355,7 @@ class ir_values(osv.osv):
     def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
         new_model = []
         for data in models:
-            if isinstance(data,tuple):
+            if type(data) in (list,tuple):
                 new_model.append((data[0],caldevIDs2readIDs(data[1])))
             else:
                 new_model.append(data)
