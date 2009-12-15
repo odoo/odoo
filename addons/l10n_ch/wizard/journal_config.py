@@ -113,20 +113,17 @@ class Journal(osv.osv_memory):
 
     def execute(self,cr,uid,ids,context={}):
         jids = self.pool.get('account.journal').search(cr, uid, [])
-        if self._inner_steps < len(jids)-1 :
+        if self._inner_steps < len(jids)-1:
             self._inner_steps += 1
-        else :
-            print 'DONE'
-            self._inner_steps = 'done'
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'account.journal.todo',
-            'view_id': self.pool.get('ir.ui.view')\
-                .search(cr, uid, [('name','=','account.journal.todo.form')]),
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            }
+            return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'account.journal.todo',
+                'view_id': self.pool.get('ir.ui.view')\
+                    .search(cr, uid, [('name','=','account.journal.todo.form')]),
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                }
 Journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
