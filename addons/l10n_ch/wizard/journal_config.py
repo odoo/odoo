@@ -31,10 +31,10 @@
 ##############################################################################
 from osv import fields, osv
 
-
-class Journal(osv.osv):
+class Journal(osv.osv_memory):
     """Create account.journal.todo in order to add configuration wizzard"""
     _name ="account.journal.todo"
+    _inherit = 'res.config'
 
     def _get_journal(self, cr, uid, ctx):
         if not self.__dict__.has_key('_inner_steps') :
@@ -111,15 +111,7 @@ class Journal(osv.osv):
                 )
         return {}
 
-    def action_cancel(self,cr,uid,ids,context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-    def action_new(self,cr,uid,ids,context={}):
+    def execute(self,cr,uid,ids,context={}):
         jids = self.pool.get('account.journal').search(cr, uid, [])
         if self._inner_steps < len(jids)-1 :
             self._inner_steps += 1
@@ -127,17 +119,14 @@ class Journal(osv.osv):
             print 'DONE'
             self._inner_steps = 'done'
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'account.journal.todo',
-                'view_id':self.pool.get('ir.ui.view').search(
-                        cr,
-                        uid,
-                        [('name','=','view_account_journal_form_todo')]
-                    ),
-                'type': 'ir.actions.act_window',
-                'target':'new',
-               }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'account.journal.todo',
+            'view_id': self.pool.get('ir.ui.view')\
+                .search(cr, uid, [('name','=','account.journal.todo.form')]),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            }
 Journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
