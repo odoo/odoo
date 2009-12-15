@@ -142,28 +142,6 @@
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
-        <record id="purchase_form_action2" model="ir.actions.act_window">
-            <field name="name">Request For Quotations</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="domain">[('state','=','draft')]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
-        </record>
-
-        <record id="purchase_form_action3" model="ir.actions.act_window">
-            <field name="name">Purchase Order Waiting Approval</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','confirmed')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
-        </record>
-
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -171,26 +149,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
-            <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_purchase_order_filter"/>            
-        </record>
-
-        <record id="purchase_form_action_new" model="ir.actions.act_window">
-            <field name="name">New Purchase Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-
-        <record id="purchase_form_action3" model="ir.actions.act_window">
-            <field name="name">Purchase Order Waiting Approval</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','confirmed')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
 
         <record id="purchase_order_tree" model="ir.ui.view">
