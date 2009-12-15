@@ -7,15 +7,20 @@
 #
 from osv import fields, osv
 
-
 class Tax_template(osv.osv):
-    """Creat account.journal.todo class in order 
+    """Creat account.journal.todo class in order
         to add configuration wizzard"""
     _name ="account.tax.template.todo"
-    
+
     def _ensure_step(self):
         if getattr(self, '_inner_steps', None) is None:
             self._inner_steps = 0
+
+    def _current_tax_template(self, cr, uid):
+        ids = self.pool.get('account.tax.template').search(cr,uid,[])
+        return self.pool.get('account.tax.template').browse(
+            cr, uid, ids[self._inner_steps]
+            )
 
     def _get_tax(self, cr, uid, ctx):
         self._ensure_step()
@@ -28,20 +33,14 @@ class Tax_template(osv.osv):
         self._ensure_steps()
         if self._inner_steps == 'done' :
             return False
-        ids = self.pool.get('account.tax.template').search(cr,uid,[])
-        return self.pool.get('account.tax.template').browse(
-            cr, uid, ids[self._inner_steps]
-        ).account_collected_id.id
-        
+        return self._current_tax_template(cr, uid).account_collected_id.id
+
     def _get_paid(self, cr, uid, ctx):
         self._ensure_steps()
         if self._inner_steps == 'done' :
             return False
-        ids = self.pool.get('account.tax.template').search(cr,uid,[])
-        return self.pool.get('account.tax.template').browse(
-            cr, uid, ids[self._inner_steps]
-        ).account_paid_id.id
-        
+        return self._current_tax_template(cr, uid).account_paid_id.id
+
     _columns = {
         'name': fields.many2one(
             'account.tax.template',
@@ -50,12 +49,12 @@ class Tax_template(osv.osv):
              help="The tax template you are currently editing"
         ),
         'account_collected_id':fields.many2one(
-            'account.account.template', 
+            'account.account.template',
             'Invoice Tax Account',
             help="You can set here the invoice tax account"
             ),
         'account_paid_id':fields.many2one(
-            'account.account.template', 
+            'account.account.template',
             'Refund Tax Account',
             help="You can set here the refund tax account"
             ),
@@ -66,20 +65,20 @@ class Tax_template(osv.osv):
         'account_collected_id': _get_collected,
         'account_paid_id': _get_paid,
         }
-    
-    def on_change_collected(self, cr, uid, id, tax, account) :
-        if account :
+
+    def _on_change(self, cr, uid, id, tax, vals):
+        if account:
             self.pool.get('account.tax.template').write(
-                cr, uid, tax, vals={'account_collected_id': account,}
-                )
+                cr, uid, tax, vals=vals)
         return {}
-        
-    def on_change_paid(self, cr, uid, id, tax, account) :
-        if account :
-            self.pool.get('account.tax.template').write(
-                cr, uid, tax, vals={'account_paid_id': account,}
-                )
-        return {}
+
+    def on_change_collected(self, cr, uid, id, tax, account):
+        return self._on_change(
+            cr, uid, ids, tax, vals={'account_collected_id': account})
+
+    def on_change_paid(self, cr, uid, id, tax, account):
+        return self._on_change(
+            cr, uid, ids, tax, vals={'account_paid_id': account})
 
     def action_cancel(self,cr,uid,ids,context=None):
         return {
@@ -89,7 +88,7 @@ class Tax_template(osv.osv):
             'type': 'ir.actions.act_window',
             'target':'new',
             }
-    
+
     def action_new(self,cr,uid,ids,context={}):
         jids = self.pool.get('account.tax.template').search(cr, uid, [])
         if self._inner_steps < len(jids)-1 :
