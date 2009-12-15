@@ -47,18 +47,18 @@
     =====================
     -->
 
-    	<record id="view_res_partner_address_filter" model="ir.ui.view">
-		    <field name="name">res.partner.address.select</field>
-		    <field name="model">res.partner.address</field>
-		    <field name="type">search</field>
-		    <field name="arch" type="xml">
-		        <search string="Search Contact">
-		        	<field name="name" select='1'/>
-	           		<field name="partner_id" select='1'/>
-	           		<field name="country_id" select='1'/>
-		       </search>
-		    </field>
-	    </record>
+        <record id="view_res_partner_address_filter" model="ir.ui.view">
+            <field name="name">res.partner.address.select</field>
+            <field name="model">res.partner.address</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contact">
+                    <field name="name" select='1'/>
+                    <field name="partner_id" select='1'/>
+                    <field name="country_id" select='1'/>
+                </search>
+            </field>
+        </record>
 
         <record id="view_partner_address_tree" model="ir.ui.view">
             <field name="name">res.partner.address.tree</field>
@@ -110,7 +110,6 @@
                         <field name="mobile" select="2"/>
                         <field name="email"  select="2" widget="email"/>
                      </group>
-
                 </form>
             </field>
         </record>
@@ -255,14 +254,14 @@
                         <page string="General">
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
-                                    <group colspan="4" col="4">
+                                    <group colspan="4" col="6">
                                         <field name="name" select="2"/>
-                                        <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" />
                                         <field name="function"/>
-                                        <field name="type" select="2" colspan="4"/>
                                     </group>
                                     <newline/>
-                                      <group string="Postal Address" colspan="2" col="4">
+                                      <group colspan="2" col="4">
+                                        <separator string="Postal Address" colspan="4" col="4" />
                                         <field name="street" select="2" colspan="4"/>
                                         <field name="street2" colspan="4"/>
                                         <field name="zip" select="2"/>
@@ -270,13 +269,14 @@
                                         <field name="country_id" select="2" completion="1"/>
                                         <field name="state_id" select="2"/>
                                      </group>
-                                     <group string="Communication" colspan="2" col="2">
+                                     <group colspan="2" col="2">
+                                        <separator string="Communication" colspan="2" col="2" />
+                                        <field name="type" select="2" string="Type" />
                                         <field name="phone"/>
                                         <field name="mobile"/>
                                         <field name="fax"/>
                                         <field name="email" select="2" widget="email"/>
                                      </group>
-
                                 </form>
                                 <tree string="Partner Contacts">
                                     <field name="name"/>
@@ -560,10 +560,10 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_partner_form" sequence="1"/>
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
-			<field name="name">Partner Categories</field>
+            <field name="name">Partner Categories</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
