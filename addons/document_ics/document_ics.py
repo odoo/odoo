@@ -87,15 +87,16 @@ class document_directory_content(osv.osv):
     }
     def _file_get(self, cr, node, nodename, content, context=None):
         if not content.obj_iterate:
-            return super(document_directory_content, self)._file_get(cr,node,nodename,content)
+            return super(document_directory_content, self)._file_get(cr, node, nodename, content)
         else:
-            # print "iterate over ", content.object_id.model
+            if not content.object_id:
+                return False
             mod = self.pool.get(content.object_id.model)
             uid = node.context.uid
             fname_fld = content.fname_field or 'id'
-            where = []
+            where = []            
             if node.domain:
-                where.append(node.domain)
+                where += eval(node.domain)
             if nodename:
                 # Reverse-parse the nodename to deduce the clause:
                 prefix = (content.prefix or '')
@@ -107,7 +108,7 @@ class document_directory_content(osv.osv):
                 tval = nodename[len(prefix):0 - len(suffix)]
                 where.append((fname_fld,'=',tval))
             # print "ics iterate clause:", where
-            resids = mod.search(cr,uid,where,context=context)
+            resids = mod.search(cr, uid, where, context=context)
             if not resids:
                 return False
         
@@ -244,13 +245,15 @@ class document_directory_content(osv.osv):
                 return datetime.datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
 
         if node.extension != '.ics':
-                return super(document_directory_content).process_read(cr, uid, node, context)
+            return super(document_directory_content).process_read(cr, uid, node, context)
 
         import vobject
         ctx = (context or {})
         ctx.update(node.context.context.copy())
         ctx.update(node.dctx)
         content = self.browse(cr, uid, node.cnt_id, ctx)
+        if not content.object_id:
+            return super(document_directory_content).process_read(cr, uid, node, context)
         obj_class = self.pool.get(content.object_id.model)
 
         if content.ics_domain:
@@ -261,7 +264,7 @@ class document_directory_content(osv.osv):
             domain.append(('id','=',node.act_id))
         # print "process read clause:",domain
         ids = obj_class.search(cr, uid, domain, context=ctx)
-        cal = vobject.iCalendar()
+        cal = vobject.iCalendar()        
         for obj in obj_class.browse(cr, uid, ids):
             event = cal.add('vevent')
             # Fix dtstamp et last-modified with create and write date on the object line

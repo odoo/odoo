@@ -168,7 +168,9 @@ class node_dir(node_class):
         #todo: more info from dirr
         self.mimetype = 'application/x-directory'
             # 'httpd/unix-directory'
-        self.create_date = dirr.create_date
+        self.create_date = dirr.create_date        
+        self.domain = dirr.domain
+        self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
@@ -205,9 +207,9 @@ class node_dir(node_class):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         where = [('directory_id','=',self.dir_id) ]
-        ids = cntobj.search(cr,uid,where,context=ctx)
-        for content in cntobj.browse(cr,uid,ids,context=ctx):
-            res3 = cntobj._file_get(cr,self,nodename,content)
+        ids = cntobj.search(cr, uid, where, context=ctx)
+        for content in cntobj.browse(cr, uid, ids, context=ctx):
+            res3 = cntobj._file_get(cr, self, nodename, content)
             if res3:
                 res.extend(res3)
 
@@ -312,7 +314,7 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
-        self.res_model = dirr.ressource_type_id.model
+        self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
         self.namefield = dirr.resource_field or 'name'
         self.displayname = dirr.name

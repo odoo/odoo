@@ -2165,7 +2165,7 @@ class FTPHandler(asynchat.async_chat):
             datacr = self.fs.get_cr(line)
             file = self.fs.ftp2fs(line, datacr)
             line = self.fs.ftpnorm(line)
-            fd = self.run_as_current_user(self.fs.open, file, 'rb')
+            fd = self.run_as_current_user(self.fs.open, file, 'rb')            
         except OSError, err:
             self.fs.close_cr(datacr)
             why = _strerror(err)

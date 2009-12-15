@@ -307,8 +307,8 @@ class abstracted_fs:
     def open(self, node, mode):
         if not node:
             raise OSError(1, 'Operation not permited.')
-        # Reading operation
-        if node.type=='file':
+        # Reading operation        
+        if node.type == 'file':
             cr = pooler.get_db(node.context.dbname).cursor()
             uid = node.context.uid
             if not self.isfile(node):
@@ -321,13 +321,15 @@ class abstracted_fs:
             s.name = node
             cr.close()
             return s
-        elif node.type=='content':
+        elif node.type == 'content':
             uid = node.context.uid
             cr = pooler.get_db(node.context.dbname).cursor()
             pool = pooler.get_pool(node.context.dbname)
             res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
-            cr.close()
-            return res
+            cr.close()            
+            s = StringIO.StringIO(res)
+            s.name = node
+            return s
         else:
             raise OSError(1, 'Operation not permited.')
 
