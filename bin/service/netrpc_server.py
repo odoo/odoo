@@ -78,7 +78,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                     break
             except Exception, e:
                 # this code should not be reachable, therefore we warn
-                netsvc.Logger().notifyChannel("net-rpc", netsvc.LOG_WARNING, "exception: %" % str(e))
+                netsvc.Logger().notifyChannel("net-rpc", netsvc.LOG_WARNING, "exception: %s" % str(e))
                 break
 
         self.threads.remove(self)
