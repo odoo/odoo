@@ -111,7 +111,7 @@ class Journal(osv.osv_memory):
                 )
         return {}
 
-    def execute(self,cr,uid,ids,context={}):
+    def execute(self,cr,uid,ids,context=None):
         jids = self.pool.get('account.journal').search(cr, uid, [])
         if self._inner_steps < len(jids)-1:
             self._inner_steps += 1
