@@ -141,7 +141,7 @@ class Calendar(CalDAV, osv.osv_memory):
             elif child_name == "vtimezone":
                 timezone = Timezone()
                 timezone.import_ical(cr, uid, child)
-        return True        
+        return True
 
     def export_ical(self, cr, uid, ids):
         # Read openobject data in ical format
@@ -275,7 +275,7 @@ class Journal(CalDAV):
     }
 
 class FreeBusy(CalDAV):
-    __attribute__ = {    
+    __attribute__ = {
     'contact' : None, # Use: O-1, Type: Text,         Represent contact information or alternately a  reference to contact information associated with the calendar component.
     'dtstart' : None, # Use: O-1, Type: DATE-TIME,    Specifies when the calendar component begins.
     'dtend' : None, # Use: O-1, Type: DATE-TIME,    Specifies the date and time that a calendar component ends.
@@ -309,7 +309,7 @@ class Timezone(CalDAV):
 
 class Alarm(CalDAV):
     __attribute__ = {
-    
+
     'action' : None, # Use: R-1, Type: Text,        defines the action to be invoked when an alarm is triggered LIKE "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"
     'description' : None, #      Type: Text,        Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property. Use:- R-1 for DISPLAY,Use:- R-1 for EMAIL,Use:- R-1 for PROCEDURE
     'summary' : None, # Use: R-1, Type: Text        Which contains the text to be used as the message subject. Use for EMAIL
@@ -320,7 +320,7 @@ class Alarm(CalDAV):
     'attach' : None, # Use:- O-n : which MUST point to a sound resource, which is rendered when the alarm is triggered for AUDIO, Use:- O-n : which are intended to be sent as message attachments for EMAIL, Use:- R-1:which MUST point to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
     'x-prop' : None, 
     }
-    
+
     def import_ical(self, cr, uid, ical_data):
         for val in ical_data.getChildren():
             if self.__attribute__.has_key(val.name.lower()):
