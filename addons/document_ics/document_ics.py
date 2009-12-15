@@ -30,7 +30,7 @@ import random
 import tools
 import re
 
-from document import nodes
+from document.nodes import node_content
 
 from tools.safe_eval import safe_eval
 
@@ -86,42 +86,42 @@ class document_directory_content(osv.osv):
         'ics_domain': lambda *args: '[]'
     }
     def _file_get(self, cr, node, nodename, content, context=None):
-	if not content.obj_iterate:
-		return super(document_directory_content, self)._file_get(cr,node,nodename,content)
-	else:
-		# print "iterate over ", content.object_id.model
-		mod = self.pool.get(content.object_id.model)
-		uid = node.context.uid
-		fname_fld = content.fname_field or 'id'
-		where = []
-		if node.domain:
-		    where.append(node.domain)
-		if nodename:
-		    # Reverse-parse the nodename to deduce the clause:
-		    prefix = (content.prefix or '')
-		    suffix = (content.suffix or '') + (content.extension or '')
-		    if not nodename.startswith(prefix):
-			return False
-		    if not nodename.endswith(suffix):
-			return False
-		    tval = nodename[len(prefix):0 - len(suffix)]
-		    where.append((fname_fld,'=',tval))
-		# print "ics iterate clause:", where
-		resids = mod.search(cr,uid,where,context=context)
-		if not resids:
-		    return False
-		
-		res2 = []
-		for ro in mod.read(cr,uid,resids,['id', fname_fld]):
-		    tname = (content.prefix or '') + str(ro[fname_fld])
-		    tname += (content.suffix or '') + (content.extension or '')
-		    dctx2 = { 'active_id': ro['id'] }
-		    if fname_fld:
-			dctx2['active_'+fname_fld] = ro[fname_fld]
-		    n = nodes.node_content(tname, node, node.context,content,dctx=dctx2, act_id = ro['id'])
-		    n.fill_fields(cr, dctx2)
-		    res2.append(n)
-		return res2
+        if not content.obj_iterate:
+            return super(document_directory_content, self)._file_get(cr,node,nodename,content)
+        else:
+            # print "iterate over ", content.object_id.model
+            mod = self.pool.get(content.object_id.model)
+            uid = node.context.uid
+            fname_fld = content.fname_field or 'id'
+            where = []
+            if node.domain:
+                where.append(node.domain)
+            if nodename:
+                # Reverse-parse the nodename to deduce the clause:
+                prefix = (content.prefix or '')
+                suffix = (content.suffix or '') + (content.extension or '')
+                if not nodename.startswith(prefix):
+                    return False
+                if not nodename.endswith(suffix):
+                    return False
+                tval = nodename[len(prefix):0 - len(suffix)]
+                where.append((fname_fld,'=',tval))
+            # print "ics iterate clause:", where
+            resids = mod.search(cr,uid,where,context=context)
+            if not resids:
+                return False
+        
+            res2 = []
+            for ro in mod.read(cr,uid,resids,['id', fname_fld]):
+                tname = (content.prefix or '') + str(ro[fname_fld])
+                tname += (content.suffix or '') + (content.extension or '')
+                dctx2 = { 'active_id': ro['id'] }
+                if fname_fld:
+                    dctx2['active_'+fname_fld] = ro[fname_fld]
+                n = node_content(tname, node, node.context,content,dctx=dctx2, act_id = ro['id'])
+                n.fill_fields(cr, dctx2)
+                res2.append(n)
+            return res2
 
     def process_write(self, cr, uid, node, data, context=None):
         if node.extension != '.ics':
@@ -148,8 +148,8 @@ class document_directory_content(osv.osv):
             fexprs[n.name] = n.expr
 
         if 'uid' not in fields:
-	    print "uid not in ", fields
-	    # FIXME: should pass
+            print "uid not in ", fields
+            # FIXME: should pass
             return True
         for child in parsedCal.getChildren():
             result = {}
@@ -188,11 +188,11 @@ class document_directory_content(osv.osv):
 
             if not uuid:
                 print "Skipping cal", child
-		# FIXME: should pass
+                # FIXME: should pass
                 continue
 
             cmodel = content.object_id.model
-	    wexpr = False
+            wexpr = False
             if fields['uid']:
                 wexpr = [(fields['uid'], '=', uuid.encode('utf8'))]
             else:
