@@ -25,21 +25,15 @@ class Tax_template(osv.osv_memory):
 
     def _get_tax(self, cr, uid, ctx):
         self._ensure_step()
-        if self._inner_steps == 'done' :
-            return False
         return self.pool.get('account.tax.template')\
             .search(cr,uid,[])[self._inner_steps]
 
     def _get_collected(self, cr, uid, ctx):
         self._ensure_step()
-        if self._inner_steps == 'done' :
-            return False
         return self._current_tax_template(cr, uid).account_collected_id.id
 
     def _get_paid(self, cr, uid, ctx):
         self._ensure_step()
-        if self._inner_steps == 'done' :
-            return False
         return self._current_tax_template(cr, uid).account_paid_id.id
 
     _columns = {
@@ -85,17 +79,15 @@ class Tax_template(osv.osv_memory):
         jids = self.pool.get('account.tax.template').search(cr, uid, [])
         if self._inner_steps < len(jids)-1 :
             self._inner_steps += 1
-        else :
-            self._inner_steps = 'done'
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'account.tax.template.todo',
-            'view_id':self.pool.get('ir.ui.view').search(
-                cr, uid, [('name','=','account.tax.template.todo')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
+            return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'account.tax.template.todo',
+                'view_id':self.pool.get('ir.ui.view').search(
+                    cr, uid, [('name','=','account.tax.template.todo')]),
+                'type': 'ir.actions.act_window',
+                'target':'new',
+                }
 Tax_template()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
