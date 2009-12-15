@@ -141,15 +141,6 @@
 		<field name="filter" eval="True"/>
 	</record>
 
-	<record model="ir.actions.act_window" id="action_auction_dates1">
-		<field name="res_model">auction.dates</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_auction_dates_form"/>
-	</record>
-	<menuitem name="New Auction Dates" parent="auction_date_menu" id="menu_auction_dates_new"  action="action_auction_dates1"/>
-
-
-
     =======================================================
     Auction Management/Auction Dates/Reporting
 	=======================================================
@@ -1245,14 +1236,6 @@ My Latest Objects
 My Latest Deposit
 ==============================
 
-	<record model="ir.actions.act_window" id="action_report_latest_doposit_tree">
-		<field name="res_model">auction.deposit</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('create_uid','=',uid)]</field>
-	</record>
-	<menuitem name="My Latest Deposits" action="action_report_latest_doposit_tree" id="menu_report_latest_doposit_tree" parent="auction_report_employees_menu"/>
-
 	<record model="ir.actions.act_window" id="action_report_latest_doposit_manager_tree">
 		<field name="res_model">auction.deposit</field>
 		<field name="view_type">form</field>
@@ -1304,13 +1287,6 @@ Objects per Day
 		</field>
 	</record>
 
-
-	<record model="ir.actions.act_window" id="action_report_auction_object_date_tree_my">
-		<field name="res_model">report.auction.object.date</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain">[('user_id','=',uid),('month','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
 	<record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
 		<field name="res_model">report.auction.object.date</field>
 		<field name="view_type">form</field>
@@ -1322,12 +1298,6 @@ Objects per Day
 		action="action_report_auction_object_date_tree"
 		id="menu_report_auction_object_date_tree"
 		parent="auction_report_manager_menu"/>
-	<menuitem
-		name="My Encoded Objects Per Day"
-		action="action_report_auction_object_date_tree_my"
-		id="menu_report_auction_object_date_tree1_my"
-		parent="auction_report_employees_menu"/>
-
 
 	<record model="ir.actions.act_window" id="view_report_object_by_auction">
 		<field name="name">Detailed lots</field>

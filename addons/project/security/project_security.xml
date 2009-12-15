@@ -15,9 +15,6 @@
     <record model="ir.ui.menu" id="menu_definitions">
         <field name="groups_id" eval="[(6,0,[ref('group_project_manager'), ref('group_project_finance')])]"/>
     </record>
-    <record model="ir.ui.menu" id="menu_open_view_project">
-        <field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
-    </record>
 
     <record model="ir.rule.group" id="project_comp_rule_group">
         <field name="name">Project multi-company</field>

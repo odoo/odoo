@@ -36,7 +36,9 @@ class report_crm_case_section_categ2(osv.osv):
     _description = "Cases by section and category2"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'category2_id':fields.many2one('crm.case.category2', 'Type', readonly=True),
@@ -54,7 +56,8 @@ class report_crm_case_section_categ2(osv.osv):
               create view report_crm_case_section_categ2 as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.user_id,
                     c.state,
                     c.category2_id,
@@ -66,7 +69,7 @@ class report_crm_case_section_categ2(osv.osv):
                 from
                     crm_case c
                 where c.category2_id is not null
-                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.state, c.stage_id, c.category2_id, c.section_id)""")
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.category2_id, c.section_id)""")
 
 report_crm_case_section_categ2()
 
@@ -75,7 +78,9 @@ class report_crm_case_section_stage(osv.osv):
     _description = "Cases by section and stage"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
@@ -93,7 +98,8 @@ class report_crm_case_section_stage(osv.osv):
               create view report_crm_case_section_stage as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.user_id,
                     c.state,
                     c.stage_id,
@@ -104,7 +110,7 @@ class report_crm_case_section_stage(osv.osv):
                 from
                     crm_case c
                 where c.stage_id is not null
-                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_stage()
 
@@ -113,8 +119,9 @@ class report_crm_case_section_categ_stage(osv.osv):
     _description = "Cases by section, Category and stage"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
-        'year': fields.char('Year',size=64,readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
@@ -131,8 +138,8 @@ class report_crm_case_section_categ_stage(osv.osv):
               create view report_crm_case_section_categ_stage as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date,'YYYY') as year,
-                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.user_id,
                     c.categ_id,
                     c.state,
@@ -143,7 +150,7 @@ class report_crm_case_section_categ_stage(osv.osv):
                 from
                     crm_case c
                 where c.categ_id is not null AND c.stage_id is not null
-                group by to_char(c.create_date,'YYYY'),to_char(c.create_date,'YYYY-MM'), c.user_id, c.categ_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.categ_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_categ_stage()
 
@@ -152,8 +159,9 @@ class report_crm_case_section_categ_categ2(osv.osv):
     _description = "Cases by section, Category and Category2"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
-        'year': fields.char('Year',size=64,readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
         'category2_id':fields.many2one('crm.case.category2', 'Type', readonly=True),
@@ -171,8 +179,8 @@ class report_crm_case_section_categ_categ2(osv.osv):
               create view report_crm_case_section_categ_categ2 as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY') as year,
-                    to_char(c.create_date, 'YYYY-MM')||'-01' as name,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
                     c.user_id,
                     c.categ_id,
                     c.category2_id,
@@ -184,7 +192,7 @@ class report_crm_case_section_categ_categ2(osv.osv):
                 from
                     crm_case c
                 where c.categ_id is not null AND c.category2_id is not null
-                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date,'YYYY-MM'), c.user_id, c.categ_id, c.category2_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.categ_id, c.category2_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_categ_categ2()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

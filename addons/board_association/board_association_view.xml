@@ -17,15 +17,17 @@
                                 name="%(event.action_event_registration)d"
                                 colspan="4"/>
                             <action
-                                string="My tasks"
-                                name="%(project.action_view_task5_prog)d"
+                                string="My Tasks"
+                                name="%(project.action_view_task)d"
                                 colspan="4"
                                 height="200"
-                                width="510"/>
+                                width="510"
+                                domain="[('user_id', '=', uid),('state','in',('open','draft'))]"/>
                             <action
                                 string="Unpaid Invoices"
-                                name="%(account.action_invoice_tree7)d"
-                                colspan="4"/>
+                                name="%(account.action_invoice_tree)d"
+                                colspan="4"
+                                domain="[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]"/>
                         </child1>
 
                         <child2>
