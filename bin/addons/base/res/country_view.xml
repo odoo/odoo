@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!--
 		Country
 		-->
-        
+
         <record id="view_country_tree" model="ir.ui.view">
             <field name="name">res.country.tree</field>
             <field name="model">res.country</field>
@@ -17,7 +17,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_country_form" model="ir.ui.view">
             <field name="name">res.country.form</field>
             <field name="model">res.country</field>
@@ -29,21 +29,21 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_country" model="ir.actions.act_window">
             <field name="name">Countries</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.country</field>
             <field name="view_type">form</field>
         </record>
-        
-        <menuitem id="menu_localisation" name="Localisation" parent="menu_base_config"/>
+
+        <menuitem id="menu_localisation" name="Localisation" parent="menu_base_config" sequence="30"/>
         <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation"/>
-        
+
         <!--
-		State
-		-->
-        
+          State
+        -->
+
         <record id="view_country_state_tree" model="ir.ui.view">
             <field name="name">res.country.state.tree</field>
             <field name="model">res.country.state</field>
@@ -56,7 +56,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_country_state_form" model="ir.ui.view">
             <field name="name">res.country.state.form</field>
             <field name="model">res.country.state</field>
@@ -69,7 +69,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_country_state" model="ir.actions.act_window">
             <field name="name">Fed. States</field>
             <field name="type">ir.actions.act_window</field>
@@ -77,8 +77,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_country_state_tree"/>
         </record>
-        
+
         <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation"/>
-        
+
     </data>
 </openerp>
