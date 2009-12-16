@@ -83,7 +83,12 @@ class res_config_configurable(osv.osv_memory):
         self.logger.notifyChannel(
             'actions', netsvc.LOG_INFO,
             'all configuration actions have been executed')
-        return {'type': 'ir.actions.act_window_close'}
+
+        current_user_menu = self.pool.get('res.users')\
+            .browse(cr, uid, uid).menu_id
+        # return the action associated with the menu
+        return self.pool.get(current_user_menu.type)\
+            .read(cr, uid, current_user_menu.id)
     def next(self, cr, uid, ids, context=None):
         return self._next(cr, uid)
 
