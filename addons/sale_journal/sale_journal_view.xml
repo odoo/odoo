@@ -99,7 +99,7 @@
         <field name="arch" type="xml">
             <search string="Sales by Journal">
             	<group col="8" colspan="4">
-	            	<filter icon="terp-sale" string="My" domain="[('user_id','=',uid)]" help="My Sale Journals"/>
+	            	<filter icon="terp-sale" string="My Sale Journals" domain="[('user_id','=',uid)]" help="My Sale Journals"/>
 	               	<filter icon="terp-sale" string="Open" domain="[('state','=','open')]" help="Open Sale Journals"/>
 	               	<separator orientation="vertical"/>
 	                <field name="name" select="1"/>
