@@ -45,7 +45,7 @@ class make_meeting(wizard.interface):
     def _selectPartner(self, cr, uid, data, context):
         case_obj = pooler.get_pool(cr.dbname).get('crm.case')
         case = case_obj.browse(cr, uid, data['id'])
-        return {'date': case.date, 'duration': case.duration or 2.0}
+        return {'date': case[0].date, 'duration': case[0].duration or 2.0}
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)

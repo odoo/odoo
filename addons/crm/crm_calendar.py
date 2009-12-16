@@ -31,6 +31,13 @@ import  datetime
 from time import strftime
 from pytz import timezone
 import tools
+from service import web_services
+
+def caldevIDs2readIDs(caldev_ID = None):
+    if caldev_ID:
+        if isinstance(caldev_ID, str):
+            return int(caldev_ID.split('-')[0])
+        return caldev_ID
 
 class crm_section(osv.osv):
     _name = 'crm.case.section'
@@ -50,7 +57,7 @@ class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'
     _description = 'Attendee information'
     _rec_name = 'cutype'
-    
+
     __attribute__ = {
         'cutype' : {'field':'cutype', 'type':'text'}, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
         'member' : {'field':'member', 'type':'text'}, # Use: 0-1    Specify the group or list membership of the calendar user specified by the property.
@@ -64,7 +71,7 @@ class crm_caldav_attendee(osv.osv):
         'dir' : {'field':'dir', 'type':'text'}, # Use: 0-1    Specify reference to a directory entry associated with the calendar user specified by the property.
         'language' : {'field':'language', 'type':'text'}, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
-     
+
     _columns = {
                 'cutype' : fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
                         ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'), 
@@ -72,7 +79,8 @@ class crm_caldav_attendee(osv.osv):
                 'role' : fields.selection([('CHAIR', 'CHAIR'), ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
                         ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'), 
                 'partstat' : fields.selection([('NEEDS-ACTION', 'NEEDS-ACTION'), ('ACCEPTED', 'ACCEPTED'), \
-                        ('DECLINED', 'DECLINED'), ('TENTATIVE', 'TENTATIVE'), ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
+                                ('DECLINED', 'DECLINED'), ('TENTATIVE', 'TENTATIVE'), \
+                                ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
                 'rsvp' :  fields.boolean('RSVP'), 
                 'delegated_to' : fields.char('DELEGATED-TO', size=124), 
                 'delegated_from' : fields.char('DELEGATED-FROM', size=124), 
@@ -91,8 +99,19 @@ crm_caldav_attendee()
 class crm_caldav_alarm(osv.osv):
     _name = 'crm.caldav.alarm'
     _description = 'Event alarm information'
-    
+
     __attribute__ = {
+            'action': {'field': 'action', 'type': 'text'},
+            'description': {'field': 'name', 'type': 'text'},
+            'summary': {'field': 'description', 'type': 'text'},
+            'attendee': {'field': 'attendee', 'type': 'text'},
+            'trigger_related': {'field': 'trigger_related', 'type': 'text'}, # Check with separated fields
+            'trigger_duration': {'field': 'trigger_duration', 'type': 'text'},
+            'trigger_occurs': {'field': 'trigger_occurs', 'type': 'text'}, 
+            'trigger_interval': {'field': 'trigger_interval', 'type': 'text'}, 
+            'duration': {'field': 'duration', 'type': 'text'},
+            'repeat': {'field': 'repeat', 'type': 'text'},
+            'attach': {'field': 'attach', 'type': 'text'},
     }
      
     _columns = {
@@ -100,14 +119,15 @@ class crm_caldav_alarm(osv.osv):
                 'action' : fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
                         ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action' , required=True), 
                 'description' : fields.text('Description'), 
-                'attendee': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', 'alarm_id', 'attendee_id', 'Attendees'),
-                'trigger_related' : fields.selection([('BEFORE', 'BEFORE'),('AFTER', 'AFTER')]\
+                'attendee': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
+                                              'alarm_id', 'attendee_id', 'Attendees'), 
+                'trigger_related' : fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')]\
                                                  , 'Trigger time', required=True), 
                 'trigger_duration' : fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
                         ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
                 'trigger_interval' :  fields.integer('TIme' , required=True), 
-                'trigger_occurs' :  fields.selection([('starts', 'The event starts'),('ends', 'The event ends')],\
-                                              'Trigger Occures at', required=True),
+                'trigger_occurs' :  fields.selection([('start', 'The event starts'), ('end', \
+                                               'The event ends')], 'Trigger Occures at', required=True), 
                 'duration' : fields.integer('Duration'), 
                 'repeat' : fields.integer('Repeat'), # TODO 
                 'attach' : fields.binary('Attachment'), 
@@ -116,9 +136,9 @@ class crm_caldav_alarm(osv.osv):
     _defaults = {
         'action' :  lambda *x: 'EMAIL', 
         'trigger_interval' :  lambda *x: 5, 
-        'trigger_duration' : lambda *x: 'MINUTES',
-        'trigger_related' : lambda *x: 'BEFORE',
-        'trigger_occurs' : lambda *x: 'starts',
+        'trigger_duration' : lambda *x: 'MINUTES', 
+        'trigger_related' : lambda *x: 'BEFORE', 
+        'trigger_occurs' : lambda *x: 'starts', 
                  }
     
 crm_caldav_alarm()
@@ -127,15 +147,15 @@ class crm_case(osv.osv):
     _name = 'crm.case'
     _inherit = 'crm.case'
     _description = 'Cases'
-    
+
     __attribute__ = {
         'class' : {'field':'class', 'type':'text'}, 
         'created' : {'field':'create_date', 'type':'datetime'}, # keep none for now
         'description' : {'field':'description', 'type':'text'}, 
         'dtstart' : {'field':'date', 'type':'datetime'}, 
-        #'last-mod' : {'field':'write_date', 'type':'datetime'}, 
+        #'last-mod' : {'field':'write_date', 'type':'datetime'},
         'location' : {'field':'location', 'type':'text'}, 
-        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
+#        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
         'priority' : {'field':'priority', 'type':'int'}, 
         'dtstamp'  : {'field':'date', 'type':'datetime'}, 
         'seq' : None, 
@@ -161,10 +181,11 @@ class crm_case(osv.osv):
         'rrule' : {'field':'rrule', 'type':'text'}, 
         'x-openobject-id' : {'field':'id', 'type':'text'}, 
         'x-openobject-model' : {'value':_name, 'type':'text'}, 
-#        'duration' : {'field':'duration'}, 
+#        'duration' : {'field':'duration'},
         'dtend' : {'field':'date_closed', 'type':'datetime'}, 
+        'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'}, 
     }
-    
+
     def _get_location(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for case in self.browse(cr, uid, ids):
@@ -179,7 +200,7 @@ class crm_case(osv.osv):
             else:
                 res[case.id] = ''
         return res
-    
+
     def _get_rdates(self, cr, uid, ids, name, arg, context=None):
         res = {}
         context.update({'read':True})
@@ -190,21 +211,23 @@ class crm_case(osv.osv):
                 event_obj = self.pool.get('caldav.event')
                 res[case['id']] = str(event_obj.get_recurrent_dates(str(rule), exdate, case['date']))
         return res
-    
+
     _columns = {
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
                  ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
-        'location' : fields.function(_get_location, method=True, store=True, string='Location', type='text'), 
+        'location' : fields.function(_get_location, method=True, store=True, \
+                                     string='Location', type='text'), 
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=34), 
         'rrule' : fields.text('Recurrent Rule'), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
-       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'),
-       'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'),  
+       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
+                                      'attendee_id', 'Attendees'), 
+       'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
     }
-    
+
     _defaults = {
              'caldav_url': lambda *a: 'http://localhost:8080', 
              'class': lambda *a: 'PUBLIC', 
@@ -212,14 +235,15 @@ class crm_case(osv.osv):
         }
     
     
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
+                       context=None):
         if not context:
             context={}
         cr.execute('select c.id as id, c.date as date, alarm.id as alarm_id, alarm.name as name,\
                                 alarm.trigger_interval, alarm.trigger_duration, alarm.trigger_related, \
                                 alarm.trigger_occurs from crm_case c \
                                    join crm_caldav_alarm alarm on (alarm.id=c.alarm_id) \
-                               where alarm_id is not null and alarm.active=True' )
+                               where alarm_id is not null and alarm.active=True')
         case_with_alarm = cr.dictfetchall() 
         case_obj = self.pool.get('crm.case')
         attendee_obj = self.pool.get('crm.caldav.attendee')
@@ -232,7 +256,7 @@ class crm_case(osv.osv):
                 delta = datetime.timedelta(hours=alarmdata['trigger_interval'])
             if alarmdata['trigger_duration'] == 'MINUTES':
                 delta = datetime.timedelta(minutes=alarmdata['trigger_interval'])
-            alarm_time =  dtstart + ( alarmdata['trigger_related']== 'AFTER' and delta or -delta)
+            alarm_time =  dtstart + (alarmdata['trigger_related']== 'AFTER' and delta or -delta)
             if datetime.datetime.now() >= alarm_time:
                 case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)
                 for att in case_val.attendees:
@@ -240,13 +264,13 @@ class crm_case(osv.osv):
                         mail_to.append(att.cn[7:])
                 if mail_to:
                     sub = 'Event Reminder for ' +  case_val.name or '' 
-                    body = (case_val.name or '' )+ '\n\t' + ( case_val.description or '') + '\n\nEvent time: ' \
-                                    +(case_val.date) + '\n\nLocation: ' + (case_val.location or '' ) + \
+                    body = (case_val.name or '')+ '\n\t' + (case_val.description or '') + '\n\nEvent time: ' \
+                                    +(case_val.date) + '\n\nLocation: ' + (case_val.location or '') + \
                                     '\n\nMembers Details: ' + '\n'.join(mail_to)
                     tools.email_send(
-                        case_val.user_id.address_id.email,
-                        mail_to,
-                        sub,
+                        case_val.user_id.address_id.email, 
+                        mail_to, 
+                        sub, 
                         body
                     )
                 cr.execute('update crm_caldav_alarm set active=False\
@@ -288,12 +312,14 @@ class crm_case(osv.osv):
                     if val['type'] == "text":
                         vevent.add(key).value = str(crm[val['field']])
                     elif val['type'] == 'datetime' and crm[val['field']]:
-                        vevent.add(key).value = datetime.datetime.strptime(crm[val['field']], "%Y-%m-%d %H:%M:%S")
+                        vevent.add(key).value = datetime.datetime.strptime(crm[val['field']], \
+                                                                           "%Y-%m-%d %H:%M:%S")
             if crm[self.__attribute__['rrule']['field']]:
                 startdate = datetime.datetime.strptime(crm['date'], "%Y-%m-%d %H:%M:%S")
                 if not startdate:
                     startdate = datetime.now()
-                rset1 = rrulestr(str(crm[self.__attribute__['rrule']['field']]), dtstart=startdate, forceset=True)
+                rset1 = rrulestr(str(crm[self.__attribute__['rrule']['field']]), \
+                                 dtstart=startdate, forceset=True)
                 vevent.rruleset = rset1
             vevent.add('uid').value = uid_val
         return ical.serialize()#.replace(vobject.icalendar.CRLF, vobject.icalendar.LF).strip()
@@ -306,6 +332,10 @@ class crm_case(osv.osv):
         attendee_obj = self.pool.get('caldav.attendee')
         crm_attendee = self.pool.get('crm.caldav.attendee')
         attendee_obj.__attribute__.update(crm_attendee.__attribute__)
+        
+        alarm_obj = self.pool.get('caldav.alarm')
+        crm_alarm = self.pool.get('crm.caldav.alarm')
+        alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         
         vals = event_obj.import_ical(cr, uid, file_content)
         # TODO: Select proper section
@@ -321,17 +351,21 @@ class crm_case(osv.osv):
         res = super(crm_case, self).search(cr, uid, args, offset, 
                 limit, order, context, count)
         return res
-    
+
     def write(self, cr, uid, ids, vals, context=None):
-        res = super(crm_case, self).write(cr, uid, ids, vals, context=context)
+        new_ids = []
+        for id in ids:
+            id = caldevIDs2readIDs(id)
+            if not id in new_ids:
+                new_ids.append(id)
+        if 'case_id' in vals :
+            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+        res = super(crm_case, self).write(cr, uid, new_ids, vals, context=context)
         return res
-    
+
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
-        if not type(select) == list :
-            # Called from code
-            id = int(str(select).split('-')[0])
-            return super(crm_case, self).browse(cr, uid, id, context, list_class, fields_process)
-        select = map(lambda x:int(str(x).split('-')[0]), select)
+        if not isinstance(select, list): select = [select]
+        select = map(lambda x:caldevIDs2readIDs(x), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
     def read(self, cr, uid, ids, fields=None, context={}, 
@@ -339,14 +373,14 @@ class crm_case(osv.osv):
         """         logic for recurrent event
          example : 123-20091111170822"""
         if context and context.has_key('read'):
-            return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+            return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, \
+                                              load=load)
         if not type(ids) == list :
             # Called from code
-            ids = int(str(ids).split('-')[0])
-            res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-            return res
+            return super(crm_case, self).read(cr, uid, caldevIDs2readIDs(ids), fields=fields, \
+                                               context=context, load=load)
         else:
-            ids = map(lambda x:int(str(x).split('-')[0]), ids)
+            ids = map(lambda x:caldevIDs2readIDs(x), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
@@ -374,18 +408,28 @@ class crm_case(osv.osv):
                 val['id'] = id + '-' + ''.join(idval)
                 val1 = val.copy()
                 result += [val1]
-        return result 
-    
+        return result
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        return super(crm_case, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
+
     def unlink(self, cr, uid, ids, context=None):
         #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
-                date_new = time.strftime("%Y-%m-%d %H:%M:%S", time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [str(id).split('-')[0]], ['date', 'rdates', 'rrule']):
+                date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
+                                 time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
+                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], ['date', 'rdates', 'rrule']):
                     if record['date'] == date_new:
-                        self.write(cr, uid, [int(str(id).split('-')[0])], {'rrule' : record['rrule'] +"\n" + str(date_new)})
+                        self.write(cr, uid, [caldevIDs2readIDs(id)], \
+                                   {'rrule' : record['rrule'] +"\n" + str(date_new)})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
+
+    def create(self, cr, uid, vals, context={}):
+        if 'case_id' in vals:
+            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+        return super(crm_case, self).create(cr, uid, vals, context)
 
 crm_case()
 
@@ -400,4 +444,85 @@ class ir_attachment(osv.osv):
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+            context=None, count=False):
+        new_args = []
+        if len(args) > 1:
+            new_args = [args[0]]
+            if args[1][0] == 'res_id':
+                new_args.append((args[1][0], args[1][1], caldevIDs2readIDs(args[1][2])))
+        if new_args:
+            args = new_args
+        return super(ir_attachment, self).search(cr, uid, args, offset=offset, 
+                                                limit=limit, order=order, 
+                                                context=context, count=False)
 ir_attachment()
+
+class ir_values(osv.osv):
+    _inherit = 'ir.values'
+
+    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, \
+                         meta=False, preserve_user=False, company=False):
+        new_model = []
+        for data in models:
+            if type(data) in (list, tuple):
+                new_model.append((data[0], caldevIDs2readIDs(data[1])))
+            else:
+                new_model.append(data)
+        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, value, \
+                                   replace, isobject, meta, preserve_user, company)
+
+    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, \
+                    without_user=True, key2_req=True):
+        new_model = []
+        for data in models:
+            if type(data) in (list, tuple):
+                new_model.append((data[0], caldevIDs2readIDs(data[1])))
+            else:
+                new_model.append(data)
+        return super(ir_values, self).get(cr, uid, key, key2, new_model, meta, context, \
+                                      res_id_req, without_user, key2_req)
+
+ir_values()
+
+class ir_model(osv.osv):
+
+    _inherit = 'ir.model'
+
+    def read(self, cr, uid, ids, fields=None, context={}, 
+            load='_classic_read'):
+        data = super(ir_model, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        if data:
+            for val in data:
+                val['id'] = caldevIDs2readIDs(val['id'])
+        return data
+    
+ir_model()
+
+class virtual_report_spool(web_services.report_spool):
+
+    def exp_report(self, db, uid, object, ids, datas=None, context=None):
+        if object == 'printscreen.list':
+            return super(virtual_report_spool, self).exp_report(db, uid, object, ids, datas, context)
+        new_ids = []
+        for id in ids:
+            new_ids.append(caldevIDs2readIDs(id))
+        datas['id'] = caldevIDs2readIDs(datas['id'])
+        super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+
+virtual_report_spool()
+
+class virtual_wizard(web_services.wizard):
+
+    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
+        new_ids = []
+        if 'id' in datas:
+            datas['id'] = caldevIDs2readIDs(datas['id'])
+            for id in datas['ids']:
+               new_ids.append(caldevIDs2readIDs(id))
+            datas['ids'] = new_ids
+        res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
+        return res
+
+virtual_wizard()

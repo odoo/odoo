@@ -29,7 +29,7 @@ from mx import DateTime
 from tools.translate import _
 
 #----------------------------------------------------------
-# Workcenters
+# Work Centers
 #----------------------------------------------------------
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
@@ -434,7 +434,7 @@ class mrp_operations_operation(osv.osv):
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),
-        'workcenter_id':fields.many2one('mrp.workcenter','Workcenter',required=True),
+        'workcenter_id':fields.many2one('mrp.workcenter','Work Center',required=True),
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),

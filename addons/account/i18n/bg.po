@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-14 03:31+0000\n"
+"PO-Revision-Date: 2009-12-14 23:34+0000\n"
 "Last-Translator: Antoan Georgiev <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-14 04:36+0000\n"
+"X-Launchpad-Export-Date: 2009-12-16 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -45,7 +45,7 @@ msgstr "Определи съобщението за доклад на прос�
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr ""
+msgstr "Потвърждаване на отчет от проект(чернова)"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -79,7 +79,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr ""
+msgstr "Остава празно за да се използва потвърдената дата (на фактурата)."
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -89,7 +89,7 @@ msgstr "Резултат от изравняване"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Неизравнени записи"
+msgstr "Несъгласувани стойности"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -122,7 +122,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,residual:0
 msgid "Residual"
-msgstr ""
+msgstr "Остатък"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -227,7 +227,7 @@ msgstr "Стар пробен баланс"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr ""
+msgstr "Повтарящи се записи"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -262,7 +262,7 @@ msgstr ""
 #. module: account
 #: rml:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr ""
+msgstr "Счетоводни записи-"
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -272,6 +272,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Дава изглед използван за запис или разглеждане на записи от този дневник. "
+"Изгледа задава на Open ERP кои полета ще бъдат видими, задължителни или само "
+"за четене и в какъв ред. Може да създадете собствен изглед за по-бързо "
+"набиране във всеки дневник."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -282,6 +286,11 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Ако използвате условия за разплащане, датата за плащане ще се изчисли "
+"автоматично при създаване на записите на сметката. Ако запазите условията за "
+"плащане и датата на плащане празна, това означава директно плащане(веднага). "
+"Условията за плащане може да изчислят няколко дати(частични плащания), "
+"например 50% сега и 50% след месец."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -330,7 +339,7 @@ msgstr "Пресмятане на абонамент"
 #. module: account
 #: rml:account.central.journal:0
 msgid "Account Num."
-msgstr ""
+msgstr "Номер на сметка"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0

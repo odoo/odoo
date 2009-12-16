@@ -29,7 +29,7 @@ from mx import DateTime
 from tools.translate import _
 
 #----------------------------------------------------------
-# Workcenters
+# Work Centers
 #----------------------------------------------------------
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
@@ -39,9 +39,9 @@ from tools.translate import _
 #
 class mrp_workcenter(osv.osv):
     _name = 'mrp.workcenter'
-    _description = 'Workcenter'
+    _description = 'Work Center'
     _columns = {
-        'name': fields.char('Workcenter Name', size=64, required=True),
+        'name': fields.char('Work Center Name', size=64, required=True),
         'active': fields.boolean('Active'),
         'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
         'code': fields.char('Code', size=16),
@@ -107,7 +107,7 @@ class mrp_routing(osv.osv):
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
-        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Workcenters'),
+        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Work Centers'),
 
         'location_id': fields.many2one('stock.location', 'Production Location',
             help="Keep empty if you produce at the location where the finished products are needed." \
@@ -124,7 +124,7 @@ class mrp_routing_workcenter(osv.osv):
     _name = 'mrp.routing.workcenter'
     _description = 'Routing workcenter usage'
     _columns = {
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence'),
         'cycle_nbr': fields.float('Number of Cycle', required=True,
@@ -437,7 +437,7 @@ class mrp_production(osv.osv):
 
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created'),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
-        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
+        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Packing Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production get started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
@@ -757,7 +757,7 @@ class mrp_production_workcenter_line(osv.osv):
     _order = 'sequence'
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Nbr of cycle', digits=(16,2)),
         'hour': fields.float('Nbr of hour', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True),
