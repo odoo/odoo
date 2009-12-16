@@ -1842,7 +1842,7 @@ class orm(orm_template):
         if not hasattr(self, "_auto") or self._auto:
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
             if not cr.rowcount:
-                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS" % self._table)
+                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS" % self._table)
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'","''")))
                 create = True
             cr.commit()
@@ -1905,7 +1905,7 @@ class orm(orm_template):
                             ref = self.pool.get(f._obj)._table
                         except AttributeError:
                             ref = f._obj.replace('.', '_')
-                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
+                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITHOUT OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
                         cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
