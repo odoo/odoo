@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:35+0000\n"
+"X-Launchpad-Export-Date: 2009-12-16 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -40,7 +40,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
-msgstr ""
+msgstr "Planificació de recursos de fabricació (MRP)"
 
 #. module: mrp
 #: constraint:ir.actions.act_window:0
@@ -110,7 +110,7 @@ msgstr "Referència"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Productes finalitzats"
 
 #. module: mrp
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
@@ -394,6 +394,10 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Deixar-lo buit si es produeix en el mateix lloc en que els productes acabats "
+"són necessaris. Indiqueu una ubicació si es produeix en una ubicació fixa. "
+"Pot ser una ubicació d'una altra empresa si subcontracta les operacions de "
+"fabricació."
 
 #. module: mrp
 #: field:mrp.procurement,move_id:0
@@ -657,7 +661,7 @@ msgstr "Data impressió"
 #: model:process.node,name:mrp.process_node_orderrfq0
 #: model:process.node,name:mrp.process_node_rfq0
 msgid "RFQ"
-msgstr ""
+msgstr "Demana pressupost"
 
 #. module: mrp
 #: field:mrp.bom,revision_type:0
@@ -860,7 +864,7 @@ msgstr ""
 #. module: mrp
 #: rml:bom.structure:0
 msgid "-"
-msgstr ""
+msgstr "–"
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
@@ -961,7 +965,7 @@ msgstr "Valor en cicles"
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 msgid "Finished Products Location"
-msgstr ""
+msgstr "Ubicació productes finalitzats"
 
 #. module: mrp
 #: wizard_field:product.product.procurement,init,uom_id:0
@@ -1013,7 +1017,7 @@ msgstr "Núm. de hora"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1035,7 +1039,7 @@ msgstr "Número de productes a produir"
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Ubicació on el sistema emmagatzemarà els productes finalitzats."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -1374,7 +1378,7 @@ msgstr "Total hores"
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "Ubicació matèries primeres"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
@@ -1450,7 +1454,7 @@ msgstr "Comanda de compra"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Workcenters"
-msgstr ""
+msgstr "Producció dels centres de producció"
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1594,7 +1598,7 @@ msgstr "Calcula només proveïments"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Qtat. UdV del producte"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1760,6 +1764,10 @@ msgid ""
 "operations and to plan futur loads on workcenters based on production "
 "plannification."
 msgstr ""
+"La llista d'operacions (llista de centres de producció) per produir el "
+"producte acabat. La ruta és útil sobretot per a calcular els costos dels "
+"centres de producció durant la fabricació i per planificar futures càrregues "
+"dels centres de producció."
 
 #. module: mrp
 #: selection:mrp.production,state:0
