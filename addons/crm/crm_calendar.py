@@ -39,19 +39,6 @@ def caldevIDs2readIDs(caldev_ID = None):
             return int(caldev_ID.split('-')[0])
         return caldev_ID
 
-class crm_section(osv.osv):
-    _name = 'crm.case.section'
-    _inherit = 'crm.case.section'
-    _description = 'Cases Section'
-
-    def export_cal(self, cr, uid, ids, context={}):
-        # Set all property of CalDAV
-        self.export_ical()
-
-    def import_cal(self, cr, uid, ids, context={}):
-        self.import_ical(cr, uid)
-        # get all property of CalDAV
-crm_section()
 
 class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'
@@ -126,13 +113,14 @@ class crm_caldav_alarm(osv.osv):
                 'trigger_duration' : fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
                         ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
                 'trigger_interval' :  fields.integer('TIme' , required=True), 
-                'trigger_occurs' :  fields.selection([('start', 'The event starts'), ('end', \
+                'trigger_occurs' :  fields.selection([('starts', 'The event starts'), ('end', \
                                                'The event ends')], 'Trigger Occures at', required=True), 
                 'duration' : fields.integer('Duration'), 
                 'repeat' : fields.integer('Repeat'), # TODO 
                 'attach' : fields.binary('Attachment'), 
                 'active' : fields.boolean('Active'), 
                 }
+
     _defaults = {
         'action' :  lambda *x: 'EMAIL', 
         'trigger_interval' :  lambda *x: 5, 
@@ -258,10 +246,10 @@ class crm_case(osv.osv):
                 delta = datetime.timedelta(minutes=alarmdata['trigger_interval'])
             alarm_time =  dtstart + (alarmdata['trigger_related']== 'AFTER' and delta or -delta)
             if datetime.datetime.now() >= alarm_time:
-                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)
+                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)[0]
                 for att in case_val.attendees:
-                    if att.cn[7:]:
-                        mail_to.append(att.cn[7:])
+                    if att.cn.rsplit(':')[-1]:
+                        mail_to.append(att.cn.rsplit(':')[-1])
                 if mail_to:
                     sub = 'Event Reminder for ' +  case_val.name or '' 
                     body = (case_val.name or '')+ '\n\t' + (case_val.description or '') + '\n\nEvent time: ' \
