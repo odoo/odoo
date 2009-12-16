@@ -109,4 +109,35 @@ class res_config_configurable(osv.osv_memory):
         return self.next(cr, uid, ids, context=context)
 res_config_configurable()
 
+class ir_actions_configuration_wizard(osv.osv_memory):
+    ''' Compatibility configuration wizard
+
+    The old configuration wizard has been replaced by res.config, but in order
+    not to break existing but not-yet-migrated addons, the old wizard was
+    reintegrated and gutted.
+    '''
+    _name='ir.actions.configuration.wizard'
+    _inherit = 'res.config'
+
+    def _next_action_note(self, cr, uid, ids, context=None):
+        next = self._next_action(cr, uid)
+        if next:
+            return next.note
+        return "Your database is now fully configured.\n\n"\
+            "Click 'Continue' and enjoy your OpenERP experience..."
+
+    _columns = {
+        'note': fields.text('Next Wizard', readonly=True),
+        }
+    _defaults = {
+        'note': _next_action_note,
+        }
+
+    def execute(self, cr, uid, ids, context=None):
+        self.logger.notifyChannel(
+            'configuration', netsvc.LOG_WARNING,
+            'Addon using old-style configuration wizard, please migrate to '\
+                'res.config objects')
+ir_actions_configuration_wizard()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -691,7 +691,9 @@ class ir_actions_todo(osv.osv):
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'state': fields.selection(TODO_STATES, string='State', required=True)
+        'state': fields.selection(TODO_STATES, string='State', required=True),
+        'name':fields.char('Name', size=64),
+        'note':fields.text('Text', translate=True),
     }
     _defaults={
         'state': lambda *a: 'open',

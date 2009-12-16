@@ -24,5 +24,28 @@
         </form>
       </field>
     </record>
+
+    <record id="view_config_wizard_form" model="ir.ui.view">
+      <field name="name">Compabitiliby configuration wizard</field>
+      <field name="model">ir.actions.configuration.wizard</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Next Configuration Step">
+          <image name="gtk-dialog-info"/>
+          <group>
+            <field name="note" nolabel="1" colspan="4" width="500"/>
+            <group colspan="4" col="8">
+              <field name="progress" widget="progressbar"/>
+              <label string="" colspan="4"/>
+              <group colspan="1" col="2">
+                <button name="action_next" icon="gtk-go-forward"
+                        type="object" string="Continue"/>
+              </group>
+            </group>
+          </group>
+        </form>
+      </field>
+    </record>
+
   </data>
 </openerp>
