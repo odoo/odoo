@@ -137,8 +137,6 @@ class report_timesheet_task_user(osv.osv):
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
         'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
       }
 
 
@@ -156,7 +154,7 @@ class report_timesheet_task_user(osv.osv):
             union
                 select to_char(h.name,'YYYY-MM-01') as name,
                 to_char(h.name,'MM') as m_id
-                from hr_timesheet_sheet_sheet_day h) as months) """)
+                from hr_timesheet_sheet_sheet_day h) as month) """)
 
 report_timesheet_task_user()
 
