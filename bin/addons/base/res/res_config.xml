@@ -9,13 +9,17 @@
           <group string="res_config_contents">
           </group>
           <separator string="" colspan="4"/>
-          <field name="progress" widget="progressbar" colspan="1"/>
-          <label string="" colspan="1"/>
-          <group colspan="2" col="4">
-            <button name="action_skip" icon="gtk-goto-last" special="cancel"
-                    type="object" string="Skip"/>
-            <button name="action_next" icon="gtk-go-forward"
-                    type="object" string="Next"/>
+          <group colspan="4" col="8">
+            <field name="progress" widget="progressbar"/>
+            <label string="" colspan="3"/>
+            <group colspan="1" col="2">
+              <button name="action_skip" icon="gtk-goto-last" special="cancel"
+                      type="object" string="Skip"/>
+            </group>
+            <group colspan="1" col="2">
+              <button name="action_next" icon="gtk-go-forward"
+                      type="object" string="Next"/>
+            </group>
           </group>
         </form>
       </field>
