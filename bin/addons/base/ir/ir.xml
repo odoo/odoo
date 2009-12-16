@@ -1358,7 +1358,7 @@
                     <field name="sequence"/>
                     <field name="action_id" select="1"/>
                     <field name="state"/>
-                    <field name="active" select="1"/>
+                    <field name="active" select="2"/>
                 </tree>
             </field>
         </record>
@@ -1368,10 +1368,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
-                    <field name="action_id" select="1"/>
                     <field name="sequence"/>
+                    <field name="action_id" select="1"/>
                     <field name="state"/>
-                    <field name="active" select="1"/>
+                    <field name="active" select="2"/>
                 </form>
             </field>
         </record>
