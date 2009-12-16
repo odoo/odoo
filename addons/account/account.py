@@ -1091,8 +1091,8 @@ class account_move_reconcile(osv.osv):
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
+        total = 0.0 
         for rec in self.browse(cr, uid, ids, context):
-            total = 0.0
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
