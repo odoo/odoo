@@ -91,7 +91,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_sale_journal_search">
         <field name="name">sale_journal.sale.journal.search</field>
         <field name="model">sale_journal.sale.journal</field>
@@ -110,7 +110,7 @@
             </search>
         </field>
     </record>
-    
+
     <record model="ir.actions.act_window" id="action_definition_journal">
         <field name="res_model">sale_journal.sale.journal</field>
         <field name="view_type">form</field>
@@ -119,16 +119,6 @@
     </record>
 
     <menuitem name="Sales Journals" id="menu_definition_journal" parent="sale.menu_shop_configuration" action="action_definition_journal"/>
-
-    <record model="ir.actions.act_window" id="action_definition_journal_tree">
-        <field name="res_model">sale_journal.sale.journal</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-        <field name="search_view_id" ref="view_sale_journal_search"/>
-    </record>
-
-    <menuitem name="Sales by Journal" id="menu_definition_journal_sales" parent="sale.menu_sale_root" action="action_definition_journal_tree"/>
 
     <record model="ir.ui.view" id="sale_journal_sale_order">
         <field name="name">sale.order.journal.view.form</field>
@@ -303,7 +293,7 @@
             </form>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_sale_journal_sale_stats_search">
         <field name="name">sale_journal.sale.stats.search</field>
         <field name="model">sale_journal.sale.stats</field>
@@ -330,8 +320,8 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_sale_journal_sale_stats_search"/>
     </record>
-    
-	<menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>    
+
+	<menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>
     <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
 
     <act_window name="Monthly sales"
