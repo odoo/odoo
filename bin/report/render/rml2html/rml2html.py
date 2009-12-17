@@ -103,12 +103,10 @@ class _flowable(object):
         process(node,new_node)
         if new_node.get('colWidths',False):
             sizes = map(lambda x: utils.unit_get(x), new_node.get('colWidths').split(','))
-            tr = etree.Element('tr')
+            tr = etree.SubElement(new_node, 'tr')
             for s in sizes:
-                td = etree.Element('td')
-                td.set("width", str(s))
-                tr.append(td)
-            new_node.append(tr)
+                etree.SubElement(tr, 'td', width=str(s))
+
         return etree.tostring(new_node)
 
     def _tag_para(self, node):
@@ -297,7 +295,7 @@ class _rml_template(object):
                 posx = int(utils.unit_get(tmpl.get('x1')))
                 frames[(posy,posx,tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
             for tmpl in pt.findall('pageGraphics'):
-                for n in tmpl.getchildren():
+                for n in tmpl:
                         if n.tag == 'image':
                            self.data = rc + utils._process_text(self, n.text)
                         if n.tag in self._tags:

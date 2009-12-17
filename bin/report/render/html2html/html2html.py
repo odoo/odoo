@@ -74,7 +74,7 @@ class html2html(object):
         return self._node
         
     def url_modify(self,root):
-        for n in root.getchildren():
+        for n in root:
             if (n.text.find('<a ')>=0 or n.text.find('&lt;a')>=0) and n.text.find('href')>=0 and n.text.find('style')<=0 :
                 node = (n.tag=='span' and n.getparent().tag=='u') and n.getparent().getparent() or ((n.tag=='span') and n.getparent()) or n
                 style = node.get('color') and "style='color:%s; text-decoration: none;'"%node.get('color') or ''
