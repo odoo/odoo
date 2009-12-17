@@ -187,9 +187,9 @@ class users(osv.osv):
         return ids or False
 
     _defaults = {
-        'password' : lambda obj,cr,uid,context={} : '',
+        'password' : lambda *a : '',
         'context_lang': lambda *args: 'en_US',
-        'active' : lambda obj,cr,uid,context={} : True,
+        'active' : lambda *a: True,
         'menu_id': _get_menu,
         'action_id': _get_menu,
         'company_id': _get_company,
