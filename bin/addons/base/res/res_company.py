@@ -36,7 +36,7 @@ class multi_company_default(osv.osv):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Name', size=32, required=True, help='Name it to easily find a record'),
+        'name': fields.char('Name', size=256, required=True, help='Name it to easily find a record'),
         'company_id': fields.many2one('res.company', 'Main Company', required=True,
             help='Company where the user is connected'),
         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
@@ -45,6 +45,7 @@ class multi_company_default(osv.osv):
             help='Object affect by this rules'),
         'expression': fields.char('Expression', size=32, required=True,
             help='Expression, must be True to match'),
+        'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
     }
 
     _defaults = {
@@ -88,14 +89,18 @@ class res_company(osv.osv):
     }
 
 
-    def _company_default_get(self, cr, uid, object=False, context=None):
+    def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """
         Check if the object for this company have a default value
         """
         if not context:
             context = {}
         proxy = self.pool.get('multi_company.default')
-        ids = proxy.search(cr, uid, [('object_id.model', '=', object)])
+        args = [
+            ('object_id.model', '=', object),
+            ('field_id.name','=',field),
+        ]
+        ids = proxy.search(cr, uid, args)
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             if eval(rule.expression, {'context': context, 'user': user}):
