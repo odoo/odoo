@@ -282,7 +282,7 @@ class config_users(osv.osv_memory):
                       'partner_id': partner_id,},
             context)
         user_data = dict(
-            user_data,
+            base_data,
             signature=self._generate_signature(
                 cr, base_data['name'], base_data['email'], context=context),
             address_id=address,
