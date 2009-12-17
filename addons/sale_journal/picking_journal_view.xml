@@ -49,7 +49,7 @@
 			</tree>
 		</field>
 	</record>
-	
+
 	<record model="ir.ui.view" id="view_picking_journal_search">
 		<field name="name">sale_journal.picking.journal.search</field>
 		<field name="model">sale_journal.picking.journal</field>
@@ -73,21 +73,10 @@
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
-	</record>
-
-	<menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
-
-	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree">
-		<field name="name">Picking by journal</field>
-		<field name="res_model">sale_journal.picking.journal</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[]</field>
 		<field name="search_view_id" ref="view_picking_journal_search"/>
 	</record>
 
-
-	<menuitem name="Picking by Journal" id="menu_definition_journal_picking_byjournal" parent="stock.menu_stock_root" action="action_definition_picking_journal_tree"/>
+	<menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_stock_configuration" action="action_definition_picking_journal"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_tree">
 		<field name="name">Picking by invoice_method</field>
