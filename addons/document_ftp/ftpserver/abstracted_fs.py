@@ -205,7 +205,9 @@ class abstracted_fs:
     def fs2ftp(self, node):        
         res='/'
         if node:
-            res = os.path.normpath(''.join(node.full_path()))
+            paths = node.full_path()
+            paths = map(lambda x: '/' +x, paths)
+            res = os.path.normpath(''.join(paths))
             res = res.replace("\\", "/")        
             while res[:2] == '//':
                 res = res[1:]

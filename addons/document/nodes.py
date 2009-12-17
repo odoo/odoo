@@ -104,6 +104,10 @@ class node_class(object):
         self.displayname = 'Object'
     
     def full_path(self):
+        """ Return the components of the full path for some
+            node. 
+            The returned list only contains the names of nodes.
+        """
         if self.parent:
             s = self.parent.full_path()
         else:
@@ -112,7 +116,7 @@ class node_class(object):
             s+=self.path
         else:
             s.append(self.path)
-        return map(lambda x: '/' +x, s)
+        return s #map(lambda x: '/' +x, s)
 
     def children(self, cr):
         print "node_class.children()"

@@ -21,24 +21,20 @@
 
 
 {
-    'name': 'Integrated Document Management System',
+    'name': 'Integrated FTP Server with Document Management System',
     'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """This is a complete document management system:    
-    * User Authentication
-    * Document Indexation
+    'description': """This is a support FTP Interface with document management system:    
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['base', 'document'],
     'init_xml': [],
     'update_xml': [
-        'document_view.xml',
-        'document_data.xml',
-        'security/document_security.xml',
-        'security/ir.model.access.csv'
+        'document_ftp_view.xml',
+        'security/ir.model.access.csv'        
     ],
-    'demo_xml': [ 'document_demo.xml',],
+    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': None,

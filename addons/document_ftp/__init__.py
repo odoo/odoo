@@ -18,30 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-
-{
-    'name': 'Integrated Document Management System',
-    'version': '1.99',
-    'category': 'Generic Modules/Others',
-    'description': """This is a complete document management system:    
-    * User Authentication
-    * Document Indexation
-""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
-    'init_xml': [],
-    'update_xml': [
-        'document_view.xml',
-        'document_data.xml',
-        'security/document_security.xml',
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [ 'document_demo.xml',],
-    'installable': True,
-    'active': False,
-    'certificate': None,
-}
+import doc_conf_wizard
+import ftpserver
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
