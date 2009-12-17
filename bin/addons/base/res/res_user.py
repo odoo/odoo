@@ -131,6 +131,8 @@ class users(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
+        'email': fields.char('E-mail', size=64, help='If an email is provided'\
+                             ', the user will be sent a message welcoming him'),
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
