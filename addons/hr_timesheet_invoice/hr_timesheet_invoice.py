@@ -57,7 +57,7 @@ class account_analytic_account(osv.osv):
         for rec in self.browse(cr, uid, ids, context):
             result[rec.id] = rec.pricelist_id and (rec.pricelist_id.currency_id.id,rec.pricelist_id.currency_id.code) or result[rec.id]
         return result
-        
+
     _inherit = "account.analytic.account"
     _columns = {
         'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
@@ -97,11 +97,11 @@ class account_analytic_line(osv.osv):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-    if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
-        for line in self.browse(cr, uid, select):
-            if line.invoice_id:
-            raise osv.except_osv(_('Error !'),
-                _('You can not modify an invoiced analytic line!'))
+        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+            for line in self.browse(cr, uid, select):
+                if line.invoice_id:
+                    raise osv.except_osv(_('Error !'),
+                        _('You can not modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):

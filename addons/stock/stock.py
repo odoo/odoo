@@ -1321,13 +1321,21 @@ class stock_move(osv.osv):
                     ref = move.picking_id and move.picking_id.name or False
                     product_uom_obj = self.pool.get('product.uom')
                     default_uom = move.product_id.uom_id.id
+                    date = time.strftime('%Y-%m-%d')
                     q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
                     if move.product_id.cost_method == 'average' and move.price_unit:
                         amount = q * move.price_unit
+                    # Base computation on valuation pricelist
                     else:
-                        amount = q * move.product_id.standard_price
-
-                    date = time.strftime('%Y-%m-%d')
+                        company_id=move.company_id.id
+                        pricelist_id = self.pool.get('res.company').browse(cr,uid,company_id).property_valuation_pricelist.id
+                        amount_unit = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id],
+                                            move.product_id.id, q or 1.0, None, {
+                                                'date': date,
+                                                })[pricelist_id]
+                        amount=amount_unit * q or 1.0
+                        # amount = q * move.product_id.standard_price
+                    
                     partner_id = False
                     if move.picking_id:
                         partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
