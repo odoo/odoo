@@ -1205,6 +1205,26 @@ class orm_template(object):
 
         return arch
 
+    def __get_default_search_view(self, cr, uid, context={}):
+        
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+
+        view = self.fields_view_get(cr, uid, False, 'form', context)
+        
+        root = etree.fromstring(encode(view['arch']))
+        res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
+        node = etree.Element("group")
+        res.append(node)
+        
+        fields = root.xpath("//field[@select=1]")
+        for field in fields:
+            node.append(field)
+        
+        return etree.tostring(res, encoding="utf-8").replace('\t', '')
+
     #
     # if view_id, view_type is not required
     #
@@ -1323,19 +1343,10 @@ class orm_template(object):
                         inherit_id IS NULL
                     ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
-            if not sql_res and view_type == 'search':
-                cr.execute('''SELECT
-                        arch,name,field_parent,id,type,inherit_id
-                    FROM
-                        ir_ui_view
-                    WHERE
-                        model=%s AND
-                        type=%s AND
-                        inherit_id IS NULL
-                    ORDER BY priority''', (self._name, 'form'))
-                sql_res = cr.fetchone()
+
             if not sql_res:
                 break
+            
             ok = sql_res[5]
             view_id = ok or sql_res[3]
             model = False
@@ -1361,6 +1372,7 @@ class orm_template(object):
             result['name'] = sql_res[1]
             result['field_parent'] = sql_res[2] or False
         else:
+            
             # otherwise, build some kind of default view
             if view_type == 'form':
                 res = self.fields_get(cr, user, context=context)
@@ -1372,6 +1384,7 @@ class orm_template(object):
                         if res[x]['type'] == 'text':
                             xml += "<newline/>"
                 xml += "</form>"
+                
             elif view_type == 'tree':
                 _rec_name = self._rec_name
                 if _rec_name not in self._columns:
@@ -1379,8 +1392,13 @@ class orm_template(object):
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
                        % (self._description, self._rec_name)
+                       
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
+                                
+            elif view_type == 'search':
+                xml = self.__get_default_search_view(cr, user, context)
+                
             else:
                 xml = '<?xml version="1.0"?>' # what happens here, graph case?
                 # raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
