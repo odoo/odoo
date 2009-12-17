@@ -46,9 +46,9 @@ from DAV.iface import *
 import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
-
+from document.nodes import node_res_dir, node_res_obj
 from cache import memoize
-
+from tools import misc
 CACHE_SIZE=20000
 
 #hack for urlparse: add webdav in the net protocols
@@ -183,9 +183,9 @@ class tinydav_handler(dav_interface):
     #
     # pos: -1 to get the parent of the uri
     #
-    def get_cr(self, uri):
+    def get_cr(self, uri):        
         pdb = self.parent.auth_proxy.last_auth
-        reluri = self.uri2local(uri)
+        reluri = self.uri2local(uri)        
         try:
             dbname = reluri.split('/')[2]
         except:
@@ -195,7 +195,7 @@ class tinydav_handler(dav_interface):
         if not pdb and dbname:
             # if dbname was in our uri, we should have authenticated
             # against that.
-            raise Exception("Programming error")
+            raise Exception("Programming error")        
         assert pdb == dbname, " %s != %s" %(pdb, dbname)
         user, passwd, dbn2, uid = self.parent.auth_proxy.auth_creds[pdb]
         db,pool = pooler.get_db_and_pool(dbname)
@@ -376,32 +376,32 @@ class tinydav_handler(dav_interface):
         if not dbname:
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2[:-1])
-        object2=node and node.object2 or False
-        object=node and node.object or False
+        object2 = False            
+        if isinstance(node, node_res_obj):
+            object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
+        
+        obj = node.context._dirobj.browse(cr, uid, node.dir_id)            
+        if obj and (obj.type == 'ressource') and not object2:
+            raise OSError(1, 'Operation not permited.')
 
         objname = uri2[-1]
-        if not object:
-            pool.get('document.directory').create(cr, uid, {
+        val = {
                 'name': objname,
-                'parent_id': False,
-                'ressource_type_id': False,
-                'ressource_id': False
-            })
-        else:
-            pool.get('document.directory').create(cr, uid, {
-                'name': objname,
-                'parent_id': object.id,
-                'ressource_type_id': object.ressource_type_id.id,
-                'ressource_id': object2 and object2.id or False
-            })
-
-        cr.commit()
+                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+                'ressource_id': object2 and object2.id or False,
+                'parent_id' : False
+        }
+        if (obj and (obj.type in ('directory'))) or not object2:                
+            val['parent_id'] =  obj and obj.id or False            
+        
+        pool.get('document.directory').create(cr, uid, val)
+        cr.commit() 
         cr.close()
         return True
 
     def put(self,uri,data,content_type=None):
         """ put the object into the filesystem """
-        self.parent.log_message('Putting %s (%d), %s'%( unicode(uri,'utf8'), len(data), content_type))
+        self.parent.log_message('Putting %s (%d), %s'%( misc.ustr(uri), len(data), content_type))
         parent='/'.join(uri.split('/')[:-1])
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
@@ -434,25 +434,27 @@ class tinydav_handler(dav_interface):
                 raise DAV_Forbidden
             
         cr.commit()
-
+        cr.close()
         return 201
 
     def rmcol(self,uri):
         """ delete a collection """
         if uri[-1]=='/':uri=uri[:-1]
 
-        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
-        if True or not dbname: # *-*
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
+        if not dbname: # *-*
             raise DAV_Error, 409
-        node = self.uri2object(cr,uid,pool, uri2)
-        object2=node and node.object2 or False
-        object=node and node.object or False
+        node = self.uri2object(cr, uid, pool, uri2)             
+        object = node.context._dirobj.browse(cr, uid, node.dir_id)
+        
+        if not object:
+            raise OSError(2, 'Not such file or directory.')        
         if object._table_name=='document.directory':
-            if object.child_ids:
-                raise DAV_Forbidden # forbidden
-            if object.file_ids:
-                raise DAV_Forbidden # forbidden
+            if node.children(cr):
+                raise OSError(39, 'Directory not empty.')
             res = pool.get('document.directory').unlink(cr, uid, [object.id])
+        else:
+            raise OSError(1, 'Operation not permited.')
 
         cr.commit()
         cr.close()
@@ -463,22 +465,19 @@ class tinydav_handler(dav_interface):
 
         object=False
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
-        #if not dbname:
-        if True:
-	    cr.close()
+        if not dbname:        
+            cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2)
-        object2=node and node.object2 or False
-        object=node and node.object or False
-        if not object:
-            raise DAV_NotFound
-
+        object = pool.get('ir.attachment').browse(cr, uid, node.file_id)
         self.parent.log_message(' rm %s "%s"'%(object._table_name,uri))
-        if object._table_name=='ir.attachment':
+        if not object:
+            raise OSError(2, 'Not such file or directory.')
+        if object._table_name == 'ir.attachment':
             res = pool.get('ir.attachment').unlink(cr, uid, [object.id])
         else:
-            raise DAV_Forbidden # forbidden
-        parent='/'.join(uri.split('/')[:-1])
+            raise OSError(1, 'Operation not permited.')       
+        
         cr.commit()
         cr.close()
         return 204
