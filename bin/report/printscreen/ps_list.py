@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,8 +24,6 @@ import pooler
 import tools
 from lxml  import etree
 from report import render
-import libxml2
-import libxslt
 import locale
 
 import time, os
@@ -37,14 +35,9 @@ class report_printscreen_list(report_int):
 
     def _parse_node(self, root_node):
         result = []
-        for node in root_node.getchildren():
+        for node in root_node:
             if node.tag == 'field':
-                attrsa = node.attrib
-                attrs = {}
-                if not attrsa is None:
-                   for key,val in attrsa.items():
-                    attrs[key] = val
-                result.append(attrs['name'])
+                result.append(node.get('name'))
             else:
                 result.extend(self._parse_node(node))
         return result
@@ -53,7 +46,7 @@ class report_printscreen_list(report_int):
         try:
             dom = etree.XML(view.encode('utf-8'))
         except:
-            dom = etree.XML(view)   
+            dom = etree.XML(view)
         return self._parse_node(dom)
 
     def create(self, cr, uid, ids, datas, context=None):
@@ -76,44 +69,42 @@ class report_printscreen_list(report_int):
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
         ids2 = [x['id'] for x in rows] # getting the ids from read result
-        
+
         if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
             rows_new = []
             for id in datas['ids']:
                 element = [elem for elem in rows if elem['id']==id]
                 rows_new.append(element[0])
             rows = rows_new
-        
+
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
         pageSize=[297.0, 210.0]
-        new_doc = etree.Element("report")
-        config = etree.Element("config")
 
-        # build header
+        new_doc = etree.Element("report")
+        config = etree.SubElement(new_doc, 'config')
 
         def _append_node(name, text):
-            n = etree.Element(name)
+            n = etree.SubElement(config, name)
             n.text = text
-            config.append(n)
 
         #_append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('date', time.strftime(str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))))
         _append_node('PageSize', '%.2fmm,%.2fmm' % tuple(pageSize))
         _append_node('PageWidth', '%.2f' % (pageSize[0] * 2.8346,))
         _append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
-
         _append_node('report-header', title)
+
         l = []
         t = 0
         rowcount=0;
         strmax = (pageSize[0]-40) * 2.8346
         temp = []
         count = len(fields_order)
-        for i in range(0,count):
+        for i in range(0, count):
             temp.append(0)
 
         ince = -1;
@@ -135,24 +126,20 @@ class report_printscreen_list(report_int):
                 l[pos] = strmax * s / t
 
         _append_node('tableSize', ','.join(map(str,l)) )
-        new_doc.append(config)
-        header=etree.Element("header")
 
-
+        header = etree.SubElement(new_doc, 'header')
         for f in fields_order:
-            field = etree.Element("field")
+            field = etree.SubElement(header, 'field')
             field.text = tools.ustr(fields[f]['string'] or '')
-            header.append(field)
 
-        new_doc.append(header)
-        lines = etree.Element("lines")
+        lines = etree.SubElement(new_doc, 'lines')
         tsum = []
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-            
+
         for line in results:
-            node_line = etree.Element("row")
+            node_line = etree.SubElement(lines, 'row')
             count = -1
             for f in fields_order:
                 float_flag = 0
@@ -181,41 +168,32 @@ class report_printscreen_list(report_int):
                     d1 = datetime.strptime(line[f],'%y-%m-%d')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 if fields[f]['type'] == 'time' and line[f]:
                     format = str(locale.nl_langinfo(locale.T_FMT))
                     d1 = datetime.strptime(line[f], '%H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 if fields[f]['type'] == 'datetime' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
                     d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
                     
-                col = etree.Element("col")
-                col.set('para','yes')
-                col.set('tree','no')
+                col = etree.SubElement(node_line, 'col', para='yes', tree='no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
-                       col.set('tree','float') 
-                    if temp[count] == 1:
+                       col.set('tree','float')
+                    if f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
-                        
-                        
                 else:
                      col.text = '/'
-                node_line.append(col)
-            lines.append(node_line)
-        node_line = etree.Element("row")
-        lines.append(node_line)
 
+        node_line = etree.SubElement(lines, 'row')
         for f in range(0,count+1):
-            col = etree.Element("col")
-            col.set('para','yes')
-            col.set('tree','no')
+            col = etree.SubElement(node_line, 'col', para='yes', tree='no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
                    prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
@@ -230,16 +208,12 @@ class report_printscreen_list(report_int):
                 txt ='Total'
 
             col.text = tools.ustr(txt or '')
-            node_line.append(col)
 
-        lines.append(node_line)
+        transform = etree.XSLT(
+            etree.parse(os.path.join(tools.config['root_path'],
+                                     'addons/base/report/custom_new.xsl')))
+        rml = etree.tostring(transform(new_doc))
 
-        new_doc.append(lines)
-        styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
-        style = libxslt.parseStylesheetDoc(styledoc)
-        doc = libxml2.parseDoc(etree.tostring(new_doc))
-        rml_obj = style.applyStylesheet(doc, None)
-        rml = style.saveResultToString(rml_obj)
         self.obj = render.rml(rml, title=self.title)
         self.obj.render()
         return True

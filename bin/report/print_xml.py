@@ -121,8 +121,7 @@ class document(object):
 #TODO: test this
                     if value == '' and 'default' in attrs:
                         value = attrs['default']
-                    el = etree.Element(node.tag)
-                    parent.append(el)
+                    el = etree.SubElement(parent, node.tag)
                     el.text = tounicode(value)
 #TODO: test this
                     for key, value in attrs.iteritems():
@@ -154,31 +153,27 @@ class document(object):
                             fp.write(dt)
                             i = str(len(self.bin_datas))
                             self.bin_datas[i] = fp
-                            el = etree.Element(node.tag)
+                            el = etree.SubElement(parent, node.tag)
                             el.text = i
-                            parent.append(el)
 
                 elif attrs['type']=='data':
 #TODO: test this
                     txt = self.datas.get('form', {}).get(attrs['name'], '')
-                    el = etree.Element(node.tag)
+                    el = etree.SubElement(parent, node.tag)
                     el.text = txt
-                    parent.append(el)
 
                 elif attrs['type']=='function':
                     if attrs['name'] in self.func:
                         txt = self.func[attrs['name']](node)
                     else:
                         txt = print_fnc.print_fnc(attrs['name'], node)
-                    el = etree.Element(node.tag)
+                    el = etree.SubElement(parent, node.tag)
                     el.text = txt
-                    parent.append(el)
 
                 elif attrs['type']=='eval':
                     value = self.eval(browser, attrs['expr'])
-                    el = etree.Element(node.tag)
+                    el = etree.SubElement(parent, node.tag)
                     el.text = str(value)
-                    parent.append(el)
 
                 elif attrs['type']=='fields':
                     fields = attrs['name'].split(',')
@@ -196,8 +191,7 @@ class document(object):
 
                     v_list = [vals[k] for k in keys]
                     for v in v_list:
-                        el = etree.Element(node.tag)
-                        parent.append(el)
+                        el = etree.SubElement(parent, node.tag)
                         for el_cld in node:
                             self.parse_node(el_cld, el, v)
 
@@ -231,8 +225,7 @@ class document(object):
 
                     def parse_result_tree(node, parent, datas):
                         if not node.tag == etree.Comment:
-                            el = etree.Element(node.tag)
-                            parent.append(el)
+                            el = etree.SubElement(parent, node.tag)
                             atr = self.node_attrs_get(node)
                             if 'value' in atr:
                                 if not isinstance(datas[atr['value']], (str, unicode)):
@@ -256,8 +249,7 @@ class document(object):
                         else:
                             v_list = value
                         for v in v_list:
-                            el = etree.Element(node.tag)
-                            parent.append(el)
+                            el = etree.SubElement(parent, node.tag)
                             for el_cld in node:
                                 self.parse_node(el_cld, el, v)
             else:
@@ -266,8 +258,7 @@ class document(object):
                     if node.tag == parent.tag:
                         el = parent
                     else:
-                        el = etree.Element(node.tag)
-                        parent.append(el)
+                        el = etree.SubElement(parent, node.tag)
                     for el_cld in node:
                         self.parse_node(el_cld,el, browser)
     def xml_get(self):

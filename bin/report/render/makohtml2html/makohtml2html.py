@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import mako
 from lxml import etree
 from mako.template import Template
 from mako.lookup import TemplateLookup
