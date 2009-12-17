@@ -55,7 +55,16 @@ class account_analytic_line(osv.osv):
             else:
                 result[rec.id] = False
         return result
-        
+    
+    def _get_account_line(self, cr, uid, ids, context={}):
+        aac_ids = {}
+        for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
+            aac_ids[acc.id] = True
+        aal_ids = []
+        if aac_ids:
+            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
+        return aal_ids
+
     _columns = {
         'name' : fields.char('Description', size=256, required=True),
         'date' : fields.date('Date', required=True),
@@ -70,13 +79,17 @@ class account_analytic_line(osv.osv):
         'code' : fields.char('Code', size=8),
         'user_id' : fields.many2one('res.users', 'User',),
         'ref': fields.char('Ref.', size=32),
-        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Currency',
-                store=True, help="The related account currency if not equal to the company one."),
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                },
+                 help="The related account currency if not equal to the company one."),
         'company_id': fields.many2one('res.company','Company',required=True),
         'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
-                    store=True,
-                    help="The amount expressed in the related account currency if not equal to the company one.",
-                ),
+                    store={
+                        'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    },
+                    help="The amount expressed in the related account currency if not equal to the company one.",),
         
     }
     _defaults = {

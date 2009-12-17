@@ -183,7 +183,10 @@ class account_analytic_account(osv.osv):
                         and amount_currency<0 \
                     GROUP BY account_analytic_line.account_id"""%acc_set)
             for account_id, sum in cr.fetchall():
-                res[account_id] += round(sum,2)
+                if res.has_key(account_id):
+                    res[account_id] += round(sum,2)
+                else:
+                    res[account_id] = round(sum,2)
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             for child_id in self.search(cr, uid,

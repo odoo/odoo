@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        
+        
+        <!-- Valuation pricelist -->
+        <record id="list_usd" model="product.pricelist">
+            <field name="name">Valuation Pricelist USD</field>
+            <field name="type">valuation</field>
+            <field name="currency_id" search="[('code','=','USD')]"/>
+        </record>
+        <record id="ver_usd" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list_usd"/>
+            <field name="name">Default Valuation Pricelist Version USD</field>
+        </record>
+        <record id="item_usd" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver_usd"/>
+            <field name="base" ref="product.standard_price"/>
+            <field name="name">Default Valuation Pricelist Line USD</field>
+        </record>
+        
 <!--                      Partner                        -->    
         <record id="base.main_partner" model="res.partner">
             <field name="name">OpenERP Corp.</field>
@@ -29,26 +47,32 @@
             <field name="partner_id" ref="res_partner_oerp_editor"/>
             <field name="parent_id" ref="base.main_company"/>
             <field name="name">OpenERP Editor</field>
+            <field name="currency_id" search="[('code','=','EUR')]"/>
         </record>
         <record id="res_company_oerp_us" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_us"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="name">OpenERP US</field>
+            <field name="currency_id" search="[('code','=','USD')]"/>
+            <field name="property_valuation_pricelist" ref="list_usd"/>
         </record>
         <record id="res_company_oerp_be" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_be"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="name">OpenERP BE</field>
+            <field name="currency_id" search="[('code','=','EUR')]"/>
         </record>OpenERP IN
         <record id="res_company_oerp_in" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_in"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="name">OpenERP IN</field>
+            <field name="currency_id" search="[('code','=','EUR')]"/>
         </record>
         <record id="res_company_odoo" model="res.company">
             <field name="partner_id" ref="res_partner_odoo"/>
             <field name="parent_id" ref="base.main_company"/>
             <field name="name">Odoo</field>
+            <field name="currency_id" search="[('code','=','EUR')]"/>
         </record>
         
 <!--                      User                        -->
