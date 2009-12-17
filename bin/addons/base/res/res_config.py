@@ -122,7 +122,10 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     def _next_action_note(self, cr, uid, ids, context=None):
         next = self._next_action(cr, uid)
         if next:
-            return next.note
+            # if the next one is also an old-style extension, you never know...
+            if next.note:
+                return next.note
+            return "Click 'Continue' to configure the next addon..."
         return "Your database is now fully configured.\n\n"\
             "Click 'Continue' and enjoy your OpenERP experience..."
 
