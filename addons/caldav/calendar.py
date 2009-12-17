@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
 from osv import fields, osv
@@ -110,12 +110,27 @@ class CalDAV(object):
                         alarm = vevent.add('valarm')
                         alarm_object = self.pool.get('crm.caldav.alarm')
                         alarm_data = alarm_object.read(cr, uid, data[map_field][0], [])
+
+                        # Compute trigger data
                         interval = alarm_data['trigger_interval']
-                        duration = alarm_data['trigger_duration']
-                        related = alarm_data['trigger_related']
                         occurs = alarm_data['trigger_occurs']
-                        value_string = (occurs == 'BEFORE' and '-P' or 'P') +\
-                                             str(duration) + interval[0]
+                        duration = (occurs == 'AFTER' and alarm_data['trigger_duration']) \
+                                                            or -(alarm_data['trigger_duration'])
+                        related = alarm_data['trigger_related']
+                        trigger = alarm.add('TRIGGER')
+                        trigger.params['RELATED'] = [related.upper()]
+                        if interval == 'DAYS':
+                            delta = timedelta(days=duration)
+                        if interval == 'HOURS':
+                            delta = timedelta(hours=duration)
+                        if interval == 'MINUTES':
+                            delta = timedelta(minutes=duration)
+                        trigger.value = delta
+
+                        # Compute other details
+                        alarm.add('DESCRIPTION').value = alarm_data['name']
+                        alarm.add('ACTION').value = alarm_data['action']
+
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -148,7 +163,7 @@ class CalDAV(object):
         vals = map_data(cr, uid, self)
         return vals
 
-    
+
 class Calendar(CalDAV, osv.osv_memory):
     _name = 'caldav.calendar'
     __attribute__ = {
@@ -322,7 +337,7 @@ class Attendee(CalDAV, osv.osv_memory):
     'dir': None, # Use: 0-1    Specify reference to a directory entry associated with the calendar user specified by the property.
     'language': None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
-        
+
     def import_ical(self, cr, uid, ical_data):
         for para in ical_data.params:
             if para.lower() == 'cn':

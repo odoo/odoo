@@ -113,7 +113,7 @@ class crm_caldav_alarm(osv.osv):
                 'trigger_interval' : fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
                         ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
                 'trigger_duration' :  fields.integer('TIme' , required=True), 
-                'trigger_related' :  fields.selection([('starts', 'The event starts'), ('end', \
+                'trigger_related' :  fields.selection([('start', 'The event starts'), ('end', \
                                                'The event ends')], 'Trigger Occures at', required=True), 
                 'duration' : fields.integer('Duration'), 
                 'repeat' : fields.integer('Repeat'), # TODO 
@@ -126,7 +126,7 @@ class crm_caldav_alarm(osv.osv):
         'trigger_interval' :  lambda *x: 'MINUTES',
         'trigger_duration' : lambda *x: 5,  
         'trigger_occurs' : lambda *x: 'BEFORE', 
-        'trigger_related' : lambda *x: 'starts', 
+        'trigger_related' : lambda *x: 'start', 
                  }
     
 crm_caldav_alarm()
@@ -238,13 +238,14 @@ class crm_case(osv.osv):
         mail_to = []
         for alarmdata in case_with_alarm:
             dtstart = datetime.datetime.strptime(alarmdata['date'], "%Y-%m-%d %H:%M:%S")
-            if alarmdata['trigger_duration'] == 'DAYS':
-                delta = datetime.timedelta(days=alarmdata['trigger_interval'])
-            if alarmdata['trigger_duration'] == 'HOURS':
-                delta = datetime.timedelta(hours=alarmdata['trigger_interval'])
-            if alarmdata['trigger_duration'] == 'MINUTES':
-                delta = datetime.timedelta(minutes=alarmdata['trigger_interval'])
-            alarm_time =  dtstart + (alarmdata['trigger_related']== 'AFTER' and delta or -delta)
+            if alarmdata['trigger_interval'] == 'DAYS':
+                delta = datetime.timedelta(days=alarmdata['trigger_duration'])
+            if alarmdata['trigger_interval'] == 'HOURS':
+                delta = datetime.timedelta(hours=alarmdata['trigger_duration'])
+            if alarmdata['trigger_interval'] == 'MINUTES':
+                delta = datetime.timedelta(minutes=alarmdata['trigger_duration'])
+            alarm_time =  dtstart + (alarmdata['trigger_occurs']== 'AFTER' and delta or -delta)
+            print 'alarm_time', alarm_time
             if datetime.datetime.now() >= alarm_time:
                 case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)[0]
                 for att in case_val.attendees:
