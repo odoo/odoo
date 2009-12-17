@@ -24,10 +24,38 @@ import time
 from osv import fields
 from osv import osv
 from tools.translate import _
+import tools
+from tools import config
 
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
     _description = 'Analytic lines'
+    
+    def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            cmp_cur_id=rec.company_id.currency_id.id
+            aa_cur_id=rec.account_id.currency_id.id
+            result[rec.id] = 0.0
+            if cmp_cur_id <> aa_cur_id:
+                cur_obj = self.pool.get('res.currency')
+                ctx = {}
+                if rec.date and rec.amount:
+                    ctx['date'] = rec.date
+                    result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
+                        rec.account_id.currency_id.id, rec.amount,
+                        context=ctx)
+        return result
+        
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            if rec.company_id.currency_id.id <> rec.account_id.currency_id.id:
+                result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
+            else:
+                result[rec.id] = False
+        return result
+        
     _columns = {
         'name' : fields.char('Description', size=256, required=True),
         'date' : fields.date('Date', required=True),
@@ -42,12 +70,20 @@ class account_analytic_line(osv.osv):
         'code' : fields.char('Code', size=8),
         'user_id' : fields.many2one('res.users', 'User',),
         'ref': fields.char('Ref.', size=32),
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Currency',
+                store=True, help="The related account currency if not equal to the company one."),
+        'company_id': fields.many2one('res.company','Company',required=True),
+        'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
+                    store=True,
+                    help="The amount expressed in the related account currency if not equal to the company one.",
+                ),
+        
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
     }
     _order = 'date'
-    
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
@@ -72,8 +108,10 @@ class account_analytic_line(osv.osv):
 #        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
     
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,
-            unit=False, context=None):
+    # Compute the cost based on the valuation pricelist define into company
+    # property_product_pricelist property
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
+            date,unit=False, context=None):
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
 #        if unit_amount and prod_id:
@@ -87,8 +125,17 @@ class account_analytic_line(osv.osv):
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
-            amount = unit_amount * uom_obj._compute_price(cr, uid,
-                    prod.uom_id.id, prod.standard_price, unit)
+            if company_id:
+                company_obj = self.pool.get('res.company')
+            else:
+                company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
+            pricelist_id=company_obj.browse(cr,uid,company_id).property_valuation_pricelist.id
+            amount_unit = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id],
+                                prod_id, unit_amount or 1.0, None, {
+                                    'uom': unit,
+                                    'date': date,
+                                    })[pricelist_id]
+            amount=amount_unit*unit_amount or 1.0
             return {'value': {
                 'amount': - round(amount, 2),
                 'general_account_id': a,

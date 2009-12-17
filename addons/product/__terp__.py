@@ -54,6 +54,7 @@
         'product_view.xml',
         'pricelist_view.xml',
         'partner_view.xml',
+        'company_view.xml',
         'product_wizard.xml',
         'process/product_process.xml'
     ],

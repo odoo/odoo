@@ -52,8 +52,15 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result=super(account_analytic_account, self)._get_account_currency(cr, uid, ids, field_name, arg, context)
+        for rec in self.browse(cr, uid, ids, context):
+            result[rec.id] = rec.pricelist_id and (rec.pricelist_id.currency_id.id,rec.pricelist_id.currency_id.code) or result[rec.id]
+        return result
+        
     _inherit = "account.analytic.account"
     _columns = {
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
         'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
@@ -77,7 +84,7 @@ class account_analytic_line(osv.osv):
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        self._check(cursor, user, ids)
+        # self._check(cursor, user, ids)
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
@@ -90,11 +97,11 @@ class account_analytic_line(osv.osv):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-	if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
-		for line in self.browse(cr, uid, select):
-		    if line.invoice_id:
-			raise osv.except_osv(_('Error !'),
-				_('You can not modify an invoiced analytic line!'))
+    if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+        for line in self.browse(cr, uid, select):
+            if line.invoice_id:
+            raise osv.except_osv(_('Error !'),
+                _('You can not modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):

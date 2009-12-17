@@ -73,13 +73,17 @@ parameter) will see those record just disappear.
         
         
         
-        
         <!--
 	Price list type
 	-->
         <record id="pricelist_type_sale" model="product.pricelist.type">
             <field name="name">Sale Pricelist</field>
             <field name="key">sale</field>
+        </record>
+ 
+        <record id="pricelist_type_valuation" model="product.pricelist.type">
+            <field name="name">Valuation Pricelist</field>
+            <field name="key">valuation</field>
         </record>
         
         <!--
@@ -99,6 +103,21 @@ parameter) will see those record just disappear.
             <field name="name">Default Public Pricelist Line</field>
         </record>
         
+        
+        <record id="list_v" model="product.pricelist">
+            <field name="name">Valuation Pricelist</field>
+            <field name="type">valuation</field>
+        </record>
+        <record id="ver_v" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list_v"/>
+            <field name="name">Default Valuation Pricelist Version</field>
+        </record>
+        <record id="item_v" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver_v"/>
+            <field name="base" ref="standard_price"/>
+            <field name="name">Default Valuation Pricelist Line</field>
+        </record>
+        
         <!--
         Property
         -->
@@ -107,5 +126,12 @@ parameter) will see those record just disappear.
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
+        
+        <record forcecreate="True" id="property_valuation_pricelist" model="ir.property">
+            <field name="name">property_valuation_pricelist</field>
+            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_pricelist')]"/>
+            <field eval="'product.pricelist,'+str(ref('list_v'))" name="value"/>
+        </record>
+        
     </data>
 </openerp>

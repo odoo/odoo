@@ -18,11 +18,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import product
-import pricelist
-import report
-import partner
-import wizard
-import company
+
+from osv import fields, osv
+
+
+class res_company(osv.osv):
+    _inherit = 'res.company'
+    _columns = {
+        'property_valuation_pricelist': fields.property(
+            'product.pricelist',
+            type='many2one', 
+            relation='product.pricelist', 
+            domain=[('type','=','valuation')],
+            string="Valuation Pricelist", 
+            method=True,
+            view_load=True,
+            help="This pricelist will be used, instead of the default one, \
+                    for valuation to the current company"),
+    }
+    
+    def _check_currency(self, cr, uid, ids):
+        for rec in self.browse(cr, uid, ids):
+            if rec.currency_id.id <> rec.property_valuation_pricelist.currency_id.id:
+                return False
+        return True
+        
+    _constraints = [
+        (_check_currency, 'Error! You can not chooes a pricelist in a different currency than your company.', ['property_valuation_pricelist'])
+    ]
+
+res_company()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

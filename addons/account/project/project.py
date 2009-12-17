@@ -167,6 +167,10 @@ class account_analytic_account(osv.osv):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code) or False
         return result
 
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
+        return result
+            
     _columns = {
         'name' : fields.char('Account Name', size=64, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
@@ -194,6 +198,7 @@ class account_analytic_account(osv.osv):
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state.'),
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
     }
 
     def _default_company(self, cr, uid, context={}):
