@@ -126,7 +126,7 @@ class document_directory_content(osv.osv):
 
     def process_write(self, cr, uid, node, data, context=None):
         if node.extension != '.ics':
-                return super(document_directory_content).process_write(cr, uid, node, data, context)
+                return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         import vobject
         parsedCal = vobject.readOne(data)
         fields = {}
@@ -245,7 +245,7 @@ class document_directory_content(osv.osv):
                 return datetime.datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
 
         if node.extension != '.ics':
-            return super(document_directory_content).process_read(cr, uid, node, context)
+            return super(document_directory_content, self).process_read(cr, uid, node, context)
 
         import vobject
         ctx = (context or {})
@@ -253,7 +253,7 @@ class document_directory_content(osv.osv):
         ctx.update(node.dctx)
         content = self.browse(cr, uid, node.cnt_id, ctx)
         if not content.object_id:
-            return super(document_directory_content).process_read(cr, uid, node, context)
+            return super(document_directory_content, self).process_read(cr, uid, node, context)
         obj_class = self.pool.get(content.object_id.model)
 
         if content.ics_domain:
@@ -294,8 +294,7 @@ class document_directory_content(osv.osv):
                     else:
                         value = ics_datetime(value)
                     event.add(field.name).value = value
-        s= cal.serialize()
-        cr.commit()
+        s = cal.serialize()        
         return s
 document_directory_content()
 

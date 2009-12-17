@@ -98,18 +98,16 @@ class document_directory_content(osv.osv):
                 res2.append(n)
         return res2
 
-    def process_write(self, cr, uid, node, data):
+    def process_write(self, cr, uid, node, data, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
     
-    def process_read(self, cr, uid, node):
+    def process_read(self, cr, uid, node, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
         srv = netsvc.Service._services['report.'+report.report_name]
-        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})
-        s = StringIO.StringIO(pdf)
-        s.name = node
-        return s
+        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})        
+        return pdf
 document_directory_content()

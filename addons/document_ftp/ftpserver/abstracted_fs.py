@@ -328,10 +328,10 @@ class abstracted_fs:
             cr = pooler.get_db(node.context.dbname).cursor()
             pool = pooler.get_pool(node.context.dbname)
             res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
-            cr.close()            
-            s = StringIO.StringIO(res)
-            s.name = node
-            return s
+            res = StringIO.StringIO(res)
+            res.name = node
+            cr.close()
+            return res
         else:
             raise OSError(1, 'Operation not permited.')
 
