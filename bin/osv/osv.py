@@ -239,31 +239,32 @@ class osv(orm.orm):
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        parent_name = hasattr(cls, '_inherit') and cls._inherit
-        if parent_name:
-            parent_class = pool.get(parent_name).__class__
-            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-            nattr = {}
-            for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
-                new = copy.copy(getattr(pool.get(parent_name), s))
-                if hasattr(new, 'update'):
-                    new.update(cls.__dict__.get(s, {}))
-                else:
-                    if s=='_constraints':
-                        for c in cls.__dict__.get(s, []):
-                            exist = False
-                            for c2 in range(len(new)):
-                                if new[c2][2]==c[2]:
-                                    new[c2] = c
-                                    exist = True
-                                    break
-                            if not exist:
-                                new.append(c)
+        parent_names = hasattr(cls, '_inherit') and cls._inherit
+        if parent_names:
+            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+                parent_class = pool.get(parent_name).__class__
+                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+                nattr = {}
+                for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
+                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    if hasattr(new, 'update'):
+                        new.update(cls.__dict__.get(s, {}))
                     else:
-                        new.extend(cls.__dict__.get(s, []))
-                nattr[s] = new
-            name = hasattr(cls, '_name') and cls._name or cls._inherit
-            cls = type(name, (cls, parent_class), nattr)
+                        if s=='_constraints':
+                            for c in cls.__dict__.get(s, []):
+                                exist = False
+                                for c2 in range(len(new)):
+                                    if new[c2][2]==c[2]:
+                                        new[c2] = c
+                                        exist = True
+                                        break
+                                if not exist:
+                                    new.append(c)
+                        else:
+                            new.extend(cls.__dict__.get(s, []))
+                    nattr[s] = new
+                name = hasattr(cls, '_name') and cls._name or cls._inherit
+                cls = type(name, (cls, parent_class), nattr)
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
