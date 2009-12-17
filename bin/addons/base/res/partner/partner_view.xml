@@ -2,21 +2,23 @@
 <openerp>
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Partners" sequence="0"/>
-
         <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="1"
             groups="group_system"/>
 
+        <menuitem id="menu_base_config_partner" name="Partners" parent="menu_base_config" sequence="10" />
+        <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
+
         <!--
-    ================================
-    Function
-    ================================
-    -->
+          ================================
+          Function
+          ================================
+        -->
         <record id="view_partner_function_form" model="ir.ui.view">
             <field name="name">res.partner.function.form</field>
             <field name="model">res.partner.function</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Functions">
+                <form string="Contact Functions">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                 </form>
@@ -27,38 +29,38 @@
             <field name="model">res.partner.function</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Partner Functions">
+                <tree string="Contact Functions">
                     <field name="code"/>
                     <field name="name"/>
                 </tree>
             </field>
         </record>
         <record id="action_partner_function_form" model="ir.actions.act_window">
-            <field name="name">Partner Functions</field>
+            <field name="name">Contact Functions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.function</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config"/>
+        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config_contact" sequence="20"/>
 
         <!--
-    =====================
-    Partner Address
-    =====================
-    -->
+          =====================
+          Partner Address
+          =====================
+        -->
 
-    	<record id="view_res_partner_address_filter" model="ir.ui.view">
-		    <field name="name">res.partner.address.select</field>
-		    <field name="model">res.partner.address</field>
-		    <field name="type">search</field>
-		    <field name="arch" type="xml">
-		        <search string="Search Contact">
-		        	<field name="name" select='1'/>
-	           		<field name="partner_id" select='1'/>
-	           		<field name="country_id" select='1'/>
-		       </search>
-		    </field>
-	    </record>
+        <record id="view_res_partner_address_filter" model="ir.ui.view">
+            <field name="name">res.partner.address.select</field>
+            <field name="model">res.partner.address</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Contact">
+                    <field name="name" select='1'/>
+                    <field name="partner_id" select='1'/>
+                    <field name="country_id" select='1'/>
+                </search>
+            </field>
+        </record>
 
         <record id="view_partner_address_tree" model="ir.ui.view">
             <field name="name">res.partner.address.tree</field>
@@ -92,7 +94,7 @@
                     <field colspan="4" name="partner_id" select="1"/>
                     <newline/>
                     <field name="name" select="1"/>
-                    <field domain="[('domain', '=', 'contact')]" name="title"/>
+                    <field domain="[('domain', '=', 'contact')]" name="title" />
                     <field name="function"/>
                     <newline/>
                       <group string="Postal Address" colspan="2" col="2">
@@ -110,7 +112,6 @@
                         <field name="mobile" select="2"/>
                         <field name="email"  select="2" widget="email"/>
                      </group>
-
                 </form>
             </field>
         </record>
@@ -136,10 +137,10 @@
         <menuitem action="action_partner_address_form" id="menu_partner_address_form" parent="base.menu_base_partner"/>
 
         <!--
-    =========================================
-    the short form used in the partner form
-    =========================================
-    -->
+          =========================================
+          the short form used in the partner form
+          =========================================
+        -->
         <record id="view_partner_address_form2" model="ir.ui.view">
             <field name="name">res.partner.address.form2</field>
             <field name="model">res.partner.address</field>
@@ -169,10 +170,10 @@
         </record>
 
         <!--
-    =======================
-    Partner Titles
-    =======================
-    -->
+          =======================
+          Partner Titles
+          =======================
+        -->
         <record id="view_partner_title_form" model="ir.ui.view">
             <field name="name">res.partner.title.form</field>
             <field name="model">res.partner.title</field>
@@ -185,6 +186,8 @@
                 </form>
             </field>
         </record>
+
+        <!--
         <record id="action_partner_title" model="ir.actions.act_window">
             <field name="name">Titles</field>
             <field name="type">ir.actions.act_window</field>
@@ -192,6 +195,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
+        -->
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
             <field name="name">Partner Titles</field>
@@ -200,7 +204,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
         </record>
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_partner_title"/>
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_base_config_partner" sequence="10"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
@@ -209,13 +213,13 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
         </record>
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="menu_partner_title"/>
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="menu_base_config_contact" sequence="10"/>
 
         <!--
-    =======================
-    Partner
-    =======================
-    -->
+          =======================
+          Partner
+          =======================
+        -->
         <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
@@ -255,14 +259,14 @@
                         <page string="General">
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
-                                    <group colspan="4" col="4">
+                                    <group colspan="4" col="6">
                                         <field name="name" select="2"/>
-                                        <field domain="[('domain', '=', 'contact')]" name="title" string="Type"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
                                         <field name="function"/>
-                                        <field name="type" select="2" colspan="4"/>
                                     </group>
                                     <newline/>
-                                      <group string="Postal Address" colspan="2" col="4">
+                                      <group colspan="2" col="4">
+                                        <separator string="Postal Address" colspan="4" col="4" />
                                         <field name="street" select="2" colspan="4"/>
                                         <field name="street2" colspan="4"/>
                                         <field name="zip" select="2"/>
@@ -270,13 +274,14 @@
                                         <field name="country_id" select="2" completion="1"/>
                                         <field name="state_id" select="2"/>
                                      </group>
-                                     <group string="Communication" colspan="2" col="2">
+                                     <group colspan="2" col="2">
+                                        <separator string="Communication" colspan="2" col="2" />
+                                        <field name="type" select="2" string="Type" />
                                         <field name="phone"/>
                                         <field name="mobile"/>
                                         <field name="fax"/>
                                         <field name="email" select="2" widget="email"/>
                                      </group>
-
                                 </form>
                                 <tree string="Partner Contacts">
                                     <field name="name"/>
@@ -478,10 +483,10 @@
         </record>
 
         <!--
-    ======================
-    Company Architecture
-    ======================
-    -->
+          ======================
+          Company Architecture
+          ======================
+        -->
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
@@ -512,10 +517,10 @@
         </record>
 
         <!--
-    ======================
-    Categories
-    ======================
-    -->
+          ======================
+          Categories
+          ======================
+        -->
         <record id="view_partner_category_form" model="ir.ui.view">
             <field name="name">res.partner.category.form</field>
             <field name="model">res.partner.category</field>
@@ -560,10 +565,10 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_partner_form" sequence="1"/>
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
-			<field name="name">Partner Categories</field>
+            <field name="name">Partner Categories</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -584,7 +589,7 @@
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config_partner"/>
 
         <act_window domain="[('partner_id', '=', active_id)]"
             id="act_res_partner_event" name="Events"
