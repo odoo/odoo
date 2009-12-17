@@ -24,13 +24,14 @@
 #
 
 from osv import fields,osv
+import tools
 
 class report_purchase_order_product(osv.osv):
     _name = "report.purchase.order.product"
     _description = "Purchases Orders by Products"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
@@ -46,14 +47,19 @@ class report_purchase_order_product(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'report_purchase_order_product')
         cr.execute("""
             create or replace view report_purchase_order_product as (
                 select
                     min(l.id) as id,
-                    to_char(s.date_order, 'YYYY-MM-01') as name,
+                    to_char(s.date_order, 'YYYY') as name,
+                    to_char(s.date_order, 'MM') as month,
                     s.state,
                     l.product_id,
                     sum(l.product_qty*u.factor) as quantity,
@@ -64,7 +70,7 @@ class report_purchase_order_product(osv.osv):
                     left join purchase_order_line l on (s.id=l.order_id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
-                group by l.product_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
+                group by l.product_id, to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state
             )
         """)
 report_purchase_order_product()
@@ -74,7 +80,7 @@ class report_purchase_order_category(osv.osv):
     _description = "Purchases Orders by Categories"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
@@ -90,14 +96,18 @@ class report_purchase_order_category(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'report_purchase_order_category')
         cr.execute("""
             create or replace view report_purchase_order_category as (
                 select
                     min(l.id) as id,
-                    to_char(s.date_order, 'YYYY-MM-01') as name,
+                    to_char(s.date_order, 'YYYY') as name,
+                    to_char(s.date_order, 'MM') as month,
                     s.state,
                     t.categ_id as category_id,
                     sum(l.product_qty*u.factor) as quantity,
@@ -110,7 +120,7 @@ class report_purchase_order_category(osv.osv):
                     left join product_template t on (t.id=p.product_tmpl_id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
-                group by t.categ_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
+                group by t.categ_id, to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state
              )
         """)
 report_purchase_order_category()

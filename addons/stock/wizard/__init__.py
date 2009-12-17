@@ -21,6 +21,7 @@
 
 import stock_traceability
 import wizard_partial_picking
+import wizard_partial_move
 import wizard_picking_make
 import wizard_replacement
 import wizard_return

@@ -7,7 +7,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Workcenters load">
+                <tree string="Work Ccenters load">
                     <field name="name" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle"/>
@@ -21,7 +21,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Workcenter load" type="bar">
+                <graph string="Work Center load" type="bar">
                     <field name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
@@ -36,7 +36,7 @@
             <field name="model">report.workcenter.load</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Workcenter load" type="bar">
+                <form string="Work Center load" type="bar">
                     <field name="name" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle"/>
@@ -45,7 +45,7 @@
             </field>
         </record>
         <record id="action_report_workcenter_load_tree" model="ir.actions.act_window">
-            <field name="name">Workcenter Loads</field>
+            <field name="name">Work Center Loads</field>
             <field name="res_model">report.workcenter.load</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,7 @@ from mx import DateTime
 from tools.translate import _
 
 #----------------------------------------------------------
-# Workcenters
+# Work Centers
 #----------------------------------------------------------
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
@@ -39,9 +39,9 @@ from tools.translate import _
 #
 class mrp_workcenter(osv.osv):
     _name = 'mrp.workcenter'
-    _description = 'Workcenter'
+    _description = 'Work Center'
     _columns = {
-        'name': fields.char('Workcenter Name', size=64, required=True),
+        'name': fields.char('Work Center Name', size=64, required=True),
         'active': fields.boolean('Active'),
         'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
         'code': fields.char('Code', size=16),
@@ -53,7 +53,7 @@ class mrp_workcenter(osv.osv):
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'time_efficiency': fields.float('Time Efficiency', help="Factor that multiplies all times expressed in the workcenter."),
+        'time_efficiency': fields.float('Time Efficiency', help="Factor to adjust the work center cycle and before and after production durations"),
 
         'costs_hour': fields.float('Cost per hour'),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
@@ -63,12 +63,14 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
+        'company_id': fields.many2one('res.company','Company',required=True),  
     }
     _defaults = {
         'active': lambda *a: 1,
         'type': lambda *a: 'machine',
         'time_efficiency': lambda *a: 1.0,
         'capacity_per_cycle': lambda *a: 1.0,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.workcenter', c)
     }
 mrp_workcenter()
 
@@ -105,7 +107,7 @@ class mrp_routing(osv.osv):
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
-        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Workcenters'),
+        'workcenter_lines': fields.one2many('mrp.routing.workcenter', 'routing_id', 'Work Centers'),
 
         'location_id': fields.many2one('stock.location', 'Production Location',
             help="Keep empty if you produce at the location where the finished products are needed." \
@@ -122,13 +124,13 @@ class mrp_routing_workcenter(osv.osv):
     _name = 'mrp.routing.workcenter'
     _description = 'Routing workcenter usage'
     _columns = {
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence'),
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="Time in hours for doing one cycle."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True,
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade', 
              help="routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description')
@@ -191,15 +193,16 @@ class mrp_bom(osv.osv):
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
         'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity. For integer only values, put 1.0"),
-        'product_efficiency': fields.float('Product Efficiency', required=True, help="Efficiency on the production. A factor of 0.9 means a loss of 10% in the production."),
+        'product_efficiency': fields.float('Product Efficiency', required=True, help="Material efficiency. A factor of 0.9 means a loss of 10% in the production."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
-        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type'),
-        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many'),
-        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hyerarchy", type='many2many')
+        'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
+        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
+        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -207,6 +210,7 @@ class mrp_bom(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', c)
     }
     _order = "sequence"
     _sql_constraints = [
@@ -363,7 +367,7 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
-                    #TODO: fix me sale module can not be used here, 
+                    #TODO: fix me sale module can not be used here,
                     #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
@@ -426,21 +430,23 @@ class mrp_production(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
 
-        'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True,
-            help="This is the internal picking list take bring the raw materials to the production plan."),
+        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
+            help="This is the internal picking list of the raw material needed for the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
         'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created'),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
-        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
-
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'Status', readonly=True),
+        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
+        'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
+                                    help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Packing Exception\'.\
+                                    \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production get started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
         'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
         'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'priority': lambda *a: '1',
@@ -448,6 +454,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', c),
     }
     _order = 'date_planned asc, priority desc';
     def unlink(self, cr, uid, ids, context=None):
@@ -650,6 +657,7 @@ class mrp_production(osv.osv):
                 'state': 'auto',
                 'address_id': address_id,
                 'auto_picking': self._get_auto_picking(cr, uid, production),
+                'company_id': production.company_id.id,
             })
 
             source = production.product_id.product_tmpl_id.property_stock_production.id
@@ -664,7 +672,8 @@ class mrp_production(osv.osv):
                 'location_id': source,
                 'location_dest_id': production.location_dest_id.id,
                 'move_dest_id': production.move_prod_id.id,
-                'state': 'waiting'
+                'state': 'waiting',
+                'company_id': production.company_id.id,
             }
             res_final_id = self.pool.get('stock.move').create(cr, uid, data)
 
@@ -686,6 +695,7 @@ class mrp_production(osv.osv):
                         'location_dest_id': source,
                         'move_dest_id': res_final_id,
                         'state': 'waiting',
+                        'company_id': production.company_id.id,
                     })
                     moves.append(res_dest_id)
                     move_id = self.pool.get('stock.move').create(cr, uid, {
@@ -701,6 +711,7 @@ class mrp_production(osv.osv):
                         'location_id': production.location_src_id.id,
                         'location_dest_id': routing_loc or production.location_src_id.id,
                         'state': 'waiting',
+                        'company_id': production.company_id.id,
                     })
                 proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
                     'name': (production.origin or '').split(':')[0] + ':' + production.name,
@@ -714,6 +725,7 @@ class mrp_production(osv.osv):
                     'location_id': production.location_src_id.id,
                     'procure_method': line.product_id.procure_method,
                     'move_id': move_id,
+                    'company_id': production.company_id.id,
                 })
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -745,7 +757,7 @@ class mrp_production_workcenter_line(osv.osv):
     _order = 'sequence'
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Nbr of cycle', digits=(16,2)),
         'hour': fields.float('Nbr of hour', digits=(16,2)),
         'sequence': fields.integer('Sequence', required=True),
@@ -782,11 +794,11 @@ mrp_production_product_line()
 class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
     _description = "Procurement"
-    _order = 'priority,date_planned'    
+    _order = 'priority,date_planned'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64,
-            help="Reference of the document that created this procurement.\n"
+            help="Reference of the document that created this Requisition.\n"
             "This is automatically completed by Open ERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
@@ -802,8 +814,8 @@ class mrp_procurement(osv.osv):
 
         'close_move': fields.boolean('Close Move at end', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
-            readonly=True, required=True, help="If you encode manually a procurement, you probably want to use" \
+        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Requisition Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
+            readonly=True, required=True, help="If you encode manually a Requisition, you probably want to use" \
             " a make to order method."),
 
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
@@ -820,8 +832,11 @@ class mrp_procurement(osv.osv):
             ('cancel','Cancel'),
             ('ready','Ready'),
             ('done','Done'),
-            ('waiting','Waiting')], 'Status', required=True),
+            ('waiting','Waiting')], 'State', required=True,
+            help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
+            \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note' : fields.text('Note'),
+        'company_id': fields.many2one('res.company','Company',required=True),  
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -829,6 +844,7 @@ class mrp_procurement(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', c)
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -838,7 +854,7 @@ class mrp_procurement(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Requisition Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
@@ -981,7 +997,7 @@ class mrp_procurement(osv.osv):
     def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Requisition Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -996,6 +1012,7 @@ class mrp_procurement(osv.osv):
                         'product_uom': procurement.product_uom.id,
                         'date_planned': procurement.date_planned,
                         'state':'confirmed',
+                        'company_id': procurement.company_id.id,
                     })
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
@@ -1048,6 +1065,7 @@ class mrp_procurement(osv.osv):
                 'bom_id': procurement.bom_id and procurement.bom_id.id or False,
                 'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_prod_id': res_id,
+                'company_id': procurement.company_id.id,
             })
             self.write(cr, uid, [procurement.id], {'state':'running'})
             bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
@@ -1106,6 +1124,7 @@ class mrp_procurement(osv.osv):
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
                 'order_line': [(0,0,line)],
+                'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
@@ -1182,13 +1201,14 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a requisition to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a requisition to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
+            help="The requisition quantity will by rounded up to this multiple."),
+        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order'),
+        'company_id': fields.many2one('res.company','Company',required=True),   
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -1196,6 +1216,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': lambda *a: 1,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', c)
     }
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:
@@ -1222,7 +1243,7 @@ stock_warehouse_orderpoint()
 class StockMove(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Requisitions'),
     }
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
@@ -1244,6 +1265,7 @@ class StockMove(osv.osv):
                 if move.state=='assigned':
                     state='assigned'
                 for line in res[0]:
+                    print 'Line :',line
                     valdef = {
                         'picking_id': move.picking_id.id,
                         'product_id': line['product_id'],
@@ -1257,7 +1279,7 @@ class StockMove(osv.osv):
                         'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],
-                        'procurements': []
+                        'procurements': [],
                     }
                     mid = self.pool.get('stock.move').copy(cr, uid, move.id, default=valdef)
                     prodobj = self.pool.get('product.product').browse(cr, uid, line['product_id'], context=context)
@@ -1273,6 +1295,7 @@ class StockMove(osv.osv):
                         'location_id': move.location_id.id,
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
+                        'company_id': line['company_id'],
                     })
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)

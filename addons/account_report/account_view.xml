@@ -93,14 +93,6 @@
 
         <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration"/>
 
-        <record id="action_account_report_form" model="ir.actions.act_window">
-            <field name="name">New Reporting Item Formula</field>
-            <field name="res_model">account.report.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-        <menuitem action="action_account_report_form" id="menu_action_account_report_form" parent="account_report.menu_action_account_report_tree_define"/>
-
         <record id="view_account_report_tree" model="ir.ui.view">
             <field name="name">account.report.report.tree</field>
             <field name="model">account.report.report</field>

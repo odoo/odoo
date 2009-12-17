@@ -26,7 +26,7 @@ import tools
 import os
 _email_form = '''<?xml version="1.0"?>
 <form string="Email Gateway">
-    <separator string="Fetching Emails from" />
+    <separator string="Fetching Emails : " />
     <field name="server" colspan="4" nolabel="1" />
  </form>'''
  
@@ -57,21 +57,28 @@ def _default(self , cr, uid, data, context):
     data['form']['server'] = '\n'.join(server)    
     return data['form']
     
-def fetch_mail(self , cr, uid, data, context):
+def section_fetch_mail(self , cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     gateway_pool=pool.get('crm.email.gateway')    
     messages = gateway_pool.fetch_mails(cr, uid, ids=[], section_ids=data['ids'], context=context)
     data['form']['message'] = '\n'.join(messages)    
     return data['form']
 
-class wiz_fetch_mail(wizard.interface):
+def mailgate_fetch_mail(self , cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    gateway_pool=pool.get('crm.email.gateway')    
+    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)
+    data['form']['message'] = '\n'.join(messages)    
+    return data['form']
+
+class wiz_section_fetch_mail(wizard.interface):
     states = {
         'init': {
             'actions': [_default],
             'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end','Cancel','gtk-cancel'), ('fetch','Fetch','gtk-execute')]}
                 },        
         'fetch': {
-            'actions': [fetch_mail],
+            'actions': [section_fetch_mail],
             'result': {'type': 'form', 'arch': _email_done_form,
                 'fields': _email_done_fields,
                 'state': (
@@ -80,5 +87,22 @@ class wiz_fetch_mail(wizard.interface):
             },
         },
     }
-wiz_fetch_mail('crm.case.section.fetchmail')
+class wiz_mailgateway_fetch_mail(wizard.interface):
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end','Cancel','gtk-cancel'), ('fetch','Fetch','gtk-execute')]}
+                },        
+        'fetch': {
+            'actions': [mailgate_fetch_mail],
+            'result': {'type': 'form', 'arch': _email_done_form,
+                'fields': _email_done_fields,
+                'state': (
+                    ('end', 'Close'),
+                )
+            },
+        },
+    }
+wiz_section_fetch_mail('crm.case.section.fetchmail')
+wiz_mailgateway_fetch_mail('crm.case.mailgate.fetchmail')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

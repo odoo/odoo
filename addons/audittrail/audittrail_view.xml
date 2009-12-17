@@ -53,13 +53,13 @@
 
 
 		<record model="ir.actions.act_window" id="action_audittrail_rule_tree_sub">
-			<field name="name">Rules</field>
+			<field name="name">Subscribed Rules</field>
 			<field name="res_model">audittrail.rule</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','subscribed')]</field>
+			<field name="filter" eval="True"/>
 		</record>
-		<menuitem name="Subscribed Rules" id="menu_action_audittrail_rule_tree_sub" action="action_audittrail_rule_tree_sub" parent="menu_action_audittrail_rule_tree"/>
 
 		<record model="ir.ui.view" id="view_audittrail_log_form">
 			<field name="name">audittrail.log.form</field>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
     _name='profile.service.config.install_modules_wizard'
     _rec_name = 'crm_configuration'
     _columns = {
-        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: prospects and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
+        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
         'project_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
         'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shipping, ... Install this module if you plan to invoice your customers based on time spent on projects."),
         'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),
@@ -42,7 +42,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
                 "and contacts of these partners (employee/people). Install this if you plan to manage your relationships with partners and contacts, with contacts having different jobs in different companies."),
         'portal': fields.boolean('Portal',
             help="This module allows you to manage a Portal system."),
-        'wiki': fields.boolean('Wiki', 
+        'wiki': fields.boolean('Wiki',
             help="An integrated wiki content management system. This is really "\
                 "usefull to manage FAQ, quality manuals, etc.")
     }

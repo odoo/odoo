@@ -50,7 +50,8 @@ class mrp_procurement(osv.osv):
                 'description': content,
                 'date_deadline': procurement.date_planned,
                 'state': 'draft',
-                'partner_id': l and l.order_id.partner_id.id or False
+                'partner_id': l and l.order_id.partner_id.id or False,
+                'company_id': procurement.company_id.id,
             })
         return task_id
 mrp_procurement()

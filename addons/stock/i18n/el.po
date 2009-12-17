@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:08+0000\n"
-"Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
+"PO-Revision-Date: 2009-12-16 20:04+0000\n"
+"Last-Translator: Andreas Porevopoulos <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 04:50+0000\n"
+"X-Launchpad-Export-Date: 2009-12-17 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -47,12 +47,12 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
-msgid "Stock Management"
+msgid "Inventory Management"
 msgstr "Διαχείριση Αποθεμάτων"
 
 #. module: stock
@@ -73,7 +73,7 @@ msgstr "STOCK_MEDIA_FORWARD"
 #. module: stock
 #: rml:lot.location:0
 msgid "Total :"
-msgstr ""
+msgstr "Σύνολο:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -287,7 +287,7 @@ msgstr "Παραγγελία (προέλευση)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Γενικό σύνολο"
 
 #. module: stock
 #: view:stock.location:0
@@ -576,7 +576,7 @@ msgstr "STOCK_DIALOG_ERROR"
 #. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Αριστερός γονέας"
 
 #. module: stock
 #: field:report.stock.lines.date,create_date:0
@@ -728,7 +728,7 @@ msgstr "Από"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "weight"
-msgstr ""
+msgstr "βάρος"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -1112,7 +1112,7 @@ msgstr "Διεύθυνση Ιδιοκτήτη"
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Δεξής γονέας"
 
 #. module: stock
 #: field:stock.picking,origin:0
@@ -1378,7 +1378,7 @@ msgstr "Κατάσταση Τιμολογίου"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Μονάδες"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1398,7 +1398,7 @@ msgstr "Εκτίμηση Μελλοντικού Αποθέματος"
 #. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
 msgid ""
-"OpenERP Stock Management module can manage multi-warehouses, multi and "
+"OpenERP Inventory Management module can manage multi-warehouses, multi and "
 "structured stock locations.\n"
 "Thanks to the double entry management, the inventory controlling is powerful "
 "and flexible:\n"
@@ -1412,18 +1412,18 @@ msgid ""
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
 msgstr ""
-"Η Διαχείριση Αποθεμάτων του OpenERP μπορεί να διαχειριστεί πολλαπλούς "
-"αποθηκευτικούς χώρους και τοποθεσίες αποθήκευσης.\n"
-"Με τη διπλoγραφική μέθοδο, ο έλεγχος αποθέματος είναι δυνατός και ευέλικτος\n"
-"* Ιστορικό κινήσεων και προγραμματισμός,\n"
-"* Διαφορετικές μέθοδοι ροής αποθεμάτων (FIFO, LIFO κλπ)\n"
-"* Αποτίμηση αποθεμάτων (μέσος όρος ή τιμή κτίσης)\n"
-"* Στιβαρότητα με τις διαφορές απογραφής\n"
-"* Αυτόματοι κανόνες παραγγελίας\n"
-"* Υποστήριξη Bar code\n"
-"* Γρήγορος εντοπισμός σφαλμάτων μέσω του συστήματος διπλών εγγραφών\n"
-"* Ανίχνευσιμότητα (προς άνω/κάτω, παρτίδες παραγωγής, σειριακοί αριθμοί "
-"κλπ)\n"
+"Το πρόσθετο Διαχείρισης Αποθεμάτων της OpenERP μπορεί να διαχειριστεί "
+"πολλαπλές αποθήκες, πολλές και δομημένες τοποθεσίες αποθεμάτων.\n"
+"Χάρις στο διπλογραφικό σύστημα, η διαχείριση είναι ισχυρή και ευέλικτη:\n"
+"* Ιστορικό και προγραμματισμό κινήσεων.\n"
+"* Διάφορες μεθόδους απογραφής (FIFO, LIFO, ...)\n"
+"* Αποτίμηση (στάνταρ ή μέση τιμή, ...)\n"
+"* Ευρωστία στις διαφορές αποθεμάτων\n"
+"* Αυτόματοι κανόνες προμηθειών ( ύψος αποθεμάτων, JIT, ...)\n"
+"* Υποστήριξη bar code\n"
+"* Γρήγορη ανίχνευση λαθών μέσω του διπλογραφικού συτήματος\n"
+"* Παρακολούθηση κινήσεων (εισαγωγών/εξαγωγών, παρτίδες παραγωγής, σειριακός "
+"αριθμός, ...)\n"
 "    "
 
 #. module: stock
@@ -1646,7 +1646,7 @@ msgstr "Συντομεύσεις"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Σύνολο:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2287,6 +2287,8 @@ msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
 msgstr ""
+"Προγραμματισμένη ημερομηνία κίνησης προϊόντων ή ημερομηνία κίνησης αν αυτή "
+"έχει γίνει."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2426,6 +2428,9 @@ msgstr "Στάδιο Κίνησης"
 msgid "Physical Locations"
 msgstr "Φυσικές Τοποοθεσίες"
 
+#~ msgid "Stock Management"
+#~ msgstr "Διαχείριση Αποθεμάτων"
+
 #, python-format
 #~ msgid "Futur Stock"
 #~ msgstr "Μελλοντικό Απόθεμα"
@@ -2556,3 +2561,32 @@ msgstr "Φυσικές Τοποοθεσίες"
 #, python-format
 #~ msgid "Invoice state"
 #~ msgstr "Στάδιο τιμολογίου"
+
+#~ msgid ""
+#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "Η Διαχείριση Αποθεμάτων του OpenERP μπορεί να διαχειριστεί πολλαπλούς "
+#~ "αποθηκευτικούς χώρους και τοποθεσίες αποθήκευσης.\n"
+#~ "Με τη διπλoγραφική μέθοδο, ο έλεγχος αποθέματος είναι δυνατός και ευέλικτος\n"
+#~ "* Ιστορικό κινήσεων και προγραμματισμός,\n"
+#~ "* Διαφορετικές μέθοδοι ροής αποθεμάτων (FIFO, LIFO κλπ)\n"
+#~ "* Αποτίμηση αποθεμάτων (μέσος όρος ή τιμή κτίσης)\n"
+#~ "* Στιβαρότητα με τις διαφορές απογραφής\n"
+#~ "* Αυτόματοι κανόνες παραγγελίας\n"
+#~ "* Υποστήριξη Bar code\n"
+#~ "* Γρήγορος εντοπισμός σφαλμάτων μέσω του συστήματος διπλών εγγραφών\n"
+#~ "* Ανίχνευσιμότητα (προς άνω/κάτω, παρτίδες παραγωγής, σειριακοί αριθμοί "
+#~ "κλπ)\n"
+#~ "    "

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!--
 	Cases by user and section
 	-->
-        
+
         <record id="view_crm_case_user_tree" model="ir.ui.view">
             <field name="name">report.crm.case.user.tree</field>
             <field name="model">report.crm.case.user</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
-                    <field name="name"/>
+                    <field name="name" />
+                    <field name="month"/>
                     <field name="user_id"/>
                     <field name="section_id"/>
                     <field name="nbr"/>
@@ -32,6 +33,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="nbr" select="1"/>
@@ -39,7 +41,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_crm_case_user_graph" model="ir.ui.view">
             <field name="name">report.crm.case.user.graph</field>
             <field name="model">report.crm.case.user</field>
@@ -52,50 +54,52 @@
                 </graph>
             </field>
         </record>
-        
-        
-        <record id="action_report_crm_case_user_tree_month" model="ir.actions.act_window">
-            <field name="name">Cases by user and section (this month)</field>
-            <field name="res_model">report.crm.case.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+
+        <record id="view_crm_case_user_filter" model="ir.ui.view">
+            <field name="name">report.crm.case.user.select</field>
+            <field name="model">report.crm.case.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cases by User">
+                   <group col="12" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="user_id" select="1"/>
+	                    <field name="section_id" select="1" widget="selection"/>
+	                    <field name="nbr" select="1"/>
+	                    <field name="state" select="1"/>
+                   </group>
+               </search>
+            </field>
         </record>
-        
-        <menuitem id="next_id_64" name="Reporting" parent="crm.menu_crm" sequence="50"/>
 
-        <menuitem id="crm.next_id_52" name="All Cases" parent="next_id_64" sequence="0"/>
+        <menuitem id="crm.next_id_64" name="Reporting" parent="crm.menu_crm" sequence="50"/>
+        <menuitem id="crm.next_id_52" name="All Cases" parent="crm.next_id_64" sequence="0"/>
 
-        <menuitem id="next_id_65" name="This Month" parent="next_id_64"/><menuitem action="action_report_crm_case_user_tree_month" id="menu_crm_case_user_tree_month" parent="next_id_65"/>
-        
         <record id="action_report_crm_case_user_tree" model="ir.actions.act_window">
             <field name="name">Cases by User and Section</field>
             <field name="res_model">report.crm.case.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_crm_case_user_filter"/>
         </record>
-        <menuitem id="next_id_66" name="All Months" parent="report_crm.next_id_64"/><menuitem action="action_report_crm_case_user_tree" id="menu_crm_case_user_tree" parent="next_id_66"/>
-        
-        <record id="action_report_crm_case_user_tree_month_my" model="ir.actions.act_window">
-            <field name="name">My cases by section (this month)</field>
-            <field name="res_model">report.crm.case.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('user_id','=',uid),('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        <menuitem action="action_report_crm_case_user_tree_month_my" id="menu_crm_case_user_tree_month_my" parent="report_crm.next_id_65"/>
-        
+        <menuitem action="action_report_crm_case_user_tree" id="menu_crm_case_user_tree" parent="crm.next_id_64"/>
+
         <record id="action_report_crm_case_user_tree_my" model="ir.actions.act_window">
             <field name="name">My cases by section</field>
             <field name="res_model">report.crm.case.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="domain">[('user_id','=',uid)]</field>
+            <field name="search_view_id" ref="view_crm_case_user_filter"/>
         </record>
-        <menuitem action="action_report_crm_case_user_tree_my" id="menu_crm_case_user_tree_my" parent="report_crm.next_id_66"/>
-        
+        <menuitem action="action_report_crm_case_user_tree_my" id="menu_crm_case_user_tree_my" parent="crm.next_id_64"/>
+
         <!-- # Cases by section and categoryof case -->
-        
+
         <record id="view_crm_case_categ_tree" model="ir.ui.view">
             <field name="name">report.crm.case.categ.tree</field>
             <field name="model">report.crm.case.categ</field>
@@ -103,6 +107,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="categ_id"/>
                     <field name="section_id"/>
                     <field name="nbr"/>
@@ -122,6 +127,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="categ_id" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="nbr" select="1"/>
@@ -129,35 +135,48 @@
                 </form>
             </field>
         </record>
-        
-        
-        <record id="action_report_crm_case_categ_tree_month" model="ir.actions.act_window">
-            <field name="name">Cases by categories and section (this month)</field>
-            <field name="res_model">report.crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+
+		<record id="view_crm_case_categ_filter" model="ir.ui.view">
+            <field name="name">report.crm.case.categ.select</field>
+            <field name="model">report.crm.case.categ</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cases by categories and Sections">
+                   <group col="12" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="categ_id" select="1"/>
+	                    <field name="section_id" select="1" widget="selection"/>
+	                    <field name="nbr" select="1"/>
+	                    <field name="state" select="1"/>
+                   </group>
+               </search>
+            </field>
         </record>
-        <menuitem action="action_report_crm_case_categ_tree_month" id="menu_crm_case_categ_tree_month" parent="report_crm.next_id_65"/>
+
         <record id="action_report_crm_case_categ_tree" model="ir.actions.act_window">
             <field name="name">Cases by Categories and Section</field>
             <field name="res_model">report.crm.case.categ</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_crm_case_categ_filter"/>
         </record>
-        <menuitem action="action_report_crm_case_categ_tree" id="menu_crm_case_categ_tree" parent="report_crm.next_id_66"/>
-        
+        <menuitem action="action_report_crm_case_categ_tree" id="menu_crm_case_categ_tree" parent="crm.next_id_64"/>
+
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_crm_case_user" name="Monthly cases" res_model="report.crm.case.user" src_model="res.users"/>
-        
+
         <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_user" name="Monthly cases by user" res_model="report.crm.case.user" src_model="crm.case.section"/>
-        
+
         <act_window domain="[('categ_id', '=', active_id)]" id="act_crm_case_categ_2_report_crm_case_categ" name="Monthly cases" res_model="report.crm.case.categ" src_model="crm.case.categ"/>
-        
+
         <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="report.crm.case.categ" src_model="crm.case.section"/>
-        
-        
+
+
         <!-- Cases by Section  -->
-        
+
         <record id="view_report_crm_case_section_tree" model="ir.ui.view">
             <field name="name">report.crm.case.section.tree</field>
             <field name="model">report.crm.case.section</field>
@@ -165,6 +184,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by Section">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="section_id" select="1"/>
                     <field name="nbr_cases" select="1"/>
                     <field name="avg_answers"/>
@@ -174,7 +194,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_report_crm_case_section_graph" model="ir.ui.view">
             <field name="name">report.crm.case.section.graph</field>
             <field name="model">report.crm.case.section</field>
@@ -186,16 +206,37 @@
                 </graph>
             </field>
         </record>
-        
+
+		<record id="view_report_crm_case_section_filter" model="ir.ui.view">
+            <field name="name">report.crm.case.section.select</field>
+            <field name="model">report.crm.case.section</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cases by Section">
+                   <group col="4" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="section_id" select="1"/>
+	                    <field name="nbr_cases" select="1"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+
         <record id="action_report_crm_case_section_tree" model="ir.actions.act_window">
             <field name="name">Cases by Section</field>
             <field name="res_model">report.crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_report_crm_case_section_filter"/>
         </record>
-        
-        <!-- Closed & Open CRM Case view for Random Activities dashboard  -->         
-        
+
+        <!-- Closed & Open CRM Case view for Random Activities dashboard  -->
+
         <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">
             <field name="name">report.crm.case.service.dashboard.tree</field>
             <field name="model">report.crm.case.service.dashboard</field>
@@ -215,7 +256,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="board_view_crm_case_done_dashboard_tree" model="ir.ui.view">
             <field name="name">report.crm.case.service.dashboard.tree</field>
             <field name="model">report.crm.case.service.dashboard</field>
@@ -234,8 +275,8 @@
                     <field name="state" />
                 </tree>
             </field>
-        </record>        
-        
+        </record>
+
         <record id="action_view_closed_crm_case_dashboard" model="ir.actions.act_window">
 	    	<field name="name">Closed CRM Cases Within Past 15 Days</field>
 	    	<field name="res_model">report.crm.case.service.dashboard</field>
@@ -244,7 +285,7 @@
 	    	<field name="view_id" ref="board_view_crm_case_done_dashboard_tree"/>
 	    	<field name="domain">[('state','=','done')]</field>
     	</record>
-    	
+
     	<record id="action_view_open_crm_case_dashboard" model="ir.actions.act_window">
 	    	<field name="name">Open CRM Cases Within Past 15 Days</field>
 	    	<field name="res_model">report.crm.case.service.dashboard</field>
@@ -253,6 +294,6 @@
 	    	<field name="view_id" ref="board_view_crm_case_open_dashboard_tree"/>
 	    	<field name="domain">[('state','=','open')]</field>
     	</record>
-    	
+
     </data>
 </openerp>

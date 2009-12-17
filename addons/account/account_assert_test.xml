@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <assert model="account.move" search="[]" string="For all account moves, the state is valid implies that the sum of credits equals the sum of debits">
+        <assert model="account.move" search="[]" string="For all Ledger Postings, the state is valid implies that the sum of credits equals the sum of debits">
             <test expr="not len(line_id) or line_id[0].state != 'valid' or (sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001)"/>
         </assert>
 

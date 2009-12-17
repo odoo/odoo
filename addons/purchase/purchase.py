@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -163,7 +163,7 @@ class purchase_order(osv.osv):
 
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
-        'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Waiting Supplier Ack'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
+        'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Waiting Supplier Ack'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order State', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
@@ -180,22 +180,22 @@ class purchase_order(osv.osv):
                 "Manual: no invoice will be pre-generated. The accountant will have to encode manually."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
-        'amount_untaxed': fields.function(_amount_all, method=True, string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
-        'amount_total': fields.function(_amount_all, method=True, string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
-        'create_uid':  fields.many2one('res.users', 'Responsible'),    
-        'company_id': fields.many2one('res.company','Company',required=True),    
+        'create_uid':  fields.many2one('res.users', 'Responsible'),
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
@@ -206,7 +206,7 @@ class purchase_order(osv.osv):
         'invoiced': lambda *a: 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', c),
     }
     _name = "purchase.order"
     _description = "Purchase order"
@@ -319,7 +319,10 @@ class purchase_order(osv.osv):
                 il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
-            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase')], limit=1)
+            journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
+            if not journal_ids:
+                raise osv.except_osv(_('Error !'),
+                    _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
                 'reference': "P%dPO%d" % (o.partner_id.id, o.id),
@@ -333,7 +336,8 @@ class purchase_order(osv.osv):
                 'origin': o.name,
                 'invoice_line': il,
                 'fiscal_position': o.partner_id.property_account_position.id,
-                'payment_term':o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'payment_term': o.partner_id.property_payment_term and o.partner_id.property_payment_term.id or False,
+                'company_id': o.company_id.id,
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
@@ -357,7 +361,7 @@ class purchase_order(osv.osv):
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
                         _('Could not cancel purchase order !'),
-                        _('You must first cancel all packing attached to this purchase order.'))
+                        _('You must first cancel all picking attached to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
@@ -385,6 +389,7 @@ class purchase_order(osv.osv):
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
+                'company_id': order.company_id.id,
             })
             for order_line in order.order_line:
                 if not order_line.product_id:
@@ -405,12 +410,14 @@ class purchase_order(osv.osv):
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'assigned',
                         'purchase_line_id': order_line.id,
+                        'company_id': order.company_id.id,
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
+
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -449,7 +456,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',object='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'product_qty': lambda *a: 1.0

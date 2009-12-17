@@ -176,9 +176,6 @@
     </record>
 
     <menuitem name="All Work Orders" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
-    <menuitem name="Work Orders to Do" parent="menu_mrp_production_wc_action" action="mrp_production_wc_confirm_action" id="menu_mrp_production_wc_confirm_action"/>
-    <menuitem name="Future Work Orders" parent="menu_mrp_production_wc_action" action="mrp_production_wc_draft_action" id="menu_mrp_production_wc_draft_action"/>
-    <menuitem parent="menu_mrp_production_wc_action" action="mrp_production_wc_action_planning" id="menu_mrp_production_wc_draft_action_planning"/>
 
 <!-- Operation codes -->
 
@@ -242,7 +239,7 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Hours by Workcenter" type="bar">
+                <graph string="Hours by Work Center" type="bar">
                      <field name="date_start_date"/>
                      <field name="hour" operator="+"/>
                      <field name="workcenter_id" group="True" operator="+"/>

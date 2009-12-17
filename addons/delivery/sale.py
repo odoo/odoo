@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import netsvc
@@ -24,9 +24,9 @@ from osv import fields,osv
 
 # Overloaded sale_order to manage carriers :
 class sale_order(osv.osv):
-    _inherit = 'sale.order' 
+    _inherit = 'sale.order'
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on packing."),
+        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on picking."),
         'id': fields.integer('ID', readonly=True,invisible=True),
     }
 

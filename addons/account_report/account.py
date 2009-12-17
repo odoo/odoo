@@ -192,7 +192,7 @@ class account_report(osv.osv):
         'type': lambda *args: 'indicator',
     }
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:

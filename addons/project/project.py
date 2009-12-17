@@ -115,7 +115,9 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'notes': fields.text('Notes', help="Internal description of the project."),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
+                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
+                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
      }
 
@@ -280,7 +282,9 @@ class task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+                                  help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                  \n If the task is over, the states is set to \'Done\'.'),
         'date_start': fields.datetime('Starting Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
@@ -322,24 +326,31 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
-        if not tm:
+        obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = obj_tm and obj_tm.name or 'Hours'
+
+        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
+
+        if tm in ['Hours','Hour']:
             return res
-        tm = tm.name
-        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode_id'], context)        
+
         eview = etree.fromstring(res['arch'])
-        def _check_rec(eview, tm):
-            if eview.attrib.get('widget',False) == 'float_time':
+        
+        def _check_rec(eview):
+            if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
             for child in eview:
-                _check_rec(child, tm)
+                _check_rec(child)
             return True
-        _check_rec(eview, tm)
+        
+        _check_rec(eview)
+        
         res['arch'] = etree.tostring(eview)
+        
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
+        
         return res
 
     def do_close(self, cr, uid, ids, *args):
@@ -432,7 +443,7 @@ class project_work(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
-        'project_id': fields.related('task_id','project_id',type='many2one',relation='project.project', string='Project'),
+        'company_id': fields.related('task_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,

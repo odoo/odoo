@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,18 +15,20 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
+import tools
 from osv import fields,osv
+
 
 class report_sale_order_product(osv.osv):
     _name = "report.sale.order.product"
     _description = "Sales Orders by Products"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
@@ -42,14 +44,18 @@ class report_sale_order_product(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_sale_order_product')
         cr.execute("""
             create or replace view report_sale_order_product as (
                 select
                     min(l.id) as id,
-                    to_char(s.date_order, 'YYYY-MM-01') as name,
+                    to_char(s.date_order, 'YYYY') as name,
+                    to_char(s.date_order,'MM') as month,
                     s.state,
                     l.product_id,
                     sum(l.product_uom_qty*u.factor) as quantity,
@@ -60,7 +66,7 @@ class report_sale_order_product(osv.osv):
                     right join sale_order_line l on (s.id=l.order_id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_uom_qty != 0
-                group by l.product_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
+                group by l.product_id, to_char(s.date_order, 'YYYY'),to_char(s.date_order,'MM'),s.state
             )
         """)
 report_sale_order_product()
@@ -70,7 +76,7 @@ class report_sale_order_category(osv.osv):
     _description = "Sales Orders by Categories"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
@@ -86,14 +92,19 @@ class report_sale_order_category(osv.osv):
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_sale_order_category')
         cr.execute("""
             create or replace view report_sale_order_category as (
                 select
                     min(l.id) as id,
-                    to_char(s.date_order, 'YYYY-MM-01') as name,
+                    to_char(s.date_order, 'YYYY') as name,
+                    to_char(s.date_order,'MM') as month,
                     s.state,
                     t.categ_id as category_id,
                     sum(l.product_uom_qty*u.factor) as quantity,
@@ -105,8 +116,8 @@ class report_sale_order_category(osv.osv):
                     left join product_product p on (p.id=l.product_id)
                     left join product_template t on (t.id=p.product_tmpl_id)
                     left join product_uom u on (u.id=l.product_uom)
-                where l.product_uom_qty != 0    
-                group by t.categ_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
+                where l.product_uom_qty != 0
+                group by t.categ_id,to_char(s.date_order, 'YYYY'),to_char(s.date_order,'MM'),s.state
             )
         """)
 report_sale_order_category()
@@ -119,13 +130,13 @@ class report_turnover_per_month(osv.osv):
         'name': fields.date('Month', readonly=True),
         'turnover': fields.float('Total Turnover', readonly=True),
     }
-    
+
     def init(self, cr):
         cr.execute("""
             create or replace view report_turnover_per_month as (
                 select min(am.id) as id, sum(credit) as turnover,to_char(am.date, 'YYYY-MM-01') as name from account_move_line am
-                    where am.account_id in (select distinct(account_id) from account_invoice_line) 
-                    and 
+                    where am.account_id in (select distinct(account_id) from account_invoice_line)
+                    and
                     am.move_id in(select distinct(aw.move_id) from account_invoice aw,account_invoice_line l where l.invoice_id=aw.id)
                     group by to_char(am.date, 'YYYY-MM-01')
             )
@@ -137,17 +148,17 @@ class report_turnover_per_product(osv.osv):
     _description = "Turnover Per Product"
     _auto = False
     _rec_name = 'product_id'
-    
+
     _columns = {
         'product_id': fields.many2one('product.product','Product', readonly=True),
         'turnover': fields.float('Total Turnover', readonly=True),
     }
-    
+
     def init(self, cr):
         cr.execute("""
             create or replace view report_turnover_per_product as (
-                select min(am.id) as id, sum(credit) as turnover,am.product_id as product_id 
-                from account_move_line am                    
+                select min(am.id) as id, sum(credit) as turnover,am.product_id as product_id
+                from account_move_line am
                 group by am.product_id
             )
         """)
@@ -176,12 +187,12 @@ class report_sale_order_created(osv.osv):
         'create_date' : fields.datetime('Create Date', readolnly=True)
     }
     _order = 'create_date'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_sale_order_created as (
             select
                 sale.id as id, sale.date_order as date_order, sale.name as name,
-                sale.partner_id as partner_id, 
+                sale.partner_id as partner_id,
                 sale.partner_shipping_id as partner_shipping_id,
                 sale.amount_untaxed as amount_untaxed, sale.state as state,
                 sale.create_date as create_date

@@ -130,7 +130,7 @@ class abstract_quality_check(object):
         result_ids = {}
         for obj in object_list:
             ids = pool.get(obj).search(cr, uid, [])
-            ids = filter(lambda id: id != None, ids)
+            ids = filter(lambda id: id != None, ids or [])
             result_ids[obj] = ids
         return result_ids
 

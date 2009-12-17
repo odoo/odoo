@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!--
 			Process
 		-->
-	
+
 		<record id="process_process_stockableproductprocess0" model="process.process">
 			<field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
 			<field eval="1" name="active"/>
 		</record>
-		
+
 		<!--
 			Process Node
 		-->
-		
+
 		<record id="process_node_mts0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
@@ -26,7 +26,7 @@
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_stock0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
 			<field name="model_id" ref="mrp.model_mrp_procurement"/>
@@ -37,7 +37,7 @@
 			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_rfq0" model="process.node">
 			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
 			<field name="model_id" ref="purchase.model_purchase_order"/>
@@ -49,7 +49,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-	
+
 		<record id="process_node_production0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_production_action"/>
 			<field name="model_id" ref="mrp.model_mrp_production"/>
@@ -60,11 +60,11 @@
 			<field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<!--
 			Process Transition
 		-->
-		
+
 		<record id="process_transition_stockrfq0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -73,7 +73,7 @@
 			<field model="process.node" name="target_node_id" ref="process_node_rfq0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_stock0"/>
 		</record>
-	
+
 		<record id="process_transition_stockproduction0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -82,6 +82,6 @@
 			<field model="process.node" name="target_node_id" ref="process_node_production0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_stock0"/>
 		</record>
-	
+
 	</data>
 </openerp>

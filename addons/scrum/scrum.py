@@ -98,7 +98,7 @@ class scrum_sprint(osv.osv):
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'Status', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -119,7 +119,7 @@ class scrum_product_backlog(osv.osv):
     _name = 'scrum.product.backlog'
     _description = 'Product Backlog'
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -166,7 +166,7 @@ class scrum_product_backlog(osv.osv):
         'sequence' : fields.integer('Sequence'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
         'tasks_id': fields.one2many('scrum.task', 'product_backlog_id', 'Tasks Details'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'Status', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours')

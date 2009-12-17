@@ -133,9 +133,7 @@ class account_voucher(osv.osv):
         'type': _get_type,
         'reference_type': lambda *a: 'none',
         'journal_id':_get_journal,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher', c),
         'currency_id': _get_currency,
     }
     
@@ -443,7 +441,7 @@ class account_voucher(osv.osv):
         }
         return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:

@@ -39,6 +39,12 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'model' in vals:
+            raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
+        return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
+    
 subscription_document()
 
 class subscription_document_fields(osv.osv):
@@ -70,7 +76,7 @@ class subscription_subscription(osv.osv):
         'interval_type': fields.selection([('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status'),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
         'cron_id': fields.many2one('ir.cron', 'Cron Job')

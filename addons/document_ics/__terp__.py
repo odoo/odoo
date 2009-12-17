@@ -27,7 +27,7 @@
     'description': """Allows to synchronise calendars with others applications.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['document', 'crm_configuration'],
+    'depends': ['document', 'crm'],
     'init_xml': ['document_data.xml'],
     'update_xml': ['document_view.xml', 'security/ir.model.access.csv','document_ics_config_wizard.xml'],
     'demo_xml': ['document_demo.xml'],
