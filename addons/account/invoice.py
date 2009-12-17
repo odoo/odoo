@@ -979,14 +979,8 @@ class account_invoice_line(osv.osv):
                     p = l[2].get('price_unit', 0) * (1-l[2].get('discount', 0)/100.0)
                     t = t - (p * l[2].get('quantity'))
                     taxes = l[2].get('invoice_line_tax_id')
-                    if taxes:
-                        if context.get('client','') == 'web':
-                            tax_ids = taxes
-                        elif len(taxes[0]) >= 3 and taxes[0][2]:
-                            tax_ids = taxes[0][2]
-                        else:
-                            continue    
-                        taxes = tax_obj.browse(cr, uid, tax_ids)
+                    if len(taxes[0]) >= 3 and taxes[0][2]:
+                        taxes=tax_obj.browse(cr, uid, taxes[0][2])
                         for tax in tax_obj.compute(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False)):
                             t = t - tax['amount']
             return t
