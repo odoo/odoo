@@ -171,9 +171,19 @@ class account_analytic_account(osv.osv):
                         on account_analytic_line.journal_id = account_analytic_journal.id \
                     where account_analytic_line.account_id IN (%s) \
                         and amount<0 \
+                        and amount_currency=0.0 \
                     GROUP BY account_analytic_line.account_id"""%acc_set)
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
+            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount_currency),0.0) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and amount_currency<0 \
+                    GROUP BY account_analytic_line.account_id"""%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] += round(sum,2)
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             for child_id in self.search(cr, uid,
