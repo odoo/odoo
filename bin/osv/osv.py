@@ -171,9 +171,12 @@ class osv_pool(netsvc.Service):
             res.append(klass.createInstance(self, module, cr))
         return res
 
+class osv_base(object):
+    def __init__(self, pool, cr):
+        pool.add(self._name, self)
+        self.pool = pool
+        super(osv_base, self).__init__(cr)
 
-class osv_memory(orm.orm_memory):
-    #__metaclass__ = inheritor
     def __new__(cls):
         module = str(cls)[6:]
         module = module[:len(module)-1]
@@ -186,6 +189,7 @@ class osv_memory(orm.orm_memory):
             module_list.append(cls._module)
         return None
 
+class osv_memory(osv_base, orm.orm_memory):
     #
     # Goal: try to apply inheritancy at the instanciation level and
     #       put objects in the pool var
@@ -213,27 +217,7 @@ class osv_memory(orm.orm_memory):
         return obj
     createInstance = classmethod(createInstance)
 
-    def __init__(self, pool, cr):
-        pool.add(self._name, self)
-        self.pool = pool
-        orm.orm_memory.__init__(self, cr)
-
-
-
-class osv(orm.orm):
-    #__metaclass__ = inheritor
-    def __new__(cls):
-        module = str(cls)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
-        if not hasattr(cls, '_module'):
-            cls._module = module
-        module_class_list.setdefault(cls._module, []).append(cls)
-        class_pool[cls._name] = cls
-        if module not in module_list:
-            module_list.append(cls._module)
-        return None
-
+class osv(osv_base, orm.orm):
     #
     # Goal: try to apply inheritancy at the instanciation level and
     #       put objects in the pool var
@@ -269,11 +253,6 @@ class osv(orm.orm):
         obj.__init__(pool, cr)
         return obj
     createInstance = classmethod(createInstance)
-
-    def __init__(self, pool, cr):
-        pool.add(self._name, self)
-        self.pool = pool
-        orm.orm.__init__(self, cr)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
