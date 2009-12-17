@@ -96,41 +96,12 @@ class CalDAV(object):
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
                 if map_field in data.keys():
-                    if field == 'attendee':
-                        attendee_object = self.pool.get('crm.caldav.attendee')
-                        for attendee in attendee_object.read(cr, uid, data[map_field], []):
-                            attendee_add = vevent.add('attendee')
-                            for a_key, a_val in attendee_object.__attribute__.items():
-                                if attendee[a_val['field']]:
-                                    if a_val['type'] == 'text':
-                                        attendee_add.params[a_key] = [str(attendee[a_val['field']])]
-                                    elif a_val['type'] == 'boolean':
-                                        attendee_add.params[a_key] = [str(attendee[a_val['field']])]
-                    elif field == 'valarm':
-                        alarm = vevent.add('valarm')
-                        alarm_object = self.pool.get('crm.caldav.alarm')
-                        alarm_data = alarm_object.read(cr, uid, data[map_field][0], [])
-
-                        # Compute trigger data
-                        interval = alarm_data['trigger_interval']
-                        occurs = alarm_data['trigger_occurs']
-                        duration = (occurs == 'AFTER' and alarm_data['trigger_duration']) \
-                                                            or -(alarm_data['trigger_duration'])
-                        related = alarm_data['trigger_related']
-                        trigger = alarm.add('TRIGGER')
-                        trigger.params['RELATED'] = [related.upper()]
-                        if interval == 'DAYS':
-                            delta = timedelta(days=duration)
-                        if interval == 'HOURS':
-                            delta = timedelta(hours=duration)
-                        if interval == 'MINUTES':
-                            delta = timedelta(minutes=duration)
-                        trigger.value = delta
-
-                        # Compute other details
-                        alarm.add('DESCRIPTION').value = alarm_data['name']
-                        alarm.add('ACTION').value = alarm_data['action']
-
+                    if field == 'attendee' and data[map_field]:
+                        attendee_obj = self.pool.get('caldav.attendee')
+                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent)
+                    elif field == 'valarm' and data[map_field]:
+                        alarm_obj = self.pool.get('caldav.alarm')
+                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent)
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -290,6 +261,32 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
+    def export_ical(self, cr, uid, alarm_id, vevent):
+        valarm = vevent.add('valarm')
+        alarm_object = self.pool.get('crm.caldav.alarm')
+        alarm_data = alarm_object.read(cr, uid, alarm_id, [])
+
+        # Compute trigger data
+        interval = alarm_data['trigger_interval']
+        occurs = alarm_data['trigger_occurs']
+        duration = (occurs == 'AFTER' and alarm_data['trigger_duration']) \
+                                            or -(alarm_data['trigger_duration'])
+        related = alarm_data['trigger_related']
+        trigger = valarm.add('TRIGGER')
+        trigger.params['RELATED'] = [related.upper()]
+        if interval == 'DAYS':
+            delta = timedelta(days=duration)
+        if interval == 'HOURS':
+            delta = timedelta(hours=duration)
+        if interval == 'MINUTES':
+            delta = timedelta(minutes=duration)
+        trigger.value = delta
+
+        # Compute other details
+        valarm.add('DESCRIPTION').value = alarm_data['name']
+        valarm.add('ACTION').value = alarm_data['action']
+        return vevent
+        
     def import_ical(self, cr, uid, ical_data):
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
@@ -346,5 +343,17 @@ class Attendee(CalDAV, osv.osv_memory):
                 self.ical_set(para.lower(), ical_data.params[para][0], 'value')
         vals = map_data(cr, uid, self)
         return vals
+
+    def export_ical(self, cr, uid, attendee_id, vevent):
+        attendee_object = self.pool.get('crm.caldav.attendee')
+        for attendee in attendee_object.read(cr, uid, attendee_id, []):
+            attendee_add = vevent.add('attendee')
+            for a_key, a_val in attendee_object.__attribute__.items():
+                if attendee[a_val['field']]:
+                    if a_val['type'] == 'text':
+                        attendee_add.params[a_key] = [str(attendee[a_val['field']])]
+                    elif a_val['type'] == 'boolean':
+                        attendee_add.params[a_key] = [str(attendee[a_val['field']])]
+        return vevent
 
 Attendee()
