@@ -259,11 +259,17 @@ class users(osv.osv):
     ]
 users()
 
+SIGNATURE_FORMAT = '''--
+%(name)s %(email)s
+'''
 class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _inherit = 'res.config'
 
-    _columns = users._columns
+    _columns = dict(
+        users._columns,
+        previous_signature=fields.text(),
+        )
     _defaults = users._defaults
 
     def user_data(self, cr, uid, new_id, context=None):
@@ -279,7 +285,25 @@ class config_users(osv.osv_memory):
         '''
         self.pool.get('res.users').create(
             cr, uid, self.user_data(cr, uid, new_id, context), context)
-    
+
+    def generate_signature(self, cr, uid, ids, name, email,
+                           previous_signature, signature, context=None):
+        ''' If the admin sets the name or email, regenerate the signature
+        except if the admin has previously edited the signature manually,
+        in this case stop generating the signature unless the admin completely
+        empties the custom sig.
+        '''
+        if signature != previous_signature:
+            return {'value': {'previous_signature':''}}
+        signature =  SIGNATURE_FORMAT % {
+            'name': name or '',
+            'email': email and ' <'+email+'>' or '',
+            }
+        return {'value': {
+                'previous_signature': signature,
+                'signature': signature,
+                }}
+
     def execute(self, cr, uid, ids, context=None):
         self.create_user(cr, uid, ids[0], context=context)
         return {

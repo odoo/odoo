@@ -210,13 +210,20 @@
 
                 <group string="res_config_contents" position="replace">
                   <separator string="New User" colspan="4"/>
-                  <field name="name"/>
-                  <field name="email"/>
+                  <field name="previous_signature" invisible="1"/>
+                  <field name="name"
+                         on_change="generate_signature(name, email,
+                                    previous_signature, signature)"/>
+                  <field name="email"
+                         on_change="generate_signature(name, email,
+                                    previous_signature, signature)"/>
                   <field name="login"/>
                   <field name="password" password="True"/>
                   <field name="context_lang"/>
                   <field name="context_tz"/>
-                  <field colspan="4" name="signature"/>
+                  <field colspan="4" name="signature"
+                         on_change="generate_signature(name, email,
+                                    previous_signature, signature)"/>
 
                   <separator string="Group" colspan="4"/>
                   <label  align="0.0" colspan="4" string="
