@@ -109,6 +109,10 @@ class res_config_configurable(osv.osv_memory):
         return self.next(cr, uid, ids, context=context)
 res_config_configurable()
 
+DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\
+    'wizards (ir.actions.configuration.wizard). Old-style configuration '\
+    'wizards have been deprecated.\n'\
+    'The addon should be migrated to res.config objects.'
 class ir_actions_configuration_wizard(osv.osv_memory):
     ''' Compatibility configuration wizard
 
@@ -138,9 +142,8 @@ class ir_actions_configuration_wizard(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         self.logger.notifyChannel(
-            'configuration', netsvc.LOG_WARNING,
-            'Addon using old-style configuration wizard, please migrate to '\
-                'res.config objects')
+            'configuration', netsvc.LOG_WARNING, DEPRECATION_MESSAGE)
+
 ir_actions_configuration_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
