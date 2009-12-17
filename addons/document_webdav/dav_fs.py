@@ -150,6 +150,7 @@ class tinydav_handler(dav_interface):
         
         if not dbname:
             s = netsvc.LocalService('db')
+            cr.close()
             return map(lambda x: self.urijoin(x), self.db_list())
         result = []
         node = self.uri2object(cr,uid,pool, uri2[:])
@@ -354,11 +355,6 @@ class tinydav_handler(dav_interface):
             node = self.uri2object(cr,uid,pool, uri2)
             if not node:
                 raise DAV_NotFound(uri2)
-            
-            result = 'application/octet-stream'
-            #if node.type=='collection':
-                #result ='httpd/unix-directory'
-            #else:
             result = node.mimetype
             return result
             #raise DAV_NotFound, 'Could not find %s' % path
@@ -469,6 +465,7 @@ class tinydav_handler(dav_interface):
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         #if not dbname:
         if True:
+	    cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2)
         object2=node and node.object2 or False
@@ -637,6 +634,7 @@ class tinydav_handler(dav_interface):
         result = False
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
+            cr.close()
             return True
         try:
             node = self.uri2object(cr,uid,pool, uri2)
