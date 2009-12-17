@@ -1531,7 +1531,7 @@ class orm_memory(orm_template):
     _check_time = 20
 
     def __init__(self, cr):
-        super(orm_memory, self).__init__(cr)
+        orm_template.__init__(self, cr)
         self.datas = {}
         self.next_id = 0
         self.check_id = 0
