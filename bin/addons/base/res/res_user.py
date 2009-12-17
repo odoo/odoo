@@ -303,7 +303,9 @@ class res_config_view(osv.osv_memory):
     _inherit = 'res.config'
     _columns = {
         'name':fields.char('Name', size=64),
-        'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),
+        'view': fields.selection([('simple','Simplified'),
+                                  ('extended','Extended')],
+                                 'Interface', required=True ),
     }
     _defaults={
         'view':lambda *args: 'simple',

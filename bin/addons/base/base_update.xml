@@ -269,13 +269,19 @@
 
                 <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0" string='
-                    Choose between the simplified interface and the extended one.
-                    If you are testing or using OpenERP for the first time, we suggest you use
-                    the simplified interface, which has less options and fields but is easier to
-                    understand. You will be able to switch to the extended view later.
+                    Choose between the simplified interface and the extended
+                    one.'/>
+                  <newline/>
+                  <label colspan="4" align="0.0" string='
+                    If you are testing OpenERP or using it for the first time,
+                    we suggest you use the simplified interface. It has less
+                    options and fields but is easier to understand.'/>
+                  <newline/>
+                  <label colspan="4" align="0.0" string='
+                    You will be able to switch to the extended interface later.
                     '/>
-                  <separator string="Choose Your Mode" colspan="4"/>
-                  <field colspan="2" name="view"/>
+                  <separator string="Choose Your Interface" colspan="4"/>
+                  <field colspan="2" name="view" nolabel="1"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
                 <xpath expr='//button[@name="action_next"]' position='attributes'>
