@@ -476,6 +476,8 @@ virtual_report_spool()
 
 class virtual_wizard(web_services.wizard):
     def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
+        if wiz_id not in self.wiz_uid:
+            super(virtual_wizard,self).exp_create(db, uid, 'module.upgrade', datas)
         new_ids = []
         if 'id' in datas:
             datas['id'] = caldevIDs2readIDs(datas['id'])
