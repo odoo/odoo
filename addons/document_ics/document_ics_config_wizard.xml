@@ -12,6 +12,9 @@
                   Configure Calendars for CRM Sections
                 </attribute></form>
                 <group string="res_config_contents" position="replace">
+                  <label colspan="4" align="0.0" string="
+                    OpenERP can create and pre-configure a series of integrated
+                    calendar for you."/>
                   <separator string="Create Pre-Configured Calendars"
                              colspan="4"/>
                   <newline/>
@@ -25,6 +28,8 @@
                   <field name="jobs"/>
                   <field name="fund"/>
                 </group>
+                <xpath expr='//button[@name="action_skip"]'
+                       position='replace'/>
               </data>
             </field>
         </record>

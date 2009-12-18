@@ -81,16 +81,12 @@ class document_ics_crm_wizard(osv.osv_memory):
         else:
             dir_id = dir_obj.create(cr, uid, {'name': 'Calendars' ,'user_id' : uid, 'type': 'directory'})
         for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
-            if (not data[section]):
-                continue
-            else:
+            if data[section]:
                 section_id=self.pool.get('crm.case.section').search(cr, uid, [('name', '=', SECTION_NAME[section])])
-                if not section_id:
-                    continue
-                else:
+                if section_id:
                     object_id=self.pool.get('ir.model').search(cr, uid, [('name', '=', 'Case')])[0]
 
-                    vals_cont={
+                    vals_cont = {
                           'name': SECTION_NAME[section],
                           'sequence': 1,
                           'directory_id': dir_id,
@@ -106,11 +102,11 @@ class document_ics_crm_wizard(osv.osv_memory):
                     ics_obj=self.pool.get('document.directory.ics.fields')
                     for tag in ['description', 'url', 'summary', 'dtstart', 'dtend', 'uid']:
                         field_id =  self.pool.get('ir.model.fields').search(cr, uid, [('model_id.name', '=', 'Case'), ('field_description', '=', ICS_TAGS[tag])])[0]
-                        vals_ics={
-                                'field_id':  field_id ,
-                                'name':  tag ,
-                                'content_id': content_id ,
-                                  }
+                        vals_ics = {
+                            'field_id':  field_id ,
+                            'name':  tag ,
+                            'content_id': content_id ,
+                            }
                         ics_obj.create(cr, uid, vals_ics)
 document_ics_crm_wizard()
 
