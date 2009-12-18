@@ -30,99 +30,6 @@ def caldevIDs2readIDs(caldev_ID = None):
             return int(caldev_ID.split('-')[0])
         return caldev_ID
 
-class crm_caldav_attendee(osv.osv):
-    _name = 'crm.caldav.attendee'
-    _description = 'Attendee information'
-    _rec_name = 'cutype'
-
-    __attribute__ = {
-        'cutype': {'field':'cutype', 'type':'text'}, 
-        'member': {'field':'member', 'type':'text'}, 
-        'role': {'field':'role', 'type':'selection'}, 
-        'partstat': {'field':'partstat', 'type':'text'}, 
-        'rsvp': {'field':'rsvp', 'type':'boolean'}, 
-        'delegated-to': {'field':'delegated_to', 'type':'char'}, 
-        'delegated-from': {'field':'delegated_from', 'type':'char'}, 
-        'sent-by': {'field':'sent_by', 'type':'text'}, 
-        'cn': {'field':'cn', 'type':'text'}, 
-        'dir': {'field':'dir', 'type':'text'}, 
-        'language': {'field':'language', 'type':'text'}, 
-    }
-
-    _columns = {
-            'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
-                                             ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), \
-                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'), 
-            'member': fields.char('Member', size=124), 
-            'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
-                                ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'), 
-            'partstat': fields.selection([('NEEDS-ACTION', 'NEEDS-ACTION'), \
-                            ('ACCEPTED', 'ACCEPTED'), ('DECLINED', 'DECLINED'), \
-                            ('TENTATIVE', 'TENTATIVE'), \
-                            ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
-            'rsvp':  fields.boolean('RSVP'), 
-            'delegated_to': fields.char('DELEGATED-TO', size=124), 
-            'delegated_from': fields.char('DELEGATED-FROM', size=124), 
-            'sent_by': fields.char('SENT-BY', size=124), 
-            'cn': fields.char('CN', size=124), 
-            'dir': fields.char('DIR', size=124), 
-            'language': fields.char('LANGUAGE', size=124), 
-                }
-    _defaults = {
-        'cn':  lambda *x: 'MAILTO:', 
-        }
-    
-crm_caldav_attendee()
-
-class crm_caldav_alarm(osv.osv):
-    _name = 'crm.caldav.alarm'
-    _description = 'Event alarm information'
-
-    __attribute__ = {
-            'action': {'field': 'action', 'type': 'text'}, 
-            'description': {'field': 'name', 'type': 'text'}, 
-            'summary': {'field': 'description', 'type': 'text'}, 
-            'attendee': {'field': 'attendee_ids', 'type': 'text'}, 
-            'trigger_related': {'field': 'trigger_related', 'type': 'text'}, 
-            'trigger_duration': {'field': 'trigger_duration', 'type': 'text'}, 
-            'trigger_occurs': {'field': 'trigger_occurs', 'type': 'text'}, 
-            'trigger_interval': {'field': 'trigger_interval', 'type': 'text'}, 
-            'duration': {'field': 'duration', 'type': 'text'}, 
-            'repeat': {'field': 'repeat', 'type': 'text'}, 
-            'attach': {'field': 'attach', 'type': 'text'}, 
-    }
-     
-    _columns = {
-            'name': fields.char('Summary', size=124), 
-            'action': fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
-                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', required=True), 
-            'description': fields.text('Description'), 
-            'attendee_ids': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees'), 
-            'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
-                                        'Trigger time', required=True), 
-            'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
-                    ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
-            'trigger_duration':  fields.integer('TIme', required=True), 
-            'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                           'The event ends')], 'Trigger Occures at', required=True), 
-            'duration': fields.integer('Duration'), 
-            'repeat': fields.integer('Repeat'), # TODO 
-            'attach': fields.binary('Attachment'), 
-            'active': fields.boolean('Active'), 
-                }
-
-    _defaults = {
-        'action':  lambda *x: 'EMAIL', 
-        'trigger_interval':  lambda *x: 'MINUTES', 
-        'trigger_duration': lambda *x: 5, 
-        'trigger_occurs': lambda *x: 'BEFORE', 
-        'trigger_related': lambda *x: 'start', 
-                 }
-    
-crm_caldav_alarm()
-
 class project_task(osv.osv):
     _inherit = "project.task"
     
@@ -155,24 +62,39 @@ class project_task(osv.osv):
     __attribute__ = {
         'class': {'field': 'class', 'type': 'text'}, 
         'completed': {'field': 'date_close', 'type': 'datetime'}, 
+#        'created': {'field': 'field', 'type': 'text'}, 
         'description': {'field': 'description', 'type': 'text'}, 
+#        'dtstamp': {'field': 'field', 'type': 'text'}, 
         'dtstart': {'field': 'date_start', 'type': 'datetime'}, 
         'duration': {'field': 'planned_hours', 'type': 'int'}, 
         'due': {'field': 'date_deadline', 'type': 'datetime'}, 
+#        'geo': {'field': 'field', 'type': 'text'}, 
+#        'last-mod ': {'field': 'field', 'type': 'text'}, 
         'location': {'field': 'location', 'type': 'text'}, # To add
         'organizer': {'field': 'partner_id', 'type': 'many2one', 'object': 'res.partner'}, 
         'percent': {'field': 'progress_rate', 'type': 'int'}, 
         'priority': {'field': 'priority', 'type': 'text'}, 
+#        'recurid': {'field': 'field', 'type': 'text'}, 
         'seq': {'field': 'sequence', 'type': 'text'}, 
         'status': {'field': 'state', 'type': 'selection', 'mapping': {'NEEDS-ACTION': 'draft', \
                                               'COMPLETED': 'done', 'IN-PROCESS': 'open', \
                                               'CANCELLED': 'cancelled'}}, 
         'summary': {'field': 'name', 'type': 'text'}, 
+        'uid': {'field': 'id', 'type': 'int'}, 
         'url': {'field': 'caldav_url', 'type': 'text'}, # To add 
+#        'attach': {'field': 'field', 'type': 'text'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
 #        'categories': {'field': 'type', 'type': 'text'}, # Needs review 
         'comment': {'field': 'notes', 'type': 'text'}, 
+#        'contact': {'field': 'field', 'type': 'text'}, 
+#        'exdate': {'field': 'field', 'type': 'text'}, 
+#        'exrule': {'field': 'field', 'type': 'text'}, 
+#        'rstatus': {'field': 'field', 'type': 'text'}, 
+#        'related': {'field': 'field', 'type': 'text'}, 
+#        'resources': {'field': 'field', 'type': 'text'}, 
+#        'rdate': {'field': 'field', 'type': 'text'}, 
         'rrule': {'field': 'rrule', 'type': 'text'}, 
+        'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'},
                      }
 
     def import_cal(self, cr, uid, ids, data, context={}):
@@ -192,15 +114,40 @@ class project_task(osv.osv):
         if not vals.has_key('duration'):
             # 'Compute duration'
             vals['planned_hours'] = 16
+#            start =  datetime.strptime(vals.get('date_start'), '%Y-%m-%d %H:%M:%S')
+#            end =  datetime.strptime(vals.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
+#            difference = float((end - start).seconds) / 3600
+##            minutes, seconds = divmod(difference.seconds, 60)
+##            hours, minutes = divmod(minutes, 60)
+        vals.pop('id')
         task_id = self.create(cr, uid, vals)
         return
     
+    def export_cal(self, cr, uid, ids, context={}):
+        task_data = self.read(cr, uid, ids, [], context ={'read': True})
+        todo_obj = self.pool.get('caldav.todo')
+        todo_obj.__attribute__.update(self.__attribute__)
+        
+        attendee_obj = self.pool.get('caldav.attendee')
+        attendee = self.pool.get('crm.caldav.attendee')
+        attendee_obj.__attribute__.update(attendee.__attribute__)
+        
+        alarm_obj = self.pool.get('caldav.alarm')
+        alarm = self.pool.get('crm.caldav.alarm')
+        alarm_obj.__attribute__.update(alarm.__attribute__)
+        
+        ical = todo_obj.export_ical(cr, uid, task_data)
+        caendar_val = ical.serialize()
+        caendar_val = caendar_val.replace('"', '').strip()
+        return caendar_val
+
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
         """         logic for recurrent task
          example : 123-20091111170822""",  ids, fields, context
         if context and context.has_key('read'):
             return super(project_task, self).read(cr, uid, ids, fields, context, load)
         if not type(ids) == list :
+            # Called from code
             return super(project_task, self).read(cr, uid, caldevIDs2readIDs(ids),\
                                                   fields=fields, context=context, load=load)
         else:
@@ -227,107 +174,53 @@ class project_task(osv.osv):
             for rdate in rdates:
                 import re
                 idval = (re.compile('\d')).findall(rdate)
-                val['date'] = rdate
+                val['date_start'] = rdate
                 id = str(val['id']).split('-')[0]
                 val['id'] = id + '-' + ''.join(idval)
                 val1 = val.copy()
                 result += [val1]
         return result
-
-project_task()
-
-class ir_attachment(osv.osv):
-    _name = 'ir.attachment'
-    _inherit = 'ir.attachment'
-
-    def search_count(self, cr, user, args, context=None):
-        args1 = []
-        for arg in args:
-            args1.append(map(lambda x:str(x).split('-')[0], arg))
-        return super(ir_attachment, self).search_count(cr, user, args1, context)
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
             context=None, count=False):
-        new_args = []
-        if len(args) > 1:
-            new_args = [args[0]]
-            if args[1][0] == 'res_id':
-                new_args.append((args[1][0], args[1][1], caldevIDs2readIDs(args[1][2])))
-        if new_args:
-            args = new_args
-        return super(ir_attachment, self).search(cr, uid, args, offset=offset, 
-                                                limit=limit, order=order, 
-                                                context=context, count=False)
-ir_attachment()
-
-class ir_values(osv.osv):
-    _inherit = 'ir.values'
-
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, \
-                         meta=False, preserve_user=False, company=False):
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], caldevIDs2readIDs(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, value, \
-                                   replace, isobject, meta, preserve_user, company)
-
-    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, \
-                    without_user=True, key2_req=True):
-        new_model = []
-        for data in models:
-            if type(data) in (list, tuple):
-                new_model.append((data[0], caldevIDs2readIDs(data[1])))
-            else:
-                new_model.append(data)
-        return super(ir_values, self).get(cr, uid, key, key2, new_model, meta, context, \
-                                      res_id_req, without_user, key2_req)
-
-ir_values()
-
-class ir_model(osv.osv):
-
-    _inherit = 'ir.model'
-
-    def read(self, cr, uid, ids, fields=None, context={}, 
-            load='_classic_read'):
-        data = super(ir_model, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        if data:
-            for val in data:
-                val['id'] = caldevIDs2readIDs(val['id'])
-        return data
-    
-ir_model()
-
-class virtual_report_spool(web_services.report_spool):
-
-    def exp_report(self, db, uid, object, ids, datas=None, context=None):
-        if object == 'printscreen.list':
-            return super(virtual_report_spool, self).exp_report(db, uid, object, ids, datas, context)
-        new_ids = []
-        for id in ids:
-            new_ids.append(caldevIDs2readIDs(id))
-        datas['id'] = caldevIDs2readIDs(datas['id'])
-        super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
-        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
-
-virtual_report_spool()
-
-class virtual_wizard(web_services.wizard):
-    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
-        if wiz_id not in self.wiz_uid:
-            super(virtual_wizard,self).exp_create(db, uid, 'module.upgrade', datas)
-        new_ids = []
-        if 'id' in datas:
-            datas['id'] = caldevIDs2readIDs(datas['id'])
-            for id in datas['ids']:
-               new_ids.append(caldevIDs2readIDs(id))
-            datas['ids'] = new_ids
-        res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
+        res = super(project_task, self).search(cr, uid, args, offset, 
+                limit, order, context, count)
         return res
 
-virtual_wizard()
+    def write(self, cr, uid, ids, vals, context=None):
+        new_ids = []
+        for id in ids:
+            id = caldevIDs2readIDs(id)
+            if not id in new_ids:
+                new_ids.append(id)
+        res = super(project_task, self).write(cr, uid, new_ids, vals, context=context)
+        return res
+
+    def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
+        if not isinstance(select, list): select = [select]
+        select = map(lambda x:caldevIDs2readIDs(x), select)
+        return super(project_task, self).browse(cr, uid, select, context, list_class, fields_process)
+
+    def copy(self, cr, uid, id, default=None, context={}):
+        return super(project_task, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        #TODO: Change RRULE
+        for id in ids:
+            if len(str(id).split('-')) > 1:
+                date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
+                                 time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
+                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], ['date_start', 'rdates', 'rrule']):
+                    if record['date_start'] == date_new:
+                        self.write(cr, uid, [caldevIDs2readIDs(id)], \
+                                   {'rrule' : record['rrule'] +"\n" + str(date_new)})
+            else:
+                return super(project_task, self).unlink(cr, uid, ids)
+
+    def create(self, cr, uid, vals, context={}):
+        if 'case_id' in vals:
+            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+        return super(project_task, self).create(cr, uid, vals, context)
+project_task()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

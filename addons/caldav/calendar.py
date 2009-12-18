@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -101,10 +100,10 @@ class CalDAV(object):
         else:
              return  self.__attribute__.get(name, None)
 
-    def export_ical(self, cr, uid, datas):
+    def export_ical(self, cr, uid, datas, vobj=None):
         ical = vobject.iCalendar()
         for data in datas:
-            vevent = ical.add('vevent')
+            vevent = ical.add(vobj)
             for field in self.__attribute__.keys():
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
@@ -205,7 +204,9 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-
+    def export_ical(self, cr, uid, datas):
+        return super(Event, self).export_ical(cr, uid, datas, 'vevent')
+    
 Event()
 
 class ToDo(CalDAV, osv.osv_memory):
@@ -245,6 +246,9 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rdate': None, 
                 'rrule': None, 
             }
+    
+    def export_ical(self, cr, uid, datas):
+        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo')
 
 ToDo()
 
@@ -395,3 +399,6 @@ class Attendee(CalDAV, osv.osv_memory):
         return vevent
 
 Attendee()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
