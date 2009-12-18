@@ -69,6 +69,19 @@ def map_data(cr, uid, obj):
 class CalDAV(object):
     __attribute__ = {
     }
+    def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
+        todate = parser.parse
+        if not startdate:
+            startdate = datetime.now()
+        else:
+            startdate = todate(''.join((re.compile('\d')).findall(startdate)) + 'Z')
+        rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
+        for date in exdate:
+            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            rset1._exdate.append(datetime_obj)
+        re_dates = rset1._iter()
+        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
+        return recurrent_dates
 
     def ical_set(self, name, value, type):
         if name in self.__attribute__ and self.__attribute__[name]:
@@ -117,6 +130,7 @@ class CalDAV(object):
     def import_ical(self, cr, uid, ical_data):
         parsedCal = vobject.readOne(ical_data)
         att_data = []
+        todo_data = []
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
                 if cal_data.name.lower() == 'attendee':
@@ -192,25 +206,47 @@ class Event(CalDAV, osv.osv_memory):
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
 
-    def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
-        todate = parser.parse
-        if not startdate:
-            startdate = datetime.now()
-        else:
-            startdate = todate(''.join((re.compile('\d')).findall(startdate)) + 'Z')
-        rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
-        for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-            rset1._exdate.append(datetime_obj)
-        re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
-        return recurrent_dates
-
 Event()
 
-class ToDo(CalDAV):
+class ToDo(CalDAV, osv.osv_memory):
+    _name = 'caldav.todo'
+
     __attribute__ = {
-    }
+                'class': None, 
+                'completed': None, 
+                'created': None, 
+                'description': None, 
+                'dtstamp': None, 
+                'dtstart': None, 
+                'duration': None,
+                'due': None,
+                'geo': None, 
+                'last-mod ': None, 
+                'location': None, 
+                'organizer': None, 
+                'percent': None, 
+                'priority': None, 
+                'recurid': None, 
+                'seq': None, 
+                'status': None, 
+                'summary': None, 
+                'uid': None, 
+                'url': None, 
+                'attach': None, 
+                'attendee': None, 
+                'categories': None, 
+                'comment': None, 
+                'contact': None, 
+                'exdate': None, 
+                'exrule': None, 
+                'rstatus': None, 
+                'related': None, 
+                'resources': None, 
+                'rdate': None, 
+                'rrule': None, 
+            }
+
+ToDo()
 
 class Journal(CalDAV):
     __attribute__ = {
@@ -341,6 +377,8 @@ class Attendee(CalDAV, osv.osv_memory):
                 self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
             else:
                 self.ical_set(para.lower(), ical_data.params[para][0], 'value')
+        if not ical_data.params.get('CN'):
+            self.ical_set('cn', ical_data.value, 'value')
         vals = map_data(cr, uid, self)
         return vals
 
