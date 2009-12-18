@@ -122,16 +122,29 @@ class crm_menu_config_wizard(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Name', size=64),
-        'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
-        'lead': fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
-        'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
-        'jobs': fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
-        'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
-        'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
-        'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
-        'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
-        'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to plan a list of phone calls to process."),
+        'meeting': fields.boolean('Meetings Calendar',
+            help="Manages each user's meetings calendar"),
+        'lead': fields.boolean('Leads', help="Tracks and manages leads"),
+        'opportunity': fields.boolean('Business Opportunities',
+            help="Tracks identified business opportunities"),
+        'jobs': fields.boolean('Jobs Hiring Process',
+            help="Helps you organise your hiring process (evaluation, "\
+                                   "meetings, email integration...)"),
+        'document_ics': fields.boolean('Shared Calendar',
+            help="Lets you use your OpenERP calendars in third-party systems "\
+                 "(smartphones, Microsoft Outlook, iCal, Google Calendar..."),
+        'bugs': fields.boolean('Bug Tracking',
+            help="Track bugs and support requests on software"),
+        'helpdesk': fields.boolean('Helpdesk',
+            help="Manages an Helpdesk service."),
+        'fund': fields.boolean('Fund Raising Operations',
+            help="Provides processing and tracking for fund raisings"),
+        'claims': fields.boolean('Claims',
+            help="Manages supplier and customers claims, including "\
+                 "corrective or preventive actions"),
+        'phonecall': fields.boolean('Phone Calls',
+            help="Lets users encode phone call outcomes or phone calls to "\
+                                        "perform"),
     }
     _defaults = {
         'meeting': lambda *args: True,
