@@ -1113,7 +1113,7 @@ class crm_calendar_config_wizard(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Name', size=64),
-        'caldav': fields.boolean('Caldav Properties View', help="Manages the fields required for Caldav Properties.")
+        'caldav': fields.boolean('Advanced View')
     }
 
     def execute(self, cr, uid, ids, context=None):

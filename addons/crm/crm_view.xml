@@ -736,7 +736,7 @@
         <!-- Caldav configartion view -->
 
         <record id="view_config_crm_caldav_menu" model="ir.ui.view">
-            <field name="name">Configure Menu for Caldav Properites</field>
+            <field name="name">Configure Caldav Properties</field>
             <field name="model">crm.calendar.config_wizard</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
@@ -749,17 +749,18 @@
                 <group string="res_config_contents" position="replace">
                   <separator colspan="4" string=""/>
                   <label colspan="4" align="0.0" string="
-                     Enable a detailed view of the caldav properties
-                     configuration."/>
+                     Enable a detailed view of the caldav configuration
+                     screens."/>
                   <newline/>
                   <field name="caldav"/>
                 </group>
+                <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
             </field>
         </record>
 
         <record id="action_view_config_crm_caldav_menu" model="ir.actions.act_window">
-            <field name="name">Configure Menu for Caldav Properites</field>
+            <field name="name">Configure Caldav Properties</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">crm.calendar.config_wizard</field>
             <field name="view_id" ref="view_config_crm_caldav_menu"/>
