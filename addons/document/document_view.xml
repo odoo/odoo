@@ -256,17 +256,14 @@
               Auto Configure
             </attribute></form>
             <group string="res_config_contents" position="replace">
-                <separator string="Document Management System." colspan="4"/>
-                <label string="This wizard will automatically configure the document management system according to modules installed on your system." align="0.0" colspan="4"/>
-                <separator string="" colspan="4"/>
-                <label string="Choose the ftp server address and port. These values will be stored in the configuration file." align="0.0" colspan="4"/>
-                <field name="host" colspan="4"/>
-                <field name="suggested_host" colspan="4"/>
-                <field name="port" colspan="4"/>
+                <separator string="FTP Server Configuration." colspan="4"/>
+                <label align="0.0" colspan="4"
+                       string="Choose the address and port for the Document
+                               Management System's FTP server."/>
+                <field name="host"/>
+                <field name="port"/>
             </group>
-            <xpath expr="//button[@name='action_next']" position="attributes">
-              <attribute name="string">Configure</attribute>
-            </xpath>
+            <xpath expr='//button[@name="action_skip"]' position="replace"/>
           </data>
         </field>
     </record>
@@ -296,9 +293,8 @@
                 <separator string="Document Management System." colspan="4"/>
                 <label string="This wizard will configure the ftp server address and port." align="0.0" colspan="4"/>
                 <label string="These values will be stored in the configuration file." align="0.0" colspan="4"/>
-                <field name="host" colspan="4"/>
-                <field name="suggested_host" colspan="4"/>
-                <field name="port" colspan="4"/>
+                <field name="host"/>
+                <field name="port"/>
                 <separator string="" colspan="4"/>
                 <label string="" colspan="2"/>
                 <group col="4" colspan="2">

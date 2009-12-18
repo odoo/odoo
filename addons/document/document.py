@@ -721,11 +721,10 @@ class document_configuration_wizard(osv.osv_memory):
     _inherit = 'res.config'
     _rec_name = 'host'
     _columns = {
-        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
-            "Keep localhost if you don't know what to write.", required=True),
-        'suggested_host': fields.char('Suggested Server Address', size=64, readonly=True, help="This is the guessed server address"),
-        'port': fields.char('Server Port', size=5, help="Put here the server port. " \
-            "Keep 8021 if you don't know what to write.", required=True)
+        'host': fields.char('Address', size=64,
+                            help="Server address or IP.", required=True),
+        'port': fields.char('Port', size=5, help="Server port. " \
+            "Leave 8021 if you don't know what to write.", required=True)
     }
 
     def get_ftp_server_address(self, cr, uid, context=None):
@@ -738,12 +737,8 @@ class document_configuration_wizard(osv.osv_memory):
     def get_ftp_server_port(self, cr, uid, context=None):
         return config.get('ftp_server_port', 8021)
 
-    def get_suggested_ftp_server_address(self, cr, uid, context=None):
-        return tools.misc.detect_ip_addr()
-
     _defaults = {
         'host': get_ftp_server_address,
-        'suggested_host': get_suggested_ftp_server_address,
         'port': get_ftp_server_port,
     }
 
@@ -827,10 +822,9 @@ class document_configuration_ftpserver_wizard(osv.osv_memory):
     _name='document.configuration.ftp_server.wizard'
     _rec_name = 'Configure FTP server address'
     _columns = {
-        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
+        'host': fields.char('Address', size=64, help="Put here the server address or IP. " \
             "Keep localhost if you don't know what to write.", required=True),
-        'suggested_host': fields.char('Suggested Server Address', size=64, readonly=True, help="This is the guessed server address"),
-        'port': fields.char('Server Port', size=5, help="Put here the server port. " \
+        'port': fields.char('Port', size=5, help="Put here the server port. " \
             "Keep 8021 if you don't know what to write.", required=True)
     }
 
@@ -841,12 +835,8 @@ class document_configuration_ftpserver_wizard(osv.osv_memory):
     def get_ftp_server_port(self, cr, uid, context=None):
         return config.get('ftp_server_port', '8021')
 
-    def get_suggested_ftp_server_address(self, cr, uid, context=None):
-        return tools.misc.detect_ip_addr()
-
     _defaults = {
         'host': get_ftp_server_address,
-        'suggested_host': get_suggested_ftp_server_address,
         'port': get_ftp_server_port,
     }
 
