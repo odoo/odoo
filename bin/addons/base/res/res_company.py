@@ -98,8 +98,11 @@ class res_company(osv.osv):
         proxy = self.pool.get('multi_company.default')
         args = [
             ('object_id.model', '=', object),
-            ('field_id.name','=',field),
         ]
+        if field:
+            args.append(('field_id.name','=',field))
+        else:
+            args.append(('field_id','=',False))
         ids = proxy.search(cr, uid, args)
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
