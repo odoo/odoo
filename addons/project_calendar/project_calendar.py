@@ -66,7 +66,7 @@ class project_task(osv.osv):
         'description': {'field': 'description', 'type': 'text'}, 
 #        'dtstamp': {'field': 'field', 'type': 'text'}, 
         'dtstart': {'field': 'date_start', 'type': 'datetime'}, 
-        'duration': {'field': 'planned_hours', 'type': 'int'}, 
+        'duration': {'field': 'planned_hours', 'type': 'timedelta'}, 
         'due': {'field': 'date_deadline', 'type': 'datetime'}, 
 #        'geo': {'field': 'field', 'type': 'text'}, 
 #        'last-mod ': {'field': 'field', 'type': 'text'}, 
@@ -112,9 +112,14 @@ class project_task(osv.osv):
 
         vals = todo_obj.import_ical(cr, uid, file_content)
         for val in vals:
-            if not val.has_key('duration'):
-                # 'Compute duration'
+            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+            if not val.has_key('planned_hours'):
+                # 'Compute duration' in days
                 val['planned_hours'] = 16
+            else:
+                # Convert timedelta into Project time unit
+                val['planned_hours'] = (val['planned_hours'].seconds/float(86400) + \
+                                        val['planned_hours'].days) * obj_tm.factor
             val.pop('id')
             task_id = self.create(cr, uid, val)
         return {'count': len(vals)}

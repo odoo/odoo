@@ -204,7 +204,7 @@ virtual_report_spool()
 class virtual_wizard(web_services.wizard):
     def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
         if wiz_id not in self.wiz_uid:
-            # TODO : To Check why need it
+            # TODO: To Check why need it
             if wiz_id == 1:
                 wiz_name ='base_setup.base_setup'
             if wiz_id == 2:
