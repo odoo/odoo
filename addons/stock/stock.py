@@ -149,12 +149,12 @@ class stock_location(osv.osv):
             [('auto', 'Automatic Move'), ('manual', 'Manual Operation'), ('transparent', 'Automatic No Step Added')],
             'Automatic Move',
             required=True,
-            help="This is used only if you selected a chained location type.\n" \
+            help="This is used only if you select a chained location type.\n" \
                 "The 'Automatic Move' value will create a stock move after the current one that will be "\
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
             ),
-        'chained_delay': fields.integer('Chained Delay (days)'),
+        'chained_delay': fields.integer('Chained lead time (days)'),
         'address_id': fields.many2one('res.partner.address', 'Location Address'),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
 
@@ -337,7 +337,7 @@ class stock_tracking(osv.osv):
         return sequence + str(self.checksum(sequence))
 
     _columns = {
-        'name': fields.char('Tracking', size=64, required=True),
+        'name': fields.char('Tracking ID', size=64, required=True),
         'active': fields.boolean('Active'),
         'serial': fields.char('Reference', size=64),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),

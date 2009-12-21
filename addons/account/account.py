@@ -266,7 +266,7 @@ class account_account(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
+        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([
             ('receivable', 'Receivable'),
@@ -468,7 +468,7 @@ class account_journal(osv.osv):
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
         'active': fields.boolean('Active'),
-        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
+        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
@@ -1270,7 +1270,7 @@ class account_tax(osv.osv):
         'ref_tax_code_id': fields.many2one('account.tax.code', 'Refund Tax Code', help="Use this code for the VAT declaration."),
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
-        'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
+        'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
@@ -1591,8 +1591,8 @@ class account_model_line(osv.osv):
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
 
-        'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
-        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can chosse between the date of the creation action or the the date of the creation of the entries plus the partner payment terms."),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
         'date': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Current Date', required=True, help="The date of the generated entries"),
     }
     _defaults = {
@@ -1797,7 +1797,7 @@ class account_account_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
+        'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
         'type': fields.selection([
             ('receivable','Receivable'),
@@ -1811,8 +1811,8 @@ class account_account_template(osv.osv):
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for deprecated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            help="These types are defined according to your country. The type contain more information "\
-            "about the account and it's specificities."),
+            help="These types are defined according to your country. The type contains more information "\
+            "about the account and its specificities."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),

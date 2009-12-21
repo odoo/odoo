@@ -58,7 +58,7 @@ class hr_expense_expense(osv.osv):
         'ref': fields.char('Reference', size=32),
         'date': fields.date('Date'),
         'journal_id': fields.many2one('account.journal', 'Force Journal'),
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Date Confirmed'),
         'date_valid': fields.date('Date Validated'),

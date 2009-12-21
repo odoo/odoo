@@ -1236,7 +1236,7 @@ class report_attendance(osv.osv):
     #_rec_name='date'
     _columns = {
         'name': fields.date('Date', readonly=True,select=1),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=1, readonly=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=1, readonly=True),
         'total_attendance': fields.float('Total', readonly=True),
 }
     def init(self, cr):

@@ -119,7 +119,7 @@ class hr_employee(osv.osv):
     _description = "Employee"
 
     _columns = {
-        'name' : fields.char("Employee", size=128, required=True),
+        'name' : fields.char("Employee's Name", size=128, required=True),
         'active' : fields.boolean('Active'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id' : fields.many2one('res.users', 'Related User'),
