@@ -1306,7 +1306,7 @@ class account_invoice_tax(osv.osv):
         'base': fields.float('Base', digits=(16,int(config['price_accuracy']))),
         'amount': fields.float('Amount', digits=(16,int(config['price_accuracy']))),
         'manual': fields.boolean('Manual'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
 
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,int(config['price_accuracy']))),

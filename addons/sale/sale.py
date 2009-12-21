@@ -752,7 +752,7 @@ class sale_order_line(osv.osv):
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Ref', required=True, ondelete='cascade', select=True),
         'name': fields.char('Description', size=256, required=True, select=True),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),

@@ -68,7 +68,7 @@ class  report_closed_task(osv.osv):
     _description = "Closed Task Report"
     _auto = False
     _columns = {
-        'sequence': fields.integer('Sequence', readonly=True),
+        'sequence': fields.integer('Sequence', readonly=True, help="Gives the sequence order when displaying a list of closed task reports."),
         'name': fields.char('Task summary', size=128, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),

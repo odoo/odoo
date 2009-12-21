@@ -202,7 +202,7 @@ class product_category(osv.osv):
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
     _order = "sequence"
     def _check_recursion(self, cr, uid, ids):
@@ -566,7 +566,7 @@ class product_packaging(osv.osv):
     _description = "Packaging"
     _rec_name = 'ean'
     _columns = {
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
         'name' : fields.char('Description', size=64),
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
@@ -629,7 +629,7 @@ class product_supplierinfo(osv.osv):
         'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', help="Supplier of this product"),
         'product_name': fields.char('Partner Product Name', size=128, help="This partner's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Partner Product Code', size=64, help="This partner's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
-        'sequence' : fields.integer('Priority'),
+        'sequence' : fields.integer('Priority', help="Assigns the priority to the list of product supplier."),
         'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),

@@ -69,7 +69,7 @@ class crm_case_section(osv.osv):
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case sections."),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
@@ -370,7 +370,7 @@ class crm_case_rule(osv.osv):
     _columns = {
         'name': fields.char('Rule Name',size=64, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case rule without removing it."),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case rules."),
 
         'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case State', size=16),
         'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Button Pressed', size=16),

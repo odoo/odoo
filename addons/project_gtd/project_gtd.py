@@ -35,7 +35,7 @@ class project_gtd_context(osv.osv):
     _description = "Contexts"
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),
         'project_default_id': fields.many2one('project.project', 'Default Project', required=True),
     }
     _defaults = {
@@ -51,7 +51,7 @@ class project_gtd_timebox(osv.osv):
     _order = "sequence"
     _columns = {
         'name': fields.char('Timebox', size=64, required=True, select=1),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of timebox."),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
     

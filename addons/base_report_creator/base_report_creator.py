@@ -378,7 +378,7 @@ class report_creator_field(osv.osv):
     _rec_name = 'field_id'
     _order = "sequence,id"
     _columns = {
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of fields."),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
         'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('count','Count'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),

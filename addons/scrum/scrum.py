@@ -163,7 +163,7 @@ class scrum_product_backlog(osv.osv):
         'project_id': fields.many2one('scrum.project', 'Scrum Project', required=True, domain=[('scrum','=',1)]),
         'user_id': fields.many2one('res.users', 'User'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
-        'sequence' : fields.integer('Sequence'),
+        'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
         'tasks_id': fields.one2many('scrum.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),

@@ -79,7 +79,7 @@ class delivery_grid(osv.osv):
     _description = "Delivery Grid"
     _columns = {
         'name': fields.char('Grid Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=64, required=True),
+        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when displaying a list of delivery grid."),
         'carrier_id': fields.many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade'),
         'country_ids': fields.many2many('res.country', 'delivery_grid_country_rel', 'grid_id', 'country_id', 'Countries'),
         'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
