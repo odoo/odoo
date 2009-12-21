@@ -202,7 +202,7 @@ class hr_timesheet_sheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
         context['sheet_id']=ids[0]
-        success = emp_obj.sign_in(cr, uid, emp_id, context=context)
+        success = emp_obj.attendance_action_change(cr, uid, emp_id, type='sign_in', context=context,)
         return True
 
     def sign_out(self, cr, uid, ids, context):
@@ -211,7 +211,7 @@ class hr_timesheet_sheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
         context['sheet_id']=ids[0]
-        success = emp_obj.sign_out(cr, uid, emp_id, context=context)
+        success = emp_obj.attendance_action_change(cr, uid, emp_id, type='sign_out', context=context,)
         return True
 
     _columns = {
