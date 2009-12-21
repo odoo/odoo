@@ -305,7 +305,7 @@ class report_creator(osv.osv):
     _columns = {
         'name': fields.char('Report Name',size=64, required=True),
         'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the report without removing it."),
         'view_type1': fields.selection([('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'First View', required=True),
         'view_type2': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Second View'),
         'view_type3': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Third View'),

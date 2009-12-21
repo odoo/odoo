@@ -434,7 +434,7 @@ class document_directory_content_type(osv.osv):
     _columns = {
         'name': fields.char('Content Type', size=64, required=True),
         'code': fields.char('Extension', size=4),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the directory content type without removing it."),
     }
     _defaults = {
         'active': lambda *args: 1

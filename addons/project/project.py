@@ -92,7 +92,7 @@ class project(osv.osv):
     _columns = {
         'name': fields.char("Project Name", size=128, required=True),
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=128),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
         'manager': fields.many2one('res.users', 'Project Manager'),
@@ -276,7 +276,7 @@ class task(osv.osv):
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     _columns = {
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
         'name': fields.char('Task summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),

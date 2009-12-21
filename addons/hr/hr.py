@@ -120,7 +120,7 @@ class hr_employee(osv.osv):
 
     _columns = {
         'name' : fields.char("Employee's Name", size=128, required=True),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the employee record without removing it."),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id' : fields.many2one('res.users', 'Related User'),
 

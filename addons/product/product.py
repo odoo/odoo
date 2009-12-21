@@ -91,7 +91,7 @@ class product_uom(osv.osv):
         'factor_inv_data': fields.float('Factor', digits=(12, 6)),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
             help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
     }
 
     _defaults = {
@@ -438,7 +438,7 @@ class product_product(osv.osv):
         'code': fields.function(_product_code, method=True, type='char', string='Code'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Code', size=64),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'ean13': fields.char('EAN13', size=13),

@@ -50,7 +50,7 @@ class delivery_carrier(osv.osv):
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'price' : fields.function(get_price, method=True,string='Price'),
-        'active': fields.boolean('Active')
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery carrier without removing it.")
     }
     _defaults = {
         'active': lambda *args:1
@@ -86,7 +86,7 @@ class delivery_grid(osv.osv):
         'zip_from': fields.char('Start Zip', size=12),
         'zip_to': fields.char('To Zip', size=12),
         'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery grid without removing it."),
     }
     _defaults = {
         'active': lambda *a: 1,

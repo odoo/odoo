@@ -42,7 +42,7 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _columns = {
         'name': fields.char('Work Center Name', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the work center without removing it."),
         'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
         'code': fields.char('Code', size=16),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="The normal working time of the workcenter."),
@@ -103,7 +103,7 @@ class mrp_routing(osv.osv):
     _description = 'Routing'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
@@ -174,7 +174,7 @@ class mrp_bom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help=
             "Use a phantom bill of material in raw materials lines that have to be " \
             "automatically computed in on eproduction order and not one per level." \
@@ -1193,7 +1193,7 @@ class stock_warehouse_orderpoint(osv.osv):
     _description = "Orderpoint minimum rule"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),

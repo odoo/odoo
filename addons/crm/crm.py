@@ -67,7 +67,7 @@ class crm_case_section(osv.osv):
     _columns = {
         'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
@@ -219,7 +219,7 @@ class crm_email_gateway_server(osv.osv):
         'server_type': fields.selection([("pop","POP"),("imap","Imap")],"Type of Server", required=True, help="Type of Email gateway Server"),
         'port': fields.integer("Port" , help="Port Of Email gateway Server. If port is omitted, the standard POP3 port (110) is used for POP EMail Server and the standard IMAP4 port (143) is used for IMAP Sever."),
         'ssl': fields.boolean('SSL',help ="Use Secure Authentication"),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the email gateway server without removing it."),
     }
     _defaults = {
         'server_type':lambda * a:'pop',
@@ -369,7 +369,7 @@ class crm_case_rule(osv.osv):
     _description = "Case Rule"
     _columns = {
         'name': fields.char('Rule Name',size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case rule without removing it."),
         'sequence': fields.integer('Sequence'),
 
         'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case State', size=16),
@@ -491,7 +491,7 @@ class crm_case(osv.osv):
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description',size=64,required=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),

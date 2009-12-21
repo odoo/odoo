@@ -153,7 +153,7 @@ class account_report(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the account report without removing it."),
         'sequence': fields.integer('Sequence'),
         'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([

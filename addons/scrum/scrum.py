@@ -159,7 +159,7 @@ class scrum_product_backlog(osv.osv):
     _columns = {
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product backlog without removing it."),
         'project_id': fields.many2one('scrum.project', 'Scrum Project', required=True, domain=[('scrum','=',1)]),
         'user_id': fields.many2one('res.users', 'User'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
