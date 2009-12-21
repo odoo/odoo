@@ -19,15 +19,8 @@
 #
 ##############################################################################
 
-import time
-import tools
 import wizard
-import os
-import mx.DateTime
-import base64
 import pooler
-import vobject
-
 
 class project_cal_imp_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
@@ -44,22 +37,46 @@ class project_cal_imp_wizard(wizard.interface):
                 'filters': '*.ics'
                 }
             }
+    display = '''<?xml version="1.0"?>
+    <form string="Import Message">
+        <field name="msg" colspan="4" width="300" nolabel="1"/>
+    </form>'''
     
+    display_fields = {
+            'msg': {
+                'string': '', 
+                'type': 'text', 
+                'readonly': True, 
+                'default': 'Imported %s Tasks'
+                }
+            }
+
     def _process_imp_ics(self, cr, uid, data, context=None):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
-        task_obj.import_cal(cr, uid, data['ids'], data, context)
+        vals = task_obj.import_cal(cr, uid, data['ids'], data, context)
+        if vals:
+            global cnt
+            cnt = vals['count']
         return {}
+    
+    def _result_set(self, cr, uid, data, context=None):
+        return {'msg': 'Imported %s Task(s)' % cnt}
     
     states = {
         'init': {
             'actions': [], 
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
+            'result': {'type': 'form', 'arch': form1, 'fields': form1_fields, \
                        'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Import', 'gtk-ok')]}
         }, 
         'open': {
             'actions': [], 
-            'result': {'type': 'action', 'action':_process_imp_ics, 'state':'end'}
-        }
+            'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
+        },
+       'display': {
+            'actions': [_result_set], 
+            'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
+                       'state': [('end', 'Ok', 'gtk-ok')]}
+        }, 
     }
     
 project_cal_imp_wizard('caldav.project.import')

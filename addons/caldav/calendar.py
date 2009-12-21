@@ -100,6 +100,12 @@ class CalDAV(object):
         else:
              return  self.__attribute__.get(name, None)
 
+    def ical_reset(self, type):
+        for name in self.__attribute__:
+            if self.__attribute__[name]:
+                self.__attribute__[name][type] = None
+        return True
+
     def export_ical(self, cr, uid, datas, vobj=None):
         ical = vobject.iCalendar()
         for data in datas:
@@ -129,7 +135,7 @@ class CalDAV(object):
     def import_ical(self, cr, uid, ical_data):
         parsedCal = vobject.readOne(ical_data)
         att_data = []
-        todo_data = []
+        res = []
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
                 if cal_data.name.lower() == 'attendee':
@@ -144,8 +150,10 @@ class CalDAV(object):
                     continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
-        vals = map_data(cr, uid, self)
-        return vals
+            vals = map_data(cr, uid, self)
+            if vals : res.append(vals)
+            self.ical_reset('value')
+        return res
 
 
 class Calendar(CalDAV, osv.osv_memory):

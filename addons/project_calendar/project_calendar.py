@@ -111,17 +111,13 @@ class project_task(osv.osv):
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
 
         vals = todo_obj.import_ical(cr, uid, file_content)
-        if not vals.has_key('duration'):
-            # 'Compute duration'
-            vals['planned_hours'] = 16
-#            start =  datetime.strptime(vals.get('date_start'), '%Y-%m-%d %H:%M:%S')
-#            end =  datetime.strptime(vals.get('date_deadline'), '%Y-%m-%d %H:%M:%S')
-#            difference = float((end - start).seconds) / 3600
-##            minutes, seconds = divmod(difference.seconds, 60)
-##            hours, minutes = divmod(minutes, 60)
-        vals.pop('id')
-        task_id = self.create(cr, uid, vals)
-        return
+        for val in vals:
+            if not val.has_key('duration'):
+                # 'Compute duration'
+                val['planned_hours'] = 16
+            val.pop('id')
+            task_id = self.create(cr, uid, val)
+        return {'count': len(vals)}
     
     def export_cal(self, cr, uid, ids, context={}):
         task_data = self.read(cr, uid, ids, [], context ={'read': True})

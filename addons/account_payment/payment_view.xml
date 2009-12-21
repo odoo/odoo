@@ -51,6 +51,13 @@
                 </form>
             </field>
         </record>
+        
+        <record id="action_payment_type_tree" model="ir.actions.act_window">
+            <field name="name">Payment Type</field>
+            <field name="res_model">payment.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
@@ -83,8 +90,12 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/><menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
-
+		<menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/>
+        
+        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
+        
+        <menuitem action="action_payment_type_tree" id="menu_action_paymen_type" parent="next_id_44"/>
+        
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
             <field name="model">payment.order</field>
