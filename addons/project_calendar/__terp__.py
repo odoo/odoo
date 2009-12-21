@@ -19,7 +19,18 @@
 #
 ##############################################################################
 
-import calendar
-import common
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+{
+    "name" : "Caldav task management", 
+    "version" : "1.0", 
+    "author" : "Tiny", 
+    "category" : "Generic Modules/Others", 
+    "description": """ Synchronize between Project task and Caldav Vtodo.""", 
+    "depends" : ["project", "caldav"], 
+    "init_xml" : [], 
+    "demo_xml" : [], 
+    "update_xml" : ["project_calendar_view.xml", 
+                                "project_calendar_wizard.xml"], 
+    "active": False, 
+    "website": "http://www.openerp.com", 
+    "installable": True, 
+}
