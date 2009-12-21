@@ -1712,18 +1712,24 @@ class account_config_wizard(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'),
+                                        ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
         res.sort(key=lambda x: x[1])
         return res
 
     _columns = {
-        'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
-        'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
+        'name':fields.char(
+            'Name', required=True, size=64,
+            help="Name of the fiscal year as displayed on screens."),
+        'code':fields.char(
+            'Code', required=True, size=64,
+            help="Name of the fiscal year as displayed in reports."),
         'date1': fields.date('Start Date', required=True),
         'date2': fields.date('End Date', required=True),
-        'period':fields.selection([('month','Month'),('3months','3 Months')], 'Periods', required=True),
+        'period':fields.selection([('month','Month'), ('3months','3 Months')],
+                                  'Periods', required=True),
         'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
     }
     _defaults = {
