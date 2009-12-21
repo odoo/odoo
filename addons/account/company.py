@@ -46,7 +46,6 @@ class company_setup(osv.osv_memory):
 
     _columns = {
         'company_id':fields.many2one('res.company','Company',required=True),
-        'partner_id':fields.many2one('res.partner','Partner'),
         'overdue_msg': fields.text('Overdue Payment Message'),
     }
     def get_message(self,cr,uid,context={}):
@@ -58,7 +57,6 @@ class company_setup(osv.osv_memory):
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
-        'partner_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.partner_id.id,
         'overdue_msg': get_message,
     }
 
@@ -72,8 +70,7 @@ class company_setup(osv.osv_memory):
         else:
             msg_tail = '.'
 
-        return {'value': {'overdue_msg': comp_obj.overdue_msg + msg_tail,
-                          'partner_id': comp_obj.partner_id.id } }
+        return {'value': {'overdue_msg': comp_obj.overdue_msg + msg_tail } }
 
     def execute(self, cr, uid, ids, context=None):
         content_wiz = self.pool.get('wizard.company.setup')\
