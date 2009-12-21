@@ -144,7 +144,7 @@ class crm_menu_config_wizard(osv.osv_memory):
                  "corrective or preventive actions"),
         'phonecall': fields.boolean('Phone Calls',
             help="Lets users encode phone call outcomes or phone calls to "\
-                                        "perform"),
+                 "perform"),
     }
     _defaults = {
         'meeting': lambda *args: True,
@@ -153,28 +153,27 @@ class crm_menu_config_wizard(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        module_proxy = self.pool.get('ir.module.module')
-        modid = module_proxy.search(cr, uid, [('name', '=', 'crm')])
-        moddemo = module_proxy.browse(cr, uid, modid[0]).demo
+        modobj = self.pool.get('ir.module.module')
+        modids = modobj.search(cr, uid, [('name', '=', 'crm')])
+        moddemo = modobj.browse(cr, uid, modids[0]).demo
         lst = ('data', 'menu')
         if moddemo:
             lst = ('data', 'menu', 'demo')
         res = self.read(cr, uid, ids)[0]
-        idref = {}
         for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
             if (not res[section]):
                 continue
             for fname in lst:
-                file_name = 'crm_' + section + '_' + fname + '.xml'
+                file_name = 'crm_%s_%s.xml'%(section, fname)
                 try:
-                    fp = tools.file_open(os.path.join('crm', file_name))
-                except IOError, e:
-                    fp = None
-                if fp:
-                    tools.convert_xml_import(cr, 'crm', fp, idref, 'init', noupdate=True)
+                    tools.convert_xml_import(
+                        cr, 'crm',
+                        tools.file_open(os.path.join('crm', file_name)),
+                        {}, 'init', noupdate=True)
+                except IOError:
+                    pass
+
         cr.commit()
-        modobj = self.pool.get('ir.module.module')
-        modids = modobj.search(cr, uid, [('name', '=', 'crm')])
         modobj.update_translations(cr, 1, modids, None)
 
         if res['document_ics']:
