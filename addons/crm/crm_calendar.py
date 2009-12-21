@@ -204,15 +204,15 @@ class crm_case(osv.osv):
         alarm_obj = self.pool.get('caldav.alarm')
         crm_alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
-        
         vals = event_obj.import_ical(cr, uid, file_content)
-        # TODO: Select proper section
-        section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
-        vals.update({'section_id' : section_id})
-        vals.pop('id')
-        vals.pop('create_date')
-        case_id = self.create(cr, uid, vals)
-        return
+        for val in vals:
+            # TODO: Select proper section
+            section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
+            val.update({'section_id' : section_id})
+            val.pop('id')
+            val.pop('create_date')
+            case_id = self.create(cr, uid, val)
+        return {'count': len(vals)}
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
             context=None, count=False):

@@ -19,14 +19,9 @@
 #
 ##############################################################################
 
-import time
-import tools
 import wizard
-import os
-import mx.DateTime
 import base64
 import pooler
-import vobject
 
 
 class project_cal_export_wizard(wizard.interface):
