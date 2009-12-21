@@ -46,7 +46,9 @@ class account_invoice_line(osv.osv):
         """
         res = {}
         tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
+            cur = line.invoice_id.currency_id
             res_init = super(account_invoice_line, self)._amount_line(cr, uid, [line.id], name, args, context)
             res[line.id] = {
                 'price_subtotal': 0.0,
@@ -64,13 +66,13 @@ class account_invoice_line(osv.osv):
                         product_taxes = filter(lambda x: x.price_include, line.product_id.supplier_taxes_id)
 
                 if ((set(product_taxes) == set(line.invoice_line_tax_id)) or not product_taxes) and (line.invoice_id.price_type == 'tax_included'):
-                    res[line.id]['price_subtotal_incl'] = res_init[line.id]
+                    res[line.id]['price_subtotal_incl'] = cur_obj.round(cr, uid, cur, res_init[line.id])
                 else:
-                    res[line.id]['price_subtotal'] = res_init[line.id]
+                    res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res_init[line.id])
                     for tax in tax_obj.compute_inv(cr, uid, product_taxes, res_init[line.id]/line.quantity, line.quantity):
-                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], 2)
+                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], int(config['price_accuracy']))
             else:
-                res[line.id]['price_subtotal'] = res_init[line.id]
+                res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, res_init[line.id])
 
             if res[line.id]['price_subtotal']:
                 res[line.id]['price_subtotal_incl'] = res[line.id]['price_subtotal']
@@ -83,8 +85,8 @@ class account_invoice_line(osv.osv):
                     res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
                     res[line.id]['data'].append( tax)
 
-        res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], 2)
-        res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], 2)
+        res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], int(config['price_accuracy']))
+        res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], int(config['price_accuracy']))
         return res
 
     def _price_unit_default(self, cr, uid, context=None):
