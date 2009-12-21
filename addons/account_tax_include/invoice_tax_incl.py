@@ -24,6 +24,7 @@ import time
 import netsvc
 from osv import fields, osv
 import ir
+from tools import config
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
