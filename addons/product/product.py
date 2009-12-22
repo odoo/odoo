@@ -276,7 +276,7 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company',select=1),
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -633,7 +633,7 @@ class product_supplierinfo(osv.osv):
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Delay', required=True, help="Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
-        'company_id':fields.many2one('res.company','Company'),
+        'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
         'qty': lambda *a: 0.0,
