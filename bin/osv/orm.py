@@ -2595,7 +2595,7 @@ class orm(orm_template):
             str_d = string.join(('%s',)*len(sub_ids), ',')
             if d1:
                 cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                        'WHERE '+self._table+'.id IN ('+str_d+')'+' and '.join(d1), sub_ids+d2)
+                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
@@ -2703,6 +2703,7 @@ class orm(orm_template):
         if len(upd0):
 
             d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+            print d1,d2
             if d1:
                 d1 = ' and '+' and '.join(d1)
 
@@ -2711,7 +2712,7 @@ class orm(orm_template):
                 ids_str = string.join(map(str, sub_ids), ',')
                 if d1:
                     cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                            'WHERE '+self._table+'.id IN ('+ids_str+')'+' and '.join(d1), d2)
+                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while writing (Document type: %s).') % \
