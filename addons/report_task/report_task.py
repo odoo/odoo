@@ -154,7 +154,7 @@ class report_timesheet_task_user(osv.osv):
             union
                 select to_char(h.name,'YYYY-MM-01') as name,
                 to_char(h.name,'MM') as m_id
-                from hr_timesheet_sheet_sheet_day h) as month) """)
+                from hr_timesheet_sheet_sheet_day h) as months) """)
 
 report_timesheet_task_user()
 
