@@ -137,7 +137,7 @@ class ir_rule(osv.osv):
         if not (field_id or operator or operand):
             return {}
 
-    def domain_get2(self, cr, uid, model_name):
+    def domain_get2(self, cr, uid, model_name, context={}):
         if uid == 1:
             return []
 
@@ -155,8 +155,9 @@ class ir_rule(osv.osv):
         for rule in self.browse(cr, uid, ids):
             dom += rule.domain
         return dom
-    def domain_get(self, cr, uid, model_name):
-        dom = self.domain_get2(cr, uid, model_name)
+
+    def domain_get(self, cr, uid, model_name, context={}):
+        dom = self.domain_get2(cr, uid, model_name, context=context)
         d1,d2,tables = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
         return ' and '.join(d1), d2, tables
     domain_get = tools.cache()(domain_get)

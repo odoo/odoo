@@ -2375,7 +2375,7 @@ class orm(orm_template):
             fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
@@ -2404,7 +2404,7 @@ class orm(orm_template):
                                 self._order),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % self._description)
+                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
@@ -2586,7 +2586,7 @@ class orm(orm_template):
         #   ids2 = [x[self._inherits[key]] for x in res]
         #   self.pool.get(key).unlink(cr, uid, ids2)
 
-        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
+        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         if d1:
             d1 = ' AND '+d1
 
@@ -2702,7 +2702,7 @@ class orm(orm_template):
 
         if len(upd0):
 
-            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
             if d1:
                 d1 = ' and '+d1
 
@@ -2714,7 +2714,7 @@ class orm(orm_template):
                             'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % \
+                                _('You try to bypass an access rule while writing (Document type: %s).') % \
                                         self._description)
                 else:
                     cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
@@ -3016,7 +3016,9 @@ class orm(orm_template):
                     continue
 
             result.setdefault(fncts[fnct][0], {})
-            ids2 = fncts[fnct][2](self,cr, uid, ids, context)
+
+            # uid == 1 for accessing objects having rules defined on store fields
+            ids2 = fncts[fnct][2](self,cr, 1, ids, context)
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
@@ -3065,7 +3067,8 @@ class orm(orm_template):
         for key in keys:
             val = todo[key]
             if key:
-                result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
+                # uid == 1 for accessing objects having rules defined on store fields
+                result = self._columns[val[0]].get(cr, self, ids, val, 1, context=context)
                 for id,value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -3089,7 +3092,8 @@ class orm(orm_template):
 
             else:
                 for f in val:
-                    result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    # uid == 1 for accessing objects having rules defined on store fields
+                    result = self._columns[f].get(cr, self, ids, f, 1, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -3151,7 +3155,7 @@ class orm(orm_template):
         if not context:
             context = {}
         # compute the where, order by, limit and offset clauses
-        dom = self.pool.get('ir.rule').domain_get2(cr, user, self._name)
+        dom = self.pool.get('ir.rule').domain_get2(cr, user, self._name, context=context)
         (qu1, qu2, tables) = self._where_calc(cr, user, args+dom, context=context)
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')

@@ -506,7 +506,7 @@ class many2many(_column):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
-        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
         if d1:
             d1 = ' and ' + d1
 
@@ -544,7 +544,7 @@ class many2many(_column):
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
 
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
                 if d1:
                     d1 = ' and ' + d1
                 cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+','.join(tables)+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
@@ -741,7 +741,8 @@ class related(function):
         if not ids: return {}
         relation = obj._name
         res = {}.fromkeys(ids, False)
-        objlst = obj.browse(cr, uid, ids)
+
+        objlst = obj.browse(cr, uid, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -778,7 +779,6 @@ class related(function):
                 if res[r]:
                     res[r] = [x.id for x in res[r]]
 
-            
         return res
 
     def __init__(self, *arg, **args):
