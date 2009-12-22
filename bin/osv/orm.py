@@ -3157,7 +3157,6 @@ class orm(orm_template):
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-        print '***', dom, qu1,qu2,tables
         qu1 = qu1 + dom[0]
         qu2 = qu2 + dom[1]
         for t in dom[2]:

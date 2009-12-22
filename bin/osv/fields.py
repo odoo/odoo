@@ -509,6 +509,7 @@ class many2many(_column):
         d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
         if d1:
             d1 = ' and ' + ' and '.join(d1)
+        else: d1 = ''
 
         cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
                 FROM '+self._rel+' , '+(','.join(tables))+' \
@@ -547,6 +548,8 @@ class many2many(_column):
                 d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
                 if d1:
                     d1 = ' and ' + ' and '.join(d1)
+                else:
+                    d1 = ''
                 cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+','.join(tables)+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
 
                 for act_nbr in act[2]:
