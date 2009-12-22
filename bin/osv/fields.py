@@ -901,27 +901,25 @@ class property(function):
             else:
                 res[int(prop.res_id.split(',')[1])] = prop.value or ''
 
-        try:
+        if self._obj:
             obj = obj.pool.get(self._obj)
-    
+
             to_check = res.values()
             if default_val and default_val not in to_check:
                 to_check += [default_val]
             existing_ids = obj.search(cr, uid, [('id', 'in', to_check)])
-            
+
             for id, res_id in res.items():
                 if res_id not in existing_ids:
                     cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
                     res[id] = default_val
-    
+
             names = dict(obj.name_get(cr, uid, existing_ids, context))
             for r in res.keys():
                 if res[r] and res[r] in names:
                     res[r] = (res[r], names[res[r]])
                 else:
                     res[r] = False
-        except:
-            pass
         return res
 
     def _field_get(self, cr, uid, model_name, prop):
