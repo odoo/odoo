@@ -158,17 +158,19 @@
               </td>
             </tr>
           </blockTable>
-	<blockTable colWidths="105.0,78.0" style="Table_Amount">
-	      <tr>
-	        <td>
-	          <para style="terp_default_2">[[ repeatIn(o.payments,'d') or removeParentNode('blockTable') ]]</para>
-	          <para style="terp_default_Bold_9_Right1">[[ d.journal_id.name ]]:</para>
-	        </td>
-	        <td>
-	          <para style="terp_default_Bold_9_Right2">[[ d.amount ]]</para>
-	        </td>
-	      </tr>
-		</blockTable>
+          <section>
+          <para style="terp_default_2">[[ repeatIn(o.payments,'d') ]]</para>
+			<blockTable colWidths="105.0,78.0" style="Table_Amount">
+		      <tr>
+		        <td>
+		          <para style="terp_default_Bold_9_Right1">[[ d.journal_id.name ]]:</para>
+		        </td>
+		        <td>
+		          <para style="terp_default_Bold_9_Right2">[[ d.amount ]]</para>
+		        </td>
+		      </tr>
+			</blockTable>
+		  </section>
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
