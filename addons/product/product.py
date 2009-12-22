@@ -629,7 +629,7 @@ class product_supplierinfo(osv.osv):
         'product_name': fields.char('Partner Product Name', size=128, help="Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Partner Product Code', size=64, help="Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Priority'),
-        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase for this supplier, expressed in the default unit of measure."),
+        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase for this supplier, expressed in the purchase unit of measure."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Delay', required=True, help="Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
