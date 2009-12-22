@@ -571,7 +571,7 @@ class product_packaging(osv.osv):
         'qty' : fields.float('Quantity by Package',
             help="The total number of products you can put by pallet or box."),
         'ul' : fields.many2one('product.ul', 'Type of Package', required=True),
-        'ul_qty' : fields.integer('Package by layer'),
+        'ul_qty' : fields.integer('Package by layer', help='The number of packages by layer'),
         'rows' : fields.integer('Number of Layers', required=True,
             help='The number of layers on a pallet or box'),
         'product_id' : fields.many2one('product.product', 'Product', select=1, ondelete='cascade', required=True),

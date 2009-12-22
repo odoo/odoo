@@ -175,13 +175,10 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help=
-            "Use a phantom bill of material in raw materials lines that have to be " \
-            "automatically computed in on eproduction order and not one per level." \
-            "If you put \"Phantom/Set\" at the root level of a bill of material " \
-            "it is considered as a set or pack: the products are replaced by the components " \
-            "between the sale order to the picking without going through the production order." \
-            "The normal BoM will generate one production order per BoM level."),
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, 
+                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM."\
+                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type."\
+                                 "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
