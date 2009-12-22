@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-21 04:01+0000\n"
+"PO-Revision-Date: 2009-12-21 06:56+0000\n"
 "Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-21 04:43+0000\n"
+"X-Launchpad-Export-Date: 2009-12-22 04:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -559,17 +559,17 @@ msgstr "该文件已创建日期"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoices"
-msgstr "运输与发票"
+msgstr "递送与发票"
 
 #. module: purchase
 #: field:purchase.order,date_order:0
 msgid "Date"
-msgstr "时间"
+msgstr "日期"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr ""
+msgstr "生成该采购报价请求的单据编号"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -579,7 +579,7 @@ msgstr "电话："
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
 msgid "After Purchase order , Create invoice."
-msgstr ""
+msgstr "在采购订单后创建发票"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -589,7 +589,7 @@ msgstr "计划日期"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Our Order Reference"
-msgstr ""
+msgstr "我方的采购订单编号"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -604,7 +604,7 @@ msgstr "计算"
 #. module: purchase
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr "您不能同时具有两个重叠的价格表版本。"
+msgstr "你不能有两个重复的价格表版本！"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -614,7 +614,7 @@ msgstr "取消采购订单"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Create Packing list"
-msgstr ""
+msgstr "创建分拣单"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -624,17 +624,17 @@ msgstr "总计："
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
-msgstr "当采购订单批准以后将创建装箱单。"
+msgstr "当采购订单批准以后将创建分拣单。"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr "历史记录"
+msgstr "历史"
 
 #. module: purchase
 #: field:purchase.order,state:0
 msgid "Order Status"
-msgstr "订单状态"
+msgstr "采购订单状态"
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -660,7 +660,7 @@ msgstr "财务状况"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "报价请求编号："
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -682,7 +682,7 @@ msgstr "采购属性"
 #. module: purchase
 #: field:purchase.order.line,order_id:0
 msgid "Order Ref"
-msgstr "订单参照"
+msgstr "采购订单编号"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -694,7 +694,7 @@ msgstr "采购订单"
 #: wizard_view:purchase.order.merge,init:0
 #: wizard_button:purchase.order.merge,init,merge:0
 msgid "Merge orders"
-msgstr "合并订单"
+msgstr "合并采购订单"
 
 #. module: purchase
 #: constraint:ir.model:0
@@ -712,28 +712,28 @@ msgstr "新建采购订单"
 #: field:purchase.order,shipped:0
 #: field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr "已接收"
+msgstr "已收货"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
 msgid "Request for Quotation"
-msgstr "询价"
+msgstr "报价请求"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Out Packing"
-msgstr "发出包装"
+msgstr "发货分拣单"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Control invoices on receptions"
-msgstr "接收时控制发票"
+msgstr "接收时核对发票"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "要求日期"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -746,8 +746,8 @@ msgid ""
 "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
 msgstr ""
-"采购模块管理：\n"
-"    询价请求、创建供应商发票和打印订单等等"
+"采购管理模块\\n\n"
+"    报价请求,创建供应商发票，打印采购订单。。"
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -764,7 +764,7 @@ msgstr "说明"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "Product recept invoice"
-msgstr ""
+msgstr "货品接收的发票"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -805,12 +805,12 @@ msgstr "采购发票"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Your Order Reference"
-msgstr ""
+msgstr "您的订单编号"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "采购订单确认编号"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -825,13 +825,13 @@ msgstr "订货日期"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
-msgstr "采购控制"
+msgstr "采购管理"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
 msgid "Request For Quotations"
-msgstr ""
+msgstr "报价请求"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -841,17 +841,17 @@ msgstr "开票方式"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr "核准"
+msgstr "批准"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
 msgid "Approved Purchase"
-msgstr "以批准的采购"
+msgstr "已批准采购"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr "从装箱单创建发票"
+msgstr "从分拣单创建发票"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -861,7 +861,7 @@ msgstr "总计"
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr "你确定要合并此订单马？"
+msgstr "你确定要合并此订单吗？"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -871,7 +871,7 @@ msgstr "正在批准采购订单"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
 msgid "After approved purchase order , it comes into the supplier invoice"
-msgstr "当采购订单批准以后将进入供应商发票"
+msgstr "采购订单审批通过后创建供应商发票"
 
 #. module: purchase
 #: view:purchase.order.line:0
