@@ -115,14 +115,14 @@ class expression(object):
             main_table = table
             fargs = left.split('.', 1)
             index = i
-            if left in table._inherit_fields:
+            if fargs[0] in table._inherit_fields:
                 while True:
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
                         self.__tables[i] = working_table
                         break
-                    working_table = main_table.pool.get(main_table._inherit_fields[left][0])
+                    working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__tables.values():
                         self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
                         self.__tables[index] = working_table

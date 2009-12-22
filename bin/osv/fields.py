@@ -506,12 +506,12 @@ class many2many(_column):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
-        d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
         if d1:
             d1 = ' and ' + d1
 
         cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
-                FROM '+self._rel+' , '+obj._table+' \
+                FROM '+self._rel+' , '+(','.join(tables))+' \
                 WHERE '+self._rel+'.'+self._id1+' = ANY (%s) \
                     AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
                 +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
@@ -544,10 +544,10 @@ class many2many(_column):
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
 
-                d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
                 if d1:
                     d1 = ' and ' + d1
-                cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
+                cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+','.join(tables)+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
 
                 for act_nbr in act[2]:
                     cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s, %s)', (id, act_nbr))
