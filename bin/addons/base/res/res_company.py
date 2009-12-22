@@ -45,6 +45,7 @@ class multi_company_default(osv.osv):
             help='Object affect by this rules'),
         'expression': fields.char('Expression', size=32, required=True,
             help='Expression, must be True to match'),
+        'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
     }
 
     _defaults = {
@@ -88,7 +89,7 @@ class res_company(osv.osv):
     }
 
 
-    def _company_default_get(self, cr, uid, object=False, context=None):
+    def _company_default_get(self, cr, uid, object=False, field=False, context=None):
         """
         Check if the object for this company have a default value
         """
@@ -96,7 +97,14 @@ class res_company(osv.osv):
             context = {}
         user_company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         proxy = self.pool.get('multi_company.default')
-        ids = proxy.search(cr, uid, [('object_id.model', '=', object), ('company_id','=',user_company_id)])
+        args = [
+            ('object_id.model', '=', object),
+        ]
+        if field:
+            args.append(('field_id.name','=',field))
+        else:
+            args.append(('field_id','=',False))
+        ids = proxy.search(cr, uid, args)
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             if eval(rule.expression, {'context': context, 'user': user}):
