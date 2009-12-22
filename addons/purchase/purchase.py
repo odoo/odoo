@@ -148,7 +148,7 @@ class purchase_order(osv.osv):
         'origin': fields.char('Origin', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
-        'partner_ref': fields.char('Supplier Ref.', size=64),
+        'partner_ref': fields.char('Supplier Reference', size=64),
         'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
@@ -454,7 +454,7 @@ class purchase_order_line(osv.osv):
         'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits=(16, int(config['price_accuracy']))),
         'notes': fields.text('Notes'),
-        'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
+        'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
         'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }

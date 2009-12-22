@@ -186,7 +186,7 @@ class mrp_bom(osv.osv):
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
-        'position': fields.char('Internal Ref.', size=64, help="Reference to a position in an external plan."),
+        'position': fields.char('Internal Reference', size=64, help="Reference to a position in an external plan."),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS', help="Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."),
@@ -407,7 +407,7 @@ class mrp_production(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
@@ -445,7 +445,7 @@ class mrp_production(osv.osv):
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
         'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
-        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
+        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Reference'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {

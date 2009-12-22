@@ -587,7 +587,7 @@ class account_bank_statement_line(osv.osv):
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'move_id','statement_id',
             'Moves'),
-        'ref': fields.char('Ref.', size=32),
+        'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),

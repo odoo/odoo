@@ -184,8 +184,8 @@ class sale_order(osv.osv):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'origin': fields.char('Origin', size=64),
-        'client_order_ref': fields.char('Customer Ref', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that generated this sale order request."),
+        'client_order_ref': fields.char('Customer Reference', size=64),
 
         'state': fields.selection([
             ('draft', 'Quotation'),
@@ -750,7 +750,7 @@ class sale_order_line(osv.osv):
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
-        'order_id': fields.many2one('sale.order', 'Order Ref', required=True, ondelete='cascade', select=True),
+        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True),
         'name': fields.char('Description', size=256, required=True, select=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),

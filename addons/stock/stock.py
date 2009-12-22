@@ -437,7 +437,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Origin Reference', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking."),
         'backorder_id': fields.many2one('stock.picking', 'Back Order'),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the picking without removing it."),
@@ -883,7 +883,7 @@ class stock_production_lot(osv.osv):
 
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
-        'ref': fields.char('Internal Ref', size=64),
+        'ref': fields.char('Internal Reference', size=64),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),

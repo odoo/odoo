@@ -275,9 +275,13 @@ class account_account(osv.osv):
             ('consolidation', 'Consolidation'),
             ('other', 'Others'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True,),
-
-        'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
+        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
+            "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
+            "can have children accounts for multi-company consolidations, payable/receivable are for "\
+            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
+        'user_type': fields.many2one('account.account.type', 'Account Type', required=True, 
+            help="These types are defined according to your country. The type contains more information "\
+            "about the account and its specificities."),
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade'),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
@@ -762,7 +766,7 @@ class account_move(osv.osv):
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
-        'ref': fields.char('Ref', size=64),
+        'ref': fields.char('Reference', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True,
@@ -1526,7 +1530,7 @@ class account_model(osv.osv):
     _description = "Account Model"
     _columns = {
         'name': fields.char('Model Name', size=64, required=True, help="This is a model for recurring accounting entries"),
-        'ref': fields.char('Ref', size=64),
+        'ref': fields.char('Reference', size=64),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
         'legend' :fields.text('Legend',readonly=True,size=100),
@@ -1586,7 +1590,7 @@ class account_model_line(osv.osv):
 
         'model_id': fields.many2one('account.model', 'Model', required=True, ondelete="cascade", select=True),
 
-        'ref': fields.char('Ref.', size=16),
+        'ref': fields.char('Reference', size=16),
 
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
@@ -1615,7 +1619,7 @@ class account_subscription(osv.osv):
     _description = "Account Subscription"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'ref': fields.char('Ref', size=16),
+        'ref': fields.char('Reference', size=16),
         'model_id': fields.many2one('account.model', 'Model', required=True),
 
         'date_start': fields.date('Start Date', required=True),
@@ -1806,10 +1810,10 @@ class account_account_template(osv.osv):
             ('consolidation','Consolidation'),
             ('other','Others'),
             ('closed','Closed'),
-            ], 'Internal Type', required=True,help="This type is used to differenciate types with "\
+            ], 'Internal Type', required=True,help="This type is used to differentiate types with "\
             "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
-            "partners accounts (for debit/credit computations), closed for deprecated accounts."),
+            "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
@@ -1994,14 +1998,14 @@ class account_tax_template(osv.osv):
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'name': fields.char('Tax Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits=(14,4)),
+        'amount': fields.float('Amount', required=True, digits=(14,4), help="For Tax Type percent enter % ratio between 0-1."),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
-        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
+        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
-        'child_depend':fields.boolean('Tax on Children', help="Indicates if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+        'child_depend':fields.boolean('Tax on Children', help="Set if the tax computation is based on the computation of child taxes rather than on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),
