@@ -139,7 +139,7 @@ class ir_rule(osv.osv):
 
     def domain_get(self, cr, uid, model_name, context={}):
         if uid == 1:
-            return [], [], []
+            return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
         cr.execute("""SELECT r.id FROM
             ir_rule r
