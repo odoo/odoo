@@ -446,7 +446,6 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
-#        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
