@@ -2703,7 +2703,6 @@ class orm(orm_template):
         if len(upd0):
 
             d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-            print d1,d2
             if d1:
                 d1 = ' and '+' and '.join(d1)
 
