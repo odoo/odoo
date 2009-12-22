@@ -82,7 +82,6 @@ class Cursor(object):
         self.sql_into_log = {}
         self.sql_log = False
         self.sql_log_count = 0
-
         self.__closed = True    # avoid the call of close() (by __del__) if an exception
                                 # is raised by any of the following initialisations
         self._pool = pool

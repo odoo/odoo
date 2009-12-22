@@ -2400,7 +2400,7 @@ class orm(orm_template):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('SELECT %s FROM %s WHERE %s.id = ANY (%%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, d1,
+                            (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
                                 self._order),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
@@ -2588,14 +2588,14 @@ class orm(orm_template):
 
         d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         if d1:
-            d1 = ' AND '+d1
+            d1 = ' AND '+' and '.join(d1)
 
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
             str_d = string.join(('%s',)*len(sub_ids), ',')
             if d1:
                 cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
+                        'WHERE '+self._table+'.id IN ('+str_d+')'+' and '.join(d1), sub_ids+d2)
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
@@ -2704,14 +2704,14 @@ class orm(orm_template):
 
             d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
             if d1:
-                d1 = ' and '+d1
+                d1 = ' and '+' and '.join(d1)
 
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 ids_str = string.join(map(str, sub_ids), ',')
                 if d1:
                     cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
+                            'WHERE '+self._table+'.id IN ('+ids_str+')'+' and '.join(d1), d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while writing (Document type: %s).') % \
@@ -3155,12 +3155,20 @@ class orm(orm_template):
         if not context:
             context = {}
         # compute the where, order by, limit and offset clauses
-        dom = self.pool.get('ir.rule').domain_get2(cr, user, self._name, context=context)
-        (qu1, qu2, tables) = self._where_calc(cr, user, args+dom, context=context)
+        (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+        print '***', dom, qu1,qu2,tables
+        qu1 = qu1 + dom[0]
+        qu2 = qu2 + dom[1]
+        for t in dom[2]:
+            if t not in tables:
+                tables.append(t)
+
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')
         else:
             qu1 = ''
+
 
         if order:
             self._check_qorder(order)
