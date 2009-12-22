@@ -19,18 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from time import strftime
-import time
-import base64
-import vobject
 from dateutil.rrule import *
-from dateutil import parser
+from osv import fields, osv
 import  datetime
-from time import strftime
-from pytz import timezone
+import base64
+import re
+import time
 import tools
-from service import web_services
 
 def caldevIDs2readIDs(caldev_ID = None):
     if caldev_ID:
@@ -68,8 +63,8 @@ class crm_case(osv.osv):
 #        'categories' : {'field':None , 'sub-field':'name', 'type':'text'}, # keep none for now
         'comment' : None, 
         'contact' : None, 
-        'exdate'  : None, 
-        'exrule'  : None, 
+        'exdate'  : {'field':'exdate', 'type':'datetime'}, 
+        'exrule'  : {'field':'exrule', 'type':'text'}, 
         'rstatus' : None, 
         'related' : None, 
         'resources' : None, 
@@ -100,10 +95,10 @@ class crm_case(osv.osv):
     def _get_rdates(self, cr, uid, ids, name, arg, context=None):
         res = {}
         context.update({'read':True})
-        for case in self.read(cr, uid, ids, ['date', 'rrule'], context=context):
+        for case in self.read(cr, uid, ids, ['date', 'rrule', 'exdate', 'exrule'], context=context):
             if case['rrule']:
-                rule = case['rrule'].split('\n')[0]
-                exdate = case['rrule'].split('\n')[1:]
+                rule = case['rrule']
+                exdate = case['exdate'] and case['exdate'].split(',') or []
                 event_obj = self.pool.get('caldav.event')
                 res[case['id']] = str(event_obj.get_recurrent_dates(str(rule), exdate, case['date']))
         return res
@@ -116,6 +111,10 @@ class crm_case(osv.osv):
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=34), 
+        'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
+                 of date/time exceptions for arecurring calendar component."), 
+        'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
+                                 for anexception to a recurrence set"), 
         'rrule' : fields.text('Recurrent Rule'), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
@@ -134,7 +133,7 @@ class crm_case(osv.osv):
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
         if not context:
-            context={}
+            context = {}
         cr.execute('select c.id as id, c.date as date, alarm.id as alarm_id, alarm.name as name,\
                                 alarm.trigger_interval, alarm.trigger_duration, alarm.trigger_related, \
                                 alarm.trigger_occurs from crm_case c \
@@ -196,7 +195,7 @@ class crm_case(osv.osv):
         file_content = base64.decodestring(data['form']['file_path'])
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
-        
+
         attendee_obj = self.pool.get('caldav.attendee')
         crm_attendee = self.pool.get('crm.caldav.attendee')
         attendee_obj.__attribute__.update(crm_attendee.__attribute__)
@@ -236,8 +235,7 @@ class crm_case(osv.osv):
         select = map(lambda x:caldevIDs2readIDs(x), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
-    def read(self, cr, uid, ids, fields=None, context={}, 
-            load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context={},  load='_classic_read'):
         """         logic for recurrent event
          example : 123-20091111170822"""
         if context and context.has_key('read'):
@@ -269,7 +267,6 @@ class crm_case(osv.osv):
                         result.remove(val)
 
             for rdate in rdates:
-                import re
                 idval = (re.compile('\d')).findall(rdate)
                 val['date'] = rdate
                 id = str(val['id']).split('-')[0]
@@ -287,10 +284,12 @@ class crm_case(osv.osv):
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], ['date', 'rdates', 'rrule']):
+                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], \
+                                            ['date', 'rdates', 'rrule', 'exdate']):
+                    exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
+                                ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                     if record['date'] == date_new:
-                        self.write(cr, uid, [caldevIDs2readIDs(id)], \
-                                   {'rrule' : record['rrule'] +"\n" + str(date_new)})
+                        self.write(cr, uid, [caldevIDs2readIDs(id)], {'exdate' : exdate})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
 

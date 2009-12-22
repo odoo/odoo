@@ -69,14 +69,17 @@ class CalDAV(object):
     __attribute__ = {
     }
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
-        todate = parser.parse
+        def todate(date):
+            val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
+            return val
+
         if not startdate:
             startdate = datetime.now()
         else:
-            startdate = todate(''.join((re.compile('\d')).findall(startdate)) + 'Z')
+            startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            datetime_obj = todate(date)
             rset1._exdate.append(datetime_obj)
         re_dates = rset1._iter()
         recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
@@ -93,9 +96,12 @@ class CalDAV(object):
             valtype =  self.__attribute__.get(name).get('type', None)
             if type == 'value':
                 if valtype and valtype=='datetime' and val:
-                     val = val.strftime('%Y-%m-%d %H:%M:%S')
+                    if isinstance(val, list):
+                        val = ','.join(map(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'), val))
+                    else:
+                        val = val.strftime('%Y-%m-%d %H:%M:%S')
                 if valtype and valtype=='integer' and val:
-                     val = int(val)
+                    val = int(val)
             return  val
         else:
              return  self.__attribute__.get(name, None)
@@ -124,8 +130,10 @@ class CalDAV(object):
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
                         elif map_type == 'datetime' and data[map_field]:
-                            vevent.add(field).value = datetime.strptime(data[map_field], \
-                                                                           "%Y-%m-%d %H:%M:%S")
+                            if field in ('exdate'):
+                                vevent.add(field).value = [parser.parse(data[map_field])]
+                            else:
+                                vevent.add(field).value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         if self.__attribute__.get(field).has_key('mapping'):
