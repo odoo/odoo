@@ -164,11 +164,11 @@ class product_product(osv.osv):
         return res
 
     _columns = {
-        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantity of products in selected locations or all internal if none have been selected.", multi='qty_available'),
+        'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
         'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Future stock for this product according to the selected locations or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
         'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
         'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'track_production': fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
+        'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),

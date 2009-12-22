@@ -260,7 +260,7 @@ class product_template(osv.osv):
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty (months)'),
-        'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
+        'sale_ok': fields.boolean('Can be sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),

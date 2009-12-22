@@ -45,13 +45,13 @@ class account_dta(osv.osv):
         'dta_line_ids': fields.one2many('account.dta.line','dta_id','DTA lines', readonly=True), 
         ## textual notes
         'note': fields.text('Creation log', readonly=True, 
-            help="display the problem during dta generation"),
+            help="Displays the problem during dta generation"),
         ### bank how will execute DTA order
         'bank': fields.many2one('res.partner.bank','Bank', readonly=True,select=True,
-            help="bank how will execute DTA order"),
+            help="Bank how will execute DTA order"),
         ### date of DTA order generation 
         'date': fields.date('Creation Date', readonly=True,select=True,
-            help="date of DTA order generation"),
+            help="Date of DTA order generation"),
         ### user how generate the DTA order
         'user_id': fields.many2one('res.users','User', readonly=True, select=True),
     }
@@ -76,10 +76,10 @@ class account_dta_line(osv.osv):
         'cashdisc_date' : fields.date('Cash Discount date'),
         ### amount effectively paied on this line 
         'amount_to_pay' : fields.float('Amount to pay', 
-            help="amount effectively paid"),
+            help="Amount effectively paid"),
         ### amount that was on the supplier invoice
         'amount_invoice': fields.float('Invoiced Amount',
-            help="amount to pay base on the supplier invoice"),
+            help="Amount to pay base on the supplier invoice"),
         ### Cash discount amount 
         'amount_cashdisc': fields.float('Cash Discount Amount'),
         ### Linke to the main dta order

@@ -1880,7 +1880,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
             return False
 
     _columns = {
-        'cparent_id':fields.many2one('account.account', 'Parent target', help="Create an account with the selected template under this existing parent.", required=True),
+        'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True),
     }
     _defaults = {
         'cparent_id': _get_def_cparent,
@@ -2001,7 +2001,7 @@ class account_tax_template(osv.osv):
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
         'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
         'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
-        'child_depend':fields.boolean('Tax on Children', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+        'child_depend':fields.boolean('Tax on Children', help="Indicates if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
         'python_compute':fields.text('Python Code'),
         'python_compute_inv':fields.text('Python Code (reverse)'),
         'python_applicable':fields.text('Python Code'),

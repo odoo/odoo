@@ -75,7 +75,7 @@ class crm_case_section(osv.osv):
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
         "gateway_ids" : fields.one2many("crm.email.gateway",'section_id',"Email Gateways"),
-        'calendar' : fields.boolean('Calendar', help='Allow to show calendar'),
+        'calendar' : fields.boolean('Calendar', help='Allows to show calendar'),
     }
     _defaults = {
         'active': lambda *a: 1,

@@ -36,7 +36,7 @@ class stock_incoterms(osv.osv):
     _description = "Incoterms"
     _columns = {
         'name': fields.char('Name', size=64, required=True,help="Incoterms are series of sales terms.They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices."),
-        'code': fields.char('Code', size=3, required=True,help="code for Incoterms"),
+        'code': fields.char('Code', size=3, required=True,help="Code for Incoterms"),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the incoterms without removing it."),
     }
     _defaults = {
@@ -978,9 +978,9 @@ class stock_move(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
-        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, help="Set a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True, help="Location where the system will stock the finished products."),
-        'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Adress where goods are to be delivered"),
+        'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Address where goods are to be delivered"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
         'tracking_id': fields.many2one('stock.tracking', 'Tracking Lot', select=True, help="Tracking lot is the code that will be put on the logistical unit/pallet"),

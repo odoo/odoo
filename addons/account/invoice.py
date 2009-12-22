@@ -264,7 +264,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated Ledger Postings."),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Links to the automatically generated Ledger Postings."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])),string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
