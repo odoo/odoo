@@ -1259,7 +1259,7 @@
             <field name="arch" type="xml">
             	<search string="Stock Moves">
             		<group col="8" colspan="4">
-	            		<filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
+	            		<filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" default="1" help="Stock to be received"/>
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
