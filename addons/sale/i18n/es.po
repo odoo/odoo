@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:41+0000\n"
+"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -57,6 +57,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Si no dispone de suficientes existencias para enviarlo todo de una vez, "
+"¿acepta envíos parciales o no?"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -272,7 +274,7 @@ msgstr "Mis pedidos de ventas en proceso"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Cantidad (UdV)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -480,12 +482,12 @@ msgstr "¡XML inválido para la definición de la vista!"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Packing"
-msgstr ""
+msgstr "Albarán relacionado"
 
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Cuentas de pago"
 
 #. module: sale
 #: constraint:product.template:0
@@ -495,7 +497,7 @@ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref. cliente"
 
 #. module: sale
 #: view:sale.order:0
@@ -946,6 +948,12 @@ msgid ""
 "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
 "for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
+"Indica el estado del presupuesto o pedido de venta. El estado de excepción "
+"se establece automáticamente cuando se produce una cancelación en la "
+"validación de la factura (Excepción de factura) o en el procesado del "
+"albarán (Excepción de envío). El estado 'Esperando planificación' se "
+"establece cuando se confirma la factura pero se espera a que el planificador "
+"procese el pedido en la fecha 'Fecha del pedido'."
 
 #. module: sale
 #: view:sale.order:0
@@ -956,7 +964,7 @@ msgstr "UdM"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Número paquetes"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -970,7 +978,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "En proceso"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
@@ -1107,7 +1115,7 @@ msgstr "Cancelar asignación"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Facturar desde el albarán"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1172,12 +1180,12 @@ msgstr "Fecha ordenada"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "UdV del producto"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manual en proceso"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1230,7 +1238,7 @@ msgstr "Facturas relacionadas"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Nombre tienda"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1283,7 +1291,7 @@ msgstr "Enviada"
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilidad"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

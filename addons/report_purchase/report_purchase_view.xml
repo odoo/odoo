@@ -41,6 +41,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchases by products">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="product_id"/>
                     <field name="count"/>
                     <field name="quantity"/>
@@ -50,7 +51,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_order_product_search" model="ir.ui.view">
             <field name="name">report.purchase.order.product.search</field>
             <field name="model">report.purchase.order.product</field>
@@ -69,7 +70,7 @@
             	</search>
             </field>
         </record>
-	
+
         <record id="action_order_product_tree_all" model="ir.actions.act_window">
             <field name="name">Purchases by Products</field>
             <field name="res_model">report.purchase.order.product</field>
@@ -121,6 +122,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchases by Category of Products">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="category_id"/>
                     <field name="count"/>
                     <field name="quantity"/>

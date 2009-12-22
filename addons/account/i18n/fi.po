@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-11 08:18+0000\n"
-"Last-Translator: NightSpirit <Unknown>\n"
+"PO-Revision-Date: 2009-12-19 13:33+0000\n"
+"Last-Translator: Omar Bedretdin <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-12 04:42+0000\n"
+"X-Launchpad-Export-Date: 2009-12-20 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -36,7 +36,7 @@ msgstr "Maksamattomat toimittajalaskut"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Entries Encoding"
-msgstr "Merkintöjen koodaus"
+msgstr "Tapahtumien kirjaus"
 
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
@@ -46,17 +46,17 @@ msgstr "Määritä viesti myöhässä olevalle laskuraportille."
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr "Hyväksy lausunto luonnoksesta"
+msgstr "Hyväksy tiliote luonnoksesta"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
 msgid "Asset"
-msgstr "Vastaavaa"
+msgstr "Varat"
 
 #. module: account
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: account
 #: help:account.journal,currency:0
@@ -74,7 +74,8 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
-"Tätä tiliä käytetään tulevan varaston arvioimiseen nykyiselle tuoteryhmälle"
+"Tätä tiliä käytetään saapuvan varaston arvottamiseen nykyiselle "
+"tuotekategorialle"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -84,19 +85,19 @@ msgstr "Jätä tyhjäksi käyttääksesi jakson tarkistus(lasku) päivämäärä
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
 msgid "Reconciliation result"
-msgstr "Sovinnonteon tulos"
+msgstr "Suoritusajon tulos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Kirjaamattomat liiketapahtumat"
+msgstr "Suorittamattomat tapahtumat"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
 #: field:account.tax,base_code_id:0
 #: field:account.tax.template,base_code_id:0
 msgid "Base Code"
-msgstr "Peruskoodi"
+msgstr "Perustekoodi"
 
 #. module: account
 #: view:account.account:0
@@ -107,12 +108,12 @@ msgstr "Tilitilastot"
 #: model:ir.actions.wizard,name:account.wizard_vat_declaration
 #: model:ir.ui.menu,name:account.menu_wizard_vat_declaration
 msgid "Print Taxes Report"
-msgstr "Tulosta raportti veroista"
+msgstr "Tulosta veroraportti"
 
 #. module: account
 #: field:account.account,parent_id:0
 msgid "Parent"
-msgstr "Vanhempi"
+msgstr "Ylempi tili"
 
 #. module: account
 #: selection:account.move,type:0
@@ -130,18 +131,18 @@ msgstr "Jäännös"
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr "Peruskoodin merkki"
+msgstr "Perustekoodin merkki"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Ei sovitut merkinnät"
+msgstr "Poista suoritusmerkinnät"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Virhe! Jakson/jaksojen kesto on virheellinen "
+msgstr "Virhe! Jakson / jaksojen pituus on virheellinen. "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -161,7 +162,7 @@ msgstr "Debettien keskitys"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_invoice_state_confirm
 msgid "Confirm draft invoices"
-msgstr "Hyväksy laskujen luonnokset"
+msgstr "Hyväksy luonnoslaskut"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
@@ -170,14 +171,14 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
-"Kuukauden päivä, asetettu -1 viime kuukauden viimeiselle päivälle. Jos tämä "
-"on positiivinen, antaa se seuraavan kuukauden päivän. Aseta 0 jos haluat "
-"verkkopäiviksi (muutoin se asetetaan kuukauden alkuun)."
+"Kuukauden päivä, jossa arvo -1 vastaa kuluvan kuukauden viimeistä päivää. "
+"Positiivinen arvo vastaa seuraavan kuukauden päivää. Aseta 0 jos haluat "
+"määrittää päivät kiinteästi (muutoin ne lasketaan kuukauden alusta)."
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr "Kokonaisluotto"
+msgstr "Summa kredit"
 
 #. module: account
 #: field:account.config.wizard,charts:0
@@ -195,12 +196,12 @@ msgstr "Siirrä rivivalinta"
 #: rml:account.third_party_ledger:0
 #: rml:account.third_party_ledger_other:0
 msgid "Entry label"
-msgstr "Merkintä label"
+msgstr "Merkintänimike"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr "Tilin malli merkinnät"
+msgstr "Tilimallin merkinnät"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -211,23 +212,23 @@ msgstr "Kauden summa"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Compute Code (if type=code)"
-msgstr "arviokoodi (if type=code)"
+msgstr "Suorita koodi (jos tyyppi=koodi)"
 
 #. module: account
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "Tilin merkintärivi"
+msgstr "Tilimerkinnän rivi"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
 msgid "Aged Trial Balance"
-msgstr "Vanhentunut koe balanssi"
+msgstr "Välitase vanhenevista laskuista"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr "Toistuvat merkinnät"
+msgstr "Toistuvat tapahtumat"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -240,7 +241,7 @@ msgstr "Toistuvat merkinnät"
 #: field:account.tax.template,amount:0
 #: xsl:account.transfer:0
 msgid "Amount"
-msgstr "Määrä"
+msgstr "Summa"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
@@ -257,7 +258,7 @@ msgstr "Toimittajan verot"
 #. module: account
 #: view:account.move:0
 msgid "Total Debit"
-msgstr "Kokonais debet"
+msgstr "Summa debet"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -272,10 +273,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
-"Antaa käytetyn näkymän kun tähän lokikirjaan kirjoitetaan merkintöjä tai "
-"niitä selataan. Näkymä kertoo Open ERP:lle mitkä kentät tulisi olla näkyviä, "
-"tarpeelliset tai ainoastaan luku ja missä järjestyksessä. Voit luoda oman "
-"näkymän nopeampaa koodausta varten jokaisessa lokikirjassa."
+"Määrittää näkymän jota käytetään tämän päiväkirjan merkintöjen kirjoitukseen "
+"tai selailuun. Näkymä määrittelee mitkä kentät ovat näkyvissä, pakollisia "
+"tai vain luettavissa, sekä kenttien järjestyksen. Voit luoda jokaiseen "
+"päiväkirjaan oman näkymän jotta merkintöjen kirjaaminen olisi nopeampaa."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -287,9 +288,9 @@ msgid ""
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
 "Käyttäessäsi maksuehtoja eräpäivä lasketaan automaattisesti "
-"kirjanpitomerkintöjä luotaessa. Jos jätät maksuehdon ja kuluvan päivän "
-"tyhjäksi, tarkoittaa tämä suoraa maksua. Maksuehdosta riippuen eräpäiviä "
-"saattaa olla useampi, esimerkiksi 50% nyt, 50% kuukauden kuluttua."
+"kirjanpitomerkintöjä luotaessa. Jos jätät maksuehdon ja eräpäivän tyhjäksi, "
+"tarkoittaa tämä välitöntä maksua. Maksuehdon perusteella voidaan laskea myös "
+"useampi eräpäivä, esimerkiksi 50% nyt ja 50% kuukauden kuluttua."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -312,7 +313,7 @@ msgstr "Erääntyneet maksut"
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
 #: wizard_view:account.vat.declaration,init:0
 msgid "Select period"
-msgstr "Valitse ajanjakso"
+msgstr "Valitse jakso"
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -460,12 +461,12 @@ msgstr "Maksamattomat toimittajan korvaukset"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Special Computation"
-msgstr "Erikois laskenta"
+msgstr "Erikoislaskenta"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement with/without reconciliation from draft statement"
-msgstr "Hyväksy lause sovituksen kanssa tai ilman luonnostiliotteesta"
+msgstr "Vahvista ote käsin kirjaten luonnosotteesta tai automaattisesti"
 
 #. module: account
 #: wizard_view:account.move.bank.reconcile,init:0
@@ -2883,7 +2884,7 @@ msgstr "Uusi asiakaslasku"
 #: wizard_button:account.move.line.reconcile,addendum,reconcile:0
 #: wizard_button:account.move.line.reconcile,init_full,reconcile:0
 msgid "Reconcile"
-msgstr "Kirjaa tapahtumat"
+msgstr "Suoritus"
 
 #. module: account
 #: rml:account.overdue:0
@@ -6011,22 +6012,6 @@ msgid "Compute Entry Dates"
 msgstr "Lasketut merkintäpäivät"
 
 #, python-format
-#~ msgid "No Period found on Invoice!"
-#~ msgstr "Kautta ei löytynyt laskusta"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "Varoitus"
-
-#, python-format
-#~ msgid ""
-#~ "Please verify the price of the invoice !\n"
-#~ "The real total does not match the computed total."
-#~ msgstr ""
-#~ "Vahvista laskun määrä.\n"
-#~ "Todellinen kokonaismäärä ei vastaa arvioituun kokonaismäärään."
-
-#, python-format
 #~ msgid "No period found !"
 #~ msgstr "Ajanjaksoa ei löydy!"
 
@@ -6057,14 +6042,6 @@ msgstr "Lasketut merkintäpäivät"
 #~ "Oliko maksusi suoritettu kun tämä sähköposti lähetettiin, ota huomioon "
 #~ "nykyinen mitätöidyksi. Älä epäröi ottaa yhteyttä kirjanpito-osastoon +32 81 "
 #~ "81 37 00"
-
-#, python-format
-#~ msgid "No journal for ending writing has been defined for the fiscal year"
-#~ msgstr "Lokea ei ole määritelty loppukirjoitukselle verovuonna"
-
-#, python-format
-#~ msgid "Account move line \"%s\" is not valid"
-#~ msgstr "Tilinsiirto rivi \"%s\" ei ole käytettävissä"
 
 #, python-format
 #~ msgid ""
@@ -6190,32 +6167,6 @@ msgstr "Lasketut merkintäpäivät"
 #, python-format
 #~ msgid "Integrity Error !"
 #~ msgstr "Eheysvirhe!"
-
-#, python-format
-#~ msgid ""
-#~ "Specified Journal does not have any account move entries in draft state for "
-#~ "this period"
-#~ msgstr ""
-#~ "Määritellyllä päiväkirjalla ei ole tilinsiirtomerkintöjä luonnostilassa "
-#~ "tällä ajanjaksolla"
-
-#, python-format
-#~ msgid ""
-#~ "You can not modify a posted entry of this journal !\n"
-#~ "You should set the journal to allow cancelling entries if you want to do "
-#~ "that."
-#~ msgstr ""
-#~ "Et voi muokata päiväkirjaan jo vietyä merkintää!\n"
-#~ "Tämän tehdäksesi sinun tulisi asettaa päiväkirja sallimaan merkintöjen "
-#~ "poiston."
-
-#, python-format
-#~ msgid "You have to provide an account for the write off entry !"
-#~ msgstr "Poistomerkinnälle täytyy määrittää tili"
-
-#, python-format
-#~ msgid "You can not delete posted movement: \"%s\"!"
-#~ msgstr "Et voi poistaa kirjattua siirtoa: \"%s\""
 
 #~ msgid "Disc. (%)"
 #~ msgstr "Alen. (%)"

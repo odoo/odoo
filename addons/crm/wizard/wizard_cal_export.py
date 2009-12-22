@@ -19,14 +19,9 @@
 #
 ##############################################################################
 
-import time
-import tools
 import wizard
-import os
-import mx.DateTime
 import base64
 import pooler
-import vobject
 
 
 class crm_cal_export_wizard(wizard.interface):
@@ -53,8 +48,8 @@ class crm_cal_export_wizard(wizard.interface):
     states = {
         'init': {
             'actions': [_process_export_ics], 
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}
-        }, 
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
+                       'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
 crm_cal_export_wizard('caldav.crm.export')
