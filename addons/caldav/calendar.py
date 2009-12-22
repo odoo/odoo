@@ -126,6 +126,8 @@ class CalDAV(object):
                         elif map_type == 'datetime' and data[map_field]:
                             vevent.add(field).value = datetime.strptime(data[map_field], \
                                                                            "%Y-%m-%d %H:%M:%S")
+                        elif map_type == "timedelta":
+                            vevent.add(field).value = timedelta(hours=data[map_field])
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
@@ -151,7 +153,7 @@ class CalDAV(object):
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
             vals = map_data(cr, uid, self)
-            if vals : res.append(vals)
+            if vals: res.append(vals)
             self.ical_reset('value')
         return res
 
