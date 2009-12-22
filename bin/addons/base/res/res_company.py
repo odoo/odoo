@@ -36,7 +36,7 @@ class multi_company_default(osv.osv):
 
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Name', size=32, required=True, help='Name it to easily find a record'),
+        'name': fields.char('Name', size=256, required=True, help='Name it to easily find a record'),
         'company_id': fields.many2one('res.company', 'Main Company', required=True,
             help='Company where the user is connected'),
         'company_dest_id': fields.many2one('res.company', 'Default Company', required=True,
@@ -94,13 +94,14 @@ class res_company(osv.osv):
         """
         if not context:
             context = {}
+        user_company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         proxy = self.pool.get('multi_company.default')
-        ids = proxy.search(cr, uid, [('object_id.model', '=', object)])
+        ids = proxy.search(cr, uid, [('object_id.model', '=', object), ('company_id','=',user_company_id)])
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
-        return self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        return user_company_id
 
     def _get_child_ids(self, cr, uid, uid2, context={}):
         company = self.pool.get('res.users').company_get(cr, uid, uid2)
