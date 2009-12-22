@@ -277,13 +277,12 @@ res_partner()
 class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
-    _order = 'id'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.many2one('res.partner.function', 'Function'),
         'title': fields.selection(_contact_title_get, 'Title', size=32),
-        'name': fields.char('Contact Name', size=64),
+        'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
