@@ -88,7 +88,7 @@ class account_analytic_line(osv.osv):
                     store={
                         'account.analytic.account': (_get_account_line, ['company_id'], 50),
                     },
-                    help="The amount expressed in the related account currency if not equal to the company one.",)
+                    help="The amount expressed in the related account currency if not equal to the company one."),
         'ref': fields.char('Reference', size=32),
     }
     _defaults = {
