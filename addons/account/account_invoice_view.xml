@@ -114,7 +114,7 @@
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state=='draft'" string="Invoice">
+                <tree colors="blue:state in ('draft');black:state not in ('draft')" string="Invoice">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="number"/>
@@ -407,20 +407,20 @@
             <field name="context">{'type':'out_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
-        
+
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="action_invoice_tree3"/>
         </record>
-        
+
         <record id="action_invoice_tree3_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree3"/>
         </record>
-        
+
         <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
 
         <record id="action_invoice_tree4" model="ir.actions.act_window">

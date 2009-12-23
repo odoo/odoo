@@ -51,22 +51,29 @@ class crm_caldav_attendee(osv.osv):
     _columns = {
             'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
                                              ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), \
-                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'), 
-            'member': fields.char('Member', size=124), 
+                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE', \
+                                              help="Specify the type of calendar user"), 
+            'member': fields.char('Member', size=124, help="Indicate the groups that the attendee belongs to"), 
             'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
                                 ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'), 
-            'partstat': fields.selection([('NEEDS-ACTION', 'NEEDS-ACTION'), \
-                            ('ACCEPTED', 'ACCEPTED'), ('DECLINED', 'DECLINED'), \
-                            ('TENTATIVE', 'TENTATIVE'), \
-                            ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
-            'rsvp':  fields.boolean('RSVP'), 
-            'delegated_to': fields.char('DELEGATED-TO', size=124), 
-            'delegated_from': fields.char('DELEGATED-FROM', size=124), 
-            'sent_by': fields.char('SENT-BY', size=124), 
-            'cn': fields.char('CN', size=124), 
-            'dir': fields.char('DIR', size=124), 
-            'language': fields.char('LANGUAGE', size=124), 
+                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE', \
+                                help='Participation role for the calendar user'), 
+            'partstat': fields.selection([('TENTATIVE', 'TENTATIVE'), 
+                                    ('NEEDS-ACTION', 'NEEDS-ACTION'), 
+                                    ('ACCEPTED', 'ACCEPTED'), 
+                                    ('DECLINED', 'DECLINED'), 
+                                    ('DELEGATED', 'DELEGATED')], 'PARTSTAT', \
+                                    help="Status of the attendee's participation"), 
+            'rsvp':  fields.boolean('RSVP', help="Indicats whether the favor of a reply is requested"), 
+            'delegated_to': fields.char('DELEGATED-TO', size=124, \
+                                        help="The calendar users that the original request was delegated to"), 
+            'delegated_from': fields.char('DELEGATED-FROM', size=124, \
+                              help="Indicates whom the request was delegated from"), 
+            'sent_by': fields.char('SENT-BY', size=124, \
+                                   help="Specify the calendar user that is acting on behalf of the calendar user"), 
+            'cn': fields.char('CN', size=124, help="The common or displayable name to be associated with the calendar user"), 
+            'dir': fields.char('DIR', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
+            'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."), 
                 }
     _defaults = {
         'cn':  lambda *x: 'MAILTO:', 
@@ -93,22 +100,28 @@ class crm_caldav_alarm(osv.osv):
     }
      
     _columns = {
-            'name': fields.char('Summary', size=124), 
+            'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for EMAIL
+or contains the text to be used for DISPLAY"""), 
             'action': fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
-                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', required=True), 
-            'description': fields.text('Description'), 
+                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', \
+                    required=True, help="Defines the action to be invoked when an alarm is triggered"), 
+            'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
                                           'alarm_id', 'attendee_id', 'Attendees'), 
             'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
                                         'Trigger time', required=True), 
             'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
-                    ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
+                    ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
             'trigger_duration':  fields.integer('TIme', required=True), 
             'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
                                            'The event ends')], 'Trigger Occures at', required=True), 
-            'duration': fields.integer('Duration'), 
+            'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
+are both optional, but if one occurs, so MUST the other"""), 
             'repeat': fields.integer('Repeat'), # TODO 
-            'attach': fields.binary('Attachment'), 
+            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for AUDIO, 
+* File which is intended to be sent as message attachments for EMAIL,
+* Points to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
+"""), 
             'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
                 }
 
@@ -214,7 +227,7 @@ class virtual_wizard(web_services.wizard):
         if 'id' in datas:
             datas['id'] = caldevIDs2readIDs(datas['id'])
             for id in datas['ids']:
-               new_ids.append(caldevIDs2readIDs(id))
+                new_ids.append(caldevIDs2readIDs(id))
             datas['ids'] = new_ids
         res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
         return res

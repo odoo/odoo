@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Meetings
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 
     <record model="ir.ui.view" id="crm_case_form_view_meet">
         <field name="name">CRM - Meetings Form</field>
@@ -22,7 +22,7 @@
                         <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
                         <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
                     </group>
-                    
+
                 </group>
                 <notebook colspan="4">
 	                <page string="Meeting">
@@ -36,12 +36,12 @@
 	                    <field name="description" nolabel="1" colspan="4"/>
 	                    <separator colspan="4"/>
 	                    <group col="8" colspan="4">
-	                        <field name="state" select="2"/> 
+	                        <field name="state" select="2"/>
 	                        <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
 	                        <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
 	                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
 	                    </group>
-	                </page>	               	                             
+	                </page>
                 </notebook>
             </form>
         </field>
@@ -51,7 +51,7 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Meetings Tree"  colors="red:state=='open'">
+            <tree string="Meetings Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Title"/>
                 <field name="date" string="Next Meeting"/>
@@ -63,7 +63,7 @@
                 <field name="state"/>
                 <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
                 <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>                
+                <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
             </tree>
         </field>
     </record>

@@ -193,58 +193,64 @@ class product_pricelist(osv.osv):
                     'AND price_version_id = %s '
                     'AND (min_quantity IS NULL OR min_quantity <= %s) '
                     'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
-                'ORDER BY sequence LIMIT 1',
+                'ORDER BY sequence',
                 (tmpl_id, prod_id, plversion['id'], qty))
-            res = cr.dictfetchone()
-            if res:
-                if res['base'] == -1:
-                    if not res['base_pricelist_id']:
+            res1 = cr.dictfetchall()
+            
+            for res in res1:
+                if res:
+                    if res['base'] == -1:
+                        if not res['base_pricelist_id']:
+                            price = 0.0
+                        else:
+                            price_tmp = self.price_get(cr, uid,
+                                    [res['base_pricelist_id']], prod_id,
+                                    qty)[res['base_pricelist_id']]
+                            ptype_src = self.browse(cr, uid,
+                                    res['base_pricelist_id']).currency_id.id
+                            price = currency_obj.compute(cr, uid, ptype_src,
+                                    res['currency_id'], price_tmp, round=False)
+                            break    
+                    elif res['base'] == -2:
+                        where = []
+                        if partner:
+                            where = [('name', '=', partner) ] 
+                        sinfo = supplierinfo_obj.search(cr, uid,
+                                [('product_id', '=', tmpl_id)] + where)
                         price = 0.0
+                        if sinfo:
+                            cr.execute('SELECT * ' \
+                                    'FROM pricelist_partnerinfo ' \
+                                    'WHERE suppinfo_id IN (' + \
+                                        ','.join(map(str, sinfo)) + ') ' \
+                                        'AND min_quantity <= %s ' \
+                                    'ORDER BY min_quantity DESC LIMIT 1', (qty,))
+                            res2 = cr.dictfetchone()
+                            if res2:
+                                price = res2['price']
+                                break
                     else:
-                        price_tmp = self.price_get(cr, uid,
-                                [res['base_pricelist_id']], prod_id,
-                                qty)[res['base_pricelist_id']]
-                        ptype_src = self.browse(cr, uid,
-                                res['base_pricelist_id']).currency_id.id
-                        price = currency_obj.compute(cr, uid, ptype_src,
-                                res['currency_id'], price_tmp, round=False)
-                elif res['base'] == -2:
-                    where = []
-                    if partner:
-                        where = [('name', '=', partner) ] 
-                    sinfo = supplierinfo_obj.search(cr, uid,
-                            [('product_id', '=', tmpl_id)] + where)
-                    price = 0.0
-                    if sinfo:
-                        cr.execute('SELECT * ' \
-                                'FROM pricelist_partnerinfo ' \
-                                'WHERE suppinfo_id IN (' + \
-                                    ','.join(map(str, sinfo)) + ') ' \
-                                    'AND min_quantity <= %s ' \
-                                'ORDER BY min_quantity DESC LIMIT 1', (qty,))
-                        res2 = cr.dictfetchone()
-                        if res2:
-                            price = res2['price']
+                        price_type = price_type_obj.browse(cr, uid, int(res['base']))
+                        price = currency_obj.compute(cr, uid,
+                                price_type.currency_id.id, res['currency_id'],
+                                product_obj.price_get(cr, uid, [prod_id],
+                                    price_type.field)[prod_id], round=False)
+
+                    if price:
+                        price_limit = price
+        
+                        price = price * (1.0+(res['price_discount'] or 0.0))
+                        price = rounding(price, res['price_round'])
+                        price += (res['price_surcharge'] or 0.0)
+                        if res['price_min_margin']:
+                            price = max(price, price_limit+res['price_min_margin'])
+                        if res['price_max_margin']:
+                            price = min(price, price_limit+res['price_max_margin'])
+                        break    
                 else:
-                    price_type = price_type_obj.browse(cr, uid, int(res['base']))
-                    price = currency_obj.compute(cr, uid,
-                            price_type.currency_id.id, res['currency_id'],
-                            product_obj.price_get(cr, uid, [prod_id],
-                                price_type.field)[prod_id], round=False)
-
-                price_limit = price
-
-                price = price * (1.0+(res['price_discount'] or 0.0))
-                price = rounding(price, res['price_round'])
-                price += (res['price_surcharge'] or 0.0)
-                if res['price_min_margin']:
-                    price = max(price, price_limit+res['price_min_margin'])
-                if res['price_max_margin']:
-                    price = min(price, price_limit+res['price_max_margin'])
-            else:
-                # False means no valid line found ! But we may not raise an
-                # exception here because it breaks the search
-                price = False
+                    # False means no valid line found ! But we may not raise an
+                    # exception here because it breaks the search
+                    price = False
             result[id] = price            
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)

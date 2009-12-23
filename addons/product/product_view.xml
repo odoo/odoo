@@ -36,7 +36,7 @@
             <field name="type">tree</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:virtual_available&lt;0;blue:state in ['draft', 'end', 'obsolete']" string="Products">
+            <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="variants" groups="product.group_product_variant"/>

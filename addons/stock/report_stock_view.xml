@@ -38,7 +38,7 @@
                 </tree>
             </field>
         </record>
-        
+
 
         <menuitem
             id="next_id_61"
@@ -81,7 +81,7 @@
             id="act_stock_production_lot_2_stock_report_prodlots"
             name="Stock" res_model="stock.report.prodlots"
             src_model="stock.production.lot"/>
-	
+
 		<act_window
             domain="[('tracking_id', '=', active_id)]"
             id="act_stock_tracking_lot_2_stock_report_tracklots"
@@ -121,15 +121,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
         <menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date"/>
-        
+
         <record id="view_location_tree_3" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real_value" />
@@ -137,7 +137,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_location_tree_3" model="ir.actions.act_window">
             <field name="name">Locations' Values</field>
             <field name="res_model">stock.location</field>

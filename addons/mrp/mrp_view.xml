@@ -375,7 +375,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel')" string="Production orders">
+                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state in ('done','cancel') " string="Production orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
@@ -567,7 +567,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        
+
         <record id="mrp_production_action3" model="ir.actions.act_window">
             <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -578,7 +578,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        
+
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -728,11 +728,7 @@
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
                         <field name="note" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Notes">
-                        <separator colspan="4" string="Note" />
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                    </page>                    
                     </notebook>
                 </form>
             </field>

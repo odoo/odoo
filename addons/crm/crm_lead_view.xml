@@ -141,7 +141,7 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="red:state=='open'">
+            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Lead Subject"/>
                 <field name="partner_phone"/>

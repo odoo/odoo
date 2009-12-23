@@ -107,7 +107,7 @@
 			<field name="model">event.event</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Events" colors="red:register_min>register_current">
+				<tree string="Events" colors="red:register_min>register_current;black:register_min&lt;=register_current">
 					<field name="name" string="Name"/>
 					<field name="user_id"/>
 					<field name="date_begin"/>
@@ -117,7 +117,7 @@
 				</tree>
 			</field>
 		</record>
-		
+
 		<record model="ir.ui.view" id="view_event_search">
 			<field name="name">Events</field>
 			<field name="model">event.event</field>
@@ -148,8 +148,8 @@
            <field name="view_mode">tree,form</field>
            <field name="search_view_id" ref="view_event_search"/>
        </record>
-       
-       <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />	
+
+       <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="menu_event_main" />
 
 	<!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -222,7 +222,7 @@
 						<field name="ref2" colspan="4"/>
 					</page>
 					<page string="History">
-                        <field name="history_line" colspan="4" nolabel="1" mode="tree,form">                        
+                        <field name="history_line" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Communication history">
 								<field name="date"/>
 								<field name="som"/>
@@ -299,7 +299,7 @@
 			name="Registrations"
 			id="menu_action_registration" parent="menu_event_main"
 			action="action_registration"/>
-		
+
 	<!-- report , event on registration... start -->
 		<record model="ir.ui.view" id="report_event_registration_tree">
 			<field name="name">report.event.registration.tree</field>

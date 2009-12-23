@@ -68,7 +68,8 @@
                         </page>
                         <page string="Tasks">
                            <field name="tasks" nolabel="1" attrs="{'readonly':[('state','in',['cancelled','done'])]}">
-                               <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                           <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
+                           <!--    <tree string="Tasks">-->
                                    <field name="sequence"/>
                                    <field name="name"/>
                                    <field name="user_id"/>
@@ -349,7 +350,7 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" string="Seq."/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
@@ -372,7 +373,7 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree editable="top" colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                <tree editable="top" colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" string="Seq."/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
@@ -395,7 +396,7 @@
             <field name="type">tree</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) &amp; (date_deadline&lt;current_date) &amp; (state in ('draft','open'))" string="Tasks">
+                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" string="Seq."/>
                     <field name="name"/>
                     <field name="project_id"/>

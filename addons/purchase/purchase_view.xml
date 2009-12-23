@@ -53,7 +53,7 @@
                             <field name="partner_ref" select="2"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
-                                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                                <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                                     <field name="date_planned"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
@@ -149,7 +149,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
 
         <record id="purchase_order_tree" model="ir.ui.view">
@@ -212,7 +212,7 @@
             <field name="model">purchase.order.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                     <field name="name"/>
                     <field name="date_planned"/>
                     <field name="product_id"/>
