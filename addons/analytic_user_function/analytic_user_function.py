@@ -99,8 +99,11 @@ class hr_analytic_timesheet(osv.osv):
                         _('There is no expense account define ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
-            amount = unit_amount *  self.pool.get('product.uom')._compute_price(cr, uid,
-                    r.product_id.uom_id.id, r.product_id.standard_price, False)
+            # Compute based on pricetype
+            amount_unit=self.on_change_unit_amount(cr, uid, ids, 
+                r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
+                
+            amount = unit_amount *  amount_unit
             res ['value']['amount']= - round(amount, 2)
             res ['value']['general_account_id']= a
         return res
@@ -132,8 +135,11 @@ class hr_analytic_timesheet(osv.osv):
                             _('There is no expense account define ' \
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
-                amount = unit_amount * r.product_id.uom_id._compute_price(cr, uid,
-                        r.product_id.uom_id.id, r.product_id.standard_price, False)
+                # Compute based on pricetype
+                amount_unit=self.on_change_unit_amount(cr, uid, ids, 
+                    r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
+                        
+                amount = unit_amount * amount_unit
                 res ['value']['amount']= - round(amount, 2)
                 res ['value']['general_account_id']= a
         return res
