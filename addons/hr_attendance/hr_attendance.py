@@ -29,7 +29,7 @@ class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
     _description = "Action reason"
     _columns = {
-        'name' : fields.char('Reason', size=64, required=True),
+        'name' : fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
         'action_type' : fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action's type"),
     }
     _defaults = {
@@ -49,8 +49,8 @@ class hr_attendance(osv.osv):
     _columns = {
         'name' : fields.datetime('Date', required=True),
         'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
-        'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]"),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, select=True),
+        'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
     }
     _defaults = {
         'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

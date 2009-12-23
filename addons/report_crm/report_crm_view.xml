@@ -62,6 +62,8 @@
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
                    <group col="12" colspan="4">
+                   		<filter string="My Cases" icon="terp-hr" domain="[('user_id','=',uid)]" help="My cases by section"/>
+                   		<separator orientation="vertical"/>
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
@@ -87,16 +89,6 @@
             <field name="search_view_id" ref="view_crm_case_user_filter"/>
         </record>
         <menuitem action="action_report_crm_case_user_tree" id="menu_crm_case_user_tree" parent="crm.next_id_64"/>
-
-        <record id="action_report_crm_case_user_tree_my" model="ir.actions.act_window">
-            <field name="name">My cases by section</field>
-            <field name="res_model">report.crm.case.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_crm_case_user_filter"/>
-        </record>
-        <menuitem action="action_report_crm_case_user_tree_my" id="menu_crm_case_user_tree_my" parent="crm.next_id_64"/>
 
         <!-- # Cases by section and categoryof case -->
 

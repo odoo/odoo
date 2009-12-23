@@ -43,7 +43,7 @@
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
                         <field name="origin" select="2"/>
                         <field name="shipped" select="2"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
@@ -53,7 +53,7 @@
                             <field name="partner_ref" select="2"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
-                                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                                <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                                     <field name="date_planned"/>
                                     <field name="name"/>
                                     <field name="product_id"/>
@@ -149,7 +149,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
-            <field name="search_view_id" ref="view_purchase_order_filter"/>            
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
 
         <record id="purchase_order_tree" model="ir.ui.view">
@@ -160,7 +160,7 @@
                 <tree string="Purchase Order">
                     <field name="name" string="Reference"/>
                     <field name="date_order"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="minimum_planned_date"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
@@ -187,7 +187,7 @@
                             <field colspan="4" name="name"/>
                             <field name="date_planned"/>
                             <field name="price_unit"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="price_subtotal" readonly="1"/>
                         </page>
                         <page string="Notes">
@@ -212,7 +212,7 @@
             <field name="model">purchase.order.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Lines">
+                <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                     <field name="name"/>
                     <field name="date_planned"/>
                     <field name="product_id"/>

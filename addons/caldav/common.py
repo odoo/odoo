@@ -21,6 +21,8 @@
 
 from osv import fields, osv
 from service import web_services
+from tools.translate import _
+import re
 
 def caldevIDs2readIDs(caldev_ID = None):
     if caldev_ID:
@@ -51,22 +53,29 @@ class crm_caldav_attendee(osv.osv):
     _columns = {
             'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
                                              ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), \
-                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE'), 
-            'member': fields.char('Member', size=124), 
+                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE', \
+                                              help="Specify the type of calendar user"), 
+            'member': fields.char('Member', size=124, help="Indicate the groups that the attendee belongs to"), 
             'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
                                 ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE'), 
-            'partstat': fields.selection([('NEEDS-ACTION', 'NEEDS-ACTION'), \
-                            ('ACCEPTED', 'ACCEPTED'), ('DECLINED', 'DECLINED'), \
-                            ('TENTATIVE', 'TENTATIVE'), \
-                            ('DELEGATED', 'DELEGATED')], 'PARTSTAT'), 
-            'rsvp':  fields.boolean('RSVP'), 
-            'delegated_to': fields.char('DELEGATED-TO', size=124), 
-            'delegated_from': fields.char('DELEGATED-FROM', size=124), 
-            'sent_by': fields.char('SENT-BY', size=124), 
-            'cn': fields.char('CN', size=124), 
-            'dir': fields.char('DIR', size=124), 
-            'language': fields.char('LANGUAGE', size=124), 
+                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE', \
+                                help='Participation role for the calendar user'), 
+            'partstat': fields.selection([('TENTATIVE', 'TENTATIVE'), 
+                                    ('NEEDS-ACTION', 'NEEDS-ACTION'), 
+                                    ('ACCEPTED', 'ACCEPTED'), 
+                                    ('DECLINED', 'DECLINED'), 
+                                    ('DELEGATED', 'DELEGATED')], 'PARTSTAT', \
+                                    help="Status of the attendee's participation"), 
+            'rsvp':  fields.boolean('RSVP', help="Indicats whether the favor of a reply is requested"), 
+            'delegated_to': fields.char('DELEGATED-TO', size=124, \
+                                        help="The calendar users that the original request was delegated to"), 
+            'delegated_from': fields.char('DELEGATED-FROM', size=124, \
+                              help="Indicates whom the request was delegated from"), 
+            'sent_by': fields.char('SENT-BY', size=124, \
+                                   help="Specify the calendar user that is acting on behalf of the calendar user"), 
+            'cn': fields.char('CN', size=124, help="The common or displayable name to be associated with the calendar user"), 
+            'dir': fields.char('DIR', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
+            'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."), 
                 }
     _defaults = {
         'cn':  lambda *x: 'MAILTO:', 
@@ -93,23 +102,29 @@ class crm_caldav_alarm(osv.osv):
     }
      
     _columns = {
-            'name': fields.char('Summary', size=124), 
+            'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for EMAIL
+or contains the text to be used for DISPLAY"""), 
             'action': fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
-                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', required=True), 
-            'description': fields.text('Description'), 
+                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', \
+                    required=True, help="Defines the action to be invoked when an alarm is triggered"), 
+            'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
                                           'alarm_id', 'attendee_id', 'Attendees'), 
             'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
                                         'Trigger time', required=True), 
             'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
-                    ('DAYS', 'DAYS')], 'Trugger duration', required=True), 
+                    ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
             'trigger_duration':  fields.integer('TIme', required=True), 
             'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
                                            'The event ends')], 'Trigger Occures at', required=True), 
-            'duration': fields.integer('Duration'), 
+            'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
+are both optional, but if one occurs, so MUST the other"""), 
             'repeat': fields.integer('Repeat'), # TODO 
-            'attach': fields.binary('Attachment'), 
-            'active': fields.boolean('Active'), 
+            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for AUDIO, 
+* File which is intended to be sent as message attachments for EMAIL,
+* Points to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
+"""), 
+            'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
                 }
 
     _defaults = {
@@ -214,11 +229,89 @@ class virtual_wizard(web_services.wizard):
         if 'id' in datas:
             datas['id'] = caldevIDs2readIDs(datas['id'])
             for id in datas['ids']:
-               new_ids.append(caldevIDs2readIDs(id))
+                new_ids.append(caldevIDs2readIDs(id))
             datas['ids'] = new_ids
         res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
         return res
 
 virtual_wizard()
+
+
+class set_rrule_wizard(osv.osv_memory):
+    _name = "caldav.set.rrule"
+    _description = "Set RRULE"
+
+    _columns = {
+        'freq': fields.selection([('SECONDLY','SECONDLY'),\
+                            ('MINUTELY','MINUTELY'),\
+                            ('HOURLY', 'HOURLY'),\
+                            ('DAILY', 'DAILY'),\
+                            ('WEEKLY','WEEKLY'),\
+                            ('MONTHLY','MONTHLY'),\
+                            ('YEARLY','YEARLY')], 'Frequency', required=True),
+        'interval': fields.integer('Interval'),
+        'count': fields.integer('Count'),
+        'mo': fields.boolean('Mon'),
+        'tu': fields.boolean('Tue'),
+        'we': fields.boolean('Wed'),
+        'th': fields.boolean('Thu'),
+        'fr': fields.boolean('Fri'),
+        'sa': fields.boolean('Sat'),
+        'su': fields.boolean('Sun'),
+        'day': fields.integer('Day of month'),
+        'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
+                                       ('WE', 'Wednesday'), ('TH', 'Thursday'),\
+                                       ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                       ('SU', 'Sunday')], 'Weekday' ),
+        'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
+                                   ('3', 'Third'), ('4', 'Fourth'), \
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day' ),
+        'end_date': fields.date('Repeat Until')
+    }
+
+    _defaults = {
+                 'freq':  lambda *x: 'DAILY', 
+                 }
+
+    def add_rrule(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids[0])
+        if not context:
+            return {}
+        model = 'crm.case' # for now
+        obj = self.pool.get(model)
+        rrule_string = 'TEMP-value'
+        weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        weekstring = ''
+        monthstring = ''
+
+#    logic for computing rrule string
+
+        if datas.get('interval') <= 0:
+            raise osv.except_osv(_('Error!'),("Please select proper Interval"))
+        if datas.get('day') > 31:
+            raise osv.except_osv(_('Error!'),("Please select proper Day of month"))
+        freq = datas.get('freq')
+        if freq == 'WEEKLY':
+            byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
+            weekstring = ';BYDAY=' + ','.join(byday)
+        elif freq == 'MONTHLY':
+            byday = ''
+            if datas.get('byday') and datas.get('week_list'):
+                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day'))) 
+        if datas.get('end_date'):
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+        enddate_info = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '' ) +\
+                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
+
+        rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
+                    str(datas.get('interval')) + enddate_info + monthstring 
+
+#        End logic 
+        res_obj = obj.browse(cr, uid, context['active_id'])[0]
+        obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
+        return {}
+
+set_rrule_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

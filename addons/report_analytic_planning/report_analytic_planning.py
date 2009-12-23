@@ -198,6 +198,8 @@ class project_task(osv.osv):
     }
     
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if not context:
+            context = {}
         if not context.get('planning'):
             return super(project_task,self).search(cr, user, args, offset, limit, order, context)
         cr.execute(" SELECT t.id, t.name \

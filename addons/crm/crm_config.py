@@ -55,7 +55,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
     }
     _defaults = {
         'sequence': lambda *args: 1
@@ -71,7 +71,7 @@ class crm_cases(osv.osv):
         'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
         'duration': fields.float('Duration'),
         'case_id': fields.many2one('crm.case', 'Related Case'),
-        'partner_name': fields.char('Employee Name', size=64),
+        'partner_name': fields.char("Employee's Name", size=64),
         'partner_name2': fields.char('Employee Email', size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -123,13 +123,13 @@ class crm_menu_config_wizard(osv.osv_memory):
         'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
         'lead': fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
         'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
-        'jobs': fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
+        'jobs': fields.boolean('Jobs Hiring Process', help="Helps you to organise the jobs hiring process: evaluation, meetings, email integration..."),
         'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
         'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
         'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to plan a list of phone calls to process."),
+        'phonecall': fields.boolean('Phone Calls', help="Helps you to encode the result of a phone call or to plan a list of phone calls to process."),
     }
     _defaults = {
         'meeting': lambda *args: True,

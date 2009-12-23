@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Phone Calls
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 
     <record model="ir.ui.view" id="crm_case_phone_tree_view">
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" colors="red:state=='open'">
+            <tree string="Phone Calls" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="date" string="Date"/>
-                <field name="name" string="Call Summary"/>                
+                <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
-                <field name="case_id"/>                
+                <field name="case_id"/>
                 <button string="Opportunity" name="%(wizard_crm_opportunity_set)d"  type="action"/>
                 <button string="Meeting"
                         name="%(wizard_crm_reschedule_phone_call)d"  type="action" />
                 <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                
+
             </tree>
         </field>
     </record>
@@ -30,17 +30,17 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls"  editable="bottom" colors="red:state=='open'">
+            <tree string="Phone Calls"  editable="bottom" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="date" string="Date"/>
-                <field name="name" string="Call Summary"/>                
+                <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
-                <field name="case_id"/>                
+                <field name="case_id"/>
                 <button string="Opportunity" name="%(wizard_crm_opportunity_set)d"  type="action"/>
                 <button string="Meeting"
                         name="%(wizard_crm_reschedule_phone_call)d"  type="action" />
                 <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                
+
             </tree>
         </field>
     </record>
@@ -54,13 +54,13 @@
                 <group colspan="4" col="7">
                     <field name="name" string="Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="user_id" string="Assigned to" select="2"/> 
-                    <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-index" type="action"/>                   
+                    <field name="user_id" string="Assigned to" select="2"/>
+                    <button string="Convert to Opportunity" name="%(wizard_crm_opportunity_set)d" icon="gtk-index" type="action"/>
                     <newline/>
                     <field name="date" string="Planned Date"/>
                     <field name="duration"/>
                     <group colspan="2">
-                        <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)" 
+                        <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"
                         context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
                                'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
                                'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
@@ -76,11 +76,11 @@
                     <label string="Partner:" align="1.0"/>
                     <group colspan="1">
                         <field name="partner_id" string="Partner" nolabel="1"/>
-                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>                        
-                    </group>                        
-                    <field name="partner_address_id" string="Contact"/>                                     
+                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
+                    </group>
+                    <field name="partner_address_id" string="Contact"/>
                     <field name="partner_phone"/>
-                    <field name="partner_mobile"/>                    
+                    <field name="partner_mobile"/>
                     <newline/>
                     <field name="som"/>
                     <field name="priority" string="Relevant"/>
@@ -88,14 +88,14 @@
                     <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="1"/> 
+                        <field name="state" select="1"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                         <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-undo"/>
                         <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                     </group>
-                </page>                            
+                </page>
                </notebook>
            </form>
         </field>
@@ -114,7 +114,7 @@
             </calendar>
         </field>
     </record>
-        
+
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
         <field name="name">crm.case.phonecalls.select</field>
         <field name="model">crm.case</field>
@@ -158,7 +158,7 @@
            </search>
         </field>
     </record>
-    
-        
+
+
     </data>
 </openerp>

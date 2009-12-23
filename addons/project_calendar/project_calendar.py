@@ -19,18 +19,13 @@
 #
 ##############################################################################
 
+from caldav import common
 from datetime import datetime
 from osv import fields, osv
 from service import web_services
 import base64
-import time
 import re
-
-def caldevIDs2readIDs(caldev_ID = None):
-    if caldev_ID:
-        if isinstance(caldev_ID, str):
-            return int(caldev_ID.split('-')[0])
-        return caldev_ID
+import time
 
 class project_task(osv.osv):
     _inherit = "project.task"
@@ -155,10 +150,11 @@ class project_task(osv.osv):
             return super(project_task, self).read(cr, uid, ids, fields, context, load)
         if not type(ids) == list :
             # Called from code
-            return super(project_task, self).read(cr, uid, caldevIDs2readIDs(ids),\
+            return super(project_task, self).read(cr, uid, common.caldevIDs2readIDs(ids),\
                                                   fields=fields, context=context, load=load)
         else:
-            ids = map(lambda x:caldevIDs2readIDs(x), ids)
+            ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+        fields.append('date_start')
         res = super(project_task, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
@@ -167,6 +163,11 @@ class project_task(osv.osv):
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
         if not rrules:
+            for ress in res:
+                strdate = ''.join((re.compile('\d')).findall(ress['date_start']))
+                idval = str(ress['id']) + '-' + strdate
+                idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
+                ress['id'] = idval
             return res
         result =  res + []
         for data in rrules:
@@ -177,7 +178,11 @@ class project_task(osv.osv):
                     val = res_temp
                     if rdates:
                         result.remove(val)
-
+                else:
+                    strdate = ''.join((re.compile('\d')).findall(res_temp['date_start']))
+                    idval = str(res_temp['id']) + '-' + strdate
+                    res_temp['id'] = idval
+                    
             for rdate in rdates:
                 idval = (re.compile('\d')).findall(rdate)
                 val['date_start'] = rdate
@@ -195,7 +200,7 @@ class project_task(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         new_ids = []
         for id in ids:
-            id = caldevIDs2readIDs(id)
+            id = common.caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
         res = super(project_task, self).write(cr, uid, new_ids, vals, context=context)
@@ -203,11 +208,11 @@ class project_task(osv.osv):
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
         if not isinstance(select, list): select = [select]
-        select = map(lambda x:caldevIDs2readIDs(x), select)
+        select = map(lambda x:common.caldevIDs2readIDs(x), select)
         return super(project_task, self).browse(cr, uid, select, context, list_class, fields_process)
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(project_task, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
+        return super(project_task, self).copy(cr, uid, common.caldevIDs2readIDs(id), default, context)
 
     def unlink(self, cr, uid, ids, context=None):
         #TODO: Change RRULE
@@ -215,18 +220,22 @@ class project_task(osv.osv):
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], \
+                for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
                                             ['date', 'rdates', 'rrule', 'exdate']):
-                    exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
-                                ''.join((re.compile('\d')).findall(date_new)) + 'Z'
-                    if record['date_start'] == date_new:
-                        self.write(cr, uid, [caldevIDs2readIDs(id)], {'exdate' : exdate})
+                    if record['rrule']:
+                        exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
+                                    ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        if record['date_start'] == date_new:
+                            self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
+                    else:
+                        ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+                        return super(project_task, self).unlink(cr, uid, ids)
             else:
                 return super(project_task, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
-            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
         return super(project_task, self).create(cr, uid, vals, context)
 project_task()
 

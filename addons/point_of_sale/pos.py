@@ -826,7 +826,7 @@ class pos_order_line(osv.osv):
         'qty': fields.float('Quantity'),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
-        'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
+        'order_id': fields.many2one('pos.order', 'Order Reference', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         }
 
@@ -922,7 +922,7 @@ class pos_payment(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=64),
-        'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
+        'order_id': fields.many2one('pos.order', 'Order Reference', required=True, ondelete='cascade'),
         'journal_id': fields.many2one('account.journal', "Journal", required=True),
         'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
         'payment_nb': fields.char('Piece Number', size=32),
