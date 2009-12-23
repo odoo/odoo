@@ -277,7 +277,8 @@ class product_pricelist_version(osv.osv):
             'price_version_id', 'Price List Items', required=True),
         'date_start': fields.date('Start Date', help="Starting date for this pricelist version to be valid."),
         'date_end': fields.date('End Date', help="Ending date for this pricelist version to be valid."),
-        'company_id': fields.related('pricelist_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('pricelist_id','company_id',type='many2one',
+            readonly=True, relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -374,7 +375,8 @@ class product_pricelist_item(osv.osv):
             digits=(16, int(config['price_accuracy']))),
         'price_max_margin': fields.float('Max. Price Margin',
             digits=(16, int(config['price_accuracy']))),
-        'company_id': fields.related('price_version_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('price_version_id','company_id',type='many2one',
+            readonly=True, relation='res.company', string='Company', store=True)
     }
     
     _constraints = [
