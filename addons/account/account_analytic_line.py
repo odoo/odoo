@@ -125,7 +125,7 @@ class account_analytic_line(osv.osv):
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
-            date,unit=False, context=None):
+            unit=False, context=None):
         if context==None:
             context={}
         uom_obj = self.pool.get('product.uom')

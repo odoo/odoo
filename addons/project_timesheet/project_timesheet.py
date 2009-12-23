@@ -104,7 +104,12 @@ class project_work(osv.osv):
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 vals_line['unit_amount'] = vals['hours']
-                vals_line['amount'] = (-1) * vals['hours'] * (obj.browse(cr,uid,line_id).product_id.standard_price or 0.0)
+                
+                # Compute based on pricetype
+                amount_unit=obj.on_change_unit_amount(cr, uid, line_id, 
+                    vals_line['product_id'], vals_line['unit_amount'], unit, context)
+                
+                vals_line['amount'] = (-1) * vals['hours'] * (amount_unit or 0.0)
             obj.write(cr, uid, [line_id], vals_line, {})
 
         return super(project_work,self).write(cr, uid, ids, vals, context)

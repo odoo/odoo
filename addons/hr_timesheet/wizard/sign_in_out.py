@@ -106,7 +106,7 @@ def _write(self, cr, uid, data, emp_id, context):
     res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'])
     if not res['product_uom_id']:
         raise wizard.except_wizard(_('UserError'), _('No cost unit defined for this employee !'))
-    up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, data['form']['date'], res['product_uom_id'])['value']
+    up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
     res['name'] = data['form']['info']
     res['account_id'] = data['form']['account_id']
     res['unit_amount'] = hour
