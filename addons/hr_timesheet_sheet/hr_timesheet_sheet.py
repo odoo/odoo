@@ -270,7 +270,7 @@ class hr_timesheet_sheet(osv.osv):
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': lambda *a: 'new',
-         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', c)
+         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 
     def _sheet_date(self, cr, uid, ids):

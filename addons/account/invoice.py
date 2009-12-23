@@ -318,7 +318,7 @@ class account_invoice(osv.osv):
         'state': lambda *a: 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
     }

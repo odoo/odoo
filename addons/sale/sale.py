@@ -257,7 +257,7 @@ class sale_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': lambda *a: 'direct',
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': lambda *a: 'manual',
