@@ -1328,14 +1328,13 @@ class stock_move(osv.osv):
                     q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
                     if move.product_id.cost_method == 'average' and move.price_unit:
                         amount = q * move.price_unit
-                    # Base computation on valuation pricelist
+                    # Base computation on valuation price type
                     else:
                         company_id=move.company_id.id
-                        pricelist_id = self.pool.get('res.company').browse(cr,uid,company_id).property_valuation_pricelist.id
-                        amount_unit = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id],
-                                            move.product_id.id, q or 1.0, None, {
-                                                'date': date,
-                                                })[pricelist_id]
+                        
+                        pricetype=self.pool.get('product.price.type').browse(cr,uid,move.company_id.property_valuation_price_type.id)
+                        amount_unit=move.product_id.price_get(cr, uid, ids, pricetype.field, context)
+                        
                         amount=amount_unit * q or 1.0
                         # amount = q * move.product_id.standard_price
                     

@@ -3,21 +3,13 @@
     <data noupdate="1">
         
         
-        <!-- Valuation pricelist -->
-        <record id="list_usd" model="product.pricelist">
-            <field name="name">Valuation Pricelist USD</field>
-            <field name="type">valuation</field>
+        <!-- Valuation price type -->
+        <record id="standard_price_usd" model="product.price.type">
+            <field name="name">Cost Price USD</field>
+            <field name="field">standard_price_usd</field>
             <field name="currency_id" search="[('code','=','USD')]"/>
         </record>
-        <record id="ver_usd" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_usd"/>
-            <field name="name">Default Valuation Pricelist Version USD</field>
-        </record>
-        <record id="item_usd" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_usd"/>
-            <field name="base" ref="product.standard_price"/>
-            <field name="name">Default Valuation Pricelist Line USD</field>
-        </record>
+        
         
 <!--                      Partner                        -->    
         <record id="base.main_partner" model="res.partner">
@@ -54,7 +46,7 @@
             <field name="parent_id" ref="res_company_oerp_editor"/>
             <field name="name">OpenERP US</field>
             <field name="currency_id" search="[('code','=','USD')]"/>
-            <field name="property_valuation_pricelist" ref="list_usd"/>
+            <field name="property_valuation_price_type" ref="standard_price_usd"/>
         </record>
         <record id="res_company_oerp_be" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_be"/>

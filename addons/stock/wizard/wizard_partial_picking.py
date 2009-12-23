@@ -131,7 +131,7 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-
+            pricetype=pool.get('product.price.type').browse(cr,uid,user.company_id.property_valuation_price_type.id)
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
@@ -140,11 +140,14 @@ def _do_split(self, cr, uid, data, context):
                 if product.qty_available<=0:
                     new_std_price = new_price
                 else:
-                    new_std_price = ((product.standard_price * product.qty_available)\
+                    # Get the standard price
+                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    new_std_price = ((amount_unit * product.qty_available)\
                         + (new_price * qty))/(product.qty_available + qty)
-
+                        
+                # Write the field according to price type field
                 product_obj.write(cr, uid, [product.id],
-                        {'standard_price': new_std_price})
+                        {pricetype.field: new_std_price})
                 move_obj.write(cr, uid, [move.id], {'price_unit': new_price})
 
     for move in too_few:

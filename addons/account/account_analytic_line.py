@@ -83,7 +83,6 @@ class account_analytic_line(osv.osv):
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
                     'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
                 },
-                # multi='all',
                 help="The related account currency if not equal to the company one."),
         'company_id': fields.many2one('res.company','Company',required=True),
         'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
@@ -91,7 +90,6 @@ class account_analytic_line(osv.osv):
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
                     'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
                 },
-                # multi='all',
                 help="The amount expressed in the related account currency if not equal to the company one."),
         'ref': fields.char('Reference', size=32),
     }
@@ -124,13 +122,15 @@ class account_analytic_line(osv.osv):
 #        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
     
-    # Compute the cost based on the valuation pricelist define into company
-    # property_product_pricelist property
+    # Compute the cost based on the price type define into company
+    # property_valuation_price_type property
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
             date,unit=False, context=None):
+        if context==None:
+            context={}
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-#        if unit_amount and prod_id:
+        company_obj=self.pool.get('res.company')
         if  prod_id:
             prod = product_obj.browse(cr, uid, prod_id)
             a = prod.product_tmpl_id.property_account_expense.id
@@ -141,16 +141,13 @@ class account_analytic_line(osv.osv):
                         _('There is no expense account defined ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
-            if company_id:
-                company_obj = self.pool.get('res.company')
-            else:
-                company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
-            pricelist_id=company_obj.browse(cr,uid,company_id).property_valuation_pricelist.id
-            amount_unit = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id],
-                                prod_id, unit_amount or 1.0, None, {
-                                    'uom': unit,
-                                    'date': date,
-                                    })[pricelist_id]
+            if not company_id:
+                company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
+      
+            # Compute based on pricetype
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            amount_unit=prod.price_get(pricetype.field, context)[prod.id]
+
             amount=amount_unit*unit_amount or 1.0
             return {'value': {
                 'amount': - round(amount, 2),

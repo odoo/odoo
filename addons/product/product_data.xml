@@ -81,10 +81,6 @@ parameter) will see those record just disappear.
             <field name="key">sale</field>
         </record>
  
-        <record id="pricelist_type_valuation" model="product.pricelist.type">
-            <field name="name">Valuation Pricelist</field>
-            <field name="key">valuation</field>
-        </record>
         
         <!--
 	Price list
@@ -103,21 +99,6 @@ parameter) will see those record just disappear.
             <field name="name">Default Public Pricelist Line</field>
         </record>
         
-        
-        <record id="list_v" model="product.pricelist">
-            <field name="name">Valuation Pricelist</field>
-            <field name="type">valuation</field>
-        </record>
-        <record id="ver_v" model="product.pricelist.version">
-            <field name="pricelist_id" ref="list_v"/>
-            <field name="name">Default Valuation Pricelist Version</field>
-        </record>
-        <record id="item_v" model="product.pricelist.item">
-            <field name="price_version_id" ref="ver_v"/>
-            <field name="base" ref="standard_price"/>
-            <field name="name">Default Valuation Pricelist Line</field>
-        </record>
-        
         <!--
         Property
         -->
@@ -127,10 +108,10 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
         
-        <record forcecreate="True" id="property_valuation_pricelist" model="ir.property">
-            <field name="name">property_valuation_pricelist</field>
-            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_pricelist')]"/>
-            <field eval="'product.pricelist,'+str(ref('list_v'))" name="value"/>
+        <record forcecreate="True" id="property_valuation_price_type" model="ir.property">
+            <field name="name">property_valuation_price_type</field>
+            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_price_type')]"/>
+            <field eval="'product.price.type,'+str(ref('standard_price'))" name="value"/>
         </record>
         
     </data>
