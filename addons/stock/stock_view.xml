@@ -57,7 +57,7 @@
                 <form string="Lot Inventory">
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list"/>
@@ -335,7 +335,7 @@
                     <field name="name" select="1"/>
                     <field name="active" select="2"/>
                     <field name="usage" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="account_id" select="1"/>
                     <field name="location_id"/>
                     <field name="address_id" context="{'contact_display':'partner'}"/>
@@ -417,7 +417,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="partner_address_id" context="{'contact_display':'partner'}"/>
                 </form>
@@ -523,7 +523,7 @@
                         <field name="name" readonly="1"/>
                         <field name="date"/>
                         <field name="min_date" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -643,7 +643,7 @@
                         <field name="min_date" select="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -800,7 +800,7 @@
                         <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -876,7 +876,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -945,7 +945,7 @@
                         <field name="name" readonly="1" select="1"/>
                         <field name="min_date" select="2" readonly="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1024,7 +1024,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1072,7 +1072,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1138,7 +1138,7 @@
                     <field name="product_uos" select="2"/>
                     <field colspan="4" name="name" select="2"/>
                     <field name="date"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="date_planned"/>
                     <field name="priority"/>
                     <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
