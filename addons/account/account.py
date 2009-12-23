@@ -471,7 +471,7 @@ class account_journal(osv.osv):
                                  " Select 'Cash' to be used at the time of making payment."\
                                  " Select 'General' to be used at the time of stock input/output."\
                                  " Select 'Situation' to be used at the time of making vouchers."),
-        'refund_journal': fields.boolean('Refund Journal'),
+        'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
 
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
