@@ -276,7 +276,7 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company',select=1),
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -446,7 +446,6 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
-#        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -630,11 +629,11 @@ class product_supplierinfo(osv.osv):
         'product_name': fields.char('Partner Product Name', size=128, help="This partner's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Partner Product Code', size=64, help="This partner's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Priority', help="Assigns the priority to the list of product supplier."),
-        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the default unit of measure."),
+        'qty' : fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the purchase unit of measure."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
-        'company_id':fields.many2one('res.company','Company'),
+        'company_id':fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
         'qty': lambda *a: 0.0,
