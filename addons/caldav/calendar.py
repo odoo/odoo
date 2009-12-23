@@ -22,12 +22,8 @@
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
-from osv import fields, osv
-from pytz import timezone
-from time import strftime
-import base64
+from osv import osv
 import re
-import time
 import vobject
 
 # O-1  Optional and can come only once
@@ -81,13 +77,12 @@ class CalDAV(object):
         for date in exdate:
             datetime_obj = todate(date)
             rset1._exdate.append(datetime_obj)
-        re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
-        return recurrent_dates
+        re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
+        return re_dates
 
     def ical_set(self, name, value, type):
         if name in self.__attribute__ and self.__attribute__[name]:
-           self.__attribute__[name][type] = value
+            self.__attribute__[name][type] = value
         return True
 
     def ical_get(self, name, type):
@@ -104,7 +99,7 @@ class CalDAV(object):
                     val = int(val)
             return  val
         else:
-             return  self.__attribute__.get(name, None)
+            return  self.__attribute__.get(name, None)
 
     def ical_reset(self, type):
         for name in self.__attribute__:
@@ -297,10 +292,8 @@ class Timezone(CalDAV):
     'tzid': None, # Use: R-1, Type: Text, Specifies the text value that uniquely identifies the "VTIMEZONE" calendar component.
     'last-mod': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the information associated with the calendar component was last revised in the calendar store.
     'tzurl': None, # Use: O-1, Type: URI, Provides a means for a VTIMEZONE component to point to a network location that can be used to retrieve an up-to-date version of itself.
-    'standardc':           # Use: R-n,
-        {'tzprop': None, }, # Use: R-1,
-    'daylightc':           # Use: R-n, Type: Text,
-        {'tzprop': None, }, # Use: R-1,
+    'standardc': {'tzprop': None}, # Use: R-1,
+    'daylightc': {'tzprop': None}, # Use: R-1,
     'x-prop': None, # Use: O-n, Type: Text,
     }
 
