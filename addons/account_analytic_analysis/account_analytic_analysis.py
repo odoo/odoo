@@ -35,7 +35,7 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount),0.0) \
+            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount_currency),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id  \
@@ -44,15 +44,8 @@ class account_analytic_account(osv.osv):
                     group by account_analytic_line.account_id" % acc_set)
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in self.search(cr, uid,
-                    [('parent_id', 'child_of', [obj_id])]):
-                if child_id != obj_id:
-                    res[obj_id] += res.get(child_id, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-        return res
+                
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
 
     def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
@@ -165,38 +158,18 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             acc_set = ",".join(map(str, ids2))
-            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount),0.0) \
-                    from account_analytic_line \
-                    join account_analytic_journal \
-                        on account_analytic_line.journal_id = account_analytic_journal.id \
-                    where account_analytic_line.account_id IN (%s) \
-                        and amount<0 \
-                        and amount_currency=0.0 \
-                    GROUP BY account_analytic_line.account_id"""%acc_set)
-            for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
             cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount_currency),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
                     where account_analytic_line.account_id IN (%s) \
-                        and amount_currency<0 \
+                        and amount<0 \
+
                     GROUP BY account_analytic_line.account_id"""%acc_set)
             for account_id, sum in cr.fetchall():
-                if res.has_key(account_id):
-                    res[account_id] += round(sum,2)
-                else:
-                    res[account_id] = round(sum,2)
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in self.search(cr, uid,
-                    [('parent_id', 'child_of', [obj_id])]):
-                if child_id != obj_id:
-                    res[obj_id] += res.get(child_id, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-        return res
-
+                res[account_id] = round(sum,2)
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
+            
     def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         res2 = {}

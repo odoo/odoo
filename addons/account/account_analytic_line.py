@@ -81,14 +81,18 @@ class account_analytic_line(osv.osv):
         'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
                 },
-                 help="The related account currency if not equal to the company one."),
+                # multi='all',
+                help="The related account currency if not equal to the company one."),
         'company_id': fields.many2one('res.company','Company',required=True),
         'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
-                    store={
-                        'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    },
-                    help="The amount expressed in the related account currency if not equal to the company one."),
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                },
+                # multi='all',
+                help="The amount expressed in the related account currency if not equal to the company one."),
         'ref': fields.char('Reference', size=32),
     }
     _defaults = {

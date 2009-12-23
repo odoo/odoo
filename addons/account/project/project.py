@@ -33,6 +33,32 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Accounts'
 
+    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, acc_set, context={}):
+        # Handle multi-currency on each level of analytic account
+        # This is a refactoring of _balance_calc computation
+        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
+        currency= dict(cr.fetchall())
+        res_currency= self.pool.get('res.currency')
+        for id in ids:
+            if id not in ids2:
+                continue
+            for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
+                if child <> id:
+                    res.setdefault(id, 0.0)
+                    if  currency[child]<>currency[id]:
+                        res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
+                    else:
+                        res[id] += res.get(child, 0.0)
+
+        cur_obj = res_currency.browse(cr,uid,currency.values(),context)
+        cur_obj = dict([(o.id, o) for o in cur_obj])
+        for id in ids:
+            if id in ids2:
+                res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0))
+
+        return dict([(i, res[i]) for i in ids ])
+
+
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
         acc_set = ",".join(map(str, ids))
 
@@ -86,30 +112,8 @@ class account_analytic_account(osv.osv):
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
-
-        currency= dict(cr.fetchall())
-
-        res_currency= self.pool.get('res.currency')
-        for id in ids:
-            if id not in ids2:
-                continue
-            for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
-                    res.setdefault(id, 0.0)
-                    if  currency[child]<>currency[id]:
-                        res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
-                    else:
-                        res[id] += res.get(child, 0.0)
-
-        cur_obj = res_currency.browse(cr,uid,currency.values(),context)
-        cur_obj = dict([(o.id, o) for o in cur_obj])
-        for id in ids:
-            if id in ids2:
-                res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0))
-
-        return dict([(i, res[i]) for i in ids ])
-
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
+                
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
         #XXX must convert into one uom
         res = {}
