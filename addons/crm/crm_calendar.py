@@ -110,7 +110,7 @@ class crm_case(osv.osv):
                  of date/time exceptions for arecurring calendar component."), 
         'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
-        'rrule' : fields.text('Recurrent Rule'), 
+        'rrule' : fields.text('Recurrent Rule', readonly=True), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
        'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
@@ -214,7 +214,7 @@ class crm_case(osv.osv):
                 limit, order, context, count)
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         new_ids = []
         for id in ids:
             id = common.caldevIDs2readIDs(id)
