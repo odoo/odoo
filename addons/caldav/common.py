@@ -21,6 +21,8 @@
 
 from osv import fields, osv
 from service import web_services
+from tools.translate import _
+import re
 
 def caldevIDs2readIDs(caldev_ID = None):
     if caldev_ID:
@@ -233,5 +235,83 @@ class virtual_wizard(web_services.wizard):
         return res
 
 virtual_wizard()
+
+
+class set_rrule_wizard(osv.osv_memory):
+    _name = "caldav.set.rrule"
+    _description = "Set RRULE"
+
+    _columns = {
+        'freq': fields.selection([('SECONDLY','SECONDLY'),\
+                            ('MINUTELY','MINUTELY'),\
+                            ('HOURLY', 'HOURLY'),\
+                            ('DAILY', 'DAILY'),\
+                            ('WEEKLY','WEEKLY'),\
+                            ('MONTHLY','MONTHLY'),\
+                            ('YEARLY','YEARLY')], 'Frequency', required=True),
+        'interval': fields.integer('Interval'),
+        'count': fields.integer('Count'),
+        'mo': fields.boolean('Mon'),
+        'tu': fields.boolean('Tue'),
+        'we': fields.boolean('Wed'),
+        'th': fields.boolean('Thu'),
+        'fr': fields.boolean('Fri'),
+        'sa': fields.boolean('Sat'),
+        'su': fields.boolean('Sun'),
+        'day': fields.integer('Day of month'),
+        'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
+                                       ('WE', 'Wednesday'), ('TH', 'Thursday'),\
+                                       ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                       ('SU', 'Sunday')], 'Weekday' ),
+        'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
+                                   ('3', 'Third'), ('4', 'Fourth'), \
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day' ),
+        'end_date': fields.date('Repeat Until')
+    }
+
+    _defaults = {
+                 'freq':  lambda *x: 'DAILY', 
+                 }
+
+    def add_rrule(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids[0])
+        if not context:
+            return {}
+        model = 'crm.case' # for now
+        obj = self.pool.get(model)
+        rrule_string = 'TEMP-value'
+        weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        weekstring = ''
+        monthstring = ''
+
+#    logic for computing rrule string
+
+        if datas.get('interval') <= 0:
+            raise osv.except_osv(_('Error!'),("Please select proper Interval"))
+        if datas.get('day') > 31:
+            raise osv.except_osv(_('Error!'),("Please select proper Day of month"))
+        freq = datas.get('freq')
+        if freq == 'WEEKLY':
+            byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
+            weekstring = ';BYDAY=' + ','.join(byday)
+        elif freq == 'MONTHLY':
+            byday = ''
+            if datas.get('byday') and datas.get('week_list'):
+                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day'))) 
+        if datas.get('end_date'):
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+        enddate_info = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '' ) +\
+                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
+
+        rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
+                    str(datas.get('interval')) + enddate_info + monthstring 
+
+#        End logic 
+        res_obj = obj.browse(cr, uid, context['active_id'])[0]
+        obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
+        return {}
+
+set_rrule_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
