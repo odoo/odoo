@@ -43,8 +43,8 @@ class multi_company_default(osv.osv):
             help='Company to store the current record'),
         'object_id': fields.many2one('ir.model', 'Object', required=True,
             help='Object affect by this rules'),
-        'expression': fields.char('Expression', size=32, required=True,
-            help='Expression, must be True to match'),
+        'expression': fields.char('Expression', size=256, required=True,
+            help='Expression, must be True to match\nuse context.get or user (browse)'),
         'field_id': fields.many2one('ir.model.fields', 'Field', help='Select field property'),
     }
 

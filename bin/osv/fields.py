@@ -679,6 +679,10 @@ class function(_column):
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
             res = dict(map( get_nice_size, res.items()))
+        if self._type == "integer":
+            for r in res.keys():
+                # Converting value into string so that it does not affect XML-RPC Limits
+                res[r] = str(res[r])
         return res
     get_memory = get
 

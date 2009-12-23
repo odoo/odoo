@@ -171,9 +171,10 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
     wiz_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/wizard')
     login_conn = xmlrpclib.ServerProxy(uri + '/xmlrpc/common')
     db_list = execute(conn, 'list')
-    if dbname not in db_list:
-        id = execute(conn,'create',admin_passwd, dbname, True, lang)
-        wait(id,uri)
+    if dbname in db_list:
+        drop_db(uri, dbname)
+    id = execute(conn,'create',admin_passwd, dbname, True, lang)
+    wait(id,uri)
     uid = login_conn.login(dbname, user, pwd)
 
     wiz_id = execute(wiz_conn,'create', dbname, uid, user, 'base_setup.base_setup')
