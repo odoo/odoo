@@ -242,6 +242,7 @@ class crm_case(osv.osv):
                                                       fields=fields, context=context, load=load)
         else:
             ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+        fields.append('date')
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
@@ -250,6 +251,11 @@ class crm_case(osv.osv):
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
         if not rrules:
+            for ress in res:
+                strdate = ''.join((re.compile('\d')).findall(ress['date']))
+                idval = str(ress['id']) + '-' + strdate
+                idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
+                ress['id'] = idval
             return res
         result =  res + []
         for data in rrules:
@@ -260,6 +266,11 @@ class crm_case(osv.osv):
                     val = res_temp
                     if rdates:
                         result.remove(val)
+                else:
+                    strdate = ''.join((re.compile('\d')).findall(res_temp['date']))
+                    idval = str(res_temp['id']) + '-' + strdate
+                    idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
+                    res_temp['id'] = idval
 
             for rdate in rdates:
                 idval = (re.compile('\d')).findall(rdate)
@@ -282,10 +293,14 @@ class crm_case(osv.osv):
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
                 for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
                                             ['date', 'rdates', 'rrule', 'exdate']):
-                    exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
-                                ''.join((re.compile('\d')).findall(date_new)) + 'Z'
-                    if record['date'] == date_new:
-                        self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
+                    if record['rrule']:
+                        exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
+                                    ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        if record['date'] == date_new:
+                            self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
+                    else:
+                        ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+                        return super(crm_case, self).unlink(cr, uid, common.caldevIDs2readIDs(ids))
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
 
