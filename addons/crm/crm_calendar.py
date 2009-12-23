@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from caldav import common
 from dateutil.rrule import *
 from osv import fields, osv
 import  datetime
@@ -26,13 +27,6 @@ import base64
 import re
 import time
 import tools
-
-def caldevIDs2readIDs(caldev_ID = None):
-    if caldev_ID:
-        if isinstance(caldev_ID, str):
-            return int(caldev_ID.split('-')[0])
-        return caldev_ID
-
 
 class crm_case(osv.osv):
     _name = 'crm.case'
@@ -60,7 +54,7 @@ class crm_case(osv.osv):
 #        'attach' : {'field':'attachment_ids', 'sub-field':'datas', 'type':'list'}, 
         'attendee' : {'field':'attendees', 'type':'many2many', 'object' : 'crm.caldav.attendee'}, 
 #        'categories' : {'field':'categ_id', 'sub-field':'name'},
-#        'categories' : {'field':None , 'sub-field':'name', 'type':'text'}, # keep none for now
+#        'categories' : {'field':None , 'sub-field':'name', 'type':'text'}, 
         'comment' : None, 
         'contact' : None, 
         'exdate'  : {'field':'exdate', 'type':'datetime'}, 
@@ -109,7 +103,8 @@ class crm_case(osv.osv):
         'location' : fields.function(_get_location, method=True, store=True, \
                                      string='Location', type='text'), 
         'freebusy' : fields.text('FreeBusy'), 
-        'transparent' : fields.selection([('OPAQUE', 'OPAQUE'), ('TRANSPARENT', 'TRANSPARENT')], 'Trensparent'), 
+        'transparent' : fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
+                                          ('OPAQUE', 'OPAQUE')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=34), 
         'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
                  of date/time exceptions for arecurring calendar component."), 
@@ -222,17 +217,17 @@ class crm_case(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         new_ids = []
         for id in ids:
-            id = caldevIDs2readIDs(id)
+            id = common.caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
         if 'case_id' in vals :
-            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
         res = super(crm_case, self).write(cr, uid, new_ids, vals, context=context)
         return res
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
         if not isinstance(select, list): select = [select]
-        select = map(lambda x:caldevIDs2readIDs(x), select)
+        select = map(lambda x:common.caldevIDs2readIDs(x), select)
         return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
 
     def read(self, cr, uid, ids, fields=None, context={},  load='_classic_read'):
@@ -243,10 +238,10 @@ class crm_case(osv.osv):
                                               load=load)
         if not type(ids) == list :
             # Called from code
-            return super(crm_case, self).read(cr, uid, caldevIDs2readIDs(ids), fields=fields, \
-                                               context=context, load=load)
+            return super(crm_case, self).read(cr, uid, common.caldevIDs2readIDs(ids), \
+                                                      fields=fields, context=context, load=load)
         else:
-            ids = map(lambda x:caldevIDs2readIDs(x), ids)
+            ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
         res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
@@ -276,7 +271,8 @@ class crm_case(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(crm_case, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
+        return super(crm_case, self).copy(cr, uid, common.caldevIDs2readIDs(id), \
+                                                          default, context)
 
     def unlink(self, cr, uid, ids, context=None):
         #TODO: Change RRULE
@@ -284,18 +280,18 @@ class crm_case(osv.osv):
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], \
+                for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
                                             ['date', 'rdates', 'rrule', 'exdate']):
                     exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
                                 ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                     if record['date'] == date_new:
-                        self.write(cr, uid, [caldevIDs2readIDs(id)], {'exdate' : exdate})
+                        self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
             else:
                 return super(crm_case, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
-            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
         return super(crm_case, self).create(cr, uid, vals, context)
 
 crm_case()
