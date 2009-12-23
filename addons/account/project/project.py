@@ -181,7 +181,7 @@ class account_analytic_account(osv.osv):
         'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
         'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
         'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
-        'quantity_max': fields.float('Maximum Quantity'),
+        'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
         'user_id' : fields.many2one('res.users', 'Account Manager'),
