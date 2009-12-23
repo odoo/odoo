@@ -26,13 +26,15 @@ import netsvc
 import time
 import pooler
 from osv import osv
-
+from tools.translate import _
 
 
 
 class report_creator_open(wizard.interface):
     def _open_report(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        if context.get('report_id',False):
+            raise  wizard.except_wizard(_('UserError'),_('No Wizards available for this object!'))
         rep = pool.get('base_report_creator.report').browse(cr, uid, data['id'], context)
         view_mode = rep.view_type1
         if rep.view_type2:
