@@ -2,11 +2,11 @@
 <openerp>
 <data>
 
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Opportunities
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 
-    
+
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities Form</field>
@@ -19,7 +19,7 @@
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible"/>
                     <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />                    
+                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                         <newline/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -30,7 +30,7 @@
                     <group colspan="2">
                         <field name="case_id" select="1"/>
                         <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>                    
+                    </group>
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
@@ -49,7 +49,7 @@
 
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/> 
+                        <field name="state" select="2"/>
                         <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
@@ -63,7 +63,7 @@
                     <field name="active"/>
                     <field name="canal_id"/>
                     <field name="som"/>
-                    
+
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
@@ -72,7 +72,7 @@
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
-                
+
                     <field name="log_ids" nolabel="1" colspan="4">
                         <form string="Actions">
                             <separator string="Action Information" colspan="4"/>
@@ -114,7 +114,7 @@
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                             <field name="description"/>
@@ -133,7 +133,7 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Opportunities Tree"  colors="red:state=='open'">
+            <tree string="Opportunities Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Opportunities"/>
                 <field name="stage_id"  string="Sales Stage"/>
@@ -150,7 +150,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">crm.case.opportunities.select</field>
         <field name="model">crm.case</field>

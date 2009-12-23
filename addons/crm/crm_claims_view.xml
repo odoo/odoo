@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Claims
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Claims"  colors="red:state=='open'">
+            <tree string="Claims"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -44,7 +44,7 @@
                     <group colspan="2">
                         <field name="case_id" select="1"/>
                         <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>                       
+                    </group>
                 </group>
                 <notebook>
                 <page string="Claims Info">
@@ -63,7 +63,7 @@
                     <field name="description" colspan="4" nolabel="1"/>
                     <separator colspan="4" string="Status"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="1"/> 
+                        <field name="state" select="1"/>
                         <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
@@ -75,7 +75,7 @@
                     <field name="id" select="1"/>
                     <field name="active"/>
                     <field name="canal_id"/>
-                    <field name="som"/>                                        
+                    <field name="som"/>
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
@@ -122,7 +122,7 @@
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                             <field name="description"/>
