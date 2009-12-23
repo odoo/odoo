@@ -68,7 +68,7 @@ class  report_closed_task(osv.osv):
     _description = "Closed Task Report"
     _auto = False
     _columns = {
-        'sequence': fields.integer('Sequence', readonly=True),
+        'sequence': fields.integer('Sequence', readonly=True, help="Gives the sequence order when displaying a list of closed task reports."),
         'name': fields.char('Task summary', size=128, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
@@ -133,7 +133,7 @@ class report_timesheet_task_user(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.date('Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
         'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),

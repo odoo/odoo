@@ -50,7 +50,7 @@ class hr_attendance(osv.osv):
         'name' : fields.datetime('Date', required=True),
         'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
         'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]"),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, select=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
     }
     _defaults = {
         'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

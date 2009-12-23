@@ -45,7 +45,7 @@ class account_budget_post(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'sequence': fields.integer('Sequence'),        
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of budgetary position."),        
     }
     _defaults = {
         'sequence': lambda *a: 1,   

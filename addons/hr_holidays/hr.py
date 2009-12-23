@@ -70,7 +70,7 @@ class hr_holidays_status(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'CRM Section', help='If you link this type of leave with a section in the CRM, it will synchronize each leave asked with a case in this section, to display it in the company shared calendar for example.'),
         'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True, help='This color will be used in the leaves summary located in Reporting\Print Summary of Leaves'),
         'limit' : fields.boolean('Allow to override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the leave type without removing it."),
         'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'), 
         'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'), 
         'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', multi='user_left_days'), 
@@ -102,12 +102,12 @@ class hr_holidays_per_user(osv.osv):
         return result
 
     _columns = {
-        'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name",required=True),
         'user_id' : fields.many2one('res.users','User'),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
         'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the holidays per user without removing it."),
         'notes' : fields.text('Notes'),
         'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
         'holiday_ids': fields.one2many('hr.holidays', 'holiday_user_id', 'Holidays')
@@ -143,7 +143,7 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'date_to' : fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status_id' : fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         'manager_id' : fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automaticly filled by the user who validate the leave'),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)]}),

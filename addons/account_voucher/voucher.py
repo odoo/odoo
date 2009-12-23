@@ -487,7 +487,7 @@ class VoucherLine(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),
-        'ref':fields.char('Ref.', size=32),
+        'ref':fields.char('Reference', size=32),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account')
     }
     _defaults = {

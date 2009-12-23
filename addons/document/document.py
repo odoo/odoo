@@ -434,7 +434,7 @@ class document_directory_content_type(osv.osv):
     _columns = {
         'name': fields.char('Content Type', size=64, required=True),
         'code': fields.char('Extension', size=4),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the directory content type without removing it."),
     }
     _defaults = {
         'active': lambda *args: 1
@@ -451,7 +451,7 @@ class document_directory_content(osv.osv):
         return res
     _columns = {
         'name': fields.char('Content Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=16),
+        'sequence': fields.integer('Sequence', size=16, help="Gives the sequence order when displaying a list of directory contents."),
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),

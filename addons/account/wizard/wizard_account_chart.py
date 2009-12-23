@@ -35,7 +35,7 @@ class wizard_account_chart(wizard.interface):
                 'string': 'Fiscal year',
                 'type': 'many2one',
                 'relation': 'account.fiscalyear',
-                'help': 'Keep empty for all open fiscal year',
+                'help': 'Keep empty for all open fiscal years',
         },
             'target_move': {
                 'string': 'Target Moves',

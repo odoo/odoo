@@ -109,7 +109,7 @@ class crm_caldav_alarm(osv.osv):
             'duration': fields.integer('Duration'), 
             'repeat': fields.integer('Repeat'), # TODO 
             'attach': fields.binary('Attachment'), 
-            'active': fields.boolean('Active'), 
+            'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
                 }
 
     _defaults = {
