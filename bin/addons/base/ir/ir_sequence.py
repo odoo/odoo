@@ -57,7 +57,7 @@ class ir_sequence(osv.osv):
         'number_next': lambda *a: 1,
         'padding' : lambda *a : 0,
         'weight' : lambda *a: 10,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c)
     }
 
     def _process(self, s):
