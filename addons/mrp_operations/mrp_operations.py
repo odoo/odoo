@@ -29,7 +29,7 @@ from mx import DateTime
 from tools.translate import _
 
 #----------------------------------------------------------
-# Workcenters
+# Work Centers
 #----------------------------------------------------------
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
@@ -75,11 +75,11 @@ class mrp_production_workcenter_line(osv.osv):
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finnished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="This is delay between operation start and stop in this workcenter",readonly=True),
+       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this workcenter",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
-            string='Prod.State', readonly=True),
+            string='Production State', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True),
@@ -434,7 +434,7 @@ class mrp_operations_operation(osv.osv):
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),
-        'workcenter_id':fields.many2one('mrp.workcenter','Workcenter',required=True),
+        'workcenter_id':fields.many2one('mrp.workcenter','Work Center',required=True),
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),

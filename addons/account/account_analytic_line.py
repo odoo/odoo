@@ -78,7 +78,6 @@ class account_analytic_line(osv.osv):
         'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
         'code' : fields.char('Code', size=8),
         'user_id' : fields.many2one('res.users', 'User',),
-        'ref': fields.char('Ref.', size=32),
         'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
@@ -89,8 +88,8 @@ class account_analytic_line(osv.osv):
                     store={
                         'account.analytic.account': (_get_account_line, ['company_id'], 50),
                     },
-                    help="The amount expressed in the related account currency if not equal to the company one.",),
-        
+                    help="The amount expressed in the related account currency if not equal to the company one.",)
+        'ref': fields.char('Reference', size=32),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -173,20 +172,24 @@ class timesheet_invoice(osv.osv):
     _description = "Analytic account costs and revenues"
     _auto = False
     _columns = {
-        'name': fields.date('Month', readonly=True),
+        'name': fields.char('Year',size=64,required=False, readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', readonly=True),
         'quantity': fields.float('Quantities', readonly=True),
         'cost': fields.float('Credit', readonly=True),
-        'revenue': fields.float('Debit', readonly=True)
+        'revenue': fields.float('Debit', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc, account_id'
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_hr_timesheet_invoice_journal')
         cr.execute("""
         create or replace view report_hr_timesheet_invoice_journal as (
             select
                 min(l.id) as id,
-                date_trunc('month', l.date)::date as name,
+                to_char(l.date, 'YYYY') as name,
+                to_char(l.date,'MM') as month,
                 sum(
                     CASE WHEN l.amount>0 THEN 0 ELSE l.amount
                     END
@@ -201,7 +204,8 @@ class timesheet_invoice(osv.osv):
             from account_analytic_line l
                 LEFT OUTER join product_uom u on (u.id=l.product_uom_id)
             group by
-                date_trunc('month', l.date),
+                to_char(l.date, 'YYYY'),
+                to_char(l.date,'MM'),
                 journal_id,
                 account_id
         )""")

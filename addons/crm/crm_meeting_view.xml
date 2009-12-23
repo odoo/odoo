@@ -101,8 +101,9 @@
         <field name="arch" type="xml">
             	<search string="Search Meetings">
                		<group col="10" colspan="4">
-	               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" />
-	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" />
+               			<filter icon="terp-crm" string="My Meetings" domain="[('user_id','=',uid)]" help="My Meetings"/>
+	               		<filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]" help="Draft Meetings"/>
+	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" help="Confirmed Meetings"/>
 	               		<separator orientation="vertical"/>
 	               		<field name="name" select="1" string="Subject"/>
 	               		<field name="partner_id" select="1"/>

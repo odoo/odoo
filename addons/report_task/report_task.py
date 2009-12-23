@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,6 +27,9 @@ class  report_task_user_pipeline_open (osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'task_nbr': fields.float('Task Number', readonly=True),
         'task_hrs': fields.float('Task Hours', readonly=True),
@@ -40,6 +43,8 @@ class  report_task_user_pipeline_open (osv.osv):
             create or replace view report_task_user_pipeline_open as (
                 select
                     min(t.id) as id,
+                    to_char(t.create_date, 'YYYY') as name,
+                    to_char(t.create_date,'MM') as month,
                     u.id as user_id,
                     u.company_id as company_id,
                     count(t.*) as task_nbr,
@@ -48,12 +53,12 @@ class  report_task_user_pipeline_open (osv.osv):
                     case when t.state is null then 'no' else t.state end as task_state
                 from
                     res_users u
-                left join 
+                left join
                     project_task t on (u.id = t.user_id)
                 where
                     u.active
                 group by
-                    u.id, u.company_id, t.state
+                    to_char(t.create_date, 'YYYY'),to_char(t.create_date,'MM'),u.id, u.company_id, t.state
             )
         ''')
 report_task_user_pipeline_open()
@@ -63,7 +68,7 @@ class  report_closed_task(osv.osv):
     _description = "Closed Task Report"
     _auto = False
     _columns = {
-        'sequence': fields.integer('Sequence', readonly=True),
+        'sequence': fields.integer('Sequence', readonly=True, help="Gives the sequence order when displaying a list of closed task reports."),
         'name': fields.char('Task summary', size=128, readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
         'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
@@ -99,7 +104,7 @@ class report_timesheet_task_user(osv.osv):
     _name = "report.timesheet.task.user"
     _auto = False
     _order = "name"
-    
+
     def _get_task_hours(self, cr, uid, ids, name,args,context):
         result = {}
         for record in self.browse(cr, uid, ids,context):
@@ -112,7 +117,7 @@ class report_timesheet_task_user(osv.osv):
                 total += hrs['hours']
             result[record.id] = total
         return result
-    
+
     def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
         result = {}
         sum = 0.0
@@ -126,27 +131,27 @@ class report_timesheet_task_user(osv.osv):
                 total += day_attendance['total_attendance']
             result[record.id] = total
         return result
-        
+
     _columns = {
         'name': fields.date('Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
         'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
       }
-    
-    
-    def init(self, cr):   
+
+
+    def init(self, cr):
        cr.execute(""" create or replace view report_timesheet_task_user as (
-        select  
+        select
          ((r.id*12)+to_number(months.m_id,'99'))::integer as id,
                months.name as name,
                r.id as user_id
         from res_users r,
                 (select to_char(p.date,'YYYY-MM-01') as name,
             to_char(p.date,'MM') as m_id
-                from project_task_work p 
-    
-            union 
+                from project_task_work p
+
+            union
                 select to_char(h.name,'YYYY-MM-01') as name,
                 to_char(h.name,'MM') as m_id
                 from hr_timesheet_sheet_sheet_day h) as months) """)

@@ -12,6 +12,7 @@
 		<field name="arch" type="xml">
 			<form string="Picking by invoice method">
 				<field name="name" select="1"/>
+				<field name="month" select="1"/>
 				<field name="invoice_state" select="1"/>
 				<field name="state" select="1"/>
 				<field name="invoice_type_id" select="1"/>
@@ -29,6 +30,7 @@
 		<field name="arch" type="xml">
 			<tree string="Packing by invoice method">
 				<field name="name"/>
+				<field name="month"/>
 				<field name="invoice_state"/>
 				<field name="state"/>
 				<field name="invoice_type_id"/>
@@ -37,6 +39,24 @@
 				<field name="price_total"/>
 				<field name="price_average"/>
 			</tree>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_picking_invoice_type_stats_search">
+		<field name="name">sale_journal.invoice.type.stats.search</field>
+		<field name="model">sale_journal.invoice.type.stats</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Picking by invoice method">
+				<group col="8" colspan="4">
+					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Picking by invoice method in this year"/>
+	               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Picking by invoice method in this month"/>
+	               	<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="month" select="1"/>
+					<field name="invoice_state" select="1"/>
+					<field name="state" select="1"/>
+				</group>
+			</search>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open">
@@ -48,18 +68,7 @@
 		<field name="domain">[('invoice_state','=','2binvoiced'),('invoice_type_id','=',active_id)]</field>
 	</record>
 
-	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_month">
-		<field name="name">Picking by invoice method</field>
-		<field name="res_model">sale_journal.invoice.type.stats</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-
 	<menuitem name="Picking Journal" id="menu_definition_journal_reporting" parent="stock.next_id_61"/>
-	<menuitem name="This Month" id="menu_definition_journal_reporting_this" parent="menu_definition_journal_reporting"/>
-	<menuitem name="Picking by Invoice Method" id="menu_invoice_type_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_invoice_type_picking_stats_open_menu_month"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_all">
 		<field name="name">Picking by invoice method</field>
@@ -67,10 +76,10 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
+		<field name="search_view_id" ref="view_picking_invoice_type_stats_search"/>
 	</record>
 
-	<menuitem name="All Months" id="menu_definition_journal_reporting_all" parent="menu_definition_journal_reporting"/>
-	<menuitem name="Picking by Invoice Method" id="menu_invoice_type_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_invoice_type_picking_stats_open_menu_all"/>
+	<menuitem name="Picking by Invoice Method" id="menu_invoice_type_picking_stats_open_all" parent="menu_definition_journal_reporting" action="action_invoice_type_picking_stats_open_menu_all"/>
 
 	#
 	# Packing by journal
@@ -83,6 +92,7 @@
 		<field name="arch" type="xml">
 			<form string="Picking by journals">
 				<field name="name" select="1"/>
+				<field name="month" select="1"/>
 				<field name="state" select="1"/>
 				<field name="journal_id" select="1"/>
 				<field name="quantity"/>
@@ -108,17 +118,23 @@
 			</tree>
 		</field>
 	</record>
-
-	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_month">
-		<field name="name">Picking by journal</field>
-		<field name="res_model">sale_journal.picking.stats</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+	<record model="ir.ui.view" id="view_picking_journal_stats_search">
+		<field name="name">sale_journal.picking.stats.search</field>
+		<field name="model">sale_journal.picking.stats</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Picking by journals">
+				<group col="8" colspan="4">
+					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Picking by journals in this year"/>
+	               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Picking by journals in this month"/>
+	               	<separator orientation="vertical"/>
+					<field name="name" select="1"/>
+					<field name="month" select="1"/>
+					<field name="state" select="1"/>
+				</group>
+			</search>
+		</field>
 	</record>
-
-	<menuitem name="Picking by Journal" id="menu_picking_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_picking_picking_stats_open_menu_month"/>
 
 	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_all">
 		<field name="name">Picking by journal</field>
@@ -126,9 +142,10 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
+		<field name="search_view_id" ref="view_picking_journal_stats_search"/>
 	</record>
 
-	<menuitem name="Picking by Journal" id="menu_picking_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_picking_picking_stats_open_menu_all"/>
+	<menuitem name="Picking by Journal" id="menu_picking_picking_stats_open_all" parent="menu_definition_journal_reporting" action="action_picking_picking_stats_open_menu_all"/>
 
 </data>
 </openerp>

@@ -50,7 +50,7 @@ class hr_attendance(osv.osv):
         'name' : fields.datetime('Date', required=True),
         'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
         'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]"),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, select=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
     }
     _defaults = {
         'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -106,43 +106,34 @@ class hr_employee(osv.osv):
        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
      }
     
-    def sign_change(self, cr, uid, ids, context={}, dt=False):
-        for emp in self.browse(cr, uid, ids):
-            if not self._action_check(cr, uid, emp.id, dt, context):
-                raise osv.except_osv(_('Warning'), _('You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
-            res = {'action':'action', 'employee_id':emp.id}
-            if dt:
-                res['name'] = dt
-            att_id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-        return True
-
-    def sign_out(self, cr, uid, ids, context={}, dt=False, *args):
-        id = False
-        for emp in self.browse(cr, uid, ids):
-            if not self._action_check(cr, uid, emp.id, dt, context):
-                raise osv.except_osv(_('Warning'), _('You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
-            res = {'action':'sign_out', 'employee_id':emp.id}
-            if dt:
-                res['name'] = dt
-            att_id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-            id = att_id
-        return id
-
     def _action_check(self, cr, uid, emp_id, dt=False,context={}):
         cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
-    def sign_in(self, cr, uid, ids, context={}, dt=False, *args):
+    def attendance_action_change(self, cr, uid, ids, type='action', context={}, dt=False, *args):
         id = False
-        for emp in self.browse(cr, uid, ids):
-            if not self._action_check(cr, uid, emp.id, dt, context):
-                raise osv.except_osv(_('Warning'), _('You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
-            res = {'action':'sign_in', 'employee_id':emp.id}
+        warning_sign = 'sign'
+        
+        if type == 'sign_in':
+            warning_sign = "Sign In"
+        elif type == 'sign_out':
+            warning_sign = "Sign Out"    
+        
+        for emp in self.read(cr, uid, ids, ['id'], context=context):
+            if not self._action_check(cr, uid, emp['id'], dt, context):
+                raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
+            
+            res = {'action' : type, 'employee_id' : emp['id']}
+            
             if dt:
                 res['name'] = dt
+                
             id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-        return id
+        
+        if type != 'action':
+            return id
+        return True
     
 hr_employee()
     

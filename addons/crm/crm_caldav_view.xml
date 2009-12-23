@@ -54,10 +54,10 @@
 					<separator string="Description" colspan="4"/>
            			<field name="description" colspan="4" nolabel="1" attrs="{'required' : [('action','in',('EMAIL'))]}"/>
            			<group string="Reminder details" col="4" colspan="4">
-	           			<field name="trigger_interval" nolabel="1" select="1"/>
 						<field name="trigger_duration" nolabel="1" select="1"/>
-						<field name="trigger_related" nolabel="1" select="1"/>
+						<field name="trigger_interval" nolabel="1" select="1"/>
 						<field name="trigger_occurs" nolabel="1" select="1"/>
+						<field name="trigger_related" nolabel="1" select="1"/>
 					</group>
 					<field name="duration"/>
 					<field name="repeat"/>
@@ -98,29 +98,29 @@
             			<newline/>
             			<separator string="Event Location" colspan="4"/>
             			<field name="location" colspan="4" nolabel="1"/>
-            			<separator string="Freebusy Value" colspan="4"/>
-            			<field name="freebusy" colspan="4" nolabel="1"/>
-            			<separator string="RRule Details" colspan="4"/>
-            			<field name="rrule" colspan="4" nolabel="1"/>
-            			<separator string="Recurrenet Dates" colspan="4"/>
-            			<field name="rdates" colspan="4" nolabel="1"/>
+<!--            			<separator string="Freebusy Value" colspan="4"/>-->
+<!--            			<field name="freebusy" colspan="4" nolabel="1"/>-->
+<!--            			<separator string="Recurrency Details" colspan="4"/>-->
+            			<group string="Recurrency Details" col="4" colspan="4">
+            				<group col="1" colspan="2">
+            					<separator string="Recurrenet Rule" />
+            					<field name="rrule" nolabel="1" />
+            					<separator string="Exception Rule" />
+            					<field name="exrule" nolabel="1" />
+            				</group>
+            				<group col="1" colspan="2">
+            					<separator string="Recurrenet Dates" />
+            					<field name="rdates" nolabel="1" />
+            					<separator string="Exception Dates" />
+            					<field name="exdate" nolabel="1" />
+            				</group>
+            			</group>
             		</page>
             		<page string="Attendee">
             			<separator string="Attendee" colspan="4"/>
             			<field name="attendees" colspan="4" nolabel="1"/>
             		</page>
             	</notebook>
-            </field>
-        </record>
-        
-        <record id="caldav_crm_case_view1" model="ir.ui.view">
-            <field name="name">crm.case.caldav.form1</field>
-            <field name="model">crm.case</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.crm_case-view"/>
-            <field name="arch" type="xml">
-           			<field name="categ_id" position="replace">
-           			</field>
             </field>
         </record>
         

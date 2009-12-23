@@ -60,8 +60,8 @@
                             <action colspan="4" height="150" name="%(action_view_board_note_tree)d" string="Public Notes"/>
                         </child1>
                         <child2>
-                            <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_my_form)d" string="My Planning"/>
-                            <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_my)d" string="My Timesheet"/>
+                            <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_form)d" string="My Planning" domain="[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]"/>
+                            <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_all)d" string="Timesheets"/>
                         </child2>
                     </hpaned>
                 </form>

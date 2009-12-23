@@ -19,14 +19,8 @@
 #
 ##############################################################################
 
-import time
-import tools
 import wizard
-import os
-import mx.DateTime
-import base64
 import pooler
-import vobject
 
 
 class crm_cal_import_wizard(wizard.interface):
@@ -40,25 +34,49 @@ class crm_cal_import_wizard(wizard.interface):
             'file_path': {
                 'string': 'Select ICS file', 
                 'type': 'binary', 
-                'required' : True, 
-                'filters' : '*.ics'
+                'required': True, 
+                'filters': '*.ics'
                 }
             }
+    display = '''<?xml version="1.0"?>
+    <form string="Import Message">
+        <field name="msg" colspan="4" width="300" nolabel="1"/>
+    </form>'''
     
-    def _process_import_ics(self, cr, uid, data, context=None):
+    display_fields = {
+            'msg': {
+                'string': '', 
+                'type': 'text', 
+                'readonly': True, 
+                }
+            }
+
+    def _process_imp_ics(self, cr, uid, data, context=None):
         case_obj = pooler.get_pool(cr.dbname).get('crm.case')
-        case_obj.import_cal(cr, uid, data['ids'], data, context)
+        vals = case_obj.import_cal(cr, uid, data['ids'], data, context)
+        if vals:
+            global cnt
+            cnt = vals['count']
         return {}
+    
+    def _result_set(self, cr, uid, data, context=None):
+        return {'msg': 'Imported %s Event(s)' % cnt}
     
     states = {
         'init': {
             'actions': [], 
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Import', 'gtk-ok')]}
+            'result': {'type': 'form', 'arch': form1, 'fields': form1_fields, \
+                       'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Import', 'gtk-ok')]}
         }, 
         'open': {
             'actions': [], 
-            'result': {'type': 'action', 'action':_process_import_ics, 'state':'end'}
-        }
+            'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
+        },
+       'display': {
+            'actions': [_result_set], 
+            'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
+                       'state': [('end', 'Ok', 'gtk-ok')]}
+        }, 
     }
     
 crm_cal_import_wizard('caldav.crm.import')

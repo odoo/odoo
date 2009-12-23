@@ -264,7 +264,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated Ledger Postings."),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Links to the automatically generated Ledger Postings."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])),string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -1075,7 +1075,7 @@ class account_invoice_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
@@ -1306,7 +1306,7 @@ class account_invoice_tax(osv.osv):
         'base': fields.float('Base', digits=(16,int(config['price_accuracy']))),
         'amount': fields.float('Amount', digits=(16,int(config['price_accuracy']))),
         'manual': fields.boolean('Manual'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
 
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,int(config['price_accuracy']))),

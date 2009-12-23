@@ -29,7 +29,7 @@ class account_analytic_default(osv.osv):
     _rec_name = 'analytic_id'
     _order = 'sequence'
     _columns = {
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of analytic distribution."),
         'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade'),

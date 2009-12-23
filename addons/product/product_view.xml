@@ -39,11 +39,10 @@
                 <tree colors="red:virtual_available&lt;0;blue:state in ['draft', 'end', 'obsolete']" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="variants"/>
+                    <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
-                    <field invisible="'partner_id' not in context" name="price"/>
                     <field name="lst_price"/>
                     <field name="standard_price"/>
                     <field name="state"/>
@@ -61,7 +60,7 @@
                     <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
                         <field name="name" select="1"  />
-                        <field groups="base.group_extended" name="variants" select="2" />
+                        <field groups="product.group_product_variant" name="variants" select="2" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
@@ -128,7 +127,7 @@
                             </group>
 
                             <group colspan="2" col="2" name="misc">
-                                <separator string="Miscelleanous" colspan="2"/>
+                                <separator string="Miscellaneous" colspan="2"/>
                                 <field name="active" select="2"/>
                                 <field name="company_id" select="2" groups="base.group_multi_company" widget="selection"/>
                             </group>
@@ -587,9 +586,10 @@
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
 
-        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_main_product" sequence="2"
+        <!--
+        <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products" sequence="2"
                   groups="product.group_product_variant" />
-
+        -->
 
     </data>
 </openerp>

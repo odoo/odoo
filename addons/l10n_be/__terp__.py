@@ -52,6 +52,7 @@
                     'l10n_be_wizard.xml',
                     'l10n_be_sequence.xml', 
                     'fiscal_templates.xml',
+                    #'security/ir.model.access.csv'
                    ],
     'demo_xml': [
                     'account.report.report.csv'

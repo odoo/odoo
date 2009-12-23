@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 14:52+0000\n"
-"Last-Translator: Makis Nicolaou <mark.nicolaou@gmail.com>\n"
+"PO-Revision-Date: 2009-12-15 20:48+0000\n"
+"Last-Translator: Andreas Porevopoulos <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 05:07+0000\n"
+"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -45,7 +45,7 @@ msgstr "Συνεργάτης Παροχής"
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -58,6 +58,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Αν δεν υπάρχει αρκετό απόθεμα για να παραδώσετε όλη την παραγγελία, "
+"αποδέχεστε μερικώς εκτελεσμένες αποστολές ή όχι;"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -193,7 +195,7 @@ msgstr "Πολτική Μεταφορών"
 #: selection:sale.order,state:0
 #: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -276,7 +278,7 @@ msgstr "Οι εντολή πώλησης μου σε εξέλιξη"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Ποσότητα (ΜοΠ)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -365,7 +367,7 @@ msgstr "Γραμμές Τιμολογίου"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "Δυναμική Ανάθεση"
 
 #. module: sale
 #: view:sale.order:0
@@ -485,12 +487,12 @@ msgstr "Άκυρο XML για την αρχιτεκτονική όψης!"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Packing"
-msgstr ""
+msgstr "Σχετικές συσκευασίες"
 
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Λογαρισμός πληρωμών"
 
 #. module: sale
 #: constraint:product.template:0
@@ -502,7 +504,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Παραπομπή Πελάτη"
 
 #. module: sale
 #: view:sale.order:0
@@ -866,6 +868,18 @@ msgid ""
 "  - The 'Invoice from the packing' choice is used to create an invoice "
 "during the packing process."
 msgstr ""
+"Η Πολιτική Μεταφορών χρησιμοποιείται στον συχρονισμό της τιμολόγησης και της "
+"αποστολής.\n"
+"  - Το 'Πληρωμή πριν την Παράδοση' θα δημιουργήσει πρώτα το τιμολόγιο και "
+"στην συνέχεια την εντολή αποστολής όταν το τιμολόγιο εξοφληθεί.\n"
+"  - Το 'Παράδοση και Χειροκίνητη Τιμολόγηση' θα δημιουργήσει την εντολή "
+"αποστολής αμέσως και θα περιμένει από τον χρήστη να δημιουργήσει το "
+"τιμολόγιο πατώντας το αντίστοιχο κουμπί.\n"
+"  - Το 'Τιμολόγηση στην εντολή μετά την παράδοση' θα δημιουργήσει πρόχειρο "
+"τιμολόγιο βασισμένο στην εντολή πώλησης αφού ολοκληρωθούν όλες οι "
+"αποστολές.\n"
+"  - Το 'Τιμολόγηση απ' την συσκευασία' χρησιμοποιείται για να δημιουργήσει "
+"το τιμολόγιο κατα την διάρκεια της διαδικασίας αποστολής."
 
 #. module: sale
 #: rml:sale.order:0
@@ -953,6 +967,12 @@ msgid ""
 "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
 "for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
+"Δηλώνει την κατάσταση της προσφοράς ή της εντολής πώλησης. Η κατάσταση "
+"Εξαίρεσης πραγματοποιείται αυτόματα όταν γίνεται μια ακύρωση στην "
+"πιστοποίηση τιμολογίου (Εξαίρεση Τιμολόγησης) ή στην αποστολή (Εξαίρεση "
+"Αποστολής). Η κατάσταση Αναμονή Προγραμματισμού πραγματοποιείται όταν το "
+"τιμολόγιο επιβεβαιωθεί αλλά περιμένει τον Χρονοπρογραμματιστή να τρέξει κατα "
+"'Ημερομηνία Παραγγελίας'."
 
 #. module: sale
 #: view:sale.order:0
@@ -963,7 +983,7 @@ msgstr "1η ΜΜ"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Αριθμός συσκευασίας"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -977,7 +997,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Σε Εξέλιξη"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
@@ -1114,7 +1134,7 @@ msgstr "Ακύρωση Ανάθεσης"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Τιμολόγηση απ' την συσκευασία"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1180,12 +1200,12 @@ msgstr "Ημερομηνία Εντολής"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "ΜοΠ Προϊόντος"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Χειροκίνητη σε εξέλιξη"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1238,7 +1258,7 @@ msgstr "Σχετικά τιμολόγια"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Όνομα καταστήματος"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1291,7 +1311,7 @@ msgstr "Picked"
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "Λογιστική"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

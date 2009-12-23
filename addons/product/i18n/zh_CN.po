@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-03 13:03+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2009-12-18 09:29+0000\n"
+"Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-05 04:42+0000\n"
+"X-Launchpad-Export-Date: 2009-12-19 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -102,12 +102,12 @@ msgstr "如果这规则只适合一种货品模板则设置一个模板.为所�
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procure Method"
-msgstr "采购方式"
+msgstr "获得方式"
 
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -220,7 +220,7 @@ msgstr "接收"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "计划性生产"
+msgstr "备货型生产"
 
 #. module: product
 #: view:product.product:0
@@ -470,7 +470,7 @@ msgstr "根据需求硬盘型号"
 #: field:product.uom,factor_inv:0
 #: field:product.uom,factor_inv_data:0
 msgid "Factor"
-msgstr "满意度"
+msgstr "因数"
 
 #. module: product
 #: wizard_button:product.price_list,init,price:0
@@ -580,7 +580,7 @@ msgstr "价格表版本"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rules Test Match"
-msgstr "定价规则"
+msgstr "规则匹配测试"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
@@ -704,7 +704,7 @@ msgstr "希捷 7200.8 160GB 硬盘"
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "产品系列"
+msgstr "产品变体"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -729,7 +729,7 @@ msgstr "装箱"
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13"
-msgstr "条码"
+msgstr "(EAN13)欧洲商品编号"
 
 #. module: product
 #: view:product.product:0
@@ -768,7 +768,7 @@ msgstr "业务伙伴货品名称将用在询价上。留空为使用内部名称
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr "采购方式"
+msgstr "供应方式"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
@@ -785,7 +785,7 @@ msgstr "计量单位分类"
 #: field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr "顺序"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -800,7 +800,7 @@ msgstr "供应商信息"
 #: view:product.product:0
 #: view:product.ul:0
 msgid "Packaging"
-msgstr "装箱"
+msgstr "包装"
 
 #. module: product
 #: field:product.price.type,currency_id:0
@@ -938,7 +938,7 @@ msgstr "包装数量"
 #. module: product
 #: help:product.template,uos_id:0
 msgid ""
-"Used by companies that manages two unit of measure: invoicing and stock "
+"Used by companies that manages two unit of measure: invoicing and inventory "
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr "处理发票和库存管理两个计量单位的公司使用。例如，在食品工业中，您在库存中管理火腿，但发票使用公斤为计量单位。留空以使用默认计量单位。"
@@ -947,7 +947,7 @@ msgstr "处理发票和库存管理两个计量单位的公司使用。例如，
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "采购与货位"
+msgstr "需求单与地点"
 
 #. module: product
 #: view:product.product:0
@@ -1071,7 +1071,7 @@ msgstr "pricelist.partnerinfo"
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr "标准价格"
+msgstr "成本价格"
 
 #. module: product
 #: view:product.product:0
@@ -1110,7 +1110,7 @@ msgstr "最小价格差额"
 #. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
-msgstr "包装上的条码"
+msgstr "包装的欧洲商品编号(EAN)"
 
 #. module: product
 #: field:product.template,weight:0
@@ -1285,7 +1285,7 @@ msgstr "根据要求内存容量"
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr "个"
+msgstr "单位"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -1377,9 +1377,9 @@ msgstr "分层包装"
 #: help:product.template,type:0
 msgid ""
 "Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no inventory management "
-"in the system."
-msgstr "将改变采购处理方式。消耗品是可库存货品并有无限库存，或在无库存管理系统的情况下使用。"
+"products with infinite stock, or for use when you have no inventory "
+"management in the system."
+msgstr ""
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -1463,7 +1463,7 @@ msgstr "生产"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "来单生产"
+msgstr "订货型生产"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1545,7 +1545,7 @@ msgstr "可采购"
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
-msgstr "UOM -> UOS系数"
+msgstr "计量单位->销售单位 系数"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
@@ -1582,7 +1582,7 @@ msgstr "满箱或托盘重量"
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr "周期结束"
+msgstr "生命周期终止"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -1672,7 +1672,7 @@ msgstr "采购订单采用的计量单位。它必须与默认计量单位属于
 #. module: product
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误：无效的条码"
+msgstr "错误：无效的(EAN)条码"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -1709,4 +1709,4 @@ msgstr "千克"
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
-msgstr "折扣"
+msgstr "降价"

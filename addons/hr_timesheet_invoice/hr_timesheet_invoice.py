@@ -28,7 +28,7 @@ class hr_timesheet_invoice_factor(osv.osv):
     _description = "Invoice rate"
     _columns = {
         'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Visible name', size=128),
+        'customer_name': fields.char('Name', size=128),
         'factor': fields.float('Discount (%)', required=True),
     }
     _defaults = {
@@ -66,7 +66,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
-            help="Check this field if you plan to automatically generate invoices based " \
+            help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
     }
@@ -80,7 +80,7 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing'),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
     }
 
     def unlink(self, cursor, user, ids, context=None):
