@@ -36,7 +36,7 @@ class account_analytic_line(osv.osv):
         for rec in self.browse(cr, uid, ids, context):
             cmp_cur_id=rec.company_id.currency_id.id
             aa_cur_id=rec.account_id.currency_id.id
-            result[rec.id] = 0.0
+            # Always provide the amount in currency
             if cmp_cur_id <> aa_cur_id:
                 cur_obj = self.pool.get('res.currency')
                 ctx = {}
@@ -45,15 +45,15 @@ class account_analytic_line(osv.osv):
                     result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
                         rec.account_id.currency_id.id, rec.amount,
                         context=ctx)
+            else:
+                result[rec.id]=rec.amount
         return result
         
     def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
-            if rec.company_id.currency_id.id <> rec.account_id.currency_id.id:
-                result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
-            else:
-                result[rec.id] = False
+            # Always provide second currency
+            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
         return result
     
     def _get_account_line(self, cr, uid, ids, context={}):

@@ -42,7 +42,7 @@ class account_analytic_account(osv.osv):
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
             
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount_currency<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r = dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
@@ -58,7 +58,7 @@ class account_analytic_account(osv.osv):
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
             
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount_currency>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r= dict(cr.fetchall())
         for i in ids:
             r.setdefault(i,0.0)
@@ -81,7 +81,7 @@ class account_analytic_account(osv.osv):
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
             
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
