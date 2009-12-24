@@ -50,6 +50,9 @@ def uid2openobjectid(cr, uidval, oomodel):
             return id
         return False
     
+def openobjectid2uid(cr, uidval, oomodel):
+    value = 'OpenERP-%s_%s@%s' % (oomodel, uidval, cr.dbname)
+    return value
 
 class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'

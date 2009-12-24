@@ -147,7 +147,7 @@ class project_task(osv.osv):
         alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(alarm.__attribute__)
         
-        ical = todo_obj.export_ical(cr, uid, task_data)
+        ical = todo_obj.export_ical(cr, uid, task_data, {'model': 'project.task'})
         caendar_val = ical.serialize()
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val

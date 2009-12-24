@@ -181,7 +181,7 @@ class crm_case(osv.osv):
         crm_alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         
-        ical = event_obj.export_ical(cr, uid, crm_data)
+        ical = event_obj.export_ical(cr, uid, crm_data, {'model': 'crm.case'})
         caendar_val = ical.serialize()
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val

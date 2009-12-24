@@ -25,6 +25,7 @@ from dateutil.rrule import *
 from osv import osv
 import re
 import vobject
+import common
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -107,7 +108,7 @@ class CalDAV(object):
                 self.__attribute__[name][type] = None
         return True
 
-    def export_ical(self, cr, uid, datas, vobj=None):
+    def export_ical(self, cr, uid, datas, vobj=None, context={}):
         ical = vobject.iCalendar()
         for data in datas:
             vevent = ical.add(vobj)
@@ -115,12 +116,18 @@ class CalDAV(object):
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
                 if map_field in data.keys():
-                    if field == 'attendee' and data[map_field]:
+                    if field == 'uid' :
+                        model = context.get('model', None)
+                        if not model:
+                            continue
+                        uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        vevent.add('uid').value = uidval
+                    elif field == 'attendee' and data[map_field]:
                         attendee_obj = self.pool.get('caldav.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent)
+                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
                         alarm_obj = self.pool.get('caldav.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent)
+                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -217,8 +224,8 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-    def export_ical(self, cr, uid, datas):
-        return super(Event, self).export_ical(cr, uid, datas, 'vevent')
+    def export_ical(self, cr, uid, datas, context={}):
+        return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
     
 Event()
 
@@ -260,8 +267,8 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None, 
             }
     
-    def export_ical(self, cr, uid, datas):
-        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo')
+    def export_ical(self, cr, uid, datas, context={}):
+        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
 
 ToDo()
 
@@ -312,7 +319,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, alarm_id, vevent):
+    def export_ical(self, cr, uid, alarm_id, vevent, context={}):
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get('crm.caldav.alarm')
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -397,7 +404,7 @@ class Attendee(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, attendee_id, vevent):
+    def export_ical(self, cr, uid, attendee_id, vevent, context={}):
         attendee_object = self.pool.get('crm.caldav.attendee')
         for attendee in attendee_object.read(cr, uid, attendee_id, []):
             attendee_add = vevent.add('attendee')
