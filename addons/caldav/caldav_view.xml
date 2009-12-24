@@ -14,7 +14,7 @@
                     <field name="count"
                     	attrs="{'required' : [('end_date','=',False)]}"/>
                     <field name="end_date"
-                    	attrs="{'required' : [('count','&lt;=',0)]}"/>
+                    	attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}"/>
                     <group col="7" colspan="4" name="Select weekdays"
                     		attrs="{'invisible' : [('freq','!=','WEEKLY')]}">
                     	<separator string="" colspan="6" />
@@ -28,21 +28,31 @@
                     	<field name="su" colspan="1" />
                     	<newline />
                     </group>
-                    <group col="4" colspan="4"
-                    			attrs="{'invisible' : [('freq','!=','MONTHLY')]}">
-                    	<separator string="" colspan="6" />
-                    	<newline />
-                    	<field name="day" colspan="1"/>
-                    	<newline />
-                    	<label string="The"/>
-                    	<field name="byday" nolabel="1"
-                    		attrs="{'required' : [('day','&lt;=',0)]}"/>
-                    	<field name="week_list" nolabel="1"
-                    		attrs="{'required' : [('day','&lt;=',0)]}"/>
-                    	<label string="of the Month"/>
-                    	<newline />
+                    <group col="4" colspan="4" attrs="{'invisible' : [('freq','!=','MONTHLY'), ('freq','!=','YEARLY')]}">
+                    	<separator string="" colspan="6"/>
+                    	<group col="2" colspan="4">
+                    		<field name="select1"/>
+                    	</group>
+                    	<group col="3" colspan="4" attrs="{'readonly' : [('select1','=','day')]}">
+                    		<field name="day" attrs="{'required' : [('select1','=','date')]}"/>
+                   		</group>
+                   		<newline />
+                    	<group col="5" colspan="4" attrs="{'readonly' : [('select1','=','date')]}">
+                    		<label string="The" />
+                    		<field name="byday" nolabel="1"
+                    					attrs="{'required' : [('select1','=','day')]}"/>
+                    		<field name="week_list" nolabel="1"
+                    					attrs="{'required' : [('select1','=','day')]}"/>
+                    		<label string="of the Month" />
+                    		<newline />
+                    	</group>
+                    	<group col="2" colspan="4" attrs="{'invisible' : [('freq','!=','YEARLY')]}">
+                    		<field name="month_list" string="of" colspan="1"
+                    				attrs="{'required' : [('freq','=','YEARLY')]}"/>
+                 		</group>
                     </group>
                     <separator string="" colspan="6" />
+                    <label string="" colspan="3"/>
                     <button name="add_rrule" string="Ok" type="object" icon="gtk-ok"/>
                 </form>
             </field>
