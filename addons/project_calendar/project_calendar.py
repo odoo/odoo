@@ -99,7 +99,7 @@ class project_task(osv.osv):
                      }
 
     def import_cal(self, cr, uid, ids, data, context={}):
-        file_content = base64.decodestring(data['form']['file_path'])
+        file_content = base64.decodestring(data)
         todo_obj = self.pool.get('caldav.todo')
         todo_obj.__attribute__.update(self.__attribute__)
         
@@ -125,8 +125,13 @@ class project_task(osv.osv):
                 # Converts timedelta into Project time unit
                 val['planned_hours'] = (val['planned_hours'].seconds/float(86400) + \
                                         val['planned_hours'].days) * obj_tm.factor
+
+            is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
-            task_id = self.create(cr, uid, val)
+            if is_exists:
+                self.write(cr, uid, [is_exists], val)
+            else:
+                case_id = self.create(cr, uid, val)
         return {'count': len(vals)}
     
     def export_cal(self, cr, uid, ids, context={}):

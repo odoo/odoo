@@ -187,7 +187,7 @@ class crm_case(osv.osv):
         return caendar_val
 
     def import_cal(self, cr, uid, ids, data, context={}):
-        file_content = base64.decodestring(data['form']['file_path'])
+        file_content = base64.decodestring(data)
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
 
@@ -203,9 +203,13 @@ class crm_case(osv.osv):
             # TODO: Select proper section
             section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
             val.update({'section_id' : section_id})
+            is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
             val.pop('create_date')
-            case_id = self.create(cr, uid, val)
+            if is_exists:
+                self.write(cr, uid, [is_exists], val)
+            else:
+                case_id = self.create(cr, uid, val)
         return {'count': len(vals)}
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 

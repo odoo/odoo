@@ -24,15 +24,32 @@ from service import web_services
 from tools.translate import _
 import re
 
+months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", \
+            7:"July", 8:"August", 9:"September", 10:"October", 11:"November", \
+            12:"December"}
+
 def caldevIDs2readIDs(caldev_ID = None):
     if caldev_ID:
         if isinstance(caldev_ID, str):
             return int(caldev_ID.split('-')[0])
         return caldev_ID
 
-months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", \
-            7:"July", 8:"August", 9:"September", 10:"October", 11:"November", \
-            12:"December"}
+def uid2openobjectid(cr, uidval, oomodel):
+    __rege = re.compile(r'OpenERP-([\w|\.]+)_([0-9]+)@(\w+)$')
+    wematch = __rege.match(uidval.encode('utf8'))
+    if not wematch:
+#                raise osv.except_osv('Warning!!', "Cannot locate UID in %s" % val['id'])
+        return False
+    else:
+        model, id, dbname = wematch.groups()
+        if (not model == oomodel) or (not dbname == cr.dbname):
+            return False
+        cr.execute('select distinct(id) from %s' % model.replace('.', '_'))
+        ids = map(lambda x: str(x[0]), cr.fetchall())
+        if id in ids:
+            return id
+        return False
+    
 
 class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'
