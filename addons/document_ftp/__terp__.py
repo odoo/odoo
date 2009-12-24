@@ -19,6 +19,25 @@
 #
 ##############################################################################
 
-import document_ics
-import document_ics_config_wizard
+
+{
+    'name': 'Integrated FTP Server with Document Management System',
+    'version': '1.99',
+    'category': 'Generic Modules/Others',
+    'description': """This is a support FTP Interface with document management system:    
+""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'document'],
+    'init_xml': [],
+    'update_xml': [
+        'document_ftp_view.xml',
+        'security/ir.model.access.csv'        
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': None,
+}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
