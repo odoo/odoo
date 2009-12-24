@@ -115,10 +115,14 @@ class project_task(osv.osv):
         for val in vals:
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
             if not val.has_key('planned_hours'):
-                # 'Compute duration' in days
-                val['planned_hours'] = 16
+                # 'Computes duration' in days
+                start = datetime.strptime(val['date_start'], '%Y-%m-%d %H:%M:%S')
+                end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                diff = end - start
+                plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
+                val['planned_hours'] = plan
             else:
-                # Convert timedelta into Project time unit
+                # Converts timedelta into Project time unit
                 val['planned_hours'] = (val['planned_hours'].seconds/float(86400) + \
                                         val['planned_hours'].days) * obj_tm.factor
             val.pop('id')
@@ -165,7 +169,6 @@ class project_task(osv.osv):
         if not rrules:
             for ress in res:
                 strdate = ''.join((re.compile('\d')).findall(ress['date_start']))
-                idval = str(ress['id']) + '-' + strdate
                 idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
                 ress['id'] = idval
             return res
@@ -180,7 +183,7 @@ class project_task(osv.osv):
                         result.remove(val)
                 else:
                     strdate = ''.join((re.compile('\d')).findall(res_temp['date_start']))
-                    idval = str(res_temp['id']) + '-' + strdate
+                    idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
                     res_temp['id'] = idval
                     
             for rdate in rdates:
@@ -215,7 +218,6 @@ class project_task(osv.osv):
         return super(project_task, self).copy(cr, uid, common.caldevIDs2readIDs(id), default, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
