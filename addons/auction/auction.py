@@ -170,7 +170,7 @@ class auction_lot_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
         'aie_categ' : fields.selection([('41',"Unclassifieds"),
             ('2',"Antiques"),
             ('42',"Antique/African Arts"),
@@ -1236,7 +1236,7 @@ class report_attendance(osv.osv):
     #_rec_name='date'
     _columns = {
         'name': fields.date('Date', readonly=True,select=1),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=1, readonly=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=1, readonly=True),
         'total_attendance': fields.float('Total', readonly=True),
 }
     def init(self, cr):

@@ -116,7 +116,7 @@ class board_line(osv.osv):
     _order = 'position,sequence'
     _columns = {
         'name': fields.char('Title', size=64, required=True),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of board lines."),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),

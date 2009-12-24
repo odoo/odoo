@@ -162,7 +162,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Chart of accounts" toolbar="1" colors="blue:type=='view'">
+                <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="debit"/>
@@ -301,7 +301,7 @@
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="Statement">
+                <tree colors="red:balance_end_real!=balance_end and state=='draft';blue:state=='draft' and (balance_end_real==balance_end);black:state=='confirm'" string="Statement">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -790,7 +790,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Entry Lines</field>
             <field name="model">account.move.line</field>
@@ -1511,7 +1511,7 @@
 
 
         <!-- Account Templates -->
-        <menuitem 
+        <menuitem
             id="account_template_folder"
             name="Templates"
             parent="account.menu_finance_accounting"

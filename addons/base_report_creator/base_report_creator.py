@@ -305,7 +305,7 @@ class report_creator(osv.osv):
     _columns = {
         'name': fields.char('Report Name',size=64, required=True),
         'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the report without removing it."),
         'view_type1': fields.selection([('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'First View', required=True),
         'view_type2': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Second View'),
         'view_type3': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Third View'),
@@ -378,7 +378,7 @@ class report_creator_field(osv.osv):
     _rec_name = 'field_id'
     _order = "sequence,id"
     _columns = {
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of fields."),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
         'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('count','Count'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),

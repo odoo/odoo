@@ -35,9 +35,9 @@ form_intra = """<?xml version="1.0"?>
     <newline/>
     <field name="mand_id" help="This identifies the representative of the sending company. This is a string of 14 characters"/>
     <newline/>
-    <field name="trimester" help="it will be the first digit of period" />
+    <field name="trimester" help="It will be the first digit of period" />
     <newline/>
-    <field name="test_xml" help="Set the XML output as test file"/>
+    <field name="test_xml" help="Sets the XML output as test file"/>
     </page>
     <page string="European Countries">
     <field name="country_ids" colspan="4" nolabel="1" />

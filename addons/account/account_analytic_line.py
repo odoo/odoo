@@ -32,8 +32,8 @@ class account_analytic_line(osv.osv):
     _columns = {
         'name' : fields.char('Description', size=256, required=True),
         'date' : fields.date('Date', required=True),
-        'amount' : fields.float('Amount', required=True),
-        'unit_amount' : fields.float('Quantity'),
+        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
+        'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'product_uom_id' : fields.many2one('product.uom', 'UoM'),
         'product_id' : fields.many2one('product.product', 'Product'),
         'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
@@ -42,7 +42,7 @@ class account_analytic_line(osv.osv):
         'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
         'code' : fields.char('Code', size=8),
         'user_id' : fields.many2one('res.users', 'User',),
-        'ref': fields.char('Ref.', size=32),
+        'ref': fields.char('Reference', size=32),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
