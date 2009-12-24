@@ -284,12 +284,12 @@ class set_rrule_wizard(osv.osv_memory):
 
     def add_rrule(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
-        if not context:
+        if not context or not context.get('model'):
             return {}
-        model = 'crm.case' # for now
+        else:
+            model = context.get('model')
         obj = self.pool.get(model)
         res_obj = obj.browse(cr, uid, context['active_id'])[0]
-        
         weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         weekstring = ''
         monthstring = ''
