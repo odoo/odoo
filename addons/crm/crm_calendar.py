@@ -253,13 +253,12 @@ class crm_case(osv.osv):
         if not rrules:
             for ress in res:
                 strdate = ''.join((re.compile('\d')).findall(ress['date']))
-                idval = str(ress['id']) + '-' + strdate
                 idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
                 ress['id'] = idval
             return res
         result =  res + []
         for data in rrules:
-            if data['rrule'] and data['rdates']: # delete 2nd condition at last
+            if data['rrule'] and data['rdates']:
                 rdates = eval(data['rdates'])
             for res_temp in res:
                 if res_temp['id'] == data['id']:
@@ -268,7 +267,6 @@ class crm_case(osv.osv):
                         result.remove(val)
                 else:
                     strdate = ''.join((re.compile('\d')).findall(res_temp['date']))
-                    idval = str(res_temp['id']) + '-' + strdate
                     idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
                     res_temp['id'] = idval
 
@@ -286,7 +284,6 @@ class crm_case(osv.osv):
                                                           default, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
