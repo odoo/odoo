@@ -128,7 +128,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.ics':
                 return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         import vobject
-        parsedCal = vobject.readOne(data)
+        parsedCal = vobject.readOne(data)        
         fields = {}
         funcs = {}
         fexprs = {}
@@ -226,13 +226,11 @@ class document_directory_content(osv.osv):
             if isinstance(id, list):
                 if len(id) > 1:
                     raise Exception("Multiple matches found for ICS")
-            if id:
-                print "writting at %s#%d:" %(cmodel, id[0]), result
+            if id:                
                 fobj.write(cr, uid, id, result, context=context)
             else:
                 r = idomain.copy()
-                r.update(result)
-                print "creating at  %s#%d:" %(cmodel, id), result
+                r.update(result)                
                 fobj.create(cr, uid, r, context=context)
 
         return True
