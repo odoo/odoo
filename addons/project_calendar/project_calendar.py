@@ -98,7 +98,7 @@ class project_task(osv.osv):
         'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'},
                      }
 
-    def import_cal(self, cr, uid, ids, data, context={}):
+    def import_cal(self, cr, uid, data, context={}):
         file_content = base64.decodestring(data)
         todo_obj = self.pool.get('caldav.todo')
         todo_obj.__attribute__.update(self.__attribute__)
