@@ -25,6 +25,7 @@ import wizard_crm_new_send_email
 import wizard_fetch_mail
 import wizard_cal_export
 import wizard_cal_import
+import wizard_cal_subscribe
 
 import meeting_planify
 import wizard_partner_create
