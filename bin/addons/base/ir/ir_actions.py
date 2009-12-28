@@ -159,6 +159,16 @@ class act_window(osv.osv):
         (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
     ]
 
+    def get_filters(self, cr, uid, model):
+        cr.execute('select id from ir_act_window a where a.res_model=\''+model+'\' and a.filter=\'1\';')
+        all_ids = cr.fetchall()
+        filter_ids =  map(lambda x:x[0],all_ids)
+        act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1)])
+        act_ids += filter_ids
+        act_ids = list(set(act_ids))
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain'])
+        return my_acts
+
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
         for act in self.browse(cr, uid, ids):
