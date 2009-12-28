@@ -64,7 +64,6 @@ class crm_case(osv.osv):
         'resources' : None, 
         'rdate' : None, 
         'rrule' : {'field':'rrule', 'type':'text'}, 
-        'x-openobject-id' : {'field':'id', 'type':'text'}, 
         'x-openobject-model' : {'value':_name, 'type':'text'}, 
 #        'duration' : {'field':'duration'},
         'dtend' : {'field':'date_closed', 'type':'datetime'}, 
@@ -186,7 +185,7 @@ class crm_case(osv.osv):
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val
 
-    def import_cal(self, cr, uid, ids, data, context={}):
+    def import_cal(self, cr, uid, data, context={}):
         file_content = base64.decodestring(data)
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
