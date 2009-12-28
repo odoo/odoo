@@ -53,9 +53,10 @@ class project_cal_imp_wizard(wizard.interface):
 
     def _process_imp_ics(self, cr, uid, data, context=None):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
-        vals = task_obj.import_cal(cr, uid, data['ids'], data, context)
+        vals = task_obj.import_cal(cr, uid, data['ids'], data['form']['file_path'], context)
+        global cnt
+        cnt = 0
         if vals:
-            global cnt
             cnt = vals['count']
         return {}
     

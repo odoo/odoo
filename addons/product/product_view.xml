@@ -408,7 +408,7 @@
                     <field name="product_code"/>
                     <field name="delay"/>
                     <field name="qty"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
                         <tree editable="bottom" string="Pricelist">
                             <field name="min_quantity"/>
@@ -433,7 +433,7 @@
                     <field name="delay"/>
                     <field name="qty"/>
                     <field name="product_code"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>

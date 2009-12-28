@@ -109,7 +109,11 @@
             			<newline/>
             			<separator string="Location" colspan="4"/>
             			<field name="location" colspan="4" nolabel="1"/>
-            			<group string="Recurrency Details" col="4" colspan="4">
+            			<group string="Recurrency Details" col="5" colspan="4">
+            				<button string="Change RRule"
+            					name="%(caldav.action_view_caldav_set_rrule_wizard)d"
+            					icon="gtk-save-as" type="action" colspan="4"
+            					context="{'model' : 'project.task'}"/>
             				<group col="1" colspan="2">
             					<separator string="Recurrenet Rule" />
             					<field name="rrule" nolabel="1" />

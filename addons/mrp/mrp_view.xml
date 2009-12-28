@@ -110,7 +110,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="active" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Work Center">
@@ -239,7 +239,7 @@
                       <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                       <field name="name" select="1"/>
                       <field name="code" select="1"/>
-                      <field name="company_id" select="1" groups="base.group_multi_company"/>
+                      <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <newline/>
                     <field name="product_uom"/>
@@ -456,7 +456,7 @@
                         <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
                     <notebook colspan="4">
@@ -685,7 +685,7 @@
                         <separator colspan="2" string="References"/>
                         <field name="name" select="1" string="Requisition Reason"/>
                         <field name="origin" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
@@ -824,7 +824,7 @@
                     <field name="active" select="1"/>
                     <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" select="1" widget="selection"/>
                     <field name="location_id" select="2"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>

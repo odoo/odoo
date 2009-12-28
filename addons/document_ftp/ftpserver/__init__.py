@@ -28,7 +28,7 @@ import netsvc
 from tools import config
 from tools.misc import detect_ip_addr
 HOST = ''
-PORT = int(config.get('ftp_server_port', 8021))
+PORT = 8021
 PASSIVE_PORTS = None
 pps = config.get('ftp_server_passive_ports', '').split(':')
 if len(pps) == 2:
@@ -53,8 +53,7 @@ class ftp_server(threading.Thread):
         ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
 
         HOST = config.get('ftp_server_address', detect_ip_addr())
-        PORT = int(config.get('ftp_server_port', '8021'))
-
+        PORT = int(config.get('ftp_server_port', '8021'))        
         address = (HOST, PORT)
         ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
         ftpd.serve_forever()

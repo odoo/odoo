@@ -325,7 +325,7 @@ class account_account(osv.osv):
         'active': lambda *a: True,
         'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
     def _check_recursion(self, cr, uid, ids):

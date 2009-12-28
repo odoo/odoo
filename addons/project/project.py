@@ -127,7 +127,7 @@ class project(osv.osv):
         'priority': lambda *a: 1,
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'open',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', context=c)
     }
 
     _order = "parent_id,priority,name"
@@ -318,7 +318,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', c) 
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c) 
     }
     _order = "sequence, priority, date_deadline, id"
 

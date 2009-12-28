@@ -110,7 +110,7 @@ class crm_case(osv.osv):
                  of date/time exceptions for arecurring calendar component."), 
         'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
-        'rrule' : fields.text('Recurrent Rule'), 
+        'rrule' : fields.text('Recurrent Rule', readonly=True), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
        'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
@@ -181,13 +181,13 @@ class crm_case(osv.osv):
         crm_alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         
-        ical = event_obj.export_ical(cr, uid, crm_data)
+        ical = event_obj.export_ical(cr, uid, crm_data, {'model': 'crm.case'})
         caendar_val = ical.serialize()
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val
 
     def import_cal(self, cr, uid, ids, data, context={}):
-        file_content = base64.decodestring(data['form']['file_path'])
+        file_content = base64.decodestring(data)
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
 
@@ -203,9 +203,13 @@ class crm_case(osv.osv):
             # TODO: Select proper section
             section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
             val.update({'section_id' : section_id})
+            is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
             val.pop('create_date')
-            case_id = self.create(cr, uid, val)
+            if is_exists:
+                self.write(cr, uid, [is_exists], val)
+            else:
+                case_id = self.create(cr, uid, val)
         return {'count': len(vals)}
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
@@ -214,7 +218,7 @@ class crm_case(osv.osv):
                 limit, order, context, count)
         return res
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         new_ids = []
         for id in ids:
             id = common.caldevIDs2readIDs(id)
@@ -253,13 +257,12 @@ class crm_case(osv.osv):
         if not rrules:
             for ress in res:
                 strdate = ''.join((re.compile('\d')).findall(ress['date']))
-                idval = str(ress['id']) + '-' + strdate
                 idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
                 ress['id'] = idval
             return res
         result =  res + []
         for data in rrules:
-            if data['rrule'] and data['rdates']: # delete 2nd condition at last
+            if data['rrule'] and data['rdates']:
                 rdates = eval(data['rdates'])
             for res_temp in res:
                 if res_temp['id'] == data['id']:
@@ -268,7 +271,6 @@ class crm_case(osv.osv):
                         result.remove(val)
                 else:
                     strdate = ''.join((re.compile('\d')).findall(res_temp['date']))
-                    idval = str(res_temp['id']) + '-' + strdate
                     idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
                     res_temp['id'] = idval
 
@@ -286,7 +288,6 @@ class crm_case(osv.osv):
                                                           default, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \

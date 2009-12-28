@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-20 15:06+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2009-12-28 04:48+0000\n"
+"Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-21 04:43+0000\n"
+"X-Launchpad-Export-Date: 2009-12-28 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -44,7 +44,7 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
@@ -126,12 +126,12 @@ msgstr "进来的产品列表"
 #: field:stock.picking,name:0
 #: field:stock.tracking,serial:0
 msgid "Reference"
-msgstr "参考"
+msgstr "参照"
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
 msgid "Group by partner"
-msgstr "业务伙伴组"
+msgstr "按业务伙伴分类"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -147,7 +147,7 @@ msgstr "收货时强制指定产品批号"
 #: field:stock.move,move_history_ids:0
 #: field:stock.move,move_history_ids2:0
 msgid "Move History"
-msgstr "记录"
+msgstr "移动历史记录"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -184,7 +184,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
-msgstr "真实库存值"
+msgstr "实时库存值"
 
 #. module: stock
 #: view:stock.move:0
@@ -206,7 +206,7 @@ msgstr "打包裹"
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
 msgid "Packing result"
-msgstr "挑选结果"
+msgstr "创建分拣单结果"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -586,7 +586,7 @@ msgstr "STOCK_GOTO_BOTTOM"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 #: model:ir.ui.menu,name:stock.menu_action_picking_form
 msgid "New Reception Packing"
-msgstr "新接收挑选"
+msgstr "新收货分拣单"
 
 #. module: stock
 #: wizard_field:stock.move.track,init,quantity:0
@@ -624,7 +624,7 @@ msgstr "作者"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_UNDELETE"
-msgstr "STOCK_UNDELETE"
+msgstr "未删除"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -690,12 +690,12 @@ msgstr "欧洲客户"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-stock"
-msgstr "terp-stock"
+msgstr "库存"
 
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Packing List:"
-msgstr "挑选列表"
+msgstr "分拣单:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -735,7 +735,7 @@ msgstr "生产批次修订"
 #. module: stock
 #: view:stock.picking:0
 msgid "Packing Done"
-msgstr "挑选完成"
+msgstr "创建分拣单完成"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -749,7 +749,7 @@ msgstr "等待中"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree7
 #: model:ir.ui.menu,name:stock.menu_picking_waiting
 msgid "Available Packing"
-msgstr "可挑选"
+msgstr "可用分拣单"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -802,7 +802,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "挑选"
+msgstr "分拣单"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -824,7 +824,7 @@ msgstr "STOCK_OK"
 #: model:ir.actions.act_window,name:stock.action_picking_tree9
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree9
 msgid "New Internal Packing"
-msgstr "新内部挑选"
+msgstr "新内部分拣单"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -918,7 +918,7 @@ msgstr "取消可用"
 #. module: stock
 #: field:stock.inventory,move_ids:0
 msgid "Created Moves"
-msgstr "创建存货移动"
+msgstr "已创建存货调拨"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -960,7 +960,7 @@ msgstr "分配方法"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-administration"
-msgstr "terp-administration"
+msgstr "管理"
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -1115,7 +1115,7 @@ msgstr "STOCK_HARDDISK"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "相关挑选"
+msgstr "相关运货清单"
 
 #. module: stock
 #: field:stock.incoterms,name:0
@@ -1143,13 +1143,13 @@ msgstr "]"
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Packing List"
-msgstr "输入挑选列表"
+msgstr "输入分拣单"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Packing List"
-msgstr "挑选列表"
+msgstr "分拣单"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1190,7 +1190,7 @@ msgstr "STOCK_CDROM"
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not from Packing"
-msgstr "不是来自挑选"
+msgstr "不是根据分拣单"
 
 #. module: stock
 #: view:stock.location:0
@@ -1210,7 +1210,7 @@ msgstr "内部引用"
 #. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_REFRESH"
-msgstr "STOCK_REFRESH"
+msgstr "刷新"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1279,12 +1279,12 @@ msgstr "产品"
 #. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
-msgstr "运输方式"
+msgstr "交货方式"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.partial_picking
 msgid "Partial packing"
-msgstr "部分挑选"
+msgstr "分批出货分拣"
 
 #. module: stock
 #: selection:stock.location,icon:0

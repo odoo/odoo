@@ -21,6 +21,12 @@
 
 from osv import fields, osv
 from service import web_services
+from tools.translate import _
+import re
+
+months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", \
+            7:"July", 8:"August", 9:"September", 10:"October", 11:"November", \
+            12:"December"}
 
 def caldevIDs2readIDs(caldev_ID = None):
     if caldev_ID:
@@ -28,6 +34,25 @@ def caldevIDs2readIDs(caldev_ID = None):
             return int(caldev_ID.split('-')[0])
         return caldev_ID
 
+def uid2openobjectid(cr, uidval, oomodel):
+    __rege = re.compile(r'OpenERP-([\w|\.]+)_([0-9]+)@(\w+)$')
+    wematch = __rege.match(uidval.encode('utf8'))
+    if not wematch:
+#                raise osv.except_osv('Warning!!', "Cannot locate UID in %s" % val['id'])
+        return False
+    else:
+        model, id, dbname = wematch.groups()
+        if (not model == oomodel) or (not dbname == cr.dbname):
+            return False
+        cr.execute('select distinct(id) from %s' % model.replace('.', '_'))
+        ids = map(lambda x: str(x[0]), cr.fetchall())
+        if id in ids:
+            return id
+        return False
+    
+def openobjectid2uid(cr, uidval, oomodel):
+    value = 'OpenERP-%s_%s@%s' % (oomodel, uidval, cr.dbname)
+    return value
 
 class crm_caldav_attendee(osv.osv):
     _name = 'crm.caldav.attendee'
@@ -233,5 +258,108 @@ class virtual_wizard(web_services.wizard):
         return res
 
 virtual_wizard()
+
+
+class set_rrule_wizard(osv.osv_memory):
+    _name = "caldav.set.rrule"
+    _description = "Set RRULE"
+
+    _columns = {
+        'freq': fields.selection([('None', 'No Repeat'), \
+                            ('SECONDLY', 'SECONDLY'), \
+                            ('MINUTELY', 'MINUTELY'), \
+                            ('HOURLY', 'HOURLY'), \
+                            ('DAILY', 'DAILY'), \
+                            ('WEEKLY', 'WEEKLY'), \
+                            ('MONTHLY', 'MONTHLY'), \
+                            ('YEARLY', 'YEARLY')], 'Frequency', required=True), 
+        'interval': fields.integer('Interval'), 
+        'count': fields.integer('Count'), 
+        'mo': fields.boolean('Mon'), 
+        'tu': fields.boolean('Tue'), 
+        'we': fields.boolean('Wed'), 
+        'th': fields.boolean('Thu'), 
+        'fr': fields.boolean('Fri'), 
+        'sa': fields.boolean('Sat'), 
+        'su': fields.boolean('Sun'), 
+        'select1': fields.selection([('date', 'Date of month'), \
+                            ('day', 'Day of month')], 'Select Option'), 
+        'day': fields.integer('Day of month'), 
+        'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
+                                       ('WE', 'Wednesday'), ('TH', 'Thursday'), \
+                                       ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                       ('SU', 'Sunday')], 'Weekday'), 
+        'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
+                                   ('3', 'Third'), ('4', 'Fourth'), \
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
+        'month_list': fields.selection(months.items(), 'Month'), 
+        'end_date': fields.date('Repeat Until')
+    }
+
+    _defaults = {
+                 'freq':  lambda *x: 'DAILY', 
+                 'select1':  lambda *x: 'date', 
+                 'interval':  lambda *x: 1, 
+                 }
+
+    def add_rrule(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids)[0]
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])[0]
+        weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        weekstring = ''
+        monthstring = ''
+        yearstring = ''
+
+#    logic for computing rrule string
+
+        freq = datas.get('freq')
+        if freq == 'None':
+            obj.write(cr, uid, [res_obj.id], {'rrule' : '', 'rdates': ''})
+            return {}
+        if datas.get('interval') <= 0:
+            raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
+        
+        if freq == 'WEEKLY':
+            byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
+            weekstring = ';BYDAY=' + ','.join(byday)
+
+        elif freq == 'MONTHLY':
+            byday = ''
+            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
+                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
+            if datas.get('byday') and datas.get('week_list'):
+                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day')))
+
+        elif freq == 'YEARLY':
+            bymonth = ''
+            byday = ''
+            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
+                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
+            if datas.get('byday') and datas.get('week_list'):
+                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            if datas.get('month_list'):
+                bymonth = ';BYMONTH=' + str(datas.get('month_list'))
+            bymonthday = ';BYMONTHDAY=' + str(datas.get('day'))
+            yearstring = bymonth + (datas.get('day') and bymonthday or '') + byday
+
+        if datas.get('end_date'):
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+        enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
+                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
+
+        rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
+                str(datas.get('interval')) + enddate + monthstring + yearstring
+
+#        End logic 
+        obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
+        return {}
+
+set_rrule_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
