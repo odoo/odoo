@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -212,7 +212,7 @@ class browse_record(object):
             # create browse records for 'remote' objects
             for data in datas:
                 if len(str(data['id']).split('-')) > 1:
-                    data['id'] = int(str(data['id']).split('-')[0]) 
+                    data['id'] = int(str(data['id']).split('-')[0])
                 for n, f in ffields:
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
@@ -348,6 +348,41 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    def read_group(self, cr, user, domain, fields, order, offset=0, limit=None, context=None):
+        context = context or {}
+        # compute the where, order by, limit and offset clauses
+        (qu1, qu2, tables) = self._where_calc(cr, user, domain, context=context)
+        if len(qu1):
+            qu1 = ' where '+string.join(qu1, ' and ')
+        else:
+            qu1 = ''
+        if order:
+            self._check_qorder(order)
+        order_by = order or self._order
+       # sumof = ','.join(['sum('+field_name+')' for field_name,values in fields.items() if values['type'] in ('float','integer')]) # filter fields in args to only get float and int
+        sumof = ','.join([field_name for field_name,values in fields.items() if values['type'] in ('float','integer')]) # filter fields in args to only get float and int
+
+        limit_str = limit and ' limit %d' % limit or ''
+        offset_str = offset and ' offset %d' % offset or ''
+
+        # construct a clause for the rules :
+        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        if d1:
+            qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
+            qu2 += d2
+
+        # execute the "main" query to fetch the ids we were searching for
+        cr.execute('select '+order_by+','+sumof+' from %s' % self._table + qu1+' group by '+order_by+','+sumof+limit_str+offset_str, qu2)
+        result = []
+        for x in cr.fetchall():
+            result.append({
+                'name':x[0],
+                'domain':[(order_by,'=',x[0])],
+                'fields': {x[0]:x[1]}
+            })
+        print result
+     #   return result
+
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
         if not cr.rowcount:
@@ -465,7 +500,7 @@ class orm_template(object):
             elif field_type == 'boolean':
                 return False
             return ''
-        
+
         def selection_field(in_field):
             col_obj = self.pool.get(in_field.keys()[0])
             if f[i] in col_obj._columns.keys():
@@ -473,8 +508,8 @@ class orm_template(object):
             elif f[i] in col_obj._inherits.keys():
                 selection_field(col_obj._inherits)
             else:
-                return False    
-           
+                return False
+
 
         lines = []
         data = map(lambda x: '', range(len(fields)))
@@ -501,7 +536,7 @@ class orm_template(object):
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        if not context.get('import_comp',False):# Allow external name only if its not import compatible 
+                        if not context.get('import_comp',False):# Allow external name only if its not import compatible
                             cols = False
                             if f[i] in self._columns.keys():
                                 cols = self._columns[f[i]]
@@ -1130,7 +1165,7 @@ class orm_template(object):
                 # running -> done = signal_next (role Z)
                 # running -> cancel = signal_cancel (role Z)
 
-                # As we don't know the object state, in this scenario, 
+                # As we don't know the object state, in this scenario,
                 #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
                 #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
                 # The verification will be made later in workflow process...
@@ -1929,7 +1964,7 @@ class orm(orm_template):
                             cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % ( self._table,f.oldname, k))
                             res = res_old
                             res[0]['attname'] = k
-                
+
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -2017,7 +2052,7 @@ class orm(orm_template):
                                             field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
                                             if field_size != f_pg_size:
                                                 field_size_change = True
-                                                
+
                                     if f_pg_type != f_obj_type or field_size_change:
                                         if f_pg_type != f_obj_type:
                                             logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
@@ -2322,7 +2357,7 @@ class orm(orm_template):
 
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
-        
+
         for r in result:
             for key, v in r.items():
                 if v == None:
@@ -2340,8 +2375,8 @@ class orm(orm_template):
                     id_exist = cr.fetchone()
                     if not id_exist:
                         cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
-                        r[key] = ''                    
-        
+                        r[key] = ''
+
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
