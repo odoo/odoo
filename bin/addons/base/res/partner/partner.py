@@ -295,7 +295,7 @@ class res_partner_address(osv.osv):
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
     }
     _defaults = {
         'active': lambda *a: 1,
