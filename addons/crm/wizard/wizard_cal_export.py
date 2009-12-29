@@ -47,7 +47,7 @@ class crm_cal_export_wizard(wizard.interface):
             }
     
     def _process_export_ics(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.case')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
         calendar = case_obj.export_cal(cr, uid, data['ids'], context)
         return {'file_path': base64.encodestring(calendar), \
                                 'name': 'OpenERP Events.ics'}

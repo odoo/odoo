@@ -58,7 +58,7 @@ class crm_cal_subscribe_wizard(wizard.interface):
         f =  urllib.urlopen(data['form']['url_path'])
         caldata= f.fp.read()
         f.close()
-        case_obj = pooler.get_pool(cr.dbname).get('crm.case')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
         context.update({'url': data['form']['url_path']})
         vals = case_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
         if vals:

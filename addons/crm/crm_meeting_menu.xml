@@ -5,15 +5,14 @@
     <act_window
         id="crm_case_categ_meet_create_partner"
         name="Schedule a Meeting"
-        res_model="crm.case"
+        res_model="crm.meeting"
         src_model="res.partner"
         view_mode="calendar,tree,form,gantt"
         context="{'default_partner_id': active_id, 'default_duration': 4.0}"
-        domain="[('section_id','=',ref('section_support1'))]"/>
+    />
 
 
-    <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
+    <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">        
         <field name="context" eval="{'default_state':'open'}"/>
     </record>
 
@@ -46,14 +45,13 @@
     <act_window
         id="crm_case_categ_meet_case"
         name="Schedule a Meeting"
-        res_model="crm.case"
+        res_model="crm.meeting"
         src_model="crm.case"
         view_mode="calendar,tree,form,gantt"
         context="{'default_case_id': active_id, 'default_duration': 4.0}"
-        domain="[('section_id','=',ref('section_support1'))]"/>	
+        />	
 
-    <record model="ir.actions.act_window" id="crm_case_categ_meet_case">
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support1'))+')]'"/>
+    <record model="ir.actions.act_window" id="crm_case_categ_meet_case">        
         <field name="context" eval="{'default_state':'open'}"/>
     </record>    
 
@@ -83,7 +81,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet">
-        <field name="res_model">crm.case</field>
+        <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view"/>
         <field name="context" eval="{'default_state':'open'}"/>
@@ -123,7 +121,7 @@
 
     <record model="ir.actions.act_window" id="crm_case_category_act_meetall3">
         <field name="name">Next Meetings</field>
-        <field name="res_model">crm.case</field>
+        <field name="res_model">crm.meeting</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
