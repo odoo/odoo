@@ -365,10 +365,18 @@ class orm_template(object):
                 'ttype': f._type,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
-                'select_level': str(f.select or 0),
+                'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
             }
+            # When its a custom field,it does not contain f.select
+            if context.get('field_state','base') == 'manual':
+                if context.get('field_name','') == k:
+                    vals['select_level'] = context.get('select','0')
+                #setting value to let the problem NOT occur next time
+                else:
+                    vals['select_level'] = cols[k]['select_level']
+            
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -2211,13 +2219,14 @@ class orm(orm_template):
                     return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
+            order_by = self._parent_order or self._order            
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join(['%s' for x in sub_ids]), d1,
-                                self._order),sub_ids + d2)
+                                order_by),sub_ids + d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
@@ -2225,7 +2234,7 @@ class orm(orm_template):
                     cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join(['%s' for x in sub_ids]),
-                                self._order), sub_ids)
+                                order_by), sub_ids)
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)

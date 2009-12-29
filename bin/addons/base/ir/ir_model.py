@@ -83,7 +83,7 @@ class ir_model(osv.osv):
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
             self.pool.get(vals['model']).__init__(self.pool, cr)
-            self.pool.get(vals['model'])._auto_init(cr,{})
+            self.pool.get(vals['model'])._auto_init(cr,{'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
             #pooler.restart_pool(cr.dbname)
         return res
 
@@ -113,10 +113,10 @@ class ir_model_grid(osv.osv):
         result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
         allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
         acc_obj = self.pool.get('ir.model.access')
-        
+
         if not isinstance(result,list):
             result=[result]
-            
+
         for res in result:
             rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
             rules_br = acc_obj.browse(cr, uid, rules, context=context)
@@ -247,18 +247,19 @@ class ir_model_fields(osv.osv):
             vals['model'] = model_data.model
         if context and context.get('manual',False):
             vals['state'] = 'manual'
-        res = super(ir_model_fields,self).create(cr, user, vals, context)    
+        res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
-            
+
             if 'relation' in vals and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
                  raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
-                 
+
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
-                self.pool.get(vals['model'])._auto_init(cr, {})
-                
+                #Added context to _auto_init for special treatment to custom field for select_level
+                self.pool.get(vals['model'])._auto_init(cr, {'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+
         return res
 ir_model_fields()
 
@@ -458,7 +459,7 @@ class ir_model_data(osv.osv):
         if (not xml_id) and (not self.doinit):
             return False
         action_id = False
-        
+
         if xml_id:
             cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
             results = cr.fetchall()
@@ -567,7 +568,7 @@ class ir_model_data(osv.osv):
     def _process_end(self, cr, uid, modules):
         if not modules:
             return True
-        modules = list(modules)    
+        modules = list(modules)
         module_in = ",".join(["%s"] * len(modules))
         cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
