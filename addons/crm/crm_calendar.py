@@ -104,7 +104,7 @@ class crm_case(osv.osv):
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
                                           ('OPAQUE', 'OPAQUE')], 'Trensparent'), 
-        'caldav_url' : fields.char('Caldav URL', size=34), 
+        'caldav_url' : fields.char('Caldav URL', size=264), 
         'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
                  of date/time exceptions for arecurring calendar component."), 
         'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
@@ -204,7 +204,8 @@ class crm_case(osv.osv):
             val.update({'section_id' : section_id})
             is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
-            val.pop('create_date')
+            if val.has_key('create_date'): val.pop('create_date')
+            val['caldav_url'] = context.get('url') or ''
             if is_exists:
                 self.write(cr, uid, [is_exists], val)
             else:
