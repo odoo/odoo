@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -102,17 +102,17 @@ class report_creator(osv.osv):
                     set_dict[f.calendar_mode] = 'field'+str(i)
                     i+=1
                     del required_types[required_types.index(f.calendar_mode)]
-                    
+
                 else:
                     temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'field'+str(i)})
                     i+=1
             arch += '''<%(view_type)s string="%(string)s" date_start="%(date_start)s" ''' %set_dict
             if set_dict.get('date_delay',False):
                 arch +=''' date_delay="%(date_delay)s"  '''%set_dict
-            
+
             if set_dict.get('date_stop',False):
-                arch +=''' date_stop="%(date_stop)s" '''%set_dict      
-            
+                arch +=''' date_stop="%(date_stop)s" '''%set_dict
+
             if set_dict.get('color',False):
                 arch +=''' color="%(color)s"'''%set_dict
             arch += '''>'''
@@ -151,12 +151,12 @@ class report_creator(osv.osv):
             for k in r:
                 r[k] = r[k] or False
                 field_dict = fields_get.get(k)
-                field_type = field_dict and field_dict.get('type',False) or False 
+                field_type = field_dict and field_dict.get('type',False) or False
                 if field_type and field_type == 'many2one':
                     if r[k]==False:
                         continue
                     related_name = self.pool.get(field_dict.get('relation')).name_get(cr,user,[r[k]],context)[0]
-                    r[k] = related_name 
+                    r[k] = related_name
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
@@ -196,9 +196,9 @@ class report_creator(osv.osv):
         from_list = []
         where_list = []
         filter_list = []
-        for model in models:            
+        for model in models:
             model_dict[model.model] = self.pool.get(model.model)._table
-        
+
         model_list = model_dict.keys()
         reference_model_dict = {}
         for model in model_dict:
@@ -207,9 +207,9 @@ class report_creator(osv.osv):
             rest_list.remove(model)
             model_pool = self.pool.get(model)
             fields_get = model_pool.fields_get(cr,uid)
-            fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
-                                        and x[1].get('relation') in rest_list 
-                                        and x[1].get('type')=='many2one' 
+            fields_filter = dict(filter(lambda x:x[1].get('relation',False)
+                                        and x[1].get('relation') in rest_list
+                                        and x[1].get('type')=='many2one'
                                         and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related) or isinstance(model_pool._columns[x[0]],fields.dummy)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
@@ -225,30 +225,30 @@ class report_creator(osv.osv):
                     reference_model_dict[v.get('relation')] = relation_count+1
                 else:
                     reference_model_dict[v.get('relation')]=1
-                   
+
                 str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
                 where_list.append(str_where)
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
             raise osv.except_osv(_('No Related Models!!'),_('These is/are model(s) (%s) in selection which is/are not related to any other model') % ','.join(model_list))
-        
+
         if filter_ids and where_list<>[]:
             filter_list.append(' and ')
             filter_list.append(' ')
-        
+
         for filter_id in filter_ids:
             filter_list.append(filter_id.expression)
             filter_list.append(' ')
             filter_list.append(filter_id.condition)
-        
+
         if len(from_list) == 1 and filter_ids:
             from_list.append(' ')
             ret_str = "\n where \n".join(from_list)
         else:
             ret_str = ",\n".join(from_list)
-        
-            
+
+
         if where_list:
             ret_str+="\n where \n"+" and\n".join(where_list)
             ret_str = ret_str.strip()
@@ -283,7 +283,7 @@ class report_creator(osv.osv):
             check = self._id_get(cr, uid, ids[0], context)
             if check<>False:
                 fields.insert(0,(check+' as id'))
-            
+
             if models:
                 result[obj.id] = """select
     %s
@@ -301,7 +301,7 @@ class report_creator(osv.osv):
             else:
                 result[obj.id] = False
         return result
-    
+
     _columns = {
         'name': fields.char('Report Name',size=64, required=True),
         'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
@@ -314,7 +314,12 @@ class report_creator(osv.osv):
         'model_ids': fields.many2many('ir.model', 'base_report_creator_report_model_rel', 'report_id','model_id', 'Reported Objects'),
         'field_ids': fields.one2many('base_report_creator.report.fields', 'report_id', 'Fields to Display'),
         'filter_ids': fields.one2many('base_report_creator.report.filter', 'report_id', 'Filters'),
-        'state': fields.selection([('draft','Draft'),('valid','Valid')], 'State', required=True),
+        'state': fields.selection([
+                ('draft','Draft'),
+                ('valid','Valid')],
+                'State', required=True,
+                help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed custom report. \
+                    \n* The \'Valid\' state is used when user validates the custom report.'),
         'sql_query': fields.function(_sql_query_get, method=True, type="text", string='SQL Query', store=True),
         'group_ids': fields.many2many('res.groups', 'base_report_creator_group_rel','report_id','group_id','Authorized Groups'),
     }
@@ -333,26 +338,26 @@ class report_creator(osv.osv):
             for fld in obj.field_ids:
                 model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                 if (isinstance(model_column,fields.function) or isinstance(model_column,fields.related)) and not model_column.store:
-                    return False 
+                    return False
         return True
-    
+
     def _aggregation_error(self, cr, uid, ids):
         aggregate_columns = ('integer','float')
         apply_functions = ('sum','min','max','avg','count')
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:
             for fld in obj.field_ids:
-                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]                
+                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                 if model_column._type not in aggregate_columns and fld.group_method in apply_functions:
-                    return False 
+                    return False
         return True
-    
+
     def _calander_view_error(self, cr, uid, ids):
-#       required_types = ['date_start','date_delay','color'] 
+#       required_types = ['date_start','date_delay','color']
         required_types = []
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:
-            if obj.view_type1=='calendar' or obj.view_type2=='calendar' or obj.view_type3=='calendar': 
+            if obj.view_type1=='calendar' or obj.view_type2=='calendar' or obj.view_type3=='calendar':
                 for fld in obj.field_ids:
                     model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                     if fld.calendar_mode in ('date_start','date_end') and model_column._type not in ('date','datetime'):
@@ -362,9 +367,9 @@ class report_creator(osv.osv):
                     else:
                         required_types.append(fld.calendar_mode)
                 if 'date_start' not in required_types:
-                    return False     
+                    return False
         return True
-    
+
     _constraints = [
         (_function_field, 'You can not display field which are not stored in Database.', ['field_ids']),
         (_aggregation_error, 'You can apply aggregate function to the non calculated field.', ['field_ids']),
