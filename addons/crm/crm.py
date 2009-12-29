@@ -493,7 +493,7 @@ class crm_case(osv.osv):
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
-        'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),

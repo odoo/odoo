@@ -201,8 +201,12 @@ class crm_meeting(osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
+        else:
+            select = ids
         new_ids = []
-        for id in ids:
+        for id in select:
             id = common.caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
@@ -300,7 +304,76 @@ class crm_meeting(osv.osv):
             vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
         return super(crm_meeting, self).create(cr, uid, vals, context)
 
+
+    def _map_ids(self, method, cr, uid, ids, *args, **argv):
+        case_data = self.browse(cr, uid, ids)
+        new_ids = []
+        for case in case_data:
+            if case.inherit_case_id:
+                new_ids.append(case.inherit_case_id.id)
+        return getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
+
+
+    def onchange_case_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_case_id',cr,uid,ids,*args,**argv)
+    def onchange_partner_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_partner_id',cr,uid,ids,*args,**argv)
+    def onchange_partner_address_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_partner_address_id',cr,uid,ids,*args,**argv)
+    def onchange_categ_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
+    def case_close(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
+    def case_open(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_open',cr,uid,ids,*args,**argv)
+    def case_cancel(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
+    def case_reset(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_reset',cr,uid,ids,*args,**argv)
+    
+
 crm_meeting()
+
+
+class crm_meeting_generic_wizard(osv.osv_memory):
+    _name = 'crm.meeting.generic_wizard'
+
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Section', required=True),
+        'user_id': fields.many2one('res.users', 'Responsible'),
+    }
+
+    def _get_default_section(self, cr, uid, context):
+        case_id = context.get('active_id',False)
+        if not case_id:
+            return False
+        case_obj = self.pool.get('crm.meeting')
+        case = case_obj.read(cr, uid, case_id, ['state','section_id'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
+        return case['section_id']
+
+
+    _defaults = {
+        'section_id': _get_default_section
+    }
+    def action_create(self, cr, uid, ids, context=None):
+        case_obj = self.pool.get('crm.meeting')
+        case_id = context.get('active_id',[])
+        res = self.read(cr, uid, ids)[0]
+        case = case_obj.read(cr, uid, case_id, ['state'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
+        new_case_id = case_obj.copy(cr, uid, case_id, default=
+                                            {
+                                                'section_id':res.get('section_id',False),
+                                                'user_id':res.get('user_id',False)
+                                            }, context=context)        
+        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
+        case_obj.case_close(cr, uid, [case_id])
+        return {}
+
+crm_meeting_generic_wizard()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
