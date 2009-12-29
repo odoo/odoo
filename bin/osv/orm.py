@@ -358,11 +358,12 @@ class orm_template(object):
             qu1 = ''
         if order:
             self._check_qorder(order)
+
         order_by = order or self._order
 
         float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
+
         sumof = ','.join(map(lambda field_name:'sum('+field_name+') as '+field_name+'',float_int_fields)) # filter fields in args to only get float and int
-       # sumof = ','.join([field_name for field_name,values in fields.items() if values['type'] in ('float','integer')]) # filter fields in args to only get float and int
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
@@ -372,63 +373,61 @@ class orm_template(object):
         if d1:
             qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
             qu2 += d2
+
+        def get_fulname(ids,table):
+
+            if ids and not type(ids) in (list,tuple) or len(ids) == 1:
+                cond = ' where id = %s'%(ids)
+            else:
+                cond = ' where id in %s'%(ids,)
+            qury = 'select id,name from ' + table + cond
+            cr.execute(qury)
+            return cr.fetchall()
+
         if not ids:
-        # execute the "main" query to fetch the ids we were searching for
-            #cr.execute('select distinct('+order_by+'),'+self._table+'.id,'+sumof+' from ' + ','.join(tables) +qu1+' group by '+order_by +','+self._table+'.id'+limit_str+offset_str)
-            cr.execute('select distinct('+order_by+'),'+sumof+' from ' + ','.join(tables) +qu1+' group by '+order_by +limit_str+offset_str)
-            res = cr.fetchall()
-            uniq_ids = ()
-            if fields[order_by]['type'] == 'many2one':
-                uniq_ids =tuple(set(map(lambda x:str(x[0]),res)))
-                if uniq_ids and len(uniq_ids) == 1:
-                    cond = ' where id = %s'%(uniq_ids)
-                else:
-                    cond = ' where id in %s'%(uniq_ids,)
-                qury = 'select name,id from ' + fields[order_by]['relation'].replace('.','_') + cond
-                cr.execute(qury)
-                uniq_order_by_res =  dict(map(lambda x:(x[1],x[0]),cr.fetchall()))
             result = []
-            b = {}
-            for p_ids in uniq_ids:
-                cr.execute('select id from '+','.join(tables)+' where +'+order_by+' = %s'%(p_ids,))
-                res2 = cr.fetchall()
-                for val in res2:
-                    if int(p_ids) not in b:
-                        b[int(p_ids)] = [val[0]]
+            cr.execute('select distinct('+order_by+'),'+sumof+' from ' + ','.join(tables) +qu1+' group by '+order_by +limit_str+offset_str)
+            parent_res = cr.fetchall()
+            uniq_ids = tuple(map(lambda x:str(x[0]),parent_res))
+            if len(uniq_ids):
+                uniq_order_by_res = get_fulname(uniq_ids,fields[order_by]['relation'].replace('.','_'))
+                uniq_order_by_res = dict(uniq_order_by_res)
+            child_ids_dict = {}
+            # get child ids
+            for parent_id in uniq_ids:
+                cr.execute('select id from '+','.join(tables)+' where +'+order_by+' = %s'%(parent_id,))
+                child_ids = cr.fetchall()
+                for val in child_ids:
+                    if int(parent_id) not in child_ids_dict:
+                        child_ids_dict[int(parent_id)] = [val[0]]
                     else:
-                        b[int(p_ids)].append(val[0])
-            old_id = []
-            for x in res:
-                if x[0] in old_id:
-                    continue
-                temp = {'id':x[0],order_by:(x[0],uniq_order_by_res[x[0]]),'group_child':b[x[0]]}
+                        child_ids_dict[int(parent_id)].append(val[0])
+            #create [{},{}] for parent ids i.e for group by field
+            for x in parent_res:
+                parent_val_dict = {'id':x[0],order_by:(x[0],uniq_order_by_res[x[0]]),'group_child':child_ids_dict[x[0]]}
                 for sum in float_int_fields:
-                    temp[sum] = x[float_int_fields.index(sum)+1]
+                    parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
                 for field in fields.keys():
-                    if field not in temp:
-                        temp[field] = False
-                old_id.append(x[0])
-                result.append(temp)
+                    if field not in parent_val_dict:
+                        parent_val_dict[field] = False
+                result.append(parent_val_dict)
             return result
         else:
-            query_fields = ','.join(fields.keys())
+            # process for getting child values for all fields in the view
             result = []
             ids = ','.join(map(lambda x:str(x),ids))
-            cr.execute('select id,' + query_fields+' from '+','.join(tables)+' where id in (%s)'%(ids))
-            pos_orderby = fields.keys().index(order_by)
-            res1 = cr.fetchall()
-            if res1 and len(res1):
-                part = str(res1[0][pos_orderby+1])
-            cr.execute('select id,name from %s where id = %s'%(fields[order_by]['relation'].replace('.','_'),part))
-            partner = cr.fetchall()[0]
-            for val in res1:
-                temp = {'id':val[0],'group_child':[]}
+            cr.execute('select id,' + ','.join(fields.keys())+' from '+','.join(tables)+' where id in (%s)'%(ids))
+            child_res = cr.fetchall()
+            for val in child_res:
+                child_dict = {'id':val[0],'group_child':[]}
                 for field in fields.keys():
-                    if field == order_by:
-                        temp[field] = partner
+                    if fields[field]['type'] == 'many2one':
+                        pos = fields.keys().index(field)
+                        part = str(val[pos+1])
+                        child_dict[field] = get_fulname(part,fields[field]['relation'].replace('.','_'))[0]
                         continue
-                    temp[field] = val[fields.keys().index(field)+1]
-                result.append(temp)
+                    child_dict[field] = val[fields.keys().index(field)+1]
+                result.append(child_dict)
             return result
 
     def _field_create(self, cr, context={}):
