@@ -80,7 +80,7 @@ class document_directory_content(osv.osv):
         'obj_iterate': fields.boolean('Iterate object',help="If set, a separate instance will be created for each record of Object"),
         'fname_field': fields.char("Filename field",size=16,help="The field of the object used in the filename. Has to be a unique identifier."),
         'ics_domain': fields.char('Domain', size=64),
-        'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
+        #'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
     }
     _defaults = {
         'ics_domain': lambda *args: '[]'
@@ -140,7 +140,7 @@ class document_directory_content(osv.osv):
                 idomain[d[0]]=d[2]
 
         fobj = self.pool.get(content.object_id.model)
-        fobj.import_cal(cr, uid, base64.encodestring(data), context=context)
+        fobj.import_cal(cr, uid, base64.encodestring(data), context=context)        
         return True
 
     def process_read(self, cr, uid, node, context=None):

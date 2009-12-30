@@ -776,8 +776,8 @@ class sale_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight'),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
-                help=' * The \'Draft\' state is set automatically when sale order in draft state.. \
-                    \n* The \'Confirmed\' state is set automatically as confirm when sale order in confirm state. \
+                help=' * The \'Draft\' state is set automatically when sale order in draft state. \
+                    \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
                     \n* The \'Exception\' state is set automatically when sale order is set as exception. \
                     \n* The \'Done\' state is set automatically when sale order is set as done. \
                     \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
