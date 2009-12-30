@@ -96,6 +96,7 @@ class make_sale(wizard.interface):
 
             vals = {
                 'origin': 'CRM:%s' % str(case.id),
+                'section_id': case.section_id and case.section_id.id or False,
                 'picking_policy': data['form']['picking_policy'],
                 'shop_id': data['form']['shop_id'],
                 'partner_id': partner_id,
