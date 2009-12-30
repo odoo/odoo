@@ -184,6 +184,8 @@ class crm_meeting(osv.osv):
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         vals = event_obj.import_ical(cr, uid, file_content)
         for val in vals:
+            section_id = self.pool.get('crm.case.section').search(cr, uid, [('name', 'like', 'Meeting%')])[0]
+            val.update({'section_id' : section_id})
             is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
