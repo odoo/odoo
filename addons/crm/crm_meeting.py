@@ -80,6 +80,11 @@ class crm_meeting(osv.osv):
                 event_obj = self.pool.get('caldav.event')
                 res[case['id']] = str(event_obj.get_recurrent_dates(str(rule), exdate, case['date']))
         return res
+    
+    def _data_set(self, cr, uid, id, name, value, arg, context):
+        if not self.browse(cr, uid, id, context).rrule:
+            cr.execute("UPDATE crm_meeting set rdates='' where id=%s" % id)
+        return True
 
     _columns = {
         'inherit_case_id': fields.many2one('crm.case','Case',ondelete='cascade'),
@@ -95,8 +100,8 @@ class crm_meeting(osv.osv):
         'exrule' : fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
         'rrule' : fields.char('Recurrent Rule', size=352), 
-        'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
-                                   store=True, type='text'), 
+        'rdates' : fields.function(_get_rdates, method=True, fnct_inv=_data_set \
+                    , store=True, type='text'), 
         'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
         'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
@@ -184,7 +189,8 @@ class crm_meeting(osv.osv):
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         vals = event_obj.import_ical(cr, uid, file_content)
         for val in vals:
-            section_id = self.pool.get('crm.case.section').search(cr, uid, [('name', 'like', 'Meeting%')])[0]
+            section_id = self.pool.get('crm.case.section').search(cr, uid, \
+                            [('name', 'like', 'Meeting%')])[0]
             val.update({'section_id' : section_id})
             is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
