@@ -171,7 +171,7 @@ class account_analytic_account(osv.osv):
         'name' : fields.char('Account Name', size=64, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
         'code' : fields.char('Account Code', size=24),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic account without removing it."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
         'description' : fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -181,7 +181,7 @@ class account_analytic_account(osv.osv):
         'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
         'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
         'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
-        'quantity_max': fields.float('Maximum Quantity'),
+        'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
         'user_id' : fields.many2one('res.users', 'Account Manager'),
@@ -270,8 +270,8 @@ class account_analytic_journal(osv.osv):
     _columns = {
         'name' : fields.char('Journal name', size=64, required=True),
         'code' : fields.char('Journal code', size=8),
-        'active' : fields.boolean('Active'),
-        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic journal without removing it."),
+        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When it needs for a document (eg: an invoice) to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }

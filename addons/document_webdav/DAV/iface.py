@@ -67,19 +67,19 @@ class dav_interface:
         if self.M_NS.has_key(ns):
             prefix=self.M_NS[ns]
         else:
-	    print "No namespace:",ns
+            print "No namespace:",ns, "( for prop:", propname,")"
             raise DAV_NotFound
         mname=prefix+"_"+propname
-	if not hasattr(self,mname):
-	    raise DAV_NotFound
+        if not hasattr(self,mname):
+            raise DAV_NotFound
 
         try:
             m=getattr(self,mname)
             r=m(uri)
             return r
         except AttributeError, e:
-	    print 'Property %s not supported' % propname
-	    print "Exception:", e
+            print 'Property %s not supported' % propname
+            print "Exception:", e
             raise DAV_NotFound
 
     ###
@@ -110,15 +110,15 @@ class dav_interface:
         """ return the creationdate of a resource """
         d=self.get_creationdate(uri)
         # format it
-	if isinstance(d, int) or isinstance(d, float):
-		d = time.localtimetime(d)
+        if isinstance(d, int) or isinstance(d, float):
+            d = time.localtimetime(d)
         return time.strftime("%Y-%m-%dT%H:%M:%S%Z",d)
 
     def _get_dav_getlastmodified(self,uri):
         """ return the last modified date of a resource """
         d=self.get_lastmodified(uri)
-	if isinstance(d, int) or isinstance(d, float):
-		d = time.localtime(d)
+        if isinstance(d, int) or isinstance(d, float):
+            d = time.localtime(d)
         # format it
         return time.asctime(d)
 

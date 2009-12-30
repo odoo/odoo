@@ -34,10 +34,9 @@
                     <field name="partner_phone"/>
                     <field name="partner_mobile"/>
                     <field name="email_from" string="Lead Email"/>
-                    <newline/>
-                     <label string="Partner:"  colspan="1" align="1.0"/>
-                     <group colspan="2" col="2">
-                         <field name="partner_id" nolabel="1" colspan="1"/>
+                    <newline/>                     
+                     <group colspan="2" col="3">
+                         <field name="partner_id" colspan="1"/>
                           <button string="Convert to Partner"
                               icon="terp-partner" name="%(wizard_crm_partner_create)d"
                               type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
@@ -141,7 +140,7 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="red:state=='open'">
+            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Lead Subject"/>
                 <field name="partner_phone"/>

@@ -73,7 +73,7 @@ class Journal(osv.osv_memory):
             'account.journal',
             'Journal to set',
              readonly=True,
-             help="the currenty edited account journal"
+             help="The currenty edited account journal"
         ),
         'default_credit_account_id': fields.many2one(
                 'account.account', 'Default Credit Account', 

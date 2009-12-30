@@ -57,7 +57,7 @@
                 <form string="Lot Inventory">
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list"/>
@@ -139,7 +139,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree color="grey:not active" string="Tracking Number">
+                <tree colors="grey:not active" string="Tracking Number">
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
@@ -228,7 +228,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -250,7 +250,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -335,7 +335,7 @@
                     <field name="name" select="1"/>
                     <field name="active" select="2"/>
                     <field name="usage" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="account_id" select="1"/>
                     <field name="location_id"/>
                     <field name="address_id" context="{'contact_display':'partner'}"/>
@@ -349,7 +349,7 @@
                         <field name="chained_delay"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Localisation" colspan="2"/>
+                        <separator string="Localization" colspan="2"/>
                         <field name="posx"/>
                         <field name="posy"/>
                         <field name="posz"/>
@@ -364,7 +364,7 @@
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real" invisible="'product_id' not in context"/>
@@ -417,7 +417,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="partner_address_id" context="{'contact_display':'partner'}"/>
                 </form>
@@ -499,7 +499,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -523,7 +523,7 @@
                         <field name="name" readonly="1"/>
                         <field name="date"/>
                         <field name="min_date" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -576,7 +576,7 @@
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string="Others info" groups="base.group_extended">
+                        <page string="Other info" groups="base.group_extended">
                             <field name="origin" select="2"/>
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
@@ -589,8 +589,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_stock_picking_filter" model="ir.ui.view">
             <field name="name">stock.picking.list.select</field>
             <field name="model">stock.picking</field>
@@ -619,7 +619,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -643,7 +643,7 @@
                         <field name="min_date" select="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -692,7 +692,7 @@
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string="Others info" groups="base.group_extended">
+                        <page string="Other info" groups="base.group_extended">
                             <field name="auto_picking"/>
                             <field name="active" select="2"/>
                             <newline/>
@@ -761,7 +761,7 @@
             <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
-		
+
         <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_root" sequence="20"/>
         <menuitem action="action_picking_calendar_delivery" id="menu_action_picking_calendar_delivery" parent="menu_action_picking_tree_delivery"/>
 
@@ -774,7 +774,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state=='cancel';grey:state=='confirmed';blue:state=='done'" string="Picking list">
+                <tree colors="red:state in ('cancel');grey:state in ('confirmed');blue:state in ('done');black:state not in ('cancel','confirmed','done')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -800,7 +800,7 @@
                         <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -851,7 +851,7 @@
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string="Others info" groups="base.group_extended">
+                        <page string="Other info" groups="base.group_extended">
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>
@@ -863,7 +863,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search</field>
             <field name="model">stock.picking</field>
@@ -876,12 +876,12 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
         </record>
-	
+
         <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Outgoing Products</field>
             <field name="res_model">stock.picking</field>
@@ -919,7 +919,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -945,7 +945,7 @@
                         <field name="name" readonly="1" select="1"/>
                         <field name="min_date" select="2" readonly="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1011,7 +1011,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_picking_in_search" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
             <field name="model">stock.picking</field>
@@ -1024,7 +1024,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1072,7 +1072,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1105,7 +1105,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1138,7 +1138,7 @@
                     <field name="product_uos" select="2"/>
                     <field colspan="4" name="name" select="2"/>
                     <field name="date"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="date_planned"/>
                     <field name="priority"/>
                     <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
@@ -1164,7 +1164,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
@@ -1183,7 +1183,7 @@
             	</search>
             </field>
         </record>
-        
+
         <record id="action_move_form2" model="ir.actions.act_window">
             <field name="name">Stock Moves</field>
             <field name="res_model">stock.move</field>
@@ -1208,7 +1208,7 @@
 	====================================
         Reception Picking (By Stock Move)
         ====================================
-        
+
 	<record id="view_move_tree_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
@@ -1216,8 +1216,8 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
-                    <field name="picking_id" string="Reference"/> 
-                    <field name="origin" string="Purchase Order"/>               	
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin" string="Purchase Order"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
@@ -1232,7 +1232,7 @@
                 </tree>
             </field>
         </record>
-	
+
 	<record id="view_move_form_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.form2</field>
             <field name="model">stock.move</field>
@@ -1240,7 +1240,7 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Moves">
-                	<field name="picking_id"/>                    
+                	<field name="picking_id"/>
                 	<field name="product_id"/>
                 	<field name="product_qty" />
                     <field name="product_uom" string="UOM"/>
@@ -1250,7 +1250,7 @@
                 </form>
             </field>
         </record>
-	
+
 	<record id="view_move_search_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.search2</field>
             <field name="model">stock.move</field>
@@ -1259,13 +1259,13 @@
             <field name="arch" type="xml">
             	<search string="Stock Moves">
             		<group col="8" colspan="4">
-	            		<filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
+	            		<filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" default="1" help="Stock to be received"/>
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
-                        <field name="origin" string="Purchase Order" select="1"/> 
+                        <field name="origin" string="Purchase Order" select="1"/>
 	            		<field name="partner_id" string="Supplier" select="1"/>
-	                    <field name="product_id"/>	                    
+	                    <field name="product_id"/>
                     </group>
             	</search>
             </field>
@@ -1282,7 +1282,7 @@
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
         <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_root"/>
-		
+
 
         # -------------------------------------------------------------
         # Stock incoterms

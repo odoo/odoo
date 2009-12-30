@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -170,7 +170,7 @@ class auction_lot_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
         'aie_categ' : fields.selection([('41',"Unclassifieds"),
             ('2',"Antiques"),
             ('42',"Antique/African Arts"),
@@ -443,7 +443,16 @@ class auction_lots(osv.osv):
 #       'paid_vnd':fields.function(_is_paid_vnd,string='Seller Paid',method=True,type='boolean',store=True),
         'paid_vnd':fields.boolean('Seller Paid'),
         'paid_ach':fields.function(_is_paid_ach,string='Buyer invoice reconciled',method=True, type='boolean',store=True),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold'),('taken_away','Taken away')),'State', required=True, readonly=True),
+        'state': fields.selection((
+            ('draft','Draft'),
+            ('unsold','Unsold'),
+            ('paid','Paid'),
+            ('sold','Sold'),
+            ('taken_away','Taken away')),'State', required=True, readonly=True,
+            help=' * The \'Draft\' state is used when a object is encoding as a new object. \
+                \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
+                \n* The \'Paid\' state is used when user pay for the object \
+                \n* The \'Sold\' state is used when user buy the object.'),
         'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price',store=True),
         'seller_price': fields.function(_sellerprice, method=True, string='Seller price',store=True),
         'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue',store=True),
@@ -1236,7 +1245,7 @@ class report_attendance(osv.osv):
     #_rec_name='date'
     _columns = {
         'name': fields.date('Date', readonly=True,select=1),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=1, readonly=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=1, readonly=True),
         'total_attendance': fields.float('Total', readonly=True),
 }
     def init(self, cr):

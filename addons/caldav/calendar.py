@@ -22,13 +22,10 @@
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
-from osv import fields, osv
-from pytz import timezone
-from time import strftime
-import base64
+from osv import osv
 import re
-import time
 import vobject
+import common
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -69,22 +66,24 @@ class CalDAV(object):
     __attribute__ = {
     }
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
-        todate = parser.parse
+        def todate(date):
+            val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
+            return val
+
         if not startdate:
             startdate = datetime.now()
         else:
-            startdate = todate(''.join((re.compile('\d')).findall(startdate)) + 'Z')
+            startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
         for date in exdate:
-            datetime_obj = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            datetime_obj = todate(date)
             rset1._exdate.append(datetime_obj)
-        re_dates = rset1._iter()
-        recurrent_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), re_dates)
-        return recurrent_dates
+        re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
+        return re_dates
 
     def ical_set(self, name, value, type):
         if name in self.__attribute__ and self.__attribute__[name]:
-           self.__attribute__[name][type] = value
+            self.__attribute__[name][type] = value
         return True
 
     def ical_get(self, name, type):
@@ -93,12 +92,15 @@ class CalDAV(object):
             valtype =  self.__attribute__.get(name).get('type', None)
             if type == 'value':
                 if valtype and valtype=='datetime' and val:
-                     val = val.strftime('%Y-%m-%d %H:%M:%S')
+                    if isinstance(val, list):
+                        val = ','.join(map(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'), val))
+                    else:
+                        val = val.strftime('%Y-%m-%d %H:%M:%S')
                 if valtype and valtype=='integer' and val:
-                     val = int(val)
+                    val = int(val)
             return  val
         else:
-             return  self.__attribute__.get(name, None)
+            return  self.__attribute__.get(name, None)
 
     def ical_reset(self, type):
         for name in self.__attribute__:
@@ -106,7 +108,7 @@ class CalDAV(object):
                 self.__attribute__[name][type] = None
         return True
 
-    def export_ical(self, cr, uid, datas, vobj=None):
+    def export_ical(self, cr, uid, datas, vobj=None, context={}):
         ical = vobject.iCalendar()
         for data in datas:
             vevent = ical.add(vobj)
@@ -114,18 +116,26 @@ class CalDAV(object):
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
                 if map_field in data.keys():
-                    if field == 'attendee' and data[map_field]:
+                    if field == 'uid' :
+                        model = context.get('model', None)
+                        if not model:
+                            continue
+                        uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        vevent.add('uid').value = uidval
+                    elif field == 'attendee' and data[map_field]:
                         attendee_obj = self.pool.get('caldav.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent)
+                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
                         alarm_obj = self.pool.get('caldav.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent)
+                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
                         elif map_type == 'datetime' and data[map_field]:
-                            vevent.add(field).value = datetime.strptime(data[map_field], \
-                                                                           "%Y-%m-%d %H:%M:%S")
+                            if field in ('exdate'):
+                                vevent.add(field).value = [parser.parse(data[map_field])]
+                            else:
+                                vevent.add(field).value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         if self.__attribute__.get(field).has_key('mapping'):
@@ -214,8 +224,8 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-    def export_ical(self, cr, uid, datas):
-        return super(Event, self).export_ical(cr, uid, datas, 'vevent')
+    def export_ical(self, cr, uid, datas, context={}):
+        return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
     
 Event()
 
@@ -257,8 +267,8 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None, 
             }
     
-    def export_ical(self, cr, uid, datas):
-        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo')
+    def export_ical(self, cr, uid, datas, context={}):
+        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
 
 ToDo()
 
@@ -289,10 +299,8 @@ class Timezone(CalDAV):
     'tzid': None, # Use: R-1, Type: Text, Specifies the text value that uniquely identifies the "VTIMEZONE" calendar component.
     'last-mod': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the information associated with the calendar component was last revised in the calendar store.
     'tzurl': None, # Use: O-1, Type: URI, Provides a means for a VTIMEZONE component to point to a network location that can be used to retrieve an up-to-date version of itself.
-    'standardc':           # Use: R-n,
-        {'tzprop': None, }, # Use: R-1,
-    'daylightc':           # Use: R-n, Type: Text,
-        {'tzprop': None, }, # Use: R-1,
+    'standardc': {'tzprop': None}, # Use: R-1,
+    'daylightc': {'tzprop': None}, # Use: R-1,
     'x-prop': None, # Use: O-n, Type: Text,
     }
 
@@ -311,7 +319,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, alarm_id, vevent):
+    def export_ical(self, cr, uid, alarm_id, vevent, context={}):
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get('crm.caldav.alarm')
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -396,7 +404,7 @@ class Attendee(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, attendee_id, vevent):
+    def export_ical(self, cr, uid, attendee_id, vevent, context={}):
         attendee_object = self.pool.get('crm.caldav.attendee')
         for attendee in attendee_object.read(cr, uid, attendee_id, []):
             attendee_add = vevent.add('attendee')

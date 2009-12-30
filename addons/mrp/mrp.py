@@ -42,18 +42,18 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _columns = {
         'name': fields.char('Work Center Name', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the work center without removing it."),
         'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
         'code': fields.char('Code', size=16),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="The normal working time of the workcenter."),
         'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
 
-        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operation this workcenter can do in parallel. If this workcenter represent a team of 5 workers, the capacity per cycle is 5."),
+        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this workcenter can do in parallel. If this workcenter represents a team of 5 workers, the capacity per cycle is 5."),
 
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'time_efficiency': fields.float('Time Efficiency', help="Factor to adjust the work center cycle and before and after production durations"),
+        'time_efficiency': fields.float('Efficiency factor', help="Factor to adjust the work center cycle and before and after production durations"),
 
         'costs_hour': fields.float('Cost per hour'),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
@@ -70,7 +70,7 @@ class mrp_workcenter(osv.osv):
         'type': lambda *a: 'machine',
         'time_efficiency': lambda *a: 1.0,
         'capacity_per_cycle': lambda *a: 1.0,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.workcenter', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.workcenter', context=c)
     }
 mrp_workcenter()
 
@@ -103,7 +103,7 @@ class mrp_routing(osv.osv):
     _description = 'Routing'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the routing without removing it."),
         'code': fields.char('Code', size=8),
 
         'note': fields.text('Description'),
@@ -126,12 +126,12 @@ class mrp_routing_workcenter(osv.osv):
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence'),
-        'cycle_nbr': fields.float('Number of Cycle', required=True,
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
+        'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Time in hours for doing one cycle."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade', 
-             help="routing indicates all the workcenters used, for how long and/or cycles." \
+             help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description')
     }
@@ -143,7 +143,7 @@ mrp_routing_workcenter()
 
 class mrp_bom(osv.osv):
     _name = 'mrp.bom'
-    _description = 'Bill of Material'
+    _description = 'Bills of Material'
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
@@ -174,29 +174,26 @@ class mrp_bom(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
-        'active': fields.boolean('Active'),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help=
-            "Use a phantom bill of material in raw materials lines that have to be " \
-            "automatically computed in on eproduction order and not one per level." \
-            "If you put \"Phantom/Set\" at the root level of a bill of material " \
-            "it is considered as a set or pack: the products are replaced by the components " \
-            "between the sale order to the picking without going through the production order." \
-            "The normal BoM will generate one production order per BoM level."),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, 
+                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM."\
+                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type."\
+                                 "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', method=True, type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
         'date_stop': fields.date('Valid Until', help="Validity of this BoM or component. Keep empty if it's always valid."),
-        'sequence': fields.integer('Sequence'),
-        'position': fields.char('Internal Ref.', size=64, help="Reference to a position in an external plan."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bills of material."),
+        'position': fields.char('Internal Reference', size=64, help="Reference to a position in an external plan."),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uos_qty': fields.float('Product UOS Qty'),
         'product_uos': fields.many2one('product.uom', 'Product UOS', help="Product UOS (Unit of Sale) is the unit of measurement for the invoicing and promotion of stock."),
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, help="UoM (Unit of Measure) is the unit of measurement for the inventory control"),
-        'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity. For integer only values, put 1.0"),
+        'product_rounding': fields.float('Product Rounding', help="Rounding applied on the product quantity."),
         'product_efficiency': fields.float('Product Efficiency', required=True, help="Material efficiency. A factor of 0.9 means a loss of 10% in the production."),
         'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
-        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
+        'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan future loads on workcenters based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
@@ -210,7 +207,7 @@ class mrp_bom(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c)
     }
     _order = "sequence"
     _sql_constraints = [
@@ -407,7 +404,7 @@ class mrp_production(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
@@ -417,7 +414,7 @@ class mrp_production(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
-            help="Location where the system will look for products used in raw materials."),
+            help="Location where the system will look for components."),
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             help="Location where the system will stock the finished products."),
 
@@ -431,7 +428,7 @@ class mrp_production(osv.osv):
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of workcenters) to produce the finished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
 
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
-            help="This is the internal picking list of the raw material needed for the production plan"),
+            help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
@@ -444,8 +441,8 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
-        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
+        'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name', help='Indicate the name of sale order.'),
+        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -454,7 +451,7 @@ class mrp_production(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
     def unlink(self, cr, uid, ids, context=None):
@@ -758,9 +755,9 @@ class mrp_production_workcenter_line(osv.osv):
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
-        'cycle': fields.float('Nbr of cycle', digits=(16,2)),
-        'hour': fields.float('Nbr of hour', digits=(16,2)),
-        'sequence': fields.integer('Sequence', required=True),
+        'cycle': fields.float('Nbr of cycles', digits=(16,2)),
+        'hour': fields.float('Nbr of hours', digits=(16,2)),
+        'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of work orders."),
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True, ondelete='cascade'),
     }
     _defaults = {
@@ -796,7 +793,7 @@ class mrp_procurement(osv.osv):
     _description = "Procurement"
     _order = 'priority,date_planned'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, help='Requisition name.'),
         'origin': fields.char('Origin', size=64,
             help="Reference of the document that created this Requisition.\n"
             "This is automatically completed by Open ERP."),
@@ -844,7 +841,7 @@ class mrp_procurement(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', context=c)
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1193,7 +1190,7 @@ class stock_warehouse_orderpoint(osv.osv):
     _description = "Orderpoint minimum rule"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -1216,7 +1213,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': lambda *a: 1,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:

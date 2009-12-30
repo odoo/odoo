@@ -238,7 +238,7 @@
             <field name="view_id" ref="crm_case_rule_tree-view"/>
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
-		
+
        <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
             <field name="name">Add CC</field>
             <field name="model">crm.email.add.cc</field>
@@ -322,7 +322,7 @@
             <field name="model">crm.case</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="Cases">
+                <tree colors="red:date_deadline&lt;current_date and state=='open';black:state in ('draft', 'cancel','done','pending')" string="Cases">
                     <field name="id"/>
                     <field name="section_id"/>
                     <field name="date"/>
@@ -529,7 +529,7 @@
                 </search>
         	</field>
     	</record>
-        
+
         <record id="crm_case_history-act" model="ir.actions.act_window">
             <field name="name">Histories</field>
             <field name="res_model">crm.case.history</field>
@@ -686,7 +686,7 @@
                 <tree string="Email Gateway">
                     <field name="name"/>
                     <field name="section_id" />
-                    <field name="server_id" />                    
+                    <field name="server_id" />
                 </tree>
             </field>
         </record>
@@ -696,7 +696,7 @@
             <field name="model">crm.email.gateway.server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email Gateway Server">                    
+                <form string="Email Gateway Server">
                     <field name="server_type" colspan="4" on_change="onchange_server_type(server_type,ssl)"/>
                     <field name="name"/>
                     <field name="port" />
@@ -718,7 +718,7 @@
                     <field name="name"/>
                     <field name="port" />
                     <field name="server_type"/>
-                    <field name="ssl" />            
+                    <field name="ssl" />
                 </tree>
             </field>
         </record>
@@ -732,47 +732,6 @@
             <field name="view_id" ref="crm_email_gateway_tree"/>
         </record>
         <menuitem id="crm_email_gateway_menu" name="Email Gateway" parent="next_id_51" action="crm_email_gateway_act" />
-
-        <!-- Caldav configartion view -->
-
-        <record id="view_config_crm_caldav_menu" model="ir.ui.view">
-            <field name="name">Configure Caldav Properties</field>
-            <field name="model">crm.calendar.config_wizard</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes"><attribute name="string">
-                  Configure view for Caldav Properties
-                </attribute></form>
-
-                <group string="res_config_contents" position="replace">
-                  <separator colspan="4" string=""/>
-                  <label colspan="4" align="0.0" string="
-                     Enable a detailed view of the caldav configuration
-                     screens."/>
-                  <newline/>
-                  <field name="caldav"/>
-                </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_view_config_crm_caldav_menu" model="ir.actions.act_window">
-            <field name="name">Configure Caldav Properties</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.calendar.config_wizard</field>
-            <field name="view_id" ref="view_config_crm_caldav_menu"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-        <record id="config_wizard_step_cam_caldav_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_view_config_crm_caldav_menu"/>
-        </record>
 
     </data>
 </openerp>

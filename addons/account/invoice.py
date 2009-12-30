@@ -245,8 +245,12 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-        ],'State', select=True, readonly=True),
-
+            ],'State', select=True, readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
+            \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
+            \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
+            \n* The \'Done\' state is set automatically when invoice is paid.\
+            \n* The \'Cancelled\' state is used when user cancel invoice.'),
         'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)],'close':[('readonly',True)]}, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
@@ -264,7 +268,7 @@ class account_invoice(osv.osv):
         'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
-        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Link to the automatically generated Ledger Postings."),
+        'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True, help="Links to the automatically generated Ledger Postings."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])),string='Untaxed',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
@@ -318,7 +322,7 @@ class account_invoice(osv.osv):
         'state': lambda *a: 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
     }
@@ -358,7 +362,7 @@ class account_invoice(osv.osv):
                 if p.property_account_receivable.company_id.id != company_id and p.property_account_payable.company_id.id != company_id:
                     rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
                     pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
-                    if not rec_pro_id: 
+                    if not rec_pro_id:
                         rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
@@ -394,7 +398,7 @@ class account_invoice(osv.osv):
 
         if type in ('in_invoice', 'in_refund'):
             result['value']['partner_bank'] = bank_id
-            
+
         if payment_term != partner_payment_term:
             if partner_payment_term:
                 to_update = self.onchange_payment_term_date_invoice(
@@ -408,7 +412,12 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_currency_id(self, cr, uid, ids, curr_id):
+    def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
+        if curr_id:
+            currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
+            if currency.company_id != company_id:
+                raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
@@ -446,7 +455,7 @@ class account_invoice(osv.osv):
                 if partner_obj.property_account_payable.company_id.id != company_id and partner_obj.property_account_receivable.company_id.id != company_id:
                     rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
                     pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
-                    if not rec_pro_id: 
+                    if not rec_pro_id:
                         rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
@@ -1075,7 +1084,7 @@ class account_invoice_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
@@ -1120,7 +1129,7 @@ class account_invoice_line(osv.osv):
         context.update({'lang': lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        
+
         if company_id:
             in_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_income'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
             if not in_pro_id:
@@ -1128,9 +1137,9 @@ class account_invoice_line(osv.osv):
             exp_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_expense'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
             if not exp_pro_id:
                 exp_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_expense_categ'),('res_id','=','product.template,'+str(res.categ_id.id)+''),('company_id','=',company_id)])
-            
+
             if not in_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income 
+                in_acc = res.product_tmpl_id.property_account_income
                 in_acc_cate = res.categ_id.property_account_income_categ
                 if in_acc:
                     app_acc_in = in_acc
@@ -1148,7 +1157,7 @@ class account_invoice_line(osv.osv):
             else:
                 app_acc_exp = self.pool.get('account.account').browse(cr,uid,exp_pro_id)[0]
             if not in_pro_id and not exp_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income 
+                in_acc = res.product_tmpl_id.property_account_income
                 in_acc_cate = res.categ_id.property_account_income_categ
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
@@ -1212,18 +1221,22 @@ class account_invoice_line(osv.osv):
             res2 = res.uom_id.category_id.id
             if res2 :
                 domain = {'uos_id':[('category_id','=',res2 )]}
-        
-        prod_pool=self.pool.get('product.product')            
+
+        prod_pool=self.pool.get('product.product')
         result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
-        
+
         if not company_id and not currency_id:
             return res_final
-        
+
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
         
-        if company.currency_id.id != currency.id and currency.company_id.id == company.id:
+        if not currency.company_id.id == company.id:
+            raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
+        
+        if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
         return res_final
@@ -1306,7 +1319,7 @@ class account_invoice_tax(osv.osv):
         'base': fields.float('Base', digits=(16,int(config['price_accuracy']))),
         'amount': fields.float('Amount', digits=(16,int(config['price_accuracy']))),
         'manual': fields.boolean('Manual'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
 
         'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="The account basis of the tax declaration."),
         'base_amount': fields.float('Base Code Amount', digits=(16,int(config['price_accuracy']))),

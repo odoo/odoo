@@ -52,7 +52,7 @@ form = """<?xml version="1.0"?>
     <newline/>
     <field name="limit_amount" help="Limit under which the partners will not be included into the listing"/>
     <newline/>
-    <field name="test_xml" help="Set the XML output as test file"/>
+    <field name="test_xml" help="Sets the XML output as test file"/>
 </form>"""
 
 fields = {

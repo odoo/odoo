@@ -55,7 +55,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
     }
     _defaults = {
         'sequence': lambda *args: 1
@@ -71,7 +71,7 @@ class crm_cases(osv.osv):
         'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
         'duration': fields.float('Duration'),
         'case_id': fields.many2one('crm.case', 'Related Case'),
-        'partner_name': fields.char('Employee Name', size=64),
+        'partner_name': fields.char("Employee's Name", size=64),
         'partner_name2': fields.char('Employee Email', size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),

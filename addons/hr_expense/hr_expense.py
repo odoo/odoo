@@ -58,7 +58,7 @@ class hr_expense_expense(osv.osv):
         'ref': fields.char('Reference', size=32),
         'date': fields.date('Date'),
         'journal_id': fields.many2one('account.journal', 'Force Journal'),
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Date Confirmed'),
         'date_valid': fields.date('Date Validated'),
@@ -176,7 +176,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     _columns = {
-                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
 
 product_product()
@@ -205,7 +205,7 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence' : fields.integer('Sequence'),
+        'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
     }
     _defaults = {
         'unit_quantity': lambda *a: 1,

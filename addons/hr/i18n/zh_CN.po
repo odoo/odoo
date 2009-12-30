@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-01 14:36+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2009-12-29 02:57+0000\n"
+"Last-Translator: Jeroen Vet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:21+0000\n"
+"X-Launchpad-Export-Date: 2009-12-30 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -31,7 +31,7 @@ msgstr "工作时间分类"
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr "错误！您不能创建循环部门。"
+msgstr "错误！您不能创建递归部门。"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -42,7 +42,7 @@ msgstr "社保号"
 #: model:ir.module.module,shortdesc:hr.module_meta_information
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
-msgstr "人事管理"
+msgstr "人力资源"
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
@@ -57,7 +57,7 @@ msgstr "上级"
 #. module: hr
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: hr
 #: view:hr.department:0
@@ -72,7 +72,7 @@ msgstr "员工联系方式"
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr "办公电子邮件"
+msgstr "工作电子邮件"
 
 #. module: hr
 #: field:hr.timesheet.group,name:0
@@ -100,7 +100,7 @@ msgstr "上级部门"
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
-msgstr "备注"
+msgstr "注解"
 
 #. module: hr
 #: field:hr.timesheet,hour_from:0
@@ -189,7 +189,7 @@ msgstr "成员"
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr "社保号"
+msgstr "社会安全号"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -199,7 +199,7 @@ msgstr "填写联系方式"
 #. module: hr
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图结构"
+msgstr "无效的XML视图结构！"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -232,7 +232,7 @@ msgstr "已婚"
 #. module: hr
 #: field:hr.timesheet,tgroup_id:0
 msgid "Employee's timesheet group"
-msgstr "员工工作时间表"
+msgstr "员工工作时间表组"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -300,7 +300,7 @@ msgstr "分类结构"
 #. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
-msgstr "星期"
+msgstr "星期几"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -310,12 +310,12 @@ msgstr "生日"
 #. module: hr
 #: field:hr.employee,active:0
 msgid "Active"
-msgstr "有效"
+msgstr "在职"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "错误！您不能创建循环的员工等级。"
+msgstr "错误！您不能创建递归的员工等级。"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
@@ -330,7 +330,7 @@ msgstr "创建系统用户"
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee Complete Form"
-msgstr "员工完成表单"
+msgstr "填写员工表"
 
 #. module: hr
 #: view:hr.department:0
@@ -371,7 +371,7 @@ msgstr "婚姻状况"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet
 msgid "Timesheet Line"
-msgstr "工作表明细"
+msgstr "工作时间表明细"
 
 #. module: hr
 #: view:hr.employee:0
@@ -434,7 +434,7 @@ msgstr "其他证件号"
 #. module: hr
 #: field:hr.timesheet,name:0
 msgid "Name"
-msgstr "名称"
+msgstr "姓名"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -446,7 +446,7 @@ msgstr "性别"
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list
 msgid "Employees"
-msgstr "员工列表"
+msgstr "员工"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -472,7 +472,7 @@ msgstr "填写员工联系方式信息"
 #: field:hr.department,manager_id:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "经理"
+msgstr "上司"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
@@ -489,4 +489,4 @@ msgstr "周六"
 #: model:ir.actions.act_window,name:hr.open_view_employee_new
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_new
 msgid "New Employee"
-msgstr "新建员工"
+msgstr "新员工"

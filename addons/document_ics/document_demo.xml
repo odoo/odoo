@@ -17,8 +17,8 @@
         <field name="directory_id" ref="dir_calendars"/>
         <field name="extension">.ics</field>
         <field name="include_name" eval="False"/>
-        <field name="ics_object_id" ref="crm.model_crm_case"/>
-        <field name="ics_domain" eval="'[(\'section_id\',\'=\','+str(ref('section_meeting'))+')]'"/>
+        <field name="object_id" ref="crm.model_crm_meeting"/>
+        <field name="ics_domain" eval="'[]'"/>
     </record>
 
     <record model="document.directory.ics.fields" id="dir_field1">

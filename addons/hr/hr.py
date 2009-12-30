@@ -119,14 +119,14 @@ class hr_employee(osv.osv):
     _description = "Employee"
 
     _columns = {
-        'name' : fields.char("Employee", size=128, required=True),
-        'active' : fields.boolean('Active'),
+        'name' : fields.char("Employee's Name", size=128, required=True),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the employee record without removing it."),
         'company_id': fields.many2one('res.company', 'Company'),
-        'user_id' : fields.many2one('res.users', 'Related User'),
+        'user_id' : fields.many2one('res.users', 'Related User', help='Related user name for an employee to manage his access rights.'),
 
         'country_id' : fields.many2one('res.country', 'Nationality'),
         'birthday' : fields.date("Birthday"),
-        'ssnid': fields.char('SSN No', size=32),
+        'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
         'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),

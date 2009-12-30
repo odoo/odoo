@@ -52,10 +52,11 @@ class crm_cal_import_wizard(wizard.interface):
             }
 
     def _process_imp_ics(self, cr, uid, data, context=None):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.case')
-        vals = case_obj.import_cal(cr, uid, data['ids'], data, context)
+        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
+        vals = case_obj.import_cal(cr, uid, data['form']['file_path'], context)
+        global cnt
+        cnt = 0
         if vals:
-            global cnt
             cnt = vals['count']
         return {}
     

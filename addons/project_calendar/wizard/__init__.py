@@ -21,5 +21,6 @@
 
 import wizard_cal_export
 import wizard_cal_import
+import wizard_cal_subscribe
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

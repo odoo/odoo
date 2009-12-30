@@ -22,27 +22,26 @@
 
 {
     'name': 'Integrated Document Management System',
-    'version': '1.1',
+    'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """This is a complete document management system:
-    * FTP Interface
+    'description': """This is a complete document management system:    
     * User Authentication
     * Document Indexation
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process'],
-    'init_xml': ['document_data.xml', 'document_demo.xml'],
+    'init_xml': [],
     'update_xml': [
         'document_view.xml',
         'document_data.xml',
         'security/document_security.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': [],
+    'demo_xml': [ 'document_demo.xml',],
     'installable': True,
     'active': False,
-    'certificate': '0070515416461',
+    'certificate': None,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

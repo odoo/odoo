@@ -110,7 +110,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="active" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Work Center">
@@ -239,7 +239,7 @@
                       <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                       <field name="name" select="1"/>
                       <field name="code" select="1"/>
-                      <field name="company_id" select="1" groups="base.group_multi_company"/>
+                      <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <newline/>
                     <field name="product_uom"/>
@@ -375,7 +375,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel')" string="Production orders">
+                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state in ('done','cancel') " string="Production orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
@@ -456,7 +456,7 @@
                         <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
                     <notebook colspan="4">
@@ -567,7 +567,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        
+
         <record id="mrp_production_action3" model="ir.actions.act_window">
             <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -578,7 +578,7 @@
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        
+
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -685,7 +685,7 @@
                         <separator colspan="2" string="References"/>
                         <field name="name" select="1" string="Requisition Reason"/>
                         <field name="origin" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
@@ -728,11 +728,7 @@
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
                         <field name="note" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Notes">
-                        <separator colspan="4" string="Note" />
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                    </page>                    
                     </notebook>
                 </form>
             </field>
@@ -828,7 +824,7 @@
                     <field name="active" select="1"/>
                     <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" select="1" widget="selection"/>
                     <field name="location_id" select="2"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>

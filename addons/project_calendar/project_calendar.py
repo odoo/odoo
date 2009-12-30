@@ -19,16 +19,13 @@
 #
 ##############################################################################
 
+from caldav import common
 from datetime import datetime
 from osv import fields, osv
 from service import web_services
 import base64
-
-def caldevIDs2readIDs(caldev_ID = None):
-    if caldev_ID:
-        if isinstance(caldev_ID, str):
-            return int(caldev_ID.split('-')[0])
-        return caldev_ID
+import re
+import time
 
 class project_task(osv.osv):
     _inherit = "project.task"
@@ -36,12 +33,12 @@ class project_task(osv.osv):
     def _get_rdates(self, cr, uid, ids, name, arg, context=None):
         res = {}
         context.update({'read':True})
-        for task in self.read(cr, uid, ids, ['date_start', 'rrule'], context=context):
+        for task in self.read(cr, uid, ids, ['date_start', 'rrule', 'exdate', 'exrule'], context=context):
             if task['rrule']:
-                rule = task['rrule'].split('\n')[0]
+                rule = task['rrule']
                 if rule.upper().find('COUNT') < 0: # Temp fix, needs review
                     rule += ';COUNT=5'
-                exdate = task['rrule'].split('\n')[1:]
+                exdate = task['exdate'] and task['exdate'].split(',') or []
                 todo_obj = self.pool.get('caldav.todo')
                 res[task['id']] = str(todo_obj.get_recurrent_dates(str(rule), exdate, task['date_start']))
         return res
@@ -51,9 +48,13 @@ class project_task(osv.osv):
                                              ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
                 'location': fields.text('Location'), 
                 'rrule': fields.text('Recurrent Rule'), 
+                'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
+                                 of date/time exceptions for arecurring calendar component."), 
+                'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
+                                 for anexception to a recurrence set"), 
                 'rdates': fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
-               'attendee_ids': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
+               'attendee_ids': fields.many2many('crm.caldav.attendee', 'task_attendee_rel', 'case_id', \
                                               'attendee_id', 'Attendees'), 
                'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
                'caldav_url': fields.char('Caldav URL', size=34), 
@@ -87,8 +88,8 @@ class project_task(osv.osv):
 #        'categories': {'field': 'type', 'type': 'text'}, # Needs review 
         'comment': {'field': 'notes', 'type': 'text'}, 
 #        'contact': {'field': 'field', 'type': 'text'}, 
-#        'exdate': {'field': 'field', 'type': 'text'}, 
-#        'exrule': {'field': 'field', 'type': 'text'}, 
+        'exdate'  : {'field':'exdate', 'type':'datetime'}, 
+        'exrule'  : {'field':'exrule', 'type':'text'}, 
 #        'rstatus': {'field': 'field', 'type': 'text'}, 
 #        'related': {'field': 'field', 'type': 'text'}, 
 #        'resources': {'field': 'field', 'type': 'text'}, 
@@ -97,8 +98,8 @@ class project_task(osv.osv):
         'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'},
                      }
 
-    def import_cal(self, cr, uid, ids, data, context={}):
-        file_content = base64.decodestring(data['form']['file_path'])
+    def import_cal(self, cr, uid, data, context={}):
+        file_content = base64.decodestring(data)
         todo_obj = self.pool.get('caldav.todo')
         todo_obj.__attribute__.update(self.__attribute__)
         
@@ -114,14 +115,23 @@ class project_task(osv.osv):
         for val in vals:
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
             if not val.has_key('planned_hours'):
-                # 'Compute duration' in days
-                val['planned_hours'] = 16
+                # 'Computes duration' in days
+                start = datetime.strptime(val['date_start'], '%Y-%m-%d %H:%M:%S')
+                end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                diff = end - start
+                plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
+                val['planned_hours'] = plan
             else:
-                # Convert timedelta into Project time unit
+                # Converts timedelta into Project time unit
                 val['planned_hours'] = (val['planned_hours'].seconds/float(86400) + \
                                         val['planned_hours'].days) * obj_tm.factor
+
+            is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
-            task_id = self.create(cr, uid, val)
+            if is_exists:
+                self.write(cr, uid, [is_exists], val)
+            else:
+                case_id = self.create(cr, uid, val)
         return {'count': len(vals)}
     
     def export_cal(self, cr, uid, ids, context={}):
@@ -137,22 +147,23 @@ class project_task(osv.osv):
         alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(alarm.__attribute__)
         
-        ical = todo_obj.export_ical(cr, uid, task_data)
+        ical = todo_obj.export_ical(cr, uid, task_data, {'model': 'project.task'})
         caendar_val = ical.serialize()
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val
 
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
-        """         logic for recurrent task
-         example : 123-20091111170822""",  ids, fields, context
+        """ Logic for recurrent task
+                     example : 123-20091111170822"""
         if context and context.has_key('read'):
             return super(project_task, self).read(cr, uid, ids, fields, context, load)
         if not type(ids) == list :
             # Called from code
-            return super(project_task, self).read(cr, uid, caldevIDs2readIDs(ids),\
+            return super(project_task, self).read(cr, uid, common.caldevIDs2readIDs(ids),\
                                                   fields=fields, context=context, load=load)
         else:
-            ids = map(lambda x:caldevIDs2readIDs(x), ids)
+            ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+        fields.append('date_start')
         res = super(project_task, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
@@ -161,6 +172,10 @@ class project_task(osv.osv):
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
         if not rrules:
+            for ress in res:
+                strdate = ''.join((re.compile('\d')).findall(ress['date_start']))
+                idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
+                ress['id'] = idval
             return res
         result =  res + []
         for data in rrules:
@@ -171,9 +186,12 @@ class project_task(osv.osv):
                     val = res_temp
                     if rdates:
                         result.remove(val)
-
+                else:
+                    strdate = ''.join((re.compile('\d')).findall(res_temp['date_start']))
+                    idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
+                    res_temp['id'] = idval
+                    
             for rdate in rdates:
-                import re
                 idval = (re.compile('\d')).findall(rdate)
                 val['date_start'] = rdate
                 id = str(val['id']).split('-')[0]
@@ -190,7 +208,7 @@ class project_task(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         new_ids = []
         for id in ids:
-            id = caldevIDs2readIDs(id)
+            id = common.caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
         res = super(project_task, self).write(cr, uid, new_ids, vals, context=context)
@@ -198,28 +216,33 @@ class project_task(osv.osv):
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
         if not isinstance(select, list): select = [select]
-        select = map(lambda x:caldevIDs2readIDs(x), select)
+        select = map(lambda x:common.caldevIDs2readIDs(x), select)
         return super(project_task, self).browse(cr, uid, select, context, list_class, fields_process)
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(project_task, self).copy(cr, uid, caldevIDs2readIDs(id), default, context)
+        return super(project_task, self).copy(cr, uid, common.caldevIDs2readIDs(id), default, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        #TODO: Change RRULE
         for id in ids:
             if len(str(id).split('-')) > 1:
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [caldevIDs2readIDs(id)], ['date_start', 'rdates', 'rrule']):
-                    if record['date_start'] == date_new:
-                        self.write(cr, uid, [caldevIDs2readIDs(id)], \
-                                   {'rrule' : record['rrule'] +"\n" + str(date_new)})
+                for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
+                                            ['date', 'rdates', 'rrule', 'exdate']):
+                    if record['rrule']:
+                        exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
+                                    ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        if record['date_start'] == date_new:
+                            self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
+                    else:
+                        ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
+                        return super(project_task, self).unlink(cr, uid, ids)
             else:
                 return super(project_task, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
-            vals['case_id'] = caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
         return super(project_task, self).create(cr, uid, vals, context)
 project_task()
 
