@@ -172,15 +172,12 @@ class ir_attachment(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
             context=None, count=False):
-        new_args = []
-        if len(args) > 1:
-            new_args = [args[0]]
-            if args[1][0] == 'res_id':
-                new_args.append((args[1][0], args[1][1], caldevIDs2readIDs(args[1][2])))
-        if new_args:
-            args = new_args
-        return super(ir_attachment, self).search(cr, uid, args, offset=offset, 
-                                                limit=limit, order=order, 
+        new_args = args
+        for i, arg in enumerate(new_args):
+            if arg[0] == 'res_id':
+                new_args[i] = (arg[0], arg[1], caldevIDs2readIDs(arg[2]))
+        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
+                                                limit=limit, order=order,
                                                 context=context, count=False)
 ir_attachment()
 
