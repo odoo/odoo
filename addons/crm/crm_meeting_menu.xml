@@ -83,7 +83,7 @@
     <record model="ir.actions.act_window" id="crm_case_categ_meet">
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
-        <field name="view_id" ref="crm_case_calendar_view"/>
+        <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
         <field name="domain" eval="[('section_id.calendar','=',1)]"/>
