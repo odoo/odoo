@@ -87,7 +87,13 @@ class mrp_repair(osv.osv):
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
             ('cancel','Cancel')
-            ], 'Repair State', readonly=True, help="Gives the state of the Repair Order"),
+            ], 'Repair State', readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
+            \n* The \'Confirmed\' state is used when a user confirms the repair order. \
+            \n* The \'Ready to Repair\' state is used to start to repairing, user can start repairing only after repair order is confirmed. \
+            \n* The \'To be Invoiced\' state is used to generate the invoice before or after repairing done. \
+            \n* The \'Done\' state is set when repairing is completed.\
+            \n* The \'Cancelled\' state is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
@@ -503,7 +509,15 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', required=True, readonly=True),
+        'state': fields.selection([
+                    ('draft','Draft'),
+                    ('confirmed','Confirmed'),
+                    ('done','Done'),
+                    ('cancel','Canceled')], 'State', required=True, readonly=True,
+                    help=' * The \'Draft\' state is set automatically as draft when repair order in draft state. \
+                        \n* The \'Confirmed\' state is set automatically as confirm when repair order in confirm state. \
+                        \n* The \'Done\' state is set automatically when repair order is completed.\
+                        \n* The \'Cancelled\' state is set automatically when user cancel repair order.'),
     }
     _defaults = {
      'state': lambda *a: 'draft',

@@ -38,13 +38,18 @@ def map_data(cr, uid, obj):
         map_val = obj.ical_get(map_dict, 'value')
         field = obj.ical_get(map_dict, 'field')
         field_type = obj.ical_get(map_dict, 'type')
-        if field and map_val:
+        if field:
             if field_type == 'selection':
+                if not map_val:
+                    continue
                 mapping =obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
                     map_val = mapping[map_val]
             if field_type == 'many2many':
                 ids = []
+                if not map_val:
+                    vals[field] = ids
+                    continue
                 model = obj.__attribute__[map_dict].get('object', False)
                 modobj = obj.pool.get(model)
                 for map_vall in map_val:
@@ -54,12 +59,16 @@ def map_data(cr, uid, obj):
                 continue
             if field_type == 'many2one':
                 id = None
+                if not map_val:
+                    vals[field] = id
+                    continue
                 model = obj.__attribute__[map_dict].get('object', False)
                 modobj = obj.pool.get(model)
                 id = modobj.create(cr, uid, map_val)
                 vals[field] = id
                 continue
-            vals[field] = map_val
+            if map_val:
+                vals[field] = map_val
     return vals
 
 class CalDAV(object):
@@ -75,6 +84,7 @@ class CalDAV(object):
         else:
             startdate = todate(startdate)
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
+    
         for date in exdate:
             datetime_obj = todate(date)
             rset1._exdate.append(datetime_obj)
@@ -162,9 +172,9 @@ class CalDAV(object):
                     continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
-            vals = map_data(cr, uid, self)
-            if vals: res.append(vals)
-            self.ical_reset('value')
+        vals = map_data(cr, uid, self)
+        if vals: res.append(vals)
+        self.ical_reset('value')
         return res
 
 

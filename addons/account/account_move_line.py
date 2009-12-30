@@ -380,9 +380,9 @@ class account_move_line(osv.osv):
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
         'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or tax code account."),
-        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code,\
-                    this field will contain the basic amount(without tax)."),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
+        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
+                    "this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),

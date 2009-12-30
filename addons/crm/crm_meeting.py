@@ -70,22 +70,6 @@ class crm_meeting(osv.osv):
         'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'}, 
     }   
 
-    def _get_rdates(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        context.update({'read':True})
-        for case in self.read(cr, uid, ids, ['date', 'rrule', 'exdate', 'exrule'], context=context):
-            if case['rrule']:
-                rule = case['rrule']
-                exdate = case['exdate'] and case['exdate'].split(',') or []
-                event_obj = self.pool.get('caldav.event')
-                res[case['id']] = str(event_obj.get_recurrent_dates(str(rule), exdate, case['date']))
-        return res
-    
-    def _data_set(self, cr, uid, id, name, value, arg, context):
-        if not self.browse(cr, uid, id, context).rrule:
-            cr.execute("UPDATE crm_meeting set rdates='' where id=%s" % id)
-        return True
-
     _columns = {
         'inherit_case_id': fields.many2one('crm.case','Case',ondelete='cascade'),
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
@@ -100,8 +84,6 @@ class crm_meeting(osv.osv):
         'exrule' : fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
         'rrule' : fields.char('Recurrent Rule', size=352), 
-        'rdates' : fields.function(_get_rdates, method=True, fnct_inv=_data_set \
-                    , store=True, type='text'), 
         'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
         'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
@@ -249,40 +231,33 @@ class crm_meeting(osv.osv):
 
         if fields and 'date' not in fields:
             fields.append('date')
-        res = super(crm_meeting, self).read(cr, uid, ids, fields=fields, context=context, load=load)        
-        read_ids = ",".join([str(x) for x in ids])
-        if not read_ids:
+        if not ids:
             return []
-        cr.execute('select id,rrule,rdates from crm_meeting where id in (%s)' % read_ids)
-        rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
-        rdates = []
-        if not rrules:
-            for ress in res:
-                strdate = ''.join((re.compile('\d')).findall(ress['date']))
-                idval = str(common.caldevIDs2readIDs(ress['id'])) + '-' + strdate
-                ress['id'] = idval
-            return res
-        result =  res + []
-        for data in rrules:
-            if data['rrule'] and data['rdates']:
-                rdates = eval(data['rdates'])
-            for res_temp in res:
-                if res_temp['id'] == data['id']:
-                    val = res_temp
-                    if rdates:
-                        result.remove(val)
-                else:
-                    strdate = ''.join((re.compile('\d')).findall(res_temp['date']))
-                    idval = str(common.caldevIDs2readIDs(res_temp['id'])) + '-' + strdate
-                    res_temp['id'] = idval
-
-            for rdate in rdates:
-                idval = (re.compile('\d')).findall(rdate)
-                val['date'] = rdate
-                id = str(val['id']).split('-')[0]
-                val['id'] = id + '-' + ''.join(idval)
-                val1 = val.copy()
-                result += [val1]
+        result =  []
+        for read_id in ids:
+            res = super(crm_meeting, self).read(cr, uid, read_id, fields=fields, context=context, load=load)
+            cr.execute("""select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
+                     join crm_case c on (c.id=m.inherit_case_id) \
+                     where m.id = %s""" % read_id)
+            data = cr.dictfetchall()[0]
+            if not data['rrule']:
+                strdate = ''.join((re.compile('\d')).findall(data['date']))
+                idval = str(common.caldevIDs2readIDs(data['id'])) + '-' + strdate
+                data['id'] = idval
+                res.update(data)
+                result.append(res)
+            else:
+                exdate = data['exdate'] and data['exdate'].split(',') or []
+                event_obj = self.pool.get('caldav.event')
+                rdates = event_obj.get_recurrent_dates(str(data['rrule']), exdate, data['date'])[:10]
+                for rdate in rdates:
+                    val = res.copy()
+                    idval = (re.compile('\d')).findall(rdate)
+                    val['date'] = rdate
+                    id = str(res['id']).split('-')[0]
+                    val['id'] = id + '-' + ''.join(idval)
+                    val1 = val.copy()
+                    result.append(val1)
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):        
@@ -382,6 +357,5 @@ class crm_meeting_generic_wizard(osv.osv_memory):
         return {}
 
 crm_meeting_generic_wizard()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

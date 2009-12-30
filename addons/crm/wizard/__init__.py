@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import crm_wizard
+#import crm_wizard
 import wizard_crm_send_email
 import wizard_crm_new_send_email
 import wizard_fetch_mail
