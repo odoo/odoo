@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-import wizard
+from tools.translate import _
+import base64
 import pooler
 import urllib
-import base64
+import wizard
 
 class crm_cal_subscribe_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
@@ -55,9 +56,12 @@ class crm_cal_subscribe_wizard(wizard.interface):
     def _process_imp_ics(self, cr, uid, data, context=None):
         global cnt
         cnt = 0
-        f =  urllib.urlopen(data['form']['url_path'])
-        caldata= f.fp.read()
-        f.close()
+        try:
+            f =  urllib.urlopen(data['form']['url_path'])
+            caldata= f.fp.read()
+            f.close()
+        except Exception,e:
+            raise wizard.except_wizard(_('Error!'), _('Please provide Proper URL !'))
         case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
         context.update({'url': data['form']['url_path']})
         vals = case_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
