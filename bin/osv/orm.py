@@ -456,7 +456,7 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
-
+        
         def check_type(field_type):
             if field_type == 'float':
                 return 0.0
@@ -569,21 +569,24 @@ class orm_template(object):
         warning_fields = []
         for field in fields_export:
             if imp_comp and len(field)>1:
-                warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
+                warning_fields.append(['/'.join(map(lambda x:x in cols and x,field))])
             elif len (field) <=1:
                 if imp_comp and cols.get(field and field[0],False):
                     if ((isinstance(cols[field[0]], fields.function) and not cols[field[0]].store) \
                                      or isinstance(cols[field[0]], fields.related)\
-                                     or isinstance(cols[field[0]], fields.one2many)):
-                        warning_fields.append('/'.join(map(lambda x:x in cols and cols[x].string or x,field)))
+                                     or isinstance(cols[field[0]], fields.one2many)\
+                                     or isinstance(cols[field[0]], fields.many2many)):
+                        warning_fields.append(['/'.join(map(lambda x:x in cols and x,field))])
         datas = []
+        fields_to_export = [val for val in fields_to_export if val not in warning_fields]
+        datas.append(map(lambda x:x[0],fields_to_export))
         if imp_comp and len(warning_fields):
-            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' %('\n'.join(warning_fields))
-            cr.rollback()
-            return {'warning' : warning}
+            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' %('\n'.join(map(lambda x:x[0] in cols and cols[x[0]].string or x[0],warning_fields)))
+#            cr.rollback()
+#            return {'warning' : warning}
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
-        return {'datas':datas}
+        return {'datas': datas,'warning': warning}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         if not context:
