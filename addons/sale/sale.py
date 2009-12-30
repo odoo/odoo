@@ -369,7 +369,7 @@ class sale_order(osv.osv):
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error !'), 
+            raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
         inv = {
             'name': order.client_order_ref or order.name,
@@ -775,7 +775,12 @@ class sale_order_line(osv.osv):
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight'),
-        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
+                help=' * The \'Draft\' state is set automatically when sale order in draft state.. \
+                    \n* The \'Confirmed\' state is set automatically as confirm when sale order in confirm state. \
+                    \n* The \'Exception\' state is set automatically when sale order is set as exception. \
+                    \n* The \'Done\' state is set automatically when sale order is set as done. \
+                    \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
         'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
