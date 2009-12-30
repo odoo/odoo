@@ -45,33 +45,21 @@ _email_done_fields = {
     'message': {'string':"Log Detail", 'type':'text', 'readonly':True},
        }       
 
-def _default(self , cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)
-    gateway_pool=pool.get('crm.case.section')    
-    sections = gateway_pool.browse(cr, uid, data['ids'], context=context)
-    server = []
-#    for section in sections:
-#        for gateway in section.gateway_ids:
-#            if gateway.server_id.active:
-#                server.append(gateway.name or '%s (%s)'%(gateway.server_id.login, gateway.server_id.name) )
-    data['form']['server'] = '\n'.join(server)    
-    return data['form']
-    
-def section_fetch_mail(self , cr, uid, data, context):
+def mailgate_fetch_mail(self , cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     gateway_pool=pool.get('mail.gateway')    
     messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)
     data['form']['message'] = '\n'.join(messages)    
     return data['form']
 
-class wiz_section_fetch_mail(wizard.interface):
+class wiz_mailgateway_fetch_mail(wizard.interface):
     states = {
         'init': {
-            'actions': [_default],
+            'actions': [],
             'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end','Cancel','gtk-cancel'), ('fetch','Fetch','gtk-execute')]}
                 },        
         'fetch': {
-            'actions': [section_fetch_mail],
+            'actions': [mailgate_fetch_mail],
             'result': {'type': 'form', 'arch': _email_done_form,
                 'fields': _email_done_fields,
                 'state': (
@@ -80,6 +68,5 @@ class wiz_section_fetch_mail(wizard.interface):
             },
         },
     }
-wiz_section_fetch_mail('crm.case.section.fetchmail')
-
+wiz_mailgateway_fetch_mail('mailgate.fetchmail')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

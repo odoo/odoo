@@ -42,8 +42,8 @@
 	                            <field name="allow_unlink" select="2"/>
 	                            <field name="calendar" select="2"/>
 	                        </group>
-	                            <field name="reply_to" select="2"/>
-                            <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
+	                        <field name="reply_to" select="2"/>
+	                        <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
                                 <tree string="Email Gateway" editable="bottom">
                                    <field name="name" />
                                    <field name="server_id" />
@@ -56,12 +56,10 @@
                                     <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
                                         <tree string="Email History">
                                             <field name="name"/>
-                                            <field name="case_id"/>
                                             <field name="note"/>
                                         </tree>
                                        <form string="Email History">
                                             <field name="name"/>
-                                            <field name="case_id"/>
                                             <separator colspan="4" string="Notes"/>
                                             <field name="note" nolabel="1" colspan="4"/>
                                        </form>
@@ -648,90 +646,6 @@
         <act_window domain="[('canal_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_canal_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner.canal" view_mode="tree,form,calendar" view_type="form"/>
 
         <act_window domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_users_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.users" view_mode="tree,form,calendar" view_type="form"/>
-
-
-        <record id="crm_email_gateway_form" model="ir.ui.view">
-            <field name="name">crm.email.gateway.form</field>
-            <field name="model">crm.email.gateway</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Email Gateway">
-                    <field name="name"/>
-                    <field name="section_id" />
-                    <field name="server_id" />
-                    <field name="to_email_id"/>
-                    <field name="cc_email_id" />
-                    <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
-                        <tree string="Email History">
-                            <field name="name"/>
-                            <field name="case_id"/>
-                            <field name="note"/>
-                        </tree>
-                       <form string="Email History">
-                            <field name="name"/>
-                            <field name="case_id"/>
-                            <separator colspan="4" string="Notes"/>
-                            <field name="note" nolabel="1" colspan="4"/>
-                       </form>
-                    </field>
-                </form>
-            </field>
-        </record>
-
-        <record id="crm_email_gateway_tree" model="ir.ui.view">
-            <field name="name">crm.email.gateway.tree</field>
-            <field name="model">crm.email.gateway</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Email Gateway">
-                    <field name="name"/>
-                    <field name="section_id" />
-                    <field name="server_id" />
-                </tree>
-            </field>
-        </record>
-
-        <record id="crm_email_gateway_server_form" model="ir.ui.view">
-            <field name="name">crm.email.gateway.server.form</field>
-            <field name="model">crm.email.gateway.server</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Email Gateway Server">
-                    <field name="server_type" colspan="4" on_change="onchange_server_type(server_type,ssl)"/>
-                    <field name="name"/>
-                    <field name="port" />
-                    <field name="login" />
-                    <field name="password" password="True"/>
-                    <field name="ssl" on_change="onchange_server_type(server_type,ssl)"/>
-                    <field name="active" />
-
-                </form>
-            </field>
-        </record>
-
-        <record id="crm_email_gateway_server_tree" model="ir.ui.view">
-            <field name="name">crm.email.gateway.server.tree</field>
-            <field name="model">crm.email.gateway.server</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Email Gateway Server">
-                    <field name="name"/>
-                    <field name="port" />
-                    <field name="server_type"/>
-                    <field name="ssl" />
-                </tree>
-            </field>
-        </record>
-
-
-        <record id="crm_email_gateway_act" model="ir.actions.act_window">
-            <field name="name">Email Gateway</field>
-            <field name="res_model">crm.email.gateway</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="crm_email_gateway_tree"/>
-        </record>
-        <menuitem id="crm_email_gateway_menu" name="Email Gateway" parent="next_id_51" action="crm_email_gateway_act" />        
 
     </data>
 </openerp>
