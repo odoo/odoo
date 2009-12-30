@@ -493,7 +493,7 @@ class crm_case(osv.osv):
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
-        'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),
@@ -1105,47 +1105,5 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         return {}
 
 crm_email_add_cc_wizard()
-
-
-class crm_calendar_config_wizard(osv.osv_memory):
-    _name = 'crm.calendar.config_wizard'
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'caldav': fields.boolean('Caldav Properties View', help="Manages the fields required for Caldav Properties.")
-    }
-    
-    def action_create(self, cr, uid, ids, context=None):
-        res = self.read(cr, uid, ids)[0]
-        idref = {}
-        if res['caldav']:
-            for fname in ('view', 'wizard', 'data'):
-                try:
-                    fp = tools.file_open(os.path.join('crm',  'crm_caldav_' + fname + '.xml'))
-                except IOError, e:
-                    fp = None
-                if fp:
-                    tools.convert_xml_import(cr, 'crm', fp, idref, 'init', noupdate=True)
-            cr.commit()
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-crm_calendar_config_wizard()
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -6,7 +6,7 @@
 	-->
 
 	<!--For Meetings-->
-		<record id="crm_case_followuponproposal0" model="crm.case">
+		<record id="crm_case_followuponproposal0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_wong"/>
 			<field eval="1" name="active"/>
 			<field name="partner_id" ref="base.res_partner_maxtor"/>
@@ -23,7 +23,7 @@
 			<field eval="6.3" name="duration"/>
 		</record>
 	
-		<record id="crm_case_initialdiscussion0" model="crm.case">
+		<record id="crm_case_initialdiscussion0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_2"/>
 			<field eval="1" name="active"/>
 			<field name="category2_id" ref="crm.category_meet1"/>
@@ -41,7 +41,7 @@
 			<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
 		</record>
 	
-		<record id="crm_case_discusspricing0" model="crm.case">
+		<record id="crm_case_discusspricing0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_zen"/>
 			<field eval="1" name="active"/>
 			<field name="category2_id" ref="crm.category_meet3"/>
@@ -59,7 +59,7 @@
 			<field eval="time.strftime('%Y-%m-20')" name="date_deadline"/>
 		</record>
 	
-		<record id="crm_case_reviewneeds0" model="crm.case">
+		<record id="crm_case_reviewneeds0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_15"/>
 			<field eval="1" name="active"/>
 			<field name="category2_id" ref="crm.category_meet2"/>
@@ -76,7 +76,7 @@
 			<field eval="time.strftime('%Y-%m-25')" name="date_deadline"/>
 		</record>
 	
-		<record id="crm_case_changesindesigning0" model="crm.case">
+		<record id="crm_case_changesindesigning0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_1"/>
 			<field eval="1" name="active"/>
 			<field name="category2_id" ref="crm.category_meet1"/>
@@ -94,7 +94,7 @@
 			<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
 		</record>
 	
-		<record id="crm_case_updatethedata0" model="crm.case">
+		<record id="crm_case_updatethedata0" model="crm.meeting">
 			<field name="partner_address_id" ref="base.res_partner_address_7"/>
 			<field eval="1" name="active"/>
 			<field name="category2_id" ref="crm.category_meet2"/>

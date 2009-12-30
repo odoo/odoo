@@ -72,10 +72,9 @@
                 <notebook colspan="4">
                 <page string="General">
                     <field name="categ_id" string="Direction" select="1" on_change="onchange_categ_id(categ_id)" required="1"/>
-                    <field name="active" string="Reminder"/>
-                    <label string="Partner:" align="1.0"/>
-                    <group colspan="1">
-                        <field name="partner_id" string="Partner" nolabel="1"/>
+                    <field name="active" string="Reminder"/>                    
+                    <group colspan="2" col="3">
+                        <field name="partner_id" string="Partner"/>
                         <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
                     </group>
                     <field name="partner_address_id" string="Contact"/>

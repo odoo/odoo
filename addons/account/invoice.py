@@ -412,7 +412,12 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_currency_id(self, cr, uid, ids, curr_id):
+    def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
+        if curr_id:
+            currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
+            if currency.company_id != company_id:
+                raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
@@ -1226,8 +1231,12 @@ class account_invoice_line(osv.osv):
 
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-
-        if company.currency_id.id != currency.id and currency.company_id.id == company.id:
+        
+        if not currency.company_id.id == company.id:
+            raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
+        
+        if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
         return res_final

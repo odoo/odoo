@@ -28,11 +28,11 @@ import re
 import time
 import tools
 
-class crm_case(osv.osv):
-    _name = 'crm.case'
-    _inherit = 'crm.case'
-    _description = 'Cases'
-
+class crm_meeting(osv.osv):
+    _name = 'crm.meeting'    
+    _description = "Meeting Cases"
+    _order = "id desc"
+    _inherits = {'crm.case':"inherit_case_id"}    
     __attribute__ = {
         'class' : {'field':'class', 'type':'text'}, 
         'created' : {'field':'create_date', 'type':'datetime'}, # keep none for now
@@ -68,22 +68,7 @@ class crm_case(osv.osv):
 #        'duration' : {'field':'duration'},
         'dtend' : {'field':'date_closed', 'type':'datetime'}, 
         'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'}, 
-    }
-
-    def _get_location(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for case in self.browse(cr, uid, ids):
-            if case.partner_address_id:
-                add = case.partner_address_id
-                st = add.street and add.street+',\n'  or ''
-                st2 = add.street2 and add.street2+',\n'  or ''
-                ct = add.city and add.city+',\n'  or ''
-                zip = add.zip and add.zip or ''
-                country = add.country_id and add.country_id.name+',\n'  or ''
-                res[case.id] = st + st2+ ct + country + zip
-            else:
-                res[case.id] = ''
-        return res
+    }   
 
     def _get_rdates(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -97,44 +82,44 @@ class crm_case(osv.osv):
         return res
 
     _columns = {
+        'inherit_case_id': fields.many2one('crm.case','Case',ondelete='cascade'),
         'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
-                 ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
-        'location' : fields.function(_get_location, method=True, store=True, \
-                                     string='Location', type='text'), 
+                 ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Privacy'), 
+        'location' : fields.char('Location', size=264, help="Gives Location of Meeting"), 
         'freebusy' : fields.text('FreeBusy'), 
         'transparent' : fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
                                           ('OPAQUE', 'OPAQUE')], 'Trensparent'), 
         'caldav_url' : fields.char('Caldav URL', size=264), 
         'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
                  of date/time exceptions for arecurring calendar component."), 
-        'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
+        'exrule' : fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
-        'rrule' : fields.text('Recurrent Rule', readonly=True), 
+        'rrule' : fields.char('Recurrent Rule', size=352), 
         'rdates' : fields.function(_get_rdates, method=True, string='Recurrent Dates', \
                                    store=True, type='text'), 
-       'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
+        'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
-       'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
+        'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
     }
 
-    _defaults = {
-             'caldav_url': lambda *a: 'http://localhost:8080', 
+    _defaults = {             
              'class': lambda *a: 'PUBLIC', 
              'transparent': lambda *a: 'OPAQUE', 
-        }
+    }
     
     
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
         if not context:
             context = {}
-        cr.execute('select c.id as id, c.date as date, alarm.id as alarm_id, alarm.name as name,\
+        cr.execute('select c.id as id, crm_case.date as date, alarm.id as alarm_id, alarm.name as name,\
                                 alarm.trigger_interval, alarm.trigger_duration, alarm.trigger_related, \
-                                alarm.trigger_occurs from crm_case c \
+                                alarm.trigger_occurs from crm_meeting c \
+                                    join crm_case on c.inherit_case_id = crm_case.id \
                                    join crm_caldav_alarm alarm on (alarm.id=c.alarm_id) \
                                where alarm_id is not null and alarm.active=True')
         case_with_alarm = cr.dictfetchall() 
-        case_obj = self.pool.get('crm.case')
+        case_obj = self.pool.get('crm.meeting')
         attendee_obj = self.pool.get('crm.caldav.attendee')
         mail_to = []
         for alarmdata in case_with_alarm:
@@ -180,7 +165,7 @@ class crm_case(osv.osv):
         crm_alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         
-        ical = event_obj.export_ical(cr, uid, crm_data, {'model': 'crm.case'})
+        ical = event_obj.export_ical(cr, uid, crm_data, {'model': 'crm.meeting'})
         caendar_val = ical.serialize()
         caendar_val = caendar_val.replace('"', '').strip()
         return caendar_val
@@ -199,9 +184,6 @@ class crm_case(osv.osv):
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         vals = event_obj.import_ical(cr, uid, file_content)
         for val in vals:
-            # TODO: Select proper section
-            section_id = self.pool.get('crm.case.section').search(cr, uid, [])[0]
-            val.update({'section_id' : section_id})
             is_exists = common.uid2openobjectid(cr, val['id'], self._name )
             val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
@@ -214,44 +196,56 @@ class crm_case(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
             context=None, count=False):
-        res = super(crm_case, self).search(cr, uid, args, offset, 
+        res = super(crm_meeting, self).search(cr, uid, args, offset, 
                 limit, order, context, count)
         return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
+        else:
+            select = ids
         new_ids = []
-        for id in ids:
+        for id in select:
             id = common.caldevIDs2readIDs(id)
             if not id in new_ids:
                 new_ids.append(id)
         if 'case_id' in vals :
             vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
-        res = super(crm_case, self).write(cr, uid, new_ids, vals, context=context)
+        res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
         return res
 
-    def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
-        if not isinstance(select, list): select = [select]
+    def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
+        else:
+            select = ids        
         select = map(lambda x:common.caldevIDs2readIDs(x), select)
-        return super(crm_case, self).browse(cr, uid, select, context, list_class, fields_process)
+        res = super(crm_meeting, self).browse(cr, uid, select, context, list_class, fields_process)        
+        if isinstance(ids, (str, int, long)):
+            return res and res[0] or False
+        return res
 
     def read(self, cr, uid, ids, fields=None, context={},  load='_classic_read'):
         """         logic for recurrent event
-         example : 123-20091111170822"""
+         example : 123-20091111170822"""        
         if context and context.has_key('read'):
-            return super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, \
+            return super(crm_meeting, self).read(cr, uid, ids, fields=fields, context=context, \
                                               load=load)
         if not type(ids) == list :
             # Called from code
-            return super(crm_case, self).read(cr, uid, common.caldevIDs2readIDs(ids), \
+            return super(crm_meeting, self).read(cr, uid, common.caldevIDs2readIDs(ids), \
                                                       fields=fields, context=context, load=load)
         else:
             ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
-        fields.append('date')
-        res = super(crm_case, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+
+        if fields and 'date' not in fields:
+            fields.append('date')
+        res = super(crm_meeting, self).read(cr, uid, ids, fields=fields, context=context, load=load)        
         read_ids = ",".join([str(x) for x in ids])
         if not read_ids:
             return []
-        cr.execute('select id,rrule,rdates from crm_case where id in (%s)' % read_ids)
+        cr.execute('select id,rrule,rdates from crm_meeting where id in (%s)' % read_ids)
         rrules = filter(lambda x: not x['rrule']==None, cr.dictfetchall())
         rdates = []
         if not rrules:
@@ -283,8 +277,8 @@ class crm_case(osv.osv):
                 result += [val1]
         return result
 
-    def copy(self, cr, uid, id, default=None, context={}):
-        return super(crm_case, self).copy(cr, uid, common.caldevIDs2readIDs(id), \
+    def copy(self, cr, uid, id, default=None, context={}):        
+        return super(crm_meeting, self).copy(cr, uid, common.caldevIDs2readIDs(id), \
                                                           default, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -301,16 +295,85 @@ class crm_case(osv.osv):
                             self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
                     else:
                         ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
-                        return super(crm_case, self).unlink(cr, uid, common.caldevIDs2readIDs(ids))
+                        return super(crm_meeting, self).unlink(cr, uid, common.caldevIDs2readIDs(ids))
             else:
-                return super(crm_case, self).unlink(cr, uid, ids)
+                return super(crm_meeting, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
             vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
-        return super(crm_case, self).create(cr, uid, vals, context)
+        return super(crm_meeting, self).create(cr, uid, vals, context)
 
-crm_case()
+
+    def _map_ids(self, method, cr, uid, ids, *args, **argv):
+        case_data = self.browse(cr, uid, ids)
+        new_ids = []
+        for case in case_data:
+            if case.inherit_case_id:
+                new_ids.append(case.inherit_case_id.id)
+        return getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
+
+
+    def onchange_case_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_case_id',cr,uid,ids,*args,**argv)
+    def onchange_partner_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_partner_id',cr,uid,ids,*args,**argv)
+    def onchange_partner_address_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_partner_address_id',cr,uid,ids,*args,**argv)
+    def onchange_categ_id(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
+    def case_close(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
+    def case_open(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_open',cr,uid,ids,*args,**argv)
+    def case_cancel(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
+    def case_reset(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_reset',cr,uid,ids,*args,**argv)
+    
+
+crm_meeting()
+
+
+class crm_meeting_generic_wizard(osv.osv_memory):
+    _name = 'crm.meeting.generic_wizard'
+
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Section', required=True),
+        'user_id': fields.many2one('res.users', 'Responsible'),
+    }
+
+    def _get_default_section(self, cr, uid, context):
+        case_id = context.get('active_id',False)
+        if not case_id:
+            return False
+        case_obj = self.pool.get('crm.meeting')
+        case = case_obj.read(cr, uid, case_id, ['state','section_id'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
+        return case['section_id']
+
+
+    _defaults = {
+        'section_id': _get_default_section
+    }
+    def action_create(self, cr, uid, ids, context=None):
+        case_obj = self.pool.get('crm.meeting')
+        case_id = context.get('active_id',[])
+        res = self.read(cr, uid, ids)[0]
+        case = case_obj.read(cr, uid, case_id, ['state'])
+        if case['state'] in ('done'):
+            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
+        new_case_id = case_obj.copy(cr, uid, case_id, default=
+                                            {
+                                                'section_id':res.get('section_id',False),
+                                                'user_id':res.get('user_id',False)
+                                            }, context=context)        
+        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
+        case_obj.case_close(cr, uid, [case_id])
+        return {}
+
+crm_meeting_generic_wizard()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -63,7 +63,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
 try:
     from service.http_server import reg_http_service,OpenERPAuthProvider
-    if (config.get_misc('webdav','enable',False)):
+    if (config.get_misc('webdav','enable',True)):
         davpath = '/'+config.get_misc('webdav','vdir','webdav')+'/'
         handler = DAVHandler
         handler.verbose = config.get_misc('webdav','verbose',True)

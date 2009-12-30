@@ -309,7 +309,7 @@ class set_rrule_wizard(osv.osv_memory):
         else:
             model = context.get('model')
         obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])[0]
+        res_obj = obj.browse(cr, uid, context['active_id'])
         weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         weekstring = ''
         monthstring = ''
