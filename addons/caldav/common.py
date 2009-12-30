@@ -319,7 +319,7 @@ class set_rrule_wizard(osv.osv_memory):
 
         freq = datas.get('freq')
         if freq == 'None':
-            obj.write(cr, uid, [res_obj.id], {'rrule' : '', 'rdates': ''})
+            obj.write(cr, uid, [res_obj.id], {'rrule' : ''})
             return {}
         if datas.get('interval') <= 0:
             raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
