@@ -125,8 +125,9 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     return html
     
 class rpc_proxy(object):
-    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):        
-        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
+    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
+        self.rpc = xmlrpclib.ServerProxy('http://' + host + ':' + str(port) + '/xmlrpc/' + path)
+#        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))        
         self.user_id = uid
         self.passwd = passwd
         self.dbname = dbname

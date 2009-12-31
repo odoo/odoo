@@ -50,17 +50,23 @@ def _default(self , cr, uid, data, context):
     gateway_pool=pool.get('crm.case.section')    
     sections = gateway_pool.browse(cr, uid, data['ids'], context=context)
     server = []
-#    for section in sections:
-#        for gateway in section.gateway_ids:
-#            if gateway.server_id.active:
-#                server.append(gateway.name or '%s (%s)'%(gateway.server_id.login, gateway.server_id.name) )
+    for section in sections:
+        for gateway in section.gateway_ids:
+            if gateway.server_id.active:
+                server.append(gateway.name or '%s (%s)'%(gateway.server_id.login, gateway.server_id.name) )
     data['form']['server'] = '\n'.join(server)    
     return data['form']
     
 def section_fetch_mail(self , cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    gateway_pool=pool.get('mail.gateway')    
-    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)
+    gateway_ids = []
+    section_pool=pool.get('crm.case.section')    
+    sections = section_pool.browse(cr, uid, data['ids'], context=context)
+    gateway_pool=pool.get('mail.gateway')
+    for section in sections:
+        for gateway in section.gateway_ids:
+            gateway_ids.append(gateway.id)
+    messages = gateway_pool.fetch_mails(cr, uid, ids=gateway_ids, context=context)    
     data['form']['message'] = '\n'.join(messages)    
     return data['form']
 

@@ -99,14 +99,17 @@ class mail_gateway(osv.osv):
             res_model = False
         except Exception, e:
             note = "Error in Parsing Mail: %s " %(str(e))
-            netsvc.Logger().notifyChannel('Emailgate: Parsing mail:%s' % (mailgateway.name or
+            if mailgateway:
+                netsvc.Logger().notifyChannel('Emailgate: Parsing mail:%s' % (mailgateway.name or
                          '%s (%s)'%(mailgateway.server_id.login, mailgateway.server_id.name)), netsvc.LOG_ERROR, str(e))
 
-        mail_history_obj.create(cr, uid, {'name':msg_id, 'res_id': res_id, 'res_model': res_model,'gateway_id':mailgateway.id, 'note':note})
+        mail_history_obj.create(cr, uid, {'name': msg_id, 'res_id': res_id, 'res_model': res_model,'gateway_id': mailgateway.id, 'note': note})
         return res_id, res_model, note
 
     def fetch_mails(self, cr, uid, ids=[], context={}):        
         log_messages = []
+        mailgate_server = False
+        new_messages = []
         for mailgateway in self.browse(cr, uid, ids):
             try :
                 mailgate_server = mailgateway.server_id
@@ -160,7 +163,8 @@ class mail_gateway(osv.osv):
 
             except Exception, e:
                  log_messages.append("Error in Fetching Mail: %s " %(str(e)))
-                 netsvc.Logger().notifyChannel('Emailgate: Fetching mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
+                 if mailgate_server:
+                     netsvc.Logger().notifyChannel('Emailgate: Fetching mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
 
             log_messages.append("-"*25)
             log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))
