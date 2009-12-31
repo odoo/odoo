@@ -901,6 +901,71 @@ class stock_production_lot(osv.osv):
 
 stock_production_lot()
 
+class stock_split_production_lots(osv.osv_memory):
+    _name = "stock.split.production.lots"
+    _description = "Split Production Lots"
+    
+    def _quantity_default_get(self, cr, uid, object=False, field=False, context=None):
+        cr.execute("select %s from %s where id=%s" %(field,object,context.get('active_id')))
+        res = cr.fetchone()[0]
+        return res
+    
+    _columns = {
+        'name': fields.char('Lot Number/Prefix', size=64, required=True),
+        'qty': fields.float('Total Quantity'),
+        'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
+    }
+    _defaults = {
+                 'qty': lambda self,cr,uid,c: self.pool.get('stock.split.production.lots')._quantity_default_get(cr, uid, 'stock_move', 'product_qty',context=c) or 1,
+    }
+    
+    def split_lines(self, cr, uid, ids, context={}):
+        data = self.read(cr, uid, ids[0])
+        prodlot_obj = self.pool.get('stock.production.lot')
+        move_obj = self.pool.get('stock.move')
+        move_browse = move_obj.browse(cr, uid, context['active_id'])
+        
+        quantity = data['qty']
+        if quantity <= 0 or move_browse.product_qty == 0:
+            return {}
+        uos_qty = quantity/move_browse.product_qty*move_browse.product_uos_qty
+
+        quantity_rest = move_browse.product_qty%quantity
+        uos_qty_rest = quantity_rest/move_browse.product_qty*move_browse.product_uos_qty
+    
+        update_val = {
+            'product_qty': quantity,
+            'product_uos_qty': uos_qty,
+        }
+        
+        new_move = []
+        for idx in range(int(move_browse.product_qty//quantity)):
+            if idx:
+                current_move = move_obj.copy(cr, uid, move_browse.id, {'state': move_browse.state})
+                new_move.append(current_move)
+            else:
+                current_move = move_browse.id
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': data['name'], 'ref': '%d'%idx}, {'product_id': move_browse.product_id.id})
+            update_val['prodlot_id'] = new_prodlot
+            move_obj.write(cr, uid, [current_move], update_val)
+        
+        if quantity_rest > 0:
+            idx = int(move_browse.product_qty//quantity)
+            update_val['product_qty'] = quantity_rest
+            update_val['product_uos_qty'] = uos_qty_rest
+            if idx:
+                current_move = move_obj.copy(cr, uid, move_browse.id, {'state': move_browse.state})
+                new_move.append(current_move)
+            else:
+                current_move = move_browse.id
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': data['name'], 'ref': '%d'%idx}, {'product_id': move_browse.product_id.id})
+            update_val['prodlot_id'] = new_prodlot
+            move_obj.write(cr, uid, [current_move], update_val)
+        
+        return {}
+
+stock_split_production_lots()
+
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'

@@ -481,6 +481,32 @@
         =============================
         Picking
         =============================
+    	<record id="view_stock_split_production_lots" model="ir.ui.view">
+            <field name="name">Split Production Lots</field>
+            <field name="model">stock.split.production.lots</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Split Production Lots">
+                	<group col="4" colspan="4">
+	                   <field name="name"/>
+	                   <field name="qty" attrs="{'readonly':[('action','!=','split')]}"/>
+	                   <field name="action" colspan="4"/>
+                    </group>
+                    <newline/>
+                    <button name="split_lines" string="Ok" type="object" icon="gtk-go-forward"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_stock_split_production_lots" model="ir.actions.act_window">
+            <field name="name">Split Production Lots</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.split.production.lots</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -549,7 +575,11 @@
                                     <field groups="base.group_extended" name="tracking_id" select="2"/>
                                     <newline/>
                                     <label/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                                    <!--button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/-->
+									<button
+								       	string="Split in Production Lots"
+								       	name="%(stock.action_view_stock_split_production_lots)d"
+								       	icon="gtk-stock" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
@@ -824,7 +854,11 @@
                                         on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <label/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                                    <!--button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/-->
+									<button
+								       	string="Split in Production Lots"
+								       	name="%(stock.action_view_stock_split_production_lots)d"
+								       	icon="gtk-stock" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
@@ -980,7 +1014,11 @@
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <newline/>
                                     <label/>
-                                    <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                                    <!--button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/-->
+									<button
+								       	string="Split in Production Lots"
+								       	name="%(stock.action_view_stock_split_production_lots)d"
+								       	icon="gtk-stock" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
