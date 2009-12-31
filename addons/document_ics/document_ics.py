@@ -140,7 +140,7 @@ class document_directory_content(osv.osv):
                 idomain[d[0]]=d[2]
 
         fobj = self.pool.get(content.object_id.model)
-        fobj.import_cal(cr, uid, base64.encodestring(data), context=context)        
+        fobj.import_cal(cr, uid, base64.encodestring(data), context=ctx)        
         return True
 
     def process_read(self, cr, uid, node, context=None):
@@ -158,8 +158,8 @@ class document_directory_content(osv.osv):
             domain.append(('id','=',node.act_id))
         # print "process read clause:",domain
         ids = obj_class.search(cr, uid, domain, context=ctx)
-        context.update({'model': content.object_id.model})
-        s = obj_class.export_cal(cr, uid, ids, context=context)
+        ctx.update({'model': content.object_id.model})
+        s = obj_class.export_cal(cr, uid, ids, context=ctx)
         return s
 document_directory_content()
 
