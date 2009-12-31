@@ -27,6 +27,7 @@ import base64
 import re
 import time
 import tools
+from tools.translate import _
 
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'    
@@ -344,17 +345,29 @@ class crm_meeting_generic_wizard(osv.osv_memory):
         case_obj = self.pool.get('crm.meeting')
         case_id = context.get('active_id',[])
         res = self.read(cr, uid, ids)[0]
-        case = case_obj.read(cr, uid, case_id, ['state'])
-        if case['state'] in ('done'):
+        case = case_obj.browse(cr, uid, case_id)
+        if case.state in ('done'):
             raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
         new_case_id = case_obj.copy(cr, uid, case_id, default=
                                             {
                                                 'section_id':res.get('section_id',False),
-                                                'user_id':res.get('user_id',False)
-                                            }, context=context)        
-        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
+                                                'user_id':res.get('user_id',False),
+                                                'case_id' : case.inherit_case_id.id
+                                            }, context=context)                
         case_obj.case_close(cr, uid, [case_id])
-        return {}
+        data_obj = self.pool.get('ir.model.data')
+        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+        search_view = data_obj.read(cr, uid, result, ['res_id'])
+        new_case = case_obj.read(cr, uid, new_case_id, ['id'])                
+        value = {            
+            'name': _('Meetings'),
+            'view_type': 'form',
+            'view_mode': 'calendar, tree, form',
+            'res_model': 'crm.meeting',                      
+            'type': 'ir.actions.act_window',
+            'search_view_id': search_view['res_id']
+        }
+        return value
 
 crm_meeting_generic_wizard()
 

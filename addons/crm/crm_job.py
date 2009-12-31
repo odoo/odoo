@@ -50,6 +50,8 @@ class crm_job(osv.osv):
 
     def onchange_case_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_case_id',cr,uid,ids,*args,**argv)
+    def stage_next(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('stage_next',cr,uid,ids,*args,**argv)
     def onchange_partner_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_partner_id',cr,uid,ids,*args,**argv)
     def onchange_partner_address_id(self, cr, uid, ids, *args, **argv):
