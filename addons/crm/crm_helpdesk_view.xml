@@ -6,6 +6,34 @@
     # Helpdesk Support
     # ------------------------------------------------------
 
+    <record model="ir.ui.view" id="crm_helpdesk_assign_wizard_form">
+        <field name="name">crm.helpdesk.assign_wizard.form</field>
+        <field name="model">crm.helpdesk.assign_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="To Assign">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_crm_helpdesk_assign_wizard" model="ir.actions.act_window">
+        <field name="name">To Assign</field>
+        <field name="res_model">crm.opportunity.assign_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_helpdesk_assign_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Form</field>
         <field name="model">crm.case</field>
@@ -20,7 +48,7 @@
                     <field name="priority"/>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                        <button string="Assign" name="%(action_crm_helpdesk_assign_wizard)d"  type="action" />
                     </group>
                 </group>
                 <notebook colspan="4">

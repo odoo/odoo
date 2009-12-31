@@ -19,20 +19,20 @@
 #
 ##############################################################################
 
-#import crm_wizard
+import crm_opportunity_wizard
+import crm_lead_wizard
+import crm_job_wizard
+import crm_phonecall_wizard
+
+
 import wizard_crm_send_email
 import wizard_crm_new_send_email
 import wizard_fetch_mail
 import wizard_cal_export
 import wizard_cal_import
 import wizard_cal_subscribe
-
-import meeting_planify
-import wizard_partner_create
-import wizard_opportunity_set
-import schedule_phone_call
 import wizard_history_event
-import wizard_partner_opportunity
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

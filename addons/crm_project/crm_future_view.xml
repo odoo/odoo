@@ -4,12 +4,12 @@
 <!--    <menuitem name="CRM &amp; SRM" icon="terp-crm" id="menu_crm1"/>    -->
 
     # ------------------------------------------------------
-    # Bug Tracking
+    # Future Request
     # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="crm_bug_assign_wizard_form">
-        <field name="name">crm.project.bug.assign_wizard.form</field>
-        <field name="model">crm.project.bug.assign_wizard</field>
+    <record model="ir.ui.view" id="crm_future_assign_wizard_form">
+        <field name="name">crm.project.future.assign_wizard.form</field>
+        <field name="model">crm.project.future.assign_wizard</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="To Assign">
@@ -26,21 +26,21 @@
             </form>
         </field>
     </record>
-    <record id="action_crm_bug_assign_wizard" model="ir.actions.act_window">
+    <record id="action_crm_future_assign_wizard" model="ir.actions.act_window">
         <field name="name">To Assign</field>
-        <field name="res_model">crm.project.bug.assign_wizard</field>
+        <field name="res_model">crm.project.future.assign_wizard</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm_bug_assign_wizard_form"/>
+        <field name="view_id" ref="crm_future_assign_wizard_form"/>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_form_view">
-        <field name="name">CRM - Bug Tracker Form</field>
-        <field name="model">crm.project.bug</field>
+    <record model="ir.ui.view" id="crm_case_future_form_view">
+        <field name="name">CRM - Future Request Form</field>
+        <field name="model">crm.project.future</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Bug Tracker Form">
+            <form string="Future Request Form">
                 <group colspan="4" col="6">
                   	<field name="project_id"/>
                     <field name="name" string="Title" colspan="2"/>
@@ -64,7 +64,7 @@
                     <field name="priority" string="Severity"/>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(action_crm_bug_assign_wizard)d"  type="action" />
+                        <button string="Assign" name="%(action_crm_future_assign_wizard)d"  type="action" />
                     </group>
                     <newline/>
                     <separator string= "Description" colspan="4"/>
@@ -150,9 +150,9 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="crm_case_tree_view">
-        <field name="name">CRM - Bug Tracker Tree</field>
-        <field name="model">crm.project.bug</field>
+    <record model="ir.ui.view" id="crm_case_future_tree_view">
+        <field name="name">CRM - Future Request Tree</field>
+        <field name="model">crm.project.future</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Bugs Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -175,57 +175,53 @@
         </field>
     </record>
 
-    <record id="view_crm_case_bugs_filter" model="ir.ui.view">
-        <field name="name">CRM - Bug Tracker Search</field>
-        <field name="model">crm.project.bug</field>
+    <record id="view_crm_case_future_filter" model="ir.ui.view">
+        <field name="name">CRM - Future Request Search</field>
+        <field name="model">crm.project.future</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Search Bugs">
+            <search string="Search Future Requests">
                <group col="7" colspan="1">
-                   <filter icon="gtk-apply" string="Fixed Bugs"
+                   <filter icon="gtk-apply" string="Fixed Future Requests"
                    	domain="[('stage_id.name','=','Fixed')]"
-                   	separator="1" help="All Fixed Bugs"
+                   	separator="1" help="All Fixed Future Requests"
                    />
-                   <filter icon="gtk-media-pause" string="Waiting Bugs"
+                   <filter icon="gtk-media-pause" string="Waiting Response"
                    	domain="[('stage_id.name','=','Awaiting Response')]"
-                   	separator="1" help="All Waiting Bugs"
-                   />
-                   <filter icon="gtk-media-forward" string="Future Bugs"
-                   	domain="[('stage_id.name','=','Future')]"
-                   	separator="1" help="All Future Bugs"
-                   />
+                   	separator="1" help="All Future Requests which are Waiting for Response"
+                   />                   
                    <separator orientation="vertical"/>
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
                    	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                   	help="Todays's bugs"
+                   	help="Todays's Future Requests"
                    />
                    <filter icon="gtk-media-rewind"
                    	string="    7 Days    " separator="1"
                    	domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                   	help="Bugs during last 7 days"
+                   	help="Future Requests during last 7 days"
                    />
                </group>
                <separator orientation="vertical"/>
                <group col="4" colspan="2">
                		<field name="name" select='1' string="Subject"/>
                    <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Bugs"/>
+                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Future Requests" default="1"/>
+                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Future Requests"/>
                    </field>
                    <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Bugs"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
-                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Bugs"/>
+                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Future Requests"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Future Requests"/>
+                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Future Requests"/>
                    </field>
                </group>
             </search>
          </field>
-    </record>   
+    </record>    
 
-     <record model="ir.ui.view" id="crm_case_calendar_view">
-        <field name="name">CRM - Bug Tracker Calendar</field>
-        <field name="model">crm.project.bug</field>
+     <record model="ir.ui.view" id="crm_case_future_calendar_view">
+        <field name="name">CRM - Future Request Calendar</field>
+        <field name="model">crm.project.future</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">

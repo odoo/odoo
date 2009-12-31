@@ -22,4 +22,5 @@
 
 
 import crm_project_bug
+import crm_project_future
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

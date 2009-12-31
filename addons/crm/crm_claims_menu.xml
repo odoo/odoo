@@ -6,11 +6,10 @@
     ######################## CLAIMS (menu) ###########################
     <record model="ir.actions.act_window" id="crm_case_categ_claim0">
         <field name="name">All Claims</field>
-        <field name="res_model">crm.case</field>
+        <field name="res_model">crm.claim</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
-        <field name="view_id" ref="crm_case_claims_tree_view"/>
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_claims'))+')]'"/>
+        <field name="view_id" ref="crm_case_claims_tree_view"/>        
         <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="crm.view_crm_case_claims_filter"/>        
     </record>
