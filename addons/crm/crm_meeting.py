@@ -271,7 +271,7 @@ class crm_meeting(osv.osv):
                 date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
                 for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
-                                            ['date', 'rdates', 'rrule', 'exdate']):
+                                            ['date', 'rrule', 'exdate']):
                     if record['rrule']:
                         exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
                                     ''.join((re.compile('\d')).findall(date_new)) + 'Z'
