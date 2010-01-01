@@ -21,35 +21,25 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<notebook position="inside">
-            		<page string="CalDav Properties">
-            			<field name="class"/>
-            			<field name="caldav_url" widget="url"/>
-            			<field name="alarm_id"/>
-            			<newline/>
-            			<separator string="Location" colspan="4"/>
-            			<field name="location" colspan="4" nolabel="1"/>
-            			<group string="Recurrency Details" col="5" colspan="4">
-            				<button string="Change RRule"
-            					name="%(caldav.action_view_caldav_set_rrule_wizard)d"
-            					icon="gtk-save-as" type="action" colspan="4"
-            					context="{'model' : 'project.task'}"/>
-            				<group col="1" colspan="2">
-            					<separator string="Recurrenet Rule" />
-            					<field name="rrule" nolabel="1" />
-            					<separator string="Exception Rule" />
-            					<field name="exrule" nolabel="1" />
-            				</group>
-            				<group col="1" colspan="2">
-            					<separator string="Exception Dates" />
-            					<field name="exdate" nolabel="1" />
-            				</group>
-            			</group>
-            		</page>
-            		<page string="Attendee">
-            			<separator string="Attendee" colspan="4"/>
-            			<field name="attendee_ids" colspan="4" nolabel="1"/>
-            		</page>
-            	</notebook>
+					<page string="Calendar Properties">
+						<field name="class"/>
+						<field name="caldav_url" widget="url"/>
+						<field name="location"/>
+						<field name="alarm_id"/>
+						<newline/>
+						<field name="rrule" colspan="2"/>
+						<button string="Change RRule" name="97"
+							icon="gtk-save-as" type="action" colspan="2"
+							context="{'model' : 'project.task'}"/>
+						<field name="exrule" colspan="4"/>
+						<separator string="Exception Dates" colspan="4"/>
+						<field name="exdate" nolabel="1"  colspan="4"/>
+					</page>
+					<page string="Attendee Details">
+						<separator string="Attendee" colspan="4"/>
+						<field name="attendee_ids" colspan="4" nolabel="1"/>
+					</page>
+				</notebook>
 			</field>
 		</record>	
 		

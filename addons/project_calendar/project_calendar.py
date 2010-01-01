@@ -31,17 +31,17 @@ class project_task(osv.osv):
     _inherit = "project.task"
 
     _columns = {
-                 'class': fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
-                                             ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Class'), 
-                'location': fields.text('Location'), 
-                'rrule': fields.text('Recurrent Rule'), 
+                'class': fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
+                                             ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Privacy'), 
+                'location' : fields.char('Location', size=264, help="Gives Location of Task"), 
+                'rrule' : fields.char('Recurrent Rule', size=352),
                 'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
                                  of date/time exceptions for arecurring calendar component."), 
-                'exrule' : fields.text('Exception Rule', help="defines a rule or repeating pattern\
+                'exrule' : fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
                'attendee_ids': fields.many2many('crm.caldav.attendee', 'task_attendee_rel', 'case_id', \
                                               'attendee_id', 'Attendees'), 
-               'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
+               'alarm_id': fields.many2one('crm.caldav.alarm', 'Reminder'), 
                'caldav_url': fields.char('Caldav URL', size=34), 
     }
     
