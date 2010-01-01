@@ -172,9 +172,13 @@ class CalDAV(object):
                     continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
-        vals = map_data(cr, uid, self)
-        if vals: res.append(vals)
-        self.ical_reset('value')
+            if child.name.lower() in ('vevent', 'vtodo'):
+                vals = map_data(cr, uid, self)
+            else:
+                vals = {}
+                continue
+            if vals: res.append(vals)
+            self.ical_reset('value')
         return res
 
 
