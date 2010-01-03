@@ -240,10 +240,10 @@ class virtual_wizard(web_services.wizard):
     def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
         if wiz_id not in self.wiz_uid:
             # TODO: To Check why need it
-            if wiz_id == 1:
-                wiz_name ='base_setup.base_setup'
-            if wiz_id == 2:
-                wiz_name ='module.upgrade'
+            #if wiz_id == 1:
+            #    wiz_name ='base_setup.base_setup'
+            #if wiz_id == 2:
+            #    wiz_name ='module.upgrade'
             super(virtual_wizard,self).exp_create(db, uid, wiz_name, datas)
         new_ids = []
         if 'id' in datas:
