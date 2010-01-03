@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,30 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import project
-import company
-import project_mailgate
-import report
-import wizard
 
-
+{
+    'name': 'eMail Gateway',
+    'version': '1.0',
+    'category': 'Generic Modules/eMail Gate',
+    'description': """The generic email gateway system for the synchronisation interface
+between mails and Open Objects.
+""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'process'],
+    'init_xml': ['mail_gateway_data.xml',],
+    'update_xml': [
+        'mail_gateway_wizard.xml',        
+        'mail_gateway_view.xml',                
+        'security/ir.model.access.csv',        
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': None,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

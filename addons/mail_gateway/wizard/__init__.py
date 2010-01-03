@@ -19,11 +19,7 @@
 #
 ##############################################################################
 
-import project
-import company
-import project_mailgate
-import report
-import wizard
+import wizard_fetch_mail
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

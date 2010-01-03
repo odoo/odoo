@@ -42,12 +42,19 @@ class crm_helpdesk(osv.osv):
     }
     
     def _map_ids(self, method, cr, uid, ids, *args, **argv):
-        case_data = self.browse(cr, uid, ids)
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
+        else:
+            select = ids            
+        case_data = self.browse(cr, uid, select)
         new_ids = []
         for case in case_data:
             if case.inherit_case_id:
                 new_ids.append(case.inherit_case_id.id)
-        return getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
+        res = getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
+        if isinstance(ids, (str, int, long)) and isinstance(res, list):
+            return res and res[0] or False
+        return res
 
 
     def onchange_case_id(self, cr, uid, ids, *args, **argv):
@@ -67,7 +74,29 @@ class crm_helpdesk(osv.osv):
     def case_reset(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_reset',cr,uid,ids,*args,**argv)
     
+    def msg_new(self, cr, uid, msg):        
+        mailgate_obj = self.pool.get('mail.gateway')
+        msg_body = mailgate_obj.msg_body_get(msg)
+        data = {
+            'name': msg['Subject'],            
+            'email_from': msg['From'],
+            'email_cc': msg['Cc'],            
+            'user_id': False,
+            'description': msg_body['body'],
+            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
+        }
+        res = mailgate_obj.partner_get(cr, uid, msg['From'])
+        if res:
+            data.update(res)
+        res = self.create(cr, uid, data)        
+        return res
 
+    def msg_update(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('msg_update',cr, uid, ids, *args, **argv)
+    def emails_get(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('emails_get',cr, uid, ids, *args, **argv)
+    def msg_send(self, cr, uid, ids, *args, **argv):        
+        return self._map_ids('msg_send',cr, uid, ids, *args, **argv) 
 
 crm_helpdesk()
 
