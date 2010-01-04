@@ -1,14 +1,14 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* account
+# 	* account
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:33+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-01-04 11:36+0530\n"
+"Last-Translator: Anup <ach@tinyerp.co.in>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,9 +67,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
-msgid ""
-"Specified Journal does not have any account move entries in draft state for "
-"this period"
+msgid "Specified Journal does not have any account move entries in draft state for this period"
 msgstr ""
 
 #. module: account
@@ -79,9 +77,7 @@ msgstr "Pasirinkti pranešimą"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
-msgid ""
-"This account will be used to value incoming stock for the current product "
-"category"
+msgid "This account will be used to value incoming stock for the current product category"
 msgstr ""
 
 #. module: account
@@ -174,10 +170,7 @@ msgstr "Patvirtinti sąskaitų juodraščius"
 
 #. module: account
 #: help:account.payment.term.line,days2:0
-msgid ""
-"Day of the month, set -1 for the last day of the current month. If it's "
-"positive, it gives the day of the next month. Set 0 for net days (otherwise "
-"it's based on the beginning of the month)."
+msgid "Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."
 msgstr ""
 
 #. module: account
@@ -212,8 +205,7 @@ msgstr "Norėdami naudoti sąnaudų sąskaitą, palikite tuščią"
 #, python-format
 msgid ""
 "You can not modify a posted entry of this journal !\n"
-"You should set the journal to allow cancelling entries if you want to do "
-"that."
+"You should set the journal to allow cancelling entries if you want to do that."
 msgstr ""
 
 #. module: account
@@ -299,21 +291,13 @@ msgstr "Apskaitos įrašai-"
 
 #. module: account
 #: help:account.journal,view_id:0
-msgid ""
-"Gives the view used when writing or browsing entries in this journal. The "
-"view tell Open ERP which fields should be visible, required or readonly and "
-"in which order. You can create your own view for a faster encoding in each "
-"journal."
+msgid "Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."
 msgstr ""
 
 #. module: account
 #: help:account.invoice,date_due:0
 #: help:account.invoice,payment_term:0
-msgid ""
-"If you use payment terms, the due date will be computed automatically at the "
-"generation of accounting entries. If you keep the payment term and the due "
-"date empty, it means direct payment. The payment term may compute several "
-"due dates, for example 50% now, 50% in one month."
+msgid "If you use payment terms, the due date will be computed automatically at the generation of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."
 msgstr ""
 
 #. module: account
@@ -505,10 +489,7 @@ msgstr "Didžiosios knygos įrašas"
 
 #. module: account
 #: rml:account.overdue:0
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"departement at +32 81 81 37 00."
+msgid "Would your payment have been carried out after this mail was sent, please consider the present one as void. Do not hesitate to contact our accounting departement at +32 81 81 37 00."
 msgstr ""
 
 #. module: account
@@ -552,6 +533,7 @@ msgstr "Banko sugretinimas"
 
 #. module: account
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: field:account.model,ref:0
 #: field:account.move,ref:0
 #: rml:account.overdue:0
@@ -566,9 +548,7 @@ msgstr ""
 
 #. module: account
 #: help:account.tax.template,include_base_amount:0
-msgid ""
-"Set if the amount of tax must be included in the base amount before "
-"computing the next taxes."
+msgid "Set if the amount of tax must be included in the base amount before computing the next taxes."
 msgstr ""
 
 #. module: account
@@ -648,12 +628,8 @@ msgstr "Taip"
 
 #. module: account
 #: help:account.payment.term.line,days:0
-msgid ""
-"Number of days to add before computation of the day of month.If Date=15/01, "
-"Number of Days=22, Day of Month=-1, then the due date is 28/02."
-msgstr ""
-"Skaičius dienų, kuris pridedamas prieš skaičiuojant prie mėnesio. Jeigu data "
-"01.15, dienų skaičius=22, mėnesio diena=-1, tai apmokėjimo data 02.28."
+msgid "Number of days to add before computation of the day of month.If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."
+msgstr "Skaičius dienų, kuris pridedamas prieš skaičiuojant prie mėnesio. Jeigu data 01.15, dienų skaičius=22, mėnesio diena=-1, tai apmokėjimo data 02.28."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -673,6 +649,7 @@ msgstr "Spausdinimo data"
 
 #. module: account
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 msgid "Mvt"
 msgstr ""
 
@@ -695,12 +672,8 @@ msgstr "Įrašo valdikliai"
 
 #. module: account
 #: help:account.model.line,sequence:0
-msgid ""
-"The sequence field is used to order the resources from lower sequences to "
-"higher ones"
-msgstr ""
-"Sekos laukas naudojamas surikiuoti resursus nuo mažiausios sekos iki "
-"aukščiausios."
+msgid "The sequence field is used to order the resources from lower sequences to higher ones"
+msgstr "Sekos laukas naudojamas surikiuoti resursus nuo mažiausios sekos iki aukščiausios."
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -748,12 +721,8 @@ msgstr "Jūs negalite pridėti/keisti įrašų uždarytame žurnale."
 #. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
-msgid ""
-"You can not do this modification on a reconciled entry ! Please note that "
-"you can just change some non important fields !"
-msgstr ""
-"Jūs negalite atlikti pakeitimų sugretintame įraše ! Leidžiami keisti tik "
-"nesvarbūs laukeliai !"
+msgid "You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !"
+msgstr "Jūs negalite atlikti pakeitimų sugretintame įraše ! Leidžiami keisti tik nesvarbūs laukeliai !"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,init_full,writeoff:0
@@ -957,9 +926,7 @@ msgstr "Sąskaitos pajamos ir išlaidos pagal žurnalą"
 
 #. module: account
 #: help:account.account.template,user_type:0
-msgid ""
-"These types are defined according to your country. The type contain more "
-"information about the account and it's specificities."
+msgid "These types are defined according to your country. The type contain more information about the account and it's specificities."
 msgstr ""
 
 #. module: account
@@ -1056,12 +1023,8 @@ msgstr "Nauji fiskaliniai metai"
 
 #. module: account
 #: help:account.tax,tax_group:0
-msgid ""
-"If a default tax is given in the partner it only overrides taxes from "
-"accounts (or products) in the same group."
-msgstr ""
-"Jeigu prie kontrahento nurodyti mokesčiai, jie turi didesnę pirmenybę negu "
-"mokesčiai nurodyti prie sąskaitos arba produkto."
+msgid "If a default tax is given in the partner it only overrides taxes from accounts (or products) in the same group."
+msgstr "Jeigu prie kontrahento nurodyti mokesčiai, jie turi didesnę pirmenybę negu mokesčiai nurodyti prie sąskaitos arba produkto."
 
 #. module: account
 #: wizard_field:account.open_closed_fiscalyear,init,fyear_id:0
@@ -1237,12 +1200,8 @@ msgstr "Spausdinti analitinius žurnalus"
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
-msgid ""
-"The sequence field is used to order the payment term lines from the lowest "
-"sequences to the higher ones"
-msgstr ""
-"Šis sekos laukas naudojamas rikiuoti mokėjimo terminų eilutes nuo žemiausio "
-"iki aukščiausio"
+msgid "The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"
+msgstr "Šis sekos laukas naudojamas rikiuoti mokėjimo terminų eilutes nuo žemiausio iki aukščiausio"
 
 #. module: account
 #: field:account.bank.statement.reconcile,total_new:0
@@ -1371,12 +1330,7 @@ msgstr "Tel.:"
 
 #. module: account
 #: help:account.account,currency_mode:0
-msgid ""
-"This will select how the current currency rate for outgoing transactions is "
-"computed. In most countries the legal method is \"average\" but only a few "
-"software systems are able to manage this. So if you import from another "
-"software system you may have to use the rate at date. Incoming transactions "
-"always use the rate at date."
+msgid "This will select how the current currency rate for outgoing transactions is computed. In most countries the legal method is \"average\" but only a few software systems are able to manage this. So if you import from another software system you may have to use the rate at date. Incoming transactions always use the rate at date."
 msgstr ""
 
 #. module: account
@@ -1402,8 +1356,7 @@ msgstr "Sugretinti su nurašymu"
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
 #, python-format
-msgid ""
-"The expected balance (%.2f) is different than the computed one. (%.2f)"
+msgid "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr "Tikėtinas balansas (%.2f) skirtingas nuo apskaičiuotojo. (%.2f)"
 
 #. module: account
@@ -1528,22 +1481,14 @@ msgstr "Mokesčio skaičiavimo metodas"
 #. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
-msgid ""
-"You can not do this modification on a confirmed entry ! Please note that you "
-"can just change some non important fields !"
-msgstr ""
-"Jūs negalite atlikti pakeitimų patvirtintame įraše ! Leidžiami keisti tik "
-"nesvarbūs laukeliai !"
+msgid "You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !"
+msgstr "Jūs negalite atlikti pakeitimų patvirtintame įraše ! Leidžiami keisti tik nesvarbūs laukeliai !"
 
 #. module: account
 #: wizard_view:account.move.line.unreconcile,init:0
 #: wizard_view:account.reconcile.unreconcile,init:0
-msgid ""
-"If you unreconciliate transactions, you must also verify all the actions "
-"that are linked to those transactions because they will not be disable"
-msgstr ""
-"Jeigu Jūs norite atšaukti įrašų sugretinimą, Jūs turite atšaukti susijusius "
-"veiksmus su šiais įrašais."
+msgid "If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"
+msgstr "Jeigu Jūs norite atšaukti įrašų sugretinimą, Jūs turite atšaukti susijusius veiksmus su šiais įrašais."
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -1574,8 +1519,7 @@ msgstr "Sukurti įrašus"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Cannot create invoice move on centralised journal"
-msgstr ""
-"Negalima sukurti sąskaitos faktūros panaudojant centralizuotą žurnalą."
+msgstr "Negalima sukurti sąskaitos faktūros panaudojant centralizuotą žurnalą."
 
 #. module: account
 #: wizard_field:account.automatic.reconcile,init,journal_id:0
@@ -1998,11 +1942,8 @@ msgstr "Toliau"
 
 #. module: account
 #: help:res.partner,property_account_position:0
-msgid ""
-"The fiscal position will determine taxes and the accounts used for the the "
-"partner."
-msgstr ""
-"Fiskalinė pozicija padės nustatyti mokesčius ir apskaitą kontrahentams."
+msgid "The fiscal position will determine taxes and the accounts used for the the partner."
+msgstr "Fiskalinė pozicija padės nustatyti mokesčius ir apskaitą kontrahentams."
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -2134,8 +2075,7 @@ msgstr "Kontrahento nuoroda į šią sąskaitą faktūrą"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Cannot delete invoice(s) that are already opened or paid !"
-msgstr ""
-"Negalima trinti sąskaitų faktūrų, kurios yra atidarytos arba apmokėtos !"
+msgstr "Negalima trinti sąskaitų faktūrų, kurios yra atidarytos arba apmokėtos !"
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,sortbydate:0
@@ -2239,18 +2179,14 @@ msgstr "Mokesčio pavadinimas"
 
 #. module: account
 #: help:account.journal,entry_posted:0
-msgid ""
-"Check this box if you don't want new account moves to pass through the "
-"'draft' state and instead goes directly to the 'posted state' without any "
-"manual validation."
-msgstr ""
-"Pažymėkite šį laukelį, jeigu Jūs norite, kad sąskaitos įrašai neturėtų "
-"juodraščio būsenos, o iš karto būtų patvirtinti be jokių rankinių operacijų."
+msgid "Check this box if you don't want new account moves to pass through the 'draft' state and instead goes directly to the 'posted state' without any manual validation."
+msgstr "Pažymėkite šį laukelį, jeigu Jūs norite, kad sąskaitos įrašai neturėtų juodraščio būsenos, o iš karto būtų patvirtinti be jokių rankinių operacijų."
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
 #: field:account.bank.statement.reconcile,partner_id:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: field:account.invoice,partner_id:0
 #: field:account.move,partner_id:0
 #: wizard_field:account.partner.balance.report,init,result_selection:0
@@ -2261,12 +2197,8 @@ msgstr "Partneris"
 
 #. module: account
 #: help:account.invoice,number:0
-msgid ""
-"Unique number of the invoice, computed automatically when the invoice is "
-"created."
-msgstr ""
-"Unikalus sąskaitos faktūros numeris, automatiškai priskiriamas kai sąskaita "
-"faktūra sukuriama."
+msgid "Unique number of the invoice, computed automatically when the invoice is created."
+msgstr "Unikalus sąskaitos faktūros numeris, automatiškai priskiriamas kai sąskaita faktūra sukuriama."
 
 #. module: account
 #: rml:account.invoice:0
@@ -2322,6 +2254,7 @@ msgstr "Praeitis"
 #: field:account.bank.statement.reconcile,total_currency:0
 #: field:account.bank.statement.reconcile,total_second_currency:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.journal,currency:0
 #: field:account.model.line,currency_id:0
@@ -2440,13 +2373,8 @@ msgstr "Konfigūracijos klaida!"
 
 #. module: account
 #: rml:account.overdue:0
-msgid ""
-"Exception made of a mistake of our side, it seems that the following bills "
-"stay unpaid. Please, take appropriate measures in order to carry out this "
-"payment in the next 8 days."
-msgstr ""
-"Sekančios sąskaitos yra neapmokėtos. Prašome imtis atitinkamų priemonių ir "
-"apmokėti sąskaitas per ateinančias 8 dienas."
+msgid "Exception made of a mistake of our side, it seems that the following bills stay unpaid. Please, take appropriate measures in order to carry out this payment in the next 8 days."
+msgstr "Sekančios sąskaitos yra neapmokėtos. Prašome imtis atitinkamų priemonių ir apmokėti sąskaitas per ateinančias 8 dienas."
 
 #. module: account
 #: rml:account.invoice:0
@@ -2526,9 +2454,7 @@ msgstr "2"
 #. module: account
 #: wizard_view:account.chart,init:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
-msgstr ""
-"(Jeigu nenurodysite fiskalinių metų, bus pasirinkti visi atviri fiskaliniai "
-"metai)"
+msgstr "(Jeigu nenurodysite fiskalinių metų, bus pasirinkti visi atviri fiskaliniai metai)"
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -2542,6 +2468,7 @@ msgstr "Deklaruojama mokesčių suma"
 #: field:account.bank.statement.line,date:0
 #: field:account.bank.statement.reconcile,name:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: selection:account.general.ledger.report,checktype,sortbydate:0
 #: rml:account.journal.period.print:0
 #: field:account.move,date:0
@@ -2589,8 +2516,7 @@ msgstr "Dokumentų įrašai"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "The journal must have default credit and debit account"
-msgstr ""
-"Šis žurnalas privalo turėti numatytąsias kreditinę ir debetinę sąskaitą"
+msgstr "Šis žurnalas privalo turėti numatytąsias kreditinę ir debetinę sąskaitą"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_template_form
@@ -2658,12 +2584,8 @@ msgstr "Sąskaitos Nr."
 
 #. module: account
 #: help:account.tax,child_depend:0
-msgid ""
-"Set if the tax computation is based on the computation of child taxes rather "
-"than on the total amount."
-msgstr ""
-"Nurodoma, ar mokesčiai apskaičiuojami remiantis žemesniųjų mokesčių "
-"apskaičiuotąja verte ar remiantis bendrąją suma."
+msgid "Set if the tax computation is based on the computation of child taxes rather than on the total amount."
+msgstr "Nurodoma, ar mokesčiai apskaičiuojami remiantis žemesniųjų mokesčių apskaičiuotąja verte ar remiantis bendrąją suma."
 
 #. module: account
 #: rml:account.central.journal:0
@@ -2672,9 +2594,7 @@ msgstr "Žurnalo kodas"
 
 #. module: account
 #: help:account.tax,applicable_type:0
-msgid ""
-"If not applicable (computed through a Python code), the tax won't appear on "
-"the invoice."
+msgid "If not applicable (computed through a Python code), the tax won't appear on the invoice."
 msgstr ""
 
 #. module: account
@@ -2895,11 +2815,8 @@ msgstr "Mokėjimo nurodymas"
 
 #. module: account
 #: help:account.account.template,reconcile:0
-msgid ""
-"Check this option if you want the user to reconcile entries in this account."
-msgstr ""
-"Pažymėkite, jeigu norite, kad vartotojas galėtų kurti sugretinimo įrašus "
-"šiai sąskaitai."
+msgid "Check this option if you want the user to reconcile entries in this account."
+msgstr "Pažymėkite, jeigu norite, kad vartotojas galėtų kurti sugretinimo įrašus šiai sąskaitai."
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -2943,12 +2860,7 @@ msgstr "Negalima pakeisti mokesčio !"
 
 #. module: account
 #: help:account.account.template,type:0
-msgid ""
-"This type is used to differenciate types with special effects in Open ERP: "
-"view can not have entries, consolidation are accounts that can have children "
-"accounts for multi-company consolidations, payable/receivable are for "
-"partners accounts (for debit/credit computations), closed for deprecated "
-"accounts."
+msgid "This type is used to differenciate types with special effects in Open ERP: view can not have entries, consolidation are accounts that can have children accounts for multi-company consolidations, payable/receivable are for partners accounts (for debit/credit computations), closed for deprecated accounts."
 msgstr ""
 
 #. module: account
@@ -2959,11 +2871,8 @@ msgstr "Gerb. Pone/Ponia,"
 #. module: account
 #: code:addons/account/invoice.py:0
 #, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
-"Tiekėjo mokėjimo terminas neturi apibrėžtų mokėjimo termino eilučių !"
+msgid "The Payment Term of Supplier does not have Payment Term Lines(Computation) defined !"
+msgstr "Tiekėjo mokėjimo terminas neturi apibrėžtų mokėjimo termino eilučių !"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_generic_report
@@ -3092,10 +3001,7 @@ msgstr "Efektyvi data"
 
 #. module: account
 #: help:account.tax.template,sequence:0
-msgid ""
-"The sequence field is used to order the taxes lines from lower sequences to "
-"higher ones. The order is important if you have a tax that has several tax "
-"children. In this case, the evaluation order is important."
+msgid "The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."
 msgstr ""
 
 #. module: account
@@ -3195,6 +3101,7 @@ msgstr "Sąskaitos pavadinimas"
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
@@ -3328,10 +3235,7 @@ msgstr "Tik skaitymui"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
-msgid ""
-"The maturity date of the generated entries for this model. You can chosse "
-"between the date of the creation action or the the date of the creation of "
-"the entries plus the partner payment terms."
+msgid "The maturity date of the generated entries for this model. You can chosse between the date of the creation action or the the date of the creation of the entries plus the partner payment terms."
 msgstr ""
 
 #. module: account
@@ -3372,9 +3276,7 @@ msgstr "Didžiosios knygos įrašas"
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
-msgid ""
-"If this box is checked, the system will try to group the accounting lines "
-"when generating them from invoices."
+msgid "If this box is checked, the system will try to group the accounting lines when generating them from invoices."
 msgstr ""
 
 #. module: account
@@ -3399,6 +3301,7 @@ msgstr "Analitinis žurnalas"
 
 #. module: account
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 msgid "Entry Label"
 msgstr "Įrašo žymė"
 
@@ -3533,9 +3436,7 @@ msgstr "Pastabos"
 
 #. module: account
 #: help:account.invoice,reconciled:0
-msgid ""
-"The account moves of the invoice have been reconciled with account moves of "
-"the payment(s)."
+msgid "The account moves of the invoice have been reconciled with account moves of the payment(s)."
 msgstr "Sąskaitos faktūros DK įrašai sugretinti su mokėjimų DK įrašais."
 
 #. module: account
@@ -3628,8 +3529,7 @@ msgstr "Sugretinti įrašus"
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr ""
-"(Sąskaita faktūra turi būti nesugretinta, jeigu Jūs norite ją atidaryti)"
+msgstr "(Sąskaita faktūra turi būti nesugretinta, jeigu Jūs norite ją atidaryti)"
 
 #. module: account
 #: view:account.invoice:0
@@ -3748,11 +3648,8 @@ msgstr "Kontrahento žurnalas"
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
-msgid ""
-"This account will be used instead of the default one as the receivable "
-"account for the current partner"
-msgstr ""
-"Ši sąskaita bus naudojama vietoj numatytosios, pirkėjo skolai žymėti."
+msgid "This account will be used instead of the default one as the receivable account for the current partner"
+msgstr "Ši sąskaita bus naudojama vietoj numatytosios, pirkėjo skolai žymėti."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -3766,12 +3663,8 @@ msgstr "Kontrahento sąskaitos"
 
 #. module: account
 #: help:account.tax.template,tax_group:0
-msgid ""
-"If a default tax if given in the partner it only override taxes from account "
-"(or product) of the same group."
-msgstr ""
-"Jeigu prie kontrahento nurodyti mokesčiai, jie turi didesnę pirmenybę negu "
-"mokesčiai nurodyti prie sąskaitos arba produkto."
+msgid "If a default tax if given in the partner it only override taxes from account (or product) of the same group."
+msgstr "Jeigu prie kontrahento nurodyti mokesčiai, jie turi didesnę pirmenybę negu mokesčiai nurodyti prie sąskaitos arba produkto."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3808,12 +3701,8 @@ msgstr "Priverstinai vykdyti visas šios sąskaitos operacijas antrąja valiuta"
 
 #. module: account
 #: wizard_view:account.move.validate,init:0
-msgid ""
-"All draft account entries in this journal and period will be validated. It "
-"means you won't be able to modify their accouting fields."
-msgstr ""
-"Visi šio periodo ir žurnalo juodraščio būsenos įrašai bus patvirtinti. Tai "
-"reiškia, kad Jūs nebegalėsite jų keisti."
+msgid "All draft account entries in this journal and period will be validated. It means you won't be able to modify their accouting fields."
+msgstr "Visi šio periodo ir žurnalo juodraščio būsenos įrašai bus patvirtinti. Tai reiškia, kad Jūs nebegalėsite jų keisti."
 
 #. module: account
 #: selection:account.model.line,date:0
@@ -3823,12 +3712,8 @@ msgstr "Šios dienos data"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
-msgid ""
-"The amount expressed in an optional other currency if it is a multi-currency "
-"entry."
-msgstr ""
-"Suma išreikšta kita, nei pagrindine įmonės valiuta, jei naudojami kelių "
-"valiutų įrašai."
+msgid "The amount expressed in an optional other currency if it is a multi-currency entry."
+msgstr "Suma išreikšta kita, nei pagrindine įmonės valiuta, jei naudojami kelių valiutų įrašai."
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -4001,9 +3886,7 @@ msgstr "# skaitmenų skaičius"
 
 #. module: account
 #: help:res.partner,property_payment_term:0
-msgid ""
-"This payment term will be used instead of the default one for the current "
-"partner"
+msgid "This payment term will be used instead of the default one for the current partner"
 msgstr "Šis mokėjimo terminas bus naudojamas vietoj numatytojo."
 
 #. module: account
@@ -4020,12 +3903,8 @@ msgstr "Kontrahento sąskaita naudojama šioje sąskaitoje faktūroje."
 #. module: account
 #: help:account.tax.code,notprintable:0
 #: help:account.tax.code.template,notprintable:0
-msgid ""
-"Check this box if you don't want any VAT related to this Tax Code to appear "
-"on invoices"
-msgstr ""
-"Pažymėkite šį langelį, jei nenorite, kad bet koks PVM, susijusių su šio "
-"mokesčio kodu būtų rodomas sąskaitoje faktūroje."
+msgid "Check this box if you don't want any VAT related to this Tax Code to appear on invoices"
+msgstr "Pažymėkite šį langelį, jei nenorite, kad bet koks PVM, susijusių su šio mokesčio kodu būtų rodomas sąskaitoje faktūroje."
 
 #. module: account
 #: field:account.account.type,sequence:0
@@ -4078,12 +3957,8 @@ msgstr "Standartiniai įrašai"
 
 #. module: account
 #: help:account.account,check_history:0
-msgid ""
-"Check this box if you want to print all entries when printing the General "
-"Ledger, otherwise it will only print its balance."
-msgstr ""
-"Pažymėkite šį langelį, jei norite atspausdinti visus įrašus, kai spausdinate "
-"Didžiąją knygą, kitaip bus atspausdintas tik balansas."
+msgid "Check this box if you want to print all entries when printing the General Ledger, otherwise it will only print its balance."
+msgstr "Pažymėkite šį langelį, jei norite atspausdinti visus įrašus, kai spausdinate Didžiąją knygą, kitaip bus atspausdintas tik balansas."
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -4229,12 +4104,8 @@ msgstr ""
 
 #. module: account
 #: help:account.automatic.reconcile,init,account_ids:0
-msgid ""
-"If no account is specified, the reconciliation will be made using every "
-"accounts that can be reconcilied"
-msgstr ""
-"Jei nėra nurodyta sąskaita, gretinimas bus atliktas naudojant visas "
-"sąskaitas, kurios gali būti sugretintos."
+msgid "If no account is specified, the reconciliation will be made using every accounts that can be reconcilied"
+msgstr "Jei nėra nurodyta sąskaita, gretinimas bus atliktas naudojant visas sąskaitas, kurios gali būti sugretintos."
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
@@ -4272,12 +4143,8 @@ msgstr "Šie periodai gali persikloti."
 
 #. module: account
 #: help:product.template,property_account_expense:0
-msgid ""
-"This account will be used instead of the default one to value outgoing stock "
-"for the current product"
-msgstr ""
-"Ši sąskaita bus naudojama vietoj numatytosios, norint įvertinti išsiunčiamas "
-"atsargas."
+msgid "This account will be used instead of the default one to value outgoing stock for the current product"
+msgstr "Ši sąskaita bus naudojama vietoj numatytosios, norint įvertinti išsiunčiamas atsargas."
 
 #. module: account
 #: model:process.node,note:account.process_node_manually0
@@ -4320,10 +4187,7 @@ msgstr "Periodo pavadinimas"
 
 #. module: account
 #: help:account.analytic.journal,type:0
-msgid ""
-"Gives the type of the analytic journal. When a document (eg: an invoice) "
-"needs to create analytic entries, Open ERP will look for a matching journal "
-"of the same type."
+msgid "Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."
 msgstr ""
 
 #. module: account
@@ -4415,12 +4279,8 @@ msgstr "Kreditas"
 
 #. module: account
 #: help:account.tax.template,child_depend:0
-msgid ""
-"Indicate if the tax computation is based on the value computed for the "
-"computation of child taxes or based on the total amount."
-msgstr ""
-"Nurodoma, ar mokesčiai apskaičiuojami remiantis žemesniųjų mokesčių "
-"apskaičiuotąja verte ar remiantis bendrąją suma."
+msgid "Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."
+msgstr "Nurodoma, ar mokesčiai apskaičiuojami remiantis žemesniųjų mokesčių apskaičiuotąja verte ar remiantis bendrąją suma."
 
 #. module: account
 #: field:account.tax,account_paid_id:0
@@ -4478,12 +4338,8 @@ msgstr "       Įtraukti sugretintus įrašus"
 
 #. module: account
 #: help:account.move.line,blocked:0
-msgid ""
-"You can check this box to mark the entry line as a litigation with the "
-"associated partner"
-msgstr ""
-"Pažimėjus šį langelį, parodoma, kad įrašas yra ginčytinas su susijusiu "
-"kontrahentu."
+msgid "You can check this box to mark the entry line as a litigation with the associated partner"
+msgstr "Pažimėjus šį langelį, parodoma, kad įrašas yra ginčytinas su susijusiu kontrahentu."
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -4600,19 +4456,13 @@ msgstr "Numatytieji mokesčiai"
 
 #. module: account
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: account
 #: help:account.account.type,sign:0
-msgid ""
-"Allows you to change the sign of the balance amount displayed in the "
-"reports, so that you can see positive figures instead of negative ones in "
-"expenses accounts."
-msgstr ""
-"Leidžia pakeisti rodomas balanso sumas, tam kad pamatytumėte teigiamą "
-"rezultatą vietoj neigiamo išlaidų sąskaitose."
+msgid "Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts."
+msgstr "Leidžia pakeisti rodomas balanso sumas, tam kad pamatytumėte teigiamą rezultatą vietoj neigiamo išlaidų sąskaitose."
 
 #. module: account
 #: help:account.config.wizard,code:0
@@ -4621,12 +4471,8 @@ msgstr "Fiskalinių metų pavadinimas rodomas ataskaitose."
 
 #. module: account
 #: help:account.move.line,date_maturity:0
-msgid ""
-"This field is used for payable and receivable entries. You can put the limit "
-"date for the payment of this entry line."
-msgstr ""
-"Šis laukas naudojamas pinigų mokėjimo ir gavimo eilutėms. Jūs galite "
-"nustatyti mokėjimo datos limitą šiai įrašo eilutei."
+msgid "This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."
+msgstr "Šis laukas naudojamas pinigų mokėjimo ir gavimo eilutėms. Jūs galite nustatyti mokėjimo datos limitą šiai įrašo eilutei."
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -4815,14 +4661,8 @@ msgstr "Metų pabaigos apdorojimas"
 
 #. module: account
 #: help:account.tax,sequence:0
-msgid ""
-"The sequence field is used to order the tax lines from the lowest sequences "
-"to the higher ones. The order is important if you have a tax with several "
-"tax children. In this case, the evaluation order is important."
-msgstr ""
-"Sekos laukas naudojamas surikiuoti mokesčių eilutes nuo žemiausio iki "
-"aukščiausio. Seka yra svarbi jeigu jūs turite mokesčių su keletą žemesniųjų "
-"mokesčių. Šiuo atveju vertinimo seka yra svarbi."
+msgid "The sequence field is used to order the tax lines from the lowest sequences to the higher ones. The order is important if you have a tax with several tax children. In this case, the evaluation order is important."
+msgstr "Sekos laukas naudojamas surikiuoti mokesčių eilutes nuo žemiausio iki aukščiausio. Seka yra svarbi jeigu jūs turite mokesčių su keletą žemesniųjų mokesčių. Šiuo atveju vertinimo seka yra svarbi."
 
 #. module: account
 #: view:account.tax:0
@@ -4906,6 +4746,7 @@ msgstr "Debitoriai ir kreditoriai"
 
 #. module: account
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 msgid "General Ledger -"
 msgstr "Didžioji knyga -"
 
@@ -4939,9 +4780,7 @@ msgstr "Įrašų numeriai yra sugeneruojami"
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
 #, python-format
 msgid "Can not pay draft/proforma/cancel invoice."
-msgstr ""
-"Negalima apmokėti sąskaitos faktūros juodraščio, proforma ir atšauktos "
-"būsenos."
+msgstr "Negalima apmokėti sąskaitos faktūros juodraščio, proforma ir atšauktos būsenos."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_account_use_model
@@ -4991,9 +4830,7 @@ msgstr "Analitinės sąskaitos statistika"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
-msgid ""
-"This will automatically configure your chart of accounts, bank accounts, "
-"taxes and journals according to the selected template"
+msgid "This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template"
 msgstr ""
 
 #. module: account
@@ -5013,9 +4850,7 @@ msgstr ""
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You can not deactivate an account that contains account moves."
-msgstr ""
-"Jūs negalite deaktyvuoti sąskaitų , kurios turi susijusių didžiosios knygos "
-"įrašų."
+msgstr "Jūs negalite deaktyvuoti sąskaitų , kurios turi susijusių didžiosios knygos įrašų."
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -5066,6 +4901,7 @@ msgstr "Įmonė"
 
 #. module: account
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 msgid "Crebit"
 msgstr "Kreditas"
 
@@ -5076,12 +4912,8 @@ msgstr "Veikiantis"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
-msgid ""
-"Indicate if the amount of tax must be included in the base amount for the "
-"computation of the next taxes"
-msgstr ""
-"Nurodoma, jeigu mokesčio suma turi būti įtraukta į sumą, skaičiuojant kitus "
-"mokesčius."
+msgid "Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"
+msgstr "Nurodoma, jeigu mokesčio suma turi būti įtraukta į sumą, skaičiuojant kitus mokesčius."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
@@ -5178,8 +5010,7 @@ msgstr "Spausdinti bandomąjį balansą"
 #: code:addons/account/account.py:0
 #, python-format
 msgid ""
-"You can specify year, month and date in the name of the model using the "
-"following labels:\n"
+"You can specify year, month and date in the name of the model using the following labels:\n"
 "\n"
 "%(year)s : To Specify Year \n"
 "%(month)s : To Specify Month \n"
@@ -5220,10 +5051,7 @@ msgstr ""
 
 #. module: account
 #: help:account.journal,centralisation:0
-msgid ""
-"Check this box to determine that each entry of this journal won't create a "
-"new counterpart but will share the same counterpart. This is used in fiscal "
-"year closing."
+msgid "Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."
 msgstr ""
 
 #. module: account
@@ -5373,9 +5201,7 @@ msgstr "Aukštesnysis sąskaitos šablonas"
 #. module: account
 #: help:account.tax,domain:0
 #: help:account.tax.template,domain:0
-msgid ""
-"This field is only used if you develop your own module allowing developers "
-"to create specific taxes in a custom domain."
+msgid "This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."
 msgstr ""
 
 #. module: account
@@ -5415,6 +5241,7 @@ msgstr "Patvirtinta"
 #: rml:account.analytic.account.inverted.balance:0
 #: rml:account.central.journal:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: rml:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -5592,12 +5419,8 @@ msgstr "Naujas kliento grąžinimas"
 
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
-msgid ""
-"Check this box if you want to use a different sequence for each created "
-"journal. Otherwise, all will use the same sequence."
-msgstr ""
-"Pažymėkite, jei norite naudoti skirtingas sekas kiekvienam sukurtam "
-"žurnalui. Kitaip bus naudojama ta pati seka."
+msgid "Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."
+msgstr "Pažymėkite, jei norite naudoti skirtingas sekas kiekvienam sukurtam žurnalui. Kitaip bus naudojama ta pati seka."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
@@ -5748,8 +5571,7 @@ msgstr ""
 #. module: account
 #: code:addons/account/wizard/wizard_validate_account_move.py:0
 #, python-format
-msgid ""
-"Selected Move lines does not have any account move enties in draft state"
+msgid "Selected Move lines does not have any account move enties in draft state"
 msgstr "Pasirinkti didžiosios knygos įrašai nėra juodraščio būsenos"
 
 #. module: account
@@ -5874,6 +5696,7 @@ msgstr ""
 #: rml:account.analytic.account.analytic.check:0
 #: rml:account.analytic.account.balance:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: rml:account.journal.period.print:0
 #: rml:account.partner.balance:0
 #: rml:account.tax.code.entries:0
@@ -5918,10 +5741,7 @@ msgstr "Datai"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
-msgid ""
-"If the Tax account is tax code account, this field will contain the taxed "
-"amount.If the tax account is base tax code,                    this field "
-"will contain the basic amount(without tax)."
+msgid "If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,                    this field will contain the basic amount(without tax)."
 msgstr ""
 
 #. module: account
@@ -5951,8 +5771,7 @@ msgstr "Periodiniai įrašai"
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
 #, python-format
 msgid "Closing of fiscal year cancelled, please check the box !"
-msgstr ""
-"Fiskalinių metų uždarymas buvo atšauktas, prašome pažymėti šį laukelį !"
+msgstr "Fiskalinių metų uždarymas buvo atšauktas, prašome pažymėti šį laukelį !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree6
@@ -6014,6 +5833,7 @@ msgstr "Bendrasis žurnalas"
 #: field:account.bank.statement,balance_end:0
 #: field:account.bank.statement.reconcile,total_balance:0
 #: rml:account.general.ledger:0
+#: rml:account.general.ledger_landscape:0
 #: field:account.move.line,balance:0
 #: rml:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -6068,12 +5888,8 @@ msgstr "Banko sąskaitos"
 
 #. module: account
 #: constraint:account.period:0
-msgid ""
-"Invalid period ! Some periods overlap or the date period is not in the scope "
-"of the fiscal year. "
-msgstr ""
-"Netinkamas periodas ! Kai kurių periodų datos sutampa arba jie nepatenka į "
-"vienerius fiskalinius metus. "
+msgid "Invalid period ! Some periods overlap or the date period is not in the scope of the fiscal year. "
+msgstr "Netinkamas periodas ! Kai kurių periodų datos sutampa arba jie nepatenka į vienerius fiskalinius metus. "
 
 #. module: account
 #: help:account.journal,invoice_sequence_id:0
@@ -6091,14 +5907,8 @@ msgstr "Bendroji informacija"
 
 #. module: account
 #: help:populate_statement_from_inv,init,journal_id:0
-msgid ""
-"This field allow you to choose the accounting journals you want for "
-"filtering the invoices. If you left this field empty, it will search on all "
-"sale, purchase and cash journals."
-msgstr ""
-"Šis laukas leidžia Jums pasirinkti apskaitos žurnalą, pagal kurį norite "
-"filtruoti sąskaitas faktūras. Jei paliksite lauką tuščią, bus ieškoma "
-"pardavimo, pirkimo ir pinigų žurnaluose."
+msgid "This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals."
+msgstr "Šis laukas leidžia Jums pasirinkti apskaitos žurnalą, pagal kurį norite filtruoti sąskaitas faktūras. Jei paliksite lauką tuščią, bus ieškoma pardavimo, pirkimo ir pinigų žurnaluose."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -6242,12 +6052,8 @@ msgstr "Aprašas"
 
 #. module: account
 #: help:product.template,property_account_income:0
-msgid ""
-"This account will be used instead of the default one to value incoming stock "
-"for the current product"
-msgstr ""
-"Registruojamos pajamos vietoj numatytosios sąskaitos (nurodoma 5kl "
-"sąskaita).  Naudojama vietoj numatytosios produkto kategorijoje."
+msgid "This account will be used instead of the default one to value incoming stock for the current product"
+msgstr "Registruojamos pajamos vietoj numatytosios sąskaitos (nurodoma 5kl sąskaita).  Naudojama vietoj numatytosios produkto kategorijoje."
 
 #. module: account
 #: field:account.tax,child_ids:0
@@ -6276,12 +6082,8 @@ msgstr "Sąskaitos konfigūracija"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
-msgid ""
-"This account will be used instead of the default one as the payable account "
-"for the current partner"
-msgstr ""
-"Ši sąskaita bus naudojama vietoj numatytosios kaip mokėtina sąskaita "
-"kontrahentui."
+msgid "This account will be used instead of the default one as the payable account for the current partner"
+msgstr "Ši sąskaita bus naudojama vietoj numatytosios kaip mokėtina sąskaita kontrahentui."
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -6311,8 +6113,7 @@ msgstr "Atidarymo/Uždarymo periodas"
 msgid ""
 "Can not create an automatic sequence for this piece !\n"
 "\n"
-"Put a sequence in the journal definition for automatic numbering or create a "
-"sequence manually for this piece."
+"Put a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
 msgstr ""
 
 #. module: account
@@ -6460,9 +6261,7 @@ msgstr "Sąskaitų nustatymai"
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category"
+msgid "This account will be used to value outgoing stock for the current product category"
 msgstr "Sąskaita bus naudojama įvertinti siunčiamas atsargas."
 
 #. module: account
@@ -6538,12 +6337,8 @@ msgstr "Pažymėkite patvirtinimui"
 
 #. module: account
 #: help:account.tax,price_include:0
-msgid ""
-"Check this if the price you use on the product and invoices includes this "
-"tax."
-msgstr ""
-"Pažymėkite, jeigu į produkto kainas, kurias naudojate sąskaitose faktūrose, "
-"įeina šis mokestis."
+msgid "Check this if the price you use on the product and invoices includes this tax."
+msgstr "Pažymėkite, jeigu į produkto kainas, kurias naudojate sąskaitose faktūrose, įeina šis mokestis."
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -6552,13 +6347,8 @@ msgstr "Stulpelio pavadinimas"
 
 #. module: account
 #: help:account.move.line,quantity:0
-msgid ""
-"The optional quantity expressed by this line, eg: number of product sold. "
-"The quantity is not a legal requirement but is very usefull for some reports."
-msgstr ""
-"Pasirinktinai galite nurodyti šios eilutės kiekį, pvz: parduotų produktų "
-"kiekį. Šis kiekis nėra privalomas, bet yra panaudotas kai kuriose "
-"ataskaitose."
+msgid "The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."
+msgstr "Pasirinktinai galite nurodyti šios eilutės kiekį, pvz: parduotų produktų kiekį. Šis kiekis nėra privalomas, bet yra panaudotas kai kuriose ataskaitose."
 
 #. module: account
 #: wizard_view:account.account.balance.report,checktype:0
@@ -6572,8 +6362,7 @@ msgstr "Filtrai"
 #: code:addons/account/wizard/wizard_aged_trial_balance.py:0
 #, python-format
 msgid "You must enter a period length that cannot be 0 or below !"
-msgstr ""
-"Turite įvesti periodo trukmę, kuri negali būti lygi 0 ar būti neigiama."
+msgstr "Turite įvesti periodo trukmę, kuri negali būti lygi 0 ar būti neigiama."
 
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,yes:0
@@ -6582,14 +6371,12 @@ msgstr "Taip"
 
 #. module: account
 #: help:account.account,reconcile:0
-msgid ""
-"Check this if the user is allowed to reconcile entries in this account."
-msgstr ""
-"Pažymėkite, jeigu norite, kad vartotojas galėtų kurti sugretinimo įrašus "
-"šiai sąskaitai."
+msgid "Check this if the user is allowed to reconcile entries in this account."
+msgstr "Pažymėkite, jeigu norite, kad vartotojas galėtų kurti sugretinimo įrašus šiai sąskaitai."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
 msgstr "Priminimo pažyma"
+
