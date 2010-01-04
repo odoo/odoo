@@ -28,6 +28,7 @@ import re
 import time
 import tools
 from tools.translate import _
+from dateutil import parser
 
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'    
@@ -38,10 +39,9 @@ class crm_meeting(osv.osv):
         'class' : {'field':'class', 'type':'text'}, 
         'created' : {'field':'create_date', 'type':'datetime'}, # keep none for now
         'description' : {'field':'description', 'type':'text'}, 
-        'dtstart' : {'field':'date', 'type':'datetime'}, 
-        #'last-mod' : {'field':'write_date', 'type':'datetime'},
+        'dtstart' : {'field':'date', 'type':'datetime'},         
         'location' : {'field':'location', 'type':'text'}, 
-#        'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
+        #'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'}, 
         'priority' : {'field':'priority', 'type':'int'}, 
         'dtstamp'  : {'field':'date', 'type':'datetime'}, 
         'seq' : None, 
@@ -91,8 +91,8 @@ class crm_meeting(osv.osv):
     }
 
     _defaults = {             
-             'class': lambda *a: 'PUBLIC', 
-             'transparent': lambda *a: 'OPAQUE', 
+         'class': lambda *a: 'PUBLIC', 
+         'transparent': lambda *a: 'OPAQUE', 
     }
     
     
@@ -185,11 +185,73 @@ class crm_meeting(osv.osv):
                 case_id = self.create(cr, uid, val)
         return {'count': len(vals)}
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
-            context=None, count=False):
-        res = super(crm_meeting, self).search(cr, uid, args, offset, 
+    def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):
+        if not limit:
+            limit = 100
+
+        if ids and (start_date or until_date):
+            cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
+                         join crm_case c on (c.id=m.inherit_case_id) \
+                         where m.id in ("+ ','.join(map(lambda x:str(x), ids))+")")
+            result = []
+            count = 0
+            start_date = start_date and datetime.datetime.strptime(start_date, "%Y-%m-%d") or False
+            until_date = until_date and datetime.datetime.strptime(until_date, "%Y-%m-%d") or False
+            for data in cr.dictfetchall():
+                if count > limit:
+                    break  
+                event_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")              
+                if start_date and start_date <= event_date:
+                    start_date = event_date
+                if not data['rrule']:                    
+                    idval = common.real_id2caldav_id(data['id'], data['date'])
+                    result.append(idval) 
+                    count += 1               
+                else:
+                    exdate = data['exdate'] and data['exdate'].split(',') or []
+                    event_obj = self.pool.get('caldav.event')
+                    rrule_str = data['rrule']    
+                    new_rrule_str = []    
+                    rrule_until_date = False
+                    for rule in rrule_str.split(';'):
+                        name, value = rule.split('=')
+                        if name == "UNTIL":
+                            value = parser.parse(value)
+                            rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
+                            if until_date and until_date >= rrule_until_date:
+                                until_date = rrule_until_date                    
+                            if until_date:
+                                until_date = until_date.strftime("%Y%m%d%H%M%S")
+                                value = until_date
+                        new_rule = '%s=%s'%(name, value)
+                        new_rrule_str.append(new_rule)
+                    new_rrule_str = ';'.join(new_rrule_str)
+                    rdates = event_obj.get_recurrent_dates(str(new_rrule_str), exdate, start_date)
+                    for rdate in rdates:                        
+                        idval = common.real_id2caldav_id(data['id'], rdate)
+                        result.append(idval)                    
+                        count += 1
+            ids = result       
+        return ids
+
+    def search(self, cr, uid, args, offset=0, limit=100, order=None, 
+            context=None, count=False):        
+        args_without_date = []
+        start_date = False
+        until_date = False
+        for arg in args:
+            if arg[0] not in ('date', unicode('date')):
+                args_without_date.append(arg)
+            else:
+                if arg[1] in ('>', '>='):
+                    start_date = arg[2]
+                elif arg[1] in ('<', '<='):
+                    until_date = arg[2]
+
+        res = super(crm_meeting, self).search(cr, uid, args_without_date, offset, 
                 limit, order, context, count)
-        return res
+        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)       
+        
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if isinstance(ids, (str, int, long)):
@@ -198,11 +260,11 @@ class crm_meeting(osv.osv):
             select = ids
         new_ids = []
         for id in select:
-            id = common.caldevIDs2readIDs(id)
+            id = common.caldav_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)
         if 'case_id' in vals :
-            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
         return res
 
@@ -210,82 +272,60 @@ class crm_meeting(osv.osv):
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
-            select = ids        
-        select = map(lambda x:common.caldevIDs2readIDs(x), select)
+            select = ids         
+        select = map(lambda x:common.caldav_id2real_id(x), select)
         res = super(crm_meeting, self).browse(cr, uid, select, context, list_class, fields_process)        
         if isinstance(ids, (str, int, long)):
             return res and res[0] or False
         return res
 
     def read(self, cr, uid, ids, fields=None, context={},  load='_classic_read'):
-        """         logic for recurrent event
-         example : 123-20091111170822"""        
-        if context and context.has_key('read'):
-            return super(crm_meeting, self).read(cr, uid, ids, fields=fields, context=context, \
-                                              load=load)
-        if not type(ids) == list :
-            # Called from code
-            return super(crm_meeting, self).read(cr, uid, common.caldevIDs2readIDs(ids), \
-                                                      fields=fields, context=context, load=load)
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
         else:
-            ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
-
+            select = ids
+        select = map(lambda x:(str(x), common.caldav_id2real_id(x)), select)
+        result = []
         if fields and 'date' not in fields:
             fields.append('date')
-        if not ids:
-            return []
-        result =  []
-        for read_id in ids:
-            res = super(crm_meeting, self).read(cr, uid, read_id, fields=fields, context=context, load=load)
-            cr.execute("""select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
-                     join crm_case c on (c.id=m.inherit_case_id) \
-                     where m.id = %s""" % read_id)
-            data = cr.dictfetchall()[0]
-            if not data['rrule']:
-                strdate = ''.join((re.compile('\d')).findall(data['date']))
-                idval = str(common.caldevIDs2readIDs(data['id'])) + '-' + strdate
-                data['id'] = idval
-                res.update(data)
-                result.append(res)
-            else:
-                exdate = data['exdate'] and data['exdate'].split(',') or []
-                event_obj = self.pool.get('caldav.event')
-                rdates = event_obj.get_recurrent_dates(str(data['rrule']), exdate, data['date'])[:10]
-                for rdate in rdates:
-                    val = res.copy()
-                    idval = (re.compile('\d')).findall(rdate)
-                    val['date'] = rdate
-                    id = str(res['id']).split('-')[0]
-                    val['id'] = id + '-' + ''.join(idval)
-                    val1 = val.copy()
-                    result.append(val1)
+        for caldav_id, real_id in select:                  
+            res = super(crm_meeting, self).read(cr, uid, real_id, fields=fields, context=context, \
+                                              load=load)
+            ls = common.caldav_id2real_id(caldav_id, with_date=True)            
+            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:                
+                res['date'] = ls[1]
+            res['id'] = caldav_id
+            
+            result.append(res)
+        if isinstance(ids, (str, int, long)):
+            return result and result[0] or False        
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):        
-        return super(crm_meeting, self).copy(cr, uid, common.caldevIDs2readIDs(id), \
+        return super(crm_meeting, self).copy(cr, uid, common.caldav_id2real_id(id), \
                                                           default, context)
 
     def unlink(self, cr, uid, ids, context=None):
         for id in ids:
-            if len(str(id).split('-')) > 1:
-                date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
-                                 time.strptime(str(str(id).split('-')[1]), "%Y%m%d%H%M%S"))
-                for record in self.read(cr, uid, [common.caldevIDs2readIDs(id)], \
+            ls = common.caldav_id2real_id(caldav_id)
+            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:             
+                date_new = ls[1]
+                for record in self.read(cr, uid, [common.caldav_id2real_id(id)], \
                                             ['date', 'rrule', 'exdate']):
                     if record['rrule']:
                         exdate = (record['exdate'] and (record['exdate'] + ',' )  or '') + \
                                     ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
-                            self.write(cr, uid, [common.caldevIDs2readIDs(id)], {'exdate' : exdate})
+                            self.write(cr, uid, [common.caldav_id2real_id(id)], {'exdate' : exdate})
                     else:
-                        ids = map(lambda x:common.caldevIDs2readIDs(x), ids)
-                        return super(crm_meeting, self).unlink(cr, uid, common.caldevIDs2readIDs(ids))
+                        ids = map(lambda x:common.caldav_id2real_id(x), ids)
+                        return super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
             else:
                 return super(crm_meeting, self).unlink(cr, uid, ids)
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
-            vals['case_id'] = common.caldevIDs2readIDs(vals['case_id'])
+            vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         return super(crm_meeting, self).create(cr, uid, vals, context)
 
 

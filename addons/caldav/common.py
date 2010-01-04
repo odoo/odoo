@@ -23,19 +23,33 @@ from osv import fields, osv
 from service import web_services
 from tools.translate import _
 import re
+import time
 
 months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", \
             7:"July", 8:"August", 9:"September", 10:"October", 11:"November", \
             12:"December"}
 
-def caldevIDs2readIDs(caldev_ID = None):
-    if caldev_ID:
-        if isinstance(caldev_ID, str):
-            return int(caldev_ID.split('-')[0])
-        return caldev_ID
+def caldav_id2real_id(caldav_id = None, with_date=False):
+    if caldav_id and isinstance(caldav_id, (str, unicode)):
+        res = caldav_id.split('-')
+        if len(res) >= 2:
+            real_id = res[0]
+            if with_date:
+                real_date = time.strftime("%Y-%m-%d %H:%M:%S", \
+                                 time.strptime(res[1], "%Y%m%d%H%M%S"))
+                return (int(real_id), real_date)
+            return int(real_id)
+    return caldav_id and int(caldav_id) or caldav_id
+
+def real_id2caldav_id(real_id , recurrent_date):    
+    if real_id and recurrent_date:
+        recurrent_date = time.strftime("%Y%m%d%H%M%S", \
+                                 time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
+        return '%d-%s'%(real_id, recurrent_date)
+    return real_id
 
 def uid2openobjectid(cr, uidval, oomodel):
-    __rege = re.compile(r'OpenERP-([\w|\.]+)_([0-9]+)@(\w+)$')
+    __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
     wematch = __rege.match(uidval.encode('utf8'))
     if not wematch:
 #                raise osv.except_osv('Warning!!', "Cannot locate UID in %s" % val['id'])
@@ -51,7 +65,7 @@ def uid2openobjectid(cr, uidval, oomodel):
         return False
     
 def openobjectid2uid(cr, uidval, oomodel):
-    value = 'OpenERP-%s_%s@%s' % (oomodel, uidval, cr.dbname)
+    value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
 class crm_caldav_attendee(osv.osv):
@@ -175,7 +189,7 @@ class ir_attachment(osv.osv):
         new_args = args
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
-                new_args[i] = (arg[0], arg[1], caldevIDs2readIDs(arg[2]))
+                new_args[i] = (arg[0], arg[1], caldav_id2real_id(arg[2]))
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
                                                 limit=limit, order=order,
                                                 context=context, count=False)
@@ -189,7 +203,7 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
-                new_model.append((data[0], caldevIDs2readIDs(data[1])))
+                new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values, self).set(cr, uid, key, key2, name, new_model, value, \
@@ -200,7 +214,7 @@ class ir_values(osv.osv):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
-                new_model.append((data[0], caldevIDs2readIDs(data[1])))
+                new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
         return super(ir_values, self).get(cr, uid, key, key2, new_model, meta, context, \
@@ -217,7 +231,7 @@ class ir_model(osv.osv):
         data = super(ir_model, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         if data:
             for val in data:
-                val['id'] = caldevIDs2readIDs(val['id'])
+                val['id'] = caldav_id2real_id(val['id'])
         return data
     
 ir_model()
@@ -229,8 +243,8 @@ class virtual_report_spool(web_services.report_spool):
             return super(virtual_report_spool, self).exp_report(db, uid, object, ids, datas, context)
         new_ids = []
         for id in ids:
-            new_ids.append(caldevIDs2readIDs(id))
-        datas['id'] = caldevIDs2readIDs(datas['id'])
+            new_ids.append(caldav_id2real_id(id))
+        datas['id'] = caldav_id2real_id(datas['id'])
         super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
@@ -247,9 +261,9 @@ class virtual_wizard(web_services.wizard):
         #    super(virtual_wizard,self).exp_create(db, uid, wiz_name, datas)
         new_ids = []
         if 'id' in datas:
-            datas['id'] = caldevIDs2readIDs(datas['id'])
+            datas['id'] = caldav_id2real_id(datas['id'])
             for id in datas['ids']:
-                new_ids.append(caldevIDs2readIDs(id))
+                new_ids.append(caldav_id2real_id(id))
             datas['ids'] = new_ids
         res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
         return res

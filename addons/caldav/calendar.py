@@ -75,14 +75,8 @@ class CalDAV(object):
     __attribute__ = {
     }
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
-        def todate(date):
-            val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
-            return val
-
         if not startdate:
-            startdate = datetime.now()
-        else:
-            startdate = todate(startdate)
+            startdate = datetime.now()         
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
     
         for date in exdate:
