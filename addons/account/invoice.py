@@ -150,7 +150,9 @@ class account_invoice(osv.osv):
             if not move_lines:
                 res[id] = []
                 continue
+            res[id] = []
             data_lines = self.pool.get('account.move.line').browse(cr,uid,move_lines)
+            partial_ids = []# Keeps the track of ids where partial payments are done with payment terms
             for line in data_lines:
                 ids_line = []
                 if line.reconcile_id:
@@ -158,7 +160,8 @@ class account_invoice(osv.osv):
                 elif line.reconcile_partial_id:
                     ids_line = line.reconcile_partial_id.line_partial_ids
                 l = map(lambda x: x.id, ids_line)
-                res[id]=[x for x in l if x <> line.id]
+                partial_ids.append(line.id)
+                res[id] =[x for x in l if x <> line.id and x not in partial_ids]
         return res
 
     def _get_invoice_line(self, cr, uid, ids, context=None):
@@ -180,11 +183,14 @@ class account_invoice(osv.osv):
             src = []
             lines = []
             for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
+                temp_lines = []#Added temp list to avoid duplicate records
                 if m.reconcile_id:
-                    lines += map(lambda x: x.id, m.reconcile_id.line_id)
+                    temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
                 elif m.reconcile_partial_id:
-                    lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                    temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                lines += [x for x in temp_lines if x not in lines]
                 src.append(m.id)
+                
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
