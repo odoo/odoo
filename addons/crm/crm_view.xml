@@ -42,30 +42,7 @@
 	                            <field name="allow_unlink" select="2"/>
 	                            <field name="calendar" select="2"/>
 	                        </group>
-	                        <field name="reply_to" select="2"/>
-	                        <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
-                                <tree string="Email Gateway" editable="bottom">
-                                   <field name="name" />
-                                   <field name="server_id" />
-                                </tree>
-                                <form string="Email Gateway">
-                                    <field name="name"/>
-                                    <field name="server_id" />
-                                    <field name="to_email_id"/>
-                                    <field name="cc_email_id" />
-                                    <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
-                                        <tree string="Email History">
-                                            <field name="name"/>
-                                            <field name="note"/>
-                                        </tree>
-                                       <form string="Email History">
-                                            <field name="name"/>
-                                            <separator colspan="4" string="Notes"/>
-                                            <field name="note" nolabel="1" colspan="4"/>
-                                       </form>
-                                    </field>
-                                </form>
-                            </field>
+	                        <field name="reply_to" select="2"/>	                        
                         </page>
                     </notebook>
                 </form>
@@ -101,20 +78,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
-        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>
-
-		<!-- Mail Gateway  -->
-		<record id="mail_gateway_form_inherited" model="ir.ui.view">
-            <field name="name">mail.gateway.form</field>
-            <field name="model">mail.gateway</field>
-            <field name="inherit_id" ref="mail_gateway.mail_gateway_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="cc_email_id" position="after">
-                    <field name="section_id"/>
-                </field>
-            </field>
-        </record>
+        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>		
 
         <!-- Case Categories -->
         <record id="crm_case_categ-view" model="ir.ui.view">

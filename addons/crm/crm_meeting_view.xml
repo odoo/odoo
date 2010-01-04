@@ -41,7 +41,8 @@
             <form string="Meetings Form">
                 <group colspan="4" col="6">
                     <field name="name" select="1" string="Title"/>
-                    <field name="section_id" widget="selection"/>
+                    <field name="section_id" widget="selection"
+                    	string="Calendar" domain="[('calendar','=',True)]"/>
                     <field name="user_id" select="2" string="Responsible" required="1"/>
                     <newline/>
                     <field name="date" string="Meeting Date" required="1"/>

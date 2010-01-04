@@ -8,18 +8,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
-					<field name="cutype" select="1"/>
-					<field name="member"/>
-					<field name="role" select="1"/>
-					<field name="partstat"/>
-					<field name="rsvp"/>
-					<field name="delegated_to" select="1"/>
-					<field name="delegated_from" select="1"/>
-					<field name="sent_by"/>
-					<field name="cn" select="1"/>
-					<field name="dir"/>
-					<field name="language"/>
-				</form>
+            		<notebook colspan="4">
+            			<page string="Basic details">
+            				<field name="cn" select="1" colspan="2" />
+            				<field name="partstat" />
+            				<field name="cutype" select="1" />
+            				<field name="role" select="1" />
+            				<field name="rsvp" />
+            			</page>
+            			<page string="Other">
+            				<field name="delegated_to" select="1" />
+            				<field name="delegated_from" select="1" />
+            				<field name="sent_by" />
+            				<field name="dir" />
+            				<field name="language" />
+            			</page>
+            		</notebook>
+            	</form>
             </field>
         </record>
 
@@ -29,18 +34,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
             	<tree string="Atendee details">
-					<field name="cutype" select="1"/>
-					<field name="member"/>
-					<field name="role" select="1"/>
-					<field name="partstat"/>
-					<field name="rsvp"/>
-					<field name="delegated_to" select="1"/>
-					<field name="delegated_from" select="1"/>
-					<field name="sent_by"/>
-					<field name="cn" select="1"/>
-					<field name="dir"/>
-					<field name="language"/>
-				</tree>
+            		<field name="cn" select="1" />
+            		<field name="partstat" />
+            		<field name="cutype" select="1" />
+            		<field name="role" select="1" />
+            	</tree>
             </field>
         </record>
         

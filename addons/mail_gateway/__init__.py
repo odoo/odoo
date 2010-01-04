@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import mailgateway
+import mail_gateway
 import wizard
 
 

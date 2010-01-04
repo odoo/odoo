@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 import wizard
@@ -45,21 +44,31 @@ _email_done_fields = {
     'message': {'string':"Log Detail", 'type':'text', 'readonly':True},
        }       
 
-def mailgate_fetch_mail(self , cr, uid, data, context):
+def _default(self , cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
+    gateway_pool=pool.get('mail.gateway')   
+    server = []     
+    for mail_gateway in gateway_pool.browse(cr, uid, data['ids'], context=context):        
+        if mail_gateway.server_id.active:
+            server.append(mail_gateway.name or '%s (%s)'%(mail_gateway.server_id.login, mail_gateway.server_id.name) )
+    data['form']['server'] = '\n'.join(server)    
+    return data['form']
+    
+def section_fetch_mail(self , cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)     
     gateway_pool=pool.get('mail.gateway')    
-    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)
+    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)    
     data['form']['message'] = '\n'.join(messages)    
     return data['form']
 
 class wiz_mailgateway_fetch_mail(wizard.interface):
     states = {
         'init': {
-            'actions': [],
+            'actions': [_default],
             'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end','Cancel','gtk-cancel'), ('fetch','Fetch','gtk-execute')]}
                 },        
         'fetch': {
-            'actions': [mailgate_fetch_mail],
+            'actions': [section_fetch_mail],
             'result': {'type': 'form', 'arch': _email_done_form,
                 'fields': _email_done_fields,
                 'state': (
@@ -68,5 +77,6 @@ class wiz_mailgateway_fetch_mail(wizard.interface):
             },
         },
     }
-wiz_mailgateway_fetch_mail('mailgate.fetchmail')
+wiz_mailgateway_fetch_mail('mail_gateway.fetchmail')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

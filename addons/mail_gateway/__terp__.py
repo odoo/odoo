@@ -21,19 +21,19 @@
 
 
 {
-    'name': 'EMail Gateway',
+    'name': 'eMail Gateway',
     'version': '1.0',
-    'category': 'Generic Modules/Mail Gate',
+    'category': 'Generic Modules/eMail Gate',
     'description': """The generic email gateway system for the synchronisation interface
-between mails and Open ERP.
+between mails and Open Objects.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'process'],
-    'init_xml': [],
+    'init_xml': ['mail_gateway_data.xml',],
     'update_xml': [
-        'mailgateway_wizard.xml',        
-        'mailgateway_view.xml',                
+        'mail_gateway_wizard.xml',        
+        'mail_gateway_view.xml',                
         'security/ir.model.access.csv',        
     ],
     'demo_xml': [],

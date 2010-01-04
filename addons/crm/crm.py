@@ -32,7 +32,7 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-#from scripts.openerp_mailgate import openerp_mailgate
+
 import email
 import netsvc
 from poplib import POP3, POP3_SSL
@@ -73,8 +73,7 @@ class crm_case_section(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
-        "gateway_ids" : fields.one2many("mail.gateway",'section_id',"Email Gateways"),
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),        
         'calendar' : fields.boolean('Calendar', help='Allows to show calendar'),
     }
     _defaults = {
@@ -208,15 +207,6 @@ class crm_case_section(osv.osv):
             res.append((record['id'], name))
         return res
 crm_case_section()
-
-class mail_gateway(osv.osv):
-    _inherit = "mail.gateway"
-    _description = "Email Gateway"
-
-    _columns = {
-                'section_id': fields.many2one('crm.case.section',"Section",required=True),
-    }
-mail_gateway()
 
 class crm_case_categ(osv.osv):
     _name = "crm.case.categ"
@@ -828,11 +818,8 @@ class crm_case(osv.osv):
                 data['user_id'] = uid
             self.write(cr, uid, ids, data)
         self._action(cr,uid, cases, 'open')
-        return True
-
-    def emails_get(self, cr, uid, id, context={}):
-        case = self.browse(cr, uid, id)
-        return ((case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False, case.email_from, case.email_cc, case.priority)
+        return True   
+    
 
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)

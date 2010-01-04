@@ -125,9 +125,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     return html
     
 class rpc_proxy(object):
-    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
-        self.rpc = xmlrpclib.ServerProxy('http://' + host + ':' + str(port) + '/xmlrpc/' + path)
-#        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))        
+    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):        
+        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
         self.user_id = uid
         self.passwd = passwd
         self.dbname = dbname
@@ -136,8 +135,12 @@ class rpc_proxy(object):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
-    def __init__(self, uid, password, email, email_default, dbname, host, port):        
+    def __init__(self, uid, password, section, email, email_default, dbname, host, port):        
         self.rpc = rpc_proxy(uid, password, host=host, port=port, dbname=dbname)
+        try:
+            self.section_id = int(section)
+        except:
+            self.section_id = self.rpc('crm.case.section', 'search', [('code','=',section)])[0]
         self.email = email
         self.email_default = email_default
         self.canal_id = False
@@ -166,6 +169,7 @@ class email_parser(object):
         message = self.msg_body_get(msg)
         data = {
             'name': self._decode_header(msg['Subject']),
+            'section_id': self.section_id,
             'email_from': self._decode_header(msg['From']),
             'email_cc': self._decode_header(msg['Cc'] or ''),
             'canal_id': self.canal_id,
@@ -201,6 +205,16 @@ class email_parser(object):
 
         return id
 
+#   #change the return type format to dictionary
+#   {
+#       'body':'body part',
+#       'attachment':{
+#                       'file_name':'file data',
+#                       'file_name':'file data',
+#                       'file_name':'file data',
+#                   }
+#   }
+#   #
     def msg_body_get(self, msg):
         message = {};
         message['body'] = '';

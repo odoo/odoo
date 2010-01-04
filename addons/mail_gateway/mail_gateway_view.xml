@@ -8,20 +8,18 @@
             <field name="arch" type="xml">
                 <form string="Email Gateway">
                     <field name="name"/>
+                    <field name="object_id"/>
                     <field name="server_id" />
-                    <field name="to_email_id"/>
-                    <field name="cc_email_id" />
+                    <field name="reply_to"/>
+                    <field name="email_default" />
                     <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
                         <tree string="Email History">
                             <field name="name"/>
-                            <field name="res_id"/>
-                            <field name="res_model"/>
-                            <field name="note"/>
+                            <field name="res_id"/>                                                        
                         </tree>
                        <form string="Email History">
                             <field name="name"/>
-                            <field name="res_id"/>
-                            <field name="res_model"/>
+                            <field name="res_id"/>                            
                             <separator colspan="4" string="Notes"/>
                             <field name="note" nolabel="1" colspan="4"/>
                        </form>
@@ -37,9 +35,18 @@
             <field name="arch" type="xml">
                 <tree string="Email Gateway">
                     <field name="name"/>
+                    <field name="object_id"/>
                     <field name="server_id" />
                 </tree>
             </field>
+        </record>
+
+        <record id="mail_gateway_act" model="ir.actions.act_window">
+            <field name="name">Email Gateway</field>
+            <field name="res_model">mail.gateway</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mail_gateway_tree"/>
         </record>
 
         <record id="mail_gateway_server_form" model="ir.ui.view">
@@ -73,15 +80,16 @@
             </field>
         </record>
 
-        <record id="mail_gateway_act" model="ir.actions.act_window">
-            <field name="name">Email Gateway</field>
-            <field name="res_model">mail.gateway</field>
+        <record id="mail_gateway_server_act" model="ir.actions.act_window">
+            <field name="name">Email Gateway Server</field>
+            <field name="res_model">mail.gateway.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="mail_gateway_tree"/>
-        </record>
+            <field name="view_id" ref="mail_gateway_server_tree"/>
+        </record>        
         
         <menuitem id="email_gateway_menu_parent" name="Email Gateway" parent="base.menu_config" />
         <menuitem id="email_gateway_menu" parent="email_gateway_menu_parent" action="mail_gateway_act"/>
+        <menuitem id="email_gateway_server_menu" parent="email_gateway_menu_parent" action="mail_gateway_server_act"/>
     </data>
 </openerp>
