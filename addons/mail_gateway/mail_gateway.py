@@ -288,8 +288,7 @@ class mail_gateway(osv.osv):
         s = decode_header(s)
         return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
-    def msg_new(self, cr, uid, msg, model):
-        print ' MSG NEW' , model
+    def msg_new(self, cr, uid, msg, model):        
         message = self.msg_body_get(msg)        
         res_model = self.pool.get(model)
         
