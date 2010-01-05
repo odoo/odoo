@@ -298,9 +298,9 @@ class mail_gateway(osv.osv):
         msg_body = self.msg_body_get(msg)        
         if len(emails)>1:            
             msg_cc = emails[1:]
-             
+        msg_attachment = map(lambda x: (x[0], x[1]), msg_body['attachment'].items())                  
         return tools.email_send(reply_to, msg_to, msg_subject , msg_body['body'], email_cc=msg_cc, 
-                         reply_to=reply_to, openobject_id=res_id, priority=priority)
+                         reply_to=reply_to, attach=msg_attachment, openobject_id=res_id, priority=priority)
         
 
     def msg_partner(self, cr, uid, msg, res_id, res_model):
