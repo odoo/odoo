@@ -20,7 +20,6 @@
 ###########################################################################################
 
 import re
-import smtplib
 import email, mimetypes
 from email.Header import decode_header
 from email.MIMEText import MIMEText
@@ -37,102 +36,7 @@ from osv.orm import except_orm
 import email
 import netsvc
 from poplib import POP3, POP3_SSL
-from imaplib import IMAP4, IMAP4_SSL
-
-email_re = re.compile(r"""
-    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
-    @                                # mandatory @ sign
-    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
-     \.
-     [a-z]{2,3}                      # TLD
-    )
-    """, re.VERBOSE)
-res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
-command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
-
-priorities = {
-    '1': '1 (Highest)',
-    '2': '2 (High)',
-    '3': '3 (Normal)',
-    '4': '4 (Low)',
-    '5': '5 (Lowest)',
-}
-
-def html2plaintext(html, body_id=None, encoding='utf-8'):
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
-    
-    
-    """ from an HTML text, convert the HTML to plain text.
-    If @body_id is provided then this is the tag where the 
-    body (not necessarily <body>) starts.
-    """
-    try:
-        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
-    except:
-        return html
-            
-    urls = []
-    if body_id is not None:
-        strainer = SoupStrainer(id=body_id)
-    else:
-        strainer = SoupStrainer('body')
-    
-    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
-    for link in soup.findAll('a'):
-        title = link.renderContents()
-        for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=str(link), title=title))
-
-    html = soup.__str__()
-            
-    url_index = []
-    i = 0
-    for d in urls:
-        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
-            html = html.replace(d['tag'], d['url'])
-        else:
-            i += 1
-            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
-            url_index.append(d['url'])
-
-    html = html.replace('<strong>','*').replace('</strong>','*')
-    html = html.replace('<b>','*').replace('</b>','*')
-    html = html.replace('<h3>','*').replace('</h3>','*')
-    html = html.replace('<h2>','**').replace('</h2>','**')
-    html = html.replace('<h1>','**').replace('</h1>','**')
-    html = html.replace('<em>','/').replace('</em>','/')
-    
-
-    # the only line breaks we respect is those of ending tags and 
-    # breaks
-    
-    html = html.replace('\n',' ')
-    html = html.replace('<br>', '\n')
-    html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n\n')
-    html = re.sub('<br\s*/>', '\n', html)
-    html = html.replace(' ' * 2, ' ')
-
-
-    # for all other tags we failed to clean up, just remove then and 
-    # complain about them on the stderr
-    def desperate_fixer(g):
-        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
-        return ' '
-
-    html = re.sub('<.*?>', desperate_fixer, html)
-
-    # lstrip all lines
-    html = '\n'.join([x.lstrip() for x in html.splitlines()])
-
-    for i, url in enumerate(url_index):
-        if i == 0:
-            html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)       
-    return html   
+from imaplib import IMAP4, IMAP4_SSL   
 
 class mail_gateway_server(osv.osv):
     _name = "mail.gateway.server"
@@ -169,8 +73,11 @@ class mail_gateway(osv.osv):
         'server_id': fields.many2one('mail.gateway.server',"Gateway Server", required=True),
         'object_id': fields.many2one('ir.model',"Model", required=True),
         'reply_to': fields.char('TO', size=64, help="Email address used in reply to/from of outgoing messages"),
-        'email_default': fields.char('CC',size=64,help="Default eMail in case of any trouble."),        
+        'email_default': fields.char('Default eMail',size=64,help="Default eMail in case of any trouble."),        
         'mail_history': fields.one2many("mail.gateway.history","gateway_id","History", readonly=True)
+    }
+    _defaults = {
+        'reply_to': lambda * a:tools.config.get('email_from',False)
     }
 
     def _fetch_mails(self, cr, uid, ids=False, context={}):
@@ -266,7 +173,7 @@ class mail_gateway(osv.osv):
         return log_messages    
 
     def emails_get(self, email_from):
-        res = email_re.search(email_from)
+        res = tools.email_re.search(email_from)
         return res and res.group(1)
 
     def partner_get(self, cr, uid, email):
@@ -309,15 +216,14 @@ class mail_gateway(osv.osv):
         return res_id
 
 
-    def msg_body_get(self, msg):
+    def msg_body_get(self, msg):        
         message = {};
         message['body'] = '';
         message['attachment'] = {};
         attachment = message['attachment'];
         counter = 1;
         def replace(match):
-            return ''
-            
+            return ''        
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
@@ -331,7 +237,7 @@ class mail_gateway(osv.osv):
                 if txt and part.get_content_subtype() == 'plain':
                     message['body'] += txt 
                 elif txt and part.get_content_subtype() == 'html':                                                               
-                    message['body'] += html2plaintext(txt)  
+                    message['body'] += tools.html2plaintext(txt)  
                 
                 filename = part.get_filename();
                 if filename :
@@ -348,7 +254,7 @@ class mail_gateway(osv.osv):
                 #end if
             #end if
             message['attachment'] = attachment
-        #end for        
+        #end for              
         return message
     #end def
 
@@ -365,7 +271,7 @@ class mail_gateway(osv.osv):
         actions = {}
         body_data = ''
         for line in body['body'].split('\n'):
-            res = command_re.match(line)
+            res = tools.command_re.match(line)
             if res:
                 actions[res.group(1).lower()] = res.group(2).lower()
             else:
@@ -383,24 +289,19 @@ class mail_gateway(osv.osv):
         res_model = self.pool.get(res_model)        
         return res_model.msg_update(cr, uid, msg, res_id, data=data, default_act='pending')        
 
-    def msg_send(self, msg, reply_to, emails, priority=None):
-        if not len(emails):
-            return False
-        del msg['To']
-        msg['To'] = emails[0]
-        if len(emails)>1:
-            if 'Cc' in msg:
-                del msg['Cc']
-            msg['Cc'] = ','.join(emails[1:])
-        del msg['Reply-To']
-        msg['Reply-To'] = reply_to
-        if priority:
-            msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-        s = smtplib.SMTP()
-        s.connect()
-        s.sendmail(reply_to, emails, msg.as_string())
-        s.close()
-        return True
+    def msg_send(self, msg, reply_to, emails, priority=None, res_id=False):        
+        if not emails:
+            return False                
+        msg_to = [emails[0]]
+        msg_subject = msg['Subject']        
+        msg_cc = []
+        msg_body = self.msg_body_get(msg)        
+        if len(emails)>1:            
+            msg_cc = emails[1:]
+             
+        return tools.email_send(reply_to, msg_to, msg_subject , msg_body['body'], email_cc=msg_cc, 
+                         reply_to=reply_to, openobject_id=res_id, priority=priority)
+        
 
     def msg_partner(self, cr, uid, msg, res_id, res_model):
         res_model = self.pool.get(res_model)        
@@ -411,11 +312,11 @@ class mail_gateway(osv.osv):
     def msg_parse(self, cr, uid, mailgateway_id, msg):
         mailgateway = self.browse(cr, uid, mailgateway_id)
         res_model = mailgateway.object_id.model
-        res_str = reference_re.search(msg.get('References', ''))
+        res_str = tools.reference_re.search(msg.get('References', ''))
         if res_str:
             res_str = res_str.group(1)
         else:
-            res_str = res_re.search(msg.get('Subject', ''))
+            res_str = tools.res_re.search(msg.get('Subject', ''))
             if res_str:
                 res_str = res_str.group(1)
 
@@ -424,7 +325,7 @@ class mail_gateway(osv.osv):
             if not res_str:
                 return (False, emails)            
             if hasattr(self.pool.get(res_model), 'emails_get'):
-                emails = self.pool.get(res_model).emails_get(cr, uid, res_str)
+                emails = self.pool.get(res_model).emails_get(cr, uid, [res_str])[0]
             return (res_str, emails)
 
         (res_id, emails) = msg_test(res_str)
@@ -434,11 +335,12 @@ class mail_gateway(osv.osv):
             
         else:
             res_id = self.msg_new(cr, uid, msg, res_model)
+            (res_id, emails) = msg_test(res_id)
+            user_email, from_email, cc_email, priority = emails
             subject = self._decode_header(msg['subject'])
             if msg.get('Subject', ''):
                 del msg['Subject']
-            msg['Subject'] = '[%s] %s' %(str(res_id), subject)
-            msg['Message-Id'] = '<%s-openobject-%s@%s>'%(str(time.time()), str(res_id), tools.config.get('interface',''))
+            msg['Subject'] = '[%s] %s' %(str(res_id), subject)            
 
         em = [user_email, from_email] + (cc_email or '').split(',')
         emails = map(self.emails_get, filter(None, em))
@@ -446,17 +348,17 @@ class mail_gateway(osv.osv):
         mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
         msg_mails = map(self.emails_get, filter(None, mm))
 
-        emails = filter(lambda m: m and m not in msg_mails, emails)
+        emails = filter(lambda m: m and m not in msg_mails, emails)        
         try:
-            self.msg_send(msg, mailgateway.reply_to, emails, priority)
+            self.msg_send(msg, mailgateway.reply_to, emails, priority, res_id)
             if hasattr(self.pool.get(res_model), 'msg_send'):
                 emails = self.pool.get(res_model).msg_send(cr, uid, res_id)
         except Exception, e:
             if mailgateway.email_default:
                 a = self._decode_header(msg['Subject'])
                 del msg['Subject']
-                msg['Subject'] = '[OpenERP-CaseError] ' + a
-                self.msg_send(msg, mailgateway.reply_to, mailgateway.email_default.split(','))
+                msg['Subject'] = '[OpenERP-Error] ' + a
+                self.msg_send(msg, mailgateway.reply_to, mailgateway.email_default.split(','), res_id)
             raise e 
         return res_id
 
