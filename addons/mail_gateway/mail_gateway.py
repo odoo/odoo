@@ -155,7 +155,7 @@ class mail_gateway(osv.osv):
                         res_id, note = self.parse_mail(cr, uid, mailgateway.id, data[0][1])
                         log = ''
                         if res_id:
-                            log = _('Object Successfully Created : %d of %s'% (res_id, res_model))
+                            log = _('Object Successfully Created/Modified: %d of %s'% (res_id, res_model))
                         if note:
                             log = note
                         log_messages.append(log)
@@ -280,14 +280,14 @@ class mail_gateway(osv.osv):
 
     def msg_user(self, cr, uid, msg, res_id, res_model):
         actions, body_data = self.msg_act_get(msg)        
-
+        data = {}
         if 'user' in actions:
             uids = self.pool.get('res.users').name_search(cr, uid, actions['user'])
             if uids:
                 data['user_id'] = uids[0][0]
 
         res_model = self.pool.get(res_model)        
-        return res_model.msg_update(cr, uid, msg, res_id, data=data, default_act='pending')        
+        return res_model.msg_update(cr, uid, res_id, msg, data=data, default_act='pending')        
 
     def msg_send(self, msg, reply_to, emails, priority=None, res_id=False):        
         if not emails:
@@ -305,7 +305,7 @@ class mail_gateway(osv.osv):
 
     def msg_partner(self, cr, uid, msg, res_id, res_model):
         res_model = self.pool.get(res_model)        
-        return res_model.msg_update(cr, uid, msg, res_id, data=data, default_act='open')      
+        return res_model.msg_update(cr, uid, res_id, msg, data={}, default_act='open')      
 
     
 
@@ -323,7 +323,8 @@ class mail_gateway(osv.osv):
         def msg_test(res_str):
             emails = ('', '', '', '')
             if not res_str:
-                return (False, emails)            
+                return (False, emails)  
+            res_str = int(res_str)          
             if hasattr(self.pool.get(res_model), 'emails_get'):
                 emails = self.pool.get(res_model).emails_get(cr, uid, [res_str])[0]
             return (res_str, emails)
