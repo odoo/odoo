@@ -239,7 +239,7 @@
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
@@ -261,7 +261,7 @@
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
@@ -543,7 +543,7 @@
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
                                     <field name="address_id" select="1" context="{'contact_display':'partner'}"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                     <field name="prodlot_id" select="2"
                                         context="{'location_id':location_id, 'product_id':product_id}"
                                         domain="[('product_id','=',product_id)]"
@@ -641,7 +641,7 @@
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                     <field name="prodlot_id" select="2"
                                         context="{'location_id':location_id, 'product_id':product_id}"
                                         domain="[('product_id','=',product_id)]"
@@ -834,7 +834,7 @@
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                     <field name="prodlot_id" select="1"
                                         context="{'location_id':location_id, 'product_id':product_id}"
                                         domain="[('product_id','=',product_id)]"
@@ -1024,7 +1024,7 @@
                                     <field groups="base.group_extended" name="date_planned"/>
                                     <newline/>
                                     <newline/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                     <newline/>                                    
                                     <field name="prodlot_id" select="1"
                                         context="{'location_id':location_id, 'product_id':product_id}"
