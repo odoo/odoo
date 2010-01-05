@@ -411,6 +411,7 @@ class orm_template(object):
                     if field not in parent_val_dict:
                         parent_val_dict[field] = False
                 result.append(parent_val_dict)
+            print "returning.........",result
             return result
         else:
             # process for getting child values for all fields in the view
@@ -2432,8 +2433,6 @@ class orm(orm_template):
             context = {}
         if not ids:
             return []
-        if len(ids) and type(ids[0])==tuple:
-            ids = list(set(map(lambda x:x[0],ids)))
         ids = map(lambda x:int(x), ids)
         if fields_to_read == None:
             fields_to_read = self._columns.keys()
