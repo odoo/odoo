@@ -1553,7 +1553,8 @@ class account_model(osv.osv):
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
         for model in self.browse(cr, uid, ids, context):
-            period_id = self.pool.get('account.period').find(cr,uid, context=context)
+            context.update({'date':datas['date']})
+            period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date',False))
             if not period_id:
                 raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
@@ -1561,6 +1562,7 @@ class account_model(osv.osv):
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
+                'date': context.get('date',time.strftime('%Y-%m-%d'))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -1578,7 +1580,7 @@ class account_model(osv.osv):
                     'move_id': move_id,
                     'ref': line.ref,
                     'partner_id': line.partner_id.id,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': time.strftime('%Y-%m-%d')
                 })
                 c = context.copy()

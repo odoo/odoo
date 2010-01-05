@@ -163,7 +163,7 @@ class account_bank_statement(osv.osv):
                         _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                         _('Please verify that an account is defined in the journal.'))
 
             for line in st.move_line_ids:
