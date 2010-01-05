@@ -207,7 +207,7 @@ class users(osv.osv):
         if (ids == [uid]):
             ok = True
             for k in values.keys():
-                if k not in ('password','signature','action_id', 'context_lang', 'context_tz'):
+                if k not in ('password','signature','action_id', 'context_lang', 'context_tz','company_id'):
                     ok=False
             if ok:
                 uid = 1

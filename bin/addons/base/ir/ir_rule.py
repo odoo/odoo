@@ -137,10 +137,9 @@ class ir_rule(osv.osv):
         if not (field_id or operator or operand):
             return {}
 
-    def domain_get(self, cr, uid, model_name):
-        # root user above constraint
+    def domain_get(self, cr, uid, model_name, context={}):
         if uid == 1:
-            return '', []
+            return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
         cr.execute("""SELECT r.id FROM
             ir_rule r
@@ -152,64 +151,11 @@ class ir_rule(osv.osv):
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                             WHERE u_rel.uid = %s) OR g.global)""", (model_name, uid))
         ids = map(lambda x:x[0], cr.fetchall())
-        if not ids:
-            return '', []
-        obj = self.pool.get(model_name)
-        add = []
-        add_str = []
-        sub = []
-        sub_str = []
-        clause={}
-        clause_global={}
+        dom = []
         for rule in self.browse(cr, uid, ids):
-            dom = rule.domain
-            if rule.rule_group['global']:
-                clause_global.setdefault(rule.rule_group.id, [])
-                clause_global[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
-            else:
-                clause.setdefault(rule.rule_group.id, [])
-                clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
-
-        def _query(clause, test):
-            query = ''
-            val = []
-            for g in clause.values():
-                if not g:
-                    continue
-                if len(query):
-                    query += ' '+test+' '
-                query += '('
-                first = True
-                for c in g:
-                    if not first:
-                        query += ' AND '
-                    first = False
-                    query += '('
-                    first2 = True
-                    for clause in c[0]:
-                        if not first2:
-                            query += ' AND '
-                        first2 = False
-                        query += clause
-                    query += ')'
-                    val += c[1]
-                query += ')'
-            return query, val
-
-        query, val = _query(clause, 'OR')
-        query_global, val_global = _query(clause_global, 'OR')
-        if query_global:
-            if query:
-                query = '('+query+') OR '+query_global
-                val.extend(val_global)
-            else:
-                query = query_global
-                val = val_global
-
-
-        if query:
-            query = '('+query+')'
-        return query, val
+            dom += rule.domain
+        d1,d2,tables = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+        return d1, d2, tables
     domain_get = tools.cache()(domain_get)
 
     def unlink(self, cr, uid, ids, context=None):

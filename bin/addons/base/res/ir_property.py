@@ -25,17 +25,6 @@ from osv import osv,fields
 # Properties
 # -------------------------------------------------------------------------
 
-def _models_get2(self, cr, uid, context={}):
-    obj = self.pool.get('ir.model.fields')
-    ids = obj.search(cr, uid, [('view_load','=',1)])
-    res = []
-    done = {}
-    for o in obj.browse(cr, uid, ids, context=context):
-        if o.relation not in done:
-            res.append( [o.relation, o.relation])
-            done[o.relation] = True
-    return res
-
 def _models_get(self, cr, uid, context={}):
     obj = self.pool.get('ir.model.fields')
     ids = obj.search(cr, uid, [('view_load','=',1)])
@@ -51,7 +40,7 @@ class ir_property(osv.osv):
     _name = 'ir.property'
     _columns = {
         'name': fields.char('Name', size=128),
-        'value': fields.reference('Value', selection=_models_get2, size=128),
+        'value': fields.char('Value', size=128),
         'res_id': fields.reference('Resource', selection=_models_get, size=128),
         'company_id': fields.many2one('res.company', 'Company'),
         'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True)

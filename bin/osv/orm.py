@@ -1860,7 +1860,8 @@ class orm(orm_template):
         if not hasattr(self, "_auto") or self._auto:
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
             if not cr.rowcount:
-                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS" % self._table)
+                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS" % self._table)
+                cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'","''")))
                 create = True
             cr.commit()
             if self._parent_store:
@@ -1922,9 +1923,10 @@ class orm(orm_template):
                             ref = self.pool.get(f._obj)._table
                         except AttributeError:
                             ref = f._obj.replace('.', '_')
-                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
+                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITHOUT OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
+                        cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
                         cr.commit()
                 else:
                     cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
@@ -1953,6 +1955,7 @@ class orm(orm_template):
 
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
+                            cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'","''")))
 
                             # initialize it
                             if not create and k in self._defaults:
@@ -2340,7 +2343,6 @@ class orm(orm_template):
 
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
-        
         for r in result:
             for key, v in r.items():
                 if v == None:
@@ -2358,8 +2360,7 @@ class orm(orm_template):
                     id_exist = cr.fetchone()
                     if not id_exist:
                         cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
-                        r[key] = ''                    
-        
+                        r[key] = ''
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
@@ -2374,7 +2375,7 @@ class orm(orm_template):
             fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
@@ -2389,7 +2390,7 @@ class orm(orm_template):
                     return "date_trunc('second', %s) as %s" % (f, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
-                        return "COALESCE(write_date, create_date, now())::timestamp AS %s" % (f,)
+                        return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
                     return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length("%s") as "%s"' % (f, f)
@@ -2398,12 +2399,12 @@ class orm(orm_template):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table, d1,
+                    cr.execute('SELECT %s FROM %s WHERE %s.id = ANY (%%s) AND %s ORDER BY %s' % \
+                            (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
                                 self._order),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % self._description)
+                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
@@ -2585,27 +2586,23 @@ class orm(orm_template):
         #   ids2 = [x[self._inherits[key]] for x in res]
         #   self.pool.get(key).unlink(cr, uid, ids2)
 
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
+        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         if d1:
-            d1 = ' AND '+d1
+            d1 = ' AND '+' and '.join(d1)
 
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
             str_d = string.join(('%s',)*len(sub_ids), ',')
             if d1:
-                cr.execute('SELECT id FROM "'+self._table+'" ' \
-                        'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
+                cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
 
-            if d1:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')'+d1, sub_ids+d2)
-            else:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')', sub_ids)
+            cr.execute('delete from '+self._table+' ' \
+                    'where id in ('+str_d+')', sub_ids)
 
         for order, object, store_ids, fields in result_store:
             if object<>self._name:
@@ -2705,19 +2702,19 @@ class orm(orm_template):
 
         if len(upd0):
 
-            d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
             if d1:
-                d1 = ' and '+d1
+                d1 = ' and '+' and '.join(d1)
 
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 ids_str = string.join(map(str, sub_ids), ',')
                 if d1:
-                    cr.execute('SELECT id FROM "'+self._table+'" ' \
-                            'WHERE id IN ('+ids_str+')'+d1, d2)
+                    cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % \
+                                _('You try to bypass an access rule while writing (Document type: %s).') % \
                                         self._description)
                 else:
                     cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
@@ -2725,12 +2722,8 @@ class orm(orm_template):
                         raise except_orm(_('AccessError'),
                                 _('You try to write on an record that doesn\'t exist ' \
                                         '(Document type: %s).') % self._description)
-                if d1:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')'+d1, upd1+ d2)
-                else:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')', upd1)
+                cr.execute('update '+self._table+' set '+string.join(upd0, ',')+' ' \
+                    'where id in ('+ids_str+')', upd1)
 
             if totranslate:
                 # TODO: optimize
@@ -3023,7 +3016,9 @@ class orm(orm_template):
                     continue
 
             result.setdefault(fncts[fnct][0], {})
-            ids2 = fncts[fnct][2](self,cr, uid, ids, context)
+
+            # uid == 1 for accessing objects having rules defined on store fields
+            ids2 = fncts[fnct][2](self,cr, 1, ids, context)
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
@@ -3072,7 +3067,8 @@ class orm(orm_template):
         for key in keys:
             val = todo[key]
             if key:
-                result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
+                # uid == 1 for accessing objects having rules defined on store fields
+                result = self._columns[val[0]].get(cr, self, ids, val, 1, context=context)
                 for id,value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -3096,7 +3092,8 @@ class orm(orm_template):
 
             else:
                 for f in val:
-                    result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    # uid == 1 for accessing objects having rules defined on store fields
+                    result = self._columns[f].get(cr, self, ids, f, 1, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -3159,11 +3156,18 @@ class orm(orm_template):
             context = {}
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+        qu1 = qu1 + dom[0]
+        qu2 = qu2 + dom[1]
+        for t in dom[2]:
+            if t not in tables:
+                tables.append(t)
 
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')
         else:
             qu1 = ''
+
 
         if order:
             self._check_qorder(order)
@@ -3172,12 +3176,6 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
-
-        # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
-        if d1:
-            qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
-            qu2 += d2
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +

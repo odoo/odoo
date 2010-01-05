@@ -506,12 +506,13 @@ class many2many(_column):
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
-        d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+        d1, d2, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
         if d1:
-            d1 = ' and ' + d1
+            d1 = ' and ' + ' and '.join(d1)
+        else: d1 = ''
 
         cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
-                FROM '+self._rel+' , '+obj._table+' \
+                FROM '+self._rel+' , '+(','.join(tables))+' \
                 WHERE '+self._rel+'.'+self._id1+' = ANY (%s) \
                     AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
                 +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
@@ -544,10 +545,12 @@ class many2many(_column):
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
 
-                d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
                 if d1:
-                    d1 = ' and ' + d1
-                cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
+                    d1 = ' and ' + ' and '.join(d1)
+                else:
+                    d1 = ''
+                cr.execute('delete from '+self._rel+' where '+self._id1+'=%s AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+','.join(tables)+' WHERE '+self._rel+'.'+self._id1+'=%s AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
 
                 for act_nbr in act[2]:
                     cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s, %s)', (id, act_nbr))
@@ -676,6 +679,10 @@ class function(_column):
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
             res = dict(map( get_nice_size, res.items()))
+        if self._type == "integer":
+            for r in res.keys():
+                # Converting value into string so that it does not affect XML-RPC Limits
+                res[r] = str(res[r])
         return res
     get_memory = get
 
@@ -741,7 +748,8 @@ class related(function):
         if not ids: return {}
         relation = obj._name
         res = {}.fromkeys(ids, False)
-        objlst = obj.browse(cr, uid, ids)
+
+        objlst = obj.browse(cr, uid, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -778,7 +786,6 @@ class related(function):
                 if res[r]:
                     res[r] = [x.id for x in res[r]]
 
-            
         return res
 
     def __init__(self, *arg, **args):
@@ -856,9 +863,12 @@ class property(function):
         if nid:
             default_val = property.browse(cr, uid, nid[0], context).value
 
-        company_id = obj.pool.get('res.users').company_get(cr, uid, uid)
+        company_id = obj.pool.get('res.company')._company_default_get(cr, uid, obj._name, prop, context=context)
         res = False
-        newval = (id_val and obj_dest+','+str(id_val)) or False
+        if val[0]:
+            newval = (id_val and obj_dest+','+str(id_val)) or False
+        else:
+            newval = id_val or False
         if (newval != default_val) and newval:
             propdef = obj.pool.get('ir.model.fields').browse(cr, uid,
                     definition_id, context=context)
@@ -892,27 +902,28 @@ class property(function):
         for id in ids:
             res[id] = default_val
         for prop in property.browse(cr, uid, nids):
-            res[int(prop.res_id.split(',')[1])] = (prop.value and \
-                    int(prop.value.split(',')[1])) or False
-
-        obj = obj.pool.get(self._obj)
-
-        to_check = res.values()
-        if default_val and default_val not in to_check:
-            to_check += [default_val]
-        existing_ids = obj.search(cr, uid, [('id', 'in', to_check)])
-        
-        for id, res_id in res.items():
-            if res_id not in existing_ids:
-                cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
-                res[id] = default_val
-
-        names = dict(obj.name_get(cr, uid, existing_ids, context))
-        for r in res.keys():
-            if res[r] and res[r] in names:
-                res[r] = (res[r], names[res[r]])
+            if prop.value.find(',') >= 0:
+                res[int(prop.res_id.split(',')[1])] = (prop.value and \
+                        int(prop.value.split(',')[1])) or False
             else:
-                res[r] = False
+                res[int(prop.res_id.split(',')[1])] = prop.value or ''
+
+        if self._obj:
+            obj = obj.pool.get(self._obj)
+            to_check = res.values()
+            if default_val and default_val not in to_check:
+                to_check += [default_val]
+            existing_ids = obj.search(cr, uid, [('id', 'in', to_check)])
+            for id, res_id in res.items():
+                if res_id not in existing_ids:
+                    cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
+                    res[id] = default_val
+            names = dict(obj.name_get(cr, uid, existing_ids, context))
+            for r in res.keys():
+                if res[r] and res[r] in names:
+                    res[r] = (res[r], names[res[r]])
+                else:
+                    res[r] = False
         return res
 
     def _field_get(self, cr, uid, model_name, prop):

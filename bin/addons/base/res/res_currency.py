@@ -63,7 +63,7 @@ class res_currency(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
     }
     _order = "code"
 

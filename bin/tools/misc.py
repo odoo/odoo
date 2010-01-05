@@ -31,6 +31,7 @@ from config import config
 import zipfile
 import release
 import socket
+import re
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -302,8 +303,103 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
+email_re = re.compile(r"""
+    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
+    @                                # mandatory @ sign
+    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
+     \.
+     [a-z]{2,3}                      # TLD
+    )
+    """, re.VERBOSE)
+res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
+command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
+reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
+
+priorities = {
+        '1': '1 (Highest)',
+        '2': '2 (High)',
+        '3': '3 (Normal)',
+        '4': '4 (Low)',
+        '5': '5 (Lowest)',
+    }
+
+def html2plaintext(html, body_id=None, encoding='utf-8'):
+    ## (c) Fry-IT, www.fry-it.com, 2007
+    ## <peter@fry-it.com>
+    ## download here: http://www.peterbe.com/plog/html2plaintext
+    
+    
+    """ from an HTML text, convert the HTML to plain text.
+    If @body_id is provided then this is the tag where the 
+    body (not necessarily <body>) starts.
+    """
+    try:
+        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
+    except:
+        return html
+            
+    urls = []
+    if body_id is not None:
+        strainer = SoupStrainer(id=body_id)
+    else:
+        strainer = SoupStrainer('body')
+    
+    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
+    for link in soup.findAll('a'):
+        title = link.renderContents()
+        for url in [x[1] for x in link.attrs if x[0]=='href']:
+            urls.append(dict(url=url, tag=str(link), title=title))
+
+    html = soup.__str__()
+            
+    url_index = []
+    i = 0
+    for d in urls:
+        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
+            html = html.replace(d['tag'], d['url'])
+        else:
+            i += 1
+            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
+            url_index.append(d['url'])
+
+    html = html.replace('<strong>','*').replace('</strong>','*')
+    html = html.replace('<b>','*').replace('</b>','*')
+    html = html.replace('<h3>','*').replace('</h3>','*')
+    html = html.replace('<h2>','**').replace('</h2>','**')
+    html = html.replace('<h1>','**').replace('</h1>','**')
+    html = html.replace('<em>','/').replace('</em>','/')
+    
+
+    # the only line breaks we respect is those of ending tags and 
+    # breaks
+    
+    html = html.replace('\n',' ')
+    html = html.replace('<br>', '\n')
+    html = html.replace('<tr>', '\n')
+    html = html.replace('</p>', '\n\n')
+    html = re.sub('<br\s*/>', '\n', html)
+    html = html.replace(' ' * 2, ' ')
+
+
+    # for all other tags we failed to clean up, just remove then and 
+    # complain about them on the stderr
+    def desperate_fixer(g):
+        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
+        return ' '
+
+    html = re.sub('<.*?>', desperate_fixer, html)
+
+    # lstrip all lines
+    html = '\n'.join([x.lstrip() for x in html.splitlines()])
+
+    for i, url in enumerate(url_index):
+        if i == 0:
+            html += '\n\n'
+        html += '[%s] %s\n' % (i+1, url)       
+    return html
+
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
+               attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
 
     """Send an email."""
     import smtplib
@@ -314,7 +410,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
-    import netsvc
+    import netsvc    
 
     if x_headers is None:
         x_headers = {}
@@ -324,6 +420,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     if not email_from and not config['email_from']:
         raise Exception("No Email sender by default, see config file")
+
+    if not email_from:
+        email_from = config.get('email_from', False)
 
     if not email_cc:
         email_cc = []
@@ -356,13 +455,15 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
     msg['X-OpenERP-Server-Host'] = socket.gethostname()
     msg['X-OpenERP-Server-Version'] = release.version
+    if priority:
+        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
     for key, value in x_headers.items():
         msg['X-OpenERP-%s' % key] = str(value)
 
-    if tinycrm:
-        msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
+    if openobject_id:
+        msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     if attach:
         try:
@@ -393,12 +494,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             return True
         except Exception,e:
             netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
-            return False
+            return False    
     
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
-
         try:
             # in case of debug, the messages are printed to stderr.
             if debug:
@@ -412,13 +512,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                 s.ehlo()
 
             if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])
-
+                s.login(config['smtp_user'], config['smtp_password'])            
             s.sendmail(email_from,
                        flatten([email_to, email_cc, email_bcc]),
                        msg.as_string()
                       )
-
         finally:
             s.quit()
             if debug:

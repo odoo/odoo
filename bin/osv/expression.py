@@ -115,14 +115,14 @@ class expression(object):
             main_table = table
             fargs = left.split('.', 1)
             index = i
-            if left in table._inherit_fields:
+            if fargs[0] in table._inherit_fields:
                 while True:
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
                         self.__tables[i] = working_table
                         break
-                    working_table = main_table.pool.get(main_table._inherit_fields[left][0])
+                    working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__tables.values():
                         self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
                         self.__tables[index] = working_table
@@ -145,25 +145,23 @@ class expression(object):
                 if field._type in ['many2many','one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
-                    self.__exp[i] = ('id', 'in', right1)                    
-                
+                    self.__exp[i] = ('id', 'in', right1)
                 continue
 
-            if field._properties:
+            if field._properties and not field.store:
                 # this is a function field
-                if not field.store:
-                    if not field._fnct_search:
-                        # the function field doesn't provide a search function and doesn't store
-                        # values in the database, so we must ignore it : we generate a dummy leaf
-                        self.__exp[i] = self.__DUMMY_LEAF
-                    else:
-                        subexp = field.search(cr, uid, table, left, [self.__exp[i]])
-                        # we assume that the expression is valid
-                        # we create a dummy leaf for forcing the parsing of the resulting expression
-                        self.__exp[i] = '&'
-                        self.__exp.insert(i + 1, self.__DUMMY_LEAF)
-                        for j, se in enumerate(subexp):
-                            self.__exp.insert(i + 2 + j, se)
+                if not field._fnct_search:
+                    # the function field doesn't provide a search function and doesn't store
+                    # values in the database, so we must ignore it : we generate a dummy leaf
+                    self.__exp[i] = self.__DUMMY_LEAF
+                else:
+                    subexp = field.search(cr, uid, table, left, [self.__exp[i]])
+                    # we assume that the expression is valid
+                    # we create a dummy leaf for forcing the parsing of the resulting expression
+                    self.__exp[i] = '&'
+                    self.__exp.insert(i + 1, self.__DUMMY_LEAF)
+                    for j, se in enumerate(subexp):
+                        self.__exp.insert(i + 2 + j, se)
 
                 # else, the value of the field is store in the database, so we search on it
 
