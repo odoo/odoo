@@ -190,7 +190,7 @@
                 />
                </group>
                <separator orientation="vertical"/>
-               <group col="4" colspan="2">
+               <group col="6" colspan="2">
                    <field name="name" select="1"/>
                    <field name="user_id" select="1" widget="selection">
                            <filter icon="terp-partner"
@@ -206,6 +206,7 @@
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Leads"/>
                        <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Leads"/>
                    </field>
+					<field name="section_id" select="1" widget="selection" string="Section"/>
                </group>
            </search>
         </field>

@@ -437,6 +437,7 @@
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
+					 <field name="section_id" select="1" widget="selection" string="Section"/>
                </search>
             </field>
         </record>
@@ -498,9 +499,12 @@
             	<search string="Search Histories">
                		<filter icon="terp-crm" string="My Histories" domain="[('user_id','=',uid)]" help="My Histories"/>
                		<separator orientation="vertical"/>
+                     <group col="6" colspan="2">
                		<field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="case_id" select="1"/>
+					 <field name="section_id" select="1" widget="selection" string="Section"/>
+					</group>
                 </search>
         	</field>
     	</record>
