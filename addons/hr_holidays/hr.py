@@ -130,6 +130,20 @@ class hr_holidays(osv.osv):
     }
     _order = 'date_from desc'
 
+    def _update_user_holidays(self, cr, uid, ids):
+        for record in self.browse(cr, uid, ids):
+            if record.state=='validate':
+                holiday_id=self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status.id)])
+                if holiday_id:
+                    obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
+                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken - record.number_of_days})
+                if record.case_id:
+                    if record.case_id.state <> 'draft':
+                        raise osv.except_osv(_('Warning !'),
+                    _('You can not cancel this holiday request. first You have to make its case in draft state.'))
+                    else:
+                        self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
+                        
     def _check_date(self, cr, uid, ids):
         if ids:
             cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
@@ -144,6 +158,10 @@ class hr_holidays(osv.osv):
         id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
         self._create_holiday(cr, uid, [id_holiday])
         return id_holiday
+    
+    def unlink(self, cr, uid, ids, context={}):
+        self._update_user_holidays(cr, uid, ids)
+        return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def _create_holiday(self, cr, uid, ids):
         holidays_user_obj = self.pool.get('hr.holidays.per.user')
@@ -220,18 +238,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
-        for record in self.browse(cr, uid, ids):
-            if record.state=='validate':
-                holiday_id=self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status.id)])
-                if holiday_id:
-                    obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
-                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken - record.number_of_days})
-                if record.case_id:
-                    if record.case_id.state <> 'draft':
-                        raise osv.except_osv(_('Warning !'),
-                    _('You can not cancel this holiday request. first You have to make its case in draft state.'))
-                    else:
-                        self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
+        self._update_user_holidays(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
