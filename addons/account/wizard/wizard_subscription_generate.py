@@ -30,7 +30,7 @@ import pooler
 
 _subscription_form = '''<?xml version="1.0"?>
 <form string="%s">
-    <seperator string="Generate entries before:" colspan="4"/>
+    <separator string="Generate entries before:" colspan="4"/>
     <field name="date"/>
 </form>''' % ('Subscription Compute',)
 
