@@ -157,7 +157,7 @@ class expression(object):
                         # values in the database, so we must ignore it : we generate a dummy leaf
                         self.__exp[i] = self.__DUMMY_LEAF
                     else:
-                        subexp = field.search(cr, uid, table, left, [self.__exp[i]])
+                        subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
                         # we assume that the expression is valid
                         # we create a dummy leaf for forcing the parsing of the resulting expression
                         self.__exp[i] = '&'
@@ -172,7 +172,7 @@ class expression(object):
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
                     else:
                         ids2 = list(right)
                     if field._obj != working_table._name:
@@ -186,7 +186,7 @@ class expression(object):
                     
                     if right:
                         if isinstance(right, basestring):
-                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None)]
+                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             operator = 'in' 
                         else:
                             if not isinstance(right,list):
@@ -213,7 +213,7 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -229,7 +229,7 @@ class expression(object):
                     call_null_m2m = True
                     if right:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator)]
+                            res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             operator = 'in'
                         else:
                             if not isinstance(right, list):

@@ -99,9 +99,9 @@ class _column(object):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         raise Exception(_('undefined get method !'))
 
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        ids = obj.search(cr, uid, args+self._domain+[(name, 'ilike', value)], offset, limit)
-        res = obj.read(cr, uid, ids, [name])
+    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
+        ids = obj.search(cr, uid, args+self._domain+[(name, 'ilike', value)], offset, limit, context=context)
+        res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
     def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
@@ -267,8 +267,8 @@ class one2one(_column):
             id = cr.fetchone()[0]
             obj.write(cr, user, [id], act[1], context=context)
 
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit)
+    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
 
 class many2one(_column):
@@ -345,8 +345,8 @@ class many2one(_column):
             else:
                 cr.execute('update '+obj_src._table+' set '+field+'=null where id=%s', (id,))
 
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit)
+    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
 
 class one2many(_column):
@@ -463,8 +463,8 @@ class one2many(_column):
                 obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
 
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
-        return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
+    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
+        return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
 
 
 #
@@ -556,8 +556,8 @@ class many2many(_column):
     #
     # TODO: use a name_search
     #
-    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit)
+    def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
 
     def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         result = {}
@@ -632,11 +632,11 @@ class function(_column):
             self._symbol_f = float._symbol_f
             self._symbol_set = float._symbol_set
 
-    def search(self, cr, uid, obj, name, args):
+    def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:
             #CHECKME: should raise an exception
             return []
-        return self._fnct_search(obj, cr, uid, obj, name, args)
+        return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
