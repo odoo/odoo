@@ -77,10 +77,11 @@ class configmanager(object):
             'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
-            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
+            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raised
             'cache_timeout': 100000,
             'login_message': False,
             'list_db' : True,
+            'timezone' : False, # to override the default TZ
         }
     
         self.misc = {}
@@ -111,6 +112,7 @@ class configmanager(object):
                           help="update a module (use \"all\" for all modules)")
         parser.add_option("--cache-timeout", dest="cache_timeout",
                           help="set the timeout for the cache system", default=100000, type="int")
+        parser.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
 
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
@@ -227,7 +229,7 @@ class configmanager(object):
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
-                'netrpc', 'xmlrpc', 'syslog', 'without_demo']
+                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if hasSSL:
             keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
@@ -265,6 +267,17 @@ class configmanager(object):
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
+
+        if self.options['timezone']:
+            # If an explicit TZ was provided in the config, make sure it is known  
+            try:
+                import pytz
+                tz = pytz.timezone(self.options['timezone'])
+            except pytz.UnknownTimeZoneError:
+                die(True, "The specified timezone (%s) is invalid" % self.options['timezone'])
+            except:
+                # If pytz is missing, don't check the provided TZ, it will be ignored anyway.
+                pass
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path

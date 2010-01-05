@@ -1174,6 +1174,89 @@ def detect_ip_addr():
         ip_addr = 'localhost'
     return ip_addr
 
+# RATIONALE BEHIND TIMESTAMP CALCULATIONS AND TIMEZONE MANAGEMENT:
+#  The server side never does any timestamp calculation, always
+#  sends them in a naive (timezone agnostic) format supposed to be
+#  expressed within the server timezone, and expects the clients to 
+#  provide timestamps in the server timezone as well.
+#  It stores all timestamps in the database in naive format as well, 
+#  which also expresses the time in the server timezone.
+#  For this reason the server makes its timezone name available via the
+#  common/timezone_get() rpc method, which clients need to read
+#  to know the appropriate time offset to use when reading/writing
+#  times.
+def get_win32_timezone():
+    """Attempt to return the "standard name" of the current timezone on a win32 system.
+       @return: the standard name of the current win32 timezone, or False if it cannot be found.
+    """
+    res = False
+    if (sys.platform == "win32"):
+        try:
+            import _winreg
+            hklm = _winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
+            current_tz_key = _winreg.OpenKey(hklm, r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation", 0,_winreg.KEY_ALL_ACCESS)
+            res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
+            _winreg.CloseKey(current_tz_key)
+            _winreg.CloseKey(hklm)
+        except:
+            pass
+    return res
+
+def detect_server_timezone():
+    """Attempt to detect the timezone to use on the server side.
+       Defaults to UTC if no working timezone can be found.
+       @return: the timezone identifier as expected by pytz.timezone.
+    """
+    import time
+    import netsvc
+    try:
+        import pytz
+    except:
+        netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+            "Python pytz module is not available. Timezone will be set to UTC by default.")
+        return 'UTC'
+
+    # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
+    # Option 2: to be backwards compatible with 5.0 or earlier, the value from time.tzname[0], but only if it is known to pytz
+    # Option 3: the environment variable TZ
+    sources = [ (config['timezone'], 'OpenERP configuration'),
+                (time.tzname[0], 'time.tzname'),
+                (os.environ.get('TZ',False),'TZ environment variable'), ]
+    # Option 4: OS-specific: /etc/timezone on Unix
+    if (os.path.exists("/etc/timezone")):
+        tz_value = False
+        try:
+            f = open("/etc/timezone")
+            tz_value = f.read(128).strip()
+        except:
+            pass
+        finally:
+            f.close()
+        sources.append((tz_value,"/etc/timezone file"))
+    # Option 5: timezone info from registry on Win32
+    if (sys.platform == "win32"):
+        # Timezone info is stored in windows registry.
+        # However this is not likely to work very well as the standard name
+        # of timezones in windows is rarely something that is known to pytz.
+        # But that's ok, it is always possible to use a config option to set
+        # it explicitly.
+        sources.append((get_win32_tz(),"Windows Registry"))
+
+    for (value,source) in sources:
+        if value:
+            try:
+                tz = pytz.timezone(value)
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_INFO,
+                    "Using timezone %s obtained from %s." % (tz.zone,source))
+                return value
+            except pytz.UnknownTimeZoneError:
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+                    "The timezone specified in %s (%s) is invalid, ignoring it." % (source,value))
+
+    netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+        "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
+    return 'UTC'
+
 
 if __name__ == '__main__':
     import doctest
