@@ -20,7 +20,6 @@
 ##############################################################################
 
 from caldav import common
-from dateutil.rrule import *
 from osv import fields, osv
 import  datetime
 import base64
@@ -34,60 +33,60 @@ class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherits = {'crm.case':"inherit_case_id"}
+    _inherits = {'crm.case': "inherit_case_id"}
     __attribute__ = {
-        'class' : {'field':'class', 'type':'text'}, 
-        'created' : {'field':'create_date', 'type':'datetime'}, # keep none for now
-        'description' : {'field':'description', 'type':'text'}, 
-        'dtstart' : {'field':'date', 'type':'datetime'}, 
-        'location' : {'field':'location', 'type':'text'}, 
-        #'organizer' : {'field':'partner_id', 'sub-field':'name', 'type':'many2one'},
-        'priority' : {'field':'priority', 'type':'int'}, 
-        'dtstamp'  : {'field':'date', 'type':'datetime'}, 
-        'seq' : None, 
-        'status' : {'field':'state', 'type':'selection', 'mapping' : {'TENTATIVE' : 'draft', \
-                                                  'CONFIRMED' : 'open' , 'CANCELLED' : 'cancel'}}, 
-        'summary' : {'field':'name', 'type':'text'}, 
-        'transp' : {'field':'transparent', 'type':'text'}, 
-        'uid' : {'field':'id', 'type':'text'}, 
-        'url' : {'field':'caldav_url', 'type':'text'}, 
-        'recurid' : None, 
-#        'attach' : {'field':'attachment_ids', 'sub-field':'datas', 'type':'list'},
-        'attendee' : {'field':'attendees', 'type':'many2many', 'object' : 'crm.caldav.attendee'}, 
-#        'categories' : {'field':'categ_id', 'sub-field':'name'},
-#        'categories' : {'field':None , 'sub-field':'name', 'type':'text'},
-        'comment' : None, 
-        'contact' : None, 
-        'exdate'  : {'field':'exdate', 'type':'datetime'}, 
-        'exrule'  : {'field':'exrule', 'type':'text'}, 
-        'rstatus' : None, 
-        'related' : None, 
-        'resources' : None, 
-        'rdate' : None, 
-        'rrule' : {'field':'rrule', 'type':'text'}, 
-        'x-openobject-model' : {'value':_name, 'type':'text'}, 
-#        'duration' : {'field':'duration'},
-        'dtend' : {'field':'date_closed', 'type':'datetime'}, 
-        'valarm' : {'field':'alarm_id', 'type':'many2one', 'object' : 'crm.caldav.alarm'}, 
+        'class': {'field': 'class', 'type': 'text'}, 
+        'created': {'field': 'create_date', 'type': 'datetime'}, # keep none for now
+        'description': {'field': 'description', 'type': 'text'}, 
+        'dtstart': {'field': 'date', 'type': 'datetime'}, 
+        'location': {'field': 'location', 'type': 'text'}, 
+        #'organizer': {'field': 'partner_id', 'sub-field': 'name', 'type': 'many2one'},
+        'priority': {'field': 'priority', 'type': 'int'}, 
+        'dtstamp' : {'field': 'date', 'type': 'datetime'}, 
+        'seq': None, 
+        'status': {'field': 'state', 'type': 'selection', 'mapping': {'TENTATIVE': 'draft', \
+                                                  'CONFIRMED': 'open' , 'CANCELLED': 'cancel'}}, 
+        'summary': {'field': 'name', 'type': 'text'}, 
+        'transp': {'field': 'transparent', 'type': 'text'}, 
+        'uid': {'field': 'id', 'type': 'text'}, 
+        'url': {'field': 'caldav_url', 'type': 'text'}, 
+        'recurid': None, 
+#        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
+        'attendee': {'field': 'attendees', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
+#        'categories': {'field': 'categ_id', 'sub-field': 'name'},
+#        'categories': {'field':None , 'sub-field': 'name', 'type': 'text'},
+        'comment': None, 
+        'contact': None, 
+        'exdate' : {'field': 'exdate', 'type': 'datetime'}, 
+        'exrule' : {'field': 'exrule', 'type': 'text'}, 
+        'rstatus': None, 
+        'related': None, 
+        'resources': None, 
+        'rdate': None, 
+        'rrule': {'field': 'rrule', 'type': 'text'}, 
+        'x-openobject-model': {'value': _name, 'type': 'text'}, 
+#        'duration': {'field': 'duration'},
+        'dtend': {'field': 'date_closed', 'type': 'datetime'}, 
+        'valarm': {'field': 'alarm_id', 'type': 'many2one', 'object': 'crm.caldav.alarm'}, 
     }
 
     _columns = {
         'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'), 
-        'class' : fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
+        'class': fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
                  ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Privacy'), 
-        'location' : fields.char('Location', size=264, help="Gives Location of Meeting"), 
-        'freebusy' : fields.text('FreeBusy'), 
-        'transparent' : fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
+        'location': fields.char('Location', size=264, help="Gives Location of Meeting"), 
+        'freebusy': fields.text('FreeBusy'), 
+        'transparent': fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
                                           ('OPAQUE', 'OPAQUE')], 'Trensparent'), 
-        'caldav_url' : fields.char('Caldav URL', size=264), 
-        'exdate' : fields.text('Exception Date/Times', help="This property defines the list\
+        'caldav_url': fields.char('Caldav URL', size=264), 
+        'exdate': fields.text('Exception Date/Times', help="This property defines the list\
                  of date/time exceptions for arecurring calendar component."), 
-        'exrule' : fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
+        'exrule': fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
-        'rrule' : fields.char('Recurrent Rule', size=352), 
+        'rrule': fields.char('Recurrent Rule', size=352), 
         'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
-        'alarm_id' : fields.many2one('crm.caldav.alarm', 'Alarm'), 
+        'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
     }
 
     _defaults = {
@@ -122,8 +121,8 @@ class crm_meeting(osv.osv):
             if datetime.datetime.now() >= alarm_time:
                 case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)[0]
                 for att in case_val.attendees:
-                    if att.cn.rsplit(':')[-1]:
-                        mail_to.append(att.cn.rsplit(':')[-1])
+                    if att.cn.rsplit(': ')[-1]:
+                        mail_to.append(att.cn.rsplit(': ')[-1])
                 if mail_to:
                     sub = 'Event Reminder for ' +  case_val.name or ''
                     body = (case_val.name or '')+ '\n\t' + (case_val.description or '') + '\n\nEvent time: ' \
@@ -141,7 +140,7 @@ class crm_meeting(osv.osv):
         return True
 
     def export_cal(self, cr, uid, ids, context={}):
-        crm_data = self.read(cr, uid, ids, [], context ={'read' :True})
+        crm_data = self.read(cr, uid, ids, [], context ={'read':True})
         event_obj = self.pool.get('caldav.event')
         event_obj.__attribute__.update(self.__attribute__)
 
@@ -174,7 +173,7 @@ class crm_meeting(osv.osv):
         for val in vals:
             section_id = self.pool.get('crm.case.section').search(cr, uid, \
                             [('name', 'like', 'Meeting%')])[0]
-            val.update({'section_id' : section_id})
+            val.update({'section_id': section_id})
             is_exists = common.uid2openobjectid(cr, val['id'], self._name)
             val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
@@ -192,7 +191,7 @@ class crm_meeting(osv.osv):
         if ids and (start_date or until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \
-                         where m.id in ("+ ','.join(map(lambda x:str(x), ids))+")")
+                         where m.id in ("+ ','.join(map(lambda x: str(x), ids))+")")
             result = []
             count = 0
             start_date = start_date and datetime.datetime.strptime(start_date, "%Y-%m-%d") or False
@@ -223,7 +222,7 @@ class crm_meeting(osv.osv):
                             if until_date:
                                 until_date = until_date.strftime("%Y%m%d%H%M%S")
                                 value = until_date
-                        new_rule = '%s=%s'%(name, value)
+                        new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     start_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -264,7 +263,7 @@ class crm_meeting(osv.osv):
             id = common.caldav_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)
-        if 'case_id' in vals :
+        if 'case_id' in vals:
             vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
         return res
@@ -274,7 +273,7 @@ class crm_meeting(osv.osv):
             select = [ids]
         else:
             select = ids
-        select = map(lambda x:common.caldav_id2real_id(x), select)
+        select = map(lambda x: common.caldav_id2real_id(x), select)
         res = super(crm_meeting, self).browse(cr, uid, select, context, list_class, fields_process)
         if isinstance(ids, (str, int, long)):
             return res and res[0] or False
@@ -285,7 +284,7 @@ class crm_meeting(osv.osv):
             select = [ids]
         else:
             select = ids
-        select = map(lambda x:(x, common.caldav_id2real_id(x)), select)
+        select = map(lambda x: (x, common.caldav_id2real_id(x)), select)
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
@@ -317,9 +316,9 @@ class crm_meeting(osv.osv):
                         exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + \
                                     ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
-                            self.write(cr, uid, [common.caldav_id2real_id(id)], {'exdate' : exdate})
+                            self.write(cr, uid, [common.caldav_id2real_id(id)], {'exdate': exdate})
                     else:
-                        ids = map(lambda x:common.caldav_id2real_id(x), ids)
+                        ids = map(lambda x: common.caldav_id2real_id(x), ids)
                         return super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
             else:
                 return super(crm_meeting, self).unlink(cr, uid, ids)
@@ -420,9 +419,9 @@ class crm_meeting_generic_wizard(osv.osv_memory):
             raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
         new_case_id = case_obj.copy(cr, uid, case_id, default=
                                             {
-                                                'section_id':res.get('section_id', False), 
-                                                'user_id':res.get('user_id', False), 
-                                                'case_id' : case.inherit_case_id.id
+                                                'section_id': res.get('section_id', False), 
+                                                'user_id': res.get('user_id', False), 
+                                                'case_id': case.inherit_case_id.id
                                             }, context=context)
         case_obj.case_close(cr, uid, [case_id])
         data_obj = self.pool.get('ir.model.data')
