@@ -440,4 +440,83 @@ class crm_meeting_generic_wizard(osv.osv_memory):
 
 crm_meeting_generic_wizard()
 
+class res_users(osv.osv):
+    _inherit = 'res.users'
+    
+    def _get_user_avail(self, cr, uid, ids, name, args, context=None):
+        res={}
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        event_obj = obj.browse(cr, uid, context['active_id'])
+        event_start = event_obj.date
+        event_end = datetime.datetime.strptime(event_obj.date, "%Y-%m-%d %H:%M:%S") \
+                    + datetime.timedelta(hours=event_obj.duration)
+        for id in ids:
+            datas = self.browse(cr, uid, id)
+            cr.execute("""SELECT c.date as start, (c.date::timestamp \
+                            + c.duration * interval '1 hour') as end \
+                            from crm_meeting m \
+                            join crm_case c on (c.id=m.inherit_case_id)\
+                            where c.user_id = %s 
+                            and m.id not in ("""   % (datas['id']) + str(context['active_id']) +")")
+            dates = cr.dictfetchall()
+            overlaps = False
+            # check event time
+            for date in dates:
+                start =  date['start']
+                end =  date['end']
+                cr.execute("SELECT (timestamp '%s', timestamp '%s') OVERLAPS\
+                   (timestamp '%s', timestamp '%s')" % (event_start, event_end, start, end))
+                over = cr.fetchone()[0]
+                if over:
+                    overlaps = True
+            
+#        check for attendee added already
+            cr.execute("""select att.user_id , c.id
+                from crm_caldav_attendee att 
+                inner join crm_attendee_rel rel on (rel.attendee_id=att.id) 
+                join crm_meeting m on (rel.case_id=m.id)
+                join crm_case c on (m.inherit_case_id = c.id )
+                    where (c.date, c.date::timestamp  + c.duration * interval '1 hour') overlaps\
+                            (timestamp '%s', timestamp '%s')""" % (event_start, event_end))
+            added_data = filter(lambda x: x.get('user_id')==id, cr.dictfetchall())
+            if added_data:
+                overlaps = True
+            if overlaps:
+                 res[id] = 'busy'
+            else:
+                res[id] = 'free'
+        return res
+    
+    _columns = {
+            'availability': fields.function(_get_user_avail, type='selection', \
+                    selection=[('free', 'Free'), ('busy', 'Busy')], \
+                    string='Free/Busy', method=True),
+    }
+
+res_users()
+    
+class invite_attendee_wizard(osv.osv_memory):
+    _name = "caldav.invite.attendee"
+    _description = "Invite Attendees"
+
+    _columns = {
+                'users': fields.many2many('res.users', 'invite_user_rel', \
+                                          'invite_id', 'user_id', 'Users'), 
+                'availability': fields.selection([('free', 'Free'), \
+                                              ('busy', 'Busy'), ('both', 'Both')], 'User Avaliability')
+    }
+
+    _defaults = {
+                 'availability':  lambda *x: 'free', 
+                 }
+
+    def do_invite(self, cr, uid, ids, context={}):
+        #TODO: Add attendee
+        return {}
+
+invite_attendee_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
