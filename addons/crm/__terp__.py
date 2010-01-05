@@ -91,8 +91,7 @@ between mails and Open ERP.""",
         'process/crm_configuration_process.xml'
     ],
     'demo_xml': [
-        'crm_demo.xml', 
-        'crm_meeting_demo.xml',
+        'crm_demo.xml',         
         'crm_claims_demo.xml',
         'crm_fund_demo.xml',
         'crm_helpdesk_demo.xml',

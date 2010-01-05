@@ -284,7 +284,7 @@ class crm_meeting(osv.osv):
             select = [ids]
         else:
             select = ids
-        select = map(lambda x:(str(x), common.caldav_id2real_id(x)), select)
+        select = map(lambda x:(x, common.caldav_id2real_id(x)), select)
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
