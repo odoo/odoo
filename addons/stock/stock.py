@@ -1352,8 +1352,7 @@ class stock_move(osv.osv):
                         company_id=move.company_id.id
                         
                         pricetype=self.pool.get('product.price.type').browse(cr,uid,move.company_id.property_valuation_price_type.id)
-                        amount_unit=move.product_id.price_get(cr, uid, ids, pricetype.field, context)
-                        
+                        amount_unit=move.product_id.price_get(pricetype.field, context)[move.product_id.id]
                         amount=amount_unit * q or 1.0
                         # amount = q * move.product_id.standard_price
                     
