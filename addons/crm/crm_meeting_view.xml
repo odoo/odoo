@@ -66,12 +66,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invite Attendees">
-                    <separator string="" colspan="4"/>
                     <separator string="Select User to Invite" colspan="4"/>
                     <newline/>
                     <field name="users" nolabel="1" colspan="4"/>
                     <separator string="" colspan="6" />
-                    <label string="" colspan="3"/>
+                    <label string="" colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
                     <button name="do_invite" string="Invite" type="object" icon="gtk-ok"/>
                 </form>
             </field>
@@ -86,7 +86,7 @@
             <field name="target">new</field>
         </record>
         
-    <record model="ir.ui.view" id="crm_case_form_view_meet">
+        <record model="ir.ui.view" id="crm_case_form_view_meet">
         <field name="name">CRM - Meetings Form</field>
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
@@ -139,8 +139,12 @@
 	                </page>
                     <page string="Attendee Detail">
             			<separator string="Attendees" colspan="4"/>
-            			<field name="attendee_ids" colspan="4" nolabel="1"/>                        
-            		</page>
+            			<field name="attendee_ids" colspan="4" nolabel="1"/>    
+            			<button string="Invite Attendees"
+            				name="%(crm.action_view_crm_invite_attendee_wizard)d"
+            				icon="terp-partner" type="action"
+            				context="{'model' : 'crm.meeting'}" />
+                    </page>
                     <page string="Partner Info">
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
 	                    <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>

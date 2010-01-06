@@ -52,7 +52,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurid': None, 
 #        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
-        'attendee': {'field': 'attendees', 'type': 'text'}, 
+        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
 #        'categories': {'field': 'categ_id', 'sub-field': 'name'},
 #        'categories': {'field':None , 'sub-field': 'name', 'type': 'text'},
         'comment': None, 
@@ -69,6 +69,33 @@ class crm_meeting(osv.osv):
         'dtend': {'field': 'date_closed', 'type': 'datetime'}, 
         'valarm': {'field': 'alarm_id', 'type': 'many2one', 'object': 'crm.caldav.alarm'}, 
     }
+    
+    def _get_attendee_data(self, cr, uid, ids, name, arg, context):
+        result = {}
+        for id in ids:
+            eventdata = self.browse(cr, uid, id, context=context)
+            if not eventdata.attendee_ids:
+                return result
+            att_data = map(lambda x: x.cn, eventdata.attendee_ids)
+            result[id] = ', '.join(att_data)
+        return result
+        
+    def _set_attendee_data(self, cr, uid, id, name, value, arg, context):
+        if not value:
+            return 
+        eventdata = self.browse(cr, uid, id, context=context)
+        att_len = len(eventdata.attendee_ids)
+        if att_len == len(value.split(',')):
+            return 
+        if att_len > len(value.split(',')):
+            for attendee in eventdata.attendee_ids[len(value.split(',')):]:
+                self.write(cr, uid, id, {'attendee_ids': [(3, attendee.id)]})
+            return 
+        attendee_obj = self.pool.get('crm.caldav.attendee') 
+        for val in value.split(',')[att_len:]:
+            attendee_id = attendee_obj.create(cr, uid, {'cn': val.strip()})
+            self.write(cr, uid, id, {'attendee_ids': [(4, attendee_id)]})
+        return 
 
     _columns = {
         'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'),
@@ -88,10 +115,11 @@ class crm_meeting(osv.osv):
         'rrule': fields.char('Recurrent Rule', size=352, invisible="True"), 
         'rrule_type' : fields.selection([('none', 'None'), ('daily', 'Daily'), \
                  ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'), 
-        'attendees': fields.text('Attendees'),
+        'attendees': fields.function(_get_attendee_data, method=True,\
+                fnct_inv=_set_attendee_data, string='Attendees', type="text"), 
         'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
-        'attendee_ids' : fields.many2many('res.users', 'crm_meeting_attendee_rel',
-            'crm_meeting_id', 'user_id', 'Attendee')
+        'attendee_ids': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
+                                      'attendee_id', 'Attendees'), 
     }
 
     _defaults = {
@@ -135,8 +163,8 @@ class crm_meeting(osv.osv):
                 delta = datetime.timedelta(minutes=alarmdata['trigger_duration'])
             alarm_time =  dtstart + (alarmdata['trigger_occurs']== 'AFTER' and delta or -delta)
             if datetime.datetime.now() >= alarm_time:
-                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)[0]
-                for att in case_val.attendees:
+                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)
+                for att in case_val.attendee_ids:
                     if att.cn.rsplit(': ')[-1]:
                         mail_to.append(att.cn.rsplit(': ')[-1])
                 if mail_to:
@@ -144,6 +172,7 @@ class crm_meeting(osv.osv):
                     body = (case_val.name or '')+ '\n\t' + (case_val.description or '') + '\n\nEvent time: ' \
                                     +(case_val.date) + '\n\nLocation: ' + (case_val.location or '') + \
                                     '\n\nMembers Details: ' + '\n'.join(mail_to)
+                    mail_to.append(case_val.user_id.address_id.email)
                     tools.email_send(
                         case_val.user_id.address_id.email, 
                         mail_to, 
@@ -323,7 +352,7 @@ class crm_meeting(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for id in ids:
-            ls = common.caldav_id2real_id(caldav_id)
+            ls = common.caldav_id2real_id(id)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 date_new = ls[1]
                 for record in self.read(cr, uid, [common.caldav_id2real_id(id)], \
@@ -533,16 +562,26 @@ class invite_attendee_wizard(osv.osv_memory):
     _columns = {
                 'users': fields.many2many('res.users', 'invite_user_rel', \
                                           'invite_id', 'user_id', 'Users'), 
-                'availability': fields.selection([('free', 'Free'), \
-                    ('busy', 'Busy'), ('both', 'Both')], 'User Avaliability')
-    }
-
-    _defaults = {
-                 'availability':  lambda *x: 'free', 
-                 }
+                      }
 
     def do_invite(self, cr, uid, ids, context={}):
-        #TODO: Add attendee
+        datas = self.read(cr, uid, ids)[0]
+        if not context or not context.get('model') or not datas.get('users'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        user_obj = self.pool.get('res.users')
+        attendee_obj = self.pool.get('crm.caldav.attendee')
+        for user_id in datas.get('users', []):
+            user = user_obj.browse(cr, uid, user_id)
+            if not user.address_id.email:
+                raise osv.except_osv(_('Error!'), \
+                                ("User does not have an email Address"))
+            attendee_id = attendee_obj.create(cr, uid, {'user_id': user_id,\
+                  'cn': user.name + ':MAILTO:' + user.address_id.email})
+            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(6, 0, [attendee_id])]})
         return {}
 
 invite_attendee_wizard()
