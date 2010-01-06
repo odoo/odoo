@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import netsvc
+import pooler
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -108,6 +109,31 @@ class res_config_configurable(osv.osv_memory):
         if next: return next
         return self.next(cr, uid, ids, context=context)
 res_config_configurable()
+
+class res_config_installer(osv.osv_memory):
+    ''' New-style configuration base specialized for modules selection
+    and installation.
+    '''
+    _name = 'res.config.installer'
+    _inherit = 'res.config'
+
+    def execute(self, cr, uid, ids, context=None):
+        modules = self.pool.get('ir.module.module')
+
+        for installer in self.read(cr, uid, ids):
+            for addon_name, to_install in installer.iteritems():
+                if addon_name != 'id' and to_install:
+                    self.logger.notifyChannel(
+                        'installer', netsvc.LOG_INFO,
+                        'Selecting addon "%s" to install'%addon_name)
+                    modules.button_install(
+                        cr, uid,
+                        modules.search(cr, uid, [('name','=',addon_name)]),
+                        context=context)
+        cr.commit()
+
+        pooler.restart_pool(cr.dbname, update_module=True)
+res_config_installer()
 
 DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\
     'wizards (ir.actions.configuration.wizard). Old-style configuration '\
