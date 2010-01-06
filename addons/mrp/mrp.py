@@ -549,7 +549,7 @@ class mrp_production(osv.osv):
 
     #TODO Review materials in function in_prod and prod_end.
     def action_production_end(self, cr, uid, ids):
-        move_ids = []
+#        move_ids = []
         for production in self.browse(cr, uid, ids):
             for res in production.move_lines:
                 for move in production.move_created_ids:
@@ -557,7 +557,7 @@ class mrp_production(osv.osv):
                     cr.execute('INSERT INTO stock_move_history_ids \
                             (parent_id, child_id) VALUES (%s,%s)',
                             (res.id, move.id))
-                move_ids.append(res.id)
+#                move_ids.append(res.id)
             vals= {'state':'confirmed'}
             new_moves = [x.id for x in production.move_created_ids]
             self.pool.get('stock.move').write(cr, uid, new_moves, vals)
@@ -565,7 +565,7 @@ class mrp_production(osv.osv):
                 self.write(cr, uid, [production.id],
                         {'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.pool.get('stock.move').check_assign(cr, uid, new_moves)
-            self.pool.get('stock.move').action_done(cr, uid, new_moves)
+#            self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
         self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr,  uid, ids, {'state': 'done'})
