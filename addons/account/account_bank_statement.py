@@ -178,6 +178,7 @@ class account_bank_statement(osv.osv):
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
+                    'date': move.date,
                 }, context=context)
                 account_bank_statement_line_obj.write(cr, uid, [move.id], {
                     'move_ids': [(4,move_id, False)]
