@@ -49,20 +49,22 @@
             <field name="model">crm.caldav.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Alarm details">
-            		<field name="action"/>
-					<field name="name" select="1" attrs="{'required' : [('action','in',('EMAIL', 'DISPLAY'))]}"/>
-					<separator string="Description" colspan="4"/>
-           			<field name="description" colspan="4" nolabel="1" attrs="{'required' : [('action','in',('EMAIL'))]}"/>
-           			<group string="Reminder details" col="4" colspan="4">
+            	<form string="Reminder details">            		
+                    <field name="duration"/>
+                    <field name="repeat"/>
+                    <separator string="Reminder details" colspan="4" />                    
+           			<group col="4" colspan="4">
 						<field name="trigger_duration" nolabel="1" select="1"/>
 						<field name="trigger_interval" nolabel="1" select="1"/>
 						<field name="trigger_occurs" nolabel="1" select="1"/>
 						<field name="trigger_related" nolabel="1" select="1"/>
-					</group>
-					<field name="duration"/>
-					<field name="repeat"/>
-					<field name="attach" colspan="4" attrs="{'required' : [('action','in',('AUDIO', 'PROCEDURE'))]}"/>
+					</group>					
+                    <separator string="" colspan="4" />
+                    <group colspan="4">
+                    <label string="" colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
+                    <button name="do_create" string="Ok" type="object" icon="gtk-ok"/>
+                    </group>
 				</form>
             </field>
         </record>
@@ -72,9 +74,8 @@
                 <field name="model">crm.caldav.alarm</field>
                 <field name="type">tree</field>
                 <field name="arch" type="xml">
-                	<tree string="Alarm details">
-					    <field name="name" select="1"/>
-					    <field name="action"/>
+                	<tree string="Reminder details">
+					    <field name="name" select="1"/>					    
 					    <field name="trigger_interval" select="1"/>
 					    <field name="trigger_duration" select="1"/>
 					    <field name="trigger_related" select="1"/>
@@ -83,6 +84,15 @@
 				    </tree>
                 </field>
             </record>
+
+        <record id="action_view_caldav_alarm_form" model="ir.actions.act_window">
+            <field name="name">Alarm</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.caldav.alarm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
 		<record id="view_caldav_set_rrule_wizard" model="ir.ui.view">
             <field name="name">Add RRule</field>
@@ -135,8 +145,9 @@
                  		</group>
                     </group>
                     <separator string="" colspan="6" />
-                    <label string="" colspan="3"/>
-                    <button name="add_rrule" string="Ok" type="object" icon="gtk-ok"/>
+                    <label string="" colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
+                    <button name="do_add" string="Ok" type="object" icon="gtk-ok"/>
                 </form>
             </field>
         </record>

@@ -292,7 +292,7 @@ class set_rrule_wizard(osv.osv_memory):
                  'interval':  lambda *x: 1, 
                  }
 
-    def add_rrule(self, cr, uid, ids, context={}):
+    def do_add(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         if not context or not context.get('model'):
             return {}
