@@ -256,10 +256,10 @@ class rml_parse(object):
                 parse_format = DHM_FORMAT
 
             # filtering time.strftime('%Y-%m-%d')
-            if type(value) == type(''):
-                parse_format = DHM_FORMAT
-                if (not date_time):
-                    return str(value)
+#            if type(value) == type(''):
+#                parse_format = DHM_FORMAT
+#                if (not date_time):
+#                    return str(value)
 
             if not isinstance(value, time.struct_time):
                 try:
