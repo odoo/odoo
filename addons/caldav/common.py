@@ -305,14 +305,7 @@ class set_rrule_wizard(osv.osv_memory):
                  'interval':  lambda *x: 1, 
                  }
 
-    def do_add(self, cr, uid, ids, context={}):
-        datas = self.read(cr, uid, ids)[0]
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
+    def compute_rule_string(self, cr, uid, datas, context=None, *args):
         weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         weekstring = ''
         monthstring = ''
@@ -324,12 +317,11 @@ class set_rrule_wizard(osv.osv_memory):
         if freq == 'None':
             obj.write(cr, uid, [res_obj.id], {'rrule' : ''})
             return {}
-        if datas.get('interval') <= 0:
-            raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
-        
+
         if freq == 'WEEKLY':
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
-            weekstring = ';BYDAY=' + ','.join(byday)
+            if byday: 
+                weekstring = ';BYDAY=' + ','.join(byday)
 
         elif freq == 'MONTHLY':
             byday = ''
@@ -360,6 +352,22 @@ class set_rrule_wizard(osv.osv_memory):
                 str(datas.get('interval')) + enddate + monthstring + yearstring
 
 #        End logic 
+        return rrule_string
+
+    def do_add(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids)[0]
+        if datas.get('interval') <= 0:
+            raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
+        
+
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        
+        rrule_string = self.compute_rule_string(cr, uid, datas)
         obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
         return {}
 
