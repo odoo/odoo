@@ -107,12 +107,7 @@
                 <notebook colspan="4">
 	                <page string="Meeting">                                              
                         <group colspan="2" col="3">          			                   
-                            <field name="alarm_type" colspan="1" string="Alarm"/>
-                            <button string="Custom"
-            					name="custom_alarm_wizard" 
-            					icon="gtk-save-as"  context="{'model' : 'crm.meeting'}" 
-                                attrs="{'invisible':[('alarm_type','!=','custom')]}"
-                                />
+                            <field name="alarm_id" colspan="1" string="Alarm"/>
                         </group>
                         <group colspan="2" col="3">
                             <field name="rrule_type" string="Recurrency" colspan="1"/>

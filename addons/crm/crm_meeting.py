@@ -89,22 +89,6 @@ class crm_meeting(osv.osv):
         'rrule_type' : fields.selection([('none', 'None'), ('daily', 'Daily'), \
                  ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'), 
         'attendees': fields.text('Attendees'),
-        'alarms': fields.text('Alarms'),
-        'alarm_type': fields.selection([('none', 'Never'), 
-                                        ('1_min_before', '1 minute before'), 
-                                        ('5_min_before', '5 minutes before'), 
-                                        ('10_min_before', '10 minutes before'), 
-                                        ('15_min_before', '15 minutes before'), 
-                                        ('30_min_before', '30 minutes before'), 
-                                        ('45_min_before', '45 minutes before'), 
-                                        ('1_hour_before', '1 hour before'), 
-                                        ('2_hour_before', '2 hours before'),
-                                        ('3_hour_before', '3 hours before'), 
-                                        ('4_hour_before', '4 hours before'),
-                                        ('5_hour_before', '5 hours before'), 
-                                        ('18_hour_before', '18 hours before'), 
-                                        ('custom', 'Custom')
-                                    ],'Reminder'),  
         'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
         'attendee_ids' : fields.many2many('res.users', 'crm_meeting_attendee_rel',
             'crm_meeting_id', 'user_id', 'Attendee')
