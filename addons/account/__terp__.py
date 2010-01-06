@@ -58,6 +58,7 @@
         'process/supplier_invoice_process.xml',
         'sequence_view.xml',
         'company_view.xml',
+        'account_installer.xml',
     ],
     'demo_xml': [
         'account_demo.xml',
