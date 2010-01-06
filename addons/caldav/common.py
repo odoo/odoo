@@ -250,27 +250,6 @@ class virtual_report_spool(web_services.report_spool):
 
 virtual_report_spool()
 
-class virtual_wizard(web_services.wizard):
-    def exp_execute(self, db, uid, wiz_id, datas, action='init', context=None):
-        #if wiz_id not in self.wiz_uid:
-        #    # TODO: To Check why need it
-        #    if wiz_id == 1:
-        #        wiz_name ='base_setup.base_setup'
-        #    if wiz_id == 2:
-        #        wiz_name ='module.upgrade'
-        #    super(virtual_wizard,self).exp_create(db, uid, wiz_name, datas)
-        new_ids = []
-        if 'id' in datas:
-            datas['id'] = caldav_id2real_id(datas['id'])
-            for id in datas['ids']:
-                new_ids.append(caldav_id2real_id(id))
-            datas['ids'] = new_ids
-        res=super(virtual_wizard, self).exp_execute(db, uid, wiz_id, datas, action, context)
-        return res
-
-virtual_wizard()
-
-
 class set_rrule_wizard(osv.osv_memory):
     _name = "caldav.set.rrule"
     _description = "Set RRULE"

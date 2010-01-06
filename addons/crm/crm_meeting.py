@@ -52,7 +52,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurid': None, 
 #        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
-        'attendee': {'field': 'attendees', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
+        'attendee': {'field': 'attendees', 'type': 'text'}, 
 #        'categories': {'field': 'categ_id', 'sub-field': 'name'},
 #        'categories': {'field':None , 'sub-field': 'name', 'type': 'text'},
         'comment': None, 
@@ -71,29 +71,61 @@ class crm_meeting(osv.osv):
     }
 
     _columns = {
-        'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'), 
-        'class': fields.selection([('PUBLIC', 'PUBLIC'), ('PRIVATE', 'PRIVATE'), \
-                 ('CONFIDENTIAL', 'CONFIDENTIAL')], 'Privacy'), 
+        'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'),
+        'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically computed from Start Date + Duration"), 
+        'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
+                 ('confidential', 'Confidential')], 'Privacy'), 
         'location': fields.char('Location', size=264, help="Gives Location of Meeting"), 
         'freebusy': fields.text('FreeBusy'), 
-        'transparent': fields.selection([('TRANSPARENT', 'TRANSPARENT'), \
-                                          ('OPAQUE', 'OPAQUE')], 'Trensparent'), 
+        'show_as': fields.selection([('free', 'Free'), \
+                                  ('busy', 'Busy')],
+                                   'show_as'), 
         'caldav_url': fields.char('Caldav URL', size=264), 
         'exdate': fields.text('Exception Date/Times', help="This property defines the list\
                  of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
                                  for anexception to a recurrence set"), 
-        'rrule': fields.char('Recurrent Rule', size=352), 
-        'attendees': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
-                                      'attendee_id', 'Attendees'), 
+        'rrule': fields.char('Recurrent Rule', size=352, invisible="True"), 
+        'rrule_type' : fields.selection([('none', 'None'), ('daily', 'Daily'), \
+                 ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'), 
+        'attendees': fields.text('Attendees'),
+        'alarms': fields.text('Alarms'),
+        'alarm_type': fields.selection([('none', 'Never'), 
+                                        ('1_min_before', '1 minute before'), 
+                                        ('5_min_before', '5 minutes before'), 
+                                        ('10_min_before', '10 minutes before'), 
+                                        ('15_min_before', '15 minutes before'), 
+                                        ('30_min_before', '30 minutes before'), 
+                                        ('45_min_before', '45 minutes before'), 
+                                        ('1_hour_before', '1 hour before'), 
+                                        ('2_hour_before', '2 hours before'),
+                                        ('3_hour_before', '3 hours before'), 
+                                        ('4_hour_before', '4 hours before'),
+                                        ('5_hour_before', '5 hours before'), 
+                                        ('18_hour_before', '18 hours before'), 
+                                        ('custom', 'Custom')
+                                    ],'Reminder'),  
         'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
+        'attendee_ids' : fields.many2many('res.users', 'crm_meeting_attendee_rel',
+            'crm_meeting_id', 'user_id', 'Attendee')
     }
 
     _defaults = {
-         'class': lambda *a: 'PUBLIC', 
-         'transparent': lambda *a: 'OPAQUE', 
+         'class': lambda *a: 'public',          
     }
 
+    def on_change_duration(self, cr, uid, id, date, duration):
+        if not date:
+            return {}
+        start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M:%S")))
+        if duration >= 0 :
+            end = start_date + datetime.timedelta(hours=duration)
+        if duration < 0:
+            raise osv.except_osv(_('Warning !'),
+                    _('You can not set negative Duration.'))
+
+        res = {'value' : {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
+        return res
 
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
