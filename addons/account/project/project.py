@@ -60,8 +60,16 @@ class account_analytic_account(osv.osv):
 
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
-
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not acc_set:
+            return res
+            
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
@@ -70,13 +78,18 @@ class account_analytic_account(osv.osv):
             
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount_currency<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r = dict(cr.fetchall())
-        for i in ids:
-            r.setdefault(i,0.0)
-        return r
-
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-
-        acc_set = ",".join(map(str, ids))
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not acc_set:
+            return res
         
         where_date = ''
         if context.get('from_date',False):
@@ -86,10 +99,8 @@ class account_analytic_account(osv.osv):
             
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount_currency>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r= dict(cr.fetchall())
-        for i in ids:
-            r.setdefault(i,0.0)
-        return r
-
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
