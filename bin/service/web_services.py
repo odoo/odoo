@@ -696,15 +696,19 @@ class report_spool(netsvc.Service):
 
         def go(id, uid, ids, datas, context):
             cr = pooler.get_db(db).cursor()
+            import traceback
+            import sys
             try:
                 obj = netsvc.LocalService('report.'+object)
                 (result, format) = obj.create(cr, uid, ids, datas, context)
+                if not result:
+                    tb = sys.exc_info()
+                    self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-                import traceback
-                import sys
+                
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()

@@ -361,7 +361,10 @@ class report_sxw(report_rml, preprocess.report):
             fnct = self.create_source_html2html
         else:
             raise 'Unknown Report Type'
-        return fnct(cr, uid, ids, data, report_xml, context)
+        fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
+        if not fnct_ret:
+            return (False,False)
+        return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_odt(cr, uid, ids, data, report_xml, context or {})
@@ -390,6 +393,8 @@ class report_sxw(report_rml, preprocess.report):
                         results.append((d,'pdf'))
                         continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
+                if not result:
+                    return False
                 try:
                     if aname:
                         name = aname+'.'+result[1]
@@ -427,6 +432,9 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         title = report_xml.name
         rml = report_xml.report_rml_content
+        # if no rml file is found
+        if not rml:
+            return False
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
