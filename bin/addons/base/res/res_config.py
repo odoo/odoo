@@ -117,19 +117,39 @@ class res_config_installer(osv.osv_memory):
     _name = 'res.config.installer'
     _inherit = 'res.config'
 
+    _install_if = {}
+
+    def _modules_to_install(self, cr, uid, ids, context=None):
+        base = set(module_name
+                   for installer in self.read(cr, uid, ids, context=context)
+                   for module_name, to_install in installer.iteritems()
+                   if module_name != 'id'
+                   if type(self._columns[module_name]) is fields.boolean
+                   if to_install)
+        hooks_results = set()
+        for module in base:
+            hook = getattr(self, '_if_%s'%(module), None)
+            if hook:
+                hooks_results.update(hook(cr, uid, ids, context=None) or set())
+
+        additionals = set(
+            module for requirements, consequences \
+                       in self._install_if.iteritems()
+                   if base.issuperset(requirements)
+                   for module in consequences)
+
+        return base | hooks_results | additionals
+
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
-
-        for installer in self.read(cr, uid, ids):
-            for addon_name, to_install in installer.iteritems():
-                if addon_name != 'id' and to_install:
-                    self.logger.notifyChannel(
-                        'installer', netsvc.LOG_INFO,
-                        'Selecting addon "%s" to install'%addon_name)
-                    modules.button_install(
-                        cr, uid,
-                        modules.search(cr, uid, [('name','=',addon_name)]),
-                        context=context)
+        for module in self._modules_to_install(cr, uid, ids, context=context):
+            self.logger.notifyChannel(
+                'installer', netsvc.LOG_INFO,
+                'Selecting addon "%s" to install'%module)
+            modules.button_install(
+                cr, uid,
+                modules.search(cr, uid, [('name','=',module)]),
+                context=context)
         cr.commit()
 
         pooler.restart_pool(cr.dbname, update_module=True)
