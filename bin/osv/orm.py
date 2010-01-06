@@ -348,88 +348,52 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
-    def read_group(self, cr, user, ids, domain, fields, order, offset=0, limit=None, context=None):
+    def read_group(self, cr, user, ids, fields, groupby, context=None):
         context = context or {}
-        # compute the where, order by, limit and offset clauses
-        (qu1, qu2, tables) = self._where_calc(cr, user, domain, context=context)
-        if len(qu1):
-            qu1 = ' where '+string.join(qu1, ' and ')
-        else:
-            qu1 = ''
-        if order:
-            self._check_qorder(order)
+        result = []
+        if not ids:return
 
-        order_by = order or self._order
-
-        float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
-
-        sumof = ','.join(map(lambda field_name:'sum('+field_name+') as '+field_name+'',float_int_fields)) # filter fields in args to only get float and int
-
-        limit_str = limit and ' limit %d' % limit or ''
-        offset_str = offset and ' offset %d' % offset or ''
-
+        qu1 = ' where id in (' + ','.join([str(id) for id in ids]) + ')'
+        qu2 = ''
         # construct a clause for the rules :
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
         if d1:
             qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
             qu2 += d2
 
-        def get_fulname(ids,table):
+        group_by_table = fields[groupby]['relation'].replace('.','_')
 
-            if ids and not type(ids) in (list,tuple) or len(ids) == 1:
-                cond = ' where id = %s'%(ids)
-            else:
-                cond = ' where id in %s'%(ids,)
-            qury = 'select id,name from ' + table + cond
-            cr.execute(qury)
-            return cr.fetchall()
+        float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
+        sumof = ','.join(map(lambda field_name:'sum('+field_name+') as '+field_name+'',float_int_fields))
 
-        if not ids:
-            result = []
-            cr.execute('select distinct('+order_by+'),'+sumof+' from ' + ','.join(tables) +qu1+' group by '+order_by +limit_str+offset_str)
-            parent_res = cr.fetchall()
-            uniq_ids = tuple(map(lambda x:str(x[0]),parent_res))
-            if len(uniq_ids):
-                uniq_order_by_res = get_fulname(uniq_ids,fields[order_by]['relation'].replace('.','_'))
-                uniq_order_by_res = dict(uniq_order_by_res)
-            child_ids_dict = {}
-            # get child ids
-            for parent_id in uniq_ids:
-                cr.execute('select id from '+','.join(tables)+' where +'+order_by+' = %s'%(parent_id,))
-                child_ids = cr.fetchall()
-                for val in child_ids:
-                    if int(parent_id) not in child_ids_dict:
-                        child_ids_dict[int(parent_id)] = [val[0]]
-                    else:
-                        child_ids_dict[int(parent_id)].append(val[0])
-            #create [{},{}] for parent ids i.e for group by field
-            for x in parent_res:
-                parent_val_dict = {'id':x[0],order_by:(x[0],uniq_order_by_res[x[0]]),'group_child':child_ids_dict[x[0]]}
-                for sum in float_int_fields:
-                    parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
-                for field in fields.keys():
-                    if field not in parent_val_dict:
-                        parent_val_dict[field] = False
-                result.append(parent_val_dict)
-            print "returning.........",result
-            return result
-        else:
-            # process for getting child values for all fields in the view
-            result = []
-            ids = ','.join(map(lambda x:str(x),ids))
-            cr.execute('select id,' + ','.join(fields.keys())+' from '+','.join(tables)+' where id in (%s)'%(ids))
-            child_res = cr.fetchall()
-            for val in child_res:
-                child_dict = {'id':val[0],'group_child':[]}
-                for field in fields.keys():
-                    if fields[field]['type'] == 'many2one':
-                        pos = fields.keys().index(field)
-                        part = str(val[pos+1])
-                        child_dict[field] = get_fulname(part,fields[field]['relation'].replace('.','_'))[0]
-                        continue
-                    child_dict[field] = val[fields.keys().index(field)+1]
-                result.append(child_dict)
-            return result
+        cr.execute('select '+groupby+','+sumof+' from ' + self._table +qu1+' group by '+groupby+qu2)
+        parent_res = cr.fetchall()
+        groupby_ids = map(lambda x:x[0],parent_res)
+        groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,user,groupby_ids,context))
+
+        child_ids_dict = {}
+        # get child ids
+        for parent_id in groupby_ids:
+            chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
+            cr.execute('select id from '+self._table+chqu1 +groupby+' = %s'%(parent_id,))
+            child_ids = cr.fetchall()
+            print child_ids
+            for val in child_ids:
+                if parent_id not in child_ids_dict:
+                    child_ids_dict[parent_id] = [val[0]]
+                else:
+                    child_ids_dict[parent_id].append(val[0])
+        #create [{},{}] for parent ids i.e for group by field
+        for x in parent_res:
+            parent_val_dict = {'id':x[0],groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
+            for sum in float_int_fields:
+                parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
+            for field in fields.keys():
+                if field not in parent_val_dict:
+                    parent_val_dict[field] = False
+            result.append(parent_val_dict)
+        print "returning.........",result
+        return result
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
