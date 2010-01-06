@@ -115,9 +115,7 @@ class crm_caldav_attendee(osv.osv):
             'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."),
             'user_id': fields.many2one('res.users', 'Responsible'),
                 }
-    _defaults = {
-        }
-    
+
 crm_caldav_attendee()
 
 class crm_caldav_alarm(osv.osv):
@@ -170,8 +168,23 @@ are both optional, but if one occurs, so MUST the other"""),
         'trigger_duration': lambda *x: 5, 
         'trigger_occurs': lambda *x: 'BEFORE', 
         'trigger_related': lambda *x: 'start', 
+        'active': lambda *x: 1, 
                  }
-    
+
+    def do_create(self, cr, uid, ids, context=None, *args):
+        datas = self.read(cr, uid, ids)[0]
+        summary = str(datas['trigger_duration']) + ' ' + \
+                        datas['trigger_interval'].title() + ' '  + \
+                        datas['trigger_occurs'].title()
+        self.write(cr, uid, ids, {'name': summary})
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        obj.write(cr, uid, context['active_id'], {'alarm_id': ids[0]})
+        return {}
+        
 crm_caldav_alarm()
 
 class ir_attachment(osv.osv):

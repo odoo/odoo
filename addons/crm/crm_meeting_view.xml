@@ -114,8 +114,10 @@
                              />
                         </group>
                         <group colspan="2" col="3">
-                            <field name="rrule_type" string="Recurrency" colspan="1"/>
-            				<button string="Custom"
+                            <field name="rrule_type" string="Recurrency"
+                            	on_change="onchange_rrule_type(rrule_type)"
+                            	colspan="1" />
+                            <button string="Custom"
             					name="%(caldav.action_view_caldav_set_rrule_wizard)d"
             					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}" 
                                 attrs="{'readonly':[('rrule_type','!=','custom')]}"

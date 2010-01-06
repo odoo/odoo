@@ -359,7 +359,18 @@ class crm_meeting(osv.osv):
         if isinstance(ids, (str, int, long)) and isinstance(res, list):
             return res and res[0] or False
         return res
-
+    
+    def onchange_rrule_type(self, cr, uid, ids, type, *args, **argv):
+        if type == 'none':
+            return {'value': {'rrule': ''}} 
+        if type == 'custom':
+            return {}
+        rrule = self.pool.get('caldav.set.rrule')
+        rrulestr = rrule.compute_rule_string(cr, uid, {'freq': type.upper(),\
+                 'interval': 1})
+        return {'value': {'rrule': rrulestr}} 
+    
+    
     def onchange_case_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_case_id', cr, uid, ids, *args, **argv)
     def onchange_partner_id(self, cr, uid, ids, *args, **argv):
@@ -523,7 +534,7 @@ class invite_attendee_wizard(osv.osv_memory):
                 'users': fields.many2many('res.users', 'invite_user_rel', \
                                           'invite_id', 'user_id', 'Users'), 
                 'availability': fields.selection([('free', 'Free'), \
-                                              ('busy', 'Busy'), ('both', 'Both')], 'User Avaliability')
+                    ('busy', 'Busy'), ('both', 'Both')], 'User Avaliability')
     }
 
     _defaults = {
