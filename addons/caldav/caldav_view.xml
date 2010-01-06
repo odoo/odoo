@@ -10,6 +10,8 @@
             	<form string="Atendee details">
             		<notebook colspan="4">
             			<page string="Basic details">
+            				<field name="user_id"/>
+            				<newline/>
             				<field name="cn" select="1" colspan="2" />
             				<field name="partstat" />
             				<field name="cutype" select="1" />
@@ -147,7 +149,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
         
     </data>
 </openerp>

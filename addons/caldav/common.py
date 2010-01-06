@@ -112,10 +112,10 @@ class crm_caldav_attendee(osv.osv):
                                    help="Specify the calendar user that is acting on behalf of the calendar user"), 
             'cn': fields.char('CN', size=124, help="The common or displayable name to be associated with the calendar user"), 
             'dir': fields.char('DIR', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-            'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."), 
+            'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."),
+            'user_id': fields.many2one('res.users', 'Responsible'),
                 }
     _defaults = {
-        'cn':  lambda *x: 'MAILTO:', 
         }
     
 crm_caldav_attendee()
