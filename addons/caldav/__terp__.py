@@ -37,7 +37,9 @@
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
-    "init_xml" : [], 
+    "init_xml" : [
+                   'caldav_data.xml'
+                   ], 
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 

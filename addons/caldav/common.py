@@ -151,7 +151,7 @@ or contains the text to be used for DISPLAY"""),
                                         'Trigger time', required=True), 
             'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
                     ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
-            'trigger_duration':  fields.integer('TIme', required=True), 
+            'trigger_duration':  fields.integer('Time', required=True), 
             'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
                                            'The event ends')], 'Trigger Occures at', required=True), 
             'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
