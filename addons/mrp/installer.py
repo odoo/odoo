@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,14 +15,21 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-import mrp
-import installer
-import wizard
-import report
-import company
-import schedulers
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class mrp_installer(osv.osv_memory):
+    _name = 'mrp.installer'
+    _inherit = 'res.config.installer'
+
+    _columns = {
+        # Manufacturing Resource Planning
+        '???':fields.boolean('Advanced Routes'),
+        'mrp_jit':fields.boolean('Just In Time Scheduling'),
+        'mrp_operations':fields.boolean('Manufacturing Operations'),
+        'mrp_subproduct':fields.boolean('MRP Subproducts'),
+        'mrp_repair':fields.boolean('Repairs'),
+        }
+mrp_installer()
