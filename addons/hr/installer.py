@@ -39,4 +39,3 @@ class hr_installer(osv.osv_memory):
         'hr_expense': True,
         }
 hr_installer()
-
