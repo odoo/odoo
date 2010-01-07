@@ -2557,8 +2557,12 @@ class orm(orm_template):
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
-                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])[0][f]
+                        if not src_trans:
+                            src_trans = vals[f]
+                            # Inserting value to DB
+                            self.write(cr, user, ids, {f:vals[f]})
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
         # call the 'set' method of fields which are not classic_write
