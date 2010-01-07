@@ -565,9 +565,9 @@ class mrp_production(osv.osv):
                 self.write(cr, uid, [production.id],
                         {'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.pool.get('stock.move').check_assign(cr, uid, new_moves)
-#            self.pool.get('stock.move').action_done(cr, uid, new_moves)
+            self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
-        self.pool.get('stock.move').action_done(cr, uid, move_ids)
+#        self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr,  uid, ids, {'state': 'done'})
         return True
 
