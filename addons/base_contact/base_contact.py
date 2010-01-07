@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -77,6 +77,12 @@ res_partner_contact()
 
 class res_partner_address(osv.osv):
 
+    def search(self, cr, user, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        if context and context.has_key('address_partner_id' ) and context['address_partner_id']:
+            args.append(('partner_id', '=', context['address_partner_id']))
+        return super(res_partner_address, self).search(cr, user, args, offset, limit, order, context, count)
+
     #overriding of the name_get defined in base in order to remove the old contact name
     def name_get(self, cr, user, ids, context={}):
         if not len(ids):
@@ -142,7 +148,7 @@ class res_partner_job(osv.osv):
 
     _defaults = {
         'sequence_contact' : lambda *a: 0,
-        'state' : lambda *a: 'current', 
+        'state' : lambda *a: 'current',
     }
 res_partner_job()
 
