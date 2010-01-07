@@ -187,17 +187,17 @@
                 <search string="Search Claims">
                    <group col="4" colspan="1">
                        <filter icon="gtk-new" string="New Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','draft')]"
+                       	domain="[('state','=','draft')]"
                        	separator="1" help="New Claims"
                        />
                        <filter icon="gtk-execute"
                        	string="In Progress Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','open')]"
+                       	domain="[('state','=','open')]"
                        	separator="1" help="In Progress Claims"
                        />
                        <filter icon="gtk-media-pause"
                        	string="Pending Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','pending')]"
+                       	domain="[('state','=','pending')]"
                        	separator="1" help="All pending Claims"
                        />
                    </group>
