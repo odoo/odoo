@@ -67,7 +67,7 @@ class crm_meeting(osv.osv):
         'x-openobject-model': {'value': _name, 'type': 'text'}, 
 #        'duration': {'field': 'duration'},
         'dtend': {'field': 'date_closed', 'type': 'datetime'}, 
-        'valarm': {'field': 'alarm_id', 'type': 'many2one', 'object': 'crm.caldav.alarm'}, 
+        'valarm': {'field': 'caldav_alarm_id', 'type': 'many2one', 'object': 'crm.caldav.alarm'}, 
     }
     
     def _get_attendee_data(self, cr, uid, ids, name, arg, context):
@@ -118,6 +118,7 @@ class crm_meeting(osv.osv):
         'attendees': fields.function(_get_attendee_data, method=True,\
                 fnct_inv=_set_attendee_data, string='Attendees', type="text"), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
+        'caldav_alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
         'attendee_ids': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
     }
@@ -130,17 +131,16 @@ class crm_meeting(osv.osv):
         alarm_obj = self.pool.get('crm.caldav.alarm')
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
-        for meeting in self.browse(cr, uid, ids):
-            alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
-            if alarm_ids and len(alarm_ids):
-                alarm_obj.unlink(cr, uid, alarm_ids)
+       
+        for meeting in self.browse(cr, uid, ids):            
+            self.do_alarm_unlink(cr, uid, [meeting.id])
             basic_alarm = meeting.alarm_id
             if basic_alarm and meeting.state in ('open'):
                 vals = {
                     'action': 'DISPLAY', 
                     'description': meeting.description, 
                     'name': meeting.name, 
-                    'attendee_ids': [6,0, map(lambda x:x.id, meeting.attendee_ids)],
+                    'attendee_ids': [(6,0, map(lambda x:x.id, meeting.attendee_ids))],
                     'trigger_related': basic_alarm.trigger_related, 
                     'trigger_duration': basic_alarm.trigger_duration, 
                     'trigger_occurs': basic_alarm.trigger_occurs, 
@@ -149,11 +149,13 @@ class crm_meeting(osv.osv):
                     'repeat': basic_alarm.repeat, 
                     'state' : 'run',
                     'event_date' : meeting.date, 
-                    'res_id' : basic_alarm.id,                    
+                    'res_id' : meeting.id,                    
                     'model_id' : model_id,
                     'user_id' : uid              
                  }       
-                alarm_obj.create(cr, uid, vals)
+                alarm_id = alarm_obj.create(cr, uid, vals)
+                cr.execute('Update crm_meeting set caldav_alarm_id=%s where id=%s' % (alarm_id, meeting.id))
+        cr.commit()
         return True              
     
     def do_alarm_unlink(self, cr, uid, ids, context={}):
@@ -163,7 +165,9 @@ class crm_meeting(osv.osv):
         for meeting in self.browse(cr, uid, ids):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
             if alarm_ids and len(alarm_ids):
-                alarm_obj.unlink(cr, uid, alarm_ids)        
+                alarm_obj.unlink(cr, uid, alarm_ids)
+                cr.execute('Update crm_meeting set caldav_alarm_id=NULL where id=%s' % (meeting.id))
+        cr.commit()
         return True
 
     def on_change_duration(self, cr, uid, id, date, duration):

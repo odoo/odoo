@@ -156,32 +156,6 @@
             </field>
         </record>
    
-        <record id="caldav_alarm_form_view" model="ir.ui.view">
-            <field name="name">crm.case.caldav.alarm.form</field>
-            <field name="model">crm.caldav.alarm</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-            	<form string="Reminder details">                    
-                    <field name="alarm_id" select="1"/>
-                    <field name="action_id" select="1" required="True"/>
-           			<separator string="Attendees" colspan="4" /> 
-                    <field name="attendee_ids" colspan="4" nolabel="1"/>					
-                    <field name='state'/>                   
-				</form>
-            </field>
-        </record>
-        <record id="crm_caldav_tree_view" model="ir.ui.view">
-                <field name="name">crm.caldav.alarm.tree</field>
-                <field name="model">crm.caldav.alarm</field>
-                <field name="type">tree</field>
-                <field name="arch" type="xml">
-                	<tree string="Reminder details">			            					    
-			            <field name="alarm_id" select="1"/>	
-                        <field name="action_id" select="1"/> 		            
-		            </tree>
-                </field>
-            </record>
-        
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
