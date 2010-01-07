@@ -224,7 +224,7 @@ class Event(CalDAV, osv.osv_memory):
         'exrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for an exception to a recurrence set.
         'rstatus': None, 
         'related': None, # Use: O-n, Specify the relationship of the alarm trigger with respect to the start or end of the calendar component.
-                                #  like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;RELATED=END:PT5M
+                                #  like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;related=END:PT5M
         'resources': None, # Use: O-n, Type: TEXT, Defines the equipment or resources anticipated for an activity specified by a calendar entity like RESOURCES:EASEL,PROJECTOR,VCR, LANGUAGE=fr:1 raton-laveur
         'rdate': None, # Use: O-n, Type: DATE-TIME, Defines the list of date/times for a recurrence set.
         'rrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for recurring events, to-dos, or time zone definitions.
@@ -320,7 +320,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'description': None, #      Type: Text, Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property. Use:- R-1 for DISPLAY,Use:- R-1 for EMAIL,Use:- R-1 for PROCEDURE
     'summary': None, # Use: R-1, Type: Text        Which contains the text to be used as the message subject. Use for EMAIL
     'attendee': None, # Use: R-n, Type: CAL-ADDRESS, Contain the email address of attendees to receive the message. It can also include one or more. Use for EMAIL
-    'trigger': None, # Use: R-1, Type: DURATION, The "TRIGGER" property specifies a duration prior to the start of an event or a to-do. The "TRIGGER" edge may be explicitly set to be relative to the "START" or "END" of the event or to-do with the "RELATED" parameter of the "TRIGGER" property. The "TRIGGER" property value type can alternatively be set to an absolute calendar date and time of day value. Use for all action like AUDIO, DISPLAY, EMAIL and PROCEDURE
+    'trigger': None, # Use: R-1, Type: DURATION, The "TRIGGER" property specifies a duration prior to the start of an event or a to-do. The "TRIGGER" edge may be explicitly set to be relative to the "START" or "END" of the event or to-do with the "related" parameter of the "TRIGGER" property. The "TRIGGER" property value type can alternatively be set to an absolute calendar date and time of day value. Use for all action like AUDIO, DISPLAY, EMAIL and PROCEDURE
     'duration': None, #           Type: DURATION, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'repeat': None, #           Type: INTEGER, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'attach': None, # Use:- O-n: which MUST point to a sound resource, which is rendered when the alarm is triggered for AUDIO, Use:- O-n: which are intended to be sent as message attachments for EMAIL, Use:- R-1:which MUST point to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
@@ -335,22 +335,22 @@ class Alarm(CalDAV, osv.osv_memory):
         # Compute trigger data
         interval = alarm_data['trigger_interval']
         occurs = alarm_data['trigger_occurs']
-        duration = (occurs == 'AFTER' and alarm_data['trigger_duration']) \
+        duration = (occurs == 'after' and alarm_data['trigger_duration']) \
                                             or -(alarm_data['trigger_duration'])
         related = alarm_data['trigger_related']
-        trigger = valarm.add('TRIGGER')
-        trigger.params['RELATED'] = [related.upper()]
-        if interval == 'DAYS':
+        trigger = valarm.add('trigger')
+        trigger.params['related'] = [related.upper()]
+        if interval == 'days':
             delta = timedelta(days=duration)
-        if interval == 'HOURS':
+        if interval == 'hours':
             delta = timedelta(hours=duration)
-        if interval == 'MINUTES':
+        if interval == 'minutes':
             delta = timedelta(minutes=duration)
         trigger.value = delta
 
         # Compute other details
-        valarm.add('DESCRIPTION').value = alarm_data['name']
-        valarm.add('ACTION').value = alarm_data['action']
+        valarm.add('description').value = alarm_data['name']
+        valarm.add('action').value = alarm_data['action']
         return vevent
         
     def import_ical(self, cr, uid, ical_data):
@@ -359,25 +359,25 @@ class Alarm(CalDAV, osv.osv_memory):
                 seconds = child.value.seconds
                 days = child.value.days
                 diff = (days * 86400) +  seconds
-                interval = 'DAYS'
-                related = 'BEFORE'
+                interval = 'days'
+                related = 'before'
                 if not seconds:
                     duration = abs(days)
-                    related = days>0 and 'AFTER' or 'BEFORE'
+                    related = days>0 and 'after' or 'before'
                 elif (abs(diff) / 3600) == 0:
                     duration = abs(diff / 60)
-                    interval = 'MINUTES'
-                    related = days>=0 and 'AFTER' or 'BEFORE'
+                    interval = 'minutes'
+                    related = days>=0 and 'after' or 'before'
                 else:
                     duration = abs(diff / 3600)
-                    interval = 'HOURS'
-                    related = days>=0 and 'AFTER' or 'BEFORE'
+                    interval = 'hours'
+                    related = days>=0 and 'after' or 'before'
                 self.ical_set('trigger_interval', interval, 'value')
                 self.ical_set('trigger_duration', duration, 'value')
                 self.ical_set('trigger_occurs', related, 'value')
                 if child.params:
-                    if child.params.get('RELATED'):
-                        self.ical_set('trigger_related', child.params.get('RELATED')[0].lower(), 'value')
+                    if child.params.get('related'):
+                        self.ical_set('trigger_related', child.params.get('related')[0].lower(), 'value')
             else:
                 self.ical_set(child.name.lower(), child.value, 'value')
         vals = map_data(cr, uid, self)

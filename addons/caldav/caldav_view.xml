@@ -63,19 +63,19 @@
 	                        <field name="state" select="2" />
 	                        <button name="do_tentative"
 	                        	string="Uncertain"
-	                        	states="NEEDS-ACTION" type="object"
+	                        	states="needs-action" type="object"
 	                        	icon="terp-crm" />
 	                        <button name="do_accept"
 	                        	string="Accept"
-	                        	states="NEEDS-ACTION" type="object"
+	                        	states="needs-action" type="object"
 	                        	icon="gtk-apply" />
 	                        <button name="do_decline"
 	                        	string="Decline"
-	                        	states="NEEDS-ACTION" type="object"
+	                        	states="needs-action" type="object"
 	                        	icon="gtk-cancel" />
 	                        <button
 	                        	name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
-	                        	states="NEEDS-ACTION" string="Delegate"
+	                        	states="needs-action" string="Delegate"
 	                        	type="action" icon="gtk-sort-descending"
 	                        	context="{'model' : 'calendar.attendee'}" />
             		</group>
@@ -206,7 +206,7 @@
                     <field name="end_date"
                     	attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}"/>
                     <group col="7" colspan="4" name="Select weekdays"
-                    		attrs="{'invisible' : [('freq','!=','WEEKLY')]}">
+                    		attrs="{'invisible' : [('freq','!=','weekly')]}">
                     	<separator string="" colspan="6" />
                     	<newline />
                     	<field name="mo" colspan="1" />
@@ -218,7 +218,7 @@
                     	<field name="su" colspan="1" />
                     	<newline />
                     </group>
-                    <group col="4" colspan="4" attrs="{'invisible' : [('freq','!=','MONTHLY'), ('freq','!=','YEARLY')]}">
+                    <group col="4" colspan="4" attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
                     	<separator string="" colspan="6"/>
                     	<group col="2" colspan="4">
                     		<field name="select1"/>
@@ -236,9 +236,9 @@
                     		<label string="of the Month" />
                     		<newline />
                     	</group>
-                    	<group col="2" colspan="4" attrs="{'invisible' : [('freq','!=','YEARLY')]}">
+                    	<group col="2" colspan="4" attrs="{'invisible' : [('freq','!=','yearly')]}">
                     		<field name="month_list" string="of" colspan="1"
-                    				attrs="{'required' : [('freq','=','YEARLY')]}"/>
+                    				attrs="{'required' : [('freq','=','yearly')]}"/>
                  		</group>
                     </group>
                     <separator string="" colspan="6" />

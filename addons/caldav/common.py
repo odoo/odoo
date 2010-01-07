@@ -125,21 +125,21 @@ class calendar_attendee(osv.osv):
         return result 
     
     _columns = {
-        'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), \
-                    ('GROUP', 'GROUP'), ('RESOURCE', 'RESOURCE'), \
-                    ('ROOM', 'ROOM'), ('UNKNOWN', 'UNKNOWN') ], \
+        'cutype': fields.selection([('individual', 'Individual'), \
+                    ('group', 'Group'), ('resource', 'Resource'), \
+                    ('room', 'Room'), ('unknown', 'Unknown') ], \
                     'User Type', help="Specify the type of calendar user"), 
         'member': fields.char('Member', size=124, help="Indicate the groups \
 that the attendee belongs to"), 
-        'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
-                        ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                        ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'User\'s Role', \
+        'role': fields.selection([ ('req-participant', 'req-participant'), \
+                        ('chair', 'chair'), ('opt-participant', 'opt-participant'), \
+                        ('non-participant', 'non-participant')], 'User\'s Role', \
                         help='Participation role for the calendar user'), 
-        'state': fields.selection([('TENTATIVE', 'Tentative'), 
-                        ('NEEDS-ACTION', 'Needs Action'), 
-                        ('ACCEPTED', 'Accepted'), 
-                        ('DECLINED', 'Declined'), 
-                        ('DELEGATED', 'Delegated')], 'Status', readonly=True, 
+        'state': fields.selection([('tentative', 'Tentative'), 
+                        ('needs-action', 'Needs Action'), 
+                        ('accepted', 'Accepted'), 
+                        ('declined', 'Declined'), 
+                        ('delegated', 'Delegated')], 'Status', readonly=True, 
                         help="Status of the attendee's participation"), 
         'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the \
 favor of a reply is requested"), 
@@ -162,7 +162,7 @@ was delegated to"),
         'email': fields.char('Email', size=124),
                 }
     _defaults = {
-        'state':  lambda *x: 'NEEDS-ACTION', 
+        'state':  lambda *x: 'needs-action', 
         }
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -172,13 +172,13 @@ was delegated to"),
         return {'value': {'email': user.address_id.email}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
-        self.write(cr, uid, ids, {'state': 'TENTATIVE'}, context)
+        self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
-        self.write(cr, uid, ids, {'state': 'ACCEPTED'}, context)
+        self.write(cr, uid, ids, {'state': 'accepted'}, context)
 
     def do_decline(self, cr, uid, ids, context=None, *args):
-        self.write(cr, uid, ids, {'state': 'DECLINED'}, context)
+        self.write(cr, uid, ids, {'state': 'declined'}, context)
 
 calendar_attendee()
 
@@ -187,10 +187,10 @@ class res_alarm(osv.osv):
     _description = 'basic alarm information'
     _columns = {      
         'name':fields.char('Name', size=256, required=True),          
-        'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
+        'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
                                         'Trigger time', required=True), 
-        'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
-                ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
+        'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
+                ('days', 'Days')], 'Trigger duration', required=True), 
         'trigger_duration':  fields.integer('Time', required=True), 
         'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
                                        'The event ends')], 'Trigger Occures at', required=True), 
@@ -202,9 +202,9 @@ are both optional, but if one occurs, so MUST the other"""),
         
     }
     _defaults = {        
-        'trigger_interval':  lambda *x: 'MINUTES', 
+        'trigger_interval':  lambda *x: 'minutes', 
         'trigger_duration': lambda *x: 5, 
-        'trigger_occurs': lambda *x: 'BEFORE', 
+        'trigger_occurs': lambda *x: 'before', 
         'trigger_related': lambda *x: 'start', 
         'active': lambda *x: 1, 
     }
@@ -230,27 +230,27 @@ class calendar_alarm(osv.osv):
     }
      
     _columns = {            
-            'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for EMAIL
-or contains the text to be used for DISPLAY"""), 
-            'action': fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
-                    ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', \
+            'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for email
+or contains the text to be used for display"""), 
+            'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
+                    ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
                     required=True, help="Defines the action to be invoked when an alarm is triggered"), 
             'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
                                           'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
-            'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
+            'trigger_occurs': fields.selection([('before', 'before'), ('after', 'after')], \
                                         'Trigger time', required=True), 
-            'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
-                    ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
+            'trigger_interval': fields.selection([('minutes', 'minutes'), ('hours', 'hours'), \
+                    ('days', 'days')], 'Trigger duration', required=True), 
             'trigger_duration':  fields.integer('Time', required=True), 
             'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
                                            'The event ends')], 'Trigger Occures at', required=True), 
             'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
 are both optional, but if one occurs, so MUST the other"""), 
             'repeat': fields.integer('Repeat'), # TODO 
-            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for AUDIO, 
-* File which is intended to be sent as message attachments for EMAIL,
-* Points to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE."""), 
+            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio, 
+* File which is intended to be sent as message attachments for email,
+* Points to a procedure resource, which is invoked when the alarm is triggered for procedure."""), 
             'res_id' : fields.integer('Resource ID'),
             'model_id': fields.many2one('ir.model', 'Model'),
             'user_id': fields.many2one('res.users', 'Owner'),
@@ -265,11 +265,11 @@ are both optional, but if one occurs, so MUST the other"""),
      }
 
     _defaults = {
-        'action':  lambda *x: 'EMAIL', 
+        'action':  lambda *x: 'email', 
         'state' : lambda *x: 'run',
-        'trigger_interval':  lambda *x: 'MINUTES', 
+        'trigger_interval':  lambda *x: 'minutes', 
         'trigger_duration': lambda *x: 5, 
-        'trigger_occurs': lambda *x: 'BEFORE', 
+        'trigger_occurs': lambda *x: 'before', 
         'trigger_related': lambda *x: 'start',         
      }   
 
@@ -277,13 +277,13 @@ are both optional, but if one occurs, so MUST the other"""),
         event_date = vals.get('event_date', False)
         if event_date:
             dtstart = datetime.datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
-            if vals['trigger_interval'] == 'DAYS':
+            if vals['trigger_interval'] == 'days':
                 delta = datetime.timedelta(days=vals['trigger_duration'])
-            if vals['trigger_interval'] == 'HOURS':
+            if vals['trigger_interval'] == 'hours':
                 delta = datetime.timedelta(hours=vals['trigger_duration'])
-            if vals['trigger_interval'] == 'MINUTES':
+            if vals['trigger_interval'] == 'minutes':
                 delta = datetime.timedelta(minutes=vals['trigger_duration'])
-            trigger_date =  dtstart + (vals['trigger_occurs'] == 'AFTER' and delta or -delta)
+            trigger_date =  dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context)        
         return res
@@ -302,7 +302,7 @@ are both optional, but if one occurs, so MUST the other"""),
         request_obj = self.pool.get('res.request')
         mail_to = []
         for alarm in self.browse(cr, uid, alarm_ids):            
-            if alarm.action == 'DISPLAY':
+            if alarm.action == 'display':
                 value = {                   
                    'name': alarm.name,
                    'act_from': alarm.user_id.id,
@@ -319,7 +319,7 @@ are both optional, but if one occurs, so MUST the other"""),
                     request_ids.append(request_id)
                 request_obj.request_send(cr, uid, request_ids)
 
-            if alarm.action == 'EMAIL':
+            if alarm.action == 'email':
                 sub = '[Openobject Remainder] %s' %(alarm.name)    
                 body = """
                 Name : %s
@@ -428,13 +428,13 @@ class set_rrule_wizard(osv.osv_memory):
 
     _columns = {
         'freq': fields.selection([('None', 'No Repeat'), \
-                            ('SECONDLY', 'SECONDLY'), \
-                            ('MINUTELY', 'MINUTELY'), \
-                            ('HOURLY', 'HOURLY'), \
-                            ('DAILY', 'DAILY'), \
-                            ('WEEKLY', 'WEEKLY'), \
-                            ('MONTHLY', 'MONTHLY'), \
-                            ('YEARLY', 'YEARLY')], 'Frequency', required=True), 
+                            ('secondly', 'Secondly'), \
+                            ('minutely', 'Minutely'), \
+                            ('hourly', 'Hourly'), \
+                            ('daily', 'Daily'), \
+                            ('weekly', 'Weekly'), \
+                            ('monthly', 'Monthly'), \
+                            ('yearly', 'Yearly')], 'Frequency', required=True), 
         'interval': fields.integer('Interval'), 
         'count': fields.integer('Count'), 
         'mo': fields.boolean('Mon'), 
@@ -459,7 +459,7 @@ class set_rrule_wizard(osv.osv_memory):
     }
 
     _defaults = {
-                 'freq':  lambda *x: 'DAILY', 
+                 'freq':  lambda *x: 'daily', 
                  'select1':  lambda *x: 'date', 
                  'interval':  lambda *x: 1, 
                  }
@@ -477,12 +477,12 @@ class set_rrule_wizard(osv.osv_memory):
             obj.write(cr, uid, [res_obj.id], {'rrule' : ''})
             return {}
 
-        if freq == 'WEEKLY':
+        if freq == 'weekly':
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday: 
                 weekstring = ';BYDAY=' + ','.join(byday)
 
-        elif freq == 'MONTHLY':
+        elif freq == 'monthly':
             byday = ''
             if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
@@ -490,7 +490,7 @@ class set_rrule_wizard(osv.osv_memory):
                 byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
             monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day')))
 
-        elif freq == 'YEARLY':
+        elif freq == 'yearly':
             bymonth = ''
             byday = ''
             if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
