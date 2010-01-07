@@ -283,8 +283,8 @@ are both optional, but if one occurs, so MUST the other"""),
                 delta = datetime.timedelta(hours=vals['trigger_duration'])
             if vals['trigger_interval'] == 'MINUTES':
                 delta = datetime.timedelta(minutes=vals['trigger_duration'])
-        trigger_date =  dtstart + (vals['trigger_occurs'] == 'AFTER' and delta or -delta)
-        vals['trigger_date'] = trigger_date
+            trigger_date =  dtstart + (vals['trigger_occurs'] == 'AFTER' and delta or -delta)
+            vals['trigger_date'] = trigger_date
         res = super(crm_caldav_alarm, self).create(cr, uid, vals, context)        
         return res
 
