@@ -1,51 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
+<!--    Attendee invite wizard-->
+
+		<record id="view_crm_invite_attendee_wizard" model="ir.ui.view">
+            <field name="name">Invite Attendees</field>
+            <field name="model">caldav.invite.attendee</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Invite Attendees">
+                    <separator string="Select User" colspan="4"/>
+                    <newline/>
+                    <field name="user_id" select="1" on_change="onchange_user_id(user_id)"/>
+                    <field name="email" />
+                    <field name="role" select="1" />
+            		<field name="rsvp" />
+                    <separator string="" colspan="6" />
+                    <label string="" colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
+                    <button name="do_invite" string="Invite" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_crm_invite_attendee_wizard" model="ir.actions.act_window">
+            <field name="name">Invite Attendees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">caldav.invite.attendee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
         <record id="caldav_attendee_form_view" model="ir.ui.view">
-            <field name="name">crm.case.caldav.attendee</field>
+            <field name="name">caldav.attendee.form</field>
             <field name="model">crm.caldav.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
+            		<field name="user_id" on_change="onchange_user_id(user_id)" />
+            		<field name="email" select="1"/>
+            		<newline />
+            		<field name="role" select="1" />
+            		<field name="cutype" select="1" />
+            		<newline />
+            		<field name="rsvp" />
             		<notebook colspan="4">
-            			<page string="Basic details">
-            				<field name="user_id"/>
-            				<newline/>
-            				<field name="cn" select="1" colspan="2" />
-            				<field name="partstat" />
-            				<field name="cutype" select="1" />
-            				<field name="role" select="1" />
-            				<field name="rsvp" />
-            			</page>
-            			<page string="Other">
-            				<field name="delegated_to" select="1" />
-            				<field name="delegated_from" select="1" />
-            				<field name="sent_by" />
-            				<field name="dir" />
+            			<page string="Details">
+            				<field name="sent_by_uid" />
+            				<field name="dir" widget='url' />
             				<field name="language" />
             			</page>
+            			<page string="Delegation Info">
+            				<separator string="Delegated to" colspan="4" />
+            				<field name="del_to_user_ids" nolabel="1" colspan="4" />
+            				<separator string="Delegated from" colspan="4" />
+            				<field name="del_from_user_ids" nolabel="1" colspan="4" />
+            			</page>
             		</notebook>
+            		<group col="6" colspan="4">
+	                        <field name="state" select="2" />
+	                        <button name="do_tentative"
+	                        	string="Uncertain"
+	                        	states="NEEDS-ACTION" type="object"
+	                        	icon="terp-crm" />
+	                        <button name="do_accept"
+	                        	string="Accept"
+	                        	states="NEEDS-ACTION" type="object"
+	                        	icon="gtk-apply" />
+	                        <button name="do_decline"
+	                        	string="Decline"
+	                        	states="NEEDS-ACTION" type="object"
+	                        	icon="gtk-cancel" />
+	                        <button
+	                        	name="%(caldav.action_view_crm_invite_attendee_wizard)d"
+	                        	states="NEEDS-ACTION" string="Delegate"
+	                        	type="action" icon="gtk-sort-descending"
+	                        	context="{'model' : 'crm.caldav.attendee'}" />
+            		</group>
             	</form>
             </field>
         </record>
 
 	 <record id="caldav_attendee_tree_view" model="ir.ui.view">
-            <field name="name">crm.case.caldav.attendee</field>
+            <field name="name">caldav.attendee.tree</field>
             <field name="model">crm.caldav.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             	<tree string="Atendee details">
             		<field name="cn" select="1" />
-            		<field name="partstat" />
+            		<field name="state" />
             		<field name="cutype" select="1" />
             		<field name="role" select="1" />
             	</tree>
             </field>
         </record>
 
-        <record id="crm_caldav_alarm_form_view" model="ir.ui.view">
-            <field name="name">crm.caldav.alarm.form</field>
+	 <record id="action_view_attendee_form" model="ir.actions.act_window">
+	 	<field name="name">My Invitations</field>
+	 	<field name="type">ir.actions.act_window</field>
+	 	<field name="res_model">crm.caldav.attendee</field>
+	 	<field name="view_type">form</field>
+	 	<field name="view_mode">tree,form</field>
+	 	<field name="view_id" ref="caldav_attendee_tree_view" />
+	 	<field name="domain">[('user_id', '=', uid)]</field>
+	 	<field name="context">{'default_sent_by_uid': uid}</field>
+	 </record>
+
+	 <record id="action_invitation_tree_view1" model="ir.actions.act_window.view">
+	 	<field eval="1" name="sequence" />
+	 	<field name="view_mode">tree</field>
+	 	<field name="view_id" ref="caldav_attendee_tree_view" />
+	 	<field name="act_window_id" ref="action_view_attendee_form" />
+	 </record>
+	 
+	 <record id="action_invitation_form_view1" model="ir.actions.act_window.view">
+	 	<field eval="2" name="sequence" />
+	 	<field name="view_mode">form</field>
+	 	<field name="view_id" ref="caldav_attendee_form_view" />
+	 	<field name="act_window_id" ref="action_view_attendee_form" />
+	 </record>
+	 
+	 
+	 <record id="caldav_attendee_tree_model" model="ir.ui.view">
+            <field name="name">caldav.attendee.tree1</field>
+            <field name="model">crm.caldav.attendee</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+            	<tree string="Atendee details">
+            		<field name="user_id" select="1" />
+            		<field name="email" />
+            		<field name="state" />
+            		<field name="cutype" select="1" />
+            		<field name="role" select="1" />
+            	</tree>
+            </field>
+        </record>
+        
+        <record id="caldav_attendee_form_model" model="ir.ui.view">
+            <field name="name">caldav.attendee.form1</field>
+            <field name="model">crm.caldav.attendee</field>
+            <field name="type">form</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+            	<form string="Atendee details">
+            		<field name="user_id" select="1"/>
+            		<field name="state" />
+            		<field name="cutype" select="1" />
+            		<field name="role" select="1" />
+            		<newline/>
+            		<field name="rsvp" select="1" />
+            	</form>
+            </field>
+        </record>
+   
+        <record id="caldav_alarm_form_view" model="ir.ui.view">
+            <field name="name">crm.case.caldav.alarm.form</field>
             <field name="model">crm.caldav.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">

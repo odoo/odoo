@@ -43,10 +43,10 @@ def caldav_id2real_id(caldav_id = None, with_date=False):
             return int(real_id)
     return caldav_id and int(caldav_id) or caldav_id
 
-def real_id2caldav_id(real_id , recurrent_date):    
+def real_id2caldav_id(real_id, recurrent_date):    
     if real_id and recurrent_date:
         recurrent_date = time.strftime("%Y%m%d%H%M%S", \
-                                 time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
+                         time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
         return '%d-%s'%(real_id, recurrent_date)
     return real_id
 
@@ -78,44 +78,107 @@ class crm_caldav_attendee(osv.osv):
         'cutype': {'field':'cutype', 'type':'text'}, 
         'member': {'field':'member', 'type':'text'}, 
         'role': {'field':'role', 'type':'selection'}, 
-        'partstat': {'field':'partstat', 'type':'text'}, 
+        'partstat': {'field':'state', 'type':'text'}, 
         'rsvp': {'field':'rsvp', 'type':'boolean'}, 
-        'delegated-to': {'field':'delegated_to', 'type':'char'}, 
-        'delegated-from': {'field':'delegated_from', 'type':'char'}, 
+        'delegated-to': {'field':'delegated_to', 'type':'text'}, 
+        'delegated-from': {'field':'delegated_from', 'type':'text'}, 
         'sent-by': {'field':'sent_by', 'type':'text'}, 
         'cn': {'field':'cn', 'type':'text'}, 
         'dir': {'field':'dir', 'type':'text'}, 
         'language': {'field':'language', 'type':'text'}, 
     }
+    
+    def _get_address(self, name=None, email=None):
+        if name and email:
+            name += ':'
+        return (name or '') + (email and ('MAILTO:' + email) or '')
+        
+    def _compute_data(self, cr, uid, ids, name, arg, context):
+        name = name[0]
+        result = {}
 
+        def get_delegate_data(user):
+            email = user.address_id and user.address_id.email or ''
+            return self._get_address(user.name, email)
+
+        for id in ids:
+            result[id] = {}
+            attdata = self.browse(cr, uid, id, context=context)
+            if name == 'sent_by':
+                if not attdata.sent_by_uid:
+                    result[id][name] = ''
+                    continue
+                else:
+                    result[id][name] =  self._get_address(attdata.sent_by_uid.name, \
+                                            attdata.sent_by_uid.address_id.email)
+            if name == 'cn':
+                result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+            if name == 'delegated_to':
+                user_obj = self.pool.get('res.users')
+                todata = map(get_delegate_data, attdata.del_to_user_ids)
+                result[id][name] = ', '.join(todata)
+            if name == 'delegated_from':
+                dstring = []
+                user_obj = self.pool.get('res.users')
+                fromdata = map(get_delegate_data, attdata.del_from_user_ids)
+                result[id][name] = ', '.join(fromdata)
+        return result 
+    
     _columns = {
-            'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), ('GROUP', 'GROUP'), \
-                                             ('RESOURCE', 'RESOURCE'), ('ROOM', 'ROOM'), \
-                                              ('UNKNOWN', 'UNKNOWN') ], 'CUTYPE', \
-                                              help="Specify the type of calendar user"), 
-            'member': fields.char('Member', size=124, help="Indicate the groups that the attendee belongs to"), 
-            'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
-                                ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'ROLE', \
-                                help='Participation role for the calendar user'), 
-            'partstat': fields.selection([('TENTATIVE', 'TENTATIVE'), 
-                                    ('NEEDS-ACTION', 'NEEDS-ACTION'), 
-                                    ('ACCEPTED', 'ACCEPTED'), 
-                                    ('DECLINED', 'DECLINED'), 
-                                    ('DELEGATED', 'DELEGATED')], 'PARTSTAT', \
-                                    help="Status of the attendee's participation"), 
-            'rsvp':  fields.boolean('RSVP', help="Indicats whether the favor of a reply is requested"), 
-            'delegated_to': fields.char('DELEGATED-TO', size=124, \
-                                        help="The calendar users that the original request was delegated to"), 
-            'delegated_from': fields.char('DELEGATED-FROM', size=124, \
-                              help="Indicates whom the request was delegated from"), 
-            'sent_by': fields.char('SENT-BY', size=124, \
-                                   help="Specify the calendar user that is acting on behalf of the calendar user"), 
-            'cn': fields.char('CN', size=124, help="The common or displayable name to be associated with the calendar user"), 
-            'dir': fields.char('DIR', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-            'language': fields.char('LANGUAGE', size=124, help="To specify the language for text values in a property or property parameter."),
-            'user_id': fields.many2one('res.users', 'Responsible'),
+        'cutype': fields.selection([('INDIVIDUAL', 'INDIVIDUAL'), \
+                    ('GROUP', 'GROUP'), ('RESOURCE', 'RESOURCE'), \
+                    ('ROOM', 'ROOM'), ('UNKNOWN', 'UNKNOWN') ], \
+                    'User Type', help="Specify the type of calendar user"), 
+        'member': fields.char('Member', size=124, help="Indicate the groups \
+that the attendee belongs to"), 
+        'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
+                        ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
+                        ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'User\'s Role', \
+                        help='Participation role for the calendar user'), 
+        'state': fields.selection([('TENTATIVE', 'Tentative'), 
+                        ('NEEDS-ACTION', 'Needs Action'), 
+                        ('ACCEPTED', 'Accepted'), 
+                        ('DECLINED', 'Declined'), 
+                        ('DELEGATED', 'Delegated')], 'Status', readonly=True, 
+                        help="Status of the attendee's participation"), 
+        'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the \
+favor of a reply is requested"), 
+        'delegated_to': fields.function(_compute_data, method=True, \
+                string='Delegated To', type="char", size=124, store=True, \
+                multi='delegated_to', help="The users that the original request \
+was delegated to"),
+        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel',
+                                  'attendee_id', 'user_id', 'Users'), 
+        'delegated_from': fields.function(_compute_data, method=True, string=\
+                'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
+        'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
+                                      'attendee_id', 'user_id', 'Users'), 
+        'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
+        'sent_by_uid': fields.many2one('res.users', 'Sent by User'),
+        'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
+        'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
+        'language': fields.char('Language', size=124, help="To specify the language for text values in a property or property parameter."),
+        'user_id': fields.many2one('res.users', 'User'),
+        'email': fields.char('Email', size=124),
                 }
+    _defaults = {
+        'state':  lambda *x: 'NEEDS-ACTION', 
+        }
+
+    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
+        if not user_id:
+            return {'value': {'email': ''}}
+        user = self.pool.get('res.users').browse(cr, uid, user_id, *args)
+        return {'value': {'email': user.address_id.email}}
+
+    def do_tentative(self, cr, uid, ids, context=None, *args):
+        self.write(cr, uid, ids, {'state': 'TENTATIVE'}, context)
+
+    def do_accept(self, cr, uid, ids, context=None, *args):
+        self.write(cr, uid, ids, {'state': 'ACCEPTED'}, context)
+
+    def do_decline(self, cr, uid, ids, context=None, *args):
+        self.write(cr, uid, ids, {'state': 'DECLINED'}, context)
 
 crm_caldav_attendee()
 
@@ -280,9 +343,7 @@ are both optional, but if one occurs, so MUST the other"""),
                 )
             self.write(cr, uid, [alarm.id], {'state':'done'})
         return True
-    
 
-        
 crm_caldav_alarm()
 
 class ir_attachment(osv.osv):
@@ -470,5 +531,49 @@ class set_rrule_wizard(osv.osv_memory):
         return {}
 
 set_rrule_wizard()
+
+class invite_attendee_wizard(osv.osv_memory):
+    _name = "caldav.invite.attendee"
+    _description = "Invite Attendees"
+
+    _columns = {
+                'user_id': fields.many2one('res.users', 'User'),
+                'email': fields.char('Email', size=124),
+                'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
+                            ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
+                            ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'User\'s Role', \
+                            help='Participation role for the calendar user'), 
+                'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the \
+favor of a reply is requested"), 
+                      }
+
+    def do_invite(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids)[0]
+        if not context or not context.get('model') or not datas.get('user_id'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        user_obj = self.pool.get('res.users')
+        attendee_obj = self.pool.get('crm.caldav.attendee')
+        for user_id in datas.get('users', []):
+            user = user_obj.browse(cr, uid, user_id)
+            if not user.address_id.email:
+                raise osv.except_osv(_('Error!'), \
+                                ("User does not have an email Address"))
+            attendee_id = attendee_obj.create(cr, uid, {'user_id': user_id,\
+                  'cn': user.name + ':MAILTO:' + user.address_id.email})
+            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(6, 0, [attendee_id])]})
+        return {}
+    
+
+    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
+        if not user_id:
+            return {'value': {'email': ''}}
+        user = self.pool.get('res.users').browse(cr, uid, user_id, *args)
+        return {'value': {'email': user.address_id.email}}
+
+invite_attendee_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

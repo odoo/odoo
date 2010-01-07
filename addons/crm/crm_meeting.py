@@ -76,7 +76,7 @@ class crm_meeting(osv.osv):
             eventdata = self.browse(cr, uid, id, context=context)
             if not eventdata.attendee_ids:
                 return result
-            att_data = map(lambda x: x.cn, eventdata.attendee_ids)
+            att_data = map(lambda x: x.cn or '', eventdata.attendee_ids)
             result[id] = ', '.join(att_data)
         return result
         
@@ -557,35 +557,5 @@ class res_users(osv.osv):
     }
 
 res_users()
-    
-class invite_attendee_wizard(osv.osv_memory):
-    _name = "caldav.invite.attendee"
-    _description = "Invite Attendees"
 
-    _columns = {
-                'users': fields.many2many('res.users', 'invite_user_rel', \
-                                          'invite_id', 'user_id', 'Users'), 
-                      }
-
-    def do_invite(self, cr, uid, ids, context={}):
-        datas = self.read(cr, uid, ids)[0]
-        if not context or not context.get('model') or not datas.get('users'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
-        user_obj = self.pool.get('res.users')
-        attendee_obj = self.pool.get('crm.caldav.attendee')
-        for user_id in datas.get('users', []):
-            user = user_obj.browse(cr, uid, user_id)
-            if not user.address_id.email:
-                raise osv.except_osv(_('Error!'), \
-                                ("User does not have an email Address"))
-            attendee_id = attendee_obj.create(cr, uid, {'user_id': user_id,\
-                  'cn': user.name + ':MAILTO:' + user.address_id.email})
-            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(6, 0, [attendee_id])]})
-        return {}
-
-invite_attendee_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
