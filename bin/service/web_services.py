@@ -443,7 +443,10 @@ GNU Public Licence.
         return info
 
     def exp_timezone_get(self, db, login, password):
-        return time.tzname[0]
+        #timezone detection is safe in multithread, so lazy init is ok here
+        if (not tools.config['timezone']):
+            tools.config['timezone'] = tools.misc.detect_server_timezone()
+        return tools.config['timezone']
 
 
     def exp_get_available_updates(self, contract_id, contract_password):

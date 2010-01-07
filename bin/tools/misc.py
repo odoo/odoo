@@ -31,6 +31,7 @@ from config import config
 import zipfile
 import release
 import socket
+import re
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -302,8 +303,103 @@ def reverse_enumerate(l):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
+email_re = re.compile(r"""
+    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
+    @                                # mandatory @ sign
+    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
+     \.
+     [a-z]{2,3}                      # TLD
+    )
+    """, re.VERBOSE)
+res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
+command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
+reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
+
+priorities = {
+        '1': '1 (Highest)',
+        '2': '2 (High)',
+        '3': '3 (Normal)',
+        '4': '4 (Low)',
+        '5': '5 (Lowest)',
+    }
+
+def html2plaintext(html, body_id=None, encoding='utf-8'):
+    ## (c) Fry-IT, www.fry-it.com, 2007
+    ## <peter@fry-it.com>
+    ## download here: http://www.peterbe.com/plog/html2plaintext
+    
+    
+    """ from an HTML text, convert the HTML to plain text.
+    If @body_id is provided then this is the tag where the 
+    body (not necessarily <body>) starts.
+    """
+    try:
+        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
+    except:
+        return html
+            
+    urls = []
+    if body_id is not None:
+        strainer = SoupStrainer(id=body_id)
+    else:
+        strainer = SoupStrainer('body')
+    
+    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
+    for link in soup.findAll('a'):
+        title = link.renderContents()
+        for url in [x[1] for x in link.attrs if x[0]=='href']:
+            urls.append(dict(url=url, tag=str(link), title=title))
+
+    html = soup.__str__()
+            
+    url_index = []
+    i = 0
+    for d in urls:
+        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
+            html = html.replace(d['tag'], d['url'])
+        else:
+            i += 1
+            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
+            url_index.append(d['url'])
+
+    html = html.replace('<strong>','*').replace('</strong>','*')
+    html = html.replace('<b>','*').replace('</b>','*')
+    html = html.replace('<h3>','*').replace('</h3>','*')
+    html = html.replace('<h2>','**').replace('</h2>','**')
+    html = html.replace('<h1>','**').replace('</h1>','**')
+    html = html.replace('<em>','/').replace('</em>','/')
+    
+
+    # the only line breaks we respect is those of ending tags and 
+    # breaks
+    
+    html = html.replace('\n',' ')
+    html = html.replace('<br>', '\n')
+    html = html.replace('<tr>', '\n')
+    html = html.replace('</p>', '\n\n')
+    html = re.sub('<br\s*/>', '\n', html)
+    html = html.replace(' ' * 2, ' ')
+
+
+    # for all other tags we failed to clean up, just remove then and 
+    # complain about them on the stderr
+    def desperate_fixer(g):
+        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
+        return ' '
+
+    html = re.sub('<.*?>', desperate_fixer, html)
+
+    # lstrip all lines
+    html = '\n'.join([x.lstrip() for x in html.splitlines()])
+
+    for i, url in enumerate(url_index):
+        if i == 0:
+            html += '\n\n'
+        html += '[%s] %s\n' % (i+1, url)       
+    return html
+
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, tinycrm=False, ssl=False, debug=False, subtype='plain', x_headers=None):
+               attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
 
     """Send an email."""
     import smtplib
@@ -314,7 +410,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
-    import netsvc
+    import netsvc    
 
     if x_headers is None:
         x_headers = {}
@@ -324,6 +420,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     if not email_from and not config['email_from']:
         raise Exception("No Email sender by default, see config file")
+
+    if not email_from:
+        email_from = config.get('email_from', False)
 
     if not email_cc:
         email_cc = []
@@ -356,13 +455,15 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
     msg['X-OpenERP-Server-Host'] = socket.gethostname()
     msg['X-OpenERP-Server-Version'] = release.version
+    if priority:
+        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
     for key, value in x_headers.items():
         msg['X-OpenERP-%s' % key] = str(value)
 
-    if tinycrm:
-        msg['Message-Id'] = "<%s-tinycrm-%s@%s>" % (time.time(), tinycrm, socket.gethostname())
+    if openobject_id:
+        msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     if attach:
         try:
@@ -393,12 +494,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             return True
         except Exception,e:
             netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
-            return False
+            return False    
     
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
-
         try:
             # in case of debug, the messages are printed to stderr.
             if debug:
@@ -412,13 +512,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                 s.ehlo()
 
             if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])
-
+                s.login(config['smtp_user'], config['smtp_password'])            
             s.sendmail(email_from,
                        flatten([email_to, email_cc, email_bcc]),
                        msg.as_string()
                       )
-
         finally:
             s.quit()
             if debug:
@@ -1075,6 +1173,89 @@ def detect_ip_addr():
     except:
         ip_addr = 'localhost'
     return ip_addr
+
+# RATIONALE BEHIND TIMESTAMP CALCULATIONS AND TIMEZONE MANAGEMENT:
+#  The server side never does any timestamp calculation, always
+#  sends them in a naive (timezone agnostic) format supposed to be
+#  expressed within the server timezone, and expects the clients to 
+#  provide timestamps in the server timezone as well.
+#  It stores all timestamps in the database in naive format as well, 
+#  which also expresses the time in the server timezone.
+#  For this reason the server makes its timezone name available via the
+#  common/timezone_get() rpc method, which clients need to read
+#  to know the appropriate time offset to use when reading/writing
+#  times.
+def get_win32_timezone():
+    """Attempt to return the "standard name" of the current timezone on a win32 system.
+       @return: the standard name of the current win32 timezone, or False if it cannot be found.
+    """
+    res = False
+    if (sys.platform == "win32"):
+        try:
+            import _winreg
+            hklm = _winreg.ConnectRegistry(None,_winreg.HKEY_LOCAL_MACHINE)
+            current_tz_key = _winreg.OpenKey(hklm, r"SYSTEM\CurrentControlSet\Control\TimeZoneInformation", 0,_winreg.KEY_ALL_ACCESS)
+            res = str(_winreg.QueryValueEx(current_tz_key,"StandardName")[0])  # [0] is value, [1] is type code
+            _winreg.CloseKey(current_tz_key)
+            _winreg.CloseKey(hklm)
+        except:
+            pass
+    return res
+
+def detect_server_timezone():
+    """Attempt to detect the timezone to use on the server side.
+       Defaults to UTC if no working timezone can be found.
+       @return: the timezone identifier as expected by pytz.timezone.
+    """
+    import time
+    import netsvc
+    try:
+        import pytz
+    except:
+        netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+            "Python pytz module is not available. Timezone will be set to UTC by default.")
+        return 'UTC'
+
+    # Option 1: the configuration option (did not exist before, so no backwards compatibility issue)
+    # Option 2: to be backwards compatible with 5.0 or earlier, the value from time.tzname[0], but only if it is known to pytz
+    # Option 3: the environment variable TZ
+    sources = [ (config['timezone'], 'OpenERP configuration'),
+                (time.tzname[0], 'time.tzname'),
+                (os.environ.get('TZ',False),'TZ environment variable'), ]
+    # Option 4: OS-specific: /etc/timezone on Unix
+    if (os.path.exists("/etc/timezone")):
+        tz_value = False
+        try:
+            f = open("/etc/timezone")
+            tz_value = f.read(128).strip()
+        except:
+            pass
+        finally:
+            f.close()
+        sources.append((tz_value,"/etc/timezone file"))
+    # Option 5: timezone info from registry on Win32
+    if (sys.platform == "win32"):
+        # Timezone info is stored in windows registry.
+        # However this is not likely to work very well as the standard name
+        # of timezones in windows is rarely something that is known to pytz.
+        # But that's ok, it is always possible to use a config option to set
+        # it explicitly.
+        sources.append((get_win32_timezone(),"Windows Registry"))
+
+    for (value,source) in sources:
+        if value:
+            try:
+                tz = pytz.timezone(value)
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_INFO,
+                    "Using timezone %s obtained from %s." % (tz.zone,source))
+                return value
+            except pytz.UnknownTimeZoneError:
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+                    "The timezone specified in %s (%s) is invalid, ignoring it." % (source,value))
+
+    netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
+        "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
+    return 'UTC'
 
 
 if __name__ == '__main__':

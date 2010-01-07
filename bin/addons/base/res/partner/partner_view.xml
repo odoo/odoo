@@ -96,6 +96,7 @@
                     <field name="name" select="1"/>
                     <field domain="[('domain', '=', 'contact')]" name="title" />
                     <field name="function"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                       <group string="Postal Address" colspan="2" col="2">
                         <field name="street" select="2"/>
@@ -153,6 +154,7 @@
                     <field name="street2"/>
                     <field name="type" select="2"/>
                     <field name="function"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="zip" select="2"/>
                     <field name="city" select="2"/>

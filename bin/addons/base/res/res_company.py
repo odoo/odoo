@@ -103,15 +103,12 @@ class res_company(osv.osv):
             args.append(('field_id.name','=',field))
         else:
             args.append(('field_id','=',False))
-        print args
         ids = proxy.search(cr, uid, args, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
             if eval(rule.expression, {'context': context, 'user': user}):
-                print 'found', object
                 return rule.company_dest_id.id
         user_company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        print 'not found', object
         return user_company_id
 
     def _get_child_ids(self, cr, uid, uid2, context={}):
