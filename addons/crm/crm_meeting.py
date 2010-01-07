@@ -137,7 +137,7 @@ class crm_meeting(osv.osv):
             basic_alarm = meeting.alarm_id
             if basic_alarm and meeting.state in ('open'):
                 vals = {
-                    'action': 'DISPLAY', 
+                    'action': 'display', 
                     'description': meeting.description, 
                     'name': meeting.name, 
                     'attendee_ids': [(6,0, map(lambda x:x.id, meeting.attendee_ids))],
@@ -221,6 +221,10 @@ class crm_meeting(osv.osv):
             val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
+            caldav_alarm_id = val['caldav_alarm_id']
+            if caldav_alarm_id:
+               caldav_alarm = self.browse(cr, uid, caldav_alarm_id)
+               val['alarm_id'] = caldav_alarm.alarm_id   
             if is_exists:
                 self.write(cr, uid, [is_exists], val)
             else:
@@ -229,8 +233,7 @@ class crm_meeting(osv.osv):
 
     def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):
         if not limit:
-            limit = 100
-
+            limit = 100        
         if ids and (start_date or until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \
@@ -255,9 +258,11 @@ class crm_meeting(osv.osv):
                     rrule_str = data['rrule']
                     new_rrule_str = []
                     rrule_until_date = False
+                    is_until = False
                     for rule in rrule_str.split(';'):
                         name, value = rule.split('=')
                         if name == "UNTIL":
+                            is_until = True
                             value = parser.parse(value)
                             rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
                             if until_date and until_date >= rrule_until_date:
@@ -267,8 +272,14 @@ class crm_meeting(osv.osv):
                                 value = until_date
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
+                    if not is_until and until_date:                        
+                        until_date = until_date.strftime("%Y%m%d%H%M%S")
+                        value = until_date
+                        name = "UNTIL"
+                        new_rule = '%s=%s' % (name, value)
+                        new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    start_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
+                    start_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")                    
                     rdates = event_obj.get_recurrent_dates(str(new_rrule_str), exdate, start_date)
                     for rdate in rdates:
                         idval = common.real_id2caldav_id(data['id'], rdate)

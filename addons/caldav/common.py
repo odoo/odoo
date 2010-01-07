@@ -214,7 +214,7 @@ res_alarm()
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'
     _description = 'Event alarm information'
-
+    _inherits = {'res.alarm': "alarm_id"}
     __attribute__ = {
             'action': {'field': 'action', 'type': 'text'}, 
             'description': {'field': 'name', 'type': 'text'}, 
@@ -227,9 +227,10 @@ class calendar_alarm(osv.osv):
             'duration': {'field': 'duration', 'type': 'text'}, 
             'repeat': {'field': 'repeat', 'type': 'text'}, 
             'attach': {'field': 'attach', 'type': 'text'}, 
-    }
-     
-    _columns = {            
+    }     
+
+    _columns = {    
+            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),        
             'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for email
 or contains the text to be used for display"""), 
             'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
@@ -237,17 +238,7 @@ or contains the text to be used for display"""),
                     required=True, help="Defines the action to be invoked when an alarm is triggered"), 
             'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
-            'trigger_occurs': fields.selection([('before', 'before'), ('after', 'after')], \
-                                        'Trigger time', required=True), 
-            'trigger_interval': fields.selection([('minutes', 'minutes'), ('hours', 'hours'), \
-                    ('days', 'days')], 'Trigger duration', required=True), 
-            'trigger_duration':  fields.integer('Time', required=True), 
-            'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                           'The event ends')], 'Trigger Occures at', required=True), 
-            'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
-are both optional, but if one occurs, so MUST the other"""), 
-            'repeat': fields.integer('Repeat'), # TODO 
+                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True),             
             'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio, 
 * File which is intended to be sent as message attachments for email,
 * Points to a procedure resource, which is invoked when the alarm is triggered for procedure."""), 
@@ -266,11 +257,7 @@ are both optional, but if one occurs, so MUST the other"""),
 
     _defaults = {
         'action':  lambda *x: 'email', 
-        'state' : lambda *x: 'run',
-        'trigger_interval':  lambda *x: 'minutes', 
-        'trigger_duration': lambda *x: 5, 
-        'trigger_occurs': lambda *x: 'before', 
-        'trigger_related': lambda *x: 'start',         
+        'state' : lambda *x: 'run',        
      }   
 
     def create(self, cr, uid, vals, context={}): 
