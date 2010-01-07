@@ -363,7 +363,10 @@ def init_module_objects(cr, module_name, obj_list):
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
     todo = []
     for obj in obj_list:
-        result = obj._auto_init(cr, {'module': module_name})
+        try:
+            result = obj._auto_init(cr, {'module': module_name})
+        except Exception, e:
+            raise 
         if result:
             todo += result
         if hasattr(obj, 'init'):
@@ -733,7 +736,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
-
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r

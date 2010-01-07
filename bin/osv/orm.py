@@ -1773,11 +1773,10 @@ class orm(orm_template):
                 elif isinstance(f, fields.many2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
-                        #FIXME: Remove this try/except
-                        try:
-                            ref = self.pool.get(f._obj)._table
-                        except AttributeError:
-                            ref = f._obj.replace('.', '_')
+                        if not self.pool.get(f._obj):
+                            raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                        ref = self.pool.get(f._obj)._table
+#                        ref = f._obj.replace('.', '_')
                         cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
@@ -1815,11 +1814,10 @@ class orm(orm_template):
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
-                                #FIXME: Remove this try/except
-                                try:
-                                    ref = self.pool.get(f._obj)._table
-                                except AttributeError:
-                                    ref = f._obj.replace('.', '_')
+                                if not self.pool.get(f._obj):
+                                    raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                                ref = self.pool.get(f._obj)._table
+#                                ref = f._obj.replace('.', '_')
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
                                     cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
