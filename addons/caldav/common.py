@@ -69,8 +69,8 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
-class crm_caldav_attendee(osv.osv):
-    _name = 'crm.caldav.attendee'
+class calendar_attendee(osv.osv):
+    _name = 'calendar.attendee'
     _description = 'Attendee information'
     _rec_name = 'cutype'
 
@@ -180,7 +180,7 @@ was delegated to"),
     def do_decline(self, cr, uid, ids, context=None, *args):
         self.write(cr, uid, ids, {'state': 'DECLINED'}, context)
 
-crm_caldav_attendee()
+calendar_attendee()
 
 class res_alarm(osv.osv):
     _name = 'res.alarm'
@@ -211,8 +211,8 @@ are both optional, but if one occurs, so MUST the other"""),
 
 res_alarm()
 
-class crm_caldav_alarm(osv.osv):
-    _name = 'crm.caldav.alarm'
+class calendar_alarm(osv.osv):
+    _name = 'calendar.alarm'
     _description = 'Event alarm information'
 
     __attribute__ = {
@@ -236,7 +236,7 @@ or contains the text to be used for DISPLAY"""),
                     ('PROCEDURE', 'PROCEDURE'), ('EMAIL', 'EMAIL') ], 'Action', \
                     required=True, help="Defines the action to be invoked when an alarm is triggered"), 
             'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
-            'attendee_ids': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
+            'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
                                           'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
             'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
                                         'Trigger time', required=True), 
@@ -285,7 +285,7 @@ are both optional, but if one occurs, so MUST the other"""),
                 delta = datetime.timedelta(minutes=vals['trigger_duration'])
             trigger_date =  dtstart + (vals['trigger_occurs'] == 'AFTER' and delta or -delta)
             vals['trigger_date'] = trigger_date
-        res = super(crm_caldav_alarm, self).create(cr, uid, vals, context)        
+        res = super(calendar_alarm, self).create(cr, uid, vals, context)        
         return res
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -294,11 +294,11 @@ are both optional, but if one occurs, so MUST the other"""),
             context = {}
         current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cr.execute("select alarm.id as id \
-                    from crm_caldav_alarm alarm \
+                    from calendar_alarm alarm \
                     where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
         res = cr.dictfetchall()  
         alarm_ids = map(lambda x: x['id'], res)      
-        attendee_obj = self.pool.get('crm.caldav.attendee')
+        attendee_obj = self.pool.get('calendar.attendee')
         request_obj = self.pool.get('res.request')
         mail_to = []
         for alarm in self.browse(cr, uid, alarm_ids):            
@@ -344,7 +344,7 @@ are both optional, but if one occurs, so MUST the other"""),
             self.write(cr, uid, [alarm.id], {'state':'done'})
         return True
 
-crm_caldav_alarm()
+calendar_alarm()
 
 class ir_attachment(osv.osv):
     _name = 'ir.attachment'
@@ -556,7 +556,7 @@ favor of a reply is requested"),
         obj = self.pool.get(model)
         res_obj = obj.browse(cr, uid, context['active_id'])
         user_obj = self.pool.get('res.users')
-        attendee_obj = self.pool.get('crm.caldav.attendee')
+        attendee_obj = self.pool.get('calendar.attendee')
         for user_id in datas.get('users', []):
             user = user_obj.browse(cr, uid, user_id)
             if not user.address_id.email:

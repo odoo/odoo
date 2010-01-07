@@ -52,7 +52,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurid': None, 
 #        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
-        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
+        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
 #        'categories': {'field': 'categ_id', 'sub-field': 'name'},
 #        'categories': {'field':None , 'sub-field': 'name', 'type': 'text'},
         'comment': None, 
@@ -67,7 +67,7 @@ class crm_meeting(osv.osv):
         'x-openobject-model': {'value': _name, 'type': 'text'}, 
 #        'duration': {'field': 'duration'},
         'dtend': {'field': 'date_closed', 'type': 'datetime'}, 
-        'valarm': {'field': 'caldav_alarm_id', 'type': 'many2one', 'object': 'crm.caldav.alarm'}, 
+        'valarm': {'field': 'caldav_alarm_id', 'type': 'many2one', 'object': 'calendar.alarm'}, 
     }
     
     def _get_attendee_data(self, cr, uid, ids, name, arg, context):
@@ -91,7 +91,7 @@ class crm_meeting(osv.osv):
             for attendee in eventdata.attendee_ids[len(value.split(',')):]:
                 self.write(cr, uid, id, {'attendee_ids': [(3, attendee.id)]})
             return 
-        attendee_obj = self.pool.get('crm.caldav.attendee') 
+        attendee_obj = self.pool.get('calendar.attendee') 
         for val in value.split(',')[att_len:]:
             attendee_id = attendee_obj.create(cr, uid, {'cn': val.strip()})
             self.write(cr, uid, id, {'attendee_ids': [(4, attendee_id)]})
@@ -118,8 +118,8 @@ class crm_meeting(osv.osv):
         'attendees': fields.function(_get_attendee_data, method=True,\
                 fnct_inv=_set_attendee_data, string='Attendees', type="text"), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
-        'caldav_alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
-        'attendee_ids': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
+        'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
+        'attendee_ids': fields.many2many('calendar.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
     }
 
@@ -128,7 +128,7 @@ class crm_meeting(osv.osv):
     }
 
     def do_alarm_create(self, cr, uid, ids, context={}):
-        alarm_obj = self.pool.get('crm.caldav.alarm')
+        alarm_obj = self.pool.get('calendar.alarm')
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
        
@@ -159,7 +159,7 @@ class crm_meeting(osv.osv):
         return True              
     
     def do_alarm_unlink(self, cr, uid, ids, context={}):
-        alarm_obj = self.pool.get('crm.caldav.alarm')
+        alarm_obj = self.pool.get('calendar.alarm')
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
         for meeting in self.browse(cr, uid, ids):
@@ -187,15 +187,15 @@ class crm_meeting(osv.osv):
 
     def export_cal(self, cr, uid, ids, context={}):
         crm_data = self.read(cr, uid, ids, [], context ={'read':True})
-        event_obj = self.pool.get('caldav.event')
+        event_obj = self.pool.get('basic.calendar.event')
         event_obj.__attribute__.update(self.__attribute__)
 
-        attendee_obj = self.pool.get('caldav.attendee')
-        crm_attendee = self.pool.get('crm.caldav.attendee')
+        attendee_obj = self.pool.get('basic.calendar.attendee')
+        crm_attendee = self.pool.get('calendar.attendee')
         attendee_obj.__attribute__.update(crm_attendee.__attribute__)
 
-        alarm_obj = self.pool.get('caldav.alarm')
-        crm_alarm = self.pool.get('crm.caldav.alarm')
+        alarm_obj = self.pool.get('basic.calendar.alarm')
+        crm_alarm = self.pool.get('calendar.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
 
         ical = event_obj.export_ical(cr, uid, crm_data, {'model': 'crm.meeting'})
@@ -205,15 +205,15 @@ class crm_meeting(osv.osv):
 
     def import_cal(self, cr, uid, data, context={}):
         file_content = base64.decodestring(data)
-        event_obj = self.pool.get('caldav.event')
+        event_obj = self.pool.get('basic.calendar.event')
         event_obj.__attribute__.update(self.__attribute__)
 
-        attendee_obj = self.pool.get('caldav.attendee')
-        crm_attendee = self.pool.get('crm.caldav.attendee')
+        attendee_obj = self.pool.get('basic.calendar.attendee')
+        crm_attendee = self.pool.get('calendar.attendee')
         attendee_obj.__attribute__.update(crm_attendee.__attribute__)
 
-        alarm_obj = self.pool.get('caldav.alarm')
-        crm_alarm = self.pool.get('crm.caldav.alarm')
+        alarm_obj = self.pool.get('basic.calendar.alarm')
+        crm_alarm = self.pool.get('calendar.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         vals = event_obj.import_ical(cr, uid, file_content)
         for val in vals:            
@@ -251,7 +251,7 @@ class crm_meeting(osv.osv):
                     count += 1
                 else:
                     exdate = data['exdate'] and data['exdate'].split(',') or []
-                    event_obj = self.pool.get('caldav.event')
+                    event_obj = self.pool.get('basic.calendar.event')
                     rrule_str = data['rrule']
                     new_rrule_str = []
                     rrule_until_date = False
@@ -539,7 +539,7 @@ class res_users(osv.osv):
             
 #        check for attendee added already
             cr.execute("""select att.user_id , c.id
-                from crm_caldav_attendee att 
+                from calendar_attendee att 
                 inner join crm_attendee_rel rel on (rel.attendee_id=att.id) 
                 join crm_meeting m on (rel.case_id=m.id)
                 join crm_case c on (m.inherit_case_id = c.id )

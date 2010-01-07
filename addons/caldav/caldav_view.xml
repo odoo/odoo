@@ -4,7 +4,7 @@
     
 <!--    Attendee invite wizard-->
 
-		<record id="view_crm_invite_attendee_wizard" model="ir.ui.view">
+		<record id="view_calendar_invite_attendee_wizard" model="ir.ui.view">
             <field name="name">Invite Attendees</field>
             <field name="model">caldav.invite.attendee</field>
             <field name="type">form</field>
@@ -24,7 +24,7 @@
             </field>
         </record>
 
-        <record id="action_view_crm_invite_attendee_wizard" model="ir.actions.act_window">
+        <record id="action_view_calendar_invite_attendee_wizard" model="ir.actions.act_window">
             <field name="name">Invite Attendees</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">caldav.invite.attendee</field>
@@ -34,8 +34,8 @@
         </record>
 
         <record id="caldav_attendee_form_view" model="ir.ui.view">
-            <field name="name">caldav.attendee.form</field>
-            <field name="model">crm.caldav.attendee</field>
+            <field name="name">calendar.attendee.form</field>
+            <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
@@ -74,18 +74,18 @@
 	                        	states="NEEDS-ACTION" type="object"
 	                        	icon="gtk-cancel" />
 	                        <button
-	                        	name="%(caldav.action_view_crm_invite_attendee_wizard)d"
+	                        	name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
 	                        	states="NEEDS-ACTION" string="Delegate"
 	                        	type="action" icon="gtk-sort-descending"
-	                        	context="{'model' : 'crm.caldav.attendee'}" />
+	                        	context="{'model' : 'calendar.attendee'}" />
             		</group>
             	</form>
             </field>
         </record>
 
 	 <record id="caldav_attendee_tree_view" model="ir.ui.view">
-            <field name="name">caldav.attendee.tree</field>
-            <field name="model">crm.caldav.attendee</field>
+            <field name="name">calendar.attendee.tree</field>
+            <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             	<tree string="Atendee details">
@@ -100,7 +100,7 @@
 	 <record id="action_view_attendee_form" model="ir.actions.act_window">
 	 	<field name="name">My Invitations</field>
 	 	<field name="type">ir.actions.act_window</field>
-	 	<field name="res_model">crm.caldav.attendee</field>
+	 	<field name="res_model">calendar.attendee</field>
 	 	<field name="view_type">form</field>
 	 	<field name="view_mode">tree,form</field>
 	 	<field name="view_id" ref="caldav_attendee_tree_view" />
@@ -124,8 +124,8 @@
 	 
 	 
 	 <record id="caldav_attendee_tree_model" model="ir.ui.view">
-            <field name="name">caldav.attendee.tree1</field>
-            <field name="model">crm.caldav.attendee</field>
+            <field name="name">calendar.attendee.tree1</field>
+            <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
@@ -140,8 +140,8 @@
         </record>
         
         <record id="caldav_attendee_form_model" model="ir.ui.view">
-            <field name="name">caldav.attendee.form1</field>
-            <field name="model">crm.caldav.attendee</field>
+            <field name="name">calendar.attendee.form1</field>
+            <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
