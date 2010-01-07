@@ -43,54 +43,67 @@
             	</tree>
             </field>
         </record>
-        
-        <record id="caldav_alarm_form_view" model="ir.ui.view">
-            <field name="name">crm.case.caldav.alarm.form</field>
+
+        <record id="crm_caldav_alarm_form_view" model="ir.ui.view">
+            <field name="name">crm.caldav.alarm.form</field>
             <field name="model">crm.caldav.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
+            	<form string="Reminder details">                    
+                    <field name="alarm_id" select="1"/>
+                    <field name="action_id" select="1" required="True"/>
+           			<separator string="Attendees" colspan="4" /> 
+                    <field name="attendee_ids" colspan="4" nolabel="1"/>					
+                    <field name='state'/>                   
+				</form>
+            </field>
+        </record>
+        <record id="crm_caldav_tree_view" model="ir.ui.view">
+                <field name="name">crm.caldav.alarm.tree</field>
+                <field name="model">crm.caldav.alarm</field>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                	<tree string="Reminder details">			            					    
+			            <field name="alarm_id" select="1"/>	
+                        <field name="action_id" select="1"/> 		            
+		            </tree>
+                </field>
+            </record>
+        
+        <record id="res_alarm_form_view" model="ir.ui.view">
+            <field name="name">res.alarm.form</field>
+            <field name="model">res.alarm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
             	<form string="Reminder details">
-                    <separator string="Reminder details" colspan="4" />                    
-           			<group col="4" colspan="4">
+                    <field name="name" select="1"/>	                      
+                    <field name="active"/>                 
+           			<group string="Reminder details" col="4" colspan="4">
 						<field name="trigger_duration" nolabel="1" select="1"/>
 						<field name="trigger_interval" nolabel="1" select="1"/>
 						<field name="trigger_occurs" nolabel="1" select="1"/>
 						<field name="trigger_related" nolabel="1" select="1"/>
 					</group>					
-                    <separator string="" colspan="4" />
-                    <group colspan="4">
-                    <label string="" colspan="2"/>
-                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
-                    <button name="do_create" string="Ok" type="object" icon="gtk-ok"/>
-                    </group>
+                    <field name="duration"/> 
+                    <field name="repeat"/>                     
 				</form>
             </field>
         </record>
 
-	     <record id="caldav_alarm_tree_view" model="ir.ui.view">
-                <field name="name">crm.case.caldav.alarm.tree</field>
-                <field name="model">crm.caldav.alarm</field>
+         <record id="res_tree_view" model="ir.ui.view">
+                <field name="name">res.alarm.tree</field>
+                <field name="model">res.alarm</field>
                 <field name="type">tree</field>
-                <field name="arch" type="xml">
+                <field name="arch" type="xml">                    
                 	<tree string="Reminder details">
-					    <field name="name" select="1"/>					    
-					    <field name="trigger_interval" select="1"/>
-					    <field name="trigger_duration" select="1"/>
-					    <field name="trigger_related" select="1"/>
-					    <field name="trigger_occurs" select="1"/>
-					    <field name="active"/>
-				    </tree>
+			            <field name="name" select="1"/>                        			    
+			            <field name="trigger_interval" select="1"/>
+			            <field name="trigger_duration" select="1"/>
+			            <field name="trigger_related" select="1"/>
+			            <field name="trigger_occurs" select="1"/>			            
+		            </tree>
                 </field>
-            </record>
-
-        <record id="action_view_caldav_alarm_form" model="ir.actions.act_window">
-            <field name="name">Alarm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.caldav.alarm</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+            </record>        
 
 		<record id="view_caldav_set_rrule_wizard" model="ir.ui.view">
             <field name="name">Add RRule</field>

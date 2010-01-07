@@ -21,7 +21,7 @@
 
 from caldav import common
 from osv import fields, osv
-import  datetime
+import datetime
 import base64
 import re
 import time
@@ -117,7 +117,7 @@ class crm_meeting(osv.osv):
                  ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'), 
         'attendees': fields.function(_get_attendee_data, method=True,\
                 fnct_inv=_set_attendee_data, string='Attendees', type="text"), 
-        'alarm_id': fields.many2one('crm.caldav.alarm', 'Alarm'), 
+        'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
         'attendee_ids': fields.many2many('crm.caldav.attendee', 'crm_attendee_rel', 'case_id', \
                                       'attendee_id', 'Attendees'), 
     }
@@ -125,6 +125,46 @@ class crm_meeting(osv.osv):
     _defaults = {
          'class': lambda *a: 'public',          
     }
+
+    def do_alarm_create(self, cr, uid, ids, context={}):
+        alarm_obj = self.pool.get('crm.caldav.alarm')
+        model_obj = self.pool.get('ir.model')
+        model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
+        for meeting in self.browse(cr, uid, ids):
+            alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
+            if alarm_ids and len(alarm_ids):
+                alarm_obj.unlink(cr, uid, alarm_ids)
+            basic_alarm = meeting.alarm_id
+            if basic_alarm and meeting.state in ('open'):
+                vals = {
+                    'action': 'DISPLAY', 
+                    'description': meeting.description, 
+                    'name': meeting.name, 
+                    'attendee_ids': [6,0, map(lambda x:x.id, meeting.attendee_ids)],
+                    'trigger_related': basic_alarm.trigger_related, 
+                    'trigger_duration': basic_alarm.trigger_duration, 
+                    'trigger_occurs': basic_alarm.trigger_occurs, 
+                    'trigger_interval': basic_alarm.trigger_interval, 
+                    'duration': basic_alarm.duration, 
+                    'repeat': basic_alarm.repeat, 
+                    'state' : 'run',
+                    'event_date' : meeting.date, 
+                    'res_id' : basic_alarm.id,                    
+                    'model_id' : model_id,
+                    'user_id' : uid              
+                 }       
+                alarm_obj.create(cr, uid, vals)
+        return True              
+    
+    def do_alarm_unlink(self, cr, uid, ids, context={}):
+        alarm_obj = self.pool.get('crm.caldav.alarm')
+        model_obj = self.pool.get('ir.model')
+        model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
+        for meeting in self.browse(cr, uid, ids):
+            alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
+            if alarm_ids and len(alarm_ids):
+                alarm_obj.unlink(cr, uid, alarm_ids)        
+        return True
 
     def on_change_duration(self, cr, uid, id, date, duration):
         if not date:
@@ -139,50 +179,7 @@ class crm_meeting(osv.osv):
         res = {'value' : {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
         return res
 
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
-                       context=None):
-        if not context:
-            context = {}
-        cr.execute('select c.id as id, crm_case.date as date, alarm.id as alarm_id, alarm.name as name,\
-                                alarm.trigger_interval, alarm.trigger_duration, alarm.trigger_related, \
-                                alarm.trigger_occurs from crm_meeting c \
-                                    join crm_case on c.inherit_case_id = crm_case.id \
-                                   join crm_caldav_alarm alarm on (alarm.id=c.alarm_id) \
-                               where alarm_id is not null and alarm.active=True')
-        case_with_alarm = cr.dictfetchall()
-        case_obj = self.pool.get('crm.meeting')
-        attendee_obj = self.pool.get('crm.caldav.attendee')
-        mail_to = []
-        for alarmdata in case_with_alarm:
-            dtstart = datetime.datetime.strptime(alarmdata['date'], "%Y-%m-%d %H:%M:%S")
-            if alarmdata['trigger_interval'] == 'DAYS':
-                delta = datetime.timedelta(days=alarmdata['trigger_duration'])
-            if alarmdata['trigger_interval'] == 'HOURS':
-                delta = datetime.timedelta(hours=alarmdata['trigger_duration'])
-            if alarmdata['trigger_interval'] == 'MINUTES':
-                delta = datetime.timedelta(minutes=alarmdata['trigger_duration'])
-            alarm_time =  dtstart + (alarmdata['trigger_occurs']== 'AFTER' and delta or -delta)
-            if datetime.datetime.now() >= alarm_time:
-                case_val = case_obj.browse(cr, uid, alarmdata.get('id'), context)
-                for att in case_val.attendee_ids:
-                    if att.cn.rsplit(': ')[-1]:
-                        mail_to.append(att.cn.rsplit(': ')[-1])
-                if mail_to:
-                    sub = 'Event Reminder for ' +  case_val.name or ''
-                    body = (case_val.name or '')+ '\n\t' + (case_val.description or '') + '\n\nEvent time: ' \
-                                    +(case_val.date) + '\n\nLocation: ' + (case_val.location or '') + \
-                                    '\n\nMembers Details: ' + '\n'.join(mail_to)
-                    mail_to.append(case_val.user_id.address_id.email)
-                    tools.email_send(
-                        case_val.user_id.address_id.email, 
-                        mail_to, 
-                        sub, 
-                        body
-                    )
-                cr.execute('update crm_caldav_alarm set active=False\
-                         where id = %s' % alarmdata['alarm_id'])
-                cr.commit()
-        return True
+    
 
     def export_cal(self, cr, uid, ids, context={}):
         crm_data = self.read(cr, uid, ids, [], context ={'read':True})
@@ -215,10 +212,7 @@ class crm_meeting(osv.osv):
         crm_alarm = self.pool.get('crm.caldav.alarm')
         alarm_obj.__attribute__.update(crm_alarm.__attribute__)
         vals = event_obj.import_ical(cr, uid, file_content)
-        for val in vals:
-            section_id = self.pool.get('crm.case.section').search(cr, uid, \
-                            [('name', 'like', 'Meeting%')])[0]
-            val.update({'section_id': section_id})
+        for val in vals:            
             is_exists = common.uid2openobjectid(cr, val['id'], self._name)
             val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
@@ -311,6 +305,7 @@ class crm_meeting(osv.osv):
         if 'case_id' in vals:
             vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
+        self.do_alarm_create(cr, uid, ids)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
@@ -347,10 +342,13 @@ class crm_meeting(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(crm_meeting, self).copy(cr, uid, common.caldav_id2real_id(id), \
+        res = super(crm_meeting, self).copy(cr, uid, common.caldav_id2real_id(id), \
                                                           default, context)
+        self.do_alarm_create(cr, uid, [res])
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
+        res = False
         for id in ids:
             ls = common.caldav_id2real_id(id)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
@@ -361,17 +359,22 @@ class crm_meeting(osv.osv):
                         exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + \
                                     ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
-                            self.write(cr, uid, [common.caldav_id2real_id(id)], {'exdate': exdate})
+                            res = self.write(cr, uid, [common.caldav_id2real_id(id)], {'exdate': exdate})
                     else:
                         ids = map(lambda x: common.caldav_id2real_id(x), ids)
-                        return super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
+                        res = super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
+                        self.do_alarm_unlink(cr, uid, ids)
             else:
-                return super(crm_meeting, self).unlink(cr, uid, ids)
+                res = super(crm_meeting, self).unlink(cr, uid, ids)
+                self.do_alarm_unlink(cr, uid, ids)
+        return res
 
     def create(self, cr, uid, vals, context={}):
         if 'case_id' in vals:
             vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
-        return super(crm_meeting, self).create(cr, uid, vals, context)
+        res = super(crm_meeting, self).create(cr, uid, vals, context)
+        self.do_alarm_create(cr, uid, [res])
+        return res
 
 
     def _map_ids(self, method, cr, uid, ids, *args, **argv):

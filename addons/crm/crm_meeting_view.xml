@@ -106,13 +106,7 @@
                 </group>
                 <notebook colspan="4">
 	                <page string="Meeting">                                              
-                        <group colspan="2" col="3">          			                   
-                            <field name="alarm_id" colspan="1" string="Alarm" widget="selection"/>
-                            <button string="Custom"
-            					name="%(caldav.action_view_caldav_alarm_form)d"
-            					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}" 
-                             />
-                        </group>
+                        <field name="alarm_id" colspan="1" string="Alarm"/>
                         <group colspan="2" col="3">
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"

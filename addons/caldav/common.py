@@ -24,10 +24,12 @@ from service import web_services
 from tools.translate import _
 import re
 import time
+import datetime
 
-months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", \
-            7:"July", 8:"August", 9:"September", 10:"October", 11:"November", \
-            12:"December"}
+months = {
+        1:"January", 2:"February", 3:"March", 4:"April", \
+        5:"May", 6:"June", 7:"July", 8:"August", 9:"September", \
+        10:"October", 11:"November", 12:"December"}
 
 def caldav_id2real_id(caldav_id = None, with_date=False):
     if caldav_id and isinstance(caldav_id, (str, unicode)):
@@ -52,7 +54,6 @@ def uid2openobjectid(cr, uidval, oomodel):
     __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
     wematch = __rege.match(uidval.encode('utf8'))
     if not wematch:
-#                raise osv.except_osv('Warning!!', "Cannot locate UID in %s" % val['id'])
         return False
     else:
         model, id, dbname = wematch.groups()
@@ -118,6 +119,35 @@ class crm_caldav_attendee(osv.osv):
 
 crm_caldav_attendee()
 
+class res_alarm(osv.osv):
+    _name = 'res.alarm'
+    _description = 'basic alarm information'
+    _columns = {      
+        'name':fields.char('Name', size=256, required=True),          
+        'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
+                                        'Trigger time', required=True), 
+        'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
+                ('DAYS', 'DAYS')], 'Trigger duration', required=True), 
+        'trigger_duration':  fields.integer('Time', required=True), 
+        'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
+                                       'The event ends')], 'Trigger Occures at', required=True), 
+        'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
+are both optional, but if one occurs, so MUST the other"""), 
+        'repeat': fields.integer('Repeat'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
+        
+        
+    }
+    _defaults = {        
+        'trigger_interval':  lambda *x: 'MINUTES', 
+        'trigger_duration': lambda *x: 5, 
+        'trigger_occurs': lambda *x: 'BEFORE', 
+        'trigger_related': lambda *x: 'start', 
+        'active': lambda *x: 1, 
+    }
+
+res_alarm()
+
 class crm_caldav_alarm(osv.osv):
     _name = 'crm.caldav.alarm'
     _description = 'Event alarm information'
@@ -136,7 +166,7 @@ class crm_caldav_alarm(osv.osv):
             'attach': {'field': 'attach', 'type': 'text'}, 
     }
      
-    _columns = {
+    _columns = {            
             'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for EMAIL
 or contains the text to be used for DISPLAY"""), 
             'action': fields.selection([('AUDIO', 'AUDIO'), ('DISPLAY', 'DISPLAY'), \
@@ -144,7 +174,7 @@ or contains the text to be used for DISPLAY"""),
                     required=True, help="Defines the action to be invoked when an alarm is triggered"), 
             'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('crm.caldav.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees'), 
+                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
             'trigger_occurs': fields.selection([('BEFORE', 'BEFORE'), ('AFTER', 'AFTER')], \
                                         'Trigger time', required=True), 
             'trigger_interval': fields.selection([('MINUTES', 'MINUTES'), ('HOURS', 'HOURS'), \
@@ -157,33 +187,101 @@ are both optional, but if one occurs, so MUST the other"""),
             'repeat': fields.integer('Repeat'), # TODO 
             'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for AUDIO, 
 * File which is intended to be sent as message attachments for EMAIL,
-* Points to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
-"""), 
-            'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
-                }
+* Points to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE."""), 
+            'res_id' : fields.integer('Resource ID'),
+            'model_id': fields.many2one('ir.model', 'Model'),
+            'user_id': fields.many2one('res.users', 'Owner'),
+            'event_date' : fields.datetime('Event Date'),
+            'trigger_date' : fields.datetime('Trigger Date', readonly="True"),
+            'state':fields.selection([
+                        ('draft','Draft'),
+                        ('run','Run'),
+                        ('stop','Stop'),
+                        ('done','Done'),
+                    ],'State', select=True, readonly=True),
+     }
 
     _defaults = {
         'action':  lambda *x: 'EMAIL', 
+        'state' : lambda *x: 'run',
         'trigger_interval':  lambda *x: 'MINUTES', 
         'trigger_duration': lambda *x: 5, 
         'trigger_occurs': lambda *x: 'BEFORE', 
-        'trigger_related': lambda *x: 'start', 
-        'active': lambda *x: 1, 
-                 }
+        'trigger_related': lambda *x: 'start',         
+     }   
 
-    def do_create(self, cr, uid, ids, context=None, *args):
-        datas = self.read(cr, uid, ids)[0]
-        summary = str(datas['trigger_duration']) + ' ' + \
-                        datas['trigger_interval'].title() + ' '  + \
-                        datas['trigger_occurs'].title()
-        self.write(cr, uid, ids, {'name': summary})
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        obj.write(cr, uid, context['active_id'], {'alarm_id': ids[0]})
-        return {}
+    def create(self, cr, uid, vals, context={}): 
+        event_date = vals.get('event_date', False)
+        if event_date:
+            dtstart = datetime.datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
+            if vals['trigger_interval'] == 'DAYS':
+                delta = datetime.timedelta(days=vals['trigger_duration'])
+            if vals['trigger_interval'] == 'HOURS':
+                delta = datetime.timedelta(hours=vals['trigger_duration'])
+            if vals['trigger_interval'] == 'MINUTES':
+                delta = datetime.timedelta(minutes=vals['trigger_duration'])
+        trigger_date =  dtstart + (vals['trigger_occurs'] == 'AFTER' and delta or -delta)
+        vals['trigger_date'] = trigger_date
+        res = super(crm_caldav_alarm, self).create(cr, uid, vals, context)        
+        return res
+
+    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
+                       context=None):
+        if not context:
+            context = {}
+        current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        cr.execute("select alarm.id as id \
+                    from crm_caldav_alarm alarm \
+                    where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
+        res = cr.dictfetchall()  
+        alarm_ids = map(lambda x: x['id'], res)      
+        attendee_obj = self.pool.get('crm.caldav.attendee')
+        request_obj = self.pool.get('res.request')
+        mail_to = []
+        for alarm in self.browse(cr, uid, alarm_ids):            
+            if alarm.action == 'DISPLAY':
+                value = {                   
+                   'name': alarm.name,
+                   'act_from': alarm.user_id.id,
+                   'act_to': alarm.user_id.id,
+                   'body': alarm.description, 
+                   'trigger_date': alarm.trigger_date, 
+                   'ref_doc1' :  '%s,%s' %(alarm.model_id.model, alarm.res_id)                  
+                }
+                request_id = request_obj.create(cr, uid, value)
+                request_ids = [request_id]
+                for attendee in alarm.attendee_ids: 
+                    value['act_to'] = attendee.act_to.id
+                    request_id = request_obj.create(cr, uid, value)
+                    request_ids.append(request_id)
+                request_obj.request_send(cr, uid, request_ids)
+
+            if alarm.action == 'EMAIL':
+                sub = '[Openobject Remainder] %s' %(alarm.name)    
+                body = """
+                Name : %s
+                Date : %s
+                Description : %s
+
+                From :
+                      %s
+                      %s
+                
+                """ %(alarm.name, alarm.trigger_date, alarm.description, alarm.user_id.name, alarm.user_id.sign)
+                mail_to = [alarm.user_id.address_id.email]
+                for att in alarm.attendee_ids:                    
+                    mail_to.append(att.act_to.address_id.email)            
+                
+                tools.email_send(
+                    tools.confirm['from_mail'], 
+                    mail_to, 
+                    sub, 
+                    body
+                )
+            self.write(cr, uid, [alarm.id], {'state':'done'})
+        return True
+    
+
         
 crm_caldav_alarm()
 
