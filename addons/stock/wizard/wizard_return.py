@@ -38,16 +38,31 @@ def make_default(val):
 
 def _get_returns(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    pick_obj=pool.get('stock.picking')
-    pick=pick_obj.browse(cr, uid, [data['id']])[0]
-    res={}
+    pick_obj = pool.get('stock.picking')
+    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    
+    if pick.state != 'done':
+        raise wizard.except_wizard(_('Warning !'), _("The Packing is not completed yet!\nYou cannot return packing which is not in 'Done' state!"))
+    res = {}
+    
+    return_history = {}
+    for m_line in pick.move_lines:
+        return_history[m_line.id] = 0
+        for rec in m_line.move_stock_return_history:
+            return_history[m_line.id] += rec.product_qty
+
     fields.clear()
     arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
     for m in [line for line in pick.move_lines]:
-        quantity=m.product_qty
-        arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
-        fields['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True, 'default':make_default(quantity)}
-        res.setdefault('returns', []).append(m.id)
+        quantity = m.product_qty
+        if quantity > return_history[m.id] and (quantity - return_history[m.id])>0:
+            arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
+            fields['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True, 'default':make_default(quantity - return_history[m.id])}
+            res.setdefault('returns', []).append(m.id)
+    
+    if not res.get('returns',False):
+        raise  wizard.except_wizard(_('Warning!'),_('There is no product to return!'))
+    
     arch_lst.append('<field name="invoice_state"/>\n<newline/>')
     if pick.invoice_state=='invoiced':
         new_invoice_state='2binvoiced'
@@ -88,6 +103,7 @@ def _create_returns(self, cr, uid, data, context):
             'picking_id':new_picking, 'state':'draft',
             'location_id':new_location, 'location_dest_id':move.location_id.id,
             'date':date_cur, 'date_planned':date_cur,})
+        move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4,new_move)]})
     if new_picking:
         wf_service = netsvc.LocalService("workflow")
         if new_picking:
