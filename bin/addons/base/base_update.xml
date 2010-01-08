@@ -76,13 +76,21 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="password" password="True" readonly="0"/>
-                    <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
-                    <field name="company_id" widget="selection" readonly="0" domain="[('user_ids','=',uid)]"/>
-                    <field name="context_lang" completion="1" readonly="0"/>
-                    <field name="context_tz" completion="1" readonly="0" colspan="4"/>
-                    <newline/>
-                    <field colspan="4" name="signature" readonly="0"/>
+                	<notebook colspan="4">
+                		<page string="Current Activity">
+                    		<field name="company_id" widget="selection" readonly="0" domain="[('user_ids','=',uid)]"/>
+                    		<newline/>
+                    		<separator colspan="4" string="Preferences"/>
+                    	</page>
+                 		<page string="Preferences">
+                    		<field name="password" password="True" readonly="0"/>
+                    		<label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
+                    		<field name="context_lang" completion="1" readonly="0"/>
+                    		<field name="context_tz" completion="1" readonly="0" colspan="4"/>
+                    		<newline/>
+                    		<field colspan="4" name="signature" readonly="0"/>
+                  		</page>
+                    </notebook>
                 </form>
             </field>
         </record>
