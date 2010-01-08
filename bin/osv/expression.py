@@ -333,7 +333,7 @@ class expression(object):
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
             params = right[1]
         elif operator in ['in', 'not in']:
-            params = right[:]
+            params = right and right[:] or []
             len_before = len(params)
             for i in range(len_before)[::-1]:
                 if params[i] == False:
@@ -342,14 +342,19 @@ class expression(object):
             len_after = len(params)
             check_nulls = len_after != len_before
             query = '(1=0)'
-
+            
             if len_after:
                 if left == 'id':
                     instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
-
+            else:
+                # the case for [field, 'in', []] or [left, 'not in', []]
+                if operator == 'in':
+                    query = '(%s.%s IS NULL)' % (table._table, left)
+                else:
+                    query = '(%s.%s IS NOT NULL)' % (table._table, left)
             if check_nulls:
                 query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
         else:
