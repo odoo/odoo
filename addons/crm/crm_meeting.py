@@ -54,7 +54,7 @@ class crm_meeting(osv.osv):
 #        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
 #        'categories': {'field': 'categ_id', 'sub-field': 'name'},
-#        'categories': {'field':None , 'sub-field': 'name', 'type': 'text'},
+        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.case.categ'},
         'comment': None, 
         'contact': None, 
         'exdate' : {'field': 'exdate', 'type': 'datetime'}, 
@@ -66,7 +66,7 @@ class crm_meeting(osv.osv):
         'rrule': {'field': 'rrule', 'type': 'text'}, 
         'x-openobject-model': {'value': _name, 'type': 'text'}, 
 #        'duration': {'field': 'duration'},
-        'dtend': {'field': 'date_closed', 'type': 'datetime'}, 
+        'dtend': {'field': 'date_deadline', 'type': 'datetime'}, 
         'valarm': {'field': 'caldav_alarm_id', 'type': 'many2one', 'object': 'calendar.alarm'}, 
     }
     
@@ -227,12 +227,12 @@ class crm_meeting(osv.osv):
                 if val['caldav_alarm_id']:
                     cal_alarm = self.browse(cr, uid, case_id).caldav_alarm_id
                     alarm_id = cal_alarm.alarm_id and cal_alarm.alarm_id.id or False
-                self.write(cr, uid, [case_id], {'alarm_id': alarm_id})
+                    self.write(cr, uid, [case_id], {'alarm_id': alarm_id})
         return {'count': len(vals)}
 
     def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):
         if not limit:
-            limit = 100        
+            limit = 100
         if ids and (start_date or until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \

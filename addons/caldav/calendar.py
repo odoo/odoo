@@ -61,7 +61,7 @@ def map_data(cr, uid, obj):
                 continue
             if field_type == 'many2one':
                 id = None
-                if not map_val:
+                if not map_val or not isinstance(map_val, dict):
                     vals[field] = id
                     continue
                 model = obj.__attribute__[map_dict].get('object', False)
@@ -144,6 +144,8 @@ class CalDAV(object):
                                 vevent.add(field).value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
+                        elif map_type == "many2one":
+                             vevent.add(field).value = [data.get(map_field)[1]]
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
