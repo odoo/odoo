@@ -35,7 +35,7 @@ class crm_meeting(osv.osv):
     _order = "id desc"
     _inherits = {'crm.case': "inherit_case_id"}
     __attribute__ = {
-        'class': {'field': 'class', 'type': 'text'}, 
+        'class': {'field': 'class', 'type': 'selection'}, 
         'created': {'field': 'create_date', 'type': 'datetime'}, # keep none for now
         'description': {'field': 'description', 'type': 'text'}, 
         'dtstart': {'field': 'date', 'type': 'datetime'}, 
@@ -44,8 +44,8 @@ class crm_meeting(osv.osv):
         'priority': {'field': 'priority', 'type': 'int'}, 
         'dtstamp' : {'field': 'date', 'type': 'datetime'}, 
         'seq': None, 
-        'status': {'field': 'state', 'type': 'selection', 'mapping': {'TENTATIVE': 'draft', \
-                                                  'CONFIRMED': 'open' , 'CANCELLED': 'cancel'}}, 
+        'status': {'field': 'state', 'type': 'selection', 'mapping': {'tentative': 'draft', \
+                                                  'confirmed': 'open' , 'cancelled': 'cancel'}}, 
         'summary': {'field': 'name', 'type': 'text'}, 
         'transp': {'field': 'transparent', 'type': 'text'}, 
         'uid': {'field': 'id', 'type': 'text'}, 
@@ -173,17 +173,14 @@ class crm_meeting(osv.osv):
     def on_change_duration(self, cr, uid, id, date, duration):
         if not date:
             return {}
-        start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M:%S")))
+        start_date = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
         if duration >= 0 :
             end = start_date + datetime.timedelta(hours=duration)
         if duration < 0:
             raise osv.except_osv(_('Warning !'),
                     _('You can not set negative Duration.'))
-
         res = {'value' : {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
         return res
-
-    
 
     def export_cal(self, cr, uid, ids, context={}):
         crm_data = self.read(cr, uid, ids, [], context ={'read':True})
@@ -218,17 +215,19 @@ class crm_meeting(osv.osv):
         vals = event_obj.import_ical(cr, uid, file_content)
         for val in vals:            
             is_exists = common.uid2openobjectid(cr, val['id'], self._name)
-            val.pop('id')
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
-            caldav_alarm_id = val['caldav_alarm_id']
-            if caldav_alarm_id:
-               caldav_alarm = self.browse(cr, uid, caldav_alarm_id)
-               val['alarm_id'] = caldav_alarm.alarm_id   
+#            caldav_alarm_id = val['caldav_alarm_id']
+            val.pop('id')
             if is_exists:
+                if val['caldav_alarm_id']:
+                    val['alarm_id'] = self.browse(cr, uid, is_exists).caldav_alarm_id.alarm_id.id
                 self.write(cr, uid, [is_exists], val)
             else:
                 case_id = self.create(cr, uid, val)
+                if caldav_alarm_id:
+                    alarm_id = self.browse(cr, uid, is_exists).caldav_alarm_id.alarm_id
+                self.write(cr, uid, case_id, {'alarm_id': alarm_id})
         return {'count': len(vals)}
 
     def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):

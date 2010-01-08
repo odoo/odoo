@@ -44,7 +44,9 @@ def map_data(cr, uid, obj):
                     continue
                 mapping =obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
-                    map_val = mapping[map_val]
+                    map_val = mapping[map_val.lower()]
+                else:
+                    map_val = map_val.lower()
             if field_type == 'many2many':
                 ids = []
                 if not map_val:
@@ -374,12 +376,12 @@ class Alarm(CalDAV, osv.osv_memory):
                     related = days>=0 and 'after' or 'before'
                 self.ical_set('trigger_interval', interval, 'value')
                 self.ical_set('trigger_duration', duration, 'value')
-                self.ical_set('trigger_occurs', related, 'value')
+                self.ical_set('trigger_occurs', related.lower(), 'value')
                 if child.params:
                     if child.params.get('related'):
                         self.ical_set('trigger_related', child.params.get('related')[0].lower(), 'value')
             else:
-                self.ical_set(child.name.lower(), child.value, 'value')
+                self.ical_set(child.name.lower(), child.value.lower(), 'value')
         vals = map_data(cr, uid, self)
         return vals
 
@@ -406,7 +408,7 @@ class Attendee(CalDAV, osv.osv_memory):
             if para.lower() == 'cn':
                 self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
             else:
-                self.ical_set(para.lower(), ical_data.params[para][0], 'value')
+                self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')
         if not ical_data.params.get('CN'):
             self.ical_set('cn', ical_data.value, 'value')
         vals = map_data(cr, uid, self)
