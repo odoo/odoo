@@ -83,6 +83,7 @@ def _create_returns(self, cr, uid, data, context):
     new_picking=None
     date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
 
+    set_invoice_state_to_none = True
     for move in move_obj.browse(cr, uid, data['form'].get('returns',[])):
         if not new_picking:
             if pick.type=='out':
@@ -95,15 +96,28 @@ def _create_returns(self, cr, uid, data, context):
                     'move_lines':[], 'state':'draft', 'type':new_type,
                     'date':date_cur, 'invoice_state':data['form']['invoice_state'],})
         new_location=move.location_dest_id.id
-
+        
+        new_qty = data['form']['return%s' % move.id]
+        returned_qty = move.product_qty
+        
+        for rec in move.move_stock_return_history:
+            returned_qty -= rec.product_qty
+        
+        if returned_qty != new_qty:
+            set_invoice_state_to_none = False
+            
         new_move=move_obj.copy(cr, uid, move.id, {
-            'product_qty': data['form']['return%s' % move.id],
+            'product_qty': new_qty,
             'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
-                data['form']['return%s' % move.id], move.product_uos.id),
+                new_qty, move.product_uos.id),
             'picking_id':new_picking, 'state':'draft',
             'location_id':new_location, 'location_dest_id':move.location_id.id,
             'date':date_cur, 'date_planned':date_cur,})
         move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4,new_move)]})
+    
+    if set_invoice_state_to_none:
+        pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})
+        
     if new_picking:
         wf_service = netsvc.LocalService("workflow")
         if new_picking:
