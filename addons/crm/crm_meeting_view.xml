@@ -110,7 +110,7 @@
             			<button string="Invite Attendees"
             				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
             				icon="terp-partner" type="action"
-            				context="{'model' : 'crm.meeting'}" />
+            				context="{'model' : 'crm.meeting', 'field': 'date'}" />
                     </page>
                     <page string="Partner Info">
                         <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />

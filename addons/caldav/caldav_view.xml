@@ -14,7 +14,8 @@
                     <newline/>
                     <field name="user_id" select="1" on_change="onchange_user_id(user_id)"/>
                     <field name="email" />
-                    <field name="role" select="1" />
+                    <field name="role"/>
+                    <field name="cutype"/>
             		<field name="rsvp" />
                     <separator string="" colspan="6" />
                     <label string="" colspan="2"/>
@@ -39,24 +40,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
-            		<field name="user_id" on_change="onchange_user_id(user_id)" />
-            		<field name="email" select="1"/>
+            		<field name="user_id"
+            			on_change="onchange_user_id(user_id)" readonly="1" />
+            		<field name="email" select="1" readonly="1" />
             		<newline />
-            		<field name="role" select="1" />
-            		<field name="cutype" select="1" />
+            		<field name="role" select="1" readonly="1" string="Role" />
+            		<field name="cutype" select="1" readonly="1"  string="Invitation type" />
             		<newline />
-            		<field name="rsvp" />
+            		<field name="rsvp" readonly="1" />
             		<notebook colspan="4">
             			<page string="Details">
+            				<field name="date" />
+            				<newline />
             				<field name="sent_by_uid" />
             				<field name="dir" widget='url' />
             				<field name="language" />
+            				<newline />
+            				<field name="reference" colspan="4" />
             			</page>
             			<page string="Delegation Info">
             				<separator string="Delegated to" colspan="4" />
-            				<field name="del_to_user_ids" nolabel="1" colspan="4" />
+            				<field name="del_to_user_ids" nolabel="1"
+            					colspan="4" readonly="1" />
             				<separator string="Delegated from" colspan="4" />
-            				<field name="del_from_user_ids" nolabel="1" colspan="4" />
+            				<field name="del_from_user_ids" nolabel="1"
+            					colspan="4" readonly="1" />
             			</page>
             		</notebook>
             		<group col="6" colspan="4">

@@ -43,7 +43,7 @@ def caldav_id2real_id(caldav_id = None, with_date=False):
             return int(real_id)
     return caldav_id and int(caldav_id) or caldav_id
 
-def real_id2caldav_id(real_id, recurrent_date):    
+def real_id2caldav_id(real_id, recurrent_date):
     if real_id and recurrent_date:
         recurrent_date = time.strftime("%Y%m%d%H%M%S", \
                          time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
@@ -64,7 +64,7 @@ def uid2openobjectid(cr, uidval, oomodel):
         if id in ids:
             return id
         return False
-    
+
 def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
@@ -87,12 +87,12 @@ class calendar_attendee(osv.osv):
         'dir': {'field':'dir', 'type':'text'}, 
         'language': {'field':'language', 'type':'text'}, 
     }
-    
+
     def _get_address(self, name=None, email=None):
         if name and email:
             name += ':'
         return (name or '') + (email and ('MAILTO:' + email) or '')
-        
+
     def _compute_data(self, cr, uid, ids, name, arg, context):
         name = name[0]
         result = {}
@@ -110,7 +110,7 @@ class calendar_attendee(osv.osv):
                     continue
                 else:
                     result[id][name] =  self._get_address(attdata.sent_by_uid.name, \
-                                            attdata.sent_by_uid.address_id.email)
+                                        attdata.sent_by_uid.address_id.email)
             if name == 'cn':
                 result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
             if name == 'delegated_to':
@@ -122,8 +122,21 @@ class calendar_attendee(osv.osv):
                 user_obj = self.pool.get('res.users')
                 fromdata = map(get_delegate_data, attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
-        return result 
-    
+        return result
+
+    def _links_get(self, cr, uid, context={}):
+        obj = self.pool.get('res.request.link')
+        ids = obj.search(cr, uid, [])
+        res = obj.read(cr, uid, ids, ['object', 'name'], context)
+        return [(r['object'], r['name']) for r in res]
+
+    def _lang_get(self, cr, uid, context={}):
+        obj = self.pool.get('res.lang')
+        ids = obj.search(cr, uid, [])
+        res = obj.read(cr, uid, ids, ['code', 'name'], context)
+        res = [((r['code']).replace('_', '-'), r['name']) for r in res]
+        return res
+
     _columns = {
         'cutype': fields.selection([('individual', 'Individual'), \
                     ('group', 'Group'), ('resource', 'Resource'), \
@@ -131,10 +144,11 @@ class calendar_attendee(osv.osv):
                     'User Type', help="Specify the type of calendar user"), 
         'member': fields.char('Member', size=124, help="Indicate the groups \
 that the attendee belongs to"), 
-        'role': fields.selection([ ('req-participant', 'req-participant'), \
-                        ('chair', 'chair'), ('opt-participant', 'opt-participant'), \
-                        ('non-participant', 'non-participant')], 'User\'s Role', \
-                        help='Participation role for the calendar user'), 
+        'role': fields.selection([('req-participant', 'Participation required'), \
+                    ('chair', 'Chair Person'), \
+                    ('opt-participant', 'Optional Participation'), \
+                    ('non-participant', 'For information Purpose')], 'Role', \
+                    help='Participation role for the calendar user'), 
         'state': fields.selection([('tentative', 'Tentative'), 
                         ('needs-action', 'Needs Action'), 
                         ('accepted', 'Accepted'), 
@@ -146,20 +160,23 @@ favor of a reply is requested"),
         'delegated_to': fields.function(_compute_data, method=True, \
                 string='Delegated To', type="char", size=124, store=True, \
                 multi='delegated_to', help="The users that the original request \
-was delegated to"),
-        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel',
+was delegated to"), 
+        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel', 
                                   'attendee_id', 'user_id', 'Users'), 
         'delegated_from': fields.function(_compute_data, method=True, string=\
                 'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.many2one('res.users', 'Sent by User'),
+        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language': fields.char('Language', size=124, help="To specify the language for text values in a property or property parameter."),
-        'user_id': fields.many2one('res.users', 'User'),
-        'email': fields.char('Email', size=124),
+        'language': fields.selection(_lang_get, 'Language', help="To specify \
+the language for text values in a property or property parameter."), 
+        'user_id': fields.many2one('res.users', 'User'), 
+        'email': fields.char('Email', size=124), 
+        'date': fields.datetime('Date of event'), 
+        'reference': fields.reference('Event Reference', selection=_links_get, size=128), 
                 }
     _defaults = {
         'state':  lambda *x: 'needs-action', 
@@ -185,8 +202,8 @@ calendar_attendee()
 class res_alarm(osv.osv):
     _name = 'res.alarm'
     _description = 'basic alarm information'
-    _columns = {      
-        'name':fields.char('Name', size=256, required=True),          
+    _columns = {
+        'name':fields.char('Name', size=256, required=True), 
         'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
                                         'Trigger time', required=True), 
         'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
@@ -196,12 +213,12 @@ class res_alarm(osv.osv):
                                        'The event ends')], 'Trigger Occures at', required=True), 
         'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
 are both optional, but if one occurs, so MUST the other"""), 
-        'repeat': fields.integer('Repeat'),
+        'repeat': fields.integer('Repeat'), 
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
-        
-        
+
+
     }
-    _defaults = {        
+    _defaults = {
         'trigger_interval':  lambda *x: 'minutes', 
         'trigger_duration': lambda *x: 5, 
         'trigger_occurs': lambda *x: 'before', 
@@ -227,10 +244,10 @@ class calendar_alarm(osv.osv):
             'duration': {'field': 'duration', 'type': 'text'}, 
             'repeat': {'field': 'repeat', 'type': 'text'}, 
             'attach': {'field': 'attach', 'type': 'text'}, 
-    }     
+    }
 
-    _columns = {    
-            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),        
+    _columns = {
+            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'), 
             'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for email
 or contains the text to be used for display"""), 
             'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
@@ -238,29 +255,29 @@ or contains the text to be used for display"""),
                     required=True, help="Defines the action to be invoked when an alarm is triggered"), 
             'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
             'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True),             
-            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio, 
+                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
+            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio,
 * File which is intended to be sent as message attachments for email,
 * Points to a procedure resource, which is invoked when the alarm is triggered for procedure."""), 
-            'res_id' : fields.integer('Resource ID'),
-            'model_id': fields.many2one('ir.model', 'Model'),
-            'user_id': fields.many2one('res.users', 'Owner'),
-            'event_date' : fields.datetime('Event Date'),
-            'trigger_date' : fields.datetime('Trigger Date', readonly="True"),
+            'res_id' : fields.integer('Resource ID'), 
+            'model_id': fields.many2one('ir.model', 'Model'), 
+            'user_id': fields.many2one('res.users', 'Owner'), 
+            'event_date' : fields.datetime('Event Date'), 
+            'trigger_date' : fields.datetime('Trigger Date', readonly="True"), 
             'state':fields.selection([
-                        ('draft','Draft'),
-                        ('run','Run'),
-                        ('stop','Stop'),
-                        ('done','Done'),
-                    ],'State', select=True, readonly=True),
+                        ('draft', 'Draft'), 
+                        ('run', 'Run'), 
+                        ('stop', 'Stop'), 
+                        ('done', 'Done'), 
+                    ], 'State', select=True, readonly=True), 
      }
 
     _defaults = {
         'action':  lambda *x: 'email', 
-        'state' : lambda *x: 'run',        
-     }   
+        'state' : lambda *x: 'run', 
+     }
 
-    def create(self, cr, uid, vals, context={}): 
+    def create(self, cr, uid, vals, context={}):
         event_date = vals.get('event_date', False)
         if event_date:
             dtstart = datetime.datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
@@ -272,7 +289,7 @@ or contains the text to be used for display"""),
                 delta = datetime.timedelta(minutes=vals['trigger_duration'])
             trigger_date =  dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
-        res = super(calendar_alarm, self).create(cr, uid, vals, context)        
+        res = super(calendar_alarm, self).create(cr, uid, vals, context)
         return res
 
     def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -283,31 +300,31 @@ or contains the text to be used for display"""),
         cr.execute("select alarm.id as id \
                     from calendar_alarm alarm \
                     where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
-        res = cr.dictfetchall()  
-        alarm_ids = map(lambda x: x['id'], res)      
+        res = cr.dictfetchall()
+        alarm_ids = map(lambda x: x['id'], res)
         attendee_obj = self.pool.get('calendar.attendee')
         request_obj = self.pool.get('res.request')
         mail_to = []
-        for alarm in self.browse(cr, uid, alarm_ids):            
+        for alarm in self.browse(cr, uid, alarm_ids):
             if alarm.action == 'display':
-                value = {                   
-                   'name': alarm.name,
-                   'act_from': alarm.user_id.id,
-                   'act_to': alarm.user_id.id,
+                value = {
+                   'name': alarm.name, 
+                   'act_from': alarm.user_id.id, 
+                   'act_to': alarm.user_id.id, 
                    'body': alarm.description, 
                    'trigger_date': alarm.trigger_date, 
-                   'ref_doc1' :  '%s,%s' %(alarm.model_id.model, alarm.res_id)                  
+                   'ref_doc1' :  '%s,%s' %(alarm.model_id.model, alarm.res_id)
                 }
                 request_id = request_obj.create(cr, uid, value)
                 request_ids = [request_id]
-                for attendee in alarm.attendee_ids: 
-                    value['act_to'] = attendee.act_to.id
+                for attendee in alarm.attendee_ids:
+                    value['act_to'] = attendee.user_id.id
                     request_id = request_obj.create(cr, uid, value)
                     request_ids.append(request_id)
                 request_obj.request_send(cr, uid, request_ids)
 
             if alarm.action == 'email':
-                sub = '[Openobject Remainder] %s' %(alarm.name)    
+                sub = '[Openobject Remainder] %s' %(alarm.name)
                 body = """
                 Name : %s
                 Date : %s
@@ -316,12 +333,12 @@ or contains the text to be used for display"""),
                 From :
                       %s
                       %s
-                
+
                 """ %(alarm.name, alarm.trigger_date, alarm.description, alarm.user_id.name, alarm.user_id.sign)
                 mail_to = [alarm.user_id.address_id.email]
-                for att in alarm.attendee_ids:                    
-                    mail_to.append(att.act_to.address_id.email)            
-                
+                for att in alarm.attendee_ids:
+                    mail_to.append(att.user_id.address_id.email)
+
                 tools.email_send(
                     tools.confirm['from_mail'], 
                     mail_to, 
@@ -349,8 +366,8 @@ class ir_attachment(osv.osv):
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
                 new_args[i] = (arg[0], arg[1], caldav_id2real_id(arg[2]))
-        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
-                                                limit=limit, order=order,
+        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset, 
+                                                limit=limit, order=order, 
                                                 context=context, count=False)
 ir_attachment()
 
@@ -392,7 +409,7 @@ class ir_model(osv.osv):
             for val in data:
                 val['id'] = caldav_id2real_id(val['id'])
         return data
-    
+
 ir_model()
 
 class virtual_report_spool(web_services.report_spool):
@@ -466,7 +483,7 @@ class set_rrule_wizard(osv.osv_memory):
 
         if freq == 'weekly':
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
-            if byday: 
+            if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
 
         elif freq == 'monthly':
@@ -497,14 +514,14 @@ class set_rrule_wizard(osv.osv_memory):
         rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
                 str(datas.get('interval')) + enddate + monthstring + yearstring
 
-#        End logic 
+#        End logic
         return rrule_string
 
     def do_add(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         if datas.get('interval') <= 0:
             raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
-        
+
 
         if not context or not context.get('model'):
             return {}
@@ -512,7 +529,7 @@ class set_rrule_wizard(osv.osv_memory):
             model = context.get('model')
         obj = self.pool.get(model)
         res_obj = obj.browse(cr, uid, context['active_id'])
-        
+
         rrule_string = self.compute_rule_string(cr, uid, datas)
         obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
         return {}
@@ -524,13 +541,18 @@ class invite_attendee_wizard(osv.osv_memory):
     _description = "Invite Attendees"
 
     _columns = {
-                'user_id': fields.many2one('res.users', 'User'),
-                'email': fields.char('Email', size=124),
-                'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
-                            ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
-                            ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'User\'s Role', \
-                            help='Participation role for the calendar user'), 
-                'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the \
+        'user_id': fields.many2one('res.users', 'User'), 
+        'email': fields.char('Email', size=124), 
+        'role': fields.selection([('req-participant', 'Participation required'), \
+            ('chair', 'Chair Person'), \
+            ('opt-participant', 'Optional Participation'), \
+            ('non-participant', 'For information Purpose')], 'Role', \
+            help='Participation role for the calendar user'), 
+        'cutype': fields.selection([('individual', 'Individual'), \
+            ('group', 'Group'), ('resource', 'Resource'), \
+            ('room', 'Room'), ('unknown', 'Unknown') ], \
+            'User Type', help="Specify the type of calendar user"), 
+        'rsvp':  fields.boolean('Required Reply?', help="Indicats whether the \
 favor of a reply is requested"), 
                       }
 
@@ -544,16 +566,24 @@ favor of a reply is requested"),
         res_obj = obj.browse(cr, uid, context['active_id'])
         user_obj = self.pool.get('res.users')
         attendee_obj = self.pool.get('calendar.attendee')
-        for user_id in datas.get('users', []):
-            user = user_obj.browse(cr, uid, user_id)
-            if not user.address_id.email:
-                raise osv.except_osv(_('Error!'), \
-                                ("User does not have an email Address"))
-            attendee_id = attendee_obj.create(cr, uid, {'user_id': user_id,\
-                  'cn': user.name + ':MAILTO:' + user.address_id.email})
-            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(6, 0, [attendee_id])]})
+        user = user_obj.browse(cr, uid, datas.get('user_id'))
+        if not user.address_id.email:
+            raise osv.except_osv(_('Error!'), \
+                            ("User does not have an email Address"))
+        val = {
+                   'user_id': user.id, 
+                   'email': datas.get('email'), 
+                   'date': res_obj[context.get('field')], 
+                   'reference': '%s,%s' %(model, context['active_id']), 
+                   'language': (user.context_lang).replace('_', '-'), 
+                   'rsvp': datas.get('rsvp'), 
+                   'role': datas.get('role'), 
+                   'cutype': datas.get('cutype'), 
+                   }
+        attendee_id = attendee_obj.create(cr, uid, val)
+        obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, attendee_id)]})
         return {}
-    
+
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
