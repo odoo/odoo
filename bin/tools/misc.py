@@ -527,9 +527,6 @@ class UpdateableDict(local):
     def __ge__(self, y):
         return self.dict.__ge__(y)
 
-    def __getitem__(self, y):
-        return self.dict.__getitem__(y)
-
     def __gt__(self, y):
         return self.dict.__gt__(y)
 
