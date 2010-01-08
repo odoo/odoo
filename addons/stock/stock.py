@@ -1068,7 +1068,8 @@ class stock_move(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"), 
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),           
+        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
+        'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),           
     }
     _constraints = [
         (_check_tracking,
@@ -1110,7 +1111,19 @@ class stock_move(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c)
     }
-
+    
+    def copy(self, cr, uid, id, default=None, context={}):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['move_stock_return_history'] = []
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+    
+    def create(self, cr, user, vals, context=None):
+        if vals.get('move_stock_return_history',False):
+            vals['move_stock_return_history'] = []
+        return super(stock_move, self).create(cr, user, vals, context)
+    
     def _auto_init(self, cursor, context):
         res = super(stock_move, self)._auto_init(cursor, context)
         cursor.execute('SELECT indexname \

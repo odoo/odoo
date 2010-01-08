@@ -19,34 +19,5 @@
 #
 ##############################################################################
 
-
-{
-    "name" : "CalDAV", 
-    "version" : "1.0", 
-    "depends" : [
-                    "base", 
-                ], 
-     'description': """
- To develop a full featured caldav system that support:
-  - access through webdav (based on xrg code)
-  - alerts (create requests)
-  - recurring events (*)
-  - invitations to others people (exactly like sunbird)
-  - availabilities of users/calendars
-  - full day events""", 
-    "author" : "Tiny", 
-    'category': 'Generic Modules/Others', 
-    'website': 'http://www.openerp.com', 
-    "init_xml" : [
-                   'caldav_data.xml'
-                   ], 
-    "demo_xml" : [], 
-    "update_xml" : [
-                    'security/ir.model.access.csv', 
-                    'caldav_view.xml'
-                    ], 
-    "installable" : True, 
-    "active" : False, 
-}
-
+import document_caldav
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

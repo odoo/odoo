@@ -52,7 +52,7 @@ class crm_cases(osv.osv):
             data.update(res)
         return self.create(cr, uid, data)       
     
-    def msg_update(self, cr, uid, id, msg, data={}, default_act='pending'): 
+    def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):         
         mailgate_obj = self.pool.get('mail.gateway')
         msg_actions, body_data = mailgate_obj.msg_act_get(msg)           
         data.update({
@@ -77,9 +77,9 @@ class crm_cases(osv.osv):
         if 'partner' in msg_actions:
             data['email_from'] = msg_actions['partner'][:128]
 
-        self.write(cr, uid, [id], data)
-        getattr(self,act)(cr, uid, [id])
-        return True
+        res = self.write(cr, uid, ids, data)        
+        getattr(self,act)(cr, uid, ids)
+        return res
 
     def emails_get(self, cr, uid, ids, context={}):                
         res = []
