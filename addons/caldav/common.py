@@ -690,7 +690,7 @@ class invite_attendee_wizard(osv.osv_memory):
                     vals.update({
                         'del_from_user_ids' : [(6, 0, del_from_user_ids)]
                     })
-                    attendee_obj.write(cr, uid, [res_id], {'del_to_user_ids' : [(6, 0, del_to_user_ids)]})
+                    attendee_obj.write(cr, uid, [res_id], {'state':'delegated','del_to_user_ids' : [(6, 0, del_to_user_ids)]})
                                   
                 vals.update({
                     'ref': ref,                    
