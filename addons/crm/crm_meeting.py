@@ -153,7 +153,8 @@ class crm_meeting(osv.osv):
                     'user_id' : uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
-                cr.execute('Update crm_meeting set caldav_alarm_id=%s where id=%s' % (alarm_id, meeting.id))
+                cr.execute('Update crm_meeting set caldav_alarm_id=%s \
+                            where id=%s' % (alarm_id, meeting.id))
         cr.commit()
         return True
 
@@ -165,7 +166,8 @@ class crm_meeting(osv.osv):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
             if alarm_ids and len(alarm_ids):
                 alarm_obj.unlink(cr, uid, alarm_ids)
-                cr.execute('Update crm_meeting set caldav_alarm_id=NULL where id=%s' % (meeting.id))
+                cr.execute('Update crm_meeting set caldav_alarm_id=NULL, \
+                               alarm_id=NULL  where id=%s' % (meeting.id))
         cr.commit()
         return True
 
