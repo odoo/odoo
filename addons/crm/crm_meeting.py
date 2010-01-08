@@ -135,7 +135,7 @@ class crm_meeting(osv.osv):
         for meeting in self.browse(cr, uid, ids):            
             self.do_alarm_unlink(cr, uid, [meeting.id])
             basic_alarm = meeting.alarm_id
-            if basic_alarm and meeting.state in ('open'):
+            if basic_alarm:
                 vals = {
                     'action': 'display', 
                     'description': meeting.description, 
@@ -217,17 +217,18 @@ class crm_meeting(osv.osv):
             is_exists = common.uid2openobjectid(cr, val['id'], self._name)
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
-#            caldav_alarm_id = val['caldav_alarm_id']
             val.pop('id')
             if is_exists:
                 if val['caldav_alarm_id']:
-                    val['alarm_id'] = self.browse(cr, uid, is_exists).caldav_alarm_id.alarm_id.id
+                    cal_alarm = self.browse(cr, uid, is_exists).caldav_alarm_id
+                    val['alarm_id'] = cal_alarm.alarm_id and cal_alarm.alarm_id.id or False
                 self.write(cr, uid, [is_exists], val)
             else:
                 case_id = self.create(cr, uid, val)
-                if caldav_alarm_id:
-                    alarm_id = self.browse(cr, uid, is_exists).caldav_alarm_id.alarm_id
-                self.write(cr, uid, case_id, {'alarm_id': alarm_id})
+                if val['caldav_alarm_id']:
+                    cal_alarm = self.browse(cr, uid, case_id).caldav_alarm_id
+                    alarm_id = cal_alarm.alarm_id and cal_alarm.alarm_id.id or False
+                self.write(cr, uid, [case_id], {'alarm_id': alarm_id})
         return {'count': len(vals)}
 
     def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):
