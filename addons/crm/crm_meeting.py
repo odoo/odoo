@@ -99,7 +99,6 @@ class crm_meeting(osv.osv):
 
     _columns = {
         'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'),
-        'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically computed from Start Date + Duration"), 
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
                  ('confidential', 'Confidential')], 'Privacy'), 
         'location': fields.char('Location', size=264, help="Gives Location of Meeting"), 
@@ -320,7 +319,7 @@ class crm_meeting(osv.osv):
         if 'case_id' in vals:
             vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
-        self.do_alarm_create(cr, uid, ids)
+        self.do_alarm_create(cr, uid, new_ids)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
