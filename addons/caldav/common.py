@@ -168,6 +168,13 @@ class calendar_attendee(osv.osv):
                     model_obj = self.pool.get(model) 
                     obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0] 
                     result[id][name] = obj['date_deadline']
+
+            if name == 'sent_by_uid':
+                if attdata.ref:
+                    model, res_id = tuple(attdata.ref.split(','))
+                    model_obj = self.pool.get(model) 
+                    obj = model_obj.read(cr, uid, res_id, ['user_id'])[0] 
+                    result[id][name] = obj['user_id']
         return result
 
     def _links_get(self, cr, uid, context={}):
@@ -199,7 +206,7 @@ class calendar_attendee(osv.osv):
                         ('needs-action', 'Needs Action'), 
                         ('accepted', 'Accepted'), 
                         ('declined', 'Declined'), 
-                        ('delegated', 'Delegated')], 'Status', readonly=True, 
+                        ('delegated', 'Delegated')], 'State', readonly=True, 
                         help="Status of the attendee's participation"), 
         'rsvp':  fields.boolean('Required Reply?', 
                     help="Indicats whether the favor of a reply is requested"), 
@@ -207,14 +214,14 @@ class calendar_attendee(osv.osv):
                 string='Delegated To', type="char", size=124, store=True, \
                 multi='delegated_to', help="The users that the original request \
                                                     was delegated to"), 
-        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel', 
+        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel',
                                   'attendee_id', 'user_id', 'Users'), 
         'delegated_from': fields.function(_compute_data, method=True, string=\
                 'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent by', type="many2one", obj='res.users', multi='sent_by_uid'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
         'language': fields.selection(_lang_get, 'Language', 
@@ -663,14 +670,31 @@ class invite_attendee_wizard(osv.osv_memory):
     def create(self, cr, uid, vals, context={}):
         attendee_ids = vals.get('attendee_ids',False)
         model = context.get('model', False)
-        res_id = context.get('active_id', False)    
+        res_id = context.get('active_id', False)   
+        state = context.get('state', False) 
         attendee_obj = self.pool.get('calendar.attendee')
-        if attendee_ids and model and res_id:
+        
+        if attendee_ids and model and res_id: 
+            attend = False  
+            if model == 'calendar.attendee' and state == 'delegated':
+               attend = attendee_obj.read(cr, uid, res_id, ['ref','user_id','del_to_user_ids'])
+     
             for v1, v2, attendee in attendee_ids:
-                vals = {
-                    'ref':'%s,%d'%(model, res_id),
-                    'send_by_uid' : uid
-                }
+                vals = {}
+                ref = '%s,%d'%(model, res_id)
+                if attend:
+                    ref = attend['ref']
+                    del_from_user_ids = [attend['user_id'][0]]
+                    del_to_user_ids = attend['del_to_user_ids']
+                    del_to_user_ids.append(attendee['user_id'])
+                    vals.update({
+                        'del_from_user_ids' : [(6, 0, del_from_user_ids)]
+                    })
+                    attendee_obj.write(cr, uid, [res_id], {'del_to_user_ids' : [(6, 0, del_to_user_ids)]})
+                                  
+                vals.update({
+                    'ref': ref,                    
+                })
                 attendee.update(vals)
                 attendee_obj.create(cr, uid, attendee)
                 
