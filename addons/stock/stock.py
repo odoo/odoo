@@ -841,7 +841,7 @@ class stock_production_lot(osv.osv):
             res.update(dict(cr.fetchall()))
         return res
 
-    def _stock_search(self, cr, uid, obj, name, args):
+    def _stock_search(self, cr, uid, obj, name, args, context):
         locations = self.pool.get('stock.location').search(cr, uid, [('usage', '=', 'internal')])
         cr.execute('''select
                 prodlot_id,

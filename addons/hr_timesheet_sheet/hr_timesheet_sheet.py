@@ -346,7 +346,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')

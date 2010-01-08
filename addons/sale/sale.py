@@ -150,7 +150,7 @@ class sale_order(osv.osv):
                 res[sale.id] = False
         return res
 
-    def _invoiced_search(self, cursor, user, obj, name, args):
+    def _invoiced_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         clause = ''

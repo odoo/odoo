@@ -112,7 +112,7 @@ class res_users(osv.osv):
                 child_ids.extend(tools.flatten(childs))
         return child_ids
 
-    def _parent_search(self, cr, uid, obj, name, args):
+    def _parent_search(self, cr, uid, obj, name, args, context):
         parent = []
         for arg in args:
             if arg[0] == 'parent_id':

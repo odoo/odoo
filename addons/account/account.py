@@ -761,7 +761,7 @@ class account_move(osv.osv):
             result.setdefault(id, 0.0)
         return result
     
-    def _search_amount(self, cr, uid, obj, name, args):
+    def _search_amount(self, cr, uid, obj, name, args, context):
         ids = []
         cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
         result = dict(cr.fetchall())
