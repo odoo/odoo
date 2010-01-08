@@ -3,7 +3,7 @@
     <data>
         <menuitem icon="terp-crm" id="menu_crm" name="CRM &amp; SRM"/>
         <menuitem id="menu_crm_configuration" name="Configuration" parent="crm.menu_crm" sequence="0"/>
-        
+
         <wizard id="wizard_crm_send_mail" model="crm.case.history" name="crm.send.mail" string="Send Mail" menu="False"/>
         <wizard id="wizard_crm_new_send_mail" model="crm.case" name="crm.new.send.mail" string="Send New Mail" menu="False"/>
 
@@ -42,7 +42,7 @@
 	                            <field name="allow_unlink" select="2"/>
 	                            <field name="calendar" select="2"/>
 	                        </group>
-	                        <field name="reply_to" select="2"/>	                        
+	                        <field name="reply_to" select="2"/>
                         </page>
                     </notebook>
                 </form>
@@ -78,7 +78,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
-        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>		
+        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>
 
         <!-- Case Categories -->
         <record id="crm_case_categ-view" model="ir.ui.view">
@@ -623,6 +623,32 @@
         <act_window domain="[('canal_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_canal_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner.canal" view_mode="tree,form,calendar" view_type="form"/>
 
         <act_window domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_users_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.users" view_mode="tree,form,calendar" view_type="form"/>
+
+
+		<record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
+            <field name="name">view.users.form.crm.modif.inherited1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<page string="Current Activity" position="inside">
+                    <field name="section_id" widget="selection"/>
+                </page>
+            </field>
+        </record>
+
+		<record id="view_users_form_simple_modif_inherited2" model="ir.ui.view">
+	            <field name="name">view.users.form.crm.modif.inherited2</field>
+	            <field name="model">res.users</field>
+	            <field name="type">form</field>
+	            <field name="inherit_id" ref="base.view_users_form"/>
+	            <field eval="18" name="priority"/>
+	            <field name="arch" type="xml">
+	                <field name="password" position="after">
+	                <field name="section_id" widget="selection" />
+	                </field>
+	            </field>
+	    </record>
 
     </data>
 </openerp>

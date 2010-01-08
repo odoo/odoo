@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -38,7 +38,11 @@ crm modules.
     'website': 'http://www.openerp.com',
     'depends': ['sale', 'crm'],
     'init_xml': [],
-    'update_xml': ['sale_crm_wizard.xml', 'sale_crm_view.xml', 'process/sale_crm_process.xml'],
+    'update_xml': ['sale_crm_wizard.xml',
+                   'sale_crm_view.xml',
+                   'process/sale_crm_process.xml',
+                   'security/sale_crm_security.xml',
+                   ],
     'demo_xml': [],
     'installable': True,
     'active': False,
