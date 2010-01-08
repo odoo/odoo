@@ -377,7 +377,6 @@ class orm_template(object):
             chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
             cr.execute('select id from '+self._table+chqu1 +groupby+' = %s'%(parent_id,))
             child_ids = cr.fetchall()
-            print child_ids
             for val in child_ids:
                 if parent_id not in child_ids_dict:
                     child_ids_dict[parent_id] = [val[0]]
@@ -385,7 +384,7 @@ class orm_template(object):
                     child_ids_dict[parent_id].append(val[0])
         #create [{},{}] for parent ids i.e for group by field
         for x in parent_res:
-            parent_val_dict = {'id':x[0],groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
+            parent_val_dict = {'id':None,groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
             for sum in float_int_fields:
                 parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
             for field in fields.keys():
