@@ -116,7 +116,7 @@ class make_sale(wizard.interface):
                 value['tax_id'] = [(6,0,value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 
-            case_obj.write(cr, uid, case.id, {'ref': 'sale.order,%s' % new_id})
+            case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
             new_ids.append(new_id)
 
         if data['form']['close']:
