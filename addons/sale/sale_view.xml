@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"
-            groups="group_sale_user"/>
+<!--        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"-->
+<!--            groups="group_sale_user"/>-->
+		<menuitem id="menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+
+		<menuitem id="menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
+		<menuitem action="product.product_normal_action" id="product.menu_products" parent="menu_product" sequence="1"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -41,8 +45,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="60"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -251,7 +254,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
-        <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
+        <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sales" sequence="3"/>
 
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -265,7 +268,7 @@
         </record>
 
         <record id="action_order_tree3" model="ir.actions.act_window">
-            <field name="name">Sales Order To Be Invoiced</field>
+            <field name="name">Sales To Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
@@ -282,7 +285,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
 
@@ -293,7 +296,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
 		<record id="action_order_tree" model="ir.actions.act_window">
@@ -415,8 +418,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_sales_order_line_filter"/>
         </record>
-        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"
-            groups="base.group_extended"/>
+        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sales"
+            groups="base.group_extended" sequence="4"/>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Lines</field>
@@ -442,6 +445,9 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
+		<menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
+		<menuitem action="action_order_tree3" id="menu_invoicing_sales_order" parent="menu_invoiced" sequence="1"/>
+		<menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
@@ -481,7 +487,6 @@
             <field name="note">This Configuration step use to set default picking policy when make sale order</field>
             <field name="action_id" ref="action_config_picking_policy"/>
         </record>
-
 
     </data>
 </openerp>
