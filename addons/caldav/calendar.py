@@ -44,7 +44,9 @@ def map_data(cr, uid, obj):
                     continue
                 mapping =obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
-                    map_val = mapping[map_val]
+                    map_val = mapping[map_val.lower()]
+                else:
+                    map_val = map_val.lower()
             if field_type == 'many2many':
                 ids = []
                 if not map_val:
@@ -59,7 +61,7 @@ def map_data(cr, uid, obj):
                 continue
             if field_type == 'many2one':
                 id = None
-                if not map_val:
+                if not map_val or not isinstance(map_val, dict):
                     vals[field] = id
                     continue
                 model = obj.__attribute__[map_dict].get('object', False)
@@ -126,12 +128,16 @@ class CalDAV(object):
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
                         vevent.add('uid').value = uidval
-                    elif field == 'attendee' and data[map_field]:
-                        attendee_obj = self.pool.get('basic.calendar.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
-                    elif field == 'valarm' and data[map_field]:
-                        alarm_obj = self.pool.get('basic.calendar.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
+                    elif field == 'attendee' and data[map_field]:                                                                        
+                        #vevent.add('attendee').value = data[map_field]
+                        #TODO : To export attendee  
+                        pass
+                            
+                    elif field == 'valarm' and data[map_field]:                                                                             
+                        # vevent.add('valarm').value = data[map_field]                        
+                        #TODO : To export valarm 
+                        pass
+
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -142,10 +148,12 @@ class CalDAV(object):
                                 vevent.add(field).value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
+                        elif map_type == "many2one":
+                             vevent.add(field).value = [data.get(map_field)[1]]
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
-                                    vevent.add(field).value = key1
+                                    vevent.add(field).value = key1        
         return ical
 
     def import_ical(self, cr, uid, ical_data):
@@ -154,16 +162,16 @@ class CalDAV(object):
         res = []
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
-                if cal_data.name.lower() == 'attendee':
-                    attendee = self.pool.get('basic.calendar.attendee')
-                    att_data.append(attendee.import_ical(cr, uid, cal_data))
-                    self.ical_set(cal_data.name.lower(), att_data, 'value')
-                    continue
-                if cal_data.name.lower() == 'valarm':
-                    alarm = self.pool.get('basic.calendar.alarm')
-                    vals = alarm.import_ical(cr, uid, cal_data)
-                    self.ical_set(cal_data.name.lower(), vals, 'value')
-                    continue
+                #if cal_data.name.lower() == 'attendee':
+                #    attendee = self.pool.get('basic.calendar.attendee')
+                #    att_data.append(attendee.import_ical(cr, uid, cal_data))
+                #    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                #    continue
+                #if cal_data.name.lower() == 'valarm':
+                #    alarm = self.pool.get('basic.calendar.alarm')
+                #    vals = alarm.import_ical(cr, uid, cal_data)
+                #    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                #    continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
             if child.name.lower() in ('vevent', 'vtodo'):
@@ -327,33 +335,37 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, alarm_id, vevent, context={}):
-        valarm = vevent.add('valarm')
-        alarm_object = self.pool.get('calendar.alarm')
-        alarm_data = alarm_object.read(cr, uid, alarm_id, [])
+    def export_ical(self, cr, uid, alarm_datas, context={}):
+        ical = vobject.iCalendar()
+        vevent = ical.add('vevent')
+        valarms = []
+        for alarm_data in alarm_datas:
+            valarm = vevent.add('valarm')
+            
+            # Compute trigger data
+            interval = alarm_data['trigger_interval']
+            occurs = alarm_data['trigger_occurs']
+            duration = (occurs == 'after' and alarm_data['trigger_duration']) \
+                                                or -(alarm_data['trigger_duration'])
+            related = alarm_data['trigger_related']
+            trigger = valarm.add('trigger')
+            trigger.params['related'] = [related.upper()]
+            if interval == 'days':
+                delta = timedelta(days=duration)
+            if interval == 'hours':
+                delta = timedelta(hours=duration)
+            if interval == 'minutes':
+                delta = timedelta(minutes=duration)
+            trigger.value = delta
 
-        # Compute trigger data
-        interval = alarm_data['trigger_interval']
-        occurs = alarm_data['trigger_occurs']
-        duration = (occurs == 'after' and alarm_data['trigger_duration']) \
-                                            or -(alarm_data['trigger_duration'])
-        related = alarm_data['trigger_related']
-        trigger = valarm.add('trigger')
-        trigger.params['related'] = [related.upper()]
-        if interval == 'days':
-            delta = timedelta(days=duration)
-        if interval == 'hours':
-            delta = timedelta(hours=duration)
-        if interval == 'minutes':
-            delta = timedelta(minutes=duration)
-        trigger.value = delta
-
-        # Compute other details
-        valarm.add('description').value = alarm_data['name']
-        valarm.add('action').value = alarm_data['action']
-        return vevent
+            # Compute other details
+            valarm.add('description').value = alarm_data['name']
+            valarm.add('action').value = alarm_data['action']
+            
+            valarms.append(valarm)
+        return valarms
         
-    def import_ical(self, cr, uid, ical_data):
+    def import_ical(self, cr, uid, ical_data):        
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
@@ -374,12 +386,12 @@ class Alarm(CalDAV, osv.osv_memory):
                     related = days>=0 and 'after' or 'before'
                 self.ical_set('trigger_interval', interval, 'value')
                 self.ical_set('trigger_duration', duration, 'value')
-                self.ical_set('trigger_occurs', related, 'value')
+                self.ical_set('trigger_occurs', related.lower(), 'value')
                 if child.params:
                     if child.params.get('related'):
                         self.ical_set('trigger_related', child.params.get('related')[0].lower(), 'value')
             else:
-                self.ical_set(child.name.lower(), child.value, 'value')
+                self.ical_set(child.name.lower(), child.value.lower(), 'value')
         vals = map_data(cr, uid, self)
         return vals
 
@@ -401,28 +413,31 @@ class Attendee(CalDAV, osv.osv_memory):
     'language': None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
 
-    def import_ical(self, cr, uid, ical_data):
+    def import_ical(self, cr, uid, ical_data):        
         for para in ical_data.params:
             if para.lower() == 'cn':
                 self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
             else:
-                self.ical_set(para.lower(), ical_data.params[para][0], 'value')
+                self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')
         if not ical_data.params.get('CN'):
             self.ical_set('cn', ical_data.value, 'value')
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, attendee_id, vevent, context={}):
-        attendee_object = self.pool.get('calendar.attendee')
-        for attendee in attendee_object.read(cr, uid, attendee_id, []):
+    def export_ical(self, cr, uid, attendee_data, context={}):        
+        ical = vobject.iCalendar()
+        attendees = []        
+        vevent = ical.add('vevent')
+        for attendee in attendee_data:            
             attendee_add = vevent.add('attendee')
-            for a_key, a_val in attendee_object.__attribute__.items():
+            for a_key, a_val in self.__attribute__.items():                
                 if attendee[a_val['field']]:
                     if a_val['type'] == 'text':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                     elif a_val['type'] == 'boolean':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
-        return vevent
+            attendees.append(attendee_add)
+        return attendees
 
 Attendee()
 

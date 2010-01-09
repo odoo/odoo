@@ -57,7 +57,7 @@ class crm_cal_import_wizard(wizard.interface):
         global cnt
         cnt = 0
         if vals:
-            cnt = vals['count']
+            cnt = len(vals)
         return {}
     
     def _result_set(self, cr, uid, data, context=None):

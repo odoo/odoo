@@ -484,7 +484,6 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/>
 
@@ -560,7 +559,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="domain">[('state','=','open')]</field>
         </record>
-
+menu_main
         <record id="action_view_task7" model="ir.actions.act_window">
             <field name="name">Unassigned Tasks</field>
             <field name="res_model">project.task</field>
@@ -660,6 +659,77 @@
                 </page>
             </field>
         </record>
+
+
+      <!--     User Form-->
+      <record id="view_project_users_form_simple" model="ir.ui.view">
+            <field name="name">res.users.project.form1</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="password" position="after">
+                 <field name="project_id" widget="selection" />
+                </field>
+            </field>
+        </record>
+
+     <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
+            <field name="name">view.users.form.project.modif.inherited1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+             <page string="Current Activity" position="inside">
+                    <field name="project_id" widget="selection"/>
+                </page>
+            </field>
+        </record>
+
+<!--- Messages-->
+     <record id="view_project_message_form" model="ir.ui.view">
+            <field name="name">project.message.form</field>
+            <field name="model">project.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Messages">
+                    <group colspan="6">
+                        <field name="subject" select="1"/>
+                        <field name="description"/>
+                        <field name="project_id" />
+                        <field name="date" select="2"/>
+                        <field name="user_id" select="1"/>
+                    </group>
+                </form>
+            </field>
+       </record>
+
+     <record id="view_project_message_tree" model="ir.ui.view">
+            <field name="name">project.message.form</field>
+            <field name="model">project.message</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                        <field name="subject" select="1"/>
+                        <field name="description" select="1"/>
+                        <field name="project_id" select="1"/>
+                        <field name="date" select="1"/>
+                        <field name="user_id" select="1"/>
+                </tree>
+            </field>
+       </record>
+
+        <record id="action_view_project_messages_tree" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">project.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_project_message_tree"/>
+       </record>
+
+		<menuitem id="menu_message_main" name="Message" parent="menu_main"/>
+        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_message_main"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
 
