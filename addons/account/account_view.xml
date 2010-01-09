@@ -955,7 +955,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
-        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_reporting"/>
+        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
@@ -991,7 +991,7 @@
         </record>
         <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>
 
-        <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="7"/>
+        <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
         <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
         <menuitem icon="STOCK_INDENT" action="wizard_account_chart" id="menu_action_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
 
@@ -1111,7 +1111,7 @@
             <field name="res_model">account.journal.period</field>
             <field name="view_type">tree</field>
         </record>
-        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_reporting"/>
+        <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_generic_reporting" sequence="2"/>
 
 
         <!--
