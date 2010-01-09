@@ -66,30 +66,30 @@ class crm_meeting(osv.osv):
         'rrule': {'field': 'rrule', 'type': 'text'},
         'x-openobject-model': {'value': _name, 'type': 'text'},
 #        'duration': {'field': 'duration'},
-        'dtend': {'field': 'date_deadline', 'type': 'datetime'}, 
-        'valarm': {'field': 'alarms', 'type': 'text'}, 
+        'dtend': {'field': 'date_deadline', 'type': 'datetime'},
+        'valarm': {'field': 'alarms', 'type': 'text'},
 
     }
-    
-    def _get_data(self, cr, uid, ids, name, arg, context):        
+
+    def _get_data(self, cr, uid, ids, name, arg, context):
         result = {}
         attendee_obj = self.pool.get('calendar.attendee')
         alarm_obj = self.pool.get('calendar.alarm')
         model_obj = self.pool.get('ir.model')
         model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
         for meeting_id in ids:
-            result[meeting_id] = {}            
+            result[meeting_id] = {}
             if "attendees" in name:
                 attendee_ids = attendee_obj.search(cr, uid, [('ref','=','%s,%d'%(self._name, meeting_id))])
                 result[meeting_id]["attendees"] = attendee_obj.export_cal(cr, uid, attendee_ids)
-            if "alarms" in name:                
+            if "alarms" in name:
                 alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting_id)])
-                result[meeting_id]["alarms"] = alarm_obj.export_cal(cr, uid, alarm_ids)         
+                result[meeting_id]["alarms"] = alarm_obj.export_cal(cr, uid, alarm_ids)
         return result
 
     def _set_data(self, cr, uid, meeting_id, name, value, arg, context):
         if not value:
-            return         
+            return
         attendee_obj = self.pool.get('calendar.attendee')
         model_obj = self.pool.get('ir.model')
         alarm_obj = self.pool.get('calendar.alarm')
@@ -100,11 +100,11 @@ class crm_meeting(osv.osv):
                 'ref':'%s,%d'%('crm.meeting', meeting_id)
             }
             attendee_obj.write(cr, uid, attendee_ids, vals)
-        if name == "alarms": 
+        if name == "alarms":
             model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
             alarm_ids = alarm_obj.import_cal(cr, uid, eventdata['alarms'])
             vals = {
-                'res_id' : meeting.id,                    
+                'res_id' : meeting.id,
                 'model_id' : model_id,
             }
             alarm_obj.write(cr, uid, alarm_ids, vals)
@@ -128,9 +128,9 @@ class crm_meeting(osv.osv):
                                  for anexception to a recurrence set"),
         'rrule': fields.char('Recurrent Rule', size=352, invisible="True"),
         'rrule_type' : fields.selection([('none', 'None'), ('daily', 'Daily'), \
-                 ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'), 
+                 ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'),
         'attendees': fields.function(_get_data, method=True,\
-                fnct_inv=_set_data, string='Attendees', type="text", multi='attendees'), 
+                fnct_inv=_set_data, string='Attendees', type="text", multi='attendees'),
         'alarms': fields.function(_get_data, method=True,\
                 fnct_inv=_set_data, string='Attendees', type="text", multi='alarms'),
         'alarm_id': fields.many2one('res.alarm', 'Alarm'),
@@ -138,7 +138,7 @@ class crm_meeting(osv.osv):
 
     _defaults = {
          'class': lambda *a: 'public',
-         'show_as' : lambda *a : 'busy',          
+         'show_as' : lambda *a : 'busy',
     }
 
     def do_alarm_create(self, cr, uid, ids, context={}):
@@ -153,23 +153,23 @@ class crm_meeting(osv.osv):
             basic_alarm = meeting.alarm_id
             if basic_alarm:
                 vals = {
-                    'action': 'display', 
-                    'description': meeting.description, 
-                    'name': meeting.name, 
+                    'action': 'display',
+                    'description': meeting.description,
+                    'name': meeting.name,
                     'attendee_ids': [(6,0, attendee_ids)],
-                    'trigger_related': basic_alarm.trigger_related, 
-                    'trigger_duration': basic_alarm.trigger_duration, 
-                    'trigger_occurs': basic_alarm.trigger_occurs, 
-                    'trigger_interval': basic_alarm.trigger_interval, 
-                    'duration': basic_alarm.duration, 
-                    'repeat': basic_alarm.repeat, 
+                    'trigger_related': basic_alarm.trigger_related,
+                    'trigger_duration': basic_alarm.trigger_duration,
+                    'trigger_occurs': basic_alarm.trigger_occurs,
+                    'trigger_interval': basic_alarm.trigger_interval,
+                    'duration': basic_alarm.duration,
+                    'repeat': basic_alarm.repeat,
                     'state' : 'run',
                     'event_date' : meeting.date,
-                    'event_end_date' : meeting.date_deadline, 
-                    'res_id' : meeting.id,                    
+                    'event_end_date' : meeting.date_deadline,
+                    'res_id' : meeting.id,
                     'model_id' : model_id,
-                    'user_id' : uid              
-                 }       
+                    'user_id' : uid
+                 }
                 alarm_id = alarm_obj.create(cr, uid, vals)
         cr.commit()
         return True
@@ -181,7 +181,7 @@ class crm_meeting(osv.osv):
         for meeting in self.browse(cr, uid, ids):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
             if alarm_ids and len(alarm_ids):
-                alarm_obj.unlink(cr, uid, alarm_ids)                
+                alarm_obj.unlink(cr, uid, alarm_ids)
         cr.commit()
         return True
 
@@ -210,8 +210,8 @@ class crm_meeting(osv.osv):
     def import_cal(self, cr, uid, data, context={}):
         file_content = base64.decodestring(data)
         event_obj = self.pool.get('basic.calendar.event')
-        event_obj.__attribute__.update(self.__attribute__)        
-        
+        event_obj.__attribute__.update(self.__attribute__)
+
         vals = event_obj.import_ical(cr, uid, file_content)
         ids = []
         for val in vals:
@@ -219,12 +219,12 @@ class crm_meeting(osv.osv):
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
             val.pop('id')
-            if is_exists:                
+            if is_exists:
                 self.write(cr, uid, [is_exists], val)
                 ids.append(is_exists)
             else:
-                case_id = self.create(cr, uid, val)   
-                ids.append(case_id)             
+                case_id = self.create(cr, uid, val)
+                ids.append(case_id)
         return ids
 
     def get_recurrent_ids(self, cr, uid, ids, base_start_date, base_until_date, limit=100):
@@ -235,10 +235,10 @@ class crm_meeting(osv.osv):
                          join crm_case c on (c.id=m.inherit_case_id) \
                          where m.id in ("+ ','.join(map(lambda x: str(x), ids))+")")
             result = []
-            count = 0                                   
+            count = 0
             for data in cr.dictfetchall():
                 start_date = base_start_date and datetime.datetime.strptime(base_start_date, "%Y-%m-%d") or False
-                until_date = base_until_date and datetime.datetime.strptime(base_until_date, "%Y-%m-%d") or False                 
+                until_date = base_until_date and datetime.datetime.strptime(base_until_date, "%Y-%m-%d") or False
                 if count > limit:
                     break
                 event_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -268,11 +268,11 @@ class crm_meeting(osv.osv):
                             if until_date and until_date >= rrule_until_date:
                                 until_date = rrule_until_date
                             if until_date:
-                                value = until_date.strftime("%Y%m%d%H%M%S")                                
+                                value = until_date.strftime("%Y%m%d%H%M%S")
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
-                    if not is_until and until_date:                        
-                        value = until_date.strftime("%Y%m%d%H%M%S")                        
+                    if not is_until and until_date:
+                        value = until_date.strftime("%Y%m%d%H%M%S")
                         name = "UNTIL"
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
@@ -303,10 +303,12 @@ class crm_meeting(osv.osv):
                 if arg[1] in ('>', '>='):
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
-                    until_date = arg[2]        
+                    until_date = arg[2]
         res = super(crm_meeting, self).search(cr, uid, args_without_date, offset,
                 limit, order, context, count)
-        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)        
+        if not isinstance(res,list):
+            res= [res]
+        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
@@ -524,13 +526,13 @@ class res_users(osv.osv):
         cr.execute("SELECT crm_case.user_id, 'busy' as status \
                     FROM crm_meeting meeting, crm_case \
                     WHERE meeting.inherit_case_id = crm_case.id \
-                    and crm_case.date <= %s and crm_case.date_deadline >= %s and crm_case.user_id = ANY(%s) and meeting.show_as = %s", 
+                    and crm_case.date <= %s and crm_case.date_deadline >= %s and crm_case.user_id = ANY(%s) and meeting.show_as = %s",
                                 (current_datetime, current_datetime , ids, 'busy'))
         result = cr.dictfetchall()
         for user_data in result:
             user_id = user_data['user_id']
             status = user_data['status']
-            res.update({user_id:status})        
+            res.update({user_id:status})
         return res
 res_users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
