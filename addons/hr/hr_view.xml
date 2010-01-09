@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-hr" id="menu_hr_root" name="Human Resources"/>
+        <menuitem 
+            icon="terp-hr" 
+            id="menu_hr_root" 
+            name="Human Resources"/>
         <menuitem 
             id="menu_hr_reporting" 
             name="Reporting" 
@@ -11,8 +14,17 @@
             id="menu_hr_configuration" 
             name="Configuration" 
             parent="hr.menu_hr_root"
-            sequence="5" groups="group_hr_manager"/>
-        
+            sequence="50" groups="group_hr_manager"/>
+        <menuitem
+            id="menu_hr_employee"
+            sequence="1"
+            name="Human Resources"
+            parent="hr.menu_hr_root"/>
+        <menuitem
+            id="menu_hr_time" 
+            name="Time Tracking" 
+            parent="hr.menu_hr_root"/>
+
         <!--
         ==========
         Employee 
@@ -103,26 +115,9 @@
         </record>
         <menuitem
             id="menu_open_view_employee_list"
-            name="Employees"
+            action="open_view_employee_list"
             groups="group_hr_manager"
-            parent="hr.menu_hr_root"/>
-
-        <menuitem
-            action="open_view_employee_tree"
-            id="menu_open_view_employee_tree"
-            parent="menu_open_view_employee_list"/>
-
-       <record id="open_view_employee_list_my" model="ir.actions.act_window">
-            <field name="name">All Employees</field>
-            <field name="res_model">hr.employee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-        </record>
-        <menuitem
-            action="open_view_employee_list_my"
-            id="menu_open_view_employee_list_my"
-            parent="menu_open_view_employee_list"/>
+            parent="hr.menu_hr_employee"/>
 
         <!--
         =======================
@@ -181,12 +176,20 @@
             </field>
         </record>
         <record id="edit_workgroup" model="ir.actions.act_window">
-            <field name="name">Working Time Categories</field>
+            <field name="name">Working Schedules</field>
             <field name="res_model">hr.timesheet.group</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="edit_workgroup" id="menu_edit_workgroup" parent="hr.menu_hr_configuration"/>
+        <menuitem 
+            name="Employees"
+            id="menu_hr_configuration_employee"
+            parent="hr.menu_hr_configuration"/>
+
+        <menuitem 
+            action="edit_workgroup" 
+            id="menu_edit_workgroup" 
+            parent="hr.menu_hr_configuration"/>
         
         <record id="view_timesheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.tree</field>
@@ -262,7 +265,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="open_view_categ_form" id="menu_view_employee_category_form" parent="hr.menu_hr_configuration"/>
+        <menuitem 
+            action="open_view_categ_form" 
+            id="menu_view_employee_category_form" 
+            parent="hr.menu_hr_configuration_employee"/>
         
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -289,8 +295,5 @@
             <field eval="'ir.actions.act_window,%d'%hr_employee_normal_action_tree" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
-        <menuitem action="open_view_categ_tree" id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
-       
     </data>
 </openerp>

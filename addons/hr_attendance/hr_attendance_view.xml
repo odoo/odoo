@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
@@ -48,8 +48,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_time"
             groups="group_hr_attendance"/>
+
         <menuitem action="open_view_attendance" id="menu_open_view_attendance"
             parent="menu_hr_attendance" groups="hr.group_hr_manager"/>
         

@@ -31,6 +31,7 @@ from tools.translate import _
 import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
+
 class crm_job(osv.osv):
     _name = "crm.job"
     _description = "Job Cases"
