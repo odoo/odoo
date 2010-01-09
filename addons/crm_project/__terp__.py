@@ -39,6 +39,7 @@
         'crm_bugs_menu.xml',
         'crm_feature_view.xml',
         'crm_feature_menu.xml',
+        'security/crm_project_security.xml'
      ],
     'demo_xml': ['crm_bugs_demo.xml'],
     'installable': True,

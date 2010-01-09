@@ -236,7 +236,7 @@ class account_invoice(osv.osv):
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
-        'comment': fields.text('Additional Information'),
+        'comment': fields.text('Additional Information', translate=True),
 
         'state': fields.selection([
             ('draft','Draft'),
@@ -1093,7 +1093,7 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits=(16, int(config['price_accuracy']))),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }

@@ -73,7 +73,7 @@ class crm_case_section(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),        
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
         'calendar' : fields.boolean('Calendar', help='Allows to show calendar'),
     }
     _defaults = {
@@ -408,6 +408,11 @@ class crm_case(osv.osv):
         if context.get('portal', False):
             return False
         return uid
+
+    def _get_section(self, cr, uid, context):
+       user = self.pool.get('res.users').browse(cr, uid, uid)
+       return user.section_id.id
+
     _defaults = {
         'active': lambda *a: 1,
         'user_id': _get_default_user,
@@ -417,6 +422,7 @@ class crm_case(osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'section_id': _get_section,
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 
@@ -818,8 +824,8 @@ class crm_case(osv.osv):
                 data['user_id'] = uid
             self.write(cr, uid, ids, data)
         self._action(cr,uid, cases, 'open')
-        return True   
-    
+        return True
+
 
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
@@ -946,5 +952,15 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         return {}
 
 crm_email_add_cc_wizard()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+class res_users(osv.osv):
+    _inherit = "res.users"
+    _description = "users"
+
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Section', required=False)
+    }
+
+res_users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

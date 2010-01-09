@@ -36,16 +36,16 @@ class crm_helpdesk(osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherits = {'crm.case':"inherit_case_id"}    
-    _columns = {        
+    _inherits = {'crm.case':"inherit_case_id"}
+    _columns = {
            'inherit_case_id':fields.many2one('crm.case','Case'),
     }
-    
+
     def _map_ids(self, method, cr, uid, ids, *args, **argv):
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
-            select = ids            
+            select = ids
         case_data = self.browse(cr, uid, select)
         new_ids = []
         for case in case_data:
@@ -66,21 +66,21 @@ class crm_helpdesk(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
     def case_close(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
+        return self._map_ids('case_close',cr,uid,ids,*args,**argv)
     def case_open(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_open',cr,uid,ids,*args,**argv)
     def case_cancel(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
     def case_reset(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_reset',cr,uid,ids,*args,**argv)
-    
-    def msg_new(self, cr, uid, msg):        
+
+    def msg_new(self, cr, uid, msg):
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
         data = {
-            'name': msg['Subject'],            
+            'name': msg['Subject'],
             'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
+            'email_cc': msg['Cc'],
             'user_id': False,
             'description': msg_body['body'],
             'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
@@ -88,15 +88,15 @@ class crm_helpdesk(osv.osv):
         res = mailgate_obj.partner_get(cr, uid, msg['From'])
         if res:
             data.update(res)
-        res = self.create(cr, uid, data)        
+        res = self.create(cr, uid, data)
         return res
 
     def msg_update(self, cr, uid, ids, *args, **argv):
         return self._map_ids('msg_update',cr, uid, ids, *args, **argv)
     def emails_get(self, cr, uid, ids, *args, **argv):
         return self._map_ids('emails_get',cr, uid, ids, *args, **argv)
-    def msg_send(self, cr, uid, ids, *args, **argv):        
-        return self._map_ids('msg_send',cr, uid, ids, *args, **argv) 
+    def msg_send(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('msg_send',cr, uid, ids, *args, **argv)
 
 crm_helpdesk()
 
@@ -104,7 +104,7 @@ class crm_helpdesk_assign_wizard(osv.osv_memory):
     _name = 'crm.helpdesk.assign_wizard'
 
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Section', required=True),
+        'section_id': fields.many2one('crm.case.section', 'Section', required=False),
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
 

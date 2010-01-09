@@ -9,17 +9,35 @@
             <field name="model">caldav.invite.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invite Attendees">
-                    <separator string="Select User" colspan="4"/>
-                    <newline/>
-                    <field name="user_id" select="1" on_change="onchange_user_id(user_id)"/>
-                    <field name="email" />
-                    <field name="role" select="1" />
-            		<field name="rsvp" />
+                <form string="Invite Attendees"> 
+                    <separator string="Atendee details" colspan="4"/>                   
+                    <field name="attendee_ids" mode="tree,form" nolabel="1" widget="one2many_list" colspan="4"> 
+                            <form string="Attendee details">
+                                <field name="user_id" on_change="onchange_user_id(user_id)" />
+                                <field name="availability" />
+                        		<field name="email" select="1"/>                                
+                        		<newline />
+                        		<field name="role" select="1" />
+                        		<field name="cutype" select="1" />
+                        		<newline />
+                        		<field name="rsvp" />
+                            </form>
+                            <tree string="Attendee details" editable="bottom">
+                                <field name="user_id" on_change="onchange_user_id(user_id)" />
+                                <field name="availability" />
+                        		<field name="email" select="1"/>                                                  		
+                        		<field name="role" select="1" />
+                        		<field name="cutype" select="1" />
+                                <field name="language" />                        		
+                        		<field name="rsvp" />
+                            </tree>
+                    </field>
                     <separator string="" colspan="6" />
                     <label string="" colspan="2"/>
                     <button icon='gtk-cancel' special="cancel" string="Cancel"/>
-                    <button name="do_invite" string="Invite" type="object" icon="gtk-ok"/>
+                    <button string="Invite"
+            				name="do_invite"
+            				icon="gtk-ok" type="object" />
                 </form>
             </field>
         </record>
@@ -39,24 +57,32 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Atendee details">
-            		<field name="user_id" on_change="onchange_user_id(user_id)" />
-            		<field name="email" select="1"/>
+            		<field name="user_id"
+            			on_change="onchange_user_id(user_id)" readonly="1" />
+            		<field name="email" select="1" readonly="1" />
             		<newline />
-            		<field name="role" select="1" />
-            		<field name="cutype" select="1" />
+            		<field name="role" select="1" readonly="1" string="Role" />
+            		<field name="cutype" select="1" readonly="1"  string="Invitation type" />
             		<newline />
-            		<field name="rsvp" />
+            		<field name="rsvp" readonly="1" />
             		<notebook colspan="4">
             			<page string="Details">
-            				<field name="sent_by_uid" />
-            				<field name="dir" widget='url' />
-            				<field name="language" />
+            				<field name="event_date" />
+                            <field name="event_end_date" />
+            				<newline />
+            				<field name="sent_by_uid" readonly="1"/>
+            				<field name="dir" widget='url' readonly="1"/>
+            				<field name="language" readonly="1"/>
+            				<newline />
+            				<field name="ref" colspan="4" readonly="1"/>
             			</page>
             			<page string="Delegation Info">
             				<separator string="Delegated to" colspan="4" />
-            				<field name="del_to_user_ids" nolabel="1" colspan="4" />
+            				<field name="del_to_user_ids" nolabel="1"
+            					colspan="4" readonly="1" />
             				<separator string="Delegated from" colspan="4" />
-            				<field name="del_from_user_ids" nolabel="1" colspan="4" />
+            				<field name="del_from_user_ids" nolabel="1"
+            					colspan="4" readonly="1" />
             			</page>
             		</notebook>
             		<group col="6" colspan="4">
@@ -77,7 +103,7 @@
 	                        	name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
 	                        	states="needs-action" string="Delegate"
 	                        	type="action" icon="gtk-sort-descending"
-	                        	context="{'model' : 'calendar.attendee'}" />
+	                        	context="{'model' : 'calendar.attendee', 'state' : 'delegated'}" />
             		</group>
             	</form>
             </field>

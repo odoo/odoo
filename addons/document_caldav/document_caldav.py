@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
+from document.nodes import node_content
 from osv import osv, fields
 from osv.orm import except_orm
+import base64
 import os
-
-from document.nodes import node_content
 
 class document_directory_content(osv.osv):
     _inherit = 'document.directory.content'    
@@ -36,7 +36,7 @@ class document_directory_content(osv.osv):
             return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         content = self.browse(cr, uid, node.cnt_id, context)
         fobj = self.pool.get(content.object_id.model)
-        fobj.import_cal(cr, uid, base64.encodestring(data), context=ctx)
+        fobj.import_cal(cr, uid, base64.encodestring(data), context=context)
 
         return True
 
