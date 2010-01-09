@@ -227,24 +227,28 @@ class crm_meeting(osv.osv):
                 ids.append(case_id)             
         return ids
 
-    def get_recurrent_ids(self, cr, uid, ids, start_date, until_date, limit=100):
+    def get_recurrent_ids(self, cr, uid, ids, base_start_date, base_until_date, limit=100):
         if not limit:
             limit = 100
-        if ids and (start_date or until_date):
+        if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \
                          where m.id in ("+ ','.join(map(lambda x: str(x), ids))+")")
             result = []
-            count = 0            
-            start_date = start_date and datetime.datetime.strptime(start_date, "%Y-%m-%d") or False
-            until_date = until_date and datetime.datetime.strptime(until_date, "%Y-%m-%d") or False            
-            for data in cr.dictfetchall():                
+            count = 0                                   
+            for data in cr.dictfetchall():
+                start_date = base_start_date and datetime.datetime.strptime(base_start_date, "%Y-%m-%d") or False
+                until_date = base_until_date and datetime.datetime.strptime(base_until_date, "%Y-%m-%d") or False                 
                 if count > limit:
                     break
                 event_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
                 if start_date and start_date <= event_date:
                     start_date = event_date
                 if not data['rrule']:
+                    if start_date and event_date < start_date:
+                        continue
+                    if until_date and event_date > until_date:
+                        continue
                     idval = common.real_id2caldav_id(data['id'], data['date'])
                     result.append(idval)
                     count += 1
@@ -276,6 +280,11 @@ class crm_meeting(osv.osv):
                     start_date = datetime.datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
                     rdates = event_obj.get_recurrent_dates(str(new_rrule_str), exdate, start_date)
                     for rdate in rdates:
+                        r_date = datetime.datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
+                        if start_date and r_date < start_date:
+                            continue
+                        if until_date and r_date > until_date:
+                            continue
                         idval = common.real_id2caldav_id(data['id'], rdate)
                         result.append(idval)
                         count += 1
@@ -294,11 +303,10 @@ class crm_meeting(osv.osv):
                 if arg[1] in ('>', '>='):
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
-                    until_date = arg[2]
-
+                    until_date = arg[2]        
         res = super(crm_meeting, self).search(cr, uid, args_without_date, offset,
                 limit, order, context, count)
-        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+        return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)        
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
