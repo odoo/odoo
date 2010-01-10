@@ -142,14 +142,15 @@ class res_config_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
-        for module in self._modules_to_install(cr, uid, ids, context=context):
-            self.logger.notifyChannel(
-                'installer', netsvc.LOG_INFO,
-                'Selecting addon "%s" to install'%module)
-            modules.button_install(
-                cr, uid,
-                modules.search(cr, uid, [('name','=',module)]),
-                context=context)
+        to_install = list(self._modules_to_install(
+            cr, uid, ids, context=context))
+        self.logger.notifyChannel(
+            'installer', netsvc.LOG_INFO,
+            'Selecting addons %s to install'%to_install)
+        modules.state_update(
+            cr, uid,
+            modules.search(cr, uid, [('name','in',to_install)]),
+            'to install', ['uninstalled'], context=context)
         cr.commit()
 
         pooler.restart_pool(cr.dbname, update_module=True)
