@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,13 +24,13 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    The base module to manage documents(wiki) 
-    
+    The base module to manage documents(wiki)
+
     keep track for the wiki groups, pages, and history
     """,
     'author': 'Tiny & Axelor',
     'website': 'http://openerp.com',
-    'depends': ['base'],
+    'depends': ['base','document'],
     'init_xml': [],
     'update_xml': [
         'wiki_view.xml',

@@ -365,6 +365,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_random_timesheet_lines_tree"/>
         </record>
-
+	  <!--<menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board"
+            parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>-->
+       <menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board" name="Timesheets Lines"
+            parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>
     </data>
 </openerp>

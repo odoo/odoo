@@ -1,7 +1,11 @@
 <openerp>
 <data>
-    <menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
-    <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>
+    <!--<menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
+    <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>-->
+
+    <menuitem name="Knowledge Management" icon="terp-stock" id="menu_document"/>
+    <menuitem name="Configuration" id="menu_document_configuration" parent="menu_document" sequence="50"/>
+    <menuitem name="Document Management" id="menu_document_management_configuration" parent="menu_document_configuration" />
 
     <record model="ir.ui.view" id="view_document_storage_form">
         <field name="name">document.storage</field>
@@ -39,11 +43,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem
+   <!-- <menuitem
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        parent="menu_document_configuration"/>
+        parent="menu_document_configuration"/>-->
 
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
@@ -133,7 +137,7 @@
         name="Directories"
         action="action_document_directory_form"
         id="menu_document_directories"
-        parent="menu_document_configuration"/>
+        parent="menu_document_management_configuration"/>
 
 
     <record model="ir.actions.act_window" id="action_document_directory_tree">
@@ -146,7 +150,7 @@
     <menuitem
         action="action_document_directory_tree"
         id="menu_document_directories_tree"
-        parent="menu_document_configuration"/>    
+        parent="menu_document_management_configuration" sequence="5"/>
 
     <record model="ir.ui.view" id="view_document_file_form">
         <field name="name">ir.attachment</field>
@@ -230,11 +234,12 @@
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
     </record>
+    <menuitem name="Documents" id="menu_document_doc" parent="menu_document" sequence="5"/>
     <menuitem
         name="Search a File"
         action="action_document_file_form"
         id="menu_document_files"
-        parent="menu_document"/>
+        parent="menu_document_doc"/>
 
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>
@@ -289,7 +294,7 @@
             </field>
         </field>
     </record>
-        
+
         <act_window domain="[('partner_id', '=', active_id)]"
             id="act_res_partner_document" name="Related Documents"
             res_model="ir.attachment"

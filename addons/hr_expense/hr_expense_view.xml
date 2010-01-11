@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
         <!-- Expenses -->
-        
+
         <record id="view_expenses_line_tree" model="ir.ui.view">
             <field name="name">hr.expense.line.tree</field>
             <field name="type">tree</field>
@@ -20,7 +20,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
@@ -36,8 +36,8 @@
                 </tree>
             </field>
         </record>
-        
-        
+
+
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form</field>
             <field name="type">form</field>
@@ -96,8 +96,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_hr_expense_filter" model="ir.ui.view">
             <field name="name">hr.expense.expense.filter</field>
             <field name="model">hr.expense.expense</field>
@@ -118,20 +118,20 @@
              	</search>
             </field>
         </record>
-        
+
         <record id="expense_all" model="ir.actions.act_window">
             <field name="name">All expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
-        
-        <menuitem id="next_id_49" name="Expenses"
+
+        <menuitem id="next_id_49" name="Expenses" sequence="6"
         	parent="hr.menu_hr_root"/>
-        	
-        <menuitem action="expense_all" id="menu_expense_all"
+
+        <menuitem action="expense_all" id="menu_expense_all" name="Expenses"
         	parent="next_id_49" groups="hr.group_hr_manager"/>
-        	
+
         <record id="view_product_hr_expense_form" model="ir.ui.view">
 			<field name="name">product.product.expense.form</field>
 			<field name="model">product.product</field>
@@ -143,6 +143,6 @@
 				</field>
 			</field>
 		</record>
-		
+
     </data>
 </openerp>

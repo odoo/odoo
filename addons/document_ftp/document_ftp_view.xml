@@ -1,19 +1,19 @@
 <openerp>
-<data>    
+<data>
     <record model="ir.actions.url" id="action_document_browse">
         <field name="name">Browse Files</field>
         <field name="url">ftp://localhost:8021/</field>
     </record>
     <menuitem
-        name="Browse Files Using FTP"
+        name="Shared Repository (FTP)"
         action="action_document_browse"
         id="menu_document_browse"
         type="url"
         icon="STOCK_EXECUTE"
-        parent="document.menu_document"/>
+        parent="document.menu_document_doc" sequence="1"/>
 
-    
-    
+
+
 
     <record id="view_auto_config_form" model="ir.ui.view">
         <field name="name">Auto Configure Directory</field>
@@ -49,7 +49,7 @@
         <field name="action_id" ref="action_config_auto_directory"/>
     </record>
 
-        
+
 
 </data>
 </openerp>
