@@ -86,7 +86,7 @@ class opportunity2phonecall(wizard.interface):
             #TODO : Take Other Info from opportunity            
             new_case = phonecall_case_obj.create(cr, uid, {
                     'name' : opportunity.name,
-                    'case_id' : opportunity.inherit_case_id.id,
+                    'case_id' : opportunity.id,
                     'user_id' : form['user_id'],
                     'categ_id' : form['category_id'],
                     'description' : form['note'],
