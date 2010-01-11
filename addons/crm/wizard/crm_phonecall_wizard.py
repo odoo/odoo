@@ -103,14 +103,14 @@ class phonecall2opportunity(wizard.interface):
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
                 'partner_id': data['form']['partner_id'],
-                'case_id':phonecall.inherit_case_id.id, 
+                'case_id':phonecall.id, 
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
                 'partner_id': data['form']['partner_id'],                
                 }
             if not phonecall.case_id:
-                vals.update({'case_id' : new_opportunity.inherit_case_id.id})
+                vals.update({'case_id' : new_opportunity.id})
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
@@ -216,7 +216,7 @@ class phonecall2meeting(wizard.interface):
                 'name': phonecall.name,
                 'date': data['form']['date'],
                 'duration': data['form']['duration'],
-                'case_id': phonecall.inherit_case_id.id,
+                'case_id': phonecall.id,
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
