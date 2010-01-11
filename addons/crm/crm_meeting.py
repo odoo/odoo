@@ -227,14 +227,19 @@ class crm_meeting(osv.osv):
                 ids.append(case_id)
         return ids
 
-    def get_recurrent_ids(self, cr, uid, ids, base_start_date, base_until_date, limit=100):
+    def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
         if not limit:
             limit = 100
+        if isinstance(select, (str, int, long)):
+            ids = [select]
+        else:
+            ids = select
+        result = ids
         if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \
                          where m.id in ("+ ','.join(map(lambda x: str(x), ids))+")")
-            result = []
+
             count = 0
             for data in cr.dictfetchall():
                 start_date = base_start_date and datetime.datetime.strptime(base_start_date, "%Y-%m-%d") or False
@@ -288,8 +293,9 @@ class crm_meeting(osv.osv):
                         idval = common.real_id2caldav_id(data['id'], rdate)
                         result.append(idval)
                         count += 1
-            ids = result
-        return ids
+        if isinstance(select, (str, int, long)):
+            return result and result[0] or False
+        return result
 
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
@@ -306,8 +312,6 @@ class crm_meeting(osv.osv):
                     until_date = arg[2]
         res = super(crm_meeting, self).search(cr, uid, args_without_date, offset,
                 limit, order, context, count)
-        if not isinstance(res,list):
-            res= [res]
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
 
