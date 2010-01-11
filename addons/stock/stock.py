@@ -791,6 +791,7 @@ class stock_picking(osv.osv):
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
             elif pick.state in ['confirmed','assigned']:
                 ids2 = [move.id for move in pick.move_lines]
+                context.update({'call_unlink':True})
                 self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
             else:
                 continue
@@ -1213,14 +1214,14 @@ class stock_move(osv.osv):
                     pickings[move.picking_id.id] = True
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
                 self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
-                if move.move_dest_id.picking_id:
+                if context.get('call_unlink',False) and move.move_dest_id.picking_id:
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
-
-        for pick in self.pool.get('stock.picking').browse(cr, uid, pickings.keys()):
-            if all(move.state == 'cancel' for move in pick.move_lines):
-                self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
+        if not context.get('call_unlink',False):
+            for pick in self.pool.get('stock.picking').browse(cr, uid, pickings.keys()):
+                if all(move.state == 'cancel' for move in pick.move_lines):
+                    self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
