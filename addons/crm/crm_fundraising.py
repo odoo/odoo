@@ -67,6 +67,9 @@ class crm_fundraising(osv.osv):
             'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
             'case_id': fields.many2one('crm.case', 'Related Case'),
+            'ref' : fields.reference('Reference', selection=_links_get, size=128),
+            'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
+            
         }
     _defaults = {
                  'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
