@@ -23,6 +23,17 @@ from osv import osv, fields
 import time
 import netsvc
 
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+    
+    _columns = {
+        'pos_line_id': fields.many2one('pos.order.line',
+            'Pos Order Line', ondelete='set null', select=True,
+            readonly=True),
+    }
+    
+stock_move()
+
 
 class stock_picking(osv.osv):
 
@@ -30,6 +41,12 @@ class stock_picking(osv.osv):
     _columns = {
         'pos_order': fields.many2one('pos.order', 'Pos order'),
     }
+    
+    def _get_discount_invoice(self, cursor, user, move_line):
+        if move_line.pos_line_id:
+           return move_line.pos_line_id.discount
+        return super(stock_picking, self)._get_discount_invoice(cursor, user,
+               move_line)
 
 stock_picking()
 
