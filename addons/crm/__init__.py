@@ -22,7 +22,6 @@
 import crm
 import crm_mailgate
 import crm_segmentation
-import crm_config
 import crm_meeting
 import crm_lead
 import crm_phonecall
