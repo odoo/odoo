@@ -69,6 +69,12 @@ class crm_fundraising(osv.osv):
             'case_id': fields.many2one('crm.case', 'Related Case'),
             'ref' : fields.reference('Reference', selection=_links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
+            'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+            'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
+                                                                       "the partner mentality in relation to our services.The scale has" \
+                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
+
             
         }
     _defaults = {
