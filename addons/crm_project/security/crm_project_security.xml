@@ -12,8 +12,8 @@
  	<record id="crm_project_bug_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','crm.project.bug'),('name','=','project_id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="crm_project_bug_rule_group"/>
     </record>
 
@@ -25,8 +25,8 @@
  	<record id="crm_project_feature_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','crm.project.future'),('name','=','project_id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="crm_project_feature_rule_group"/>
     </record>
 
