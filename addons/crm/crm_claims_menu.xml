@@ -8,7 +8,7 @@
         <field name="name">All Claims</field>
         <field name="res_model">crm.claim</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,calendar</field>
+        <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_claims_tree_view"/>        
         <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="crm.view_crm_case_claims_filter"/>        
@@ -29,6 +29,12 @@
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_claims_form_view"/>
+        <field name="act_window_id" ref="crm_case_categ_claim0"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_crm_sec_graph_view_act_job">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="crm_case_graph_view_stage_cost"/>
         <field name="act_window_id" ref="crm_case_categ_claim0"/>
     </record>
     <menuitem name="Claims" id="menu_crm_case_claims"  parent="menu_aftersale" action="crm_case_categ_claim0"/>

@@ -375,14 +375,9 @@ class crm_case(osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description',size=64,required=True),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
-        'planned_revenue': fields.float('Planned Revenue'),
-        'planned_cost': fields.float('Planned Costs'),
-        'probability': fields.float('Probability (%)'),
         'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
         'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
@@ -390,15 +385,9 @@ class crm_case(osv.osv):
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                       "the partner mentality in relation to our services.The scale has" \
-                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'date': fields.datetime('Date'),
         'create_date': fields.datetime('Created' ,readonly=True),
         'date_deadline': fields.datetime('Deadline'),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
-                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication', readonly=1),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History', readonly=1),
@@ -407,20 +396,10 @@ class crm_case(osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'ref' : fields.reference('Reference', selection=_links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'company_id': fields.many2one('res.company','Company'),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-        'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
-        'duration': fields.float('Duration'),
-        'case_id': fields.many2one('crm.case', 'Related Case'),
-        'partner_name': fields.char("Employee's Name", size=64),
-        'partner_name2': fields.char('Employee Email', size=64),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_mobile': fields.char('Mobile', size=32),
         'child_ids': fields.one2many('crm.case', 'case_id', 'Events'),
     }
     def _get_default_partner_address(self, cr, uid, context):
@@ -457,11 +436,10 @@ class crm_case(osv.osv):
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
-        'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
-    _order = 'priority, date_deadline desc, date desc,id desc'
+    _order = 'date_deadline desc, date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
