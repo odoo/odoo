@@ -400,6 +400,7 @@ class crm_case(osv.osv):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'company_id': fields.many2one('res.company','Company'),
+        'case_id': fields.many2one('crm.case', 'Related Case'),
         'child_ids': fields.one2many('crm.case', 'case_id', 'Events'),
     }
     def _get_default_partner_address(self, cr, uid, context):
