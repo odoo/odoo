@@ -226,9 +226,18 @@ class report_creator(osv.osv):
         from_list = []
         where_list = []
         filter_list = []
+        
+#        def _add_inherits(obj):
+#            pool_model = self.pool.get(obj)
+#            if not model_dict.get(obj,False):
+#                model_dict[obj] = pool_model._table
+#            for record in pool_model._inherits.keys():
+#                     _add_inherits(record)    
+        
         for model in models:            
             model_dict[model.model] = self.pool.get(model.model)._table
-        
+#            _add_inherits(model.model)
+            
         model_list = model_dict.keys()
         reference_model_dict = {}
         for model in model_dict:
@@ -237,10 +246,22 @@ class report_creator(osv.osv):
             rest_list.remove(model)
             model_pool = self.pool.get(model)
             fields_get = model_pool.fields_get(cr,uid)
+            model_columns = {}
+            
+            def _get_inherit_fields(obj):
+                pool_model = self.pool.get(obj)
+                #Adding the columns of the model itself
+                model_columns.update(pool_model._columns)
+                #Adding the columns of its _inherits
+                for record in pool_model._inherits.keys():
+                     _get_inherit_fields(record)
+
+            _get_inherit_fields(model)         
+            
             fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
                                         and x[1].get('relation') in rest_list 
                                         and x[1].get('type')=='many2one' 
-                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related)), fields_get.items()))
+                                        and not (isinstance(model_columns[x[0]],fields.function) or isinstance(model_columns[x[0]],fields.related)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)
@@ -255,9 +276,9 @@ class report_creator(osv.osv):
                     reference_model_dict[v.get('relation')] = relation_count+1
                 else:
                     reference_model_dict[v.get('relation')]=1
-                   
-                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
-                where_list.append(str_where)
+                if k in self.pool.get(model)._columns:
+                    str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
+                    where_list.append(str_where)
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
@@ -280,6 +301,7 @@ class report_creator(osv.osv):
         
             
         if where_list:
+            where_list = list(set(where_list))
             ret_str+="\n where \n"+" and\n".join(where_list)
             ret_str = ret_str.strip()
         if filter_list:
