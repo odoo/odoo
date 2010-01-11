@@ -4,7 +4,7 @@
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_root" sequence="4"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_inventory_control" sequence="4"/>
 
         <!--
         Property / Property Group
@@ -728,7 +728,7 @@
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
                         <field name="note" colspan="4" nolabel="1"/>
-                    </page>                    
+                    </page>
                     </notebook>
                 </form>
             </field>
