@@ -36,7 +36,7 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Helpdesk Support">
@@ -150,7 +150,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -174,7 +174,7 @@
 
     <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
         <field name="name">CRM - Helpdesk Support Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
