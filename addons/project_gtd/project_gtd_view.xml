@@ -123,11 +123,11 @@
         <field name="search_view_id" ref="project.view_task_search_form"/>
     </record>
 
-    <menuitem name="Todo List"
+  <!--  <menuitem name="Todo List"
         groups="group_project_getting"
         id="menu_task_inbox"
         parent="project.menu_main"
-        action="action_prject_task_tree"/>
+        action="action_prject_task_tree"/>-->
 
     <act_window name="My Inbox"
         domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
