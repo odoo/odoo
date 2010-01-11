@@ -4,8 +4,13 @@
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_inventory_control" sequence="4"/>
-
+        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_root" sequence="4"/>
+		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="-50"/>        
+        
+     	<menuitem name="Master Data"
+                  id="menu_mrp_bom"
+                  parent="menu_mrp_root"
+                  sequence="-40" />   
         <!--
         Property / Property Group
         -->
@@ -34,7 +39,7 @@
             name="Configuration"
             parent="menu_mrp_root"
             groups="group_mrp_manager"
-            sequence="-50" />
+            sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -220,10 +225,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
         </record>
-        <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="menu_mrp_configuration" groups="base.group_extended"
-                  sequence="100" />
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_routing_and_workcenters" groups="base.group_extended" />
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_routing_and_workcenters" groups="base.group_extended"/>
+ <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
+                  sequence="100" />-->
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" />
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended"/>
 
         <!--
           Bill of Materials
@@ -309,10 +314,11 @@
         </record>
 
         <!-- BOM menus -->
-        <menuitem name="Bill of Materials"
+     
+  <!--      <menuitem name="Bill of Materials"
                   id="menu_mrp_bom"
-                  parent="menu_mrp_configuration"
-                  sequence="50" />
+                  parent="menu_mrp_bom"
+                  sequence="50" />-->
         <menuitem action="mrp_bom_form_action"
                   id="menu_mrp_bom_form_action"
                   parent="menu_mrp_bom"
@@ -546,7 +552,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root" sequence="-30"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="-30"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
             <field name="name">Production Orders Planning</field>
@@ -728,7 +734,7 @@
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
                         <field name="note" colspan="4" nolabel="1"/>
-                    </page>
+                    </page>                    
                     </notebook>
                 </form>
             </field>
@@ -758,7 +764,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"
                   sequence="-40" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
