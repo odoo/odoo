@@ -10,7 +10,7 @@
         <field name="global" eval="True"/>
     </record>
  	<record id="crm_project_bug_rule" model="ir.rule">
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id])]</field>
         <field name="rule_group" ref="crm_project_bug_rule_group"/>
     </record>
 
@@ -20,7 +20,7 @@
         <field name="global" eval="True"/>
     </record>
  	<record id="crm_project_feature_rule" model="ir.rule">
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id])]</field>
         <field name="rule_group" ref="crm_project_feature_rule_group"/>
     </record>
 
