@@ -349,10 +349,11 @@ class orm_template(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def read_group(self, cr, user, ids, fields, groupby, context=None):
+        print ":::::::::::::",fields[groupby],groupby
         context = context or {}
-        result = []
         if not ids:return
-
+        if fields[groupby]['type'] not in ('many2one,date,datetime'):
+            raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
         qu1 = ' where id in (' + ','.join([str(id) for id in ids]) + ')'
         qu2 = ''
         # construct a clause for the rules :
@@ -367,15 +368,13 @@ class orm_template(object):
         parent_res = cr.fetchall()
         groupby_ids = map(lambda x:x[0],parent_res)
         groupby_name = {}
+        child_ids_dict = {}
+
         if fields[groupby]['type'] == 'many2one':
             groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,user,groupby_ids,context))
-            chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
-        else:
-            chqu1 =' where '
+        chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
 
-        child_ids_dict = {}
         # get child ids
-
         for parent_id in groupby_ids:
             cr.execute('select id from '+self._table+chqu1 +groupby+" = '%s'"%(parent_id,))
             child_ids = cr.fetchall()
@@ -385,31 +384,54 @@ class orm_template(object):
                 else:
                     child_ids_dict[parent_id].append(val[0])
         #create [{},{}] for parent ids i.e for group by field
-        import datetime
-        curr_date = datetime.date.today()
-        yesterday = (curr_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-        lastweek = (curr_date + datetime.timedelta(weeks=-1)).strftime('%Y-%m-%d')
-        date_format = 'Old'
-        for x in parent_res:
-            if fields[groupby]['type'] in ('date','datetime'):
-                if x[0] == curr_date.strftime('%Y-%m-%d'):
+        result = []
+        if fields[groupby]['type'] in ('date','datetime'):
+            curr_date = datetime.date.today()
+            yesterday = (curr_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+            lastweek = (curr_date + datetime.timedelta(weeks=-1)).strftime('%Y-%m-%d')
+            date_result = {'Today':{'group_child':[]},'Yesterday':{'group_child':[]},
+                           'LastWeek':{'group_child':[]},'Old':{'group_child':[]}}
+            for x in parent_res:
+                db_date = x[0][:10]
+                if db_date == curr_date.strftime('%Y-%m-%d'):
                     date_format = 'Today'
-                elif x[0] == yesterday:
+                elif db_date == yesterday:
                     date_format = 'Yesterday'
-                elif (x[0] < yesterday) and (x[0] >= lastweek):
+                elif (db_date < yesterday) and (db_date >= lastweek):
                     date_format = 'LastWeek'
-                val = date_format
-            else:
-                val = (x[0],groupby_name[x[0]])
-
-            parent_val_dict = {'id':None,groupby:val,'group_child':child_ids_dict[x[0]]}
-            for sum in float_int_fields:
-                parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
-            for field in fields.keys():
-                if field not in parent_val_dict:
-                    parent_val_dict[field] = False
-            result.append(parent_val_dict)
-        return result
+                else:
+                    date_format = 'Old'
+                date_result[date_format].update({'id':None,groupby:date_format})
+                date_result[date_format]['group_child'] += child_ids_dict[x[0]]
+                for sum in float_int_fields:
+                    if sum not in date_result[date_format]:
+                        date_result[date_format][sum] = x[float_int_fields.index(sum)+1]
+                    if float_int_fields.index(sum):
+                        date_result[date_format][sum] += x[float_int_fields.index(sum)+1]
+            for key,val in date_result.items():
+                if len(date_result[key]) == 1:
+                    del date_result[key]
+                    continue
+                for field in fields.keys():
+                    if field not in val:
+                        val[field] = False
+                if key in ('Today','Yesterday') and len(result):
+                    result.insert(0,val)
+                else:
+                    result.insert(-1,val)
+            print result
+            return result
+        else:
+            for x in parent_res:
+                parent_val_dict = {'id':None,groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
+                for sum in float_int_fields:
+                    parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
+                for field in fields.keys():
+                    if field not in parent_val_dict:
+                        parent_val_dict[field] = False
+                result.append(parent_val_dict)
+            print result
+            return result
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
