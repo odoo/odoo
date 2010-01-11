@@ -303,8 +303,8 @@ class crm_case(osv.osv):
         return uid
 
     def _get_section(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr, uid, uid)
-       return user.section_id.id
+       user = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+       return user.context_section_id
 
     _defaults = {
         'active': lambda *a: 1,
@@ -846,14 +846,22 @@ class crm_email_add_cc_wizard(osv.osv_memory):
 
 crm_email_add_cc_wizard()
 
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _description = "users"
+def _section_get(self, cr, uid, context={}):
+    obj = self.pool.get('crm.case.section')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['id','name'], context)
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
 
+class users(osv.osv):
+    _inherit = 'res.users'
+    _description = "Users"
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Section', required=False)
-    }
+        'context_section_id': fields.selection(_section_get, 'Sales Section'),
+        }
 
-res_users()
+users()
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
