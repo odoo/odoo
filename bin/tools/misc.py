@@ -1240,7 +1240,7 @@ def detect_server_timezone():
         # of timezones in windows is rarely something that is known to pytz.
         # But that's ok, it is always possible to use a config option to set
         # it explicitly.
-        sources.append((get_win32_tz(),"Windows Registry"))
+        sources.append((get_win32_timezone(),"Windows Registry"))
 
     for (value,source) in sources:
         if value:
