@@ -507,12 +507,20 @@ class message(osv.osv):
         }
 message()
 
+def _project_get(self, cr, uid, context={}):
+    obj = self.pool.get('project.project')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['id','name'], context)
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
+
 class users(osv.osv):
     _inherit = 'res.users'
-    _description ="User"
+    _description = "Users"
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project'),
+        'context_project_id': fields.selection(_project_get, 'Project'),
         }
 
 users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

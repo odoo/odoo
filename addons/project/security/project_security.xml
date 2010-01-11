@@ -46,8 +46,8 @@
  	<record id="project_task_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','project.task'),('name','=','project_id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="project_task_rule_group"/>
     </record>
 
@@ -59,8 +59,8 @@
  	<record id="project_task_work_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','project.task.work'),('name','=','task_id.project_id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('task_id.project_id','=',False),('task_id.project_id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('task_id.project_id','=',False),('task_id.project_id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="project_task_work_rule_group"/>
     </record>
 
@@ -72,8 +72,8 @@
  	<record id="project_project_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','project.project'),('name','=','id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('id','=',False),('id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('id','=',False),('id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="project_project_rule_group"/>
     </record>
 
@@ -85,8 +85,8 @@
  	<record id="project_message_rule" model="ir.rule">
         <field model="ir.model.fields" name="field_id" search="[('model','=','project.message'),('name','=','project_id')]"/>
         <field name="operator">=</field>
-        <field name="operand">user.project_id.id</field>
-        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.project_id.id])]</field>
+        <field name="operand">user.context_project_id.id</field>
+        <field name="domain_force">['|',('project_id','=',False),('project_id','=',[user.context_project_id.id])]</field>
         <field name="rule_group" ref="project_message_rule_group"/>
     </record>
 

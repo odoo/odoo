@@ -670,7 +670,7 @@ menu_main
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <field name="password" position="after">
-                 <field name="project_id" widget="selection" />
+                 <field name="context_project_id" completion="1"/>
                 </field>
             </field>
         </record>
@@ -680,9 +680,10 @@ menu_main
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
+            <field eval="18" name="priority"/>
             <field name="arch" type="xml">
              <page string="Current Activity" position="inside">
-                    <field name="project_id" widget="selection"/>
+                    <field name="context_project_id" completion="1" />
                 </page>
             </field>
         </record>
