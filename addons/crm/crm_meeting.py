@@ -29,134 +29,164 @@ import tools
 from tools.translate import _
 from dateutil import parser
 
+class crm_meeting_categ(osv.osv):
+    _name = "crm.meeting.categ"
+    _description = "Category of Meetings"
+    _columns = {
+        'name': fields.char('Meeting Category Name', size=64, required=True, translate=True),
+        'probability': fields.float('Probability (%)', required=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_meeting_categ()
+
+class rrule_wizard(osv.osv):
+    _inherit = "calendar.custom.rrule"
+    
+    _columns = {
+                'case_id':fields.many2one('crm.case','Case'),
+                }
+rrule_wizard()
+
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherits = {'crm.case': "inherit_case_id"}
-    __attribute__ = {
-        'class': {'field': 'class', 'type': 'selection'},
-        'created': {'field': 'create_date', 'type': 'datetime'}, # keep none for now
-        'description': {'field': 'description', 'type': 'text'},
-        'dtstart': {'field': 'date', 'type': 'datetime'},
-        'location': {'field': 'location', 'type': 'text'},
-        #'organizer': {'field': 'partner_id', 'sub-field': 'name', 'type': 'many2one'},
-        'priority': {'field': 'priority', 'type': 'int'},
-        'dtstamp' : {'field': 'date', 'type': 'datetime'},
-        'seq': None,
-        'status': {'field': 'state', 'type': 'selection', 'mapping': {'tentative': 'draft', \
-                                                  'confirmed': 'open' , 'cancelled': 'cancel'}},
-        'summary': {'field': 'name', 'type': 'text'},
-        'transp': {'field': 'transparent', 'type': 'text'},
-        'uid': {'field': 'id', 'type': 'text'},
-        'url': {'field': 'caldav_url', 'type': 'text'},
-        'recurid': None,
-#        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
-        'attendee': {'field': 'attendees', 'type': 'text'},
-#        'categories': {'field': 'categ_id', 'sub-field': 'name'},
-        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.case.categ'},
-        'comment': None,
-        'contact': None,
-        'exdate' : {'field': 'exdate', 'type': 'datetime'},
-        'exrule' : {'field': 'exrule', 'type': 'text'},
-        'rstatus': None,
-        'related': None,
-        'resources': None,
-        'rdate': None,
-        'rrule': {'field': 'rrule', 'type': 'text'},
-        'x-openobject-model': {'value': _name, 'type': 'text'},
-#        'duration': {'field': 'duration'},
-        'dtend': {'field': 'date_deadline', 'type': 'datetime'},
-        'valarm': {'field': 'alarms', 'type': 'text'},
+    _inherit = "crm.case"
 
+    __attribute__ = {
+        'class': {'field': 'class', 'type': 'selection'}, 
+        'created': {'field': 'create_date', 'type': 'datetime'}, 
+        'description': {'field': 'description', 'type': 'text'}, 
+        'dtstart': {'field': 'date', 'type': 'datetime'}, 
+        'location': {'field': 'location', 'type': 'text'}, 
+        #'organizer': {'field': 'partner_id', 'sub-field': 'name', 'type': 'many2one'},
+        'priority': {'field': 'priority', 'type': 'int'}, 
+        'dtstamp' : {'field': 'date', 'type': 'datetime'}, 
+        'seq': None, 
+        'status': {'field': 'state', 'type': 'selection', 'mapping': {'tentative': 'draft', \
+                                                  'confirmed': 'open' , 'cancelled': 'cancel'}}, 
+        'summary': {'field': 'name', 'type': 'text'}, 
+        'transp': {'field': 'transparent', 'type': 'text'}, 
+        'uid': {'field': 'id', 'type': 'text'}, 
+        'url': {'field': 'caldav_url', 'type': 'text'}, 
+        'recurid': None, 
+#        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
+        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
+#        'categories': {'field': 'categ_id', 'sub-field': 'name'},
+        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
+        'comment': None, 
+        'contact': None, 
+        'exdate' : {'field': 'exdate', 'type': 'datetime'}, 
+        'exrule' : {'field': 'exrule', 'type': 'text'}, 
+        'rstatus': None, 
+        'related': None, 
+        'resources': None, 
+        'rdate': None, 
+        'rrule': {'field': 'rrule', 'type': 'text'}, 
+        'x-openobject-model': {'value': _name, 'type': 'text'}, 
+#        'duration': {'field': 'duration'},
+        'dtend': {'field': 'date_deadline', 'type': 'datetime'}, 
+        'valarm': {'field': 'caldav_alarm_id', 'type': 'many2one', 'object': 'calendar.alarm'}, 
     }
 
-    def _get_data(self, cr, uid, ids, name, arg, context):
-        result = {}
-        attendee_obj = self.pool.get('calendar.attendee')
-        alarm_obj = self.pool.get('calendar.alarm')
-        model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
-        for meeting_id in ids:
-            result[meeting_id] = {}
-            if "attendees" in name:
-                attendee_ids = attendee_obj.search(cr, uid, [('ref','=','%s,%d'%(self._name, meeting_id))])
-                result[meeting_id]["attendees"] = attendee_obj.export_cal(cr, uid, attendee_ids)
-            if "alarms" in name:
-                alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting_id)])
-                result[meeting_id]["alarms"] = alarm_obj.export_cal(cr, uid, alarm_ids)
-        return result
-
-    def _set_data(self, cr, uid, meeting_id, name, value, arg, context):
-        if not value:
-            return
-        attendee_obj = self.pool.get('calendar.attendee')
-        model_obj = self.pool.get('ir.model')
-        alarm_obj = self.pool.get('calendar.alarm')
-        eventdata = self.read(cr, uid, meeting_id, [name], context=context)
-        if name == "attendees":
-            attendee_ids = attendee_obj.import_cal(cr, uid, eventdata['attendees'])
-            vals = {
-                'ref':'%s,%d'%('crm.meeting', meeting_id)
-            }
-            attendee_obj.write(cr, uid, attendee_ids, vals)
-        if name == "alarms":
-            model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
-            alarm_ids = alarm_obj.import_cal(cr, uid, eventdata['alarms'])
-            vals = {
-                'res_id' : meeting.id,
-                'model_id' : model_id,
-            }
-            alarm_obj.write(cr, uid, alarm_ids, vals)
-            alarm = alarm_obj.browse(cr, uid, alarm_ids)[0]
-            self.write(cr, uid, [meeting_id], {'alarm_id':alarm.alarm_id})
+    def _get_duration(self, cr, uid, ids, name, arg, context):
+        res = {}
+        for id in ids:
+            meeting = self.browse(cr, uid, id, context=context)
+            start = datetime.datetime.strptime(meeting.date, "%Y-%m-%d %H:%M:%S")
+            end = datetime.datetime.strptime(meeting.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            res[id] = round(duration, 2)
+        return res
+    
+    def _set_duration(self, cr, uid, id, name, value, arg, context):
+        meeting = self.browse(cr, uid, id, context=context)
+        start = datetime.datetime.strptime(meeting.date, "%Y-%m-%d %H:%M:%S")
+        end = start + datetime.timedelta(hours=value)
+        cr.execute("UPDATE crm_meeting set date_deadline='%s' \
+                            where id=%s"% (end.strftime("%Y-%m-%d %H:%M:%S"), id))
         return True
-
+    
+    def _get_rrule(self, cr, uid, ids, name, arg, context):
+        res = {}
+        rrule_obj = self.pool.get('calendar.custom.rrule')
+        for id in ids:
+            meeting = self.browse(cr, uid, id, context=context)
+            type = meeting.rrule_type
+            if type == 'none' or not type:
+                res[id] = ''
+                cr.execute('DELETE from calendar_custom_rrule where case_id=%s' % (id))
+            elif type != 'custom':
+                rrule = self.pool.get('calendar.custom.rrule')
+                rrulestr = rrule.compute_rule_string(cr, uid, {'freq': type.upper(),\
+                         'interval': 1})
+                res[id] = rrulestr
+                cr.execute('DELETE from calendar_custom_rrule where case_id=%s' % (id))
+            elif type == 'custom':
+                for rrule in meeting.rule_ids:
+                    rule_datas = rrule_obj.read(cr, uid, rrule.id)
+                    rulestr =  rrule_obj.compute_rule_string(cr, uid, rule_datas)
+                    res[id] = rulestr 
+        cr.commit()
+        return res
+    
     _columns = {
-        'inherit_case_id': fields.many2one('crm.case', 'Case', ondelete='cascade'),
+        'name': fields.char('Description',size=64,required=True), 
+        'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'date': fields.datetime('Date'),
+        'date_deadline': fields.datetime('Deadline'),
+        'duration': fields.function(_get_duration, method=True, \
+                                    fnct_inv=_set_duration, string='Duration'), 
+        'categ_id': fields.many2one('crm.meeting.categ', 'Category', \
+            domain="[('section_id','=',section_id)]", \
+            help='Category related to the section.Subdivide the CRM cases \
+independently or section-wise.'), 
+        'description': fields.text('Your action'),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-                 ('confidential', 'Confidential')], 'Privacy'),
-        'location': fields.char('Location', size=264, help="Gives Location of Meeting"),
-        'freebusy': fields.text('FreeBusy'),
+                 ('confidential', 'Confidential')], 'Mark as'), 
+        'location': fields.char('Location', size=264, help="Gives Location of Meeting"), 
         'show_as': fields.selection([('free', 'Free'), \
-                                  ('busy', 'Busy')],
-                                   'show_as'),
-        'caldav_url': fields.char('Caldav URL', size=264),
+                                  ('busy', 'Busy')], 
+                                   'Show as'), 
+        'caldav_url': fields.char('Caldav URL', size=264), 
         'exdate': fields.text('Exception Date/Times', help="This property defines the list\
-                 of date/time exceptions for arecurring calendar component."),
+                 of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a rule or repeating pattern\
-                                 for anexception to a recurrence set"),
-        'rrule': fields.char('Recurrent Rule', size=352, invisible="True"),
+                                 for anexception to a recurrence set"), 
+        'rrule': fields.function(_get_rrule, string='Recurrent Rule', method=True,\
+                                              store=True, type='char', size=124), 
         'rrule_type' : fields.selection([('none', 'None'), ('daily', 'Daily'), \
-                 ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom','Custom')], 'Recurrency'),
-        'attendees': fields.function(_get_data, method=True,\
-                fnct_inv=_set_data, string='Attendees', type="text", multi='attendees'),
-        'alarms': fields.function(_get_data, method=True,\
-                fnct_inv=_set_data, string='Attendees', type="text", multi='alarms'),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm'),
+                 ('weekly', 'Weekly'), ('monthly', 'Monthly'), ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
+       'attendee_ids': fields.many2many('calendar.attendee', 'crm_attendee_rel', 'case_id', \
+                                      'attendee_id', 'Attendees'), 
+        'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
+        'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
+        'rule_ids': fields.one2many('calendar.custom.rrule', 'case_id', 'Rules'),
     }
 
     _defaults = {
-         'class': lambda *a: 'public',
-         'show_as' : lambda *a : 'busy',
+         'class': lambda *a: 'public', 
+         'show_as' : lambda *a : 'busy', 
     }
 
     def do_alarm_create(self, cr, uid, ids, context={}):
         alarm_obj = self.pool.get('calendar.alarm')
         model_obj = self.pool.get('ir.model')
-        attendee_obj = self.pool.get('calendar.attendee')
         model_id = model_obj.search(cr, uid, [('model','=',self._name)])[0]
 
         for meeting in self.browse(cr, uid, ids):
             self.do_alarm_unlink(cr, uid, [meeting.id])
-            attendee_ids = attendee_obj.search(cr, uid, [('ref','=','%s,%d'%(self._name, meeting.id))])
             basic_alarm = meeting.alarm_id
             if basic_alarm:
                 vals = {
                     'action': 'display',
                     'description': meeting.description,
                     'name': meeting.name,
-                    'attendee_ids': [(6,0, attendee_ids)],
+                    'attendee_ids': [(6,0, map(lambda x:x.id, meeting.attendee_ids))],
                     'trigger_related': basic_alarm.trigger_related,
                     'trigger_duration': basic_alarm.trigger_duration,
                     'trigger_occurs': basic_alarm.trigger_occurs,
@@ -165,12 +195,13 @@ class crm_meeting(osv.osv):
                     'repeat': basic_alarm.repeat,
                     'state' : 'run',
                     'event_date' : meeting.date,
-                    'event_end_date' : meeting.date_deadline,
                     'res_id' : meeting.id,
                     'model_id' : model_id,
                     'user_id' : uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
+                cr.execute('Update crm_meeting set caldav_alarm_id=%s \
+                            where id=%s' % (alarm_id, meeting.id))
         cr.commit()
         return True
 
@@ -182,6 +213,8 @@ class crm_meeting(osv.osv):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id','=',model_id), ('res_id','=',meeting.id)])
             if alarm_ids and len(alarm_ids):
                 alarm_obj.unlink(cr, uid, alarm_ids)
+                cr.execute('Update crm_meeting set caldav_alarm_id=NULL, \
+                               alarm_id=NULL  where id=%s' % (meeting.id))
         cr.commit()
         return True
 
@@ -236,8 +269,7 @@ class crm_meeting(osv.osv):
             ids = select
         result = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
-                         join crm_case c on (c.id=m.inherit_case_id) \
+            cr.execute("select m.id, m.rrule, m.date, m.exdate from crm_meeting m\
                          where m.id in ("+ ','.join(map(lambda x: str(x), ids))+")")
 
             count = 0
@@ -402,32 +434,6 @@ class crm_meeting(osv.osv):
         return res
 
 
-    def _map_ids(self, method, cr, uid, ids, *args, **argv):
-        if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids
-        case_data = self.browse(cr, uid, select)
-        new_ids = []
-        for case in case_data:
-            if case.inherit_case_id:
-                new_ids.append(case.inherit_case_id.id)
-        res = getattr(self.pool.get('crm.case'), method)(cr, uid, new_ids, *args, **argv)
-        if isinstance(ids, (str, int, long)) and isinstance(res, list):
-            return res and res[0] or False
-        return res
-
-    def onchange_rrule_type(self, cr, uid, ids, type, *args, **argv):
-        if type == 'none':
-            return {'value': {'rrule': ''}}
-        if type == 'custom':
-            return {}
-        rrule = self.pool.get('caldav.set.rrule')
-        rrulestr = rrule.compute_rule_string(cr, uid, {'freq': type.upper(),\
-                 'interval': 1})
-        return {'value': {'rrule': rrulestr}}
-
-
     def onchange_case_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_case_id', cr, uid, ids, *args, **argv)
     def onchange_partner_id(self, cr, uid, ids, *args, **argv):
@@ -529,10 +535,10 @@ class res_users(osv.osv):
     def _get_user_avail(self, cr, uid, ids, context=None):
         current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         res = super(res_users, self)._get_user_avail(cr, uid, ids, context)
-        cr.execute("SELECT crm_case.user_id, 'busy' as status \
-                    FROM crm_meeting meeting, crm_case \
-                    WHERE meeting.inherit_case_id = crm_case.id \
-                    and crm_case.date <= %s and crm_case.date_deadline >= %s and crm_case.user_id = ANY(%s) and meeting.show_as = %s",
+        cr.execute("SELECT m.user_id, 'busy' as status \
+                    FROM crm_meeting m\
+                    where m.date <= %s and m.date_deadline >= %s \
+                        and m.user_id = ANY(%s) and m.show_as = %s",
                                 (current_datetime, current_datetime , ids, 'busy'))
         result = cr.dictfetchall()
         for user_data in result:
@@ -541,4 +547,5 @@ class res_users(osv.osv):
             res.update({user_id:status})
         return res
 res_users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
