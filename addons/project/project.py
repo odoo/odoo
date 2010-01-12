@@ -20,8 +20,7 @@
 ##############################################################################
 
 from lxml import etree
-from mx import DateTime
-from mx.DateTime import now
+import mx.DateTime
 import time
 from tools.translate import _
 
