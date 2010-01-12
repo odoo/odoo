@@ -93,34 +93,6 @@ class calendar_attendee(osv.osv):
         'dir': {'field':'dir', 'type':'text'}, 
         'language': {'field':'language', 'type':'text'}, 
     }
-    def export_cal(self, cr, uid, ids, context={}):
-        basic_attendee_obj = self.pool.get('basic.calendar.attendee')        
-        basic_attendee_obj.__attribute__.update(self.__attribute__)        
-        data = self.read(cr, uid, ids)
-        attendees = basic_attendee_obj.export_ical(cr, uid, data, {'model': self._name})
-        cal_val = ''
-        for attendee in attendees:
-            cal_val += attendee.serialize()            
-        return cal_val
-
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)        
-        basic_attendee_obj = self.pool.get('basic.calendar.attendee')        
-        basic_attendee_obj.__attribute__.update(self.__attribute__)
-        
-        vals = basic_attendee_obj.import_ical(cr, uid, file_content)
-        ids = []
-        for val in vals:            
-            is_exists = uid2openobjectid(cr, val['id'], self._name)
-            if val.has_key('create_date'): val.pop('create_date')            
-            val.pop('id')
-            if is_exists:                               
-                self.write(cr, uid, [is_exists], val)
-                ids.append(is_exists)
-            else:
-                attendee_id = self.create(cr, uid, val)
-                ids.append(attendee_id)                
-        return ids   
 
     def _get_address(self, name=None, email=None):
         if name and email:
@@ -221,16 +193,16 @@ class calendar_attendee(osv.osv):
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent by', type="many2one", obj='res.users', multi='sent_by_uid'), 
+        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
         'language': fields.selection(_lang_get, 'Language', 
                                   help="To specify the language for text values in a property or property parameter."), 
-        'user_id': fields.many2one('res.users', 'User', required=True),
+        'user_id': fields.many2one('res.users', 'User'),
         'email': fields.char('Email', size=124),
         'event_date' : fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'),
         'event_end_date' : fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'),
-        'ref':fields.reference('Document Ref', selection=_links_get, size=128),
+        'ref': fields.reference('Document Ref', selection=_links_get, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
      }
     _defaults = {
@@ -261,12 +233,12 @@ class res_alarm(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True), 
         'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
-                                        'Trigger time', required=True), 
+                                        'Triggers', required=True), 
         'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
-                ('days', 'Days')], 'Trigger duration', required=True), 
-        'trigger_duration':  fields.integer('Time', required=True), 
+                ('days', 'Days')], 'Interval', required=True), 
+        'trigger_duration':  fields.integer('Duration', required=True), 
         'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                       'The event ends')], 'Trigger Occures at', required=True), 
+                                       'The event ends')], 'Related to', required=True), 
         'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
 are both optional, but if one occurs, so MUST the other"""), 
         'repeat': fields.integer('Repeat'), 
@@ -333,35 +305,6 @@ or contains the text to be used for display"""),
         'action':  lambda *x: 'email', 
         'state' : lambda *x: 'run', 
      }
-
-    def export_cal(self, cr, uid, ids, context={}):
-        basic_alarm_obj = self.pool.get('basic.calendar.alarm')        
-        basic_alarm_obj.__attribute__.update(self.__attribute__)        
-        data = self.read(cr, uid, ids)
-        alarms = basic_alarm_obj.export_ical(cr, uid, data, {'model': self._name})
-        cal_val = ''
-        for alarm in alarms:
-            cal_val += alarm.serialize()        
-        return cal_val
-
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)        
-        basic_alarm_obj = self.pool.get('basic.calendar.alarm')        
-        basic_alarm_obj.__attribute__.update(self.__attribute__)
-        
-        vals = basic_alarm_obj.import_ical(cr, uid, file_content)
-        ids = []
-        for val in vals:            
-            is_exists = uid2openobjectid(cr, val['id'], self._name)
-            if val.has_key('create_date'): val.pop('create_date')            
-            val.pop('id')
-            if is_exists:               
-                self.write(cr, uid, [is_exists], val)
-                ids.append(is_exists)
-            else:
-                alarm_id = self.create(cr, uid, val)
-                ids.append(alarm_id)                
-        return ids
 
     def create(self, cr, uid, vals, context={}): 
         event_date = vals.get('event_date', False)
@@ -512,9 +455,9 @@ class virtual_report_spool(web_services.report_spool):
 
 virtual_report_spool()
 
-class set_rrule_wizard(osv.osv_memory):
-    _name = "caldav.set.rrule"
-    _description = "Set RRULE"
+class calendar_custom_rrule(osv.osv):
+    _name = "calendar.custom.rrule"
+    _description = "Custom Recurrency Rule"
 
     _columns = {
         'freq': fields.selection([('None', 'No Repeat'), \
@@ -535,8 +478,8 @@ class set_rrule_wizard(osv.osv_memory):
         'sa': fields.boolean('Sat'), 
         'su': fields.boolean('Sun'), 
         'select1': fields.selection([('date', 'Date of month'), \
-                            ('day', 'Day of month')], 'Select Option'), 
-        'day': fields.integer('Day of month'), 
+                            ('day', 'Day of month')], 'Option'), 
+        'day': fields.integer('Date of month'), 
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
                                        ('WE', 'Wednesday'), ('TH', 'Thursday'), \
                                        ('FR', 'Friday'), ('SA', 'Saturday'), \
@@ -573,54 +516,35 @@ class set_rrule_wizard(osv.osv_memory):
                 weekstring = ';BYDAY=' + ','.join(byday)
 
         elif freq == 'monthly':
-            byday = ''
             if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            if datas.get('byday') and datas.get('week_list'):
-                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day')))
+            if datas.get('select1')=='day':
+                monthstring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
         elif freq == 'yearly':
-            bymonth = ''
-            byday = ''
             if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            if datas.get('byday') and datas.get('week_list'):
-                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            if datas.get('month_list'):
-                bymonth = ';BYMONTH=' + str(datas.get('month_list'))
-            bymonthday = ';BYMONTHDAY=' + str(datas.get('day'))
-            yearstring = bymonth + (datas.get('day') and bymonthday or '') + byday
+            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
+            if datas.get('select1')=='day':
+                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
+            yearstring = bymonth + bystring
 
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
         enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
                              ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
 
-        rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
+        rrule_string = 'FREQ=' + freq.upper() +  weekstring + ';INTERVAL=' + \
                 str(datas.get('interval')) + enddate + monthstring + yearstring
 
 #        End logic
         return rrule_string
 
-    def do_add(self, cr, uid, ids, context={}):
-        datas = self.read(cr, uid, ids)[0]
-        if datas.get('interval') <= 0:
-            raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
-
-
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
-
-        rrule_string = self.compute_rule_string(cr, uid, datas)
-        obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
-        return {}
-
-set_rrule_wizard()
+calendar_custom_rrule()
 
 class res_users(osv.osv):
     _inherit = 'res.users'
@@ -663,54 +587,70 @@ class invite_attendee_wizard(osv.osv_memory):
     _name = "caldav.invite.attendee"
     _description = "Invite Attendees"
 
-    _columns = {                
-          'attendee_ids': fields.many2many('calendar.attendee', 'invite_attendee_rel', 'invite_id', 'attendee_id', 'Attendees Detail'),                
-    }
+    _columns = {
+        'type': fields.selection([('internal', 'Internal User'), \
+              ('external', 'External Email'), \
+              ('partner', 'Partner Contacts')], 'Type', required=True), 
+        'user_ids': fields.many2many('res.users', 'invite_user_rel',
+                                  'invite_id', 'user_id', 'Users'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'email': fields.char('Email', size=124),
+        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
+                                  'invite_id', 'contact_id', 'Contacts'), 
+        'role': fields.selection([ ('REQ-PARTICIPANT', 'REQ-PARTICIPANT'), \
+                ('CHAIR', 'CHAIR'), ('OPT-PARTICIPANT', 'OPT-PARTICIPANT'), \
+                ('NON-PARTICIPANT', 'NON-PARTICIPANT')], 'Role', \
+                help='Participation role for the calendar user'), 
+              }
 
-    def create(self, cr, uid, vals, context={}):
-        attendee_ids = vals.get('attendee_ids',False)
-        model = context.get('model', False)
-        res_id = context.get('active_id', False)   
-        state = context.get('state', False) 
-        attendee_obj = self.pool.get('calendar.attendee')
-        
-        if attendee_ids and model and res_id: 
-            attend = False  
-            if model == 'calendar.attendee' and state == 'delegated':
-               attend = attendee_obj.read(cr, uid, res_id, ['ref','user_id','del_to_user_ids'])
-     
-            for v1, v2, attendee in attendee_ids:
-                vals = {}
-                ref = '%s,%d'%(model, res_id)
-                if attend:
-                    ref = attend['ref']
-                    del_from_user_ids = [attend['user_id'][0]]
-                    del_to_user_ids = attend['del_to_user_ids']
-                    del_to_user_ids.append(attendee['user_id'])
-                    vals.update({
-                        'del_from_user_ids' : [(6, 0, del_from_user_ids)]
-                    })
-                    attendee_obj.write(cr, uid, [res_id], {'state':'delegated','del_to_user_ids' : [(6, 0, del_to_user_ids)]})
-                                  
-                vals.update({
-                    'ref': ref,                    
-                })
-                attendee.update(vals)
-                attendee_obj.create(cr, uid, attendee)
-                
-        res = super(invite_attendee_wizard, self).create(cr, uid, {}, context=context)
-        return res
-
-    def do_invite(self, cr, uid, ids, context={}):        
+    def do_invite(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids)[0]
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        type = datas.get('type')
+        att_obj = self.pool.get('calendar.attendee')
+        vals = {'ref': '%s,%s'%(model, caldav_id2real_id(context['active_id']))}
+        if type == 'internal':
+            user_obj = self.pool.get('res.users')
+            for user_id in datas.get('user_ids', []):
+                user = user_obj.browse(cr, uid, user_id)
+                if not user.address_id.email:
+                    raise osv.except_osv(_('Error!'), \
+                                    ("User does not have an email Address"))
+                vals.update({'user_id': user_id, 
+                                     'email': user.address_id.email})
+                att_id = att_obj.create(cr, uid, vals)
+                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+        elif  type == 'external' and datas.get('email'):
+            vals.update({'email': datas['email']})
+            att_id = att_obj.create(cr, uid, vals)
+            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+        elif  type == 'partner':
+            add_obj = self.pool.get('res.partner.address')
+            for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
+                vals.update({'email': contact.email})
+                att_id = att_obj.create(cr, uid, vals)
+                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
         return {}
+    
 
-
-    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
-        if not user_id:
-            return {'value': {'email': ''}}
-        user = self.pool.get('res.users').browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.address_id.email}}
+    def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):
+        if not partner_id:
+            return {'value': {'contact_ids': []}}
+        cr.execute('select id from res_partner_address \
+                         where partner_id=%s' % (partner_id))
+        contacts = map(lambda x: x[0], cr.fetchall())
+        if not contacts:
+            raise osv.except_osv(_('Error!'), \
+                                ("Partner does not have any Contacts"))
+            
+        return {'value': {'contact_ids': contacts}}
 
 invite_attendee_wizard()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
