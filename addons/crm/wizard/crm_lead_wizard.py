@@ -96,14 +96,14 @@ class lead2opportunity(wizard.interface):
 
         lead_case_obj = pool.get('crm.lead')
         opportunity_case_obj = pool.get('crm.opportunity')        
-        for lead in lead_case_obj.browse(cr, uid, data['ids']):         
+        for lead in lead_case_obj.browse(cr, uid, data['ids']):
             #TODO : Take other info from lead       
             new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
                 'partner_id': data['form']['partner_id'],
-                'case_id':lead.id,                
+                'lead_id':lead.id,                
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
@@ -111,12 +111,12 @@ class lead2opportunity(wizard.interface):
             vals = {
                 'partner_id': data['form']['partner_id'],                
                 }
-            if not lead.case_id:
-                vals.update({'case_id' : new_opportunity.inherit_case_id.id})
+            if not lead.opportunity_id:
+                vals.update({'opportunity_id' : new_opportunity.id})
 
             lead_case_obj.write(cr, uid, [lead.id], vals)
             lead_case_obj.case_cancel(cr, uid, [lead.id])
-            opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
+      #      opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         
         value = {            
             'name': _('Opportunity'),
