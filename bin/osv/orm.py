@@ -1401,7 +1401,7 @@ class orm_template(object):
                 
             else:
                 xml = '<?xml version="1.0"?>' # what happens here, graph case?
-                # raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
+                raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
             result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
             result['field_parent'] = False
