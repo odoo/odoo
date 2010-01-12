@@ -97,37 +97,6 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
                     </group>
                  </page>
-
-                 <page string="History">
-                    <field name="id" select="1"/>
-                    <field name="active" select="2"/>
-                    <newline/>
-                    <field name="planned_revenue"/>
-                    <field name="planned_cost"/>
-                    <field name="probability"/>
-                    <newline/>
-                    <field name="canal_id"/>
-                    <field name="som"/>
-                    <separator colspan="4" string="Dates"/>
-                    <field name="create_date"/>
-                    <field name="date_closed"/>
-                    <field name="date_action_last"/>
-                    <field name="date"/>
-                    <separator colspan="4" string="References"/>
-                    <field name="ref" colspan="4"/>
-                    <field name="ref2" colspan="4"/>
-
-                    <field name="log_ids" nolabel="1" colspan="4">
-                        <form string="Actions">
-                            <separator string="Action Information" colspan="4"/>
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="som"/>
-                            <field name="canal_id"/>
-                        </form>
-                    </field>
-                 </page>
                  <page string="Events" groups="base.group_extended">
                    <field name="child_ids" colspan="4" nolabel="1">
                        <tree string="Related Cases">
@@ -177,7 +146,7 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'pending');grey: state in ('cancel','done')">
                 <field name="id"/>
                 <field name="name" string="Lead Subject"/>
                 <field name="partner_phone"/>
