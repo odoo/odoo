@@ -304,7 +304,7 @@ def get_pg_type(f):
         elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             f_size = -1
         else:
-            f_size = getattr(f, 'size', 16)
+            f_size = getattr(f, 'size', None) or 16
 
         if f_size == -1:
             f_type = ('int4', 'INTEGER')
