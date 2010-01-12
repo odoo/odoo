@@ -255,10 +255,10 @@ class rml_parse(object):
                 parse_format = DHM_FORMAT
 
             # filtering time.strftime('%Y-%m-%d')
-            if type(value) == type(''):
-                parse_format = DHM_FORMAT
-                if (not date_time):
-                    return str(value)
+#            if type(value) == type(''):
+#                parse_format = DHM_FORMAT
+#                if (not date_time):
+#                    return str(value)
 
             if not isinstance(value, time.struct_time):
                 try:
@@ -361,8 +361,11 @@ class report_sxw(report_rml, preprocess.report):
         elif report_type=='mako2html':
             fnct = self.create_source_mako2html
         else:
-            raise Exception('Unknown Report Type: '+report_type)
-        return fnct(cr, uid, ids, data, report_xml, context)
+            raise 'Unknown Report Type'
+        fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
+        if not fnct_ret:
+            return (False,False)
+        return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_odt(cr, uid, ids, data, report_xml, context or {})
@@ -394,6 +397,8 @@ class report_sxw(report_rml, preprocess.report):
                         results.append((d,'pdf'))
                         continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
+                if not result:
+                    return False
                 try:
                     if aname:
                         name = aname+'.'+result[1]
@@ -431,6 +436,9 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         title = report_xml.name
         rml = report_xml.report_rml_content
+        # if no rml file is found
+        if not rml:
+            return False
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)

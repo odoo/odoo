@@ -110,11 +110,10 @@ class ir_rule(osv.osv):
             if rule.domain_force:
                 res[rule.id] = eval(rule.domain_force, eval_user_data)
             else:
-                if rule.operand.startswith('user.') and rule.operand.count('.') > 1:
+                if rule.operand and rule.operand.startswith('user.') and rule.operand.count('.') > 1:
                     #Need to check user.field.field1.field2(if field  is False,it will break the chain)
                     op = rule.operand[5:]
                     rule.operand = rule.operand[:5+len(op[:op.find('.')])] +' and '+ rule.operand + ' or False'
-
                 if rule.operator in ('in', 'child_of'):
                     dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
                         eval(rule.operand,eval_user_data)), eval_user_data)

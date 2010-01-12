@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -385,5 +386,187 @@ class OpenERPDispatcher:
                 import pdb
                 pdb.post_mortem(tb[2])
             raise OpenERPDispatcherException(e, tb_s)
+
+class GenericXMLRPCRequestHandler(OpenERPDispatcher):
+    def _dispatch(self, method, params):
+        try:
+            service_name = self.path.split("/")[-1]
+            return self.dispatch(service_name, method, params)
+        except OpenERPDispatcherException, e:
+            raise xmlrpclib.Fault(tools.exception_to_unicode(e.exception), e.traceback)
+
+class SSLSocket(object):
+    def __init__(self, socket):
+        if not hasattr(socket, 'sock_shutdown'):
+            from OpenSSL import SSL
+            ctx = SSL.Context(SSL.SSLv23_METHOD)
+            ctx.use_privatekey_file(tools.config['secure_pkey_file'])
+            ctx.use_certificate_file(tools.config['secure_cert_file'])
+            self.socket = SSL.Connection(ctx, socket)
+        else:
+            self.socket = socket
+
+    def shutdown(self, how):
+        return self.socket.sock_shutdown(how)
+
+    def __getattr__(self, name):
+        return getattr(self.socket, name)
+
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+    rpc_paths = map(lambda s: '/xmlrpc/%s' % s, GROUPS.get('web-services', {}).keys())
+
+class SecureXMLRPCRequestHandler(SimpleXMLRPCRequestHandler):
+    def setup(self):
+        self.connection = SSLSocket(self.request)
+        self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
+        self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
+
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
+
+class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
+    def __init__(self, server_address, HandlerClass, logRequests=1):
+        SimpleThreadedXMLRPCServer.__init__(self, server_address, HandlerClass, logRequests)
+        self.socket = SSLSocket(socket.socket(self.address_family, self.socket_type))
+        self.server_bind()
+        self.server_activate()
+
+class HttpDaemon(threading.Thread):
+    def __init__(self, interface, port, secure=False):
+        threading.Thread.__init__(self)
+        self.__port = port
+        self.__interface = interface
+        self.secure = bool(secure)
+        handler_class = (SimpleXMLRPCRequestHandler, SecureXMLRPCRequestHandler)[self.secure]
+        server_class = (SimpleThreadedXMLRPCServer, SecureThreadedXMLRPCServer)[self.secure]
+
+        if self.secure:
+            from OpenSSL.SSL import Error as SSLError
+        else:
+            class SSLError(Exception): pass
+        try:
+            self.server = server_class((interface, port), handler_class, 0)
+        except SSLError, e:
+            Logger().notifyChannel('xml-rpc-ssl', LOG_CRITICAL, "Can not load the certificate and/or the private key files")
+            sys.exit(1)
+        except Exception, e:
+            Logger().notifyChannel('xml-rpc', LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
+            sys.exit(1)
+
+
+    def attach(self, path, gw):
+        pass
+
+    def stop(self):
+        self.running = False
+        if os.name != 'nt':
+            try:
+                self.server.socket.shutdown(
+                    hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2)
+            except socket.error, e:
+                if e.errno != 57: raise
+                # OSX, socket shutdowns both sides if any side closes it
+                # causing an error 57 'Socket is not connected' on shutdown
+                # of the other side (or something), see
+                # http://bugs.python.org/issue4397
+                Logger().notifyChannel(
+                    'server', LOG_DEBUG,
+                    '"%s" when shutting down server socket, '
+                    'this is normal under OS X'%e)
+        self.server.socket.close()
+
+    def run(self):
+        self.server.register_introspection_functions()
+
+        self.running = True
+        while self.running:
+            self.server.handle_request()
+        return True
+
+        # If the server need to be run recursively
+        #
+        #signal.signal(signal.SIGALRM, self.my_handler)
+        #signal.alarm(6)
+        #while True:
+        #   self.server.handle_request()
+        #signal.alarm(0)          # Disable the alarm
+
+import tiny_socket
+class TinySocketClientThread(threading.Thread, OpenERPDispatcher):
+    def __init__(self, sock, threads):
+        threading.Thread.__init__(self)
+        self.sock = sock
+        self.threads = threads
+
+    def run(self):
+        import select
+        self.running = True
+        try:
+            ts = tiny_socket.mysocket(self.sock)
+        except:
+            self.sock.close()
+            self.threads.remove(self)
+            return False
+        while self.running:
+            try:
+                msg = ts.myreceive()
+            except:
+                self.sock.close()
+                self.threads.remove(self)
+                return False
+            try:
+                result = self.dispatch(msg[0], msg[1], msg[2:])
+                ts.mysend(result)
+            except OpenERPDispatcherException, e:
+                new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
+                ts.mysend(new_e, exception=True, traceback=e.traceback)
+
+            self.sock.close()
+            self.threads.remove(self)
+            return True
+
+    def stop(self):
+        self.running = False
+
+
+class TinySocketServerThread(threading.Thread):
+    def __init__(self, interface, port, secure=False):
+        threading.Thread.__init__(self)
+        self.__port = port
+        self.__interface = interface
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind((self.__interface, self.__port))
+        self.socket.listen(5)
+        self.threads = []
+
+    def run(self):
+        import select
+        try:
+            self.running = True
+            while self.running:
+                (clientsocket, address) = self.socket.accept()
+                ct = TinySocketClientThread(clientsocket, self.threads)
+                self.threads.append(ct)
+                ct.start()
+            self.socket.close()
+        except Exception, e:
+            self.socket.close()
+            return False
+
+    def stop(self):
+        self.running = False
+        for t in self.threads:
+            t.stop()
+        try:
+            if hasattr(socket, 'SHUT_RDWR'):
+                self.socket.shutdown(socket.SHUT_RDWR)
+            else:
+                self.socket.shutdown(2)
+            self.socket.close()
+        except:
+            return False
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

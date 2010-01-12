@@ -380,11 +380,19 @@ class orm_template(object):
                 'ttype': f._type,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
-                'select_level': str(f.select or 0),
+                'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
                 'selectable' : (f.selectable and 1) or 0,
             }
+            # When its a custom field,it does not contain f.select
+            if context.get('field_state','base') == 'manual':
+                if context.get('field_name','') == k:
+                    vals['select_level'] = context.get('select','0')
+                #setting value to let the problem NOT occur next time
+                else:
+                    vals['select_level'] = cols[k]['select_level']
+            
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -862,6 +870,7 @@ class orm_template(object):
             except Exception, e:
                 import psycopg2
                 import osv
+                cr.rollback()
                 if isinstance(e,psycopg2.IntegrityError):
                     msg= _('Insertion Failed! ')
                     for key in self.pool._sql_error.keys():
@@ -1918,12 +1927,11 @@ class orm(orm_template):
                 elif isinstance(f, fields.many2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
-                        #FIXME: Remove this try/except
-                        try:
-                            ref = self.pool.get(f._obj)._table
-                        except AttributeError:
-                            ref = f._obj.replace('.', '_')
-                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITHOUT OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
+                        if not self.pool.get(f._obj):
+                            raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                        ref = self.pool.get(f._obj)._table
+#                        ref = f._obj.replace('.', '_')
+                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
                         cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
@@ -1980,11 +1988,10 @@ class orm(orm_template):
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
-                                #FIXME: Remove this try/except
-                                try:
-                                    ref = self.pool.get(f._obj)._table
-                                except AttributeError:
-                                    ref = f._obj.replace('.', '_')
+                                if not self.pool.get(f._obj):
+                                    raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                                ref = self.pool.get(f._obj)._table
+#                                ref = f._obj.replace('.', '_')
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
                                     cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
@@ -2396,19 +2403,21 @@ class orm(orm_template):
                     return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
+            order_by = self._parent_order or self._order            
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('SELECT %s FROM %s WHERE %s.id = ANY (%%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
-                                self._order),[sub_ids,]+d2)
+                                order_by),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
-                                self._order), (sub_ids,))
+                                ','.join(['%s' for x in sub_ids]),
+                                order_by), sub_ids)
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
@@ -2729,8 +2738,12 @@ class orm(orm_template):
                 # TODO: optimize
                 for f in direct:
                     if self._columns[f].translate:
-                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])[0][f]
+                        if not src_trans:
+                            src_trans = vals[f]
+                            # Inserting value to DB
+                            self.write(cr, user, ids, {f:vals[f]})
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
         # call the 'set' method of fields which are not classic_write

@@ -115,7 +115,7 @@ def _partner_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
     ids = obj.search(cr, uid, [('domain', '=', 'partner')])
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res]
+    return [(r['shortcut'], r['name']) for r in res] +  [('','')]
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
