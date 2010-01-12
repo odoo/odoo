@@ -66,7 +66,7 @@ class crm_fundraising(osv.osv):
             'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
             'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
-            'case_id': fields.many2one('crm.case', 'Related Case'),
+            'case_id': fields.many2one('crm.case', 'Related fundraising'),
             'ref' : fields.reference('Reference', selection=_links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
