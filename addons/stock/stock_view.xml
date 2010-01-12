@@ -13,10 +13,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock Inventory Lines">
-                    <field name="location_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
+                    <field name="location_id"/>
                 </tree>
             </field>
         </record>
@@ -26,10 +26,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines">
-                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                     <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
+                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                 </form>
             </field>
         </record>
