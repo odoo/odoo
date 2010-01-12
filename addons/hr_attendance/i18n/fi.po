@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-18 06:22+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-12-29 09:40+0000\n"
+"Last-Translator: NightSpirit <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-19 04:37+0000\n"
+"X-Launchpad-Export-Date: 2009-12-30 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -36,18 +36,20 @@ msgstr ""
 #: model:ir.actions.wizard,name:hr_attendance.si_so
 #: model:ir.ui.menu,name:hr_attendance.menu_si_so
 msgid "Sign in / Sign out"
-msgstr ""
+msgstr "Kirjaudu sisään / Kirjaudu ulos"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
+"(*) Positiivinen viivästys tarkoittaa, että työntekijä käytti vähemmän aikaa "
+"kuin oli suunnitteltu."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr ""
+msgstr "Työntekijöiden paikallaolot"
 
 #. module: hr_attendance
 #: constraint:ir.ui.view:0
@@ -69,25 +71,25 @@ msgstr ""
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr ""
+msgstr "Viive"
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,init,name:0
 #: wizard_field:hr.si_so,si_ask_so,name:0
 #: wizard_field:hr.si_so,so_ask_si,name:0
 msgid "Employee's name"
-msgstr ""
+msgstr "Työntekijän nimi"
 
 #. module: hr_attendance
 #: wizard_button:hr.attendance.print_month,init,print:0
 #: wizard_button:hr.attendance.print_week,init,print:0
 msgid "Print Timesheet"
-msgstr ""
+msgstr "Tulosta aikataulu"
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.wizard_attendance_error
 msgid "Print Attendance Error Report"
-msgstr ""
+msgstr "Tulosta paikallaolon virheraportti"
 
 #. module: hr_attendance
 #: constraint:ir.actions.act_window:0
@@ -97,7 +99,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_week
 msgid "Print Timesheet by week"
-msgstr ""
+msgstr "Tulosta viikon aikataulu"
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -108,7 +110,7 @@ msgstr ""
 #: wizard_view:hr.attendance.print_week,init:0
 #: wizard_view:hr.attendance.report,init:0
 msgid "Select a time span"
-msgstr ""
+msgstr "Valitse ajallinen kesto"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
@@ -119,7 +121,7 @@ msgstr ""
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign In"
-msgstr ""
+msgstr "Kirjaudu sisään"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
@@ -150,7 +152,7 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
-msgstr ""
+msgstr "Viimeisin kirjautuminen"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -160,7 +162,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_month
 msgid "Print Timesheet by month"
-msgstr ""
+msgstr "Tulosta kuukausittainen aikataulu"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -171,7 +173,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
 msgid "Attendances Of Employees"
-msgstr ""
+msgstr "Työntekijöiden paikallaolot"
 
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
@@ -181,12 +183,12 @@ msgstr ""
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "Virhe: Sisään kirjautumista täytyy seurata ulos kirjautuminen"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr ""
+msgstr "Kirjautumispäivä"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -204,6 +206,8 @@ msgid ""
 "You did not signed out the last time. Please enter the date and time you "
 "signed out."
 msgstr ""
+"Et kirjautunut ulos edellisen kerran. Anna päivämäärä ja aika jolloin "
+"kirjauduit ulos."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -239,17 +243,17 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_field:hr.si_so,si_ask_so,last_time:0
 msgid "Your last sign out"
-msgstr ""
+msgstr "Viimeisin uloskirjautuminen"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr ""
+msgstr "Pienin viivästys"
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action's type"
-msgstr ""
+msgstr "Tapahtuman tyyppi"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -266,7 +270,7 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_view:hr.attendance.report,init:0
 msgid "Analysis Information"
-msgstr ""
+msgstr "Analyysitiedot"
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,init,state:0
@@ -288,12 +292,12 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Läsnäolot"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr ""
+msgstr "Läsnäolovirheet"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
@@ -304,7 +308,7 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_button:hr.attendance.report,init,print:0
 msgid "Print Attendance Report"
-msgstr ""
+msgstr "Tulosta läsnäoloraportti"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -330,7 +334,7 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
 msgid "Select a starting and a end date"
-msgstr ""
+msgstr "Valitse aloitus -ja päättymispäivämäärä"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.print_week,init,end_date:0

@@ -55,7 +55,7 @@ class crm_case_stage(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
     }
     _defaults = {
         'sequence': lambda *args: 1
@@ -71,7 +71,7 @@ class crm_cases(osv.osv):
         'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
         'duration': fields.float('Duration'),
         'case_id': fields.many2one('crm.case', 'Related Case'),
-        'partner_name': fields.char('Employee Name', size=64),
+        'partner_name': fields.char("Employee's Name", size=64),
         'partner_name2': fields.char('Employee Email', size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -121,15 +121,15 @@ class crm_menu_config_wizard(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=64),
         'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
-        'lead': fields.boolean('Prospect', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
+        'lead': fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
         'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
-        'jobs': fields.boolean('Jobs Hiring Process', help="Help you to organise the jobs hiring process: evaluation, meetings, email integration..."),
+        'jobs': fields.boolean('Jobs Hiring Process', help="Helps you to organise the jobs hiring process: evaluation, meetings, email integration..."),
         'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
         'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
         'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
         'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
         'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Help you to encode the result of a phone call or to plan a list of phone calls to process."),
+        'phonecall': fields.boolean('Phone Calls', help="Helps you to encode the result of a phone call or to plan a list of phone calls to process."),
     }
     _defaults = {
         'meeting': lambda *args: True,
@@ -186,46 +186,5 @@ class crm_menu_config_wizard(osv.osv_memory):
          }
 
 crm_menu_config_wizard()
-
-
-class crm_generic_wizard(osv.osv_memory):
-    _name = 'crm.generic_wizard'
-
-    _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Section', required=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-    }
-
-    def _get_default_section(self, cr, uid, context):
-        case_id = context.get('active_id',False)
-        if not case_id:
-            return False
-        case_obj = self.pool.get('crm.case')
-        case = case_obj.read(cr, uid, case_id, ['state','section_id'])
-        if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        return case['section_id']
-
-
-    _defaults = {
-        'section_id': _get_default_section
-    }
-    def action_create(self, cr, uid, ids, context=None):
-        case_obj = self.pool.get('crm.case')
-        case_id = context.get('active_id',[])
-        res = self.read(cr, uid, ids)[0]
-        case = case_obj.read(cr, uid, case_id, ['state'])
-        if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        new_case_id = case_obj.copy(cr, uid, case_id, default=
-                                            {
-                                                'section_id':res.get('section_id',False),
-                                                'user_id':res.get('user_id',False)
-                                            }, context=context)
-        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
-        case_obj.case_close(cr, uid, [case_id])
-        return {}
-
-crm_generic_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

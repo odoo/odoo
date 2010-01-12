@@ -170,7 +170,7 @@ class account_invoice_tax(osv.osv):
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
-                val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
+                val['amount'] = tax['amount']
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
                 val['base'] = tax['price_unit'] * line['quantity']

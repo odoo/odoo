@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -177,7 +177,12 @@ class pos_order(osv.osv):
             readonly=True),
         'state': fields.selection([('cancel', 'Cancel'), ('draft', 'Draft'),
             ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced')], 'State',
-            readonly=True, ),
+            readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed pos order. \
+            \n* The \'Paid\' state is set automatically when users makes payment for the pos order. \
+            \n* The \'Invoiced\' state is set when invoice is created for pos order. \
+            \n* The \'Done\' state is set automatically when user close the pos order.\
+            \n* The \'Cancel\' state is used when user cancel pos order.'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
         'account_move': fields.many2one('account.move', 'Account Entry', readonly=True),
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
@@ -356,6 +361,7 @@ class pos_order(osv.osv):
                         'product_uos_qty': abs(line.qty),
                         'product_qty': abs(line.qty),
                         'tracking_id': False,
+                        'pos_line_id': line.id,
                         'state': 'waiting',
                         'location_id': location_id,
                         'location_dest_id': stock_dest_id,
@@ -826,7 +832,7 @@ class pos_order_line(osv.osv):
         'qty': fields.float('Quantity'),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
-        'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
+        'order_id': fields.many2one('pos.order', 'Order Reference', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
         }
 
@@ -891,14 +897,14 @@ class pos_order_line(osv.osv):
 
         price_line = float(qty)*float(price)
         return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
-    
+
     def unlink(self, cr, uid, ids, context={}):
         """Allows to delete pos order lines in draft,cancel state"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.order_id.state not in ['draft','cancel']:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete an order line which is %s !')%(rec.order_id.state,))
         return super(pos_order_line, self).unlink(cr, uid, ids, context=context)
-    
+
 pos_order_line()
 
 
@@ -922,7 +928,7 @@ class pos_payment(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=64),
-        'order_id': fields.many2one('pos.order', 'Order Ref', required=True, ondelete='cascade'),
+        'order_id': fields.many2one('pos.order', 'Order Reference', required=True, ondelete='cascade'),
         'journal_id': fields.many2one('account.journal', "Journal", required=True),
         'payment_id': fields.many2one('account.payment.term','Payment Term', select=True),
         'payment_nb': fields.char('Piece Number', size=32),

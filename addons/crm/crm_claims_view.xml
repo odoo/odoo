@@ -1,16 +1,44 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Claims
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
+
+    <record model="ir.ui.view" id="crm_claim_assign_wizard_form">
+        <field name="name">crm.claim.assign_wizard.form</field>
+        <field name="model">crm.claim.assign_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="To Assign">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_crm_claim_assign_wizard" model="ir.actions.act_window">
+        <field name="name">To Assign</field>
+        <field name="res_model">crm.claim.assign_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_claim_assign_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.claim</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Claims"  colors="red:state=='open'">
+            <tree string="Claims"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -24,7 +52,7 @@
 
     <record model="ir.ui.view" id="crm_case_claims_form_view">
         <field name="name">CRM - Claims Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.claim</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Claims">
@@ -43,8 +71,8 @@
                     </group>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>                       
+                        <button string="Assign" name="%(action_crm_claim_assign_wizard)d"  type="action" />
+                    </group>
                 </group>
                 <notebook>
                 <page string="Claims Info">
@@ -63,7 +91,7 @@
                     <field name="description" colspan="4" nolabel="1"/>
                     <separator colspan="4" string="Status"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="1"/> 
+                        <field name="state" select="1"/>
                         <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
@@ -75,7 +103,7 @@
                     <field name="id" select="1"/>
                     <field name="active"/>
                     <field name="canal_id"/>
-                    <field name="som"/>                                        
+                    <field name="som"/>
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
@@ -122,7 +150,7 @@
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                             <field name="description"/>
@@ -139,7 +167,7 @@
 
     <record model="ir.ui.view" id="crm_case_claims_calendar_view">
         <field name="name">CRM - Claims Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.claim</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -152,8 +180,8 @@
     </record>
 
    <record id="view_crm_case_claims_filter" model="ir.ui.view">
-            <field name="name">crm.case.claims.select</field>
-            <field name="model">crm.case</field>
+            <field name="name">CRM - Claims Search</field>
+            <field name="model">crm.claim</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">

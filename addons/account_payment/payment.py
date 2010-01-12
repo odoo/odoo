@@ -31,7 +31,7 @@ class payment_type(osv.osv):
     _description= 'Payment type'
     _columns= {
         'name': fields.char('Name', size=64, required=True,help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True,help='Specify the Code for Payment Type'),
+        'code': fields.char('Code', size=64, required=True,help='Specifies the Code for Payment Type'),
         'suitable_bank_types': fields.many2many('res.partner.bank.type',
             'bank_type_payment_type_rel',
             'pay_type_id','bank_type_id',

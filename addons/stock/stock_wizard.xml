@@ -21,6 +21,13 @@
             name="stock.partial_picking"
             string="Partial picking"/>
 
+	<wizard
+            id="partial_move"
+            model="stock.move"
+            multi="True"
+            name="stock.partial_move"
+            string="Partial Move"/>
+
     <wizard
         id="track_line"
         model="stock.move"

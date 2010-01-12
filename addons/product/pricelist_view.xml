@@ -15,6 +15,7 @@
                     <field colspan="4" name="pricelist_id" select="1"/>
                     <field name="date_start" select="1"/>
                     <field name="date_end" select="1"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" name="items_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
@@ -69,6 +70,7 @@
                     <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                     <field name="product_tmpl_id" select="1"/>
                     <field name="categ_id" select="1"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="min_quantity"/>
                     <field name="sequence"/>
@@ -115,6 +117,7 @@
                     <field name="active" select="1"/>
                     <field name="type" select="1"/>
                     <field name="currency_id" select="1"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" name="version_id" nolabel="1">
                         <form string="Pricelist Version">
                             <field name="name" select="1"/>

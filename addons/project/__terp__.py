@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr", "process"],
+    "depends" : ["product", "account", "hr", "process", "mail_gateway"],
     "description": """Project management module that track multi-level projects, tasks,
 works done on tasks, eso. It is able to render planning, order tasks, eso.
     """,
@@ -41,7 +41,9 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_report.xml", 
         "process/task_process.xml"
     ],
-    'demo_xml': ['project_demo.xml'],
+    'demo_xml': [#'project_demo.xml'
+    'project_data_scheduler.xml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:35+0000\n"
+"X-Launchpad-Export-Date: 2009-12-16 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -53,7 +53,7 @@ msgstr "¡XML inválido para la definición de la vista!"
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -68,7 +68,7 @@ msgstr "Nombre de modelo no válido en la definición de acción."
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
+msgstr "Este método de envío se utilizará cuando se facture desde albaranes."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -259,7 +259,7 @@ msgstr "Operador"
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr ""
+msgstr "Transportistas y envíos"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -290,6 +290,10 @@ msgid ""
 "define your own carrier and delivery grids for prices. When creating "
 "invoices from picking, Open ERP is able to add and compute the shipping line."
 msgstr ""
+"Permite añadir los métodos de envío en los pedidos de venta y albaranes. "
+"Puede definir sus propias tablas de transportistas y destinos para el "
+"cálculo de precios. Al crear facturas desde albaranes, OpenERP es capaz de "
+"sumar y calcular la línea de gastos de envío."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -300,13 +304,13 @@ msgstr "C.Postal final"
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr ""
+msgstr "Albaranes a facturar"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
+msgstr "Complete este campo si desea facturar los envíos desde albaranes."
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add

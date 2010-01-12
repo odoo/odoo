@@ -184,8 +184,8 @@ class sale_order(osv.osv):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'origin': fields.char('Origin', size=64),
-        'client_order_ref': fields.char('Customer Ref', size=64),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that generated this sale order request."),
+        'client_order_ref': fields.char('Customer Reference', size=64),
 
         'state': fields.selection([
             ('draft', 'Quotation'),
@@ -202,7 +202,7 @@ class sale_order(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}),
-        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact that requested the order or quotation."),
+        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3),
@@ -230,7 +230,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store = {
@@ -254,10 +254,10 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company'),
+        'company_id': fields.many2one('res.company','Company',select=1),
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
         'picking_policy': lambda *a: 'direct',
         'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'order_policy': lambda *a: 'manual',
@@ -369,7 +369,7 @@ class sale_order(osv.osv):
         journal_obj = self.pool.get('account.journal')
         journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
         if not journal_ids:
-            raise osv.except_osv(_('Error !'), 
+            raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
         inv = {
             'name': order.client_order_ref or order.name,
@@ -750,9 +750,9 @@ class sale_order_line(osv.osv):
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
-        'order_id': fields.many2one('sale.order', 'Order Ref', required=True, ondelete='cascade', select=True),
+        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True),
         'name': fields.char('Description', size=256, required=True, select=True),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
@@ -773,12 +773,17 @@ class sale_order_line(osv.osv):
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes'),
+        'notes': fields.text('Notes', translate=True),
         'th_weight': fields.float('Weight'),
-        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
+                help=' * The \'Draft\' state is set automatically when sale order in draft state. \
+                    \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
+                    \n* The \'Exception\' state is set automatically when sale order is set as exception. \
+                    \n* The \'Done\' state is set automatically when sale order is set as done. \
+                    \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _order = 'sequence, id'
     _defaults = {

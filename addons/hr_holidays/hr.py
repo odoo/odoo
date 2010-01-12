@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##################################################################################
 #
-# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com) 
+# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 # and 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 # $Id: hr.py 4656 2006-11-24 09:58:42Z Cyp $
@@ -54,7 +54,7 @@ class hr_holidays_status(osv.osv):
         return_false = False
         if context and context.has_key('employee_id'):
             if not context['employee_id']:
-                return_false = True 
+                return_false = True
             employee_id = context['employee_id']
         else:
             employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
@@ -70,10 +70,10 @@ class hr_holidays_status(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'CRM Section', help='If you link this type of leave with a section in the CRM, it will synchronize each leave asked with a case in this section, to display it in the company shared calendar for example.'),
         'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True, help='This color will be used in the leaves summary located in Reporting\Print Summary of Leaves'),
         'limit' : fields.boolean('Allow to override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
-        'active' : fields.boolean('Active'),
-        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'), 
-        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'), 
-        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', multi='user_left_days'), 
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the leave type without removing it."),
+        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
+        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
+        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', multi='user_left_days'),
 
     }
     _defaults = {
@@ -102,12 +102,12 @@ class hr_holidays_per_user(osv.osv):
         return result
 
     _columns = {
-        'employee_id': fields.many2one('hr.employee', 'Employee',required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name",required=True),
         'user_id' : fields.many2one('res.users','User'),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
         'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the holidays per user without removing it."),
         'notes' : fields.text('Notes'),
         'remaining_leaves': fields.function(_get_remaining_leaves, method=True, string='Remaining Leaves', type='float'),
         'holiday_ids': fields.one2many('hr.holidays', 'holiday_user_id', 'Holidays')
@@ -143,7 +143,7 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'date_to' : fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status_id' : fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         'manager_id' : fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automaticly filled by the user who validate the leave'),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)]}),
@@ -182,7 +182,7 @@ class hr_holidays(osv.osv):
         #~ return True
 
     #_constraints = [(_check_date, 'Start date should not be greater than end date! ', ['number_of_days'])]
-    
+
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
         if date_to and date_from:
@@ -242,11 +242,11 @@ class hr_holidays(osv.osv):
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-        
+
         if ids2:
             vals['manager_id'] = ids2[0]
         else:
-            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))    
+            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))
         self.write(cr, uid, ids, vals)
         return True
 
@@ -269,6 +269,13 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
+            vals= {
+                   'name':record.name,
+                   'date_from':record.date_from,
+                   'date_to':record.date_to
+                 }
+            self.pool.get('resource.calendar.leaves').create(cr,uid,vals,context)
+
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
@@ -325,7 +332,7 @@ class hr_holidays(osv.osv):
                     'date_to' : record.date_to,
                     'notes' : record.notes,
                     'number_of_days': record.number_of_days,
-                    'number_of_days_temp': record.number_of_days_temp, 
+                    'number_of_days_temp': record.number_of_days_temp,
                     'type': record.type,
                     'allocation_type': record.allocation_type,
                     'parent_id': record.id,

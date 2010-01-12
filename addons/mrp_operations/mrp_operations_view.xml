@@ -206,7 +206,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="mrp_production_code_action">
-        <field name="name">Operations Code</field>
+        <field name="name">Operation Codes</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp_operations.operation.code</field>
         <field name="view_type">form</field>
@@ -239,7 +239,7 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Hours by Workcenter" type="bar">
+                <graph string="Hours by Work Center" type="bar">
                      <field name="date_start_date"/>
                      <field name="hour" operator="+"/>
                      <field name="workcenter_id" group="True" operator="+"/>

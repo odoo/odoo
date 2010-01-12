@@ -33,13 +33,13 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
                 "efficiently priorities in requisitions."
         ),
         'sale_margin':fields.boolean('Margins on Sales Order',
-            help="Display margins on the sale order form."),
+            help="Displays margins on the sale order form."),
         'sale_crm':fields.boolean('CRM and Calendars',
             help="This installs the customer relationship features like: "\
-            "prospects and opportunities tracking, shared calendar, jobs "\
+            "leads and opportunities tracking, shared calendar, jobs "\
             "tracking, bug tracker, and so on."),
         'sale_journal':fields.boolean('Manage by Journals',
-            help="This module  allows you to manage your " \
+            help="This module allows you to manage your " \
               "sales, invoicing and picking by journals. You can define "\
               "journals for trucks, salesman, departments, invoicing date "\
               "delivery period, etc."
@@ -69,11 +69,11 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
         'mrp_subproduct': fields.boolean('Mrp Sub Product',
             help="This module allows you to add sub poducts in mrp bom."),
          'warning': fields.boolean('Warning',
-            help="Able you to set warnings on products and partners."),
+            help="Makes you able to set warnings on products and partners."),
         'board_document':fields.boolean('Document Management',
             help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
         'mrp_repair': fields.boolean('Repair',
-            help="Allow to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
+            help="Allows to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
 
     }
     def action_cancel(self,cr,uid,ids,conect=None):

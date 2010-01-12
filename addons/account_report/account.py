@@ -153,8 +153,8 @@ class account_report(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'active': fields.boolean('Active'),
-        'sequence': fields.integer('Sequence'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the account report without removing it."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account reports."),
         'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([
             ('fiscal', 'Fiscal Statement'),
@@ -192,7 +192,7 @@ class account_report(osv.osv):
         'type': lambda *args: 'indicator',
     }
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:

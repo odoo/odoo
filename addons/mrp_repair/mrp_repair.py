@@ -73,7 +73,7 @@ class mrp_repair(osv.osv):
         return res
 
     _columns = {
-        'name' : fields.char('Repair Ref',size=24, required=True),
+        'name' : fields.char('Repair Reference',size=24, required=True),
         'product_id': fields.many2one('product.product', string='Product to Repair', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'partner_id' : fields.many2one('res.partner', 'Partner', select=True, help='This field allow you to choose the parner that will be invoiced and delivered'),
         'address_id': fields.many2one('res.partner.address', 'Delivery Address', domain="[('partner_id','=',partner_id)]"),
@@ -87,11 +87,17 @@ class mrp_repair(osv.osv):
             ('invoice_except','Invoice Exception'),
             ('done','Done'),
             ('cancel','Cancel')
-            ], 'Repair State', readonly=True, help="Gives the state of the Repair Order"),
+            ], 'Repair State', readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
+            \n* The \'Confirmed\' state is used when a user confirms the repair order. \
+            \n* The \'Ready to Repair\' state is used to start to repairing, user can start repairing only after repair order is confirmed. \
+            \n* The \'To be Invoiced\' state is used to generate the invoice before or after repairing done. \
+            \n* The \'Done\' state is set when repairing is completed.\
+            \n* The \'Cancelled\' state is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
-        'guarantee_limit': fields.date('Guarantee limit', help="The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
+        'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='The pricelist comes from the selected partner, by default.'),
         'partner_invoice_id':fields.many2one('res.partner.address', 'Invoicing Address',  domain="[('partner_id','=',partner_id)]"),
@@ -489,7 +495,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
 
     _columns = {
         'name' : fields.char('Description',size=64,required=True),
-        'repair_id': fields.many2one('mrp.repair', 'Repair Order Ref',ondelete='cascade', select=True),
+        'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference',ondelete='cascade', select=True),
         'type': fields.selection([('add','Add'),('remove','Remove')],'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], required=True),
@@ -503,7 +509,15 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'move_id': fields.many2one('stock.move', 'Inventory Move', readonly=True),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', required=True, readonly=True),
+        'state': fields.selection([
+                    ('draft','Draft'),
+                    ('confirmed','Confirmed'),
+                    ('done','Done'),
+                    ('cancel','Canceled')], 'State', required=True, readonly=True,
+                    help=' * The \'Draft\' state is set automatically as draft when repair order in draft state. \
+                        \n* The \'Confirmed\' state is set automatically as confirm when repair order in confirm state. \
+                        \n* The \'Done\' state is set automatically when repair order is completed.\
+                        \n* The \'Cancelled\' state is set automatically when user cancel repair order.'),
     }
     _defaults = {
      'state': lambda *a: 'draft',
@@ -555,7 +569,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         return res
 
     _columns = {
-        'repair_id': fields.many2one('mrp.repair', 'Repair Order Ref', required=True, ondelete='cascade', select=True),
+        'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference', required=True, ondelete='cascade', select=True),
         'name': fields.char('Description', size=64, select=True,required=True),
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_qty': fields.float('Quantity', digits=(16,2), required=True),

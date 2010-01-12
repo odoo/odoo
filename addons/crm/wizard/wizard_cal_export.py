@@ -19,42 +19,44 @@
 #
 ##############################################################################
 
-import time
-import tools
 import wizard
-import os
-import mx.DateTime
 import base64
 import pooler
-import vobject
 
 
 class crm_cal_export_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="Export ICS">
-        <separator string="Save ICS file"/>
-        <field name="file_path" colspan="4" width="300" nolabel="1"/>
+        <field name="name"/>
+        <field name="file_path" colspan="4" width="300"/>
     </form>'''
     
     form1_fields = {
             'file_path': {
-                'string': 'Select ICS file', 
+                'string': 'Save ICS file', 
                 'type': 'binary', 
                 'required' : True, 
                 'filters' : '*.ics'
-                }
+                },
+            'name': {
+                    'string': 'File name', 
+                    'type': 'char', 
+                    'size': 34, 
+                    'required': True, 
+                    'help': 'Save in .ics format'}, 
             }
     
     def _process_export_ics(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.case')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
         calendar = case_obj.export_cal(cr, uid, data['ids'], context)
-        return {'file_path': base64.encodestring(calendar)}
+        return {'file_path': base64.encodestring(calendar), \
+                                'name': 'OpenERP Events.ics'}
     
     states = {
         'init': {
             'actions': [_process_export_ics], 
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}
-        }, 
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
+                       'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
 crm_cal_export_wizard('caldav.crm.export')

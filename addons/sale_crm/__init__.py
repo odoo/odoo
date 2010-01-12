@@ -20,5 +20,6 @@
 ##############################################################################
 
 import wizard
+import sale_crm
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

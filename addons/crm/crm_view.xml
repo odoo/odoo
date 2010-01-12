@@ -3,7 +3,7 @@
     <data>
         <menuitem icon="terp-crm" id="menu_crm" name="CRM &amp; SRM"/>
         <menuitem id="menu_crm_configuration" name="Configuration" parent="crm.menu_crm" sequence="0"/>
-        <menuitem action="wizard_case_section_menu" id="menu_wizard_case_section_menu" parent="crm.menu_crm_configuration" type="wizard"/>
+
         <wizard id="wizard_crm_send_mail" model="crm.case.history" name="crm.send.mail" string="Send Mail" menu="False"/>
         <wizard id="wizard_crm_new_send_mail" model="crm.case" name="crm.new.send.mail" string="Send New Mail" menu="False"/>
 
@@ -34,40 +34,11 @@
                         <page string="Case section">
                             <field name="name" select="1"/>
                             <field name="code" select="1"/>
-                            <field name="sequence"/>
-                            <field name="active" select="2"/>
                             <field name="user_id" select="2"/>
+                            <field name="active" select="2"/>
                             <field name="parent_id" select="2" widget="selection"/>
-                            <group colspan="2" >
-	                            <field name="allow_unlink" select="2"/>
-	                            <field name="calendar" select="2"/>
-	                        </group>
-	                            <field name="reply_to" select="2"/>
-                            <field name="gateway_ids" widget="one2many_list" nolabel="1" colspan="4">
-                                <tree string="Email Gateway" editable="bottom">
-                                   <field name="name" />
-                                   <field name="server_id" />
-                                </tree>
-                                <form string="Email Gateway">
-                                    <field name="name"/>
-                                    <field name="server_id" />
-                                    <field name="to_email_id"/>
-                                    <field name="cc_email_id" />
-                                    <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
-                                        <tree string="Email History">
-                                            <field name="name"/>
-                                            <field name="case_id"/>
-                                            <field name="note"/>
-                                        </tree>
-                                       <form string="Email History">
-                                            <field name="name"/>
-                                            <field name="case_id"/>
-                                            <separator colspan="4" string="Notes"/>
-                                            <field name="note" nolabel="1" colspan="4"/>
-                                       </form>
-                                    </field>
-                                </form>
-                            </field>
+                            <field name="allow_unlink" select="2"/>
+                            <field name="reply_to" select="2"/>
                         </page>
                     </notebook>
                 </form>
@@ -238,7 +209,7 @@
             <field name="view_id" ref="crm_case_rule_tree-view"/>
         </record>
         <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.next_id_51"/>
-		
+
        <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
             <field name="name">Add CC</field>
             <field name="model">crm.email.add.cc</field>
@@ -322,7 +293,7 @@
             <field name="model">crm.case</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_deadline&lt;current_date and state=='open'" string="Cases">
+                <tree colors="red:date_deadline&lt;current_date and state=='open';black:state in ('draft', 'cancel','done','pending')" string="Cases">
                     <field name="id"/>
                     <field name="section_id"/>
                     <field name="date"/>
@@ -467,7 +438,7 @@
         </record>
 
         <record id="crm_case_categ0-act" model="ir.actions.act_window">
-            <field name="name">All Cases</field>
+            <field name="name">Cases</field>
             <field name="res_model">crm.case</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_tree-view"/>
@@ -480,24 +451,6 @@
             <field name="res_model">crm.case</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
-            <field name="search_view_id" ref="view_crm_case_filter"/>
-        </record>
-
-        <record id="crm_case_categ0-act_my" model="ir.actions.act_window">
-            <field name="name">My cases</field>
-            <field name="res_model">crm.case</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="search_view_id" ref="view_crm_case_filter"/>
-        </record>
-        <menuitem action="crm_case_categ0-act_my" id="menu_crm_case_categ0-act_my" parent="crm.next_id_52" groups="base.group_extended"/>
-        <record id="crm_case_categ0-act_my_open" model="ir.actions.act_window">
-            <field name="name">My Open Cases</field>
-            <field name="res_model">crm.case</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 
@@ -533,23 +486,30 @@
                 </form>
             </field>
         </record>
+        <record id="crm_case_history_search" model="ir.ui.view">
+        <field name="name">crm.case.history.select</field>
+        <field name="model">crm.case.history</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            	<search string="Search Histories">
+               		<filter icon="terp-crm" string="My Histories" domain="[('user_id','=',uid)]" help="My Histories"/>
+               		<separator orientation="vertical"/>
+               		<field name="date" select="1"/>
+                    <field name="user_id" select="1" widget="selection"/>
+                    <field name="case_id" select="1"/>
+                </search>
+        	</field>
+    	</record>
+
         <record id="crm_case_history-act" model="ir.actions.act_window">
-            <field name="name">All Histories</field>
+            <field name="name">Histories</field>
             <field name="res_model">crm.case.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crm_case_history_tree-view"/>
+            <field name="search_view_id" ref="crm_case_history_search"/>
         </record>
-        <menuitem id="menu_crm_case_history-act_main" name="Cases Histories" parent="crm.next_id_52"/>
-        <menuitem action="crm_case_history-act" id="menu_crm_case_history-act" parent="crm.menu_crm_case_history-act_main"/>
-        <record id="crm_case_history_my-act" model="ir.actions.act_window">
-            <field name="name">My Histories</field>
-            <field name="res_model">crm.case.history</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        <menuitem action="crm_case_history_my-act" id="menu_crm_case_history_my-act" parent="crm.menu_crm_case_history-act_main"/>
+        <menuitem action="crm_case_history-act" id="menu_crm_case_history-act_main" name="Cases Histories" parent="crm.next_id_52"/>
 
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.tree</field>
@@ -661,87 +621,30 @@
         <act_window domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_users_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.users" view_mode="tree,form,calendar" view_type="form"/>
 
 
-        <record id="crm_email_gateway_server_form" model="ir.ui.view">
-            <field name="name">crm.email.gateway.server.form</field>
-            <field name="model">crm.email.gateway.server</field>
+		<record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
+            <field name="name">view.users.form.crm.modif.inherited1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email Gateway Server">
-                     <field name="server_type"/>
-                     <notebook colspan="4">
-                        <page string="Server Info">
-                           <field name="name"/>
-                           <field name="port" />
-                           <field name="login" />
-                           <field name="password" password="True"/>
-                           <field name="ssl" />
-                           <field name="active" />
-                        </page>
-                    </notebook>
-                </form>
+            	<page string="Current Activity" position="inside">
+                    <field name="context_section_id" completion="1"/>
+                </page>
             </field>
         </record>
 
-        <record id="crm_email_gateway_server_tree" model="ir.ui.view">
-            <field name="name">crm.email.gateway.server.tree</field>
-            <field name="model">crm.email.gateway.server</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Email Gateway Server">
-                    <field name="name"/>
-                    <field name="port" />
-                    <field name="server_type"/>
-                    <field name="ssl" />
-                </tree>
-            </field>
-        </record>
-
-
-        <record id="crm_email_gateway_server_act" model="ir.actions.act_window">
-            <field name="name">Email Gateway Server</field>
-            <field name="res_model">crm.email.gateway.server</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="crm_email_gateway_server_tree"/>
-        </record>
-        <menuitem id="crm_email_gateway_server_menu" name="Email Gateway Server" parent="next_id_51" action="crm_email_gateway_server_act" />
-
-        <!-- Caldav configartion view -->
-
-        <record id="view_config_crm_caldav_menu" model="ir.ui.view">
-            <field name="name">Configure Menu for Caldav Properites</field>
-            <field name="model">crm.calendar.config_wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Configure view for Caldav Properites">
-                    <separator colspan="4" string=""/>
-                    <label colspan="4" align="0.0" string="This will provide a detailed view for caldav properties configuration"/>
-                    <newline/>
-                    <field name="caldav"/>
-                    <separator colspan="4" string=""/>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_config_crm_caldav_menu" model="ir.actions.act_window">
-            <field name="name">Configure Menu for Caldav Properites</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.calendar.config_wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-        <record id="config_wizard_step_cam_caldav_menu" model="ir.actions.todo">
-            <field name="name">Configure Menu for Caldav Properites</field>
-            <field name="note">This Configuration step use to provide a detailed view for caldav properties configuration</field>
-            <field name="action_id" ref="action_view_config_crm_caldav_menu"/>
-        </record>
+		<record id="view_users_form_simple_modif_inherited2" model="ir.ui.view">
+	            <field name="name">view.users.form.crm.modif.inherited2</field>
+	            <field name="model">res.users</field>
+	            <field name="type">form</field>
+	            <field name="inherit_id" ref="base.view_users_form"/>
+	            <field eval="18" name="priority"/>
+	            <field name="arch" type="xml">
+	                <field name="password" position="after">
+	                <field name="context_section_id" completion="1"/>
+	                </field>
+	            </field>
+	    </record>
 
     </data>
 </openerp>

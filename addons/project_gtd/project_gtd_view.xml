@@ -102,7 +102,7 @@
         <field name="type">tree</field>
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
-            <tree editable="top" colors="grey:state in ('done',);red:state=='cancelled'" string="Tasks">
+            <tree editable="top" colors="grey:state in ('done',);red:state in ('cancelled');black:state not in ('done','cancelled')" string="Tasks">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="timebox_id" widget="selection"/>

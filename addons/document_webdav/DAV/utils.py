@@ -135,7 +135,7 @@ def get_parenturi(uri):
 
 def make_xmlresponse(result):
     """ construct a response from a dict of uri:error_code elements """
-    doc = Document.Document(None)
+    doc = Document(None)
     ms=doc.createElement("D:multistatus")
     ms.setAttribute("xmlns:D","DAV:")
     doc.appendChild(ms)

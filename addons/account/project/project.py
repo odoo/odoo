@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +41,7 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r = dict(cr.fetchall())
         for i in ids:
@@ -51,13 +51,13 @@ class account_analytic_account(osv.osv):
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
 
         acc_set = ",".join(map(str, ids))
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
         r= dict(cr.fetchall())
         for i in ids:
@@ -68,21 +68,21 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not acc_set:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
-        
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
@@ -115,19 +115,19 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not acc_set:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
@@ -168,10 +168,10 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name' : fields.char('Account Name', size=64, required=True),
+        'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
         'code' : fields.char('Account Code', size=24),
-        'active' : fields.boolean('Active'),
+#        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic account without removing it."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
         'description' : fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -181,7 +181,7 @@ class account_analytic_account(osv.osv):
         'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
         'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
         'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
-        'quantity_max': fields.float('Maximum Quantity'),
+        'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
         'user_id' : fields.many2one('res.users', 'Account Manager'),
@@ -189,11 +189,13 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
-        'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True,
+        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True,readonly=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \
-                                  \n* And finally when all the transactions are over, it can be in \'Close\' state.'),
+                                  \n* And finally when all the transactions are over, it can be in \'Close\' state. \
+                                  \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
+                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -202,13 +204,14 @@ class account_analytic_account(osv.osv):
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
     _defaults = {
-        'active' : lambda *a : True,
+#        'active' : lambda *a : True,
         'type' : lambda *a : 'normal',
         'company_id': _default_company,
-        'state' : lambda *a : 'draft',
+        'state' : lambda *a : 'open',
         'user_id' : lambda self,cr,uid,ctx : uid,
         'partner_id': lambda self,cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self,cr, uid, ctx: ctx.get('contact_id', False),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
@@ -248,7 +251,7 @@ class account_analytic_account(osv.osv):
             res['value']['partner_id'] = partner
         return res
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -270,8 +273,8 @@ class account_analytic_journal(osv.osv):
     _columns = {
         'name' : fields.char('Journal name', size=64, required=True),
         'code' : fields.char('Journal code', size=8),
-        'active' : fields.boolean('Active'),
-        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When a document (eg: an invoice) needs to create analytic entries, Open ERP will look for a matching journal of the same type."),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic journal without removing it."),
+        'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When it needs for a document (eg: an invoice) to create analytic entries, Open ERP will look for a matching journal of the same type."),
         'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }

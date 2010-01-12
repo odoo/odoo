@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+	<record id="caldav_project_task_view" model="ir.ui.view">
+            <field name="name">project.task.caldav.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="project.view_task_tree2"/>
+            <field name="arch" type="xml">
+           			<field name="sequence" position="before">
+           				<field name="id" widget="char"/>
+        			</field>
+            </field>
+        </record>
+        
+    	<record id="view_project_caldav_task_form" model="ir.ui.view">
+			<field name="name">project.task.caldav.form</field>
+			<field name="model">project.task</field>
+			<field name="inherit_id" ref="project.view_task_form2"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Calendar Properties">
+						<field name="class"/>
+						<field name="caldav_url" widget="url"/>
+						<field name="location"/>
+						<field name="alarm_id"/>
+						<newline/>
+						<field name="rrule" colspan="2"/>
+						<button string="Change RRule" name="97"
+							icon="gtk-save-as" type="action" colspan="2"
+							context="{'model' : 'project.task'}"/>
+						<field name="exrule" colspan="4"/>
+						<separator string="Exception Dates" colspan="4"/>
+						<field name="exdate" nolabel="1"  colspan="4"/>
+					</page>
+					<page string="Attendee Details">
+						<separator string="Attendee" colspan="4"/>
+						<field name="attendee_ids" colspan="4" nolabel="1"/>
+					</page>
+				</notebook>
+			</field>
+		</record>	
+		
+    </data>
+</openerp>

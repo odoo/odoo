@@ -2,9 +2,37 @@
 <openerp>
 <data>
 
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Helpdesk Support
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
+
+    <record model="ir.ui.view" id="crm_helpdesk_assign_wizard_form">
+        <field name="name">crm.helpdesk.assign_wizard.form</field>
+        <field name="model">crm.helpdesk.assign_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="To Assign">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_crm_helpdesk_assign_wizard" model="ir.actions.act_window">
+        <field name="name">To Assign</field>
+        <field name="res_model">crm.opportunity.assign_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_helpdesk_assign_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Form</field>
@@ -20,8 +48,8 @@
                     <field name="priority"/>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
-                    </group>                    
+                        <button string="Assign" name="%(action_crm_helpdesk_assign_wizard)d"  type="action" />
+                    </group>
                 </group>
                 <notebook colspan="4">
                     <page string="General">
@@ -115,7 +143,7 @@
                            </tree>
                        </field>
                        <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
-                    </page>                        
+                    </page>
                 </notebook>
             </form>
         </field>
@@ -125,9 +153,9 @@
         <field name="model">crm.case</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Helpdesk Support Tree"  colors="red:state=='open'">
+            <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
-                <field name="name" string="Support Query"/>                
+                <field name="name" string="Support Query"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="planned_revenue"/>
                 <field name="probability"/>
@@ -139,11 +167,11 @@
                 <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                 <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>                
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
             </tree>
         </field>
-    </record>   
-    
+    </record>
+
     <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
         <field name="name">CRM - Helpdesk Support Calendar</field>
         <field name="model">crm.case</field>
@@ -156,6 +184,6 @@
                 <field name="categ_id"/>
             </calendar>
         </field>
-    </record> 
+    </record>
 </data>
 </openerp>

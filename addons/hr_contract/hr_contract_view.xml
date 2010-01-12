@@ -60,16 +60,22 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration"/><menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
-        
+        <menuitem
+            id="next_id_56" 
+            name="Contracts" 
+            parent="hr.menu_hr_configuration"/>
+        <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
+
         <record id="action_hr_contract_wage_type_period" model="ir.actions.act_window">
             <field name="name">Wage period</field>
             <field name="res_model">hr.contract.wage.type.period</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_hr_contract_wage_type_period" id="hr_menu_contract_wage_type_period" parent="hr_contract.next_id_56"/>
-        
-        
+        <menuitem
+            action="action_hr_contract_wage_type_period" 
+            id="hr_menu_contract_wage_type_period" 
+            parent="hr_contract.next_id_56"/>
+
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -138,8 +144,10 @@
             <field name="view_mode">tree,form</field>
         </record>
         
-        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status" parent="hr.menu_hr_configuration"/>
-        
+        <menuitem
+            action="action_hr_marital_status"
+            id="hr_menu_marital_status"
+            parent="hr.menu_hr_configuration_employee"/>
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
@@ -203,9 +211,8 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-        
-        <menuitem name="Contract" id="menu_hr_contract" parent="hr.menu_hr_root"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="menu_hr_contract"/>
-        
+
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_employee"/>
+
     </data>
 </openerp>

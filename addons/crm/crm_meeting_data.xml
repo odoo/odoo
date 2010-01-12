@@ -4,8 +4,7 @@
 
     <record model="crm.case.section" id="section_support1">
         <field name="name">Meetings</field>
-        <field name="code">Mtngs</field>
-        <field name="calendar">True</field>
+        <field name="code">Mtngs</field>        
     </record>
         <!--    CASE CATEGORY(categ_id)        -->
 
@@ -58,6 +57,11 @@
     <record model="crm.case.stage" id="stage_meet5">
         <field name="name">Future</field>
         <field name="section_id" ref="section_support1"/>
+    </record>   
+
+    <record model="res.request.link" id="request_link_meeting">
+        <field name="name">Case Meeting</field>
+        <field name="object">crm.meeting</field>
     </record>
 
 </data>

@@ -29,7 +29,7 @@ from mx import DateTime
 from tools.translate import _
 
 #----------------------------------------------------------
-# Workcenters
+# Work Centers
 #----------------------------------------------------------
 # capacity_hour : capacity per hour. default: 1.0.
 #          Eg: If 5 concurrent operations at one time: capacity = 5 (because 5 employees)
@@ -60,7 +60,7 @@ class mrp_production_workcenter_line(osv.osv):
             res[op.id]= False
             if op.date_planned:
                 d = DateTime.strptime(op.date_planned,'%Y-%m-%d %H:%M:%S')
-                i = self.pool.get('hr.timesheet.group').interval_get(cr, uid, op.workcenter_id.timesheet_id.id or False, d, op.hour or 0.0)
+                i = self.pool.get('resource.calendar').interval_get(cr, uid, op.workcenter_id.calendar_id.id or False, d, op.hour or 0.0)
                 if i:
                     res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 else:
@@ -69,17 +69,22 @@ class mrp_production_workcenter_line(osv.osv):
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
     _columns = {
-       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'State', readonly=True),
+       'state': fields.selection([('draft','Draft'),('startworking', 'In Progress'),('pause','Pause'),('cancel','Canceled'),('done','Finished')],'State', readonly=True,
+                                 help="* When a work order is created it is set in 'Draft' state.\n" \
+                                       "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
+                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n" \
+                                       "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
+                                       "* When order is completely processed that time it is set in 'Finished' state."),
        'date_start_date': fields.function(_get_date_date, method=True, string='Start Date', type='date'),
        'date_planned': fields.datetime('Scheduled Date'),
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finnished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="This is delay between operation start and stop in this workcenter",readonly=True),
+       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this workcenter",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
-            string='Prod.State', readonly=True),
+            string='Production State', readonly=True),
        'product':fields.related('production_id','product_id',type='many2one',relation='product.product',string='Product',
             readonly=True),
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True),
@@ -199,10 +204,10 @@ class mrp_production(osv.osv):
                     self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
                         'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)
-                    i = self.pool.get('hr.timesheet.group').interval_get(
+                    i = self.pool.get('resource.calendar').interval_get(
                         cr,
                         uid,
-                        wc.workcenter_id.timesheet_id and wc.workcenter_id.timesheet_id.id or False,
+                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or False,
                         dt,
                         wc.hour or 0.0
                     )
@@ -230,10 +235,10 @@ class mrp_production(osv.osv):
                 if l.production_id and (l.production_id.date_finnished>dt):
                     if l.production_id.state not in ('done','cancel'):
                         for wc in l.production_id.workcenter_lines:
-                            i = self.pool.get('hr.timesheet.group').interval_min_get(
+                            i = self.pool.get('resource.calendar').interval_min_get(
                                 cr,
                                 uid,
-                                wc.workcenter_id.timesheet_id.id or False,
+                                wc.workcenter_id.calendar_id.id or False,
                                 dt, wc.hour or 0.0
                             )
                             dt = i[0][0]
@@ -434,7 +439,7 @@ class mrp_operations_operation(osv.osv):
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),
-        'workcenter_id':fields.many2one('mrp.workcenter','Workcenter',required=True),
+        'workcenter_id':fields.many2one('mrp.workcenter','Work Center',required=True),
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),

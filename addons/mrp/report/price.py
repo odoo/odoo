@@ -136,7 +136,7 @@ class report_custom(report_rml):
                     <col>%s</col>
                 </row>
             </lines>
-        """ % (_('Workcenter name'), _('Cycles Cost'), _('Total hourly costs'))
+        """ % (_('Work Center name'), _('Cycles Cost'), _('Total hourly costs'))
         prod_header = """
             <lines style='header'>
                 <row>

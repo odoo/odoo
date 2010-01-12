@@ -47,7 +47,10 @@
             <field name="view_type">tree</field>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="open_module_tree_department_tree" id="menu_department_tree" parent="base.menu_users"/>
+        <menuitem 
+            action="open_module_tree_department_tree" 
+            id="menu_department_tree" 
+            parent="hr.menu_hr_employee"/>
 
         <record id="open_module_tree_department" model="ir.actions.act_window">
             <field name="name">Departments</field>
@@ -55,7 +58,10 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem action="open_module_tree_department" id="menu_department_def" parent="hr.menu_department_tree"/>
+        <menuitem
+            action="open_module_tree_department" 
+            id="menu_department_def" 
+            parent="hr.menu_hr_employee"/>
 
         <!-- res.users inherit -->
         <record model="ir.ui.view" id="view_users_form_inherit">

@@ -2,15 +2,15 @@
 <openerp>
 <data>
 
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     # Fund Raising
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
         <field name="name">CRM - Funds Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Funds Tree"  colors="red:state=='open'">
+            <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Funds"/>
                 <field name="categ_id"/>
@@ -24,13 +24,13 @@
                 <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
                 <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>                
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
             </tree>
         </field>
     </record>
     <record model="ir.ui.view" id="crm_case_form_view_fund">
         <field name="name">CRM - Funds Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Funds Form">
@@ -58,7 +58,7 @@
                         <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/> 
+                        <field name="state" select="2"/>
                         <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
@@ -73,7 +73,7 @@
                     <field name="priority" string="Priority"/>
                     <newline/>
                     <field name="canal_id"/>
-                    <field name="som"/>                    
+                    <field name="som"/>
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
@@ -82,7 +82,7 @@
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
-                
+
                     <field name="log_ids" nolabel="1" colspan="4">
                         <form string="Actions">
                             <separator string="Action Information" colspan="4"/>
@@ -111,7 +111,7 @@
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                             <field name="description"/>
@@ -127,7 +127,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_calendar_view_fund">
         <field name="name">CRM - Funds Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -139,7 +139,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_graph_view_fund">
         <field name="name">CRM - Funds Graph</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Funds by Categories" type="bar" orientation="horizontal">
@@ -149,10 +149,10 @@
             </graph>
         </field>
     </record>
-    
+
     <record id="view_crm_case_fund_filter" model="ir.ui.view">
-            <field name="name">crm.case.fund.select</field>
-            <field name="model">crm.case</field>
+            <field name="name">CRM - Funds Search</field>
+            <field name="model">crm.fundraising</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Funds">
@@ -173,6 +173,6 @@
                </search>
             </field>
         </record>
-        
+
 </data>
 </openerp>
