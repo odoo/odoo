@@ -26,7 +26,7 @@ class mrp_installer(osv.osv_memory):
 
     _columns = {
         # Manufacturing Resource Planning
-        '???':fields.boolean('Advanced Routes'),
+        'stock_location':fields.boolean('Advanced Routes'),
         'mrp_jit':fields.boolean('Just In Time Scheduling'),
         'mrp_operations':fields.boolean('Manufacturing Operations'),
         'mrp_subproduct':fields.boolean('MRP Subproducts'),
