@@ -28,7 +28,7 @@ class account_installer(osv.osv_memory):
         # Accounting
         'account_analytic_default':fields.boolean('Analytic Accounting'),
         'account_analytic_plans':fields.boolean('Multiple Analytic Plans'),
-        '???':fields.boolean('Suppliers Payment Management'),
+        'account_payment':fields.boolean('Suppliers Payment Management'),
         'account_followup':fields.boolean('Followups Management'),
         'account_asset':fields.boolean('Assets Management')
         }
