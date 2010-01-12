@@ -1340,7 +1340,9 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         track_flag = False
+        pickings = {}
         for move in self.browse(cr, uid, ids):
+            pickings[move.picking_id.id] = True
             if move.move_dest_id.id and (move.state != 'done'):
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
@@ -1439,6 +1441,10 @@ class stock_move(osv.osv):
                         'ref': ref,
                     })
         self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for pick in self.pool.get('stock.picking').browse(cr, uid, pickings.keys()):
+            if all(move.state == 'done' for move in pick.move_lines):
+                self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'done'})
+        
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)

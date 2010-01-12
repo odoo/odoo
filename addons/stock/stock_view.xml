@@ -1266,11 +1266,11 @@
         </record>
         <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_traceability_low"/>
 
-	====================================
+	    ====================================
         Reception Picking (By Stock Move)
         ====================================
 
-	<record id="view_move_tree_reception_picking" model="ir.ui.view">
+	    <record id="view_move_tree_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
@@ -1294,25 +1294,57 @@
             </field>
         </record>
 
-	<record id="view_move_form_reception_picking" model="ir.ui.view">
+	    <record id="view_move_form_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.form2</field>
             <field name="model">stock.move</field>
             <field name="type">form</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Moves">
-                	<field name="picking_id"/>
-                	<field name="product_id"/>
-                	<field name="product_qty" />
-                    <field name="product_uom" string="UOM"/>
-                    <field name="prodlot_id"/>
-                    <field name="date_planned"/>
-                    <field name="state"/>
+                	<notebook colspan="4">
+                		<page string="General Information">
+		                    <separator colspan="4" string="Move Information"/>
+		                    <field name="location_id" select="1"/>
+		                    <field name="location_dest_id" select="1"/>
+		                    <field colspan="4" name="product_id" select="1"/>
+		                    <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                    <field name="product_uom" select="2"/>
+		                    <field name="product_uos" select="2"/>
+		                    <field colspan="4" name="name" select="2"/>
+		                    <field name="date"/>
+		                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+		                    <field name="date_planned"/>
+		                    <field name="priority"/>
+		                    <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
+		                    <newline/>
+		                    <field name="picking_id" select="2"/>
+		                    <newline/>
+		                    <field name="prodlot_id" select="2"
+		                        context="{'location_id':location_id, 'product_id':product_id}"
+		                        domain="[('product_id','=?',product_id)]"
+		                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                    <field name="tracking_id" select="2"/>
+		                    <newline/>
+		                    <label/>
+		                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                    <separator colspan="4" string="Move State"/>
+		                    <field name="state" select="1"/>
+		                    <group col="4" colspan="2">
+		                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+		                        <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+		                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+		                        <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
+		                    </group>
+		                </page>
+		                <page string="Return Packing History">
+							<field name="move_stock_return_history" nolabel="1"/>
+ 						</page>
+		            </notebook>
                 </form>
             </field>
         </record>
 
-	<record id="view_move_search_reception_picking" model="ir.ui.view">
+	    <record id="view_move_search_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.search2</field>
             <field name="model">stock.move</field>
             <field name="type">search</field>
@@ -1332,7 +1364,7 @@
             </field>
         </record>
 
-	<record id="action_reception_picking_move" model="ir.actions.act_window">
+	    <record id="action_reception_picking_move" model="ir.actions.act_window">
             <field name="name">Reception Picking Stock Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
@@ -1342,6 +1374,18 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
+        <record model="ir.actions.act_window.view" id="action_move_reception_picking_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_move_tree_reception_picking"/>
+	        <field name="act_window_id" ref="action_reception_picking_move"/>
+	    </record>
+        <record model="ir.actions.act_window.view" id="action_move_reception_picking_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="view_move_form_reception_picking"/>
+	        <field name="act_window_id" ref="action_reception_picking_move"/>
+	    </record>
         <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_root"/>
 
 
