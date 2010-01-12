@@ -42,10 +42,10 @@ class company_setup(osv.osv_memory):
         * Insert a suitable message for Overdue Payment Report.
     """
     _name='wizard.company.setup'
+    _inherit = 'res.config'
 
     _columns = {
         'company_id':fields.many2one('res.company','Company',required=True),
-        'partner_id':fields.many2one('res.partner','Partner'),
         'overdue_msg': fields.text('Overdue Payment Message'),
     }
     def get_message(self,cr,uid,context={}):
@@ -57,42 +57,28 @@ class company_setup(osv.osv_memory):
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
-        'partner_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.partner_id.id,
         'overdue_msg': get_message,
     }
 
     def onchange_company_id(self, cr, uid, ids, company, context=None):
-        res = {}
         if not company:
             return {}
         comp_obj = self.pool.get('res.company').browse(cr,uid,company)
-        res['partner_id'] = comp_obj.partner_id.id
-        phone = comp_obj.partner_id.address and (comp_obj.partner_id.address[0].phone and ' at ' + str(comp_obj.partner_id.address[0].phone) + '.' or '.') or '.'
-        res['overdue_msg'] = comp_obj.overdue_msg + str(phone)
-        
-        return {'value': res }
+        partner_address = comp_obj.partner_id.address
+        if partner_address and partner_address[0].phone:
+            msg_tail = ' at %s.'%(partner_address[0].phone)
+        else:
+            msg_tail = '.'
 
-    def action_create(self, cr, uid, ids, context=None):
-        content_wiz = self.pool.get('wizard.company.setup').read(cr,uid,ids,['company_id','overdue_msg'])
+        return {'value': {'overdue_msg': comp_obj.overdue_msg + msg_tail } }
+
+    def execute(self, cr, uid, ids, context=None):
+        content_wiz = self.pool.get('wizard.company.setup')\
+            .read(cr,uid,ids,['company_id','overdue_msg'])
         if content_wiz:
             wiz_data = content_wiz[0]
-            self.pool.get('res.company').write(cr, uid, [wiz_data['company_id']], {'overdue_msg':wiz_data['overdue_msg']})
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
+            self.pool.get('res.company').write(
+                cr, uid,
+                [wiz_data['company_id']],
+                {'overdue_msg':wiz_data['overdue_msg']})
 company_setup()

@@ -1062,6 +1062,8 @@ sale_order_line()
 
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
+    _inherit = 'res.config'
+
     _columns = {
         'name': fields.char('Name', size=64),
         'picking_policy': fields.selection([
@@ -1087,7 +1089,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'step': lambda *a: 'one'
     }
 
-    def set_default(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
@@ -1104,23 +1106,5 @@ class sale_config_picking_policy(osv.osv_memory):
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
 sale_config_picking_policy()
 

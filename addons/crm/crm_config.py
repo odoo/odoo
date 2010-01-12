@@ -118,18 +118,33 @@ crm_cases()
 
 class crm_menu_config_wizard(osv.osv_memory):
     _name = 'crm.menu.config_wizard'
+    _inherit = 'res.config'
+
     _columns = {
         'name': fields.char('Name', size=64),
-        'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
-        'lead': fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
-        'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
-        'jobs': fields.boolean('Jobs Hiring Process', help="Helps you to organise the jobs hiring process: evaluation, meetings, email integration..."),
-        'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
-        'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
-        'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
-        'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
-        'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Helps you to encode the result of a phone call or to plan a list of phone calls to process."),
+        'meeting': fields.boolean('Meetings Calendar',
+            help="Manages each user's meetings calendar"),
+        'lead': fields.boolean('Leads', help="Tracks and manages leads"),
+        'opportunity': fields.boolean('Business Opportunities',
+            help="Tracks identified business opportunities"),
+        'jobs': fields.boolean('Jobs Hiring Process',
+            help="Helps you organise your hiring process (evaluation, "\
+                                   "meetings, email integration...)"),
+        'document_ics': fields.boolean('Shared Calendar',
+            help="Lets you use your OpenERP calendars in third-party systems "\
+                 "(smartphones, Microsoft Outlook, iCal, Google Calendar..."),
+        'bugs': fields.boolean('Bug Tracking',
+            help="Track bugs and support requests on software"),
+        'helpdesk': fields.boolean('Helpdesk',
+            help="Manages an Helpdesk service."),
+        'fund': fields.boolean('Fund Raising Operations',
+            help="Provides processing and tracking for fund raisings"),
+        'claims': fields.boolean('Claims',
+            help="Manages supplier and customers claims, including "\
+                 "corrective or preventive actions"),
+        'phonecall': fields.boolean('Phone Calls',
+            help="Lets users encode phone call outcomes or phone calls to "\
+                 "perform"),
     }
     _defaults = {
         'meeting': lambda *args: True,
@@ -137,29 +152,28 @@ class crm_menu_config_wizard(osv.osv_memory):
         'phonecall': lambda *args: True,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
-        module_proxy = self.pool.get('ir.module.module')
-        modid = module_proxy.search(cr, uid, [('name', '=', 'crm')])
-        moddemo = module_proxy.browse(cr, uid, modid[0]).demo
+    def execute(self, cr, uid, ids, context=None):
+        modobj = self.pool.get('ir.module.module')
+        modids = modobj.search(cr, uid, [('name', '=', 'crm')])
+        moddemo = modobj.browse(cr, uid, modids[0]).demo
         lst = ('data', 'menu')
         if moddemo:
             lst = ('data', 'menu', 'demo')
         res = self.read(cr, uid, ids)[0]
-        idref = {}
         for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
             if (not res[section]):
                 continue
             for fname in lst:
-                file_name = 'crm_' + section + '_' + fname + '.xml'
+                file_name = 'crm_%s_%s.xml'%(section, fname)
                 try:
-                    fp = tools.file_open(os.path.join('crm', file_name))
-                except IOError, e:
-                    fp = None
-                if fp:
-                    tools.convert_xml_import(cr, 'crm', fp, idref, 'init', noupdate=True)
+                    tools.convert_xml_import(
+                        cr, 'crm',
+                        tools.file_open(os.path.join('crm', file_name)),
+                        {}, 'init', noupdate=True)
+                except IOError:
+                    pass
+
         cr.commit()
-        modobj = self.pool.get('ir.module.module')
-        modids = modobj.search(cr, uid, [('name', '=', 'crm')])
         modobj.update_translations(cr, 1, modids, None)
 
         if res['document_ics']:
@@ -167,24 +181,6 @@ class crm_menu_config_wizard(osv.osv_memory):
             module_proxy.button_install(cr, uid, ids, context=context)
             cr.commit()
             db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
 crm_menu_config_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -241,8 +241,9 @@ class wizard_base_setup(wizard.interface):
         return 'charts'
 
     def _config(self, cr, uid, data, context=None):
-        users_obj=pooler.get_pool(cr.dbname).get('res.users')
-        action_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        pool = pooler.get_pool(cr.dbname)
+        users_obj=pool.get('res.users')
+        action_obj=pool.get('ir.actions.act_window')
 
         ids=action_obj.search(cr, uid, [('name', '=', 'Menu')])
         menu=action_obj.browse(cr, uid, ids)[0]
@@ -251,14 +252,8 @@ class wizard_base_setup(wizard.interface):
         users_obj.write(cr, uid, ids, {'action_id': menu.id})
         ids=users_obj.search(cr, uid, [('menu_id', '=', 'Setup')])
         users_obj.write(cr, uid, ids, {'menu_id': menu.id})
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'context':{'menu':True},
-                'target':'new',
-         }
+
+        return pool.get('res.config').next(cr, uid, [], context=context)
 
     fields={
         'profile':{
