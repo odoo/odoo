@@ -46,6 +46,18 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+class crm_fundraising_categ(osv.osv):
+    _name = "crm.fundraising.categ"
+    _description = "Fundraising Categories"
+    _columns = {
+            'name': fields.char('Category Name', size=64, required=True),
+            'probability': fields.float('Probability (%)', required=True),
+            'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_fundraising_categ()
 
 class crm_fundraising(osv.osv):
     _name = "crm.fundraising"
@@ -55,7 +67,7 @@ class crm_fundraising(osv.osv):
     _columns = {        
             'date_closed': fields.datetime('Closed', readonly=True),
             'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),            
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
+            'categ_id': fields.many2one('crm.fundraising.categ','Category', domain="[('section_id','=',section_id)]"),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'probability': fields.float('Probability (%)'),     
@@ -74,9 +86,8 @@ class crm_fundraising(osv.osv):
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-
-            
         }
+   
     _defaults = {
                  'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
     }

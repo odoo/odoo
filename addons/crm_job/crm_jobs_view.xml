@@ -1,6 +1,43 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    
+    # ------------------------------------------------------
+    # Job Categories
+    # ------------------------------------------------------
+    
+    <record id="crm_job_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.job.categ.form</field>
+        <field name="model">crm.job.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Job Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_job_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.job.categ.tree</field>
+        <field name="model">crm.job.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Job Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_job_categ_action" model="ir.actions.act_window">
+        <field name="name">Job Categories</field>
+        <field name="res_model">crm.job.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_job_categ_view_tree"/>
+    </record>
+    
     # ------------------------------------------------------
     # Jobs
     # ------------------------------------------------------

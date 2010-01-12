@@ -46,13 +46,26 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+class crm_lead_categ(osv.osv):
+    _name = "crm.lead.categ"
+    _description = "Lead Categories"
+    _columns = {
+            'name': fields.char('Category Name', size=64, required=True),
+            'probability': fields.float('Probability (%)', required=True),
+            'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_lead_categ()
+
 class crm_lead(osv.osv):
     _name = "crm.lead"
     _description = "Leads Cases"
     _order = "id desc"
     _inherit = 'crm.case'    
     _columns = {
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),        
+            'categ_id': fields.many2one('crm.lead.categ', 'Category', domain="[('section_id','=',section_id)]"),
             'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
             'partner_name': fields.char("Employee's Name", size=64),
             'partner_name2': fields.char('Employee Email', size=64),

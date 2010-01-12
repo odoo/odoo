@@ -41,7 +41,7 @@
         'security/crm_job_security.xml', 
      ],
     'demo_xml': [
-    #'crm_jobs_demo.xml'
+        'crm_jobs_demo.xml'
     ],
     'installable': True,
     'active': False,

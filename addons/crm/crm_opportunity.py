@@ -46,6 +46,19 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+class crm_opportunity_categ(osv.osv):
+    _name = "crm.opportunity.categ"
+    _description = "Opportunity Categories"
+    _columns = {
+            'name': fields.char('Category Name', size=64, required=True),
+            'probability': fields.float('Probability (%)', required=True),
+            'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_opportunity_categ()
+
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
@@ -53,7 +66,7 @@ class crm_opportunity(osv.osv):
     _inherit = 'crm.case'  
     _columns = {        
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),        
+        'categ_id': fields.many2one('crm.opportunity.categ', 'Category', domain="[('section_id','=',section_id)]"),
         'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'probability': fields.float('Probability (%)'),

@@ -2,6 +2,41 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Fund Raising Categories
+    # ------------------------------------------------------
+    <record id="crm_fund_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.fundraising.categ.form</field>
+        <field name="model">crm.fundraising.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Fundraising Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_fund_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.fundraising.categ.tree</field>
+        <field name="model">crm.fundraising.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Fundraising Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_fund_categ_action" model="ir.actions.act_window">
+        <field name="name">Fundraising Categories</field>
+        <field name="res_model">crm.fundraising.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_fund_categ_view_tree"/>
+    </record>
+
     # ------------------------------------------------------
     # Fund Raising
     # ------------------------------------------------------

@@ -33,6 +33,40 @@
         <field name="target">new</field>
     </record>
 
+	<!-- Claim Categories -->
+    <record id="crm_claim_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.claim.categ.form</field>
+        <field name="model">crm.claim.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Claim Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_claim_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.claim.categ.tree</field>
+        <field name="model">crm.claim.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_claim_categ_action" model="ir.actions.act_window">
+        <field name="name">Claim Categories</field>
+        <field name="res_model">crm.claim.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_claim_categ_view_tree"/>
+    </record>
+
+	<!-- Claims	-->
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
         <field name="model">crm.claim</field>

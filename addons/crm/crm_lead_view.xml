@@ -2,6 +2,42 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Leads Categories
+    # ------------------------------------------------------
+    
+    <record id="crm_lead_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.lead.categ.form</field>
+        <field name="model">crm.lead.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Lead Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_lead_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.lead.categ.tree</field>
+        <field name="model">crm.lead.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Lead Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_lead_categ_action" model="ir.actions.act_window">
+        <field name="name">Lead Categories</field>
+        <field name="res_model">crm.lead.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_lead_categ_view_tree"/>
+    </record>
+
     # ------------------------------------------------------
     # Leads
     # ------------------------------------------------------   
