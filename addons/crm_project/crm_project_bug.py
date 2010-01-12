@@ -43,8 +43,10 @@ class crm_project_bug(osv.osv):
     }
 
     def _get_project(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr, uid, uid)
-       return user.project_id.id
+       user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
+       if user.context_project_id:
+           return user.context_project_id.id
+       return False
 
     _defaults = {
           'project_id':_get_project

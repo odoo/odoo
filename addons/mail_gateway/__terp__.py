@@ -24,7 +24,8 @@
     'name': 'eMail Gateway',
     'version': '1.0',
     'category': 'Generic Modules/eMail Gate',
-    'description': """The generic email gateway system for the synchronisation interface
+    'description': """
+The generic email gateway system for the synchronisation interface
 between mails and Open Objects.
 """,
     'author': 'Tiny',
