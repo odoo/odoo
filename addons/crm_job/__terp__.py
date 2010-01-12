@@ -35,13 +35,13 @@
         'crm_jobs_data.xml'
     ],
     'update_xml': [
+        'crm_job_wizard.xml',                   
         'crm_jobs_view.xml',
         'crm_jobs_menu.xml',
-        'crm_feature_view.xml',
-        'crm_job_wizard.xml',
-      
      ],
-    'demo_xml': ['crm_jobs_demo.xml'],
+    'demo_xml': [
+    #'crm_jobs_demo.xml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '',

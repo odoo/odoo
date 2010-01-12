@@ -31,70 +31,50 @@ from tools.translate import _
 import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
+
+AVAILABLE_PRIORITIES = [
+    ('5','Lowest'),
+    ('4','Low'),
+    ('3','Normal'),
+    ('2','High'),
+    ('1','Highest')
+]
+
+def _links_get(self, cr, uid, context={}):
+    obj = self.pool.get('res.request.link')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['object', 'name'], context)
+    return [(r['object'], r['name']) for r in res]
+
 class crm_job(osv.osv):
     _name = "crm.job"
     _description = "Job Cases"
     _order = "id desc"
-    _inherits = {'crm.case':"inherit_case_id"}    
+    _inherit ='crm.case'    
     _columns = {        
-        'inherit_case_id': fields.many2one('crm.case','Case',ondelete='cascade'),
+            'date_closed': fields.datetime('Closed', readonly=True),
+            'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),            
+            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
+            'planned_revenue': fields.float('Planned Revenue'),
+            'planned_cost': fields.float('Planned Costs'),
+            'probability': fields.float('Probability (%)'),     
+            'partner_name': fields.char("Employee's Name", size=64),
+            'partner_name2': fields.char('Employee Email', size=64),
+            'partner_phone': fields.char('Phone', size=32),
+            'partner_mobile': fields.char('Mobile', size=32), 
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
+            'duration': fields.float('Duration'),
+            'case_id': fields.many2one('crm.case', 'Related Case'),
+            'ref' : fields.reference('Reference', selection=_links_get, size=128),
+            'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
+            'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+            'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
+                                                                       "the partner mentality in relation to our services.The scale has" \
+                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
+
+            
     }
-    def _map_ids(self, method, cr, uid, ids, *args, **argv):
-        if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids            
-        case_data = self.browse(cr, uid, select)
-        new_ids = []
-        for case in case_data:
-            if case.inherit_case_id:
-                new_ids.append(case.inherit_case_id.id)
-        res = getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
-        if isinstance(ids, (str, int, long)) and isinstance(res, list):
-            return res and res[0] or False
-        return res
-
-
-    def onchange_case_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_case_id',cr,uid,ids,*args,**argv)
-    def stage_next(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('stage_next',cr,uid,ids,*args,**argv)
-    def onchange_partner_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_partner_id',cr,uid,ids,*args,**argv)
-    def onchange_partner_address_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_partner_address_id',cr,uid,ids,*args,**argv)
-    def onchange_categ_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
-    def case_close(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
-    def case_open(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_open',cr,uid,ids,*args,**argv)
-    def case_cancel(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
-    def case_reset(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_reset',cr,uid,ids,*args,**argv)   
-
-    def msg_new(self, cr, uid, msg):        
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],            
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)        
-        return res
-
-    def msg_update(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('msg_update',cr, uid, ids, *args, **argv)
-    def emails_get(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('emails_get',cr, uid, ids, *args, **argv)
-    def msg_send(self, cr, uid, ids, *args, **argv):        
-        return self._map_ids('msg_send',cr, uid, ids, *args, **argv) 
+   
 crm_job()
