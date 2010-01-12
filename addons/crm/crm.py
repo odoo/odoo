@@ -548,30 +548,30 @@ class crm_case(osv.osv):
                     _("No E-Mail ID Found for your Company address or missing reply address in section!"))
         tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, tinycrm=str(case.id))
         return True
-    def __log(self, cr, uid, cases, keyword, context={}):
-        if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
-            return False
-        for case in cases:
-            if case.partner_id:
-                translated_keyword = keyword
-                if 'translated_keyword' in context:
-                    translated_keyword = context['translated_keyword']
-                name = _('Case') +  ' ' + translated_keyword + ': ' + case.name
-                if isinstance(name, str):
-                    name = unicode(name, 'utf-8')
-                if len(name) > 64:
-                    name = name[:61] + '...'
-                self.pool.get('res.partner.event').create(cr, uid, {
-                    'name': name,
-                    'som':(case.som or False) and case.som.id,
-                    'description':case.description,
-                    'partner_id':case.partner_id.id,
-                    'date':time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'canal_id':(case.canal_id or False) and case.canal_id.id,
-                    'user_id':uid,
-                    'document': 'crm.case,%i' % case.id,
-                })
-        return True
+#    def __log(self, cr, uid, cases, keyword, context={}):
+#        if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
+#            return False
+#        for case in cases:
+#            if case.partner_id:
+#                translated_keyword = keyword
+#                if 'translated_keyword' in context:
+#                    translated_keyword = context['translated_keyword']
+#                name = _('Case') +  ' ' + translated_keyword + ': ' + case.name
+#                if isinstance(name, str):
+#                    name = unicode(name, 'utf-8')
+#                if len(name) > 64:
+#                    name = name[:61] + '...'
+#                self.pool.get('res.partner.event').create(cr, uid, {
+#                    'name': name,
+#                    'som':(case.som or False) and case.som.id,
+#                    'description':case.description,
+#                    'partner_id':case.partner_id.id,
+#                    'date':time.strftime('%Y-%m-%d %H:%M:%S'),
+#                    'canal_id':(case.canal_id or False) and case.canal_id.id,
+#                    'user_id':uid,
+#                    'document': 'crm.case,%i' % case.id,
+#                })
+#        return True
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
         for case in cases:
@@ -599,7 +599,7 @@ class crm_case(osv.osv):
         res = super(crm_case, self).create(cr, uid, *args, **argv)
         cases = self.browse(cr, uid, [res])
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'draft', context={'translated_keyword': _('draft')})
+       # self.__log(cr,uid, cases, 'draft', context={'translated_keyword': _('draft')})
         self._action(cr,uid, cases, 'draft')
         return res
 
@@ -732,7 +732,7 @@ class crm_case(osv.osv):
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'done', context={'translated_keyword': _('done')})
+        #self.__log(cr,uid, cases, 'done', context={'translated_keyword': _('done')})
         self.__history(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state':'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         #
@@ -760,7 +760,7 @@ class crm_case(osv.osv):
 
     def case_open(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
-        self.__log(cr, uid, cases, 'open', context={'translated_keyword': _('open')})
+      #  self.__log(cr, uid, cases, 'open', context={'translated_keyword': _('open')})
         self.__history(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state':'open', 'active':True}
@@ -774,7 +774,7 @@ class crm_case(osv.osv):
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'cancel', context={'translated_keyword': _('cancel')})
+        #self.__log(cr, uid, cases, 'cancel', context={'translated_keyword': _('cancel')})
         self.__history(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state':'cancel', 'active':True})
         self._action(cr,uid, cases, 'cancel')
@@ -783,7 +783,7 @@ class crm_case(osv.osv):
     def case_pending(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'pending', context={'translated_keyword': _('draft')})
+        #self.__log(cr, uid, cases, 'pending', context={'translated_keyword': _('draft')})
         self.__history(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state':'pending', 'active':True})
         self._action(cr,uid, cases, 'pending')
@@ -792,7 +792,7 @@ class crm_case(osv.osv):
     def case_reset(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'draft', context={'translated_keyword': _('draft')})
+       # self.__log(cr, uid, cases, 'draft', context={'translated_keyword': _('draft')})
         self.__history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state':'draft', 'active':True})
         self._action(cr, uid, cases, 'draft')
