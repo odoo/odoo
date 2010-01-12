@@ -4,13 +4,40 @@
 
     # ------------------------------------------------------
     # Opportunities
-    # ------------------------------------------------------
+    # ------------------------------------------------------   
 
+    <record model="ir.ui.view" id="crm_opportunity_assign_wizard_form">
+        <field name="name">crm.opportunity.assign_wizard.form</field>
+        <field name="model">crm.opportunity.assign_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="To Assign">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_crm_opportunity_assign_wizard" model="ir.actions.act_window">
+        <field name="name">To Assign</field>
+        <field name="res_model">crm.opportunity.assign_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_opportunity_assign_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.opportunity</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Opportunities">
@@ -19,7 +46,7 @@
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible"/>
                     <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_reschedule_phone_call)d" icon="gtk-redo" type="action" />
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                         <newline/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -29,7 +56,7 @@
                     <field name="date" string="Deadline"/>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm_generic_wizard_act)d"  type="action" />
+                        <button string="Assign" name="%(action_crm_opportunity_assign_wizard)d"  type="action" />
                     </group>
                 </group>
                 <notebook colspan="4">
@@ -130,7 +157,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_tree_view_oppor">
         <field name="name">CRM - Opportunities Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.opportunity</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Opportunities Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -150,26 +177,38 @@
             </tree>
         </field>
     </record>
+    <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
+        <field name="name">CRM - Opportunity Graph</field>
+        <field name="model">crm.opportunity</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
+                <field name="categ_id"/>
+                <field name="planned_cost" operator="+"/>
+                <field name="state" group="True"/>
+            </graph>
+        </field>
+    </record>    
 
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
-        <field name="name">crm.case.opportunities.select</field>
-        <field name="model">crm.case</field>
+        <field name="name">CRM - Opportunities Search</field>
+        <field name="model">crm.opportunity</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
            		<group col="3" colspan="1">
                 <filter icon="gtk-home" string="   Today   "
                 	separator="1"
-                	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
                 	help="Todays's Opportunities"
                 />
                 <filter icon="gtk-media-rewind" string="    7 Days    "
                 	separator="1" help="Opportunities during last 7 days"
-                	domain="[('date::date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date::date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                	domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                 />
            		</group>
                <separator orientation="vertical"/>
-               <group col="5" colspan="2">
+               <group col="6" colspan="2">
                    <field name="name" select="1" string="Opportunity"/>
                    <field name="user_id" select="1" widget="selection">
                    	<filter icon="terp-partner"
@@ -183,8 +222,9 @@
                    </field>
                    <field name="partner_id" select="1"/>
                    <field name="state" select="1">
-                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft'))]" help="Current "/>
                    </field>
+				<field name="section_id" select="1" widget="selection" string="Section"/>
                </group>
            </search>
         </field>

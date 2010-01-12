@@ -7,6 +7,33 @@
     # Bug Tracking
     # ------------------------------------------------------
 
+    <record model="ir.ui.view" id="crm_bug_assign_wizard_form">
+        <field name="name">crm.project.bug.assign_wizard.form</field>
+        <field name="model">crm.project.bug.assign_wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="To Assign">
+                <group col="2">            	
+                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>                    
+                <separator colspan="4"/>                             
+                <group col="2" colspan="2">
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_crm_bug_assign_wizard" model="ir.actions.act_window">
+        <field name="name">To Assign</field>
+        <field name="res_model">crm.project.bug.assign_wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_bug_assign_wizard_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
     <record model="ir.ui.view" id="crm_case_form_view">
         <field name="name">CRM - Bug Tracker Form</field>
@@ -15,7 +42,7 @@
         <field name="arch" type="xml">
             <form string="Bug Tracker Form">
                 <group colspan="4" col="6">
-                  	<field name="project_id"/>
+                  	<field name="project_id" required="True"/>
                     <field name="name" string="Title" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                         <label string="Resolution: " align="1.0"/>
@@ -37,7 +64,7 @@
                     <field name="priority" string="Severity"/>
                     <group colspan="2">
                         <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(crm.crm_generic_wizard_act)d"  type="action" />
+                        <button string="Assign" name="%(action_crm_bug_assign_wizard)d"  type="action" />
                     </group>
                     <newline/>
                     <separator string= "Description" colspan="4"/>
@@ -149,7 +176,7 @@
     </record>
 
     <record id="view_crm_case_bugs_filter" model="ir.ui.view">
-        <field name="name">crm.case.bugs.select</field>
+        <field name="name">CRM - Bug Tracker Search</field>
         <field name="model">crm.project.bug</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -194,28 +221,7 @@
                </group>
             </search>
          </field>
-    </record>
-
-    <record id="view_crm_case_feature_request_filter" model="ir.ui.view">
-        <field name="name">crm.case.feature.request.select</field>
-        <field name="model">crm.project.bug</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Search Feature Request">
-               <group col='6' colspan='4'>
-                   <filter icon="gtk-execute" string="My Feature Request" domain="[('user_id','=',uid)]" separator="1" help="Feature Requests Related to Current User"/>
-                   <field name="state" select="1">
-                       <filter icon="terp-crm" domain="[('state','=','draft')]" help="Draft Feature Request"/>
-                       <filter icon="terp-crm" domain="[('state','=','open')]" help="Open Feature Request"/>
-                       <filter icon="terp-crm" domain="[('state','=','pending')]" help="Pending Feature Request"/>
-                   </field>
-                   <separator orientation="vertical"/>
-                   <field name="name" select='1'/>
-                   <field name="user_id" select="1" widget="selection"/>
-               </group>
-           </search>
-        </field>
-     </record>
+    </record>   
 
      <record model="ir.ui.view" id="crm_case_calendar_view">
         <field name="name">CRM - Bug Tracker Calendar</field>

@@ -7,7 +7,7 @@
     # ------------------------------------------------------
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
         <field name="name">CRM - Funds Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -30,7 +30,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_form_view_fund">
         <field name="name">CRM - Funds Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Funds Form">
@@ -127,7 +127,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_calendar_view_fund">
         <field name="name">CRM - Funds Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -139,7 +139,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_graph_view_fund">
         <field name="name">CRM - Funds Graph</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Funds by Categories" type="bar" orientation="horizontal">
@@ -151,8 +151,8 @@
     </record>
 
     <record id="view_crm_case_fund_filter" model="ir.ui.view">
-            <field name="name">crm.case.fund.select</field>
-            <field name="model">crm.case</field>
+            <field name="name">CRM - Funds Search</field>
+            <field name="model">crm.fundraising</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Funds">

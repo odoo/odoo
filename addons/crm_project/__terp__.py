@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'Customer Relationship Management',
+    'name': 'CRM Stuff in Project Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
@@ -30,13 +30,18 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': [ 'crm','project'],
-    'init_xml': [ 'crm_bugs_data.xml'
+    'depends': ['crm','project'],
+    'init_xml': [
+        'crm_bugs_data.xml'
     ],
-    'update_xml': [ 'crm_bugs_view.xml',
-                   'crm_bugs_menu.xml',
-       ],
-    'demo_xml': [],
+    'update_xml': [
+        'crm_bugs_view.xml',
+        'crm_bugs_menu.xml',
+        'crm_feature_view.xml',
+        'crm_feature_menu.xml',
+        'security/crm_project_security.xml'
+     ],
+    'demo_xml': ['crm_bugs_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '',

@@ -230,7 +230,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
             store = {
@@ -773,7 +773,7 @@ class sale_order_line(osv.osv):
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes'),
+        'notes': fields.text('Notes', translate=True),
         'th_weight': fields.float('Weight'),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
                 help=' * The \'Draft\' state is set automatically when sale order in draft state. \

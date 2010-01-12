@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-22 08:34+0000\n"
-"Last-Translator: Jeroen Vet <Unknown>\n"
+"PO-Revision-Date: 2010-01-08 00:54+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-24 04:40+0000\n"
+"X-Launchpad-Export-Date: 2010-01-10 07:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -49,7 +49,7 @@ msgstr "操作定义中使用了无效的模式名称。"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Waiting Schedule"
-msgstr "等待日程"
+msgstr "等待安排"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -94,12 +94,12 @@ msgstr "未开票及交货明细"
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr "设置为草稿"
+msgstr "设为草稿"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Invoice Exception"
-msgstr "发票例外项"
+msgstr "发票异常"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
@@ -115,7 +115,7 @@ msgstr "送货，从仓库到客户"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr ""
+msgstr "sale.config.picking_policy"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
@@ -125,7 +125,7 @@ msgstr "审核"
 #. module: sale
 #: view:sale.order:0
 msgid "Make Invoice"
-msgstr "制作发票"
+msgstr "生成发票"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -177,7 +177,7 @@ msgstr "税款"
 #. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr "总净重："
+msgstr "净总额："
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -193,7 +193,7 @@ msgstr "已取消"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr "发货例外项"
+msgstr "送货异常"
 
 #. module: sale
 #: field:sale.order,amount_total:0
@@ -223,12 +223,12 @@ msgstr "参考"
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "一次性发出"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr "所有一起"
+msgstr "销售订单确认后生成需求单"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -280,8 +280,7 @@ msgid ""
 "choose if you invoice based on ordered or shipped quantities. If the product "
 "is a service, shipped quantities means hours spent on the associated tasks."
 msgstr ""
-"\"销售订单将自动创建发票提议(发票草稿).订单和送货数量可能不一致.你必须选择发票基按已订购数量或送货数量。如果该产品是一种服务，发货量是相关的任务所花"
-"费的小时数。"
+"销售订单将自动创建发票草稿。订单数量和送货数量可能不一致，开票时必须选择基于订单数量还是送货数量。如果该产品是一种服务，发货量是相关的任务所花费的小时数"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -317,13 +316,13 @@ msgstr "已运数量"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr "发票基于销售订单"
+msgstr "基于销售订单开票"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sale Shop"
-msgstr "销售商店"
+msgstr "销售点"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -339,7 +338,7 @@ msgstr "订单号"
 #: field:sale.order,order_line:0
 #: view:sale.order.line:0
 msgid "Order Lines"
-msgstr "订单行"
+msgstr "订单明细"
 
 #. module: sale
 #: rml:sale.order:0
@@ -657,7 +656,7 @@ msgstr "销售过程"
 #: wizard_view:sale.order.make_invoice,init:0
 #: wizard_button:sale.order.make_invoice,init,invoice:0
 msgid "Create invoices"
-msgstr ""
+msgstr "创建发票"
 
 #. module: sale
 #: constraint:product.template:0
@@ -726,12 +725,12 @@ msgstr "未完税金额"
 #. module: sale
 #: field:sale.order.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Packing Policy"
-msgstr ""
+msgstr "分拣策略"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -968,7 +967,7 @@ msgstr "预付款"
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1010,7 +1009,7 @@ msgstr "按分拣单生成发票"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Set Default"
-msgstr ""
+msgstr "设为默认"
 
 #. module: sale
 #: view:sale.order:0
@@ -1057,7 +1056,7 @@ msgstr "说明"
 #. module: sale
 #: rml:sale.order:0
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -1110,7 +1109,7 @@ msgstr "联系订单或报价单的请求者名称和地址"
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: sale
 #: field:product.product,pricelist_purchase:0
@@ -1249,13 +1248,13 @@ msgstr "确认订单后创建发票。"
 #. module: sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误：无效编码"
+msgstr "错误：无效的(EAN)条码"
 
 #. module: sale
 #: field:sale.order,picked_rate:0
 #: field:sale.order,shipped:0
 msgid "Picked"
-msgstr "已生成分拣单"
+msgstr "已提货"
 
 #. module: sale
 #: view:sale.shop:0

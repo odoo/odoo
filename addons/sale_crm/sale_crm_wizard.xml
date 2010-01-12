@@ -4,17 +4,11 @@
 
         <wizard
             string="Make Quotation"
-            model="crm.case"
-            name="crm.case.make_order"
+            model="crm.opportunity"
+            name="crm.opportunity.make_order"
             keyword="client_action_multi"
             multi="True"
             id="sale_crm_wizard"/>
-
-        <wizard
-            string="Make Case"
-            model="res.partner"
-            name="sale_crm.make_case"
-            keyword="client_action_multi"
-            id="sale_crm_make_case_wizard"/>
+        
     </data>
 </openerp>
