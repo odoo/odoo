@@ -137,7 +137,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
         if os.name != 'nt':
             try:
                 self.server.socket.shutdown(
-                    getattr(socket, 'SHUT_RDWR', 2)
+                    getattr(socket, 'SHUT_RDWR', 2))
             except socket.error, e:
                 if e.errno != 57: raise
                 # OSX, socket shutdowns both sides if any side closes it
