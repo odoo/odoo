@@ -293,9 +293,11 @@ class crm_meeting(osv.osv):
                         idval = common.real_id2caldav_id(data['id'], rdate)
                         result.append(idval)
                         count += 1
+        if result:
+            ids = result
         if isinstance(select, (str, int, long)):
-            return result and result[0] or False
-        return result
+            return ids and ids[0] or False
+        return ids
 
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
