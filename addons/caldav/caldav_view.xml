@@ -14,7 +14,8 @@
                 	<newline/>
                 	<group col="1" colspan="4"
                 		attrs="{'invisible': [('type', '!=', 'external')]}">
-                		<field name="email" colspan="4"/>
+                		<field name="email" colspan="4"
+                			attrs="{'required': [('type', '=', 'external')]}" />
                 	</group>
                 	<group col="1" colspan="4"
                 		attrs="{'invisible': [('type', '!=', 'internal')]}">
@@ -118,11 +119,11 @@
             <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Atendee details">
-            		<field name="cn" select="1" />
-            		<field name="state" />
-            		<field name="cutype" select="1" />
+            	<tree string="Atendee details" editable="top">
+            		<field name="email" select="1" />
             		<field name="role" select="1" />
+            		<field name="cutype" select="1" />
+            		<field name="state" />
             	</tree>
             </field>
         </record>
@@ -152,38 +153,6 @@
 	 	<field name="act_window_id" ref="action_view_attendee_form" />
 	 </record>
 	 
-	 
-	 <record id="caldav_attendee_tree_model" model="ir.ui.view">
-            <field name="name">calendar.attendee.tree1</field>
-            <field name="model">calendar.attendee</field>
-            <field name="type">tree</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-            	<tree string="Atendee details">
-            		<field name="email" />
-            		<field name="role" select="1" />
-            		<field name="state" />
-            	</tree>
-            </field>
-        </record>
-        
-        <record id="caldav_attendee_form_model" model="ir.ui.view">
-            <field name="name">calendar.attendee.form1</field>
-            <field name="model">calendar.attendee</field>
-            <field name="type">form</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-            	<form string="Atendee details">
-					<field name="email" />
-            		<field name="state" />
-            		<field name="cutype" select="1" />
-            		<field name="role" select="1" />
-            		<newline/>
-            		<field name="rsvp" select="1" />
-            	</form>
-            </field>
-        </record>
-   
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
@@ -233,65 +202,62 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Custom Rule">
-            		<group col="8" colspan="4">
-            			<field name="freq" />
-            			<field name="interval" />
-            			<field name="count"
-            				attrs="{'required' : [('end_date','=',False)]}" />
-            			<field name="end_date"
-            				attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}" />
-            		</group>
-            		<group col="14" colspan="2" name="Select weekdays"
-            			attrs="{'invisible' : [('freq','!=','weekly')]}">
-            			<field name="mo" colspan="1" />
-            			<field name="tu" colspan="1" />
-            			<field name="we" colspan="1" />
-            			<field name="th" colspan="1" />
-            			<field name="fr" colspan="1" />
-            			<field name="sa" colspan="1" />
-            			<field name="su" colspan="1" />
-            			<newline />
-            		</group>
-            		<group col="10" colspan="4"
-            			attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
-            			<group col="2" colspan="1">
-            				<field name="select1" />
-            			</group>
-            			<group col="2" colspan="1"
-            				attrs="{'invisible' : [('select1','=','day')]}">
-            				<field name="day"
-            					attrs="{'required' : [('select1','=','date')]}" />
-            			</group>
-            			<group col="3" colspan="1"
-            				attrs="{'invisible' : [('select1','=','date')]}">
-            				<field name="byday" string="The"
-            					attrs="{'required' : [('select1','=','day')]}" />
-            				<field name="week_list" nolabel="1"
-            					attrs="{'required' : [('select1','=','day')]}" />
-            			</group>
-            			<group col="1" colspan="1"
-            				attrs="{'invisible' : [('freq','!=','yearly')]}">
-            				<field name="month_list" string="of"
-            					colspan="1"
-            					attrs="{'required' : [('freq','=','yearly')]}" />
-            			</group>
-            		</group>
-            	</form>
+            		<separator string="Select data for Custom Rule" colspan="4"/>
+                    <field name="freq" />
+                    <field name="interval" />
+                    <newline />
+                    <field name="count"
+                    	attrs="{'required' : [('end_date','=',False)]}"/>
+                    <field name="end_date"
+                    	attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}"/>
+                    <group col="7" colspan="4" name="Select weekdays"
+                    		attrs="{'invisible' : [('freq','!=','weekly')]}">
+                    	<separator string="" colspan="6" />
+                    	<newline />
+                    	<field name="mo" colspan="1" />
+                    	<field name="tu" colspan="1" />
+                    	<field name="we" colspan="1" />
+                    	<field name="th" colspan="1" />
+                    	<field name="fr" colspan="1" />
+                    	<field name="sa" colspan="1" />
+                    	<field name="su" colspan="1" />
+                    	<newline />
+                    </group>
+                    <group col="4" colspan="4" attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+                    	<separator string="" colspan="6"/>
+                    	<group col="2" colspan="4">
+                    		<field name="select1"/>
+                    	</group>
+                    	<group col="3" colspan="4" attrs="{'invisible' : [('select1','=','day')]}">
+                    		<field name="day" attrs="{'required' : [('select1','=','date')]}"/>
+                   		</group>
+                   		<newline />
+                    	<group col="3" colspan="4" attrs="{'invisible' : [('select1','=','date')]}">
+                    		<field name="byday"  string="The"
+                    					attrs="{'required' : [('select1','=','day')]}"/>
+                    		<field name="week_list" nolabel="1"
+                    					attrs="{'required' : [('select1','=','day')]}"/>
+                    	</group>
+                    	<group col="2" colspan="4" attrs="{'invisible' : [('freq','!=','yearly')]}">
+                    		<field name="month_list" string="of" colspan="1"
+                    				attrs="{'required' : [('freq','=','yearly')]}"/>
+                 		</group>
+                    </group>
+                    <separator string="" colspan="6" />
+                    <label string="" colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
+                    <button name="do_add" string="Ok" type="object" icon="gtk-ok"/>
+                </form>
             </field>
-         </record>
-
-        <record id="view_custom_rule_tree" model="ir.ui.view">
-             <field name="name">Custom Rule</field>
-            <field name="model">calendar.custom.rrule</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-            	<tree string="Custom Rule">
-            		<field name="freq" />
-            			<field name="interval" />
-            			<field name="count" />
-            			<field name="end_date" />
-            	</tree>
-            </field>
+        </record>
+	
+	<record id="action_calendar_custom_rrule_wizard" model="ir.actions.act_window">
+            <field name="name">Custom Rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">calendar.custom.rrule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
         
     </data>

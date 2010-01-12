@@ -51,11 +51,16 @@
             		<field name="date_deadline" string="End Date" required="1" />
             		<field name="location" />
             		<field name="categ_id" widget="selection" />
-            		<field name="rrule_type"  string="Repeat"/>
-            	</group>
-            	<group col="1" colspan="4" attrs="{'invisible': [('rrule_type', '!=', 'custom')]}">
-            	<field name="rule_ids" nolabel="1" colspan="4"
-            			mode="form,tree"/>
+            		<group colspan="2" col="3">
+                            <field name="rrule_type" string="Recurrency"
+                            	on_change="onchange_rrule_type(rrule_type)"
+                            	colspan="1" />
+                            <button string="Custom"
+            					name="%(caldav.action_calendar_custom_rrule_wizard)d"
+            					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}" 
+                                attrs="{'readonly': [('rrule_type','!=','custom')]}"
+                                />
+                        </group>
             	</group>
             	<notebook colspan="4">
             		<page string="Description">
@@ -68,7 +73,31 @@
             				icon="terp-partner" type="action"
             				context="{'model' : 'crm.meeting'}" colspan="2"/>
             			<field name="attendee_ids" colspan="4"
-            					nolabel="1" widget="one2many" />
+            				nolabel="1" widget="one2many" mode="tree,form">
+            				<tree string="Atendee details"
+            					editable="top">
+            					<field name="email" />
+            					<field name="role" select="1" />
+            					<field name="state" />
+            				</tree>
+            				<form string="Atendee details">
+            					<notebook colspan="4">
+            						<page string="Details">
+            							<field name="email" />
+            							<field name="rsvp" select="1" />
+            							<field name="cutype" select="1" />
+            							<field name="role" select="1" />
+            							<separator colspan="4" string="" />
+            							<field name="state" />
+            						</page>
+            						<page string="Other">
+            							<field name="user_id" select="1" />
+            							<field name="partner_address_id" select="1" />
+            							<newline />
+            						</page>
+            					</notebook>
+            				</form>
+            			</field>
             		</page>
             		<page string="Other Information">
             			<field name="alarm_id" string="Reminder" widget="selection" />
@@ -76,7 +105,7 @@
             			<field name="show_as"/>
             			<field name="class"/>
             			<field name="user_id"/>
-            			<field name="rrule"/>
+            			<field name="rrule" invisible="1"/>
             		</page>
             	</notebook>
             </form>

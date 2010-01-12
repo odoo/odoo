@@ -23,9 +23,9 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
 from osv import osv
+import common
 import re
 import vobject
-import common
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -78,9 +78,9 @@ class CalDAV(object):
     }
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
         if not startdate:
-            startdate = datetime.now()         
+            startdate = datetime.now()
         rset1 = rrulestr(rrulestring, dtstart=startdate, forceset=True)
-    
+
         for date in exdate:
             datetime_obj = todate(date)
             rset1._exdate.append(datetime_obj)
@@ -128,10 +128,10 @@ class CalDAV(object):
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
                         vevent.add('uid').value = uidval
-                    elif field == 'attendee' and data[map_field]:                                                                        
+                    elif field == 'attendee' and data[map_field]:
                         attendee_obj = self.pool.get('basic.calendar.attendee')
                         vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
-                    elif field == 'valarm' and data[map_field]:                                                                             
+                    elif field == 'valarm' and data[map_field]:
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
                     elif data[map_field]:
@@ -149,7 +149,7 @@ class CalDAV(object):
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
-                                    vevent.add(field).value = key1        
+                                    vevent.add(field).value = key1
         return ical
 
     def import_ical(self, cr, uid, ical_data):
@@ -238,7 +238,7 @@ class Event(CalDAV, osv.osv_memory):
     }
     def export_ical(self, cr, uid, datas, context={}):
         return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
-    
+
 Event()
 
 class ToDo(CalDAV, osv.osv_memory):
@@ -251,8 +251,8 @@ class ToDo(CalDAV, osv.osv_memory):
                 'description': None, 
                 'dtstamp': None, 
                 'dtstart': None, 
-                'duration': None,
-                'due': None,
+                'duration': None, 
+                'due': None, 
                 'geo': None, 
                 'last-mod ': None, 
                 'location': None, 
@@ -278,7 +278,7 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rdate': None, 
                 'rrule': None, 
             }
-    
+
     def export_ical(self, cr, uid, datas, context={}):
         return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
 
@@ -340,7 +340,7 @@ class Alarm(CalDAV, osv.osv_memory):
         interval = alarm_data['trigger_interval']
         occurs = alarm_data['trigger_occurs']
         duration = (occurs == 'after' and alarm_data['trigger_duration']) \
-                                            or -(alarm_data['trigger_duration'])
+                                        or -(alarm_data['trigger_duration'])
         related = alarm_data['trigger_related']
         trigger = valarm.add('TRIGGER')
         trigger.params['related'] = [related.upper()]
@@ -357,7 +357,7 @@ class Alarm(CalDAV, osv.osv_memory):
         valarm.add('ACTION').value = alarm_data['action']
 
 
-    def import_ical(self, cr, uid, ical_data):        
+    def import_ical(self, cr, uid, ical_data):
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
@@ -405,10 +405,11 @@ class Attendee(CalDAV, osv.osv_memory):
     'language': None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
 
-    def import_ical(self, cr, uid, ical_data):        
+    def import_ical(self, cr, uid, ical_data):
         for para in ical_data.params:
             if para.lower() == 'cn':
-                self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
+                self.ical_set(para.lower(), ical_data.params[para][0]+':'+ \
+                        ical_data.value, 'value')
             else:
                 self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')
         if not ical_data.params.get('CN'):
