@@ -33,6 +33,7 @@
         'base_menu.xml',
         'security/base_security.xml',
         'res/res_security.xml',
+        'res/res_config.xml',
         'maintenance/maintenance_security.xml'
     ],
     'update_xml': [

@@ -1342,11 +1342,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
-                    <field name="action_id" select="1"/>
                     <field name="sequence"/>
+                    <field name="action_id" select="1"/>
                     <field name="state"/>
-                    <field name="active" select="1"/>
+                    <field name="active" select="2"/>
                 </tree>
             </field>
         </record>
@@ -1356,12 +1355,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form editable="bottom" string="Config Wizard Steps">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="action_id" select="1"/>
                     <field name="sequence"/>
+                    <field name="action_id" select="1"/>
                     <field name="state"/>
-                    <field colspan="4" name="note"/>
+                    <field name="active" select="2"/>
                 </form>
             </field>
         </record>
@@ -1370,42 +1367,18 @@
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
-            <field name="domain">[('type','=','configure')]</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
 
-        <record id="view_config_wizard_form" model="ir.ui.view">
-            <field name="name">Main Configuration Wizard</field>
-            <field name="model">ir.actions.configuration.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Next Configuration Step">
-                    <image name="gtk-dialog-info"/>
-                    <group>
-                        <separator string="Next Configuration Step" colspan="4"/>
-                        <field name="name" nolabel="1" colspan="4" width="500"/>
-                        <field name="progress" widget="progressbar"/>
-                        <separator colspan="4" string=""/>
-                        <label string="" colspan="2"/>
-                        <group colspan="2" col="2">
-                            <button icon="gtk-cancel" name="button_skip" string="Skip Step" type="object"/>
-                            <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
-                        </group>
-                    </group>
-                </form>
-            </field>
+        <record id="action_start_configurator" model="ir.actions.server">
+          <field name="name">Start Configuration</field>
+          <field name="model_id" ref="model_res_config"/>
+          <field name="state">code</field>
+          <field name="code">action = self.next(cr, uid, [])</field>
         </record>
-
-        <record id="action_config_wizard_form" model="ir.actions.act_window">
-            <field name="name">Configuration Wizard</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.actions.configuration.wizard</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-        <menuitem action="action_config_wizard_form" id="menu_config_module" parent="base.next_id_11"/>
-
+        <menuitem action="action_start_configurator" name="Start Configuration"
+                  id="menu_configurator_module" parent="next_id_11"
+                  type="server"/>
     </data>
 </openerp>

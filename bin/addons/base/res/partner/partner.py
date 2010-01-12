@@ -271,7 +271,15 @@ class res_partner(osv.osv):
         if (not context.get('category_id', False)):
             return False
         return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
-
+    def main_partner(self, cr, uid):
+        ''' Return the id of the main partner
+        '''
+        model_data = self.pool.get('ir.model.data')
+        return model_data.browse(
+            cr, uid,
+            model_data.search(cr, uid, [('module','=','base'),
+                                        ('name','=','main_partner')])[0],
+            ).res_id
 res_partner()
 
 class res_partner_address(osv.osv):
