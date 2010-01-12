@@ -85,7 +85,7 @@ class crm_lead(osv.osv):
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
                                                                        
-             'case_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+             'case_id': fields.many2one ('crm.case', 'Opportunity'),
     }
     
     def msg_new(self, cr, uid, msg):        
