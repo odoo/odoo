@@ -234,7 +234,7 @@ class crm_meeting(osv.osv):
             ids = [select]
         else:
             ids = select
-        result = ids
+        result = []
         if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, c.date, m.exdate from crm_meeting m\
                          join crm_case c on (c.id=m.inherit_case_id) \
