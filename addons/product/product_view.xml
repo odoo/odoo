@@ -190,6 +190,16 @@
 
         <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="1"/>
 
+        <record id="product_normal_action_puchased" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('purchase_ok','=',1)]</field>
+            <field name="view_id" ref="product_product_tree_view"/>
+            <field name="search_view_id" ref="product_search_form_view"/>
+        </record>
+
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
             <field name="model">product.category</field>
