@@ -6,6 +6,7 @@ class module_web(osv.osv):
     
     _columns = {
         'name': fields.char("Name", size=128, readonly=True, required=True),
+        'module': fields.char("Module", size=128, readonly=True, required=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
