@@ -7,22 +7,6 @@
         <wizard id="wizard_crm_send_mail" model="crm.case.history" name="crm.send.mail" string="Send Mail" menu="False"/>
         <wizard id="wizard_crm_new_send_mail" model="crm.case" name="crm.new.send.mail" string="Send New Mail" menu="False"/>
 
-        <record id="res_partner_events-wopartner-view" model="ir.ui.view">
-            <field name="name">res.partner.events.form</field>
-            <field name="model">res.partner.events</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Partner Events">
-                    <separator string="General Description"/>
-                    <field name="date" select="1"/>
-                    <field name="name" select="1"/>
-                    <field name="som" select="2"/>
-                    <field name="type" select="2"/>
-                    <field name="partner_type" select="2"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- Case Sections -->
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
