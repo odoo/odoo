@@ -99,19 +99,6 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
                     </group>
                  </page>
-                 <page string="Events" groups="base.group_extended">
-                   <field name="child_ids" colspan="4" nolabel="1">
-                       <tree string="Related Cases">
-                           <field name="id"/>
-                           <field name="date"/>
-                           <field name="name"/>
-                           <field name="partner_id"/>
-                           <field name="user_id"/>
-                           <field name="section_id" widget="selection"/>
-                           <field name="state"/>
-                       </tree>
-                    </field>
-                 </page>
                  <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>

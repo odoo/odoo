@@ -79,6 +79,7 @@ class crm_helpdesk(osv.osv):
                                                                    "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
             'categ_id': fields.many2one('crm.helpdesk.categ', 'Category', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
+            'case_id': fields.many2one('crm.case', 'Related Helpdesk'),
     }
     
     def msg_new(self, cr, uid, msg):
@@ -100,43 +101,5 @@ class crm_helpdesk(osv.osv):
 
 crm_helpdesk()
 
-class crm_helpdesk_assign_wizard(osv.osv_memory):
-    _name = 'crm.helpdesk.assign_wizard'
 
-    _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Section', required=False),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-    }
-
-    def _get_default_section(self, cr, uid, context):
-        case_id = context.get('active_id',False)
-        if not case_id:
-            return False
-        case_obj = self.pool.get('crm.helpdesk')
-        case = case_obj.read(cr, uid, case_id, ['state','section_id'])
-        if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        return case['section_id']
-
-
-    _defaults = {
-        'section_id': _get_default_section
-    }
-    def action_create(self, cr, uid, ids, context=None):
-        case_obj = self.pool.get('crm.helpdesk')
-        case_id = context.get('active_id',[])
-        res = self.read(cr, uid, ids)[0]
-        case = case_obj.read(cr, uid, case_id, ['state'])
-        if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        new_case_id = case_obj.copy(cr, uid, case_id, default=
-                                            {
-                                                'section_id':res.get('section_id',False),
-                                                'user_id':res.get('user_id',False)
-                                            }, context=context)
-        case_obj.write(cr, uid, case_id, {'case_id':new_case_id}, context=context)
-        case_obj.case_close(cr, uid, [case_id])
-        return {}
-
-crm_helpdesk_assign_wizard()
 
