@@ -70,6 +70,7 @@ class crm_phonecall(osv.osv):
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Planned Revenue'),
         'date_closed': fields.datetime('Closed', readonly=True),
+        'case_id': fields.many2one ('crm.case', 'Opportunity'),
     }
 
     def msg_new(self, cr, uid, msg):
