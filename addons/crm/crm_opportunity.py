@@ -81,6 +81,7 @@ class crm_opportunity(osv.osv):
         'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
         'lead_id':fields.many2one ('crm.lead', 'Lead'),
+        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
     }
 
     def msg_new(self, cr, uid, msg):        

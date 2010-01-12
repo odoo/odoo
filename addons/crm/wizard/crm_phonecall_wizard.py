@@ -103,17 +103,17 @@ class phonecall2opportunity(wizard.interface):
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
                 'partner_id': data['form']['partner_id'],
-                'case_id':phonecall.id, 
+                'phonecall_id':phonecall.id, 
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
                 'partner_id': data['form']['partner_id'],                
                 }
-            if not phonecall.case_id:
-                vals.update({'case_id' : new_opportunity.id})
+            if not phonecall.opportunity_id:
+                vals.update({'opportunity_id' : new_opportunity.id})
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
-            opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
+         #   opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         value = {            
             'name': _('Opportunity'),
             'view_type': 'form',

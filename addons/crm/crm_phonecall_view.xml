@@ -80,7 +80,7 @@
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
-                <field name="case_id"/>
+                <field name="opportunity_id"/>
                 <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action"/>
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
@@ -100,12 +100,14 @@
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
-                <field name="case_id"/>
+                <group col="2">    
+                <field name="opportunity_id"/>
                 <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action"/>
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
+                </group>        
                 <button string="Assign" name="%(action_crm_phonecall_assign_wizard)d"  type="action" />
-
+	
             </tree>
         </field>
     </record>
