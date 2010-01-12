@@ -155,7 +155,7 @@
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
         </ir_set>
-        
+
         <!--
         ============
         Employee Category
@@ -202,10 +202,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <menuitem
+            id="menu_hr_configuration_employee"
+            name="Configuration"
+            parent="hr.menu_hr_employee"/>
+
         <menuitem
             action="open_view_categ_form"
             id="menu_view_employee_category_form"
             parent="hr.menu_hr_configuration_employee"/>
+
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>

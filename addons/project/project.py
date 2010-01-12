@@ -31,7 +31,7 @@ from tools.translate import _
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-
+    _inherits = {'account.analytic.account':"category_id"}
     def _complete_name(self, cr, uid, ids, name, args, context):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
@@ -73,7 +73,7 @@ class project(osv.osv):
             tocompute = [project]
             while tocompute:
                 p = tocompute.pop()
-                tocompute += p.child_id
+                tocompute += p.child_ids
                 for i in range(3):
                     s[i] += progress.get(p.id, (0.0,0.0,0.0))[i]
             res[project.id] = {
@@ -127,10 +127,10 @@ class project(osv.osv):
 #        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', context=c)
     }
 
-    _order = "parent_id,priority,name"
-    _constraints = [
-        (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
-    ]
+#    _order = "parent_id,priority,name"
+#    _constraints = [
+#        (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
+#    ]
 
     # toggle activity of projects, their sub projects and their tasks
     def set_template(self, cr, uid, ids, context={}):
@@ -217,37 +217,6 @@ class task(osv.osv):
     _description = "Tasks"
     _date_name = "date_start"
 
-    def compute_date(self,cr,uid):
-        print 'Scheduled::::'
-        project_id = self.pool.get('project.project').search(cr,uid,[])
-        print 'Project Ids::::',project_id
-        for i in range(len(project_id)):
-            task_ids = self.pool.get('project.task').search(cr,uid,[('project_id','=',project_id[i])])
-            print 'TAsk Id List',task_ids
-            if task_ids:
-                task_obj = self.pool.get('project.task').browse(cr,uid,task_ids)
-                task_1 = task_obj[0]
-                task_1.date_start = self.pool.get('project.project').browse(cr,uid,project_id[i]).date_start
-                print '1st Date Start::::',task_1.date_start,type(task_1.date_start)
-                dt = mx.DateTime.strptime(task_1.date_start,"%Y-%m-%d").strftime("%Y-%m-%d")
-                print 'Hours:::::',task1.planned_hours
-                print 'Date',dt
-                def Project_1():
-                   title = "New Project"
-                   start = dt
-
-                   def task1():
-                       start = dt
-                       effort = task1.planned_hours
-                       title = "Task 1"
-                project_1 = BalancedProject(Project_1)
-                print 'Title::::::',project_1.title,up.task1.start
-
-
-
-
-
-
     def _str_get(self, task, level=0, border='***', context={}):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
@@ -320,11 +289,11 @@ class task(osv.osv):
         return super(task, self).copy_data(cr, uid, id, default, context)
 
 	def _check_date(self,cr,uid,ids):
-        for res in self.browse(cr,uid,ids):
-            if res.date_start and res.date_end:
-               if res.date_start > res.date_end:
-                    return False
-            return True
+            for res in self.browse(cr,uid,ids):
+                if res.date_start and res.date_end:
+                    if res.date_start > res.date_end:
+                        return False
+                    return True
 
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
