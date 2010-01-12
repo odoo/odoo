@@ -85,7 +85,7 @@ class _float_format(float, _format):
 
     def __str__(self):
         digits = 2
-        if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
+        if hasattr(self,'_field') and getattr(self._field, 'digits', None):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
@@ -108,7 +108,7 @@ class _date_format(str, _format):
 
     def __str__(self):
         if self.val:
-            if hasattr(self,'name') and (self.name):
+            if getattr(self,'name', None):
                 date = mx.DateTime.strptime(self.name,DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
@@ -120,7 +120,7 @@ class _dttime_format(str, _format):
 
     def __str__(self):
         if self.val:
-            if hasattr(self,'name') and self.name:
+            if getattr(self,'name', None):
                 datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
                 return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
         return self.val

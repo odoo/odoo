@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="module_web_tree" model="ir.ui.view">
+            <field name="name">ir.module.web.tree</field>
+            <field name="model">ir.module.web</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="author"/>
+                    <field name="state"/>
+                    <button name="button_install" string="Install" type="object" states="uninstalled" context="{'reload': 1}"/>
+                    <button name="button_uninstall" string="Uninstall" type="object" states="installed" context="{'reload': 1}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_module_web_list" model="ir.actions.url">
+            <field name="name">web_module_list</field>
+            <field name="url">/modules</field>
+        </record>
+        <menuitem name="Web Modules" action="open_module_web_list" id="open_module_web_list_url" type="url" parent="base.menu_management"/>
+
+    </data>
+</openerp>

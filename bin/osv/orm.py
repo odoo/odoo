@@ -304,7 +304,7 @@ def get_pg_type(f):
         elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             f_size = -1
         else:
-            f_size = (hasattr(f, 'size') and f.size) or 16
+            f_size = getattr(f, 'size', 16)
 
         if f_size == -1:
             f_type = ('int4', 'INTEGER')
@@ -976,8 +976,7 @@ class orm_template(object):
                     res[f]['readonly'] = True
                     res[f]['states'] = {}
                 for arg in ('digits', 'invisible','filters'):
-                    if hasattr(self._columns[f], arg) \
-                            and getattr(self._columns[f], arg):
+                    if getattr(self._columns[f], arg, None):
                         res[f][arg] = getattr(self._columns[f], arg)
 
                 #TODO: optimize
@@ -1427,7 +1426,7 @@ class orm_template(object):
                     act_id = int(data_menu.split(',')[1])
                     if act_id:
                         data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = hasattr(data_action,'menus') and data_action.menus or False
+                        result['submenu'] = getattr(data_action,'menus', False)
         if toolbar:
             def clean(x):
                 x = x[2]
@@ -1866,7 +1865,7 @@ class orm(orm_template):
         create = False
         todo_end = []
         self._field_create(cr, context=context)
-        if not hasattr(self, "_auto") or self._auto:
+        if getattr(self, '_auto', True):
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
             if not cr.rowcount:
                 cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS" % self._table)
@@ -2009,7 +2008,8 @@ class orm(orm_template):
                         f_pg_type = f_pg_def['typname']
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
-                        if isinstance(f, fields.function) and not f.store and (not hasattr(f,'nodrop') or not f.nodrop):
+                        if isinstance(f, fields.function) and not f.store and\
+                                not getattr(f, 'nodrop', False):
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
@@ -2162,7 +2162,7 @@ class orm(orm_template):
 
         if not hasattr(self, '_log_access'):
             # if not access is not specify, it is the same value as _auto
-            self._log_access = not hasattr(self, "_auto") or self._auto
+            self._log_access = getattr(self, "_auto", True)
 
         self._columns = self._columns.copy()
         for store_field in self._columns:

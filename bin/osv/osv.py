@@ -195,8 +195,8 @@ class osv_memory(osv_base, orm.orm_memory):
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        name = hasattr(cls, '_name') and cls._name or cls._inherit
-        parent_names = hasattr(cls, '_inherit') and cls._inherit
+        name = getattr(cls, '_name', cls._inherit)
+        parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_class = pool.get(parent_name).__class__
@@ -209,7 +209,7 @@ class osv_memory(osv_base, orm.orm_memory):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
-                name = hasattr(cls, '_name') and cls._name or cls._inherit
+                name = getattr(cls, '_name', cls._inherit)
                 cls = type(name, (cls, parent_class), nattr)
 
         obj = object.__new__(cls)
@@ -223,7 +223,7 @@ class osv(osv_base, orm.orm):
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        parent_names = hasattr(cls, '_inherit') and cls._inherit
+        parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_class = pool.get(parent_name).__class__
@@ -247,7 +247,7 @@ class osv(osv_base, orm.orm):
                         else:
                             new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
-                name = hasattr(cls, '_name') and cls._name or cls._inherit
+                name = getattr(cls, '_name', cls._inherit)
                 cls = type(name, (cls, parent_class), nattr)
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
