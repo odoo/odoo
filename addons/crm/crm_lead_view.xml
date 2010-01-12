@@ -60,7 +60,8 @@
                     </group>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>
                     <field name="category2_id" string="Campaign Type" select="1"/>
-                     <field name="case_id" string="Opportunity Case"/>
+                    <newline/>
+                    <field name="case_id" string="Opportunity Case"/>
                     <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>
                 </group>
                 <notebook colspan="4">
@@ -71,14 +72,15 @@
                     <field name="partner_phone"/>
                     <field name="partner_mobile"/>
                     <field name="email_from" string="Lead Email"/>
-                    <newline/>                     
-                     <group colspan="2" col="3">
-                         <field name="partner_id" colspan="1"/>
-                          <button string="Convert to Partner"
-                              icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
-                              type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
-                          />
-                     </group>
+                    <newline/>
+                    <label string="Partner:" align="1.0"/>                     
+                    <group colspan="1" col="2">
+                        <field name="partner_id" nolabel="1" colspan="1"/>
+                        <button string="Convert to Partner"
+                            icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
+                            type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
+                        />
+                    </group>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
 
                     <field name="priority" string="Priority"/>
