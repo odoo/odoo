@@ -26,7 +26,7 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-        This module provide  Store the project  bugs with  cases
+        This module provide  Store the Job 
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
@@ -38,6 +38,7 @@
         'crm_job_wizard.xml',                   
         'crm_jobs_view.xml',
         'crm_jobs_menu.xml',
+        'security/crm_job_security.xml', 
      ],
     'demo_xml': [
     #'crm_jobs_demo.xml'
