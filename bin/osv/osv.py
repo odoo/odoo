@@ -198,7 +198,7 @@ class osv_memory(osv_base, orm.orm_memory):
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_name
+                name = cls._name or parent_names
                 parent_names = [parent_names]
             else:
                 name = cls._name
@@ -232,7 +232,7 @@ class osv(osv_base, orm.orm):
         parent_names = getattr(cls, '_inherit', None)        
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_name
+                name = cls._name or parent_names
                 parent_names = [parent_names]
             else:
                 name = cls._name
