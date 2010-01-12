@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import netsvc
+import pooler
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -108,6 +109,52 @@ class res_config_configurable(osv.osv_memory):
         if next: return next
         return self.next(cr, uid, ids, context=context)
 res_config_configurable()
+
+class res_config_installer(osv.osv_memory):
+    ''' New-style configuration base specialized for modules selection
+    and installation.
+    '''
+    _name = 'res.config.installer'
+    _inherit = 'res.config'
+
+    _install_if = {}
+
+    def _modules_to_install(self, cr, uid, ids, context=None):
+        base = set(module_name
+                   for installer in self.read(cr, uid, ids, context=context)
+                   for module_name, to_install in installer.iteritems()
+                   if module_name != 'id'
+                   if type(self._columns[module_name]) is fields.boolean
+                   if to_install)
+        hooks_results = set()
+        for module in base:
+            hook = getattr(self, '_if_%s'%(module), None)
+            if hook:
+                hooks_results.update(hook(cr, uid, ids, context=None) or set())
+
+        additionals = set(
+            module for requirements, consequences \
+                       in self._install_if.iteritems()
+                   if base.issuperset(requirements)
+                   for module in consequences)
+
+        return base | hooks_results | additionals
+
+    def execute(self, cr, uid, ids, context=None):
+        modules = self.pool.get('ir.module.module')
+        to_install = list(self._modules_to_install(
+            cr, uid, ids, context=context))
+        self.logger.notifyChannel(
+            'installer', netsvc.LOG_INFO,
+            'Selecting addons %s to install'%to_install)
+        modules.state_update(
+            cr, uid,
+            modules.search(cr, uid, [('name','in',to_install)]),
+            'to install', ['uninstalled'], context=context)
+        cr.commit()
+
+        pooler.restart_pool(cr.dbname, update_module=True)
+res_config_installer()
 
 DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\
     'wizards (ir.actions.configuration.wizard). Old-style configuration '\
