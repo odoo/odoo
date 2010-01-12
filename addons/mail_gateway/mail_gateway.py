@@ -195,11 +195,10 @@ class mail_gateway(osv.osv):
         s = decode_header(s)
         return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
-    def msg_new(self, cr, uid, msg, model):        
-        message = self.msg_body_get(msg)        
+    def msg_new(self, cr, uid, msg, model):
+        message = self.msg_body_get(msg)
         res_model = self.pool.get(model)
-        
-        res_id = res_model.msg_new(cr, uid, msg)            
+        res_id = res_model.msg_new(cr, uid, msg)
         if res_id:
             attachments = message['attachment']
 
@@ -376,5 +375,3 @@ class mail_gateway_history(osv.osv):
     }
     _order = 'id desc'
 mail_gateway_history()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

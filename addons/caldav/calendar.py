@@ -44,7 +44,9 @@ def map_data(cr, uid, obj):
                     continue
                 mapping =obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
-                    map_val = mapping[map_val]
+                    map_val = mapping[map_val.lower()]
+                else:
+                    map_val = map_val.lower()
             if field_type == 'many2many':
                 ids = []
                 if not map_val:
@@ -59,7 +61,7 @@ def map_data(cr, uid, obj):
                 continue
             if field_type == 'many2one':
                 id = None
-                if not map_val:
+                if not map_val or not isinstance(map_val, dict):
                     vals[field] = id
                     continue
                 model = obj.__attribute__[map_dict].get('object', False)
@@ -126,12 +128,16 @@ class CalDAV(object):
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
                         vevent.add('uid').value = uidval
-                    elif field == 'attendee' and data[map_field]:
-                        attendee_obj = self.pool.get('caldav.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
-                    elif field == 'valarm' and data[map_field]:
-                        alarm_obj = self.pool.get('caldav.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
+                    elif field == 'attendee' and data[map_field]:                                                                        
+                        #vevent.add('attendee').value = data[map_field]
+                        #TODO : To export attendee  
+                        pass
+                            
+                    elif field == 'valarm' and data[map_field]:                                                                             
+                        # vevent.add('valarm').value = data[map_field]                        
+                        #TODO : To export valarm 
+                        pass
+
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -142,10 +148,12 @@ class CalDAV(object):
                                 vevent.add(field).value = parser.parse(data[map_field])
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
+                        elif map_type == "many2one":
+                             vevent.add(field).value = [data.get(map_field)[1]]
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
-                                    vevent.add(field).value = key1
+                                    vevent.add(field).value = key1        
         return ical
 
     def import_ical(self, cr, uid, ical_data):
@@ -154,16 +162,16 @@ class CalDAV(object):
         res = []
         for child in parsedCal.getChildren():
             for cal_data in child.getChildren():
-                if cal_data.name.lower() == 'attendee':
-                    attendee = self.pool.get('caldav.attendee')
-                    att_data.append(attendee.import_ical(cr, uid, cal_data))
-                    self.ical_set(cal_data.name.lower(), att_data, 'value')
-                    continue
-                if cal_data.name.lower() == 'valarm':
-                    alarm = self.pool.get('caldav.alarm')
-                    vals = alarm.import_ical(cr, uid, cal_data)
-                    self.ical_set(cal_data.name.lower(), vals, 'value')
-                    continue
+                #if cal_data.name.lower() == 'attendee':
+                #    attendee = self.pool.get('basic.calendar.attendee')
+                #    att_data.append(attendee.import_ical(cr, uid, cal_data))
+                #    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                #    continue
+                #if cal_data.name.lower() == 'valarm':
+                #    alarm = self.pool.get('basic.calendar.alarm')
+                #    vals = alarm.import_ical(cr, uid, cal_data)
+                #    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                #    continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
             if child.name.lower() in ('vevent', 'vtodo'):
@@ -177,7 +185,7 @@ class CalDAV(object):
 
 
 class Calendar(CalDAV, osv.osv_memory):
-    _name = 'caldav.calendar'
+    _name = 'basic.calendar'
     __attribute__ = {
         'prodid': None, # Use: R-1, Type: TEXT, Specifies the identifier for the product that created the iCalendar object.
         'version': None, # Use: R-1, Type: TEXT, Specifies the identifier corresponding to the highest version number
@@ -196,7 +204,7 @@ class Calendar(CalDAV, osv.osv_memory):
 Calendar()
 
 class Event(CalDAV, osv.osv_memory):
-    _name = 'caldav.event'
+    _name = 'basic.calendar.event'
     __attribute__ = {
         'class': None, # Use: O-1, Type: TEXT, Defines the access classification for a calendar  component like "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
         'created': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the calendar information  was created by the calendar user agent in the calendar store.
@@ -224,7 +232,7 @@ class Event(CalDAV, osv.osv_memory):
         'exrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for an exception to a recurrence set.
         'rstatus': None, 
         'related': None, # Use: O-n, Specify the relationship of the alarm trigger with respect to the start or end of the calendar component.
-                                #  like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;RELATED=END:PT5M
+                                #  like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;related=END:PT5M
         'resources': None, # Use: O-n, Type: TEXT, Defines the equipment or resources anticipated for an activity specified by a calendar entity like RESOURCES:EASEL,PROJECTOR,VCR, LANGUAGE=fr:1 raton-laveur
         'rdate': None, # Use: O-n, Type: DATE-TIME, Defines the list of date/times for a recurrence set.
         'rrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for recurring events, to-dos, or time zone definitions.
@@ -238,7 +246,7 @@ class Event(CalDAV, osv.osv_memory):
 Event()
 
 class ToDo(CalDAV, osv.osv_memory):
-    _name = 'caldav.todo'
+    _name = 'basic.calendar.todo'
 
     __attribute__ = {
                 'class': None, 
@@ -314,79 +322,83 @@ class Timezone(CalDAV):
 
 
 class Alarm(CalDAV, osv.osv_memory):
-    _name = 'caldav.alarm'
+    _name = 'basic.calendar.alarm'
     __attribute__ = {
     'action': None, # Use: R-1, Type: Text, defines the action to be invoked when an alarm is triggered LIKE "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"
     'description': None, #      Type: Text, Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property. Use:- R-1 for DISPLAY,Use:- R-1 for EMAIL,Use:- R-1 for PROCEDURE
     'summary': None, # Use: R-1, Type: Text        Which contains the text to be used as the message subject. Use for EMAIL
     'attendee': None, # Use: R-n, Type: CAL-ADDRESS, Contain the email address of attendees to receive the message. It can also include one or more. Use for EMAIL
-    'trigger': None, # Use: R-1, Type: DURATION, The "TRIGGER" property specifies a duration prior to the start of an event or a to-do. The "TRIGGER" edge may be explicitly set to be relative to the "START" or "END" of the event or to-do with the "RELATED" parameter of the "TRIGGER" property. The "TRIGGER" property value type can alternatively be set to an absolute calendar date and time of day value. Use for all action like AUDIO, DISPLAY, EMAIL and PROCEDURE
+    'trigger': None, # Use: R-1, Type: DURATION, The "TRIGGER" property specifies a duration prior to the start of an event or a to-do. The "TRIGGER" edge may be explicitly set to be relative to the "START" or "END" of the event or to-do with the "related" parameter of the "TRIGGER" property. The "TRIGGER" property value type can alternatively be set to an absolute calendar date and time of day value. Use for all action like AUDIO, DISPLAY, EMAIL and PROCEDURE
     'duration': None, #           Type: DURATION, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'repeat': None, #           Type: INTEGER, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'attach': None, # Use:- O-n: which MUST point to a sound resource, which is rendered when the alarm is triggered for AUDIO, Use:- O-n: which are intended to be sent as message attachments for EMAIL, Use:- R-1:which MUST point to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, alarm_id, vevent, context={}):
-        valarm = vevent.add('valarm')
-        alarm_object = self.pool.get('crm.caldav.alarm')
-        alarm_data = alarm_object.read(cr, uid, alarm_id, [])
+    def export_ical(self, cr, uid, alarm_datas, context={}):
+        ical = vobject.iCalendar()
+        vevent = ical.add('vevent')
+        valarms = []
+        for alarm_data in alarm_datas:
+            valarm = vevent.add('valarm')
+            
+            # Compute trigger data
+            interval = alarm_data['trigger_interval']
+            occurs = alarm_data['trigger_occurs']
+            duration = (occurs == 'after' and alarm_data['trigger_duration']) \
+                                                or -(alarm_data['trigger_duration'])
+            related = alarm_data['trigger_related']
+            trigger = valarm.add('trigger')
+            trigger.params['related'] = [related.upper()]
+            if interval == 'days':
+                delta = timedelta(days=duration)
+            if interval == 'hours':
+                delta = timedelta(hours=duration)
+            if interval == 'minutes':
+                delta = timedelta(minutes=duration)
+            trigger.value = delta
 
-        # Compute trigger data
-        interval = alarm_data['trigger_interval']
-        occurs = alarm_data['trigger_occurs']
-        duration = (occurs == 'AFTER' and alarm_data['trigger_duration']) \
-                                            or -(alarm_data['trigger_duration'])
-        related = alarm_data['trigger_related']
-        trigger = valarm.add('TRIGGER')
-        trigger.params['RELATED'] = [related.upper()]
-        if interval == 'DAYS':
-            delta = timedelta(days=duration)
-        if interval == 'HOURS':
-            delta = timedelta(hours=duration)
-        if interval == 'MINUTES':
-            delta = timedelta(minutes=duration)
-        trigger.value = delta
-
-        # Compute other details
-        valarm.add('DESCRIPTION').value = alarm_data['name']
-        valarm.add('ACTION').value = alarm_data['action']
-        return vevent
+            # Compute other details
+            valarm.add('description').value = alarm_data['name']
+            valarm.add('action').value = alarm_data['action']
+            
+            valarms.append(valarm)
+        return valarms
         
-    def import_ical(self, cr, uid, ical_data):
+    def import_ical(self, cr, uid, ical_data):        
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
                 days = child.value.days
                 diff = (days * 86400) +  seconds
-                interval = 'DAYS'
-                related = 'BEFORE'
+                interval = 'days'
+                related = 'before'
                 if not seconds:
                     duration = abs(days)
-                    related = days>0 and 'AFTER' or 'BEFORE'
+                    related = days>0 and 'after' or 'before'
                 elif (abs(diff) / 3600) == 0:
                     duration = abs(diff / 60)
-                    interval = 'MINUTES'
-                    related = days>=0 and 'AFTER' or 'BEFORE'
+                    interval = 'minutes'
+                    related = days>=0 and 'after' or 'before'
                 else:
                     duration = abs(diff / 3600)
-                    interval = 'HOURS'
-                    related = days>=0 and 'AFTER' or 'BEFORE'
+                    interval = 'hours'
+                    related = days>=0 and 'after' or 'before'
                 self.ical_set('trigger_interval', interval, 'value')
                 self.ical_set('trigger_duration', duration, 'value')
-                self.ical_set('trigger_occurs', related, 'value')
+                self.ical_set('trigger_occurs', related.lower(), 'value')
                 if child.params:
-                    if child.params.get('RELATED'):
-                        self.ical_set('trigger_related', child.params.get('RELATED')[0].lower(), 'value')
+                    if child.params.get('related'):
+                        self.ical_set('trigger_related', child.params.get('related')[0].lower(), 'value')
             else:
-                self.ical_set(child.name.lower(), child.value, 'value')
+                self.ical_set(child.name.lower(), child.value.lower(), 'value')
         vals = map_data(cr, uid, self)
         return vals
 
 Alarm()
 
 class Attendee(CalDAV, osv.osv_memory):
-    _name = 'caldav.attendee'
+    _name = 'basic.calendar.attendee'
     __attribute__ = {
     'cutype': None, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
     'member': None, # Use: 0-1    Specify the group or list membership of the calendar user specified by the property.
@@ -401,28 +413,31 @@ class Attendee(CalDAV, osv.osv_memory):
     'language': None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
 
-    def import_ical(self, cr, uid, ical_data):
+    def import_ical(self, cr, uid, ical_data):        
         for para in ical_data.params:
             if para.lower() == 'cn':
                 self.ical_set(para.lower(), ical_data.params[para][0]+':'+ ical_data.value, 'value')
             else:
-                self.ical_set(para.lower(), ical_data.params[para][0], 'value')
+                self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')
         if not ical_data.params.get('CN'):
             self.ical_set('cn', ical_data.value, 'value')
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, attendee_id, vevent, context={}):
-        attendee_object = self.pool.get('crm.caldav.attendee')
-        for attendee in attendee_object.read(cr, uid, attendee_id, []):
+    def export_ical(self, cr, uid, attendee_data, context={}):        
+        ical = vobject.iCalendar()
+        attendees = []        
+        vevent = ical.add('vevent')
+        for attendee in attendee_data:            
             attendee_add = vevent.add('attendee')
-            for a_key, a_val in attendee_object.__attribute__.items():
+            for a_key, a_val in self.__attribute__.items():                
                 if attendee[a_val['field']]:
                     if a_val['type'] == 'text':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                     elif a_val['type'] == 'boolean':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
-        return vevent
+            attendees.append(attendee_add)
+        return attendees
 
 Attendee()
 

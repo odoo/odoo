@@ -32,12 +32,6 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-
-import email
-import netsvc
-from poplib import POP3, POP3_SSL
-from imaplib import IMAP4, IMAP4_SSL
-
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -64,17 +58,16 @@ icon_lst = {
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
     _description = "Case Section"
+    _order = "name"
     _columns = {
         'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case sections."),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),        
-        'calendar' : fields.boolean('Calendar', help='Allows to show calendar'),
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -95,106 +88,6 @@ class crm_case_section(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
     ]
-
-    # Mainly used by the wizard
-    def menu_create_data(self, cr, uid, data, menu_lst, context):
-        menus = {}
-        menus[0] = data['menu_parent_id']
-        section = self.browse(cr, uid, data['section_id'], context)
-        for (index, mname, mdomain, latest, view_mode) in menu_lst:
-            view_mode = data['menu'+str(index)+'_option']
-            if view_mode=='no':
-                menus[index] = data['menu_parent_id']
-                continue
-            icon = icon_lst.get(view_mode.split(',')[0], 'STOCK_JUSTIFY_FILL')
-            menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
-                'name': data['menu'+str(index)],
-                'parent_id': menus[latest],
-                'icon': icon
-            })
-            menus[index] = menu_id
-            action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
-                'name': data['menu'+str(index)],
-                'res_model': 'crm.case',
-                'domain': mdomain.replace('SECTION_ID', str(data['section_id'])),
-                'view_type': 'form',
-                'view_mode': view_mode,
-            })
-            seq = 0
-            for mode in view_mode.split(','):
-                self.pool.get('ir.actions.act_window.view').create(cr, uid, {
-                    'sequence': seq,
-                    'view_id': data['view_'+mode],
-                    'view_mode': mode,
-                    'act_window_id': action_id,
-                    'multi': True
-                })
-                seq+=1
-            self.pool.get('ir.values').create(cr, uid, {
-                'name': data['menu'+str(index)],
-                'key2': 'tree_but_open',
-                'model': 'ir.ui.menu',
-                'res_id': menu_id,
-                'value': 'ir.actions.act_window,%d'%action_id,
-                'object': True
-            })
-        return True
-
-    #
-    # Used when called from .XML file
-    #
-    def menu_create(self, cr, uid, ids, name, menu_parent_id=False, context={}):
-        menus = {}
-        menus[-1] = menu_parent_id
-        for section in self.browse(cr, uid, ids, context):
-            for (index, mname, mdomain, latest) in [
-                (0,'',"[('section_id','=',"+str(section.id)+")]", -1),
-                (1,'My ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid)]", 0),
-                (2,'My Unclosed ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','done')]", 1),
-                (5,'My Open ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','open')]", 2),
-                (6,'My Pending ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','pending')]", 2),
-                (7,'My Draft ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','draft')]", 2),
-
-                (3,'My Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 1),
-                (4,'My Canceled ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','cancel')]", 1),
-                (8,'All ',"[('section_id','=',"+str(section.id)+"),]", 0),
-                (9,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False)]", 8),
-                (10,'Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 8),
-                (11,'Canceled ',"[('section_id','=',"+str(section.id)+"),('state','=','cancel')]", 8),
-                (12,'Unclosed ',"[('section_id','=',"+str(section.id)+"),('state','<>','cancel'), ('state','<>','done')]", 8),
-                (13,'Open ',"[('section_id','=',"+str(section.id)+"),('state','=','open')]", 12),
-                (14,'Pending ',"[('section_id','=',"+str(section.id)+"),('state','=','pending')]", 12),
-                (15,'Draft ',"[('section_id','=',"+str(section.id)+"),('state','=','draft')]", 12),
-                (16,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False),('state','<>','cancel'),('state','<>','done')]", 12),
-            ]:
-                view_mode = 'tree,form'
-                icon = 'STOCK_JUSTIFY_FILL'
-                if index==0:
-                    view_mode = 'form,tree'
-                    icon = 'STOCK_NEW'
-                menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
-                    'name': mname+name,
-                    'parent_id': menus[latest],
-                    'icon': icon
-                })
-                menus[index] = menu_id
-                action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
-                    'name': mname+name+' Cases',
-                    'res_model': 'crm.case',
-                    'domain': mdomain,
-                    'view_type': 'form',
-                    'view_mode': view_mode,
-                })
-                self.pool.get('ir.values').create(cr, uid, {
-                    'name': 'Open Cases',
-                    'key2': 'tree_but_open',
-                    'model': 'ir.ui.menu',
-                    'res_id': menu_id,
-                    'value': 'ir.actions.act_window,%d'%action_id,
-                    'object': True
-                })
-        return True
-
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
@@ -408,6 +301,11 @@ class crm_case(osv.osv):
         if context.get('portal', False):
             return False
         return uid
+
+    def _get_section(self, cr, uid, context):
+       user = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+       return user.context_section_id
+
     _defaults = {
         'active': lambda *a: 1,
         'user_id': _get_default_user,
@@ -417,6 +315,7 @@ class crm_case(osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'section_id': _get_section,
     }
     _order = 'priority, date_deadline desc, date desc,id desc'
 
@@ -818,8 +717,8 @@ class crm_case(osv.osv):
                 data['user_id'] = uid
             self.write(cr, uid, ids, data)
         self._action(cr,uid, cases, 'open')
-        return True   
-    
+        return True
+
 
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
@@ -946,5 +845,23 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         return {}
 
 crm_email_add_cc_wizard()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+def _section_get(self, cr, uid, context={}):
+    obj = self.pool.get('crm.case.section')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['id','name'], context)
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
+
+class users(osv.osv):
+    _inherit = 'res.users'
+    _description = "Users"
+    _columns = {
+        'context_section_id': fields.selection(_section_get, 'Sales Section'),
+        }
+
+users()
+
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

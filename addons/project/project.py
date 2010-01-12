@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -61,7 +61,7 @@ class project(osv.osv):
             cr.execute('''SELECT
                     project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
                 FROM
-                    project_task 
+                    project_task
                 WHERE
                     project_id in ('''+','.join(map(str,ids2))+''') AND
                     state<>'cancelled'
@@ -137,7 +137,7 @@ class project(osv.osv):
 
     # toggle activity of projects, their sub projects and their tasks
     def set_template(self, cr, uid, ids, context={}):
-        res = self.setActive(cr, uid, ids, value=False, context=context) 
+        res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
 
     def set_done(self, cr, uid, ids, context={}):
@@ -192,17 +192,17 @@ class project(osv.osv):
         raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
 
     # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, ids, value=True, context={}):   
-        for proj in self.browse(cr, uid, ids, context):            
+    def setActive(self, cr, uid, ids, value=True, context={}):
+        for proj in self.browse(cr, uid, ids, context):
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))            
-            project_ids = [x[0] for x in cr.fetchall()]            
+            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
+            project_ids = [x[0] for x in cr.fetchall()]
             for child in project_ids:
-                self.setActive(cr, uid, [child], value, context)     		
+                self.setActive(cr, uid, [child], value, context)
         return True
 project()
 
@@ -269,7 +269,7 @@ class task(osv.osv):
     #_sql_constraints = [
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
-    
+
     def copy_data(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
@@ -318,7 +318,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c) 
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
     _order = "sequence, priority, date_deadline, id"
 
@@ -335,22 +335,22 @@ class task(osv.osv):
             return res
 
         eview = etree.fromstring(res['arch'])
-        
+
         def _check_rec(eview):
             if eview.attrib.get('widget','') == 'float_time':
                 eview.set('widget','float')
             for child in eview:
                 _check_rec(child)
             return True
-        
+
         _check_rec(eview)
-        
+
         res['arch'] = etree.tostring(eview)
-        
+
         for f in res['fields']:
             if 'Hours' in res['fields'][f]['string']:
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
-        
+
         return res
 
     def do_close(self, cr, uid, ids, *args):
@@ -485,7 +485,7 @@ class config_compute_remaining(osv.osv_memory):
     _defaults = {
         'remaining_hours': _get_remaining
         }
-    
+
     def compute_hours(self, cr, uid, ids, context=None):
         if 'active_id' in context:
             remaining_hrs=self.browse(cr,uid,ids)[0].remaining_hours
@@ -495,5 +495,32 @@ class config_compute_remaining(osv.osv_memory):
          }
 config_compute_remaining()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class message(osv.osv):
+    _name = "project.message"
+    _description = "Message"
+    _columns = {
+        'subject': fields.char('Subject', size=128),
+        'description': fields.char('Description', size =128),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+        'date': fields.date('Date'),
+        'user_id': fields.many2one('res.users', 'User'),
+        }
+message()
 
+def _project_get(self, cr, uid, context={}):
+    obj = self.pool.get('project.project')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['id','name'], context)
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
+
+class users(osv.osv):
+    _inherit = 'res.users'
+    _description = "Users"
+    _columns = {
+        'context_project_id': fields.selection(_project_get, 'Project'),
+        }
+
+users()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

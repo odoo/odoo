@@ -25,7 +25,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="/form/notebook/page[@string='Other data']/field[@name='company_id']" position="after">
-                <field name="section_id"/>
+                <field name="section_id" widget='selection'/>
             </xpath>
         </field>
     </record>

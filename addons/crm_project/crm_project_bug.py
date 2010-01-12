@@ -36,17 +36,26 @@ class crm_project_bug(osv.osv):
     _name = "crm.project.bug"
     _description = "Project Bug Cases"
     _order = "id desc"
-    _inherits = {'crm.case':"inherit_case_id"}    
-    _columns = {        
+    _inherits = {'crm.case':"inherit_case_id"}
+    _columns = {
            'inherit_case_id':fields.many2one('crm.case','Case'),
            'project_id':fields.many2one('project.project', 'Project'),
     }
-    
+
+    def _get_project(self, cr, uid, context):
+       user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
+       if user.context_project_id:
+           return user.context_project_id.id
+       return False
+
+    _defaults = {
+          'project_id':_get_project
+          }
     def _map_ids(self, method, cr, uid, ids, *args, **argv):
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
-            select = ids            
+            select = ids
         case_data = self.browse(cr, uid, select)
         new_ids = []
         for case in case_data:
@@ -69,25 +78,25 @@ class crm_project_bug(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, *args, **argv):
         return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
     def case_close(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
+        return self._map_ids('case_close',cr,uid,ids,*args,**argv)
     def case_open(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_open',cr,uid,ids,*args,**argv)
     def case_cancel(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
     def case_reset(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_reset',cr,uid,ids,*args,**argv)
-    def case_escalate(self,cr, uid, ids, *args, **argv):    
-        return self._map_ids('case_escalate',cr,uid,ids,*args,**argv)    
-    def case_pending(self,cr, uid, ids, *args, **argv):    
+    def case_escalate(self,cr, uid, ids, *args, **argv):
+        return self._map_ids('case_escalate',cr,uid,ids,*args,**argv)
+    def case_pending(self,cr, uid, ids, *args, **argv):
         return self._map_ids('case_pending',cr,uid,ids,*args,**argv)
 
-    def msg_new(self, cr, uid, msg):        
+    def msg_new(self, cr, uid, msg):
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
         data = {
-            'name': msg['Subject'],            
+            'name': msg['Subject'],
             'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
+            'email_cc': msg['Cc'],
             'user_id': False,
             'description': msg_body['body'],
             'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
@@ -95,16 +104,16 @@ class crm_project_bug(osv.osv):
         res = mailgate_obj.partner_get(cr, uid, msg['From'])
         if res:
             data.update(res)
-        res = self.create(cr, uid, data)        
+        res = self.create(cr, uid, data)
         return res
 
     def msg_update(self, cr, uid, ids, *args, **argv):
         return self._map_ids('msg_update',cr, uid, ids, *args, **argv)
     def emails_get(self, cr, uid, ids, *args, **argv):
         return self._map_ids('emails_get',cr, uid, ids, *args, **argv)
-    def msg_send(self, cr, uid, ids, *args, **argv):        
-        return self._map_ids('msg_send',cr, uid, ids, *args, **argv) 
-    
+    def msg_send(self, cr, uid, ids, *args, **argv):
+        return self._map_ids('msg_send',cr, uid, ids, *args, **argv)
+
 
 
 crm_project_bug()
@@ -143,20 +152,20 @@ class crm_bug_assign_wizard(osv.osv_memory):
                                                 'section_id':res.get('section_id',False),
                                                 'user_id':res.get('user_id',False),
                                                 'case_id' : case.inherit_case_id.id
-                                            }, context=context)            
+                                            }, context=context)
         case_obj.case_close(cr, uid, [case_id])
 
         data_obj = self.pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm_project', 'view_crm_case_bugs_filter')
         search_view = data_obj.read(cr, uid, result, ['res_id'])
-        value = {            
+        value = {
             'name': _('Bugs'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'crm.project.bug',
-            'res_id': int(new_case_id),            
-            'type': 'ir.actions.act_window', 
-            'search_view_id': search_view['res_id']            
+            'res_id': int(new_case_id),
+            'type': 'ir.actions.act_window',
+            'search_view_id': search_view['res_id']
         }
         return value
 

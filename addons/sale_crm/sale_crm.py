@@ -23,10 +23,19 @@ from osv import osv,fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
+    _description = 'Sale orders'
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Section'),
-    }    
-sale_order()
+    }
 
+    def _get_section(self, cr, uid, context):
+       user = self.pool.get('res.users').browse(cr,uid,uid,context=context)
+       return user.context_section_id
+
+    _defaults = {
+          'section_id':_get_section
+          }
+
+sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
