@@ -197,7 +197,6 @@ class osv_memory(osv_base, orm.orm_memory):
     def createInstance(cls, pool, module, cr):       
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
-            name = getattr(cls, '_name', cls._inherit)
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_class = pool.get(parent_name).__class__
                 assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
@@ -209,7 +208,7 @@ class osv_memory(osv_base, orm.orm_memory):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
-                name = getattr(cls, '_name', cls._inherit)
+                name = cls._name or cls._inherit
                 cls = type(name, (cls, parent_class), nattr)
 
         obj = object.__new__(cls)
@@ -246,8 +245,8 @@ class osv(osv_base, orm.orm):
                                     new.append(c)
                         else:
                             new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new                
-                name = hasattr(cls, '_name') and cls._name or cls._inherit                
+                    nattr[s] = new
+                name = cls._name or cls._inherit
                 cls = type(name, (cls, parent_class), nattr)
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
