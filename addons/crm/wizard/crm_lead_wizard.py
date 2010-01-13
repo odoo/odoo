@@ -115,7 +115,7 @@ class lead2opportunity(wizard.interface):
 
             lead_case_obj.write(cr, uid, [lead.id], vals)
             lead_case_obj.case_cancel(cr, uid, [lead.id])
-            opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
+         #   opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         
         value = {            
             'name': _('Opportunity'),
