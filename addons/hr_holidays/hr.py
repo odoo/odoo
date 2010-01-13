@@ -242,7 +242,6 @@ class hr_holidays(osv.osv):
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-
         if ids2:
             vals['manager_id'] = ids2[0]
         else:
@@ -272,9 +271,12 @@ class hr_holidays(osv.osv):
             vals= {
                    'name':record.name,
                    'date_from':record.date_from,
-                   'date_to':record.date_to
+                   'date_to':record.date_to,
+                   'calendar_id':record.employee_id.calendar_id.id,
+                   'company_id':record.employee_id.company_id.id,
+                   'resource_id':record.employee_id.resource_id.id
                  }
-            self.pool.get('resource.calendar.leaves').create(cr,uid,vals,context)
+            self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
 
         return True
 

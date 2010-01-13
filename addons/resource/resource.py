@@ -44,16 +44,13 @@ class resource_calendar(osv.osv):
             resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource)])
             if resource_leave_ids:
                 res_leaves = self.pool.get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
-                print 'Leave Details',res_leaves
                 for i in range(len(res_leaves)):
                     dtf = mx.DateTime.strptime(res_leaves[i]['date_from'],'%Y-%m-%d %H:%M:%S')
                     dtt = mx.DateTime.strptime(res_leaves[i]['date_to'],'%Y-%m-%d %H:%M:%S')
                     leave_days = ((dtt - dtf).days) + 1
-                    print 'No Of Leaves:::::::::',int(leave_days)
                     for x in range(int(leave_days)):
                         dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d'))
                     dt_leave.sort()
-            print 'Sorted Leave Dates::::',dt_leave
         todo = hours
         cycle = 0
         result = []
@@ -70,11 +67,8 @@ class resource_calendar(osv.osv):
                         d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
                         dt1 = d1.strftime('%Y-%m-%d')
                         dt2 = d2.strftime('%Y-%m-%d')
-                        print 'Date 1',dt1
-                        print 'Date 2',dt2
                         for i in range(len(dt_leave)):
                             if dt1 == dt_leave[i]:
-                                print 'Leave::::::::'
                                 dt_from += mx.DateTime.RelativeDateTime(days=1)
                                 d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
                                 d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
@@ -96,17 +90,14 @@ class resource_calendar(osv.osv):
             resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource)])
             if resource_leave_ids:
                 res_leaves = self.pool.get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
-                print 'Leave Details',res_leaves
                 for i in range(len(res_leaves)):
                     dtf = mx.DateTime.strptime(res_leaves[i]['date_from'],'%Y-%m-%d %H:%M:%S')
                     dtt = mx.DateTime.strptime(res_leaves[i]['date_to'],'%Y-%m-%d %H:%M:%S')
                     no = dtt - dtf
                     leave_days = no.days + 1
-                    print 'No Of Leaves:::::::::',int(leave_days)
                     for x in range(int(leave_days)):
                         dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d'))
                     dt_leave.sort()
-            print 'Sorted Leave Dates::::',dt_leave
         todo = hours
         cycle = 0
         result = []
@@ -123,11 +114,8 @@ class resource_calendar(osv.osv):
                         d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
                         dt1 = d1.strftime('%Y-%m-%d')
                         dt2 = d2.strftime('%Y-%m-%d')
-                        print 'Date 1',dt1
-                        print 'Date 2',dt2
                         for i in range(len(dt_leave)):
                             if dt1 == dt_leave[i]:
-                                print 'Leave::::::::'
                                 dt_from += mx.DateTime.RelativeDateTime(days=1)
                                 d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
                                 d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
@@ -161,14 +149,14 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", size=64, required=True),
+        'name' : fields.char("Name", size=64, required=True ),
         'code': fields.char('Code', size=16),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company', required=True),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
-        'user_id' : fields.many2one('res.users', 'User'),
-        'time_efficiency' : fields.float('Efficiency factor', size=8, help="This field depict the efficency of the ressource to complete tasks. e.g  ressource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working time", required=True, help="Define the schedule of resource"),
+        'user_id' : fields.many2one('res.users', 'User',help='Related user name for the resource to manage its access.'),
+        'time_efficiency' : fields.float('Efficiency factor', size=8, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
+        'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
     }
     _defaults = {
         'resource_type' : lambda *a: 'user',
@@ -183,8 +171,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'name' : fields.char("Name", size=64),
-        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company",required=True),
-        #'company_id':fields.many2one('res.company', 'Company', required=True),
+        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company",readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working time"),
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),
