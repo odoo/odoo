@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -60,7 +60,7 @@ class groups(osv.osv):
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)        
+        gid = super(groups, self).create(cr, uid, vals, context=context)
         if context and context.get('noadmin', False):
             pass
         else:
@@ -120,13 +120,13 @@ def _companies_get(self,cr, uid, context={}):
 class users(osv.osv):
     __admin_ids = {}
     _name = "res.users"
-    
+
     def get_current_company(self, cr, uid):
         res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
         res = cr.fetchall()
-        return res     
-    
+        return res
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),
@@ -145,7 +145,7 @@ class users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
-        'company': fields.selection(_companies_get,  'Company', size=64),        
+        'company': fields.selection(_companies_get,  'Company', size=64),
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -254,6 +254,11 @@ class users(osv.osv):
             if user.company_ids and (user.company_id.id not in map(lambda x: x.id, user.company_ids)):
                 return False
         return True
+
+    def action_get(self, cr, uid, context={}):
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
+        return dataobj.browse(cr, uid, data_id, context).res_id
 
     _constraints = [
         (_check_company, 'This user can not connect using this company !', ['company_id']),
