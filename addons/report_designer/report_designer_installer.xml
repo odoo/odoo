@@ -1,18 +1,18 @@
 <openerp>
   <data>
-    <record id="view_tools_installer" model="ir.ui.view">
-      <field name="name">tools.installer.view</field>
-      <field name="model">tools.installer</field>
+    <record id="view_report_designer_installer" model="ir.ui.view">
+      <field name="name">report_designer.installer.view</field>
+      <field name="model">report_designer.installer</field>
       <field name="type">form</field>
       <field name="inherit_id" ref="base.res_config_view_base"/>
       <field name="arch" type="xml">
         <data>
           <form position="attributes"><attribute name="string">
-              Tools Modules Installation
+              Report Modules Installation
           </attribute></form>
 
           <group string="res_config_contents" position="replace">
-            <separator string="Select Tools To Install" colspan="4"/>
+            <separator string="Select Reporting Tools To Install" colspan="4"/>
             <image name="gtk-dialog-info"/>
             <newline/>
             <label align="0.0" string=" Lorem ipsum dolor
@@ -28,11 +28,10 @@
                 lectus. Mauris ligula sapien, auctor in pharetra non,
                 ultrices quis odio."/>
             <group>
-              <separator string="Tools" colspan="4"/>
-              <field name="lunch"/>
-              <field name="subscription"/>
-              <field name="survey"/>
-              <field name="audittrail"/>
+              <separator string="Reporting" colspan="4"/>
+              <field name="base_report_designer"/>
+              <field name="base_report_creator"/>
+              <field name="olap"/>
             </group>
           </group>
 
@@ -44,18 +43,18 @@
       </field>
     </record>
 
-    <record id="action_tools_installer" model="ir.actions.act_window">
-      <field name="name">Tools Modules Installation</field>
+    <record id="action_report_designer_installer" model="ir.actions.act_window">
+      <field name="name">Report Modules Installation</field>
       <field name="type">ir.actions.act_window</field>
-      <field name="res_model">tools.installer</field>
-      <field name="view_id" ref="view_tools_installer"/>
+      <field name="res_model">report_designer.installer</field>
+      <field name="view_id" ref="view_report_designer_installer"/>
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
       <field name="target">new</field>
     </record>
 
-    <record id="tools_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_tools_installer"/>
+    <record id="report_designer_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_report_designer_installer"/>
       <field name="sequence">1</field>
     </record>
   </data>

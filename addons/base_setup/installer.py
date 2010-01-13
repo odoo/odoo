@@ -63,8 +63,8 @@ class base_setup_installer(osv.osv_memory):
         'hr':fields.boolean('Human Resources'),
         'pos':fields.boolean('Point of Sales'),
         'marketing':fields.boolean('Marketing'),
-        'tools':fields.boolean('Miscellaneous Tools'),
-        'report_design':fields.boolean('Advanced Reporting'),
+        'misc_tools':fields.boolean('Miscellaneous Tools'),
+        'report_designer':fields.boolean('Advanced Reporting'),
         # Vertical modules
         'profile_association':fields.boolean('Associations'),
         'profile_training':fields.boolean('Training Centers'),

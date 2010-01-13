@@ -20,8 +20,8 @@
 ##############################################################################
 from osv import fields, osv
 
-class report_installer(osv.osv_memory):
-    _name = 'report.installer'
+class report_designer_installer(osv.osv_memory):
+    _name = 'report_designer.installer'
     _inherit = 'res.config.installer'
 
     _columns = {
@@ -30,5 +30,5 @@ class report_installer(osv.osv_memory):
         'base_report_creator':fields.boolean('Query Builder'),
         'olap':fields.boolean('Business Intelligence Report'),
         }
-report_installer()
+report_designer_installer()
 

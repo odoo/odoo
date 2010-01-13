@@ -21,16 +21,16 @@
 
 
 {
-    "name" : "Reporting Tools",
+    "name" : "Miscellaneous Tools",
     "version" : "1.0",
     "depends" : ["base"],
     "author" : "Tiny",
-    "description": """Installer for reporting tools selection
+    "description": """Installer for various interesting tools
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-        'report_installer.xml',
+        'misc_tools_installer.xml',
     ],
     'demo_xml': [],
     'installable': True,

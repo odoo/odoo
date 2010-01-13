@@ -18,22 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
 
-class tools_installer(osv.osv_memory):
-    _name = 'tools.installer'
-    _inherit = 'res.config.installer'
 
-    _columns = {
-        # Tools
-        'lunch':fields.boolean('Lunch Orders'),
-        'subscription':fields.boolean('Recurring Documents'),
-        'survey':fields.boolean('Survey'),
-        'audittrail':fields.boolean('Audit Trail'),
-        }
-    _defaults = {
-        'lunch': True,
-        }
-    
-tools_installer()
-
+{
+    "name" : "Reporting Tools",
+    "version" : "1.0",
+    "depends" : ["base"],
+    "author" : "Tiny",
+    "description": """Installer for reporting tools selection
+    """,
+    'website': 'http://www.openerp.com',
+    'init_xml': [],
+    'update_xml': [
+        'report_designer_installer.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

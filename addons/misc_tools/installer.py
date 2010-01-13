@@ -18,22 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
+class misc_tools_installer(osv.osv_memory):
+    _name = 'misc_tools.installer'
+    _inherit = 'res.config.installer'
 
-{
-    "name" : "Miscellaneous Tools",
-    "version" : "1.0",
-    "depends" : ["base"],
-    "author" : "Tiny",
-    "description": """Installer for various interesting tools
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'tools_installer.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        # Tools
+        'lunch':fields.boolean('Lunch Orders'),
+        'subscription':fields.boolean('Recurring Documents'),
+        'survey':fields.boolean('Survey'),
+        'audittrail':fields.boolean('Audit Trail'),
+        }
+    _defaults = {
+        'lunch': True,
+        }
+    
+misc_tools_installer()
+
