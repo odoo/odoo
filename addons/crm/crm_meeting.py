@@ -444,59 +444,6 @@ rule or repeating pattern for anexception to a recurrence set"),
 
 crm_meeting()
 
-
-class crm_meeting_generic_wizard(osv.osv_memory):
-    _name = 'crm.meeting.generic_wizard'
-
-    _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Section', required=False), 
-        'user_id': fields.many2one('res.users', 'Responsible'), 
-    }
-
-    def _get_default_section(self, cr, uid, context):
-        case_id = context.get('active_id', False)
-        if not case_id:
-            return False
-        case_obj = self.pool.get('crm.meeting')
-        case = case_obj.read(cr, uid, case_id, ['state', 'section_id'])
-        if case['state'] in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        return case['section_id']
-
-
-    _defaults = {
-        'section_id': _get_default_section
-    }
-
-    def action_create(self, cr, uid, ids, context=None):
-        case_obj = self.pool.get('crm.meeting')
-        case_id = context.get('active_id', [])
-        res = self.read(cr, uid, ids)[0]
-        case = case_obj.browse(cr, uid, case_id)
-        if case.state in ('done'):
-            raise osv.except_osv(_('Error !'), _('You can not assign Closed Case.'))
-        new_case_id = case_obj.copy(cr, uid, case_id, default= {
-                                    'section_id': res.get('section_id', False), 
-                                    'user_id': res.get('user_id', False), 
-                                    'case_id': case.inherit_case_id.id
-                                    }, context=context)
-        case_obj.case_close(cr, uid, [case_id])
-        data_obj = self.pool.get('ir.model.data')
-        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-        search_view = data_obj.read(cr, uid, result, ['res_id'])
-        new_case = case_obj.read(cr, uid, new_case_id, ['id'])
-        value = {
-            'name': _('Meetings'), 
-            'view_type': 'form', 
-            'view_mode': 'calendar, tree, form', 
-            'res_model': 'crm.meeting', 
-            'type': 'ir.actions.act_window', 
-            'search_view_id': search_view['res_id']
-        }
-        return value
-
-crm_meeting_generic_wizard()
-
 class res_users(osv.osv):
     _inherit = 'res.users'
     def _get_user_avail(self, cr, uid, ids, context=None):
