@@ -113,9 +113,16 @@ class crm_meeting(osv.osv):
         return {'value': {'rrule': rrulestr}}
 
     _columns = {
+        'id': fields.integer('ID', readonly=True), 
         'name': fields.char('Description', size=64, required=True), 
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email \
 account for mail gateway.'), 
+        'priority': fields.selection([('5','Lowest'),
+                                                    ('4','Low'),
+                                                    ('3','Normal'),
+                                                    ('2','High'),
+                                                    ('1','Highest')
+                                                    ], 'Priority'), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
         'duration': fields.function(_get_duration, method=True, \
@@ -125,6 +132,7 @@ account for mail gateway.'),
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
         'description': fields.text('Your action'), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
                  ('confidential', 'Confidential')], 'Mark as'), 
         'location': fields.char('Location', size=264, help="Location of Meeting"), 
@@ -140,7 +148,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         'rrule_type': fields.selection([('none', 'None'), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
-       'attendee_ids': fields.many2many('calendar.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
+        'attendee_ids': fields.many2many('calendar.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
     }
@@ -221,6 +229,14 @@ rule or repeating pattern for anexception to a recurrence set"),
         file_content = base64.decodestring(data)
         event_obj = self.pool.get('basic.calendar.event')
         event_obj.__attribute__.update(self.__attribute__)
+        
+        attendee_obj = self.pool.get('basic.calendar.attendee')
+        attendee = self.pool.get('calendar.attendee')
+        attendee_obj.__attribute__.update(attendee.__attribute__)
+        
+        alarm_obj = self.pool.get('basic.calendar.alarm')
+        alarm = self.pool.get('calendar.alarm')
+        alarm_obj.__attribute__.update(alarm.__attribute__)
 
         vals = event_obj.import_ical(cr, uid, file_content)
         ids = []
@@ -337,8 +353,6 @@ rule or repeating pattern for anexception to a recurrence set"),
             id = common.caldav_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)
-        if 'case_id' in vals:
-            vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
         self.do_alarm_create(cr, uid, new_ids)
         return res
@@ -399,13 +413,12 @@ rule or repeating pattern for anexception to a recurrence set"),
                         res = super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
                         self.do_alarm_unlink(cr, uid, ids)
             else:
+                ids = map(lambda x: common.caldav_id2real_id(x), ids)
                 res = super(crm_meeting, self).unlink(cr, uid, ids)
                 self.do_alarm_unlink(cr, uid, ids)
         return res
 
     def create(self, cr, uid, vals, context={}):
-        if 'case_id' in vals:
-            vals['case_id'] = common.caldav_id2real_id(vals['case_id'])
         res = super(crm_meeting, self).create(cr, uid, vals, context)
         self.do_alarm_create(cr, uid, [res])
         return res

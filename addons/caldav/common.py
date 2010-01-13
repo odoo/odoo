@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from osv import fields, osv
 from service import web_services
 from tools.translate import _
@@ -32,7 +32,7 @@ months = {
         5:"May", 6:"June", 7:"July", 8:"August", 9:"September", \
         10:"October", 11:"November", 12:"December"}
 
-def caldav_id2real_id(caldav_id = None, with_date=False):
+def caldav_id2real_id(caldav_id=None, with_date=False):
     if caldav_id and isinstance(caldav_id, (str, unicode)):
         res = caldav_id.split('-')
         if len(res) >= 2:
@@ -135,24 +135,30 @@ class calendar_attendee(osv.osv):
                 fromdata = map(get_delegate_data, attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
+                # TO fix date for project task
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date'])[0]
-                    result[id][name] = obj['date']
+                    result[id][name] = None#obj['date']
+                else:
+                    result[id][name] = None
             if name == 'event_end_date':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
                     result[id][name] = obj['date_deadline']
-
+                else:
+                    result[id][name] = None
             if name == 'sent_by_uid':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['user_id'])[0]
                     result[id][name] = obj['user_id']
+                else:
+                    result[id][name] = uid
         return result
 
     def _links_get(self, cr, uid, context={}):
@@ -319,11 +325,11 @@ or contains the text to be used for display"""),
         if event_date:
             dtstart = datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
             if vals['trigger_interval'] == 'days':
-                delta = datetime.timedelta(days=vals['trigger_duration'])
+                delta = timedelta(days=vals['trigger_duration'])
             if vals['trigger_interval'] == 'hours':
-                delta = datetime.timedelta(hours=vals['trigger_duration'])
+                delta = timedelta(hours=vals['trigger_duration'])
             if vals['trigger_interval'] == 'minutes':
-                delta = datetime.timedelta(minutes=vals['trigger_duration'])
+                delta = timedelta(minutes=vals['trigger_duration'])
             trigger_date =  dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context)

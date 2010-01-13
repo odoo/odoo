@@ -161,12 +161,12 @@ class CalDAV(object):
                 if cal_data.name.lower() == 'attendee':
                     attendee = self.pool.get('basic.calendar.attendee')
                     att_data.append(attendee.import_ical(cr, uid, cal_data))
-                    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                    self.ical_set(cal_data.name.lower(), att_data, 'value')
                     continue
                 if cal_data.name.lower() == 'valarm':
                     alarm = self.pool.get('basic.calendar.alarm')
                     vals = alarm.import_ical(cr, uid, cal_data)
-                    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+                    self.ical_set(cal_data.name.lower(), vals, 'value')
                     continue
                 if cal_data.name.lower() in self.__attribute__:
                     self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
