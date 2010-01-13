@@ -77,7 +77,7 @@ class crm_opportunity(osv.osv):
     _columns = {        
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
         'categ_id': fields.many2one('crm.opportunity.categ', 'Category', domain="[('section_id','=',section_id)]"),
-        'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
+        'category2_id': fields.many2one('crm.opportunity.type', 'Opportunity Type', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Planned Revenue'),

@@ -59,15 +59,6 @@ class crm_helpdesk_categ(osv.osv):
     }
 crm_helpdesk_categ()
 
-class crm_helpdesk_type(osv.osv):
-    _name = "crm.helpdesk.type"
-    _description = "Helpdesk Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Helpdesk Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-crm_helpdesk_type()
 class crm_helpdesk(osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
