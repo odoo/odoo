@@ -103,7 +103,7 @@ class crm_project_bug(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.bug.categ','Category', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.project.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),

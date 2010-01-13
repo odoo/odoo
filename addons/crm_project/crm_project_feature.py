@@ -32,6 +32,20 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
+AVAILABLE_PRIORITIES = [
+    ('5','Lowest'),
+    ('4','Low'),
+    ('3','Normal'),
+    ('2','High'),
+    ('1','Highest')
+]
+
+def _links_get(self, cr, uid, context={}):
+    obj = self.pool.get('res.request.link')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['object', 'name'], context)
+    return [(r['object'], r['name']) for r in res]
+
 class crm_project_future_request(osv.osv):
     _name = "crm.project.future"
     _description = "Project Future Request"
@@ -50,7 +64,7 @@ class crm_project_future_request(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.bug.categ','Category', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.project.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
