@@ -32,7 +32,7 @@
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                     <field name="email_from" colspan="2"/>
                     <separator colspan="4"/>
-                    <field name="category2_id" string="Version"/>
+                    <field name="type_id" string="Version"/>
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
                     <field name="priority" string="Severity"/>
                     <newline/>
@@ -118,7 +118,7 @@
                 <field name="priority" string="Severity"/>
                 <field name="categ_id"/>
                 <field name="stage_id" string="Resolution"/>
-                <field name="category2_id" string="Version"/>
+                <field name="type_id" string="Version"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
