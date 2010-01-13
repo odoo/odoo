@@ -70,6 +70,22 @@ class crm_fundraising_type(osv.osv):
 
 crm_fundraising_type()
 
+class crm_fundraising_stage(osv.osv):
+    _name = "crm.fundraising.stage"
+    _description = "Stage of fundraising case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_fundraising_stage()
+
+
 class crm_fundraising(osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"
@@ -86,10 +102,9 @@ class crm_fundraising(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-            'category2_id': fields.many2one('crm.fundraising.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.fundraising.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.fundraising.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
-            'case_id': fields.many2one('crm.case', 'Related fundraising'),
             'ref' : fields.reference('Reference', selection=_links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \

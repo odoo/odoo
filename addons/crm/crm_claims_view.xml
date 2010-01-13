@@ -38,7 +38,42 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="crm_claim_categ_view_tree"/>
     </record>
-
+    
+		# ------------------------------------------------------ 
+	    # Stage
+	    # ------------------------------------------------------ 
+	    <record model="ir.ui.view" id="crm_claim_stage_tree">
+	        <field name="name">crm.claim.stage.tree</field>
+	        <field name="model">crm.claim.stage</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Stages">
+	                <field name="sequence"/>
+	                <field name="name"/>
+	                <field name="section_id"/>
+	            </tree>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="crm_claim_stage_form">
+	        <field name="name">crm.claim.stage.form</field>
+	        <field name="model">crm.claim.stage</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Stage">
+	            	<field name="name" select="1"/>
+	                <field name="section_id" select="1" widget="selection"/>
+	                <field name="sequence"/>
+	            </form>
+	        </field>
+	    </record>
+	    <record id="crm_claim_stage_act" model="ir.actions.act_window">
+	        <field name="name">Claim Stages</field>
+	        <field name="res_model">crm.claim.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm_claim_stage_tree"/>
+	    </record>
+	  <menuitem action="crm_claim_stage_act" id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage"/>
+	    
 	<!-- Claims	-->
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
@@ -86,7 +121,7 @@
                     <field name="planned_cost" string="Claim Cost"/>
                     <newline/>
                     <field name="priority"/>
-                    <field name="category2_id" string="Type of Action" select="1"/>
+                    <field name="type_id" string="Type of Action" select="1"/>
                     <field name="ref"/>
                     <field name="ref2"/>
                     <separator colspan="4" string="Claim/Action Description"/>

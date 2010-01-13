@@ -64,6 +64,21 @@ class crm_claim_type(osv.osv):
 
 crm_claim_type()
 
+class crm_claim_stage(osv.osv):
+    _name = "crm.claim.stage"
+    _description = "Stage of claim case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_claim_stage()
+
 class crm_claim(osv.osv):
     _name = "crm.claim"
     _description = "Claim Cases"
@@ -82,34 +97,17 @@ class crm_claim(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.claim.categ','Category', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'category2_id': fields.many2one('crm.claim.type', 'Claim Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.claim.type', 'Claim Type', domain="[('section_id','=',section_id)]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', domain="[('section_id','=',section_id)]"),
     }
     
     _defaults = {
                  'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
     }
-
-    def msg_new(self, cr, uid, msg):
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)
-        return res
 
 crm_claim()
 

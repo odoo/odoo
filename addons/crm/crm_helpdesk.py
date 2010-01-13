@@ -79,26 +79,8 @@ class crm_helpdesk(osv.osv):
                                                                    "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
             'categ_id': fields.many2one('crm.helpdesk.categ', 'Category', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
-            'case_id': fields.many2one('crm.case', 'Related Helpdesk'),
     }
     
-    def msg_new(self, cr, uid, msg):
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)
-        return res
-
 crm_helpdesk()
 
 

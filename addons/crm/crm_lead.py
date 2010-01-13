@@ -69,6 +69,20 @@ class crm_lead_type(osv.osv):
     }
 crm_lead_type()
 
+class crm_lead_stage(osv.osv):
+    _name = "crm.lead.stage"
+    _description = "Stage of claim case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_lead_stage()
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
 crm_opportunity()
@@ -80,7 +94,7 @@ class crm_lead(osv.osv):
     _inherit = 'crm.case'    
     _columns = {
             'categ_id': fields.many2one('crm.lead.categ', 'Category', domain="[('section_id','=',section_id)]"),
-            'category2_id': fields.many2one('crm.lead.type', 'Lead Type Name', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.lead.type', 'Lead Type Name', domain="[('section_id','=',section_id)]"),
             'partner_name': fields.char("Employee's Name", size=64),
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
@@ -94,29 +108,12 @@ class crm_lead(osv.osv):
                                                                             " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.lead.stage', 'Stage', domain="[('section_id','=',section_id)]"),
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
                                                                        
              'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
     }
-    
-    def msg_new(self, cr, uid, msg):        
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],            
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)        
-        return res
 
 crm_lead()

@@ -101,18 +101,7 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
-class crm_case_categ(osv.osv):
-    _name = "crm.case.categ"
-    _description = "Category of case"
-    _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
-        'probability': fields.float('Probability (%)', required=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_case_categ()
+
 
 class crm_case_rule(osv.osv):
     _name = "crm.case.rule"
@@ -137,7 +126,8 @@ class crm_case_rule(osv.osv):
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
 
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
+    
+        #'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
 
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
@@ -220,33 +210,6 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
-
-class crm_case_category2(osv.osv):
-    _name = "crm.case.category2"
-    _description = "Category2 of case"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Case Category2 Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-
-crm_case_category2()
-
-
-class crm_case_stage(osv.osv):
-    _name = "crm.case.stage"
-    _description = "Stage of case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_case_stage()
 
 class crm_case(osv.osv):
     _name = "crm.case"
@@ -551,6 +514,7 @@ class crm_case(osv.osv):
 
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
+       
         for case in cases:
             data = {
                 'name': keyword,
@@ -770,76 +734,6 @@ class crm_case(osv.osv):
         return True
 crm_case()
 
-class crm_menu_config_wizard(osv.osv_memory):
-    _name = 'crm.menu.config_wizard'
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'meeting': fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
-        'lead': fields.boolean('Leads', help="Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."),
-        'opportunity': fields.boolean('Business Opportunities', help="Tracks identified business opportunities for your sales pipeline."),
-        'jobs': fields.boolean('Jobs Hiring Process', help="Helps you to organise the jobs hiring process: evaluation, meetings, email integration..."),
-        'document_ics': fields.boolean('Shared Calendar', help=" Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."),
-        'bugs': fields.boolean('Bug Tracking', help="Used by companies to track bugs and support requests on software"),
-        'helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
-        'fund': fields.boolean('Fund Raising Operations', help="This may help associations in their fund raising process and tracking."),
-        'claims': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."),
-        'phonecall': fields.boolean('Phone Calls', help="Helps you to encode the result of a phone call or to plan a list of phone calls to process."),
-    }
-    _defaults = {
-        'meeting': lambda *args: True,
-        'opportunity': lambda *args: True,
-        'phonecall': lambda *args: True,
-    }
-
-    def action_create(self, cr, uid, ids, context=None):
-        module_proxy = self.pool.get('ir.module.module')
-        modid = module_proxy.search(cr, uid, [('name', '=', 'crm')])
-        moddemo = module_proxy.browse(cr, uid, modid[0]).demo
-        lst = ('data', 'menu')
-        if moddemo:
-            lst = ('data', 'menu', 'demo')
-        res = self.read(cr, uid, ids)[0]
-        idref = {}
-        for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
-            if (not res[section]):
-                continue
-            for fname in lst:
-                file_name = 'crm_' + section + '_' + fname + '.xml'
-                try:
-                    fp = tools.file_open(os.path.join('crm', file_name))
-                except IOError, e:
-                    fp = None
-                if fp:
-                    tools.convert_xml_import(cr, 'crm', fp, idref, 'init', noupdate=True)
-        cr.commit()
-        modobj = self.pool.get('ir.module.module')
-        modids = modobj.search(cr, uid, [('name', '=', 'crm')])
-        modobj.update_translations(cr, 1, modids, None)
-
-        if res['document_ics']:
-            ids = module_proxy.search(cr, uid, [('name', '=', 'document_ics')])
-            module_proxy.button_install(cr, uid, ids, context=context)
-            cr.commit()
-            db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-crm_menu_config_wizard()
 
 class crm_case_log(osv.osv):
     _name = "crm.case.log"

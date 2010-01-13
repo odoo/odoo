@@ -69,15 +69,30 @@ class crm_opportunity_type(osv.osv):
     }
 crm_opportunity_type()
 
+class crm_opportunity_stage(osv.osv):
+    _name = "crm.opportunity.stage"
+    _description = "Stage of opportunity case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_opportunity_stage()
+
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
     _order = "id desc"
     _inherit = 'crm.case'  
     _columns = {        
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.opportunity.stage', 'Stage', domain="[('section_id','=',section_id)]"),
         'categ_id': fields.many2one('crm.opportunity.categ', 'Category', domain="[('section_id','=',section_id)]"),
-        'category2_id': fields.many2one('crm.opportunity.type', 'Opportunity Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.opportunity.type', 'Opportunity Type', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Planned Revenue'),
@@ -92,23 +107,5 @@ class crm_opportunity(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
     }
-
-    def msg_new(self, cr, uid, msg):        
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],            
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)        
-        return res
-
 crm_opportunity()
 
