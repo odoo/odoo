@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -50,6 +50,8 @@ ICS_TAGS = {
 
 class document_ics_crm_wizard(osv.osv_memory):
     _name='document.ics.crm.wizard'
+    _inherit = 'res.config'
+
     _columns = {
         'name':fields.char('Name', size=64),
         'meeting' : fields.boolean('Calendar of Meetings', help="Manages the calendar of meetings of the users."),
@@ -69,7 +71,7 @@ class document_ics_crm_wizard(osv.osv_memory):
         'phonecall': lambda *args: True,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         data=self.read(cr, uid, ids, [])[0]
         dir_obj = self.pool.get('document.directory')
         dir_cont_obj = self.pool.get('document.directory.content')
@@ -79,16 +81,12 @@ class document_ics_crm_wizard(osv.osv_memory):
         else:
             dir_id = dir_obj.create(cr, uid, {'name': 'Calendars' ,'user_id' : uid, 'type': 'directory'})
         for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
-            if (not data[section]):
-                continue
-            else:
+            if data[section]:
                 section_id=self.pool.get('crm.case.section').search(cr, uid, [('name', '=', SECTION_NAME[section])])
-                if not section_id:
-                    continue
-                else:
+                if section_id:
                     object_id=self.pool.get('ir.model').search(cr, uid, [('name', '=', 'Case')])[0]
 
-                    vals_cont={
+                    vals_cont = {
                           'name': SECTION_NAME[section],
                           'sequence': 1,
                           'directory_id': dir_id,
@@ -104,29 +102,12 @@ class document_ics_crm_wizard(osv.osv_memory):
                     ics_obj=self.pool.get('document.directory.ics.fields')
                     for tag in ['description', 'url', 'summary', 'dtstart', 'dtend', 'uid']:
                         field_id =  self.pool.get('ir.model.fields').search(cr, uid, [('model_id.name', '=', 'Case'), ('field_description', '=', ICS_TAGS[tag])])[0]
-                        vals_ics={
-                                'field_id':  field_id ,
-                                'name':  tag ,
-                                'content_id': content_id ,
-                                  }
+                        vals_ics = {
+                            'field_id':  field_id ,
+                            'name':  tag ,
+                            'content_id': content_id ,
+                            }
                         ics_obj.create(cr, uid, vals_ics)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-    def action_cancel(self, cr, uid, ids, conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-
 document_ics_crm_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

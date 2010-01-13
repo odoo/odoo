@@ -2,7 +2,7 @@
 ##################################################################################
 #
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com) 
-# and 2004-2009 Tiny SPRL (<http://tiny.be>).
+# and 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 # $Id: hr.py 4656 2006-11-24 09:58:42Z Cyp $
 #

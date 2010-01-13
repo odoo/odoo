@@ -15,7 +15,7 @@
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="user_id"/>
                 </group>
-                <newline/>                    
+                <newline/>
                 <separator colspan="4"/>                             
                 <group col="2" colspan="2">
                     <button icon="gtk-cancel" special="cancel" string="Cancel"/>
@@ -39,68 +39,79 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Meetings Form">
-                <field name="name" select="1" string="Title"/>
-                <group col="3" colspan="2">
-                    <field name="section_id" widget="selection"
-                    	string="Calendar"/>
-                    <button string="Invite Attendees"
-                				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
-                				icon="terp-partner" type="action"
-                				context="{'model' : 'crm.meeting'}" /> 
-                </group>
-                <field name="location" />
-                <field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>                
-                <field name="date" string="Start Date" required="1"/>                    
-                <field name="date_deadline" string="End Date" required="1"/>
-                <notebook colspan="4">
-	                <page string="Meeting">                                              
-                        <field name="alarm_id" colspan="1" string="Alarm"/>
-                        <group colspan="2" col="3">
+            	<group col="4" colspan="6">
+            		<field name="name" select="1" string="Summary"
+            			colspan="3" />
+            		<field name="section_id" widget="selection"
+            			colspan="1" />
+            	</group>
+            	<group col="6" colspan="6">
+            		<field name="date" string="Start Date" required="1" />
+            		<field name="duration" widget="float_time" />
+            		<field name="date_deadline" string="End Date" required="1" />
+            		<field name="location" />
+            		<field name="categ_id" widget="selection" />
+            		<group colspan="2" col="3">
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"
                             	colspan="1" />
                             <button string="Custom"
-            					name="%(caldav.action_view_caldav_set_rrule_wizard)d"
+            					name="%(caldav.action_calendar_custom_rrule_wizard)d"
             					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}" 
-                                attrs="{'readonly':[('rrule_type','!=','custom')]}"
+                                attrs="{'readonly': [('rrule_type','!=','custom')]}"
                                 />
                         </group>
-                        <separator string="Description" colspan="4"/>
-	                    <field name="description" nolabel="1" colspan="4"/>
-                        <field name="show_as" string="Show as"/> 
-                        <field name="class" string="Mark as"/> 
-                        <separator string="" colspan="4"/>                       	                                   
-	                    <group col="8" colspan="4">
-	                        <field name="state" select="2"/>
-	                        <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
-	                        <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-	                        <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
-	                    </group>
-	                </page>                    
-
-                    <page string="Partner Info">
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
-	                    <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
-	                    <field name="email_from"/>	                    
-                    </page>
-                    <page string="Other Info">
-                        <field name="user_id" select="2" string="Responsible" required="1"/>
-                        <group colspan="2">
-                            <field name="case_id" on_change="onchange_case_id(case_id, name, partner_id)"/>
-                            <button string="Assign" name="%(crm_meeting_generic_wizard_act)d"  type="action" />
-                        </group>
-                        <separator string="Attendees" colspan="4"/>
-	                    <field name="attendees" nolabel="1" colspan="4"/>   
-                        <field name="rrule" string="Recurrent Rules" colspan="4"/>
-        			    <field name="exrule" string="Exception Rules" colspan="4"/>   
-                        <separator string="Exception Dates" colspan="4"/>     					
-    					<field name="exdate" nolabel="1" colspan="4" />  
-                                  		    
+            	</group>
+            	<notebook colspan="4">
+            		<page string="Description">
+            			<separator string="Description" colspan="4" />
+            			<field name="description" nolabel="1" colspan="4" />
             		</page>
-                </notebook>
+            		<page string="Attendee Detail">
+            			<button string="Invite People"
+            				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
+            				icon="terp-partner" type="action"
+            				context="{'model' : 'crm.meeting'}" colspan="2"/>
+            			<field name="attendee_ids" colspan="4"
+            				nolabel="1" widget="one2many" mode="tree,form">
+            				<tree string="Atendee details"
+            					editable="top">
+            					<field name="email" />
+            					<field name="role" select="1" />
+            					<field name="state" />
+            				</tree>
+            				<form string="Atendee details">
+            					<notebook colspan="4">
+            						<page string="Details">
+            							<field name="email" />
+            							<field name="rsvp" select="1" />
+            							<field name="cutype" select="1" />
+            							<field name="role" select="1" />
+            							<separator colspan="4" string="" />
+            							<field name="state" />
+            						</page>
+            						<page string="Other">
+            							<field name="user_id" select="1" />
+            							<field name="partner_address_id" select="1" />
+            							<newline />
+            						</page>
+            					</notebook>
+            				</form>
+            			</field>
+            		</page>
+            		<page string="Other Information">
+            			<field name="alarm_id" string="Reminder" widget="selection" />
+            			<field name="case_id" string="Related Opportunity" />
+            			<field name="show_as"/>
+            			<field name="class"/>
+            			<field name="user_id"/>
+            			<field name="rrule" invisible="1"/>
+            		</page>
+            	</notebook>
             </form>
         </field>
     </record>
+
     <record model="ir.ui.view" id="crm_case_tree_view_meet">
         <field name="name">CRM - Meetings Tree</field>
         <field name="model">crm.meeting</field>
