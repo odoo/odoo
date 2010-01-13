@@ -61,7 +61,7 @@ class base_setup_installer(osv.osv_memory):
                                   readonly=True),
         'purchase':fields.boolean('Purchase Management'),
         'hr':fields.boolean('Human Resources'),
-        'pos':fields.boolean('Point of Sales'),
+        'point_of_sale':fields.boolean('Point of Sales'),
         'marketing':fields.boolean('Marketing'),
         'misc_tools':fields.boolean('Miscellaneous Tools'),
         'report_designer':fields.boolean('Advanced Reporting'),
