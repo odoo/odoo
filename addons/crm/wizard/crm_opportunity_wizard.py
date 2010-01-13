@@ -203,7 +203,7 @@ class partner_opportunity(wizard.interface):
         address = part_obj.address_get(cr, uid, data['ids' ])
         
         
-        categ_obj = pool.get('crm.case.categ')
+        categ_obj = pool.get('crm.opportunity.categ')
         categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
 
         case_obj = pool.get('crm.opportunity')
