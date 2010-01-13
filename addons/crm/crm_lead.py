@@ -32,19 +32,7 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-AVAILABLE_PRIORITIES = [
-    ('5','Lowest'),
-    ('4','Low'),
-    ('3','Normal'),
-    ('2','High'),
-    ('1','Highest')
-]
-
-def _links_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
-    return [(r['object'], r['name']) for r in res]
+import crm
 
 class crm_lead_categ(osv.osv):
     _name = "crm.lead.categ"
@@ -99,11 +87,11 @@ class crm_lead(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32),
-            'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
+            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
             'probability': fields.float('Probability (%)'),
             'date_closed': fields.datetime('Closed', readonly=True),
-            'ref' : fields.reference('Reference', selection=_links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
+            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                             " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
             'planned_revenue': fields.float('Planned Revenue'),

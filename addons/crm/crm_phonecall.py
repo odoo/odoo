@@ -30,13 +30,7 @@ import tools
 
 from tools.translate import _
 
-AVAILABLE_PRIORITIES = [
-    ('5','Lowest'),
-    ('4','Low'),
-    ('3','Normal'),
-    ('2','High'),
-    ('1','Highest')
-]
+import crm
 
 class crm_phonecall_categ(osv.osv):
     _name = "crm.phonecall.categ"
@@ -79,7 +73,7 @@ class crm_phonecall(osv.osv):
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                    "the partner mentality in relation to our services.The scale has" \
                                                                    "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                 " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'probability': fields.float('Probability (%)'),
