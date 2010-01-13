@@ -80,7 +80,12 @@ class crm_helpdesk(osv.osv):
             'categ_id': fields.many2one('crm.helpdesk.categ', 'Category', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
     }
-    
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.helpdesk.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}    
+        
 crm_helpdesk()
 
 

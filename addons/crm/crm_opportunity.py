@@ -107,5 +107,11 @@ class crm_opportunity(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
     }
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.opportunity.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}        
+
 crm_opportunity()
 

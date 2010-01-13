@@ -89,5 +89,10 @@ class crm_job(osv.osv):
 
             
     }
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.categ.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
    
 crm_job()

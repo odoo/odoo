@@ -256,8 +256,6 @@ class crm_case(osv.osv):
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'company_id': fields.many2one('res.company','Company'),
-#        'case_id': fields.many2one('crm.case', 'Related Case'),
-#        'child_ids': fields.one2many('crm.case', 'case_id', 'Events'),
     }
     def _get_default_partner_address(self, cr, uid, context):
         if not context.get('portal',False):
@@ -654,11 +652,7 @@ class crm_case(osv.osv):
             data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
         return {'value':data}
 
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
+
 
 
     def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
