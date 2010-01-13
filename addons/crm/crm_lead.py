@@ -58,7 +58,10 @@ class crm_lead_categ(osv.osv):
         'probability': lambda *args: 0.0
     }
 crm_lead_categ()
-
+class crm_opportunity(osv.osv):
+    _name = "crm.opportunity"
+crm_opportunity()
+    
 class crm_lead(osv.osv):
     _name = "crm.lead"
     _description = "Leads Cases"

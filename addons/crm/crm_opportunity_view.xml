@@ -54,9 +54,8 @@
                     <field name="name" select="1" string="Opportunity" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible"/>
-  					<field name="phonecall_id" select="1"/>         
-                    <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />
+					<button string="Schedule a Meeting"
+                        name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
                         <newline/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -65,10 +64,10 @@
                         </group>
                     <field name="date" string="Deadline"/>
                     <group colspan="2">
-                        <field name="lead_id" select="1"/>
+                        <field name="phonecall_id" select="1"/>
                     </group>
-                    <button string="Schedule a Meeting"
-                        name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
+					 <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />                        
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
