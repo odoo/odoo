@@ -68,7 +68,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurid': None, 
 #        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
-        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'crm.caldav.attendee'}, 
+        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
         'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
         'comment': None, 
         'contact': None, 
@@ -157,51 +157,6 @@ rule or repeating pattern for anexception to a recurrence set"),
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
     }
-
-    def do_alarm_create(self, cr, uid, ids, context={}):
-        alarm_obj = self.pool.get('calendar.alarm')
-        model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model', '=', self._name)])[0]
-
-        for meeting in self.browse(cr, uid, ids):
-            basic_alarm = meeting.alarm_id
-            self.do_alarm_unlink(cr, uid, [meeting.id])
-            if basic_alarm:
-                vals = {
-                    'action': 'display', 
-                    'description': meeting.description, 
-                    'name': meeting.name, 
-                    'attendee_ids': [(6, 0, map(lambda x:x.id, meeting.attendee_ids))], 
-                    'trigger_related': basic_alarm.trigger_related, 
-                    'trigger_duration': basic_alarm.trigger_duration, 
-                    'trigger_occurs': basic_alarm.trigger_occurs, 
-                    'trigger_interval': basic_alarm.trigger_interval, 
-                    'duration': basic_alarm.duration, 
-                    'repeat': basic_alarm.repeat, 
-                    'state': 'run', 
-                    'event_date': meeting.date, 
-                    'res_id': meeting.id, 
-                    'model_id': model_id, 
-                    'user_id': uid
-                 }
-                alarm_id = alarm_obj.create(cr, uid, vals)
-                cr.execute('Update crm_meeting set caldav_alarm_id=%s, \
-                    alarm_id=%s where id=%s' % (alarm_id, basic_alarm.id, meeting.id))
-        cr.commit()
-        return True
-
-    def do_alarm_unlink(self, cr, uid, ids, context={}):
-        alarm_obj = self.pool.get('calendar.alarm')
-        model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model', '=', self._name)])[0]
-        for meeting in self.browse(cr, uid, ids):
-            alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', meeting.id)])
-            if alarm_ids and len(alarm_ids):
-                alarm_obj.unlink(cr, uid, alarm_ids)
-                cr.execute('Update crm_meeting set caldav_alarm_id=NULL, \
-                               alarm_id=NULL  where id=%s' % (meeting.id))
-        cr.commit()
-        return True
 
     def on_change_duration(self, cr, uid, id, date, duration):
         if not date:
@@ -355,7 +310,8 @@ rule or repeating pattern for anexception to a recurrence set"),
                 new_ids.append(id)
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
         if vals.get('alarm_id'):
-            self.do_alarm_create(cr, uid, new_ids)
+            alarm_obj = self.pool.get('res.alarm')
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date')
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
@@ -393,7 +349,8 @@ rule or repeating pattern for anexception to a recurrence set"),
 
     def copy(self, cr, uid, id, default=None, context={}):
         res = super(crm_meeting, self).copy(cr, uid, common.caldav_id2real_id(id), default, context)
-        self.do_alarm_create(cr, uid, [res])
+        alarm_obj = self.pool.get('res.alarm')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -421,7 +378,8 @@ rule or repeating pattern for anexception to a recurrence set"),
 
     def create(self, cr, uid, vals, context={}):
         res = super(crm_meeting, self).create(cr, uid, vals, context)
-        self.do_alarm_create(cr, uid, [res])
+        alarm_obj = self.pool.get('res.alarm')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
         return res
 
 

@@ -422,11 +422,14 @@ class Attendee(CalDAV, osv.osv_memory):
         for attendee in attendee_object.read(cr, uid, attendee_id, []):
             attendee_add = vevent.add('attendee')
             for a_key, a_val in attendee_object.__attribute__.items():
-                if attendee[a_val['field']]:
+                if attendee[a_val['field']] and a_val['field'] != 'cn':
                     if a_val['type'] == 'text':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                     elif a_val['type'] == 'boolean':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
+                if a_val['field'] == 'cn':
+                    cn_val = [str(attendee[a_val['field']])]
+            attendee_add.params['CN']= cn_val 
         return vevent
 
 Attendee()

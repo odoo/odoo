@@ -85,7 +85,6 @@ defines the list of date/time exceptions for arecurring calendar component."),
         'rrule': {'field': 'rrule', 'type': 'text'}, 
         'valarm': {'field':'caldav_alarm_id', 'type':'many2one', 'object': 'calendar.alarm'}, 
                      }
-
     def onchange_rrule_type(self, cr, uid, ids, type, *args, **argv):
         if type == 'none':
             return {'value': {'rrule': ''}}
@@ -276,6 +275,9 @@ defines the list of date/time exceptions for arecurring calendar component."),
             if not id in new_ids:
                 new_ids.append(id)
         res = super(project_task, self).write(cr, uid, new_ids, vals, context=context)
+        if vals.get('alarm_id'):
+            alarm_obj = self.pool.get('res.alarm')
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date_start')
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
@@ -290,7 +292,10 @@ defines the list of date/time exceptions for arecurring calendar component."),
         return res
 
     def copy(self, cr, uid, id, default=None, context={}):
-        return super(project_task, self).copy(cr, uid, common.caldav_id2real_id(id), default, context)
+        res = super(project_task, self).copy(cr, uid, common.caldav_id2real_id(id), default, context)
+        alarm_obj = self.pool.get('res.alarm')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date_start')
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         for id in ids:

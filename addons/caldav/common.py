@@ -268,6 +268,54 @@ are both optional, but if one occurs, so MUST the other"""),
         'active': lambda *x: 1, 
     }
 
+    def do_alarm_create(self, cr, uid, ids, model, date, context={}):
+        alarm_obj = self.pool.get('calendar.alarm')
+        model_obj = self.pool.get('ir.model')
+        model_id = model_obj.search(cr, uid, [('model', '=', model)])[0]
+        
+        model_obj = self.pool.get(model)
+        for data in model_obj.browse(cr, uid, ids):
+            basic_alarm = data.alarm_id
+            self.do_alarm_unlink(cr, uid, [data.id], model)
+            if basic_alarm:
+                vals = {
+                    'action': 'display', 
+                    'description': data.description, 
+                    'name': data.name, 
+                    'attendee_ids': [(6, 0, map(lambda x:x.id, data.attendee_ids))], 
+                    'trigger_related': basic_alarm.trigger_related, 
+                    'trigger_duration': basic_alarm.trigger_duration, 
+                    'trigger_occurs': basic_alarm.trigger_occurs, 
+                    'trigger_interval': basic_alarm.trigger_interval, 
+                    'duration': basic_alarm.duration, 
+                    'repeat': basic_alarm.repeat, 
+                    'state': 'run', 
+                    'event_date': data[date], 
+                    'res_id': data.id, 
+                    'model_id': model_id, 
+                    'user_id': uid
+                 }
+                alarm_id = alarm_obj.create(cr, uid, vals)
+                cr.execute('Update %s set caldav_alarm_id=%s, alarm_id=%s \
+                                        where id=%s' % (model.replace('.', '_'), \
+                                                    alarm_id, basic_alarm.id, data.id))
+        cr.commit()
+        return True
+
+    def do_alarm_unlink(self, cr, uid, ids, model, context={}):
+        alarm_obj = self.pool.get('calendar.alarm')
+        ir_obj = self.pool.get('ir.model')
+        model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
+        model_obj = self.pool.get(model)
+        for datas in model_obj.browse(cr, uid, ids):
+            alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
+            if alarm_ids and len(alarm_ids):
+                alarm_obj.unlink(cr, uid, alarm_ids)
+                cr.execute('Update crm_meeting set caldav_alarm_id=NULL, \
+                               alarm_id=NULL  where id=%s' % (datas.id))
+        cr.commit()
+        return True
+
 res_alarm()
 
 class calendar_alarm(osv.osv):
