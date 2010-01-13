@@ -125,43 +125,9 @@ class job2phonecall(wizard.interface):
 job2phonecall('crm.job.reschedule_phone_call')
 
 class job2meeting(wizard.interface):
-    case_form = """<?xml version="1.0"?>
-    <form string="Plan Meeting">
-        <field name="date"/>
-        <field name="duration" widget="float_time"/>
-        <label string="Note that you can also use the calendar view to graphically schedule your next meeting." colspan="4"/>
-    </form>"""
-
-    case_fields = {
-        'date': {'string': 'Meeting date', 'type': 'datetime', 'required': 1},
-        'duration': {'string': 'Duration (Hours)', 'type': 'float', 'required': 1}
-    }
-
-    def _selectPartner(self, cr, uid, data, context):        
-        case_obj = pooler.get_pool(cr.dbname).get('crm.job')
-        case = case_obj.browse(cr, uid, data['id'])
-        return {'date': case.date, 'duration': case.duration or 2.0}
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        job_case_obj = pool.get('crm.job')
-        meeting_case_obj = pool.get('crm.meeting')        
-        for job in job_case_obj.browse(cr, uid, data['ids']):         
-            #TODO : Take other info from job
-            new_meeting_id = meeting_case_obj.create(cr, uid, {
-                'name': job.name,
-                'date': data['form']['date'],
-                'duration': data['form']['duration'],
-                'case_id': job.inherit_case_id.id,
-                })
-            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
-            vals = {}
-            if not job.case_id:
-                vals.update({'case_id' : new_meeting.inherit_case_id.id})
-            job_case_obj.write(cr, uid, [job.id], vals)
-            job_case_obj.case_cancel(cr, uid, [job.id])
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
-
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -187,13 +153,12 @@ class job2meeting(wizard.interface):
 
     states = {
         'init': {
-            'actions': [_selectPartner],
-            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Set Meeting','gtk-go-forward')]}
+            'actions': [],
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
         },
         'order': {
             'actions': [],
-            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'end'}
+            'result': {'type': 'state', 'state': 'end'}
         }
     }
 
