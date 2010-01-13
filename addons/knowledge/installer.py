@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,16 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-import hr
-import installer
-import hr_department
+class knowledge_installer(osv.osv_memory):
+    _name = 'knowledge.installer'
+    _inherit = 'res.config.installer'
 
-import report
-import wizard
+    _columns = {
+        # Knowledge Management
+        'document_ftp':fields.boolean('Shared Repositories (FTP)'),
+        'document_webdav':fields.boolean('Shared Repositories (WebDAV)'),
+        'wiki':fields.boolean('Collaborative Content (Wiki)'),
+        # Templates of Content
+        'wiki_faq':fields.boolean('Internal FAQ'),
+        'wiki_quality_manual':fields.boolean('Quality Manual'),
+        }
+    _defaults = {
+        'document_ftp':True,
+        }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+knowledge_installer()

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import account
+import installer
 import project
 import partner
 import invoice

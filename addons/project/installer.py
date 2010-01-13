@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,13 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-import project
-import company
-import installer
-import project_mailgate
-import report
-import wizard
+class project_installer(osv.osv_memory):
+    _name = 'project.installer'
+    _inherit = 'res.config.installer'
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        # Project Management
+        'project_long_term':fields.boolean('Long Term Planning'),
+        'project_wiki':fields.boolean('Specifications in a Wiki'),
+        'hr_timesheet_sheet':fields.boolean('Timesheets'),
+        'hr_timesheet_invoice':fields.boolean('Invoice Based on Hours'),
+        'account_budget':fields.boolean('Budgets'),
+        'project_messages':fields.boolean('Project Messages'),
+        'project_crm':fields.boolean('Issues Tracker & Features Requests'),
+        # Methodologies
+        'scrum':fields.boolean('SCRUM'),
+        'project_gtd':fields.boolean('Getting Things Done'),
+        }
+project_installer()

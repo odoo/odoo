@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,13 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-import project
-import company
-import installer
-import project_mailgate
-import report
-import wizard
+class hr_installer(osv.osv_memory):
+    _name = 'hr.installer'
+    _inherit = 'res.config.installer'
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        # Human Resources Management
+        'hr_holidays':fields.boolean('Holidays / Leaves Management'),
+        'hr_expense':fields.boolean('Expenses'),
+        'hr_jobs':fields.boolean('Recruitement Process'),
+        'hr_timesheet_sheet':fields.boolean('Timesheets'),
+        'hr_contract':fields.boolean("Employee's Contracts"),
+        'hr_evaluation':fields.boolean('Periodic Evaluations'),
+        'hr_attendance':fields.boolean('Attendances (Sign In/Out)'),
+        }
+    _defaults = {
+        'hr_holidays': True,
+        'hr_expense': True,
+        }
+hr_installer()

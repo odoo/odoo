@@ -39,7 +39,7 @@
         'wizard/wizard_view.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': ['data/wiki_faq.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '0086363630317',
