@@ -164,8 +164,8 @@ rule or repeating pattern for anexception to a recurrence set"),
         model_id = model_obj.search(cr, uid, [('model', '=', self._name)])[0]
 
         for meeting in self.browse(cr, uid, ids):
-            self.do_alarm_unlink(cr, uid, [meeting.id])
             basic_alarm = meeting.alarm_id
+            self.do_alarm_unlink(cr, uid, [meeting.id])
             if basic_alarm:
                 vals = {
                     'action': 'display', 
@@ -185,8 +185,8 @@ rule or repeating pattern for anexception to a recurrence set"),
                     'user_id': uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
-                cr.execute('Update crm_meeting set caldav_alarm_id=%s \
-                            where id=%s' % (alarm_id, meeting.id))
+                cr.execute('Update crm_meeting set caldav_alarm_id=%s, \
+                    alarm_id=%s where id=%s' % (alarm_id, basic_alarm.id, meeting.id))
         cr.commit()
         return True
 
@@ -354,7 +354,8 @@ rule or repeating pattern for anexception to a recurrence set"),
             if not id in new_ids:
                 new_ids.append(id)
         res = super(crm_meeting, self).write(cr, uid, new_ids, vals, context=context)
-        self.do_alarm_create(cr, uid, new_ids)
+        if vals.get('alarm_id'):
+            self.do_alarm_create(cr, uid, new_ids)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
