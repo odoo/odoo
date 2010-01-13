@@ -2,41 +2,49 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Helpdesk Support Categories
+    # ------------------------------------------------------
+    <record id="crm_helpdesk_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.helpdesk.categ.form</field>
+        <field name="model">crm.helpdesk.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_helpdesk_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.helpdesk.categ.tree</field>
+        <field name="model">crm.helpdesk.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Helpdesk Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
+        <field name="name">Helpdesk Categories</field>
+        <field name="res_model">crm.helpdesk.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_helpdesk_categ_view_tree"/>
+    </record>
+	<menuitem action="crm_helpdesk_categ_action" id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
     # Helpdesk Support
     # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="crm_helpdesk_assign_wizard_form">
-        <field name="name">crm.helpdesk.assign_wizard.form</field>
-        <field name="model">crm.helpdesk.assign_wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="To Assign">
-                <group col="2">            	
-                    <field name="section_id" select="1" widget="selection"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>                    
-                <separator colspan="4"/>                             
-                <group col="2" colspan="2">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="action_crm_helpdesk_assign_wizard" model="ir.actions.act_window">
-        <field name="name">To Assign</field>
-        <field name="res_model">crm.opportunity.assign_wizard</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm_helpdesk_assign_wizard_form"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
 
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Helpdesk Support">
@@ -46,10 +54,6 @@
                     <field name="date" select="1"/>
                     <field name="date_deadline" select="2"/>
                     <field name="priority"/>
-                    <group colspan="2">
-                        <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(action_crm_helpdesk_assign_wizard)d"  type="action" />
-                    </group>
                 </group>
                 <notebook colspan="4">
                     <page string="General">
@@ -104,19 +108,6 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Events">
-                       <field name="child_ids" colspan="4" nolabel="1">
-                           <tree string="Related Cases">
-                               <field name="id"/>
-                               <field name="date"/>
-                               <field name="name"/>
-                               <field name="partner_id"/>
-                               <field name="user_id"/>
-                               <field name="section_id" widget="selection"/>
-                               <field name="state"/>
-                           </tree>
-                        </field>
-                    </page>
                     <page string="Emails">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="CC"/>
@@ -150,7 +141,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -174,7 +165,7 @@
 
     <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
         <field name="name">CRM - Helpdesk Support Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.helpdesk</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">

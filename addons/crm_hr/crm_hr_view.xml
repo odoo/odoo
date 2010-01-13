@@ -1,6 +1,76 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    
+    # ------------------------------------------------------
+    # Job Categories
+    # ------------------------------------------------------
+    
+    <record id="crm_job_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.job.categ.form</field>
+        <field name="model">crm.job.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Job Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_job_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.job.categ.tree</field>
+        <field name="model">crm.job.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Job Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_job_categ_action" model="ir.actions.act_window">
+        <field name="name">Job Categories</field>
+        <field name="res_model">crm.job.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_job_categ_view_tree"/>
+    </record>
+    # ------------------------------------------------------ 
+	    # Stage
+	 # ------------------------------------------------------ 
+	    <record model="ir.ui.view" id="crm_job_stage_tree">
+	        <field name="name">crm.job.stage.tree</field>
+	        <field name="model">crm.job.stage</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Stages">
+	                <field name="sequence"/>
+	                <field name="name"/>
+	                <field name="section_id"/>
+	            </tree>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="crm_job_stage_form">
+	        <field name="name">crm.job.stage.form</field>
+	        <field name="model">crm.job.stage</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Stage">
+	            	<field name="name" select="1"/>
+	                <field name="section_id" select="1" widget="selection"/>
+	                <field name="sequence"/>
+	            </form>
+	        </field>
+	    </record>
+	    <record id="crm_job_stage_act" model="ir.actions.act_window">
+	        <field name="name">Job Stages</field>
+	        <field name="res_model">crm.claim.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm_job_stage_tree"/>
+	    </record>
+	  <menuitem action="crm_job_stage_act" id="menu_crm_job_stage_act" parent="crm.menu_crm_case_stage"/>
     # ------------------------------------------------------
     # Jobs
     # ------------------------------------------------------
@@ -21,11 +91,11 @@
                 <field name="priority" string="Appreciation"/>
                 <field name="user_id"/>
                 <field name="state"/>
-                <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+ 				<button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>                
+                <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                
             </tree>
         </field>
     </record>
@@ -76,17 +146,17 @@
                         <field name="planned_cost" string="Expected Salary"/>
                         <field name="planned_revenue" string="Proposed Salary"/>
                         <field name="categ_id" string="Applied Job" select="1" on_change="onchange_categ_id(categ_id)"/>
-                        <field name="category2_id" string="Degree" select="1"/>
+                        <field name="type_id" string="Degree" select="1"/>
                         <separator colspan="4" string="Qualication"/>
                         <field name="priority" string="Appreciation" select="2"/>
 
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
                             <field name="state" select="1"/>
-                            <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
                             <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                            <button name="case_close" string="Candidate Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
+                            <button name="case_cancel" string="Candidate Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>

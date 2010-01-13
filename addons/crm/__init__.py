@@ -22,18 +22,16 @@
 import crm
 import crm_mailgate
 import crm_segmentation
-import crm_config
 import crm_meeting
 import crm_lead
 import crm_phonecall
 import crm_opportunity
 import crm_claim
 import crm_fundraising
-import crm_job
 import crm_helpdesk
 
 
-import report
+#import report
 import wizard
 
 

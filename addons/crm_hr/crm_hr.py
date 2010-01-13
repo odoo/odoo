@@ -1,8 +1,8 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,11 +32,11 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-import crm
+from crm import crm
 
-class crm_fundraising_categ(osv.osv):
-    _name = "crm.fundraising.categ"
-    _description = "Fundraising Categories"
+class crm_job_categ(osv.osv):
+    _name = "crm.job.categ"
+    _description = "Job Categories"
     _columns = {
             'name': fields.char('Category Name', size=64, required=True),
             'probability': fields.float('Probability (%)', required=True),
@@ -45,22 +45,21 @@ class crm_fundraising_categ(osv.osv):
     _defaults = {
         'probability': lambda *args: 0.0
     }
-crm_fundraising_categ()
+crm_job_categ()
 
-class crm_fundraising_type(osv.osv):
-    _name = "crm.fundraising.type"
-    _description = "Fundraising Type"
+class crm_job_type(osv.osv):
+    _name = "crm.job.type"
+    _description = "Job Type"
     _rec_name = "name"
     _columns = {
-        'name': fields.char('Fundraising Type Name', size=64, required=True, translate=True),
+        'name': fields.char('Claim Type Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
     }
+crm_job_type()
 
-crm_fundraising_type()
-
-class crm_fundraising_stage(osv.osv):
-    _name = "crm.fundraising.stage"
-    _description = "Stage of fundraising case"
+class crm_job_stage(osv.osv):
+    _name = "crm.job.stage"
+    _description = "Stage of job case"
     _rec_name = 'name'
     _order = "sequence"
     _columns = {
@@ -71,18 +70,17 @@ class crm_fundraising_stage(osv.osv):
     _defaults = {
         'sequence': lambda *args: 1
     }
-crm_fundraising_stage()
+crm_job_stage()
 
-
-class crm_fundraising(osv.osv):
-    _name = "crm.fundraising"
-    _description = "Fund Raising Cases"
+class crm_job(osv.osv):
+    _name = "crm.job"
+    _description = "Job Cases"
     _order = "id desc"
-    _inherit ='crm.case'
+    _inherit ='crm.case'    
     _columns = {        
             'date_closed': fields.datetime('Closed', readonly=True),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),            
-            'categ_id': fields.many2one('crm.fundraising.categ','Category', domain="[('section_id','=',section_id)]"),
+            'categ_id': fields.many2one('crm.job.categ', 'Category', domain="[('section_id','=',section_id)]"),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'probability': fields.float('Probability (%)'),     
@@ -90,9 +88,10 @@ class crm_fundraising(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.fundraising.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-            'type_id': fields.many2one('crm.fundraising.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.job.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.job.type', 'Type Name', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
+            'case_id': fields.many2one('crm.case', 'Related Case'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
@@ -100,16 +99,13 @@ class crm_fundraising(osv.osv):
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        }
-   
-    _defaults = {
-                 'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
+
+            
     }
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.fundraising.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}    
-    
-
-crm_fundraising()    
+        cat = self.pool.get('crm.categ.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
+   
+crm_job()

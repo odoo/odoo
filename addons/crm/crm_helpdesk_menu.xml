@@ -6,7 +6,7 @@
     ######################## Help Desk (menu) ###########################
     <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
         <field name="name">All Helpdesk Requests</field>
-        <field name="res_model">crm.case</field>
+        <field name="res_model">crm.helpdesk</field>
         <field name="view_mode">tree,calendar,form</field>
         <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
         <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_help'))+')]'"/>

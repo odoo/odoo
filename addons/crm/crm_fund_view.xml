@@ -2,6 +2,76 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Fund Raising Categories
+    # ------------------------------------------------------
+    <record id="crm_fund_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.fundraising.categ.form</field>
+        <field name="model">crm.fundraising.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Fundraising Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_fund_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.fundraising.categ.tree</field>
+        <field name="model">crm.fundraising.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Fundraising Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_fund_categ_action" model="ir.actions.act_window">
+        <field name="name">Fundraising Categories</field>
+        <field name="res_model">crm.fundraising.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_fund_categ_view_tree"/>
+    </record>
+   <menuitem action="crm_fund_categ_action" id="menu_crm_case_fundraising-act" parent="crm.menu_crm_case_categ"/>
+    # ------------------------------------------------------
+    # Fund Stage
+    # ------------------------------------------------------
+	    <record model="ir.ui.view" id="crm_fundraising_stage_tree">
+	        <field name="name">crm.fundraising.stage.tree</field>
+	        <field name="model">crm.fundraising.stage</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Stages">
+	                <field name="sequence"/>
+	                <field name="name"/>
+	                <field name="section_id"/>
+	            </tree>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="crm_fundraising_stage_form">
+	        <field name="name">crm.fundraising.stage.form</field>
+	        <field name="model">crm.fundraising.stage</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Stage">
+	            	<field name="name" select="1"/>
+	                <field name="section_id" select="1" widget="selection"/>
+	                <field name="sequence"/>
+	            </form>
+	        </field>
+	    </record>
+	    <record id="crm_fundraising_stage_act" model="ir.actions.act_window">
+	        <field name="name">Fundraising Stages</field>
+	        <field name="res_model">crm.claim.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm_fundraising_stage_tree"/>
+	    </record>
+	  <menuitem action="crm_fundraising_stage_act" id="menu_crm_fundraising_stage_act" parent="crm.menu_crm_case_stage"/>
+	    
     # ------------------------------------------------------
     # Fund Raising
     # ------------------------------------------------------
@@ -14,7 +84,7 @@
                 <field name="id"/>
                 <field name="name" string="Funds"/>
                 <field name="categ_id"/>
-                <field name="category2_id" string="Payment Mode"/>
+                <field name="type_id" string="Payment Mode"/>
                 <field name="planned_cost" string="Amount"/>
                 <field name="probability"/>
                 <field name="user_id"/>
@@ -41,7 +111,7 @@
                     <newline/>
                     <field name="date" string="Next Meeting"/>
                     <field name="duration"/>
-                    <field name="category2_id" select="1" string="Payment Mode"/>
+                    <field name="type_id" select="1" string="Payment Mode"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Funds">
@@ -169,6 +239,12 @@
                        </field>
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection"/>
+					   <field name="section_id" select="1" widget="selection" string="Section">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />	
+                       </field>		
                    </group>
                </search>
             </field>

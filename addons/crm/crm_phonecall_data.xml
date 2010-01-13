@@ -1,37 +1,34 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-	<record model="crm.case.section" id="section_support_phone">
-		<field name="name">Phone Calls</field>
-		<field name="code">Phone</field>
-	</record>
+->
 	
 	<!--
-	Case Categories
+	Phonecall Categories
 	-->
-	<record model="crm.case.categ" id="categ_phone1">
+	<record model="crm.phonecall.categ" id="categ_phone1">
 		<field name="name">Inbound</field>
-		<field name="section_id" ref="section_support_phone"/>
+		<field name="section_id" ref="section_sales_department"/>
 	</record>
-	<record model="crm.case.categ" id="categ_phone2">
+	<record model="crm.phonecall.categ" id="categ_phone2">
 		<field name="name">Outbound</field>
-		<field name="section_id" ref="section_support_phone"/>
+		<field name="section_id" ref="section_sales_department"/>
 	</record>
 	
 	<!--
 	Case Stage
 	-->
-	<record model="crm.case.stage" id="stage_phone1">
+	<record model="crm.phonecall.stage" id="stage_phone1">
 		<field name="name">Planned</field>
-		<field name="section_id" ref="section_support_phone"/>
+		<field name="section_id" ref="section_sales_department"/>
 	</record>	
-	<record model="crm.case.stage" id="stage_phone2">
+	<record model="crm.phonecall.stage" id="stage_phone2">
 		<field name="name">Held</field>
-		<field name="section_id" ref="section_support_phone"/>
+		<field name="section_id" ref="section_sales_department"/>
 	</record>	
-	<record model="crm.case.stage" id="stage_phone3">
+	<record model="crm.phonecall.stage" id="stage_phone3">
 		<field name="name">Not Held</field>
-		<field name="section_id" ref="section_support_phone"/>
+		<field name="section_id" ref="section_sales_department"/>
 	</record>
 </data>
 </openerp>

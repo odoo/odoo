@@ -32,7 +32,7 @@
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv', 'report_crm_view.xml'],
     'demo_xml': [],
-    'installable': True,
+    'installable': False, #TODO : After fixed problems , set True
     'active': False,
     'certificate': '0030422968285',
 }
