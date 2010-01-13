@@ -32,7 +32,7 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-import crm
+from crm import crm
 
 class crm_project_future_request(osv.osv):
     _name = "crm.project.future"
