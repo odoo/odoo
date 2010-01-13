@@ -58,6 +58,17 @@ class crm_lead_categ(osv.osv):
         'probability': lambda *args: 0.0
     }
 crm_lead_categ()
+
+class crm_lead_type(osv.osv):
+    _name = "crm.lead.type"
+    _description = "Lead Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('lead Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+crm_lead_type()
+
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
 crm_opportunity()

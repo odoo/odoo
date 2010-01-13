@@ -59,6 +59,16 @@ class crm_opportunity_categ(osv.osv):
     }
 crm_opportunity_categ()
 
+class crm_opportunity_type(osv.osv):
+    _name = "crm.opportunity.type"
+    _description = "Opportunity Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('lead Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+crm_opportunity_type()
+
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
     _description = "Opportunity Cases"

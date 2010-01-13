@@ -59,6 +59,17 @@ class crm_fundraising_categ(osv.osv):
     }
 crm_fundraising_categ()
 
+class crm_fundraising_type(osv.osv):
+    _name = "crm.fundraising.type"
+    _description = "Fundraising Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Fundraising Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+
+crm_fundraising_type()
+
 class crm_fundraising(osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"

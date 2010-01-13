@@ -50,7 +50,6 @@ class crm_phonecall_categ(osv.osv):
         'probability': lambda *args: 0.0
     }
 crm_phonecall_categ()
-
 class crm_phonecall(osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall Cases"
