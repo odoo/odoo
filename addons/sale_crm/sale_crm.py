@@ -30,7 +30,6 @@ class sale_order(osv.osv):
 
     def _get_section(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid,context=context)
-       print "section id",type(user.context_section_id)
        return int(user.context_section_id)
 
     _defaults = {
