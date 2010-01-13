@@ -123,6 +123,75 @@ class opportunity2phonecall(wizard.interface):
 
 opportunity2phonecall('crm.opportunity.reschedule_phone_call')
 
+class opportunity2meeting(wizard.interface):
+    case_form = """<?xml version="1.0"?>
+    <form string="Plan Meeting">
+        <field name="date"/>
+        <field name="duration" widget="float_time"/>
+        <label string="Note that you can also use the calendar view to graphically schedule your next meeting." colspan="4"/>
+    </form>"""
+
+    case_fields = {
+        'date': {'string': 'Meeting date', 'type': 'datetime', 'required': 1},
+        'duration': {'string': 'Duration (Hours)', 'type': 'float', 'required': 1}
+    }
+
+    def _selectPartner(self, cr, uid, data, context):
+        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')
+        case = case_obj.browse(cr, uid, data['id'])
+        return {'date': case.date, 'duration': 2.0}
+
+    def _makeMeeting(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        opportunity_case_obj = pool.get('crm.opportunity')
+        meeting_case_obj = pool.get('crm.meeting')        
+        for opportunity in opportunity_case_obj.browse(cr, uid, data['ids']):
+            new_meeting_id = meeting_case_obj.create(cr, uid, {
+                'name': opportunity.name,
+                'date': data['form']['date'],
+                'duration': data['form']['duration'],
+                })
+            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
+            vals = {}
+            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
+            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
+
+        data_obj = pool.get('ir.model.data')
+        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+        id = data_obj.read(cr, uid, result, ['res_id'])
+        id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
+        if id1:
+            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        return {            
+            'name': _('Meetings'),
+            'view_type': 'form',
+            'view_mode': 'calendar,form,tree',
+            'res_model': 'crm.meeting',
+            'view_id': False,
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
+            }
+
+    states = {
+        'init': {
+            'actions': [_selectPartner],
+            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
+                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Set Meeting','gtk-go-forward')]}
+        },
+        'order': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'end'}
+        }
+    }
+opportunity2meeting('crm.opportunity.meeting_set')
 
 class partner_opportunity(wizard.interface):
 

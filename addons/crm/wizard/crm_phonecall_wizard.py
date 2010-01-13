@@ -113,7 +113,7 @@ class phonecall2opportunity(wizard.interface):
                 vals.update({'opportunity_id' : new_opportunity.id})
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
-         #   opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
+            opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         value = {            
             'name': _('Opportunity'),
             'view_type': 'form',

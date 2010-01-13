@@ -16,9 +16,15 @@
             name="crm.case.opportunity.partner_opportunity"
             menu="False"
             string="Create Opportunity"/>
-
-        
-            
+	  
+	  <wizard
+            id="wizard_crm_opportunity_meeting_set"
+            keyword="client_action_multi"
+            model="crm.opportunity"
+			name="crm.opportunity.meeting_set"
+			menu="False"
+            string="Schedule Meeting"/>	
+	
 	   <wizard
           id="wizard_partner_create_opportunity1"
             keyword="client_action_relate"
