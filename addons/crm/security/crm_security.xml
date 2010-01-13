@@ -26,7 +26,7 @@
     </record>
 
 	<record id="crm_meeting_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_meeting_rule_group"/>
     </record>
 
@@ -37,7 +37,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_claim_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_claim_rule_group"/>
     </record>
 
@@ -48,7 +48,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_fundraising_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_fundraising_rule_group"/>
     </record>
 
@@ -59,7 +59,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_helpdesk_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_helpdesk_rule_group"/>
     </record>
 
@@ -70,7 +70,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_job_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_job_rule_group"/>
     </record>
 
@@ -81,7 +81,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_leads_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_leads_rule_group"/>
    </record>
 
@@ -92,7 +92,7 @@
         <field name="global" eval="True"/>
     </record>
 	<record id="crm_opportunities_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_opportunities_rule_group"/>
     </record>
 
@@ -103,7 +103,7 @@
         <field name="global" eval="True"/>
     </record>
     <record id="crm_phone_calls_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_phone_calls_rule_group"/>
     </record>
 
@@ -114,7 +114,7 @@
         <field name="global" eval="True"/>
     </record>
     <record id="crm_case_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
+        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
         <field name="rule_group" ref="crm_case_rule_group"/>
     </record>
     </data>
