@@ -53,6 +53,17 @@ class crm_claim_categ(osv.osv):
     }
 crm_claim_categ()
 
+class crm_claim_type(osv.osv):
+    _name = "crm.claim.type"
+    _description = "Claim Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Claim Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+
+crm_claim_type()
+
 class crm_claim(osv.osv):
     _name = "crm.claim"
     _description = "Claim Cases"
