@@ -611,38 +611,4 @@ class ir_model_data(osv.osv):
         return True
 ir_model_data()
 
-class ir_model_config(osv.osv):
-    _name = 'ir.model.config'
-    _columns = {
-        'password': fields.char('Password', size=64),
-        'password_check': fields.char('Confirmation', size=64),
-    }
-
-    def action_cancel(self, cr, uid, ids, context={}):
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'ir.actions.configuration.wizard',
-            'type': 'ir.actions.act_window',
-            'target':'new',
-        }
-
-    def action_update_pw(self, cr, uid, ids, context={}):
-        res = self.read(cr,uid,ids)[0]
-        root = self.pool.get('res.users').browse(cr, uid, [1])[0]
-        self.unlink(cr, uid, [res['id']])
-        if res['password']!=res['password_check']:
-            raise except_orm(_('Error'), _("Password mismatch !"))
-        elif not res['password']:
-            raise except_orm(_('Error'), _("Password empty !"))
-        self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'ir.actions.configuration.wizard',
-            'type': 'ir.actions.act_window',
-            'target':'new',
-        }
-ir_model_config()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

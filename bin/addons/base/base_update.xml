@@ -206,48 +206,50 @@
         </record>
 
         <record id="view_users_configuration_form" model="ir.ui.view">
-            <field name="name">res.users.confirm.form</field>
-            <field name="model">res.users</field>
+            <field name="name">res.config.users.confirm.form</field>
+            <field name="model">res.config.users</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Configure User">
-                    <separator string="Define New Users" colspan="4"/>
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="login" select="1"/>
-                    <field name="password" password="True"/>
-                    <notebook colspan="4">
-                        <page string="User">
-                            <field name="address_id"/>
-                            <field name="company_id" required="1"/>
-                            <field name="action_id" required="True"/>
-                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
-                            <field name="context_lang"/>
-                            <field name="context_tz"/>
-                            <field colspan="4" name="signature"/>
-                        </page>
-                        <page string="Groups">
-                            <label string="Groups are used to defined access rights on each screen and menu." align="0.0" colspan="4"/>
-                            <field colspan="4" nolabel="1" name="groups_id"/>
-                        </page>
-                        <page string="Roles">
-                            <label string="Roles are used to defined available actions, provided by workflows." align="0.0" colspan="4"/>
-                            <field colspan="4" nolabel="1" name="roles_id"/>
-                        </page>
-                    </notebook>
-                    <label string="" colspan="2"/>
-                    <group col="2" colspan="2">
-                        <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip'/>
-                        <button name='action_new' icon='gtk-ok' type='object' string='Add User'/>
-                    </group>
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Create User</attribute>
                 </form>
+
+                <group string="res_config_contents" position="replace">
+                  <separator string="New User" colspan="4"/>
+                  <field name="name"/>
+                  <field name="email"/>
+                  <field name="login"/>
+                  <field name="password" password="True"/>
+                  <field name="context_lang"/>
+                  <field name="context_tz"/>
+
+                  <separator string="Group" colspan="4"/>
+                  <label  align="0.0" colspan="4" string="
+                    Groups are used to define access rights on objects and
+                    the visibility of screens and menus"/>
+                  <field colspan="4" nolabel="1" name="groups_id"/>
+                </group>
+
+                <xpath expr='//button[@name="action_skip"]'
+                       position='attributes'>
+                  <attribute name='string'>Next</attribute>
+                  <attribute name='icon'>gtk-go-forward</attribute>
+                </xpath>
+                <xpath expr='//button[@name="action_next"]'
+                       position='attributes'>
+                  <attribute name='string'>Add User</attribute>
+                  <attribute name='icon'>gtk-add</attribute>
+                </xpath>
+              </data>
             </field>
         </record>
 
         <record id="action_config_user_form" model="ir.actions.act_window">
-            <field name="name">Configure User</field>
+            <field name="name">Create Users</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
+            <field name="res_model">res.config.users</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_users_configuration_form"/>
@@ -258,26 +260,43 @@
             <field name="name">res.users.confirm.simple_view</field>
             <field name="model">res.config.view</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Configure simple view">
-                    <separator string="Choose Your Mode" colspan="4"/>
-                    <field colspan="2" name="view"/>
-                    <label string="Choose the simplified interface if you are testing OpenERP for the first time. Less used options or fields are automatically hidden. You will be able to change this, later, through the Administration menu." colspan="4" align="0.0"/>
-                    <newline/>
-                    <separator string="" colspan="4"/>
-                    <label string="" colspan="2"/>
-                    <group colspan="2" col="1">
-                        <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
-                    </group>
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Select your Interface</attribute>
                 </form>
+
+                <group string="res_config_contents" position="replace">
+                  <label colspan="4" align="0.0" string='
+                    Choose between the simplified interface and the extended
+                    one.'/>
+                  <newline/>
+                  <label colspan="4" align="0.0" string='
+                    If you are testing OpenERP or using it for the first time,
+                    we suggest you use the simplified interface. It has less
+                    options and fields but is easier to understand.'/>
+                  <newline/>
+                  <label colspan="4" align="0.0" string='
+                    You will be able to switch to the extended interface later.
+                    '/>
+                  <separator string="Choose Your Interface" colspan="4"/>
+                  <field colspan="2" name="view" nolabel="1"/>
+                </group>
+                <xpath expr='//button[@name="action_skip"]' position='replace'/>
+                <xpath expr='//button[@name="action_next"]' position='attributes'>
+                  <attribute name='string'>Set</attribute>
+                </xpath>
+              </data>
             </field>
         </record>
 
         <record id="action_config_simple_view_form" model="ir.actions.act_window">
-            <field name="name">Configure Simple View</field>
+            <field name="name">Select Your Interface</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.view</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="view_confirm_simple_view_form"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
@@ -289,21 +308,11 @@
     </data>
     <data noupdate="1">
         <record id="config_wizard_step_user" model="ir.actions.todo">
-            <field name="name">Create User</field>
-            <field name="note">Create your users.
-You will be able to assign groups to users. Groups define the access rights of each users on the different objects of the system.
-            </field>
             <field name="action_id" ref="action_config_user_form"/>
             <field name="sequence">10</field>
         </record>
 
         <record id="config_wizard_simple_view" model="ir.actions.todo">
-            <field name="name">Select Your Interface</field>
-            <field name="note">Choose between the "Simplified Interface" or the extended one.
-If you are testing or using OpenERP for the first time, we suggest you to use
-the simplified interface, which has less options and fields but is easier to
-understand. You will be able to switch to the extended view later.
-            </field>
             <field name="action_id" ref="action_config_simple_view_form"/>
             <field name="sequence">5</field>
         </record>

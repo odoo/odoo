@@ -92,13 +92,8 @@ class wizard_info_get(wizard.interface):
         return {}
 
     def _config(self, cr, uid, data, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
+        return pooler.get_pool(cr.dbname).get('res.config')\
+            .next(cr, uid, [], context=context)
 
     states = {
         'init': {
@@ -183,13 +178,8 @@ class wizard_info_get_simple(wizard.interface):
         return {}
 
     def _config(self, cr, uid, data, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
+        return pooler.get_pool(cr.dbname).get('res.config')\
+            .next(cr, uid, [], context=context)
 
     states = {
         'init': {
