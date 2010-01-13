@@ -59,6 +59,31 @@ class crm_job_categ(osv.osv):
     }
 crm_job_categ()
 
+class crm_job_type(osv.osv):
+    _name = "crm.job.type"
+    _description = "Job Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Claim Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+crm_job_type()
+
+class crm_job_stage(osv.osv):
+    _name = "crm.job.stage"
+    _description = "Stage of job case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_job_stage()
+
 class crm_job(osv.osv):
     _name = "crm.job"
     _description = "Job Cases"
@@ -75,8 +100,8 @@ class crm_job(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-            'category2_id': fields.many2one('crm.case.category2', 'Category Name', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.job.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.job.type', 'Type Name', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
             'case_id': fields.many2one('crm.case', 'Related Case'),
             'ref' : fields.reference('Reference', selection=_links_get, size=128),
