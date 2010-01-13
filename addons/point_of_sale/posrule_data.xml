@@ -57,7 +57,7 @@
 <!--        </record>-->
 
 
-   			<record id="res_users_shopuser0" model="res.users">
+   		<record id="res_users_shopuser0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name','=','Menu')]"/>
             <field eval="[(6,0,[ref('base.group_partner_manager')])]" name="groups_id"/>
             <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
