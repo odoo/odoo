@@ -2414,10 +2414,9 @@ class orm(orm_template):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join(['%s' for x in sub_ids]),
-                                order_by), sub_ids)
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' %
+                               (','.join(fields_pre2 + ['id']), self._table, 
+                                order_by), (sub_ids,))
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)

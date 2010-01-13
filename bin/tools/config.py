@@ -166,7 +166,6 @@ class configmanager(object):
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", default='64',
                          help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("--list_db", dest="list_db", default=False, help="This option hides Database list for security purpose:\n \'False\' value disables listing of Databases")
         group.add_option("-P", "--import-partial", dest="import_partial",
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
