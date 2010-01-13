@@ -32,16 +32,16 @@
     'website': 'http://www.openerp.com',
     'depends': ['crm','hr'],
     'init_xml': [
-        'crm_jobs_data.xml'
+        'crm_hr_data.xml'
     ],
     'update_xml': [
-        'crm_job_wizard.xml',                   
-        'crm_jobs_view.xml',
-        'crm_jobs_menu.xml',
-        'security/crm_job_security.xml', 
+        'crm_hr_wizard.xml',                   
+        'crm_hr_view.xml',
+        'crm_hr_menu.xml',
+        'security/crm_hr_security.xml', 
      ],
     'demo_xml': [
-        'crm_jobs_demo.xml'
+        'crm_hr_demo.xml'
     ],
     'installable': True,
     'active': False,
