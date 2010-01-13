@@ -223,10 +223,32 @@ class crm_case(osv.osv):
             else:
                 res[case.id] = False
         return res
+
     def copy(self, cr, uid, id, default=None, context={}):
         if not default: default = {}
-        default.update( {'state':'draft', 'id':False, 'history_line':[],'log_ids':[]})
+        default.update( {'state':'draft', 'id':False})
         return super(crm_case, self).copy(cr, uid, id, default, context)
+
+    def _get_log_ids(self, cr, uid, ids, field_names, arg, context={}):
+        result = {}
+        history_obj = False
+        model_obj = self.pool.get('ir.model')
+        if 'history_line' in field_names:
+            history_obj = self.pool.get('crm.case.history')
+            name = 'history_line'
+        if 'log_ids' in field_names:
+            history_obj = self.pool.get('crm.case.log')
+            name = 'log_ids'
+        if not history_obj:
+            return result
+        for case in self.browse(cr, uid, ids, context):
+            model_ids = model_obj.search(cr, uid, [('model','=',case._name)])
+            history_ids = history_obj.search(cr, uid, [('model_id','=',model_ids[0]),('res_id','=',case.id)])             
+            if history_ids:
+                result[case.id] = {name:history_ids}
+            else:
+                result[case.id] = {name:[]}         
+        return result
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
@@ -245,8 +267,8 @@ class crm_case(osv.osv):
         'create_date': fields.datetime('Created' ,readonly=True),
         'date_deadline': fields.datetime('Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication', readonly=1),
-        'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History', readonly=1),
+        'history_line': fields.function(_get_log_ids, method=True, type='one2many', multi="history_line", relation="crm.case.history", string="Communication"),
+        'log_ids': fields.function(_get_log_ids, method=True, type='one2many', multi="log_ids", relation="crm.case.log", string="Logs History"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -495,32 +517,17 @@ class crm_case(osv.osv):
         }
         return self.format_body(body % data)
 
-    def email_send(self, cr, uid, case, emails, body, context={}):
-        body = self.format_mail(case, body)
-        if case.user_id and case.user_id.address_id and case.user_id.address_id.email:
-            emailfrom = case.user_id.address_id.email
-        else:
-            emailfrom = case.section_id.reply_to
-        name = '[%d] %s' % (case.id, case.name.encode('utf8'))
-        reply_to = case.section_id.reply_to or False
-        if reply_to: reply_to = reply_to.encode('utf8')
-        if not emailfrom:
-            raise osv.except_osv(_('Error!'),
-                    _("No E-Mail ID Found for your Company address or missing reply address in section!"))
-        tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, tinycrm=str(case.id))
-        return True
-
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-       
+        model_obj = self.pool.get('ir.model')
         for case in cases:
+            model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
-                'name': keyword,
-                'som': case.som.id,
-                'canal_id': case.canal_id.id,
+                'name': keyword,                
                 'user_id': uid,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'case_id': case.id,
+                'model_id' : model_ids and model_ids[0] or False,
+                'res_id': case.id,
                 'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
@@ -530,7 +537,7 @@ class crm_case(osv.osv):
                 data['email'] = email or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or False
-            obj.create(cr, uid, data, context)
+            res = obj.create(cr, uid, data, context)            
         return True
     _history = __history
 
@@ -590,8 +597,8 @@ class crm_case(osv.osv):
 
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):
-            if case.history_line:
-                description = case.history_line[0].description
+            if case.email_last:
+                description = email_last
                 self.write(cursor, user, case.id, {
                     'description': '> ' + description.replace('\n','\n> '),
                     }, context=context)
@@ -740,7 +747,8 @@ class crm_case_log(osv.osv):
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
         'section_id': fields.many2one('crm.case.section', 'Section'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'case_id': fields.many2one('crm.case', 'Case', required=True, ondelete='cascade')
+        'model_id': fields.many2one('ir.model', "Model"),
+        'res_id': fields.integer('Resource ID'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -754,9 +762,9 @@ class crm_case_history(osv.osv):
     _inherits = {'crm.case.log':"log_id"}
 
     def create(self, cr, user, vals, context=None):
-        if vals.has_key('case_id') and vals['case_id']:
-            case_obj = self.pool.get('crm.case')
-            cases = case_obj.browse(cr, user, [vals['case_id']])
+        if vals.has_key('res_id') and vals['res_id']:
+            case_obj = self.pool.get(vals['model_id'])
+            cases = case_obj.browse(cr, user, [vals['res_id']])
             case_obj._action(cr, user, cases, '')
         return super(crm_case_history, self).create(cr, user, vals, context)
 
@@ -845,4 +853,3 @@ users()
 
 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

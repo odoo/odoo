@@ -415,7 +415,7 @@ class account_invoice(osv.osv):
     def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
         if curr_id:
             currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
-            if currency.company_id != company_id:
+            if currency.company_id.id != company_id:
                 raise osv.except_osv(_('Configration Error !'),
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}

@@ -5,34 +5,6 @@
     # Meetings
     # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="crm_meeting_generic_wizard">
-        <field name="name">crm.meeting.generic_wizard.form</field>
-        <field name="model">crm.meeting.generic_wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Generic Wizard">
-                <group col="2">            	
-                    <field name="section_id" select="1" widget="selection"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>
-                <separator colspan="4"/>                             
-                <group col="2" colspan="2">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="crm_meeting_generic_wizard_act" model="ir.actions.act_window">
-        <field name="name">Meeting Generic Wizard</field>
-        <field name="res_model">crm.meeting.generic_wizard</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm_meeting_generic_wizard"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>	
-        
     <record model="ir.ui.view" id="crm_case_form_view_meet">
         <field name="name">CRM - Meetings Form</field>
         <field name="model">crm.meeting</field>
@@ -124,7 +96,6 @@
                 <field name="section_id" widget="selection"/>
                 <field name="priority"/>
                 <field name="categ_id"/>
-                <field name="category2_id" string="Type"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
