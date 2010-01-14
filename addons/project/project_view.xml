@@ -469,7 +469,6 @@
                     <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
                             <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
-                            <filter domain="[('user_id', 'child_of', [uid])]" help="My Department tasks" icon="gtk-execute" separator="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -484,6 +483,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
+            <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/>
 

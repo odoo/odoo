@@ -1475,7 +1475,6 @@ class stock_inventory_line(osv.osv):
         'product_qty': fields.float('Quantity'),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
-
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
             return {}
