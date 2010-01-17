@@ -59,7 +59,7 @@ class opportunity2phonecall(wizard.interface):
         return {
                 'user_id' : case.user_id and case.user_id.id,
                 'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
-                'section_id' : case.section_id and case.section_id or False,
+                'section_id' : case.section_id and case.section_id.id or False,
                 'note' : case.description
                }
 
