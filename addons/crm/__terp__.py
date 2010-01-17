@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management', 
-    'version': '1.0', 
-    'category': 'Generic Modules/CRM & SRM', 
+    'name': 'Customer & Supplier Relationship Management',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
 leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
@@ -59,6 +59,7 @@ between mails and Open ERP.""",
                  'crm_opportunity_data.xml', 
                  'crm_phonecall_data.xml', 
     ], 
+
     'update_xml': [
         'crm_wizard.xml', 
         'crm_view.xml', 
@@ -85,8 +86,9 @@ between mails and Open ERP.""",
         #'crm_report.xml', 
         'security/crm_security.xml', 
         #'security/ir.model.access.csv', 
+
         'process/crm_configuration_process.xml'
-    ], 
+    ],
     'demo_xml': [
         'crm_demo.xml', 
         'crm_claims_demo.xml', 

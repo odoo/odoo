@@ -2,8 +2,25 @@
 <openerp>
     <data>
         <menuitem icon="terp-project" id="menu_main" name="Project Management"/>
-        <menuitem id="menu_tasks" name="Tasks" parent="menu_main"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="1"/>
+         <menuitem id="menu_project_management" name="Project Management" parent="menu_main" sequence="1"/>
+        <!-- <menuitem id="menu_tasks" name="Tasks" parent="menu_main"/>-->
+
+        <menuitem id="menu_pm_invoicing" name="Invoicing" parent="menu_main" sequence="7"/>
+        <menuitem id="menu_pm_budget" name="Budgets" parent="menu_pm_invoicing"/>
+        <menuitem action="account_budget.open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
+        <menuitem parent="menu_pm_budget"
+             id="menu_act_pm_crossovered_budget_view"
+             action="account_budget.act_crossovered_budget_view" />
+         <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="60"/>
+         <!--Time Tracking menu-->
+ 		<menuitem
+             id="menu_project_management_time_tracking"
+             name="Time Tracking"
+             parent="menu_main" sequence="3"/>
+         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="menu_project_management_time_tracking"
+             groups="hr.group_hr_manager"/>
+        <menuitem action="report_timesheet.action_random_timesheet_lines_board" id="menu_project_management_timesheet_lines_board" parent="menu_project_management_time_tracking"/>
+        <menuitem action="hr_attendance.si_so" id="menu_project_management_si_so" parent="menu_project_management_time_tracking" type="wizard"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -144,7 +161,7 @@
                 </tree>
             </field>
         </record>
-        <menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/>
+        <!--<menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">All projects</field>
@@ -154,7 +171,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/>
+        <!--<menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/> -->
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
@@ -163,8 +180,9 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>
-
+        <!--<menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>-->
+		<menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
+        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_template_project_specification" name="Specification Template"/>
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
             <field name="model">project.task.work</field>
@@ -218,10 +236,10 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
-        <menuitem
+        <!--<menuitem
             action="open_view_my_project_open"
             id="menu_open_view_my_project_open"
-            parent="project.menu_all_project"/>
+            parent="project.menu_all_project"/>-->
 
     <!-- Wizard for compute remaining hours -->
 
@@ -485,7 +503,8 @@
             <field eval="True" name="filter"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/>
+        <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
+		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
 
         <record id="action_view_task_department" model="ir.actions.act_window">
             <field name="name">My Department Tasks</field>
@@ -729,8 +748,8 @@ menu_main
             <field name="view_id" ref="view_project_message_tree"/>
        </record>
 
-		<menuitem id="menu_message_main" name="Message" parent="menu_main"/>
-        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_message_main"/>
+		<!--<menuitem id="menu_message_main" name="Message" parent="menu_main"/>-->
+        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
 

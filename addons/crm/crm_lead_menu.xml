@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-    <menuitem id="menu_presale" name="Sales" parent="crm.menu_crm" sequence="4"/>
+<!--    <menuitem id="menu_presale" name="Sales" parent="crm.menu_crm" sequence="4"/>-->
 
 <!--        MENU        -->
 
@@ -25,7 +25,8 @@
         <field name="view_id" ref="crm_case_form_view_leads"/>
         <field name="act_window_id" ref="crm_case_category_act_leads_all"/>
     </record>
-    <menuitem parent="menu_presale" name="Leads" id="menu_crm_case_categ0_act_leads" action="crm_case_category_act_leads_all"/>
+    <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+	<menuitem parent="base.menu_sales" name="Leads" id="menu_crm_case_categ0_act_leads" action="crm_case_category_act_leads_all" sequence="1"/>
 
 <!--        REPORTS        -->
 

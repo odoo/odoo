@@ -65,7 +65,7 @@
                                    <field name="email" widget="email"/>
                                    <field name="extension"/>
                                    <field name="other"/>
-                               </group>                                    
+                               </group>
                             </form>
                             <tree string="Functions and Addresses">
                                 <field name="sequence_contact" string="Seq."/>
@@ -90,7 +90,7 @@
                     </page>
                     <page string="Picture">
                         <field name="photo" nolabel="1" colspan="2" widget="image"/>
-                    </page>                    
+                    </page>
                 </notebook>
             </form>
         </field>
@@ -108,7 +108,7 @@
             </search>
         </field>
     </record>
-    
+
     <record model="ir.actions.act_window" id="action_partner_contact_form">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner.contact</field>
@@ -117,8 +117,8 @@
         <field name="view_id" ref="view_partner_contact_tree"/>
         <field name="search_view_id" ref="view_partner_contact_search"/>
     </record>
-    <menuitem name="Partners/" id="menu_partner_contact_form" action="action_partner_contact_form"/>
-    <menuitem name="Partners/Addresses"  id="base.menu_partner_address_form"/>
+    <menuitem name="Contacts" id="menu_partner_contact_form" action="action_partner_contact_form" parent = "base.menu_address_book" sequence="2"/>
+    <menuitem name="Addresses" id="base.menu_partner_address_form" parent = "base.menu_address_book" sequence="3"/>
 
 
     <!-- Views for Partners -->
@@ -141,7 +141,7 @@
                            <field name="country_id" select="2" completion="1"/>
                            <field name="state_id" select="2"/>
                         </group>
-                        <group string="Communication" colspan="2" col="2"> 
+                        <group string="Communication" colspan="2" col="2">
                            <field name="phone"/>
                            <field name="fax"/>
                            <field name="email" widget="email"/>
@@ -159,17 +159,17 @@
                             </tree>
                             <form string="Contacts">
                             <group string="Partner" colspan="2" col="2">
-                                <field name="sequence_partner"/>                            
+                                <field name="sequence_partner"/>
                                 <field name="name"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                             </group>
-                            <group string="Communication" colspan="2" col="2">    
+                            <group string="Communication" colspan="2" col="2">
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="extension"/>
                                 <field name="other"/>
-                                <field name="email" widget="email"/>                                
+                                <field name="email" widget="email"/>
                                 <field name="extension"/>
                                 <field name="other"/>
                             </group>
@@ -188,8 +188,8 @@
             </field>
         </field>
     </record>
-    
-    
+
+
 <!-- don't display the categories, since it is displayed in an other tab-->
         <record model="ir.ui.view" id="view_partner_form_inherit2">
             <field name="name">res.partner.form</field>
@@ -341,7 +341,7 @@
             </group>
         </field>
     </record>
-	
+
 	<record id="view_res_partner_address_filter" model="ir.ui.view">
 	    <field name="name">res.partner.address.select</field>
 	    <field name="model">res.partner.address</field>
@@ -353,7 +353,7 @@
 			</search>
 	    </field>
     </record>
-    
+
     <!-- Views for res.partner.job -->
     <record model="ir.ui.view" id="view_partner_job_tree">
         <field name="name">res.partner.job.tree</field>
@@ -408,11 +408,11 @@
         <field name="res_model">res.partner.job</field>
         <field name="view_type">form</field>
     </record>
-    <menuitem
-        name="Partners/Contact's Jobs" 
-        action="action_res_partner_job" 
-        id="menu_action_res_partner_job"
-        groups="base.group_extended"/>
+<!--    <menuitem-->
+<!--        name="Partners/Contact's Jobs"-->
+<!--        action="action_res_partner_job"-->
+<!--        id="menu_action_res_partner_job"-->
+<!--        groups="base.group_extended"/>-->
 
     <!-- Act window defining a shorcut on partners to open all his contacts -->
     <act_window domain="[('name', '=', active_id)]"
@@ -420,6 +420,7 @@
         res_model="res.partner.job"
         src_model="res.partner"
         />
-
+        <menuitem name="Contacts" id="menu_procurement_mgt_partner_contact_form" action="action_partner_contact_form"
+      parent="purchase.menu_procurement_management_supplier"/>
 </data>
 </openerp>

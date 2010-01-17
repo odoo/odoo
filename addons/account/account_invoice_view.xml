@@ -349,6 +349,18 @@
             <field name="context">{'type':'out_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
+
+        <record id="action_invoice_tree_panding_invoice" model="ir.actions.act_window">
+            <field name="name">Panding Invoice</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="invoice_tree"/>
+            <field name="context">{'type':'out_invoice'}</field>
+            <field name="domain">[('state','=','draft')]</field>
+           <!-- <field name="search_view_id" ref="view_account_invoice_filter"/>-->
+        </record>
+
         <record id="action_invoice_tree_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
@@ -360,7 +372,7 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree"/>
         </record>
-        <menuitem action="action_invoice_tree" id="menu_finance_invoice" parent="account.menu_finance"/>
+        <menuitem action="action_invoice_tree" id="menu_finance_invoice" parent="account.menu_finance" sequence="2"/>
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
             <field name="name">Customer Invoices</field>

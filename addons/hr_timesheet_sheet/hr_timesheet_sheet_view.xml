@@ -200,9 +200,9 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem 
-            action="act_hr_timesheet_sheet_form" 
-            id="menu_act_hr_timesheet_sheet_form" parent="hr.menu_hr_time"/>
+        <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
+            groups="hr.group_hr_manager"/>
 
         <!--
             Company inheritancy
