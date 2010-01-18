@@ -508,10 +508,13 @@ class message(osv.osv):
 message()
 
 def _project_get(self, cr, uid, context={}):
+    if uid==1:
+        ids = self.pool.get('project.project').search(cr, uid, [])
+        res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
+        return [(str(r['id']),r['name']) for r in res]
     cr.execute("""SELECT to_char(id, '99999'),name FROM project_project where manager=%s OR
                id IN (SELECT project_id from project_user_rel where uid=%s)""" % (uid, uid))
-    projects = cr.fetchall()
-    return projects
+    return cr.fetchall()
 
 class users(osv.osv):
     _inherit = 'res.users'
