@@ -103,7 +103,7 @@ class crm_fundraising(osv.osv):
         }
    
     _defaults = {
-                 'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
+                 'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
