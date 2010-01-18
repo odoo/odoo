@@ -505,85 +505,12 @@
         <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
 		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
 
-        <record id="action_view_task_department" model="ir.actions.act_window">
-            <field name="name">My Department Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid])]</field>
-            <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_pending" model="ir.actions.act_window">
-            <field name="name">My Department's Pending Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','pending')]</field>
-            <field name="view_id" ref="my_pending_task"/>
-           <field name="filter" eval="True"/>
-           <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Current Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','in',('open','draft'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','open')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_draft" model="ir.actions.act_window">
-            <field name="name">My Department's Draft Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task6_prog" model="ir.actions.act_window">
-            <field name="name">Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="domain">[('state','=','open')]</field>
-        </record>
-menu_main
-        <record id="action_view_task7" model="ir.actions.act_window">
-            <field name="name">Unassigned Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="domain">[('user_id', '=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
