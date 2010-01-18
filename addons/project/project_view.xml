@@ -476,7 +476,7 @@
                <search string="Task Edition">
                     <group col="8" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
-                        <filter string="Open" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
@@ -486,7 +486,7 @@
                     </group>
                     <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -495,7 +495,7 @@
         </record>
 
         <record id="action_view_task" model="ir.actions.act_window">
-            <field name="name">All Tasks</field>
+            <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
@@ -650,7 +650,7 @@ menu_main
         <act_window
             domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
-            name="All Tasks"
+            name="Tasks"
             res_model="project.task"
             src_model="project.project"
             view_mode="tree,form,calendar,graph"

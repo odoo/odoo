@@ -130,17 +130,17 @@ class project_task(osv.osv):
     _defaults = {
         'context_id': _get_context
     }
-    
     def next_timebox(self, cr, uid, ids, *args):
         timebox_obj = self.pool.get('project.gtd.timebox')
         timebox_ids = timebox_obj.search(cr,uid,[])
+        if not timebox_ids: return True
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != len(timebox_ids)-1 :
+            if not timebox:
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[0]})
+            elif timebox_ids.index(timebox) != len(timebox_ids)-1:
                 index = timebox_ids.index(timebox)
-            else:
-                index = -1
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
         return True
 
     def prev_timebox(self, cr, uid, ids, *args):
@@ -150,11 +150,9 @@ class project_task(osv.osv):
             timebox = task.timebox_id.id
             if timebox and  timebox_ids.index(timebox) != 0 :
                 index = timebox_ids.index(timebox)
-            else:
-                index = len(timebox_ids)
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
         return True
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
@@ -162,14 +160,14 @@ class project_task(osv.osv):
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
             search_extended ='''<newline/><group col="%d">''' % (len(tt)+6,)
-            search_extended += '''<filter domain="[('timebox_id','=', 0)]" icon="gtk-new" string="Inbox"/>'''
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += ''' <filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
             <field name="context_id" select="1" widget="selection"/> 
