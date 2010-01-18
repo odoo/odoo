@@ -76,8 +76,8 @@
         <field name="arch" type="xml">
             <field name="project_id" position="after">
                 <field name="timebox_id"/>
-                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" states="draft,open,pending"/>
-                <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" states="draft,open,pending"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
+                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
             </field>
         </field>
     </record>
@@ -127,10 +127,10 @@
         <field name="search_view_id" ref="project.view_task_search_form"/>
     </record>
 
-    <menuitem name="Todo List"
+    <menuitem name="To-Dos"
         groups="group_project_getting"
         id="menu_task_inbox"
-        parent="project.menu_main"
+        parent="project.menu_project_management"
         action="action_prject_task_tree"/>
 
     <act_window name="My Inbox"
