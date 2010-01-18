@@ -10,6 +10,7 @@
         <field name="view_type">form</field>
  		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>        
        	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+		<field name="context">{'object_id':'crm.claim'}</field>       	
     </record>
     <menuitem action="crm_claim_categ_action" id="menu_crm_case_claim-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
@@ -21,6 +22,7 @@
 	        <field name="view_type">form</field>
 	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
 	       <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+	      <field name="context">{'object_id':'crm.claim'}</field>  
 	    </record>
 	  <menuitem action="crm_claim_stage_act" id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage"/>
 	    

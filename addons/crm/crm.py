@@ -104,15 +104,22 @@ crm_case_section()
 class crm_case_categ(osv.osv):
     _name = "crm.case.categ"
     _description = "Category of case"
+
     _columns = {
         'name': fields.char('Case Category Name', size=64, required=True, translate=True),
         'probability': fields.float('Probability (%)', required=True),
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
+    def _find_object_id(self, cr, uid, context=None):
+        object_id = context and context.get('object_id', False) or False
+        ids =self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
+        return ids and ids[0] 
     _defaults = {
-        'probability': lambda *args: 0.0
+        'probability': lambda *args: 0.0,
+        'object_id' : _find_object_id
     }
+#               
 crm_case_categ()
 
 class crm_case_resource_type(osv.osv):
@@ -124,7 +131,13 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
-
+    def _find_object_id(self, cr, uid, context=None):
+        object_id = context and context.get('object_id', False) or False
+        ids =self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
+        return ids and ids[0] 
+    _defaults = {
+        'object_id' : _find_object_id
+    }    
 crm_case_resource_type()
 
 
@@ -139,9 +152,15 @@ class crm_case_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model','Object Name'),
     }
+    def _find_object_id(self, cr, uid, context=None):
+        object_id = context and context.get('object_id', False) or False
+        ids =self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
+        return ids and ids[0]     
     _defaults = {
-        'sequence': lambda *args: 1
+        'sequence': lambda *args: 1,
+        'object_id' : _find_object_id
     }
+    
 crm_case_stage()
 
 
