@@ -130,6 +130,16 @@ class project(osv.osv):
 #        'state': lambda *a: 'open',
 #        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', context=c)
     }
+    def _check_dates(self, cr, uid, ids):
+         leave = self.read(cr, uid, ids[0],['date_start','date'])
+         if leave['date_start'] and leave['date']:
+             if leave['date_start'] > leave['date']:
+                 return False
+         return True
+
+    _constraints = [
+        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+    ]
 
 #    _order = "parent_id,priority,name"
 #    _constraints = [
@@ -221,6 +231,32 @@ class task(osv.osv):
     _description = "Tasks"
     _date_name = "date_start"
 
+#    def compute_date(self,cr,uid):
+#        project_id = self.pool.get('project.project').search(cr,uid,[])
+#        for i in range(len(project_id)):
+#            task_ids = self.pool.get('project.task').search(cr,uid,[('project_id','=',project_id[i])])
+#            if task_ids:
+#                task_obj = self.pool.get('project.task').browse(cr,uid,task_ids)
+#                task_1 = task_obj[0]
+#                task_1.date_start = self.pool.get('project.project').browse(cr,uid,project_id[i]).date_start
+##                print '1st Date Start::::',task_1.date_start,type(task_1.date_start)
+#                dt = mx.DateTime.strptime(task_1.date_start,"%Y-%m-%d").strftime("%Y-%m-%d")
+##                print 'Hours:::::',task_1.planned_hours
+##                print 'Date',dt
+#                def Project_1():
+#                   title = "New Project"
+#                   start = dt
+#
+#                   def task1():
+#                       start = dt
+#                       effort = task_1.planned_hours
+#                       title = "Task 1"
+##                project_1 = BalancedProject(Project_1)
+##                print 'Title::::::',project_1.title
+##                for t in project_1:
+##                    print 'details:::',t.indent_name(), t.start, t.end, t.effort
+
+
     def _str_get(self, task, level=0, border='***', context={}):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
@@ -266,14 +302,10 @@ class task(osv.osv):
             if date_start and planned:
                 resource_id = self.pool.get('resource.resource').search(cr,uid,[('user_id','=',res.user_id.id)])
                 resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
-                print 'Resource Calendar::::',resource_obj.calendar_id.id
                 d = mx.DateTime.strptime(date_start,'%Y-%m-%d %H:%M:%S')
                 hrs = (planned)/(occupation_rate)
-                print 'Hours::::',hrs
                 work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, d, hrs or 0.0, resource_obj.id)
-                print 'Date_end',work_times
                 result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                print 'Date End',result['date_end']
         result['remaining_hours'] = planned-effective
         return {'value':result}
 

@@ -176,7 +176,16 @@ class resource_calendar_leaves(osv.osv):
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
-
     }
+    def check_dates(self, cr, uid, ids):
+         leave = self.read(cr, uid, ids[0],['date_from','date_to'])
+         if leave['date_from'] and leave['date_to']:
+             if leave['date_from'] > leave['date_to']:
+                 return False
+         return True
+
+    _constraints = [
+        (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])
+    ]
 resource_calendar_leaves()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

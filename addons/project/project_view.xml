@@ -309,8 +309,9 @@
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
-                            <field name="parent_ids"/>
-                            <newline/>
+                        	<separator string="Parent Tasks" colspan="4"/>
+                            <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
+                            <separator string="Delegated tasks" colspan="4"/>
                             <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
@@ -324,6 +325,7 @@
                             </field>
                             <field colspan="4" name="history" nolabel="1"/>
                         </page>
+                        
                         <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>

@@ -42,7 +42,7 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'name': fields.char('Work Center Name', size=64, required=True),
+#        'name': fields.char('Work Center Name', size=64, required=True),
         'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this workcenter can do in parallel. If this workcenter represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
@@ -56,7 +56,8 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
-        'company_id': fields.many2one('res.company','Company',required=True),
+#        'company_id': fields.many2one('res.company','Company',required=True),
+       'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
     }
     _defaults = {
         'capacity_per_cycle': lambda *a: 1.0,

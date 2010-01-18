@@ -33,32 +33,44 @@ class project_phase(osv.osv):
     _description = "Project Phase"
 
     def _check_recursion(self,cr,uid,ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct next_phase_id from project_phase_next_rel where phase_id in ('+','.join(map(str, ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            next_ids = ids
-            while(next_ids):
-                cr.execute('select distinct prev_phase_id from project_phase_prev_rel where phase_id in ('+','.join(map(str, ids))+')')
-                prev_ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+         obj_self = self.browse(cr, uid, ids[0])
+         prev_ids = obj_self.previous_phase_ids
+         next_ids = obj_self.next_phase_ids
+         #it should nither be in prev_ids nor in next_ids
+         if (obj_self in prev_ids) or (obj_self in next_ids):
+             return False
+         ids = [id for id in prev_ids if id in next_ids]
+         
+         #both prev_ids and next_ids must be unique
+         if ids:
+             return False
+         #unrelated project
+         
+         prev_ids = [rec.id for rec in prev_ids]
+         next_ids = [rec.id for rec in next_ids]
 
-        return True
-
-        while(ids):
-            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str, ids))+')')
-            child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            c_ids = child_ids
-            if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
-                return False
-            while len(c_ids):
-                s_ids = self.search(cr, uid, [('parent_id', 'in', c_ids)])
-                if p_id and (p_id in s_ids):
-                    return False
-                c_ids = s_ids
-            ids = child_ids
-        return True
-
-
+         #iter prev_ids
+         while prev_ids:
+             cr.execute('select distinct prv_phase_id from project_phase_previous_rel where phase_id in ('+','.join(map(str, prev_ids))+')')
+             prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+             if obj_self.id in prv_phase_ids:
+                 return False
+             ids = [id for id in prv_phase_ids if id in next_ids]
+             if ids:
+                 return False
+             prev_ids = prv_phase_ids
+             
+        #iter next_ids
+         while next_ids:
+             cr.execute('select distinct next_phase_id from project_phase_next_rel where phase_id in ('+','.join(map(str, next_ids))+')')
+             next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+             if obj_self.id in next_phase_ids:
+                 return False
+             ids = [id for id in next_phase_ids if id in prev_ids]
+             if ids:
+                 return False
+             next_ids = next_phase_ids
+         return True
 
     _columns = {
         'name': fields.char("Phase Name", size=64, required=True),
@@ -113,6 +125,16 @@ class task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase')
     }
+    def _check_dates(self, cr, uid, ids):
+         leave = self.read(cr, uid, ids[0],['date_start','date_end'])
+         if leave['date_start'] and leave['date_end']:
+             if leave['date_start'] > leave['date_end']:
+                 return False
+         return True
+
+    _constraints = [
+        (_check_dates, 'Error! task start-date must be lower then task end-date.', ['date_start', 'date_end'])
+    ]
 
 task()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
