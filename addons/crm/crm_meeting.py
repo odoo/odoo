@@ -369,11 +369,13 @@ rule or repeating pattern for anexception to a recurrence set"),
                     else:
                         ids = map(lambda x: common.caldav_id2real_id(x), ids)
                         res = super(crm_meeting, self).unlink(cr, uid, common.caldav_id2real_id(ids))
-                        self.do_alarm_unlink(cr, uid, ids)
+                        alarm_obj = self.pool.get('res.alarm')
+                        alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
             else:
                 ids = map(lambda x: common.caldav_id2real_id(x), ids)
                 res = super(crm_meeting, self).unlink(cr, uid, ids)
-                self.do_alarm_unlink(cr, uid, ids)
+                alarm_obj = self.pool.get('res.alarm')
+                alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
         return res
 
     def create(self, cr, uid, vals, context={}):
