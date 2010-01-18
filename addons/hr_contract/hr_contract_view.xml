@@ -60,7 +60,9 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
+
         <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration" sequence="5"/>
+
         <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
 
         <record id="action_hr_contract_wage_type_period" model="ir.actions.act_window">
@@ -68,7 +70,10 @@
             <field name="res_model">hr.contract.wage.type.period</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_hr_contract_wage_type_period" id="hr_menu_contract_wage_type_period" parent="hr_contract.next_id_56"/>
+        <menuitem 
+                action="action_hr_contract_wage_type_period" 
+                id="hr_menu_contract_wage_type_period" 
+                parent="hr_contract.next_id_56"/>
 
 
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
@@ -139,7 +144,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status" parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
+        <menuitem 
+                action="action_hr_marital_status" 
+                id="hr_menu_marital_status" 
+                parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
 
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
@@ -204,6 +212,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
+
 
      <!--   <menuitem name="Contract" id="menu_hr_contract" parent="hr.menu_hr_human_resources"/>-->
      <!--   <menuitem action="action_hr_contract" id="hr_menu_contract" parent="menu_hr_contract"/>-->

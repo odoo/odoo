@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,73 +32,84 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
+import crm
+
+class crm_fundraising_categ(osv.osv):
+    _name = "crm.fundraising.categ"
+    _description = "Fundraising Categories"
+    _columns = {
+            'name': fields.char('Category Name', size=64, required=True),
+            'probability': fields.float('Probability (%)', required=True),
+            'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_fundraising_categ()
+
+class crm_fundraising_type(osv.osv):
+    _name = "crm.fundraising.type"
+    _description = "Fundraising Type"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Fundraising Type Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+    }
+
+crm_fundraising_type()
+
+class crm_fundraising_stage(osv.osv):
+    _name = "crm.fundraising.stage"
+    _description = "Stage of fundraising case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_fundraising_stage()
+
+
 class crm_fundraising(osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"
     _order = "id desc"
-    _inherits = {'crm.case':"inherit_case_id"}  
+    _inherit ='crm.case'
     _columns = {        
-           'inherit_case_id': fields.many2one('crm.case','Case',ondelete='cascade'),
+            'date_closed': fields.datetime('Closed', readonly=True),
+            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),            
+            'categ_id': fields.many2one('crm.fundraising.categ','Category', domain="[('section_id','=',section_id)]"),
+            'planned_revenue': fields.float('Planned Revenue'),
+            'planned_cost': fields.float('Planned Costs'),
+            'probability': fields.float('Probability (%)'),     
+            'partner_name': fields.char("Employee's Name", size=64),
+            'partner_name2': fields.char('Employee Email', size=64),
+            'partner_phone': fields.char('Phone', size=32),
+            'partner_mobile': fields.char('Mobile', size=32), 
+            'stage_id': fields.many2one ('crm.fundraising.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.fundraising.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
+            'duration': fields.float('Duration'),
+            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+            'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
+                                                                       "the partner mentality in relation to our services.The scale has" \
+                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         }
-    def _map_ids(self, method, cr, uid, ids, *args, **argv):
-        if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids            
-        case_data = self.browse(cr, uid, select)
-        new_ids = []
-        for case in case_data:
-            if case.inherit_case_id:
-                new_ids.append(case.inherit_case_id.id)
-        res = getattr(self.pool.get('crm.case'),method)(cr, uid, new_ids, *args, **argv)
-        if isinstance(ids, (str, int, long)) and isinstance(res, list):
-            return res and res[0] or False
-        return res
+   
+    _defaults = {
+                 'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
+    }
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.fundraising.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}    
+    
 
-
-    def onchange_case_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_case_id',cr,uid,ids,*args,**argv)
-    def onchange_partner_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_partner_id',cr,uid,ids,*args,**argv)
-    def onchange_partner_address_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_partner_address_id',cr,uid,ids,*args,**argv)
-    def onchange_categ_id(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('onchange_categ_id',cr,uid,ids,*args,**argv)
-    def case_close(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_close',cr,uid,ids,*args,**argv)    
-    def case_open(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_open',cr,uid,ids,*args,**argv)
-    def case_cancel(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_cancel',cr,uid,ids,*args,**argv)
-    def case_reset(self,cr, uid, ids, *args, **argv):
-        return self._map_ids('case_reset',cr,uid,ids,*args,**argv)    
-    def case_escalate(self,cr, uid, ids, *args, **argv):    
-        return self._map_ids('case_escalate',cr,uid,ids,*args,**argv)    
-    def case_pending(self,cr, uid, ids, *args, **argv):    
-        return self._map_ids('case_pending',cr,uid,ids,*args,**argv)  
-
-    def msg_new(self, cr, uid, msg):        
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],            
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
-            'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)        
-        return res
-
-    def msg_update(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('msg_update',cr, uid, ids, *args, **argv)
-    def emails_get(self, cr, uid, ids, *args, **argv):
-        return self._map_ids('emails_get',cr, uid, ids, *args, **argv)
-    def msg_send(self, cr, uid, ids, *args, **argv):        
-        return self._map_ids('msg_send',cr, uid, ids, *args, **argv) 
-      
 crm_fundraising()    

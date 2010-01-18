@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,8 +29,8 @@ class sale_order(osv.osv):
     }
 
     def _get_section(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr,uid,uid)
-       return user.section_id.id
+       user = self.pool.get('res.users').browse(cr,uid,uid,context=context)
+       return int(user.context_section_id)
 
     _defaults = {
           'section_id':_get_section

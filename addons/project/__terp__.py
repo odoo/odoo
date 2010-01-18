@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -31,7 +31,6 @@
 works done on tasks, eso. It is able to render planning, order tasks, eso.
     """,
     "init_xml" : [],
-    "demo_xml" : ["project_demo.xml"],
     "update_xml": [
         "security/project_security.xml",
         "security/ir.model.access.csv",
@@ -39,7 +38,8 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_wizard.xml",
         "project_view.xml",
         "project_report.xml",
-        "process/task_process.xml"
+        "process/task_process.xml",
+        "project_installer.xml",
     ],
     'demo_xml': ['project_demo.xml'],
     'installable': True,

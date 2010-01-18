@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+      <record id="wiki_quality_manual" model="wiki.wiki">
+        <field name="name">Quality Manual</field>
+        <field name="tags">quality, faq, manual</field>
+        <field name="minor_edit">0</field>
+        <field name="toc">1</field>
+        <field name="review">1</field>
+        <field name="section">2</field>
+        <field name="summary">Base template</field>
+        <field name="text_area">
+=General=
+
+==Index and revision status==
+
+==Purpose==
+
+=Background=
+
+==Activities==
+
+==History==
+
+=Definitions and Abbreviations=
+
+==Definitions and terminology==
+
+==Abbreviations==
+
+=Management Requirements=
+
+==Organization==
+
+==Management System==
+
+==Document Control==
+
+==Review of Contracts==
+
+==Subcontracting==
+
+==Purchasing==
+
+==Service to the customer==
+
+==Complaints==
+
+==Control of non-conforming work==
+
+==Improvement==
+
+==Corrective actions==
+
+==Preventive actions==
+
+==Control of quality records==
+
+==Internal audits==
+
+==Management Reviews==
+
+=Technical Requirements=
+
+==General==
+
+==Personnel==
+
+==Accomodation==
+
+==Test methods and validation==
+
+==Equipment==
+
+==Measurement traceability==
+
+==Sampling==
+
+==Test items==
+
+==Quality control==
+
+==Reports / calibration certificates==
+
+=References=
+
+=Acknowledgements=
+        </field>
+      </record>
+      <record id="wiki_group_quality_manual" model="wiki.groups">
+        <field name="name">Quality Manual</field>
+        <field name="section">2</field>
+        <field name="home" ref="wiki_quality_manual"/>
+      </record>
+    </data>
+    <data>
+      <record id="wiki_quality_manual" model="wiki.wiki">
+        <field name="group_id" ref="wiki_group_quality_manual"/>
+      </record>
+    </data>
+</openerp>

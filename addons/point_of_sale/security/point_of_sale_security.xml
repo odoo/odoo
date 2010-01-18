@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data noupdate="1">
+  <data noupdate="1">
 
     <record id="group_pos_manager" model="res.groups">
         <field name="name">Point of Sale / Manager</field>
@@ -8,6 +8,13 @@
     <record id="group_pos_user" model="res.groups">
         <field name="name">Point of Sale / User</field>
     </record>
+  </data>
 
-</data>
+  <data>
+
+    <record id="menu_point_config" model="ir.ui.menu">
+      <field eval="[(6,0,[ref('group_pos_manager')])]" name="groups_id"/>
+    </record>
+
+  </data>
 </openerp>

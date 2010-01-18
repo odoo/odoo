@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -507,12 +507,19 @@ class message(osv.osv):
         }
 message()
 
+def _project_get(self, cr, uid, context={}):
+    cr.execute("""SELECT to_char(id, '99999'),name FROM project_project where manager=%s OR
+               id IN (SELECT project_id from project_user_rel where uid=%s)""" % (uid, uid))
+    projects = cr.fetchall()
+    return projects
+
 class users(osv.osv):
     _inherit = 'res.users'
-    _description ="User"
+    _description = "Users"
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project'),
+        'context_project_id': fields.selection(_project_get, 'Project'),
         }
 
 users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

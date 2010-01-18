@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -44,13 +44,15 @@ class crm_cases(osv.osv):
             'email_from': msg['From'],
             'email_cc': msg['Cc'],            
             'user_id': False,
-            'description': msg_body['body'],
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })],
+            'description': msg_body['body'],            
         }
         res = mailgate_obj.partner_get(cr, uid, msg['From'])
         if res:
             data.update(res)
-        return self.create(cr, uid, data)       
+        res = self.create(cr, uid, data)
+        cases = self.browse(cr, uid, [res])       
+        self.__history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
+        return res
     
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):         
         mailgate_obj = self.pool.get('mail.gateway')

@@ -487,7 +487,6 @@
                     <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
                             <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
-                            <filter domain="[('user_id', 'child_of', [uid])]" help="My Department tasks" icon="gtk-execute" separator="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -502,6 +501,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
+            <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
 		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
@@ -689,7 +689,7 @@ menu_main
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <field name="password" position="after">
-                 <field name="project_id" widget="selection" />
+                 <field name="context_project_id" completion="1"/>
                 </field>
             </field>
         </record>
@@ -699,9 +699,10 @@ menu_main
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
+            <field eval="18" name="priority"/>
             <field name="arch" type="xml">
              <page string="Current Activity" position="inside">
-                    <field name="project_id" widget="selection"/>
+                    <field name="context_project_id" completion="1" />
                 </page>
             </field>
         </record>

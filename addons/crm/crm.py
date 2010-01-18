@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,12 +32,6 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
-
-import email
-import netsvc
-from poplib import POP3, POP3_SSL
-from imaplib import IMAP4, IMAP4_SSL
-
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -64,17 +58,16 @@ icon_lst = {
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
     _description = "Case Section"
+    _order = "name"
     _columns = {
         'name': fields.char('Case Section',size=64, required=True, translate=True),
         'code': fields.char('Section Code',size=8),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case sections."),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
-        'calendar' : fields.boolean('Calendar', help='Allows to show calendar'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -95,106 +88,6 @@ class crm_case_section(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
     ]
-
-    # Mainly used by the wizard
-    def menu_create_data(self, cr, uid, data, menu_lst, context):
-        menus = {}
-        menus[0] = data['menu_parent_id']
-        section = self.browse(cr, uid, data['section_id'], context)
-        for (index, mname, mdomain, latest, view_mode) in menu_lst:
-            view_mode = data['menu'+str(index)+'_option']
-            if view_mode=='no':
-                menus[index] = data['menu_parent_id']
-                continue
-            icon = icon_lst.get(view_mode.split(',')[0], 'STOCK_JUSTIFY_FILL')
-            menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
-                'name': data['menu'+str(index)],
-                'parent_id': menus[latest],
-                'icon': icon
-            })
-            menus[index] = menu_id
-            action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
-                'name': data['menu'+str(index)],
-                'res_model': 'crm.case',
-                'domain': mdomain.replace('SECTION_ID', str(data['section_id'])),
-                'view_type': 'form',
-                'view_mode': view_mode,
-            })
-            seq = 0
-            for mode in view_mode.split(','):
-                self.pool.get('ir.actions.act_window.view').create(cr, uid, {
-                    'sequence': seq,
-                    'view_id': data['view_'+mode],
-                    'view_mode': mode,
-                    'act_window_id': action_id,
-                    'multi': True
-                })
-                seq+=1
-            self.pool.get('ir.values').create(cr, uid, {
-                'name': data['menu'+str(index)],
-                'key2': 'tree_but_open',
-                'model': 'ir.ui.menu',
-                'res_id': menu_id,
-                'value': 'ir.actions.act_window,%d'%action_id,
-                'object': True
-            })
-        return True
-
-    #
-    # Used when called from .XML file
-    #
-    def menu_create(self, cr, uid, ids, name, menu_parent_id=False, context={}):
-        menus = {}
-        menus[-1] = menu_parent_id
-        for section in self.browse(cr, uid, ids, context):
-            for (index, mname, mdomain, latest) in [
-                (0,'',"[('section_id','=',"+str(section.id)+")]", -1),
-                (1,'My ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid)]", 0),
-                (2,'My Unclosed ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','done')]", 1),
-                (5,'My Open ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','open')]", 2),
-                (6,'My Pending ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','pending')]", 2),
-                (7,'My Draft ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','draft')]", 2),
-
-                (3,'My Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 1),
-                (4,'My Canceled ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','cancel')]", 1),
-                (8,'All ',"[('section_id','=',"+str(section.id)+"),]", 0),
-                (9,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False)]", 8),
-                (10,'Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 8),
-                (11,'Canceled ',"[('section_id','=',"+str(section.id)+"),('state','=','cancel')]", 8),
-                (12,'Unclosed ',"[('section_id','=',"+str(section.id)+"),('state','<>','cancel'), ('state','<>','done')]", 8),
-                (13,'Open ',"[('section_id','=',"+str(section.id)+"),('state','=','open')]", 12),
-                (14,'Pending ',"[('section_id','=',"+str(section.id)+"),('state','=','pending')]", 12),
-                (15,'Draft ',"[('section_id','=',"+str(section.id)+"),('state','=','draft')]", 12),
-                (16,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False),('state','<>','cancel'),('state','<>','done')]", 12),
-            ]:
-                view_mode = 'tree,form'
-                icon = 'STOCK_JUSTIFY_FILL'
-                if index==0:
-                    view_mode = 'form,tree'
-                    icon = 'STOCK_NEW'
-                menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
-                    'name': mname+name,
-                    'parent_id': menus[latest],
-                    'icon': icon
-                })
-                menus[index] = menu_id
-                action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
-                    'name': mname+name+' Cases',
-                    'res_model': 'crm.case',
-                    'domain': mdomain,
-                    'view_type': 'form',
-                    'view_mode': view_mode,
-                })
-                self.pool.get('ir.values').create(cr, uid, {
-                    'name': 'Open Cases',
-                    'key2': 'tree_but_open',
-                    'model': 'ir.ui.menu',
-                    'res_id': menu_id,
-                    'value': 'ir.actions.act_window,%d'%action_id,
-                    'object': True
-                })
-        return True
-
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
@@ -208,18 +101,7 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
-class crm_case_categ(osv.osv):
-    _name = "crm.case.categ"
-    _description = "Category of case"
-    _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
-        'probability': fields.float('Probability (%)', required=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_case_categ()
+
 
 class crm_case_rule(osv.osv):
     _name = "crm.case.rule"
@@ -244,7 +126,8 @@ class crm_case_rule(osv.osv):
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
 
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
+    
+        #'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
 
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
@@ -327,6 +210,7 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+
 class crm_case(osv.osv):
     _name = "crm.case"
     _description = "Case"
@@ -339,22 +223,39 @@ class crm_case(osv.osv):
             else:
                 res[case.id] = False
         return res
+
     def copy(self, cr, uid, id, default=None, context={}):
         if not default: default = {}
-        default.update( {'state':'draft', 'id':False, 'history_line':[],'log_ids':[]})
+        default.update( {'state':'draft', 'id':False})
         return super(crm_case, self).copy(cr, uid, id, default, context)
+
+    def _get_log_ids(self, cr, uid, ids, field_names, arg, context={}):
+        result = {}
+        history_obj = False
+        model_obj = self.pool.get('ir.model')
+        if 'history_line' in field_names:
+            history_obj = self.pool.get('crm.case.history')
+            name = 'history_line'
+        if 'log_ids' in field_names:
+            history_obj = self.pool.get('crm.case.log')
+            name = 'log_ids'
+        if not history_obj:
+            return result
+        for case in self.browse(cr, uid, ids, context):
+            model_ids = model_obj.search(cr, uid, [('model','=',case._name)])
+            history_ids = history_obj.search(cr, uid, [('model_id','=',model_ids[0]),('res_id','=',case.id)])             
+            if history_ids:
+                result[case.id] = {name:history_ids}
+            else:
+                result[case.id] = {name:[]}         
+        return result
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description',size=64,required=True),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", help='Category related to the section.Subdivide the CRM cases independently or section-wise.'),
-        'planned_revenue': fields.float('Planned Revenue'),
-        'planned_cost': fields.float('Planned Costs'),
-        'probability': fields.float('Probability (%)'),
         'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
         'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
@@ -362,25 +263,17 @@ class crm_case(osv.osv):
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                       "the partner mentality in relation to our services.The scale has" \
-                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'date': fields.datetime('Date'),
         'create_date': fields.datetime('Created' ,readonly=True),
         'date_deadline': fields.datetime('Deadline'),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
-                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication', readonly=1),
-        'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History', readonly=1),
+        'history_line': fields.function(_get_log_ids, method=True, type='one2many', multi="history_line", relation="crm.case.history", string="Communication"),
+        'log_ids': fields.function(_get_log_ids, method=True, type='one2many', multi="log_ids", relation="crm.case.log", string="Logs History"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'ref' : fields.reference('Reference', selection=_links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -410,8 +303,8 @@ class crm_case(osv.osv):
         return uid
 
     def _get_section(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr, uid, uid)
-       return user.section_id.id
+       user = self.pool.get('res.users').browse(cr, uid, uid,context=context)
+       return user.context_section_id
 
     _defaults = {
         'active': lambda *a: 1,
@@ -420,11 +313,10 @@ class crm_case(osv.osv):
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
-        'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
-    _order = 'priority, date_deadline desc, date desc,id desc'
+    _order = 'date_deadline desc, date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
@@ -432,6 +324,41 @@ class crm_case(osv.osv):
                 raise osv.except_osv(_('Warning !'),
                     _('You can not delete this case. You should better cancel it.'))
         return super(crm_case, self).unlink(cr, uid, ids, context)
+
+    def stage_next(self, cr, uid, ids, context={}):
+        ok = False
+        sid = self.pool.get('crm.case.stage').search(cr, uid, [], context=context)
+        s = {}
+        previous = {}
+        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
+            section = stage.section_id.id or False
+            s.setdefault(section, {})
+            s[section][previous.get(section, False)] = stage.id
+            previous[section] = stage.id
+
+        for case in self.browse(cr, uid, ids, context):
+            section = (case.section_id.id or False)
+            if section in s:
+                st = case.stage_id.id  or False
+                if st in s[section]:
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+
+        return True
+
+    def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
+        if not case_id:
+            return {}
+        case = self.browse(cr, uid, case_id, context=context)
+        value = {}
+        if not name:
+            value['name'] = case.name
+        if (not partner_id) and case.partner_id:
+            value['partner_id'] = case.partner_id.id
+            if case.partner_address_id:
+                value['partner_address_id'] = case.partner_address_id.id
+            if case.email_from:
+                value['email_from'] = case.email_from
+        return {'value': value}
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
         if not scrit:
@@ -590,54 +517,17 @@ class crm_case(osv.osv):
         }
         return self.format_body(body % data)
 
-    def email_send(self, cr, uid, case, emails, body, context={}):
-        body = self.format_mail(case, body)
-        if case.user_id and case.user_id.address_id and case.user_id.address_id.email:
-            emailfrom = case.user_id.address_id.email
-        else:
-            emailfrom = case.section_id.reply_to
-        name = '[%d] %s' % (case.id, case.name.encode('utf8'))
-        reply_to = case.section_id.reply_to or False
-        if reply_to: reply_to = reply_to.encode('utf8')
-        if not emailfrom:
-            raise osv.except_osv(_('Error!'),
-                    _("No E-Mail ID Found for your Company address or missing reply address in section!"))
-        tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, tinycrm=str(case.id))
-        return True
-    def __log(self, cr, uid, cases, keyword, context={}):
-        if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
-            return False
-        for case in cases:
-            if case.partner_id:
-                translated_keyword = keyword
-                if 'translated_keyword' in context:
-                    translated_keyword = context['translated_keyword']
-                name = _('Case') +  ' ' + translated_keyword + ': ' + case.name
-                if isinstance(name, str):
-                    name = unicode(name, 'utf-8')
-                if len(name) > 64:
-                    name = name[:61] + '...'
-                self.pool.get('res.partner.event').create(cr, uid, {
-                    'name': name,
-                    'som':(case.som or False) and case.som.id,
-                    'description':case.description,
-                    'partner_id':case.partner_id.id,
-                    'date':time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'canal_id':(case.canal_id or False) and case.canal_id.id,
-                    'user_id':uid,
-                    'document': 'crm.case,%i' % case.id,
-                })
-        return True
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
+        model_obj = self.pool.get('ir.model')
         for case in cases:
+            model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
-                'name': keyword,
-                'som': case.som.id,
-                'canal_id': case.canal_id.id,
+                'name': keyword,                
                 'user_id': uid,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'case_id': case.id,
+                'model_id' : model_ids and model_ids[0] or False,
+                'res_id': case.id,
                 'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
@@ -647,7 +537,7 @@ class crm_case(osv.osv):
                 data['email'] = email or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or False
-            obj.create(cr, uid, data, context)
+            res = obj.create(cr, uid, data, context)            
         return True
     _history = __history
 
@@ -655,7 +545,6 @@ class crm_case(osv.osv):
         res = super(crm_case, self).create(cr, uid, *args, **argv)
         cases = self.browse(cr, uid, [res])
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'draft', context={'translated_keyword': _('draft')})
         self._action(cr,uid, cases, 'draft')
         return res
 
@@ -708,8 +597,8 @@ class crm_case(osv.osv):
 
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):
-            if case.history_line:
-                description = case.history_line[0].description
+            if case.email_last:
+                description = email_last
                 self.write(cursor, user, case.id, {
                     'description': '> ' + description.replace('\n','\n> '),
                     }, context=context)
@@ -770,11 +659,7 @@ class crm_case(osv.osv):
             data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
         return {'value':data}
 
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
+
 
 
     def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
@@ -788,7 +673,6 @@ class crm_case(osv.osv):
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr,uid, cases, 'done', context={'translated_keyword': _('done')})
         self.__history(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state':'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         #
@@ -816,7 +700,6 @@ class crm_case(osv.osv):
 
     def case_open(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
-        self.__log(cr, uid, cases, 'open', context={'translated_keyword': _('open')})
         self.__history(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state':'open', 'active':True}
@@ -830,7 +713,6 @@ class crm_case(osv.osv):
     def case_cancel(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'cancel', context={'translated_keyword': _('cancel')})
         self.__history(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state':'cancel', 'active':True})
         self._action(cr,uid, cases, 'cancel')
@@ -839,7 +721,6 @@ class crm_case(osv.osv):
     def case_pending(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'pending', context={'translated_keyword': _('draft')})
         self.__history(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state':'pending', 'active':True})
         self._action(cr,uid, cases, 'pending')
@@ -848,12 +729,12 @@ class crm_case(osv.osv):
     def case_reset(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.__log(cr, uid, cases, 'draft', context={'translated_keyword': _('draft')})
         self.__history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state':'draft', 'active':True})
         self._action(cr, uid, cases, 'draft')
         return True
 crm_case()
+
 
 class crm_case_log(osv.osv):
     _name = "crm.case.log"
@@ -866,7 +747,8 @@ class crm_case_log(osv.osv):
         'canal_id': fields.many2one('res.partner.canal', 'Channel'),
         'section_id': fields.many2one('crm.case.section', 'Section'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'case_id': fields.many2one('crm.case', 'Case', required=True, ondelete='cascade')
+        'model_id': fields.many2one('ir.model', "Model"),
+        'res_id': fields.integer('Resource ID'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -880,9 +762,9 @@ class crm_case_history(osv.osv):
     _inherits = {'crm.case.log':"log_id"}
 
     def create(self, cr, user, vals, context=None):
-        if vals.has_key('case_id') and vals['case_id']:
-            case_obj = self.pool.get('crm.case')
-            cases = case_obj.browse(cr, user, [vals['case_id']])
+        if vals.has_key('res_id') and vals['res_id']:
+            case_obj = self.pool.get(vals['model_id'])
+            cases = case_obj.browse(cr, user, [vals['res_id']])
             case_obj._action(cr, user, cases, '')
         return super(crm_case_history, self).create(cr, user, vals, context)
 
@@ -953,14 +835,21 @@ class crm_email_add_cc_wizard(osv.osv_memory):
 
 crm_email_add_cc_wizard()
 
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _description = "users"
+def _section_get(self, cr, uid, context={}):
+    obj = self.pool.get('crm.case.section')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['id','name'], context)
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
 
+class users(osv.osv):
+    _inherit = 'res.users'
+    _description = "Users"
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Section', required=False)
-    }
+        'context_section_id': fields.selection(_section_get, 'Sales Section'),
+        }
 
-res_users()
+users()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+

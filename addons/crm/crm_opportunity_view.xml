@@ -2,37 +2,82 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Opportunity Categories
+    # ------------------------------------------------------
+    
+    <record id="crm_opportunity_categ_view_form" model="ir.ui.view">
+        <field name="name">crm.opportunity.categ.form</field>
+        <field name="model">crm.opportunity.categ</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Opportunity Category">
+                <field name="name" select="1"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="crm_opportunity_categ_view_tree" model="ir.ui.view">
+        <field name="name">crm.opportunity.categ.tree</field>
+        <field name="model">crm.opportunity.categ</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Opportunity Category">
+                <field name="name"/>
+                <field name="probability"/>
+                <field name="section_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_opportunity_categ_action" model="ir.actions.act_window">
+        <field name="name">Opportunity Categories</field>
+        <field name="res_model">crm.opportunity.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_opportunity_categ_view_tree"/>
+    </record>
+     <menuitem action="crm_opportunity_categ_action" id="menu_crm_case_opportunity-act" parent="crm.menu_crm_case_categ"/>
+		# ------------------------------------------------------ 
+	    # Stage
+	    # ------------------------------------------------------ 
+	    <record model="ir.ui.view" id="crm_opportunity_stage_tree">
+	        <field name="name">crm.opportunity.stage.tree</field>
+	        <field name="model">crm.opportunity.stage</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Stages">
+	                <field name="sequence"/>
+	                <field name="name"/>
+	                <field name="section_id"/>
+	            </tree>
+	        </field>
+	    </record>
+	    
+	    <record model="ir.ui.view" id="crm_opportunity_stage_form">
+	        <field name="name">crm.opportunity.stage.form</field>
+	        <field name="model">crm.opportunity.stage</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Stage">
+	            	<field name="name" select="1"/>
+	                <field name="section_id" select="1" widget="selection"/>
+	                <field name="sequence"/>
+	            </form>
+	        </field>
+	    </record>
+	    
+	    <record id="crm_opportunity_stage_act" model="ir.actions.act_window">
+	        <field name="name">Opportunity Stages</field>
+	        <field name="res_model">crm.claim.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm_opportunity_stage_tree"/>
+	    </record>
+	  <menuitem action="crm_opportunity_stage_act" id="menu_crm_opportunity_stage_act" parent="crm.menu_crm_case_stage"/>
     # ------------------------------------------------------
     # Opportunities
     # ------------------------------------------------------   
 
-    <record model="ir.ui.view" id="crm_opportunity_assign_wizard_form">
-        <field name="name">crm.opportunity.assign_wizard.form</field>
-        <field name="model">crm.opportunity.assign_wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="To Assign">
-                <group col="2">            	
-                    <field name="section_id" select="1" widget="selection"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>                    
-                <separator colspan="4"/>                             
-                <group col="2" colspan="2">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="action_crm_opportunity_assign_wizard" model="ir.actions.act_window">
-        <field name="name">To Assign</field>
-        <field name="res_model">crm.opportunity.assign_wizard</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm_opportunity_assign_wizard_form"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
 
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
@@ -45,8 +90,8 @@
                     <field name="name" select="1" string="Opportunity" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2" string="Responsible"/>
-                    <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />
+					<button string="Schedule a Meeting"
+                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
                         <newline/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -55,9 +100,10 @@
                         </group>
                     <field name="date" string="Deadline"/>
                     <group colspan="2">
-                        <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(action_crm_opportunity_assign_wizard)d"  type="action" />
+                        <field name="phonecall_id" select="1"/>
                     </group>
+					 <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />                        
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
@@ -66,7 +112,7 @@
                     <field name="email_from" colspan="2"/>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Source"/>
                     <field name="priority" string="Priority"/>
-                    <field name="category2_id" select="1" string="Category"/>
+                    <field name="type_id" select="1" string="Type"/>
                     <separator colspan="4" string="Estimates"/>
                     <field name="planned_revenue"/>
                     <field name="planned_cost"/>
@@ -111,19 +157,6 @@
                         </form>
                     </field>
                 </page>
-                 <page string="Events">
-                   <field name="child_ids" colspan="4" nolabel="1">
-                       <tree string="Related Cases">
-                           <field name="id"/>
-                           <field name="date"/>
-                           <field name="name"/>
-                           <field name="partner_id"/>
-                           <field name="user_id"/>
-                           <field name="section_id" widget="selection"/>
-                           <field name="state"/>
-                       </tree>
-                    </field>
-                 </page>
                  <page string="Emails">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
@@ -215,16 +248,16 @@
                    		domain="[('user_id','=',uid)]"
                    		help="My Opportunities" default="1"
                    	/>
-                   	<filter icon="terp-crm"
-                   		domain="[('user_id','child_of',[uid])]"
-                   		help="My department's Opportunities"
-                   	/>
                    </field>
                    <field name="partner_id" select="1"/>
                    <field name="state" select="1">
                        <filter icon="gtk-index" domain="[('state','in',('open','draft'))]" help="Current "/>
                    </field>
-				<field name="section_id" select="1" widget="selection" string="Section"/>
+					<field name="section_id" select="1" widget="selection" string="Section">
+						<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"/>		
+			   		</field>     
                </group>
            </search>
         </field>

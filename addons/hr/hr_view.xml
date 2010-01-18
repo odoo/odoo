@@ -13,6 +13,7 @@
             name="Configuration"
             parent="hr.menu_hr_root"
             sequence="50" groups="group_hr_manager"/>
+
       <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_configuration" name="Employees" sequence="1"/>
         <!--
         ==========
@@ -104,7 +105,7 @@
         </record>
       <!--  <menuitem
             id="menu_open_view_employee_list"
-            name="Employees"
+            action="open_view_employee_list"
             groups="group_hr_manager"
             parent="menu_hr_human_resources"/>
         <menuitem
@@ -186,11 +187,12 @@
             </field>
         </record>
         <record id="edit_workgroup" model="ir.actions.act_window">
-            <field name="name">Working Time Categories</field>
+            <field name="name">Working Schedules</field>
             <field name="res_model">hr.timesheet.group</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
+
         <menuitem action="edit_workgroup" id="menu_edit_workgroup"  name="Work Schedules" parent="menu_view_employee_category_configuration_form" sequence="4"/>
 
         <record id="view_timesheet_tree" model="ir.ui.view">
@@ -269,6 +271,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form" parent="menu_view_employee_category_configuration_form" sequence="1"/>
+
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>

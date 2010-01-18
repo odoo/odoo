@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,20 @@
 #
 ##############################################################################
 
+
+from datetime import datetime, timedelta
 from osv import fields, osv
 from service import web_services
 from tools.translate import _
 import re
 import time
-import datetime
 
 months = {
         1:"January", 2:"February", 3:"March", 4:"April", \
         5:"May", 6:"June", 7:"July", 8:"August", 9:"September", \
         10:"October", 11:"November", 12:"December"}
 
-def caldav_id2real_id(caldav_id = None, with_date=False):
+def caldav_id2real_id(caldav_id=None, with_date=False):
     if caldav_id and isinstance(caldav_id, (str, unicode)):
         res = caldav_id.split('-')
         if len(res) >= 2:
@@ -93,34 +94,6 @@ class calendar_attendee(osv.osv):
         'dir': {'field':'dir', 'type':'text'}, 
         'language': {'field':'language', 'type':'text'}, 
     }
-    def export_cal(self, cr, uid, ids, context={}):
-        basic_attendee_obj = self.pool.get('basic.calendar.attendee')        
-        basic_attendee_obj.__attribute__.update(self.__attribute__)        
-        data = self.read(cr, uid, ids)
-        attendees = basic_attendee_obj.export_ical(cr, uid, data, {'model': self._name})
-        cal_val = ''
-        for attendee in attendees:
-            cal_val += attendee.serialize()            
-        return cal_val
-
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)        
-        basic_attendee_obj = self.pool.get('basic.calendar.attendee')        
-        basic_attendee_obj.__attribute__.update(self.__attribute__)
-        
-        vals = basic_attendee_obj.import_ical(cr, uid, file_content)
-        ids = []
-        for val in vals:            
-            is_exists = uid2openobjectid(cr, val['id'], self._name)
-            if val.has_key('create_date'): val.pop('create_date')            
-            val.pop('id')
-            if is_exists:                               
-                self.write(cr, uid, [is_exists], val)
-                ids.append(is_exists)
-            else:
-                attendee_id = self.create(cr, uid, val)
-                ids.append(attendee_id)                
-        return ids   
 
     def _get_address(self, name=None, email=None):
         if name and email:
@@ -137,7 +110,7 @@ class calendar_attendee(osv.osv):
 
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
-            result[id] = {}            
+            result[id] = {}
             if name == 'sent_by':
                 if not attdata.sent_by_uid:
                     result[id][name] = ''
@@ -146,7 +119,12 @@ class calendar_attendee(osv.osv):
                     result[id][name] =  self._get_address(attdata.sent_by_uid.name, \
                                         attdata.sent_by_uid.address_id.email)
             if name == 'cn':
-                result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+                if attdata.user_id:
+                    result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+                elif attdata.partner_address_id:
+                    result[id][name] = self._get_address(attdata.partner_id.name, attdata.email)
+                else:
+                    result[id][name] = self._get_address(None, attdata.email)
             if name == 'delegated_to':
                 user_obj = self.pool.get('res.users')
                 todata = map(get_delegate_data, attdata.del_to_user_ids)
@@ -157,24 +135,30 @@ class calendar_attendee(osv.osv):
                 fromdata = map(get_delegate_data, attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
+                # TO fix date for project task
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model) 
-                    obj = model_obj.read(cr, uid, res_id, ['date'])[0]                     
-                    result[id][name] = obj['date']
+                    model_obj = self.pool.get(model)
+                    obj = model_obj.read(cr, uid, res_id, ['date'])[0]
+                    result[id][name] = None#obj['date']
+                else:
+                    result[id][name] = None
             if name == 'event_end_date':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model) 
-                    obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0] 
+                    model_obj = self.pool.get(model)
+                    obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
                     result[id][name] = obj['date_deadline']
-
+                else:
+                    result[id][name] = None
             if name == 'sent_by_uid':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model) 
-                    obj = model_obj.read(cr, uid, res_id, ['user_id'])[0] 
+                    model_obj = self.pool.get(model)
+                    obj = model_obj.read(cr, uid, res_id, ['user_id'])[0]
                     result[id][name] = obj['user_id']
+                else:
+                    result[id][name] = uid
         return result
 
     def _links_get(self, cr, uid, context={}):
@@ -212,29 +196,31 @@ class calendar_attendee(osv.osv):
                     help="Indicats whether the favor of a reply is requested"), 
         'delegated_to': fields.function(_compute_data, method=True, \
                 string='Delegated To', type="char", size=124, store=True, \
-                multi='delegated_to', help="The users that the original request \
-                                                    was delegated to"), 
-        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel',
+                multi='delegated_to', help="The users that the original \
+request was delegated to"), 
+        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel', 
                                   'attendee_id', 'user_id', 'Users'), 
         'delegated_from': fields.function(_compute_data, method=True, string=\
-                'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
+            'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent by', type="many2one", obj='res.users', multi='sent_by_uid'), 
+        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
         'language': fields.selection(_lang_get, 'Language', 
                                   help="To specify the language for text values in a property or property parameter."), 
-        'user_id': fields.many2one('res.users', 'User', required=True),
-        'email': fields.char('Email', size=124),
-        'event_date' : fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'),
-        'event_end_date' : fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'),
-        'ref':fields.reference('Document Ref', selection=_links_get, size=128),
-        'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
+        'user_id': fields.many2one('res.users', 'User'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
+        'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
+        'email': fields.char('Email', size=124), 
+        'event_date' : fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
+        'event_end_date' : fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
+        'ref': fields.reference('Document Ref', selection=_links_get, size=128), 
+        'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"), 
      }
     _defaults = {
-        'state':  lambda *x: 'needs-action',         
+        'state':  lambda *x: 'needs-action', 
     }
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -261,12 +247,12 @@ class res_alarm(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True), 
         'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
-                                        'Trigger time', required=True), 
+                                        'Triggers', required=True), 
         'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
-                ('days', 'Days')], 'Trigger duration', required=True), 
-        'trigger_duration':  fields.integer('Time', required=True), 
+                ('days', 'Days')], 'Interval', required=True), 
+        'trigger_duration':  fields.integer('Duration', required=True), 
         'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                       'The event ends')], 'Trigger Occures at', required=True), 
+                                       'The event ends')], 'Related to', required=True), 
         'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
 are both optional, but if one occurs, so MUST the other"""), 
         'repeat': fields.integer('Repeat'), 
@@ -281,6 +267,54 @@ are both optional, but if one occurs, so MUST the other"""),
         'trigger_related': lambda *x: 'start', 
         'active': lambda *x: 1, 
     }
+
+    def do_alarm_create(self, cr, uid, ids, model, date, context={}):
+        alarm_obj = self.pool.get('calendar.alarm')
+        model_obj = self.pool.get('ir.model')
+        model_id = model_obj.search(cr, uid, [('model', '=', model)])[0]
+        
+        model_obj = self.pool.get(model)
+        for data in model_obj.browse(cr, uid, ids):
+            basic_alarm = data.alarm_id
+            self.do_alarm_unlink(cr, uid, [data.id], model)
+            if basic_alarm:
+                vals = {
+                    'action': 'display', 
+                    'description': data.description, 
+                    'name': data.name, 
+                    'attendee_ids': [(6, 0, map(lambda x:x.id, data.attendee_ids))], 
+                    'trigger_related': basic_alarm.trigger_related, 
+                    'trigger_duration': basic_alarm.trigger_duration, 
+                    'trigger_occurs': basic_alarm.trigger_occurs, 
+                    'trigger_interval': basic_alarm.trigger_interval, 
+                    'duration': basic_alarm.duration, 
+                    'repeat': basic_alarm.repeat, 
+                    'state': 'run', 
+                    'event_date': data[date], 
+                    'res_id': data.id, 
+                    'model_id': model_id, 
+                    'user_id': uid
+                 }
+                alarm_id = alarm_obj.create(cr, uid, vals)
+                cr.execute('Update %s set caldav_alarm_id=%s, alarm_id=%s \
+                                        where id=%s' % (model.replace('.', '_'), \
+                                                    alarm_id, basic_alarm.id, data.id))
+        cr.commit()
+        return True
+
+    def do_alarm_unlink(self, cr, uid, ids, model, context={}):
+        alarm_obj = self.pool.get('calendar.alarm')
+        ir_obj = self.pool.get('ir.model')
+        model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
+        model_obj = self.pool.get(model)
+        for datas in model_obj.browse(cr, uid, ids):
+            alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
+            if alarm_ids and len(alarm_ids):
+                alarm_obj.unlink(cr, uid, alarm_ids)
+                cr.execute('Update crm_meeting set caldav_alarm_id=NULL, \
+                               alarm_id=NULL  where id=%s' % (datas.id))
+        cr.commit()
+        return True
 
 res_alarm()
 
@@ -315,12 +349,12 @@ or contains the text to be used for display"""),
             'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio,
 * File which is intended to be sent as message attachments for email,
 * Points to a procedure resource, which is invoked when the alarm is triggered for procedure."""), 
-            'res_id' : fields.integer('Resource ID'),
-            'model_id': fields.many2one('ir.model', 'Model'),
-            'user_id': fields.many2one('res.users', 'Owner'),
-            'event_date' : fields.datetime('Event Date'),
-            'event_end_date' : fields.datetime('Event End Date'),            
-            'trigger_date' : fields.datetime('Trigger Date', readonly="True"),
+            'res_id' : fields.integer('Resource ID'), 
+            'model_id': fields.many2one('ir.model', 'Model'), 
+            'user_id': fields.many2one('res.users', 'Owner'), 
+            'event_date' : fields.datetime('Event Date'), 
+            'event_end_date' : fields.datetime('Event End Date'), 
+            'trigger_date' : fields.datetime('Trigger Date', readonly="True"), 
             'state':fields.selection([
                         ('draft', 'Draft'), 
                         ('run', 'Run'), 
@@ -334,45 +368,16 @@ or contains the text to be used for display"""),
         'state' : lambda *x: 'run', 
      }
 
-    def export_cal(self, cr, uid, ids, context={}):
-        basic_alarm_obj = self.pool.get('basic.calendar.alarm')        
-        basic_alarm_obj.__attribute__.update(self.__attribute__)        
-        data = self.read(cr, uid, ids)
-        alarms = basic_alarm_obj.export_ical(cr, uid, data, {'model': self._name})
-        cal_val = ''
-        for alarm in alarms:
-            cal_val += alarm.serialize()        
-        return cal_val
-
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)        
-        basic_alarm_obj = self.pool.get('basic.calendar.alarm')        
-        basic_alarm_obj.__attribute__.update(self.__attribute__)
-        
-        vals = basic_alarm_obj.import_ical(cr, uid, file_content)
-        ids = []
-        for val in vals:            
-            is_exists = uid2openobjectid(cr, val['id'], self._name)
-            if val.has_key('create_date'): val.pop('create_date')            
-            val.pop('id')
-            if is_exists:               
-                self.write(cr, uid, [is_exists], val)
-                ids.append(is_exists)
-            else:
-                alarm_id = self.create(cr, uid, val)
-                ids.append(alarm_id)                
-        return ids
-
-    def create(self, cr, uid, vals, context={}): 
+    def create(self, cr, uid, vals, context={}):
         event_date = vals.get('event_date', False)
         if event_date:
-            dtstart = datetime.datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
+            dtstart = datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
             if vals['trigger_interval'] == 'days':
-                delta = datetime.timedelta(days=vals['trigger_duration'])
+                delta = timedelta(days=vals['trigger_duration'])
             if vals['trigger_interval'] == 'hours':
-                delta = datetime.timedelta(hours=vals['trigger_duration'])
+                delta = timedelta(hours=vals['trigger_duration'])
             if vals['trigger_interval'] == 'minutes':
-                delta = datetime.timedelta(minutes=vals['trigger_duration'])
+                delta = timedelta(minutes=vals['trigger_duration'])
             trigger_date =  dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context)
@@ -382,7 +387,7 @@ or contains the text to be used for display"""),
                        context=None):
         if not context:
             context = {}
-        current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         cr.execute("select alarm.id as id \
                     from calendar_alarm alarm \
                     where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
@@ -420,7 +425,8 @@ or contains the text to be used for display"""),
                       %s
                       %s
 
-                """ %(alarm.name, alarm.trigger_date, alarm.description, alarm.user_id.name, alarm.user_id.sign)
+                """ %(alarm.name, alarm.trigger_date, alarm.description, \
+                    alarm.user_id.name, alarm.user_id.sign)
                 mail_to = [alarm.user_id.address_id.email]
                 for att in alarm.attendee_ids:
                     mail_to.append(att.user_id.address_id.email)
@@ -453,34 +459,34 @@ class ir_attachment(osv.osv):
             if arg[0] == 'res_id':
                 new_args[i] = (arg[0], arg[1], caldav_id2real_id(arg[2]))
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset, 
-                                                limit=limit, order=order, 
-                                                context=context, count=False)
+                            limit=limit, order=order, 
+                            context=context, count=False)
 ir_attachment()
 
 class ir_values(osv.osv):
     _inherit = 'ir.values'
 
-    def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, \
-                         meta=False, preserve_user=False, company=False):
+    def set(self, cr, uid, key, key2, name, models, value, replace=True, \
+            isobject=False, meta=False, preserve_user=False, company=False):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
                 new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, value, \
-                                   replace, isobject, meta, preserve_user, company)
+        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,\
+                    value, replace, isobject, meta, preserve_user, company)
 
-    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, \
-                    without_user=True, key2_req=True):
+    def get(self, cr, uid, key, key2, models, meta=False, context={},\
+             res_id_req=False, without_user=True, key2_req=True):
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
                 new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).get(cr, uid, key, key2, new_model, meta, context, \
-                                      res_id_req, without_user, key2_req)
+        return super(ir_values, self).get(cr, uid, key, key2, new_model, \
+                         meta, context, res_id_req, without_user, key2_req)
 
 ir_values()
 
@@ -490,7 +496,8 @@ class ir_model(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context={}, 
             load='_classic_read'):
-        data = super(ir_model, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        data = super(ir_model, self).read(cr, uid, ids, fields=fields, \
+                        context=context, load=load)
         if data:
             for val in data:
                 val['id'] = caldav_id2real_id(val['id'])
@@ -502,7 +509,8 @@ class virtual_report_spool(web_services.report_spool):
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if object == 'printscreen.list':
-            return super(virtual_report_spool, self).exp_report(db, uid, object, ids, datas, context)
+            return super(virtual_report_spool, self).exp_report(db, uid, \
+                            object, ids, datas, context)
         new_ids = []
         for id in ids:
             new_ids.append(caldav_id2real_id(id))
@@ -512,9 +520,9 @@ class virtual_report_spool(web_services.report_spool):
 
 virtual_report_spool()
 
-class set_rrule_wizard(osv.osv_memory):
-    _name = "caldav.set.rrule"
-    _description = "Set RRULE"
+class calendar_custom_rrule(osv.osv):
+    _name = "calendar.custom.rrule"
+    _description = "Custom Recurrency Rule"
 
     _columns = {
         'freq': fields.selection([('None', 'No Repeat'), \
@@ -535,12 +543,12 @@ class set_rrule_wizard(osv.osv_memory):
         'sa': fields.boolean('Sat'), 
         'su': fields.boolean('Sun'), 
         'select1': fields.selection([('date', 'Date of month'), \
-                            ('day', 'Day of month')], 'Select Option'), 
-        'day': fields.integer('Day of month'), 
+                            ('day', 'Day of month')], 'Option'), 
+        'day': fields.integer('Date of month'), 
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
-                                       ('WE', 'Wednesday'), ('TH', 'Thursday'), \
-                                       ('FR', 'Friday'), ('SA', 'Saturday'), \
-                                       ('SU', 'Sunday')], 'Weekday'), 
+                                   ('WE', 'Wednesday'), ('TH', 'Thursday'), \
+                                   ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                   ('SU', 'Sunday')], 'Weekday'), 
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
                                    ('3', 'Third'), ('4', 'Fourth'), \
                                    ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
@@ -573,31 +581,29 @@ class set_rrule_wizard(osv.osv_memory):
                 weekstring = ';BYDAY=' + ','.join(byday)
 
         elif freq == 'monthly':
-            byday = ''
-            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
+            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            if datas.get('byday') and datas.get('week_list'):
-                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            monthstring = byday or (';BYMONTHDAY=' + str(datas.get('day')))
+            if datas.get('select1')=='day':
+                monthstring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
         elif freq == 'yearly':
-            bymonth = ''
-            byday = ''
             if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            if datas.get('byday') and datas.get('week_list'):
-                byday = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            if datas.get('month_list'):
-                bymonth = ';BYMONTH=' + str(datas.get('month_list'))
-            bymonthday = ';BYMONTHDAY=' + str(datas.get('day'))
-            yearstring = bymonth + (datas.get('day') and bymonthday or '') + byday
+            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
+            if datas.get('select1')=='day':
+                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
+            yearstring = bymonth + bystring
 
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
         enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
                              ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
 
-        rrule_string = 'FREQ=' + freq +  weekstring + ';INTERVAL=' + \
+        rrule_string = 'FREQ=' + freq.upper() +  weekstring + ';INTERVAL=' + \
                 str(datas.get('interval')) + enddate + monthstring + yearstring
 
 #        End logic
@@ -620,42 +626,42 @@ class set_rrule_wizard(osv.osv_memory):
         obj.write(cr, uid, [res_obj.id], {'rrule' : rrule_string})
         return {}
 
-set_rrule_wizard()
+calendar_custom_rrule()
 
 class res_users(osv.osv):
     _inherit = 'res.users'
-    
+
     def _get_user_avail(self, cr, uid, ids, context=None):
-        current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        res = {}       
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        res = {}
         attendee_obj = self.pool.get('calendar.attendee')
         attendee_ids = attendee_obj.search(cr, uid, [
-                    ('event_date','<=',current_datetime), ('event_end_date','<=',current_datetime),
-                    ('state','=','accepted'), ('user_id','in',ids)
+                    ('event_date', '<=', current_datetime), ('event_end_date', '<=', current_datetime), 
+                    ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
-        
+
         result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'
             res.update({user_id:status})
-                
+
         #TOCHECK : Delegrated Event
         #cr.execute("SELECT user_id,'busy' FROM att_del_to_user_rel where user_id = ANY(%s)", (ids,))
-        #res.update(cr.dictfetchall())        
+        #res.update(cr.dictfetchall())
         for user_id in ids:
             if user_id not in res:
                 res[user_id] = 'free'
-        
+
         return res
 
-    def _get_user_avail_fun(self, cr, uid, ids, name, args, context=None):        
+    def _get_user_avail_fun(self, cr, uid, ids, name, args, context=None):
         return self._get_user_avail(cr, uid, ids, context=context)
-        
+
     _columns = {
             'availability': fields.function(_get_user_avail_fun, type='selection', \
                     selection=[('free', 'Free'), ('busy', 'Busy')], \
-                    string='Free/Busy', method=True),
+                    string='Free/Busy', method=True), 
     }
 res_users()
 
@@ -663,54 +669,70 @@ class invite_attendee_wizard(osv.osv_memory):
     _name = "caldav.invite.attendee"
     _description = "Invite Attendees"
 
-    _columns = {                
-          'attendee_ids': fields.many2many('calendar.attendee', 'invite_attendee_rel', 'invite_id', 'attendee_id', 'Attendees Detail'),                
-    }
+    _columns = {
+        'type': fields.selection([('internal', 'Internal User'), \
+              ('external', 'External Email'), \
+              ('partner', 'Partner Contacts')], 'Type', required=True), 
+        'user_ids': fields.many2many('res.users', 'invite_user_rel', 
+                                  'invite_id', 'user_id', 'Users'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'email': fields.char('Email', size=124), 
+        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
+                                  'invite_id', 'contact_id', 'Contacts'), 
+              }
 
-    def create(self, cr, uid, vals, context={}):
-        attendee_ids = vals.get('attendee_ids',False)
-        model = context.get('model', False)
-        res_id = context.get('active_id', False)   
-        state = context.get('state', False) 
-        attendee_obj = self.pool.get('calendar.attendee')
-        
-        if attendee_ids and model and res_id: 
-            attend = False  
-            if model == 'calendar.attendee' and state == 'delegated':
-               attend = attendee_obj.read(cr, uid, res_id, ['ref','user_id','del_to_user_ids'])
-     
-            for v1, v2, attendee in attendee_ids:
-                vals = {}
-                ref = '%s,%d'%(model, res_id)
-                if attend:
-                    ref = attend['ref']
-                    del_from_user_ids = [attend['user_id'][0]]
-                    del_to_user_ids = attend['del_to_user_ids']
-                    del_to_user_ids.append(attendee['user_id'])
-                    vals.update({
-                        'del_from_user_ids' : [(6, 0, del_from_user_ids)]
-                    })
-                    attendee_obj.write(cr, uid, [res_id], {'state':'delegated','del_to_user_ids' : [(6, 0, del_to_user_ids)]})
-                                  
+    def do_invite(self, cr, uid, ids, context={}):
+        datas = self.read(cr, uid, ids)[0]
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        type = datas.get('type')
+        att_obj = self.pool.get('calendar.attendee')
+        vals = {'ref': '%s,%s'%(model, caldav_id2real_id(context['active_id']))}
+        if type == 'internal':
+            user_obj = self.pool.get('res.users')
+            for user_id in datas.get('user_ids', []):
+                user = user_obj.browse(cr, uid, user_id)
+                if not user.address_id.email:
+                    raise osv.except_osv(_('Error!'), \
+                                    ("User does not have an email Address"))
+                vals.update({'user_id': user_id, 
+                                     'email': user.address_id.email})
+                att_id = att_obj.create(cr, uid, vals)
+                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+
+        elif  type == 'external' and datas.get('email'):
+            vals.update({'email': datas['email']})
+            att_id = att_obj.create(cr, uid, vals)
+            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+
+        elif  type == 'partner':
+            add_obj = self.pool.get('res.partner.address')
+            for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
                 vals.update({
-                    'ref': ref,                    
-                })
-                attendee.update(vals)
-                attendee_obj.create(cr, uid, attendee)
-                
-        res = super(invite_attendee_wizard, self).create(cr, uid, {}, context=context)
-        return res
-
-    def do_invite(self, cr, uid, ids, context={}):        
+                             'partner_address_id': contact.id, 
+                             'email': contact.email})
+                att_id = att_obj.create(cr, uid, vals)
+                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
         return {}
 
 
-    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
-        if not user_id:
-            return {'value': {'email': ''}}
-        user = self.pool.get('res.users').browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.address_id.email}}
+    def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):
+        if not partner_id:
+            return {'value': {'contact_ids': []}}
+        cr.execute('select id from res_partner_address \
+                         where partner_id=%s' % (partner_id))
+        contacts = map(lambda x: x[0], cr.fetchall())
+        if not contacts:
+            raise osv.except_osv(_('Error!'), \
+                                ("Partner does not have any Contacts"))
+
+        return {'value': {'contact_ids': contacts}}
 
 invite_attendee_wizard()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
