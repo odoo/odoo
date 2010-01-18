@@ -5,38 +5,12 @@
     # ------------------------------------------------------
     # Phonecall Categories
     # ------------------------------------------------------
-    
-    <record id="crm_phonecall_categ_view_form" model="ir.ui.view">
-        <field name="name">crm.phonecall.categ.form</field>
-        <field name="model">crm.case.categ</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Phonecall Category">
-                <field name="name" select="1"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-				<field name="object_id" domain="[('model','ilike','crm.phonecall')]"/>                
-            </form>
-        </field>
-    </record>
-    <record id="crm_phonecall_categ_view_tree" model="ir.ui.view">
-        <field name="name">crm.phonecall.categ.tree</field>
-        <field name="model">crm.case.categ</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Phonecall Category">
-                <field name="name"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-            </tree>
-        </field>
-    </record>
-
+   
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm_phonecall_categ_view_tree"/>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
 		<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>      
     </record>
    
@@ -44,37 +18,11 @@
     # ------------------------------------------------------
     # Fund Stage
     # ------------------------------------------------------
-	    <record model="ir.ui.view" id="crm_phonecall_stage_tree">
-	        <field name="name">crm.phonecall.stage.tree</field>
-	        <field name="model">crm.case.stage</field>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <tree string="Stages">
-	                <field name="sequence"/>
-	                <field name="name"/>
-	                <field name="section_id"/>
-					<field name="object_id" domain="[('model','ilike','crm.phonecall')]"  invisible="1"/>  	                
-	            </tree>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="crm_phonecall_stage_form">
-	        <field name="name">crm.phonecall.stage.form</field>
-	        <field name="model">crm.case.stage</field>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <form string="Stage">
-	            	<field name="name" select="1"/>
-	                <field name="section_id" select="1" widget="selection"/>
-					<field name="object_id" domain="[('model','ilike','crm.phonecall')]"/>  	                
-	                <field name="sequence"/>
-	            </form>
-	        </field>
-	    </record>
 	    <record id="crm_phonecall_stage_act" model="ir.actions.act_window">
 	        <field name="name">Phonecall Stages</field>
 	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
-	        <field name="view_id" ref="crm_phonecall_stage_tree"/>
+ 			<field name="view_id" ref="crm.crm_case_stage_tree"/>
 			<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>	 	        
 	    </record>
 	  <menuitem action="crm_phonecall_stage_act" id="menu_crm_phonecall_stage_act" parent="crm.menu_crm_case_stage"/>
