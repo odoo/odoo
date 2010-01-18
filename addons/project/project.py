@@ -28,6 +28,21 @@ from tools.translate import _
 from osv import fields, osv
 from tools.translate import _
 
+class project_task_type(osv.osv):
+    _name = 'project.task.type'
+    _description = 'Project task type'
+    _columns = {
+        'name': fields.char('Type', required=True, size=64, translate=True),
+        'description': fields.text('Description'),
+        'sequence': fields.integer('Sequence'),
+    }
+    _order = 'sequence'
+    
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+project_task_type()
+
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
@@ -119,6 +134,7 @@ class project(osv.osv):
                                   help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'allowed_task_type': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Allowed Task Types'),
      }
 
     _defaults = {
@@ -205,15 +221,6 @@ class project(osv.osv):
                 self.setActive(cr, uid, [child], value, context)
         return True
 project()
-
-class project_task_type(osv.osv):
-    _name = 'project.task.type'
-    _description = 'Project task type'
-    _columns = {
-        'name': fields.char('Type', required=True, size=64, translate=True),
-        'description': fields.text('Description'),
-    }
-project_task_type()
 
 class task(osv.osv):
     _name = "project.task"
@@ -431,6 +438,29 @@ class task(osv.osv):
         self.write(cr, uid, ids, {'state': 'pending'})
         return True
 
+    def next_type(self, cr, uid, ids, *args):
+        type_obj = self.pool.get('project.task.type')
+        type_ids = type_obj.search(cr,uid,[])
+        for typ in self.browse(cr, uid, ids):
+            typeid = typ.type.id
+            if typeid and  type_ids.index(typeid) != len(type_ids)-1 :
+                index = type_ids.index(typeid)
+            else:
+                index = -1
+            self.write(cr, uid, typ.id, {'type': type_ids[index+1]})
+        return True
+
+    def prev_type(self, cr, uid, ids, *args):
+        type_obj = self.pool.get('project.task.type')
+        type_ids = type_obj.search(cr,uid,[])
+        for typ in self.browse(cr, uid, ids):
+            typeid = typ.type.id
+            if typeid and  type_ids.index(typeid) != 0 :
+                index = type_ids.index(typeid)
+            else:
+                index = len(type_ids)
+            self.write(cr, uid, typ.id, {'type': type_ids[index - 1]})
+        return True
 
 task()
 

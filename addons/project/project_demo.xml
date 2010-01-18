@@ -9,17 +9,21 @@
             <field name="project_time_mode_id" ref="product.uom_hour"></field>
         </record>
         
-        <record id="project_tt_analysis" model="project.task.type">
-            <field name="name">Analysis</field>
+        <record id="project_tt_specification" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Specification</field>
         </record>
-        <record id="project_tt_feature" model="project.task.type">
-            <field name="name">New Feature</field>
+        <record id="project_tt_development" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Development</field>
         </record>
-        <record id="project_tt_quote" model="project.task.type">
-            <field name="name">Quotation</field>
+        <record id="project_tt_testing" model="project.task.type">
+        	<field name="sequence">3</field>
+            <field name="name">Testing</field>
         </record>
-        <record id="project_tt_bug" model="project.task.type">
-            <field name="name">Bug</field>
+        <record id="project_tt_merge" model="project.task.type">
+            <field name="sequence">4</field>
+            <field name="name">Merge</field>
         </record>
 
         <record id="project_project_9" model="project.project">
@@ -53,7 +57,7 @@
         <record id="project_task_116" model="project.task">
             <field name="planned_hours">38.0</field>
             <field name="remaining_hours">38.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="description">BoM, After sales returns, interventions. Tracability.</field>
@@ -62,7 +66,7 @@
         <record id="project_task_130" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Data importation + Doc</field>
@@ -70,7 +74,7 @@
         <record id="project_task_131" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Modifications asked by the customer.</field>
@@ -78,7 +82,7 @@
         <record id="project_task_184" model="project.task">
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project_project_21"/>
@@ -88,7 +92,7 @@
             <field name="sequence">15</field>
             <field name="planned_hours">8.0</field>
             <field name="remaining_hours">8.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Internal testing + Software Install</field>
@@ -98,7 +102,7 @@
             <field name="sequence">17</field>
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
-            <field name="type" ref="project_tt_feature"/>
+            <field name="type" ref="project_tt_development"/>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="priority">2</field>
             <field name="state">open</field>
