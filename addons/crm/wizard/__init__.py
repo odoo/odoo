@@ -22,6 +22,7 @@
 import crm_opportunity_wizard
 import crm_lead_wizard
 import crm_phonecall_wizard
+import crm_meeting_edit_wizard
 
 
 import wizard_crm_send_email

@@ -23,7 +23,7 @@
             		<field name="date_deadline" string="End Date" required="1" />
             		<field name="location" />
             		<field name="categ_id" widget="selection" />
-            		<group colspan="2" col="3">
+            		<group colspan="2" col="3" attrs="{'readonly':[('recurrent_uid','!=',False)]}">
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"
                             	colspan="1" />
@@ -46,8 +46,7 @@
             				context="{'model' : 'crm.meeting'}" colspan="2"/>
             			<field name="attendee_ids" colspan="4"
             				nolabel="1" widget="one2many" mode="tree,form">
-            				<tree string="Atendee details"
-            					editable="top">
+            				<tree string="Atendee details" editable="top">
             					<field name="email" />
             					<field name="role" select="1" />
             					<field name="state" />
@@ -63,7 +62,7 @@
             							<field name="state" />
             						</page>
             						<page string="Other">
-            							<field name="user_id" select="1" />
+            							<field name="user_id"/>
             							<field name="partner_address_id" select="1" />
             							<newline />
             						</page>
@@ -76,9 +75,17 @@
             			<field name="show_as"/>
             			<field name="class"/>
             			<field name="user_id"/>
-            			<field name="rrule" invisible="1"/>
+            			<field name="recurrent_id" invisible="1" />
+            			<field name="recurrent_uid" invisible="1" />
+            			<field name="rrule" invisible="1" />
             		</page>
             	</notebook>
+            	<group col="3" colspan="4" attrs="{'invisible':[('rrule_type','in', ('none', False))]}">
+            		<label string="" />
+            		<button string="Modify this Occurrence"
+            			name="%(crm.wizard_meeting_edit_this)d" icon="gtk-save"
+            			type="action" context="{'model' : 'crm.meeting'}" />
+            	</group>
             </form>
         </field>
     </record>
