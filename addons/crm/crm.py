@@ -101,6 +101,48 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
+class crm_case_categ(osv.osv):
+    _name = "crm.case.categ"
+    _description = "Category of case"
+    _columns = {
+        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
+        'probability': fields.float('Probability (%)', required=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'object_id': fields.many2one('ir.model','Object Name'),        
+    }
+    _defaults = {
+        'probability': lambda *args: 0.0
+    }
+crm_case_categ()
+
+class crm_case_resource_type(osv.osv):
+    _name = "crm.case.resource.type"
+    _description = "Resource Type of case"
+    _rec_name = "name"
+    _columns = {
+        'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'object_id': fields.many2one('ir.model','Object Name'),        
+    }
+
+crm_case_resource_type()
+
+
+class crm_case_stage(osv.osv):
+    _name = "crm.case.stage"
+    _description = "Stage of case"
+    _rec_name = 'name'
+    _order = "sequence"
+    _columns = {
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
+        'object_id': fields.many2one('ir.model','Object Name'),
+    }
+    _defaults = {
+        'sequence': lambda *args: 1
+    }
+crm_case_stage()
 
 
 class crm_case_rule(osv.osv):

@@ -32,33 +32,6 @@ from tools.translate import _
 
 import crm
 
-class crm_phonecall_categ(osv.osv):
-    _name = "crm.phonecall.categ"
-    _description = "Phonecall Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_phonecall_categ()
-
-class crm_phonecall_stage(osv.osv):
-    _name = "crm.phonecall.stage"
-    _description = "Stage of phonecal case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_phonecall_stage()
 
 class crm_phonecall(osv.osv):
     _name = "crm.phonecall"
@@ -67,7 +40,7 @@ class crm_phonecall(osv.osv):
     _inherit = 'crm.case'
     _columns = {
         'duration': fields.float('Duration'),
-        'categ_id': fields.many2one('crm.phonecall.categ', 'Category', domain="[('section_id','=',section_id)]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
@@ -81,6 +54,12 @@ class crm_phonecall(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),        
     }
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}    
+    
 
 crm_phonecall()
 

@@ -34,43 +34,6 @@ from osv.orm import except_orm
 
 import crm
 
-class crm_opportunity_categ(osv.osv):
-    _name = "crm.opportunity.categ"
-    _description = "Opportunity Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_opportunity_categ()
-
-class crm_opportunity_type(osv.osv):
-    _name = "crm.opportunity.type"
-    _description = "Opportunity Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('lead Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-crm_opportunity_type()
-
-class crm_opportunity_stage(osv.osv):
-    _name = "crm.opportunity.stage"
-    _description = "Stage of opportunity case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_opportunity_stage()
 
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
@@ -78,9 +41,9 @@ class crm_opportunity(osv.osv):
     _order = "id desc"
     _inherit = 'crm.case'  
     _columns = {        
-        'stage_id': fields.many2one ('crm.opportunity.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-        'categ_id': fields.many2one('crm.opportunity.categ', 'Category', domain="[('section_id','=',section_id)]"),
-        'type_id': fields.many2one('crm.opportunity.type', 'Opportunity Type', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Resource Type', domain="[('section_id','=',section_id)]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Planned Revenue'),

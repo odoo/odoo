@@ -34,44 +34,6 @@ from osv.orm import except_orm
 
 import crm
 
-class crm_fundraising_categ(osv.osv):
-    _name = "crm.fundraising.categ"
-    _description = "Fundraising Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_fundraising_categ()
-
-class crm_fundraising_type(osv.osv):
-    _name = "crm.fundraising.type"
-    _description = "Fundraising Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Fundraising Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-
-crm_fundraising_type()
-
-class crm_fundraising_stage(osv.osv):
-    _name = "crm.fundraising.stage"
-    _description = "Stage of fundraising case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_fundraising_stage()
 
 
 class crm_fundraising(osv.osv):
@@ -82,7 +44,7 @@ class crm_fundraising(osv.osv):
     _columns = {        
             'date_closed': fields.datetime('Closed', readonly=True),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),            
-            'categ_id': fields.many2one('crm.fundraising.categ','Category', domain="[('section_id','=',section_id)]"),
+            'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id)]"),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'probability': fields.float('Probability (%)'),     
@@ -90,8 +52,8 @@ class crm_fundraising(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32), 
-            'stage_id': fields.many2one ('crm.fundraising.stage', 'Stage', domain="[('section_id','=',section_id)]"),
-            'type_id': fields.many2one('crm.fundraising.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'type_id': fields.many2one('crm.case.resource.type', 'Fundraising Type', domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -108,7 +70,7 @@ class crm_fundraising(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.fundraising.categ').browse(cr, uid, categ, context).probability
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
         return {'value':{'probability':cat}}    
     
 
