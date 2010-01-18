@@ -28,6 +28,7 @@ class messages(osv.osv):
     logger = netsvc.Logger()
 
     _columns = {
+        'from_id':fields.many2one('res.users', 'From', ondelete="CASCADE"),
         'to_id':fields.many2one('res.users', 'To', ondelete="CASCADE"),
         'project_id':fields.many2one('project.project', 'Project',
                                      required=True, ondelete="CASCADE"),
