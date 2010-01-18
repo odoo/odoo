@@ -98,7 +98,7 @@ class crm_project_bug(osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.bug.stage', 'Stage', domain="[('section_id','=',section_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
-        'duration': fields.datetime('Duration') ,
+        'duration': fields.float('Duration') ,
         'probability': fields.float('Probability (%)'),       
     }
 

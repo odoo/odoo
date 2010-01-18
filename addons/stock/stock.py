@@ -1135,7 +1135,7 @@ class stock_move(osv.osv):
             cursor.commit()
         return res
 
-    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, context=None):
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False, loc_id=False, product_id=False, context=None):
         if not prodlot_id or not loc_id:
             return {}
         ctx = context and context.copy() or {}
@@ -1340,9 +1340,9 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         track_flag = False
-        pickings = {}
+        picking_ids = []
         for move in self.browse(cr, uid, ids):
-            pickings[move.picking_id.id] = True
+            if move.picking_id: picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
@@ -1440,10 +1440,10 @@ class stock_move(osv.osv):
                         'line_id': lines,
                         'ref': ref,
                     })
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
-        for pick in self.pool.get('stock.picking').browse(cr, uid, pickings.keys()):
+        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})        
+        for pick in self.pool.get('stock.picking').browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
-                self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'done'})
+                self.pool.get('stock.picking').action_done(cr, uid, [pick.id])
         
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -1546,7 +1546,6 @@ class stock_inventory_line(osv.osv):
         'product_qty': fields.float('Quantity'),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
-
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
             return {}

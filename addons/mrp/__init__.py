@@ -20,6 +20,7 @@
 ##############################################################################
 
 import mrp
+import installer
 import wizard
 import report
 import company

@@ -20,6 +20,7 @@
 ##############################################################################
 
 import hr
+import installer
 import hr_department
 
 import report

@@ -1,23 +1,23 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!--
 			Process
 		-->
-    
+
 		<record id="process_process_employeecontractprocess0" model="process.process">
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="hr.model_hr_employee"/>
 			<field eval="&quot;&quot;&quot;Employee Contract&quot;&quot;&quot;" name="name"/>
 		</record>
-		
+
 		<!--
 			Process Node
 		-->
-	
+
 		<record id="process_node_employee0" model="process.node">
-			<field name="menu_id" ref="hr.menu_open_view_employee_list"/>
+			<field name="menu_id" ref="hr.menu_open_view_employee_list_my"/>
 			<field name="model_id" ref="hr.model_hr_employee"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee&quot;&quot;&quot;" name="name"/>
@@ -25,9 +25,9 @@
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-	
+
 		<record id="process_node_employeecontact0" model="process.node">
-			<field name="menu_id" ref="hr.menu_open_view_employee_list"/>
+			<field name="menu_id" ref="hr.menu_open_view_employee_list_my"/>
 			<field name="model_id" ref="hr.model_hr_employee"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Employee Contact&quot;&quot;&quot;" name="name"/>
@@ -35,7 +35,7 @@
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-	
+
 		<record id="process_node_openerpuser0" model="process.node">
 			<field name="menu_id" ref="base.menu_users"/>
 			<field name="model_id" ref="base.model_res_users"/>
@@ -45,11 +45,11 @@
 			<field name="process_id" ref="process_process_employeecontractprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<!--
 			Process Transition
 		-->
-		
+
 		<record id="process_transition_employeeuser0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -58,7 +58,7 @@
 			<field model="process.node" name="target_node_id" ref="process_node_openerpuser0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
-		
+
 		<record id="process_transition_contactofemployee0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -67,6 +67,6 @@
 			<field model="process.node" name="target_node_id" ref="process_node_employeecontact0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_employee0"/>
 		</record>
-		
+
 	</data>
 </openerp>

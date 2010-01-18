@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-	
+
         <!-- Planning -->
 		<record id="account_analytic_planning_view_tree" model="ir.ui.view">
 			<field name="name">report.account.analytic.planning.tree</field>
@@ -97,9 +97,9 @@
 						                        <page string="Information">
 						                            <group col="3" colspan="4">
 						                            	<field name="effective_hours" widget="float_time" invisible="True" />
-						                                <field name="planned_hours" 
+						                                <field name="planned_hours"
 						                                    widget="float_time"
-						                                    attrs="{'readonly':[('state','!=','draft')]}" 
+						                                    attrs="{'readonly':[('state','!=','draft')]}"
 						                                    on_change="onchange_planned(planned_hours,effective_hours)"/>
 						                                <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"/>
 						                                <button name="%(project.action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
@@ -114,7 +114,7 @@
 						                                <button groups="base.group_extended" name="%(project.wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
 						                                <button name="%(project.wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
 						                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-						
+
 						                            </group>
 					                             </page>
 						                        <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
@@ -154,7 +154,7 @@
 				</form>
 			</field>
 		</record>
-		
+
 		<record id="account_analytic_planning_view_search" model="ir.ui.view">
 			<field name="name">report.account.analytic.planning.search</field>
 			<field name="model">report_account_analytic.planning</field>
@@ -217,10 +217,10 @@
 			<field name="view_mode">tree,form</field>
 			<field name="search_view_id" ref="account_analytic_planning_view_search"/>
 		</record>
-		
+		<menuitem id="menu_pm_planning" name="Planning" parent="project.menu_main" sequence="5"/>
 		<menuitem id="planning_main" name="Long Term Planning"
-			parent="project.menu_main" />
-			
+			parent="menu_pm_planning" />
+
 		<menuitem action="action_account_analytic_planning_form"
 			id="menu_report_account_analytic_planning" parent="planning_main" />
 
@@ -338,8 +338,8 @@
                 </notebook>
             </field>
         </record>
-        
-        
+
+
 <!--		Task Form -->
 
         <record id="view_task_planning_form" model="ir.ui.view">
@@ -359,8 +359,8 @@
 			id="act_task_of_lines" name="Planning tasks" res_model="project.task"
 			src_model="report_account_analytic.planning"
 		/>
-		
-		<!-- company form --> 
+
+		<!-- company form -->
         <record id="planning_company" model="ir.ui.view">
             <field name="name">res.company.planning.config</field>
             <field name="model">res.company</field>
