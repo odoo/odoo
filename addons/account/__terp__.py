@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Accounting and financial management",
+    "name" : "Accounting and Financial Management",
     "version" : "1.1",
     "depends" : ["product", "base", "process"],
     "author" : "Tiny",
