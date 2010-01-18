@@ -51,19 +51,26 @@ def real_id2caldav_id(real_id, recurrent_date):
         return '%d-%s'%(real_id, recurrent_date)
     return real_id
 
-def uid2openobjectid(cr, uidval, oomodel):
+def uid2openobjectid(cr, uidval, oomodel, rdate):
     __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
     wematch = __rege.match(uidval.encode('utf8'))
     if not wematch:
-        return False
+        return (False, None)
     else:
         model, id, dbname = wematch.groups()
         if (not model == oomodel) or (not dbname == cr.dbname):
-            return False
-        cr.execute('select distinct(id) from %s' % model.replace('.', '_'))
+            return (False, None)
+        qry = 'select distinct(id) from %s' % model.replace('.', '_')
+        if rdate:
+            qry += " where recurrent_id='%s'" % (rdate)
+            cr.execute(qry)
+            r_id = cr.fetchone()
+            if r_id:
+                return (id, r_id[0])
+        cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
-            return id
+            return (id, None)
         return False
 
 def openobjectid2uid(cr, uidval, oomodel):

@@ -181,13 +181,18 @@ rule or repeating pattern for anexception to a recurrence set"),
         vals = event_obj.import_ical(cr, uid, file_content)
         ids = []
         for val in vals:
-            is_exists = common.uid2openobjectid(cr, val['id'], self._name)
+            exists, r_id = common.uid2openobjectid(cr, val['id'], self._name, \
+                                                             val.get('recurrent_id'))
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
             val.pop('id')
-            if is_exists:
-                self.write(cr, uid, [is_exists], val)
-                ids.append(is_exists)
+            if exists and r_id:
+                val.update({'recurrent_uid': exists})
+                self.write(cr, uid, [r_id], val)
+                ids.append(r_id)
+            elif exists:
+                self.write(cr, uid, [exists], val)
+                ids.append(exists)
             else:
                 case_id = self.create(cr, uid, val)
                 ids.append(case_id)

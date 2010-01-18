@@ -377,6 +377,7 @@
                     <field name="sequence" string="Seq."/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
+                    <field name="type"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="remaining_hours" widget="float_time"/>
@@ -485,6 +486,9 @@
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
                         <filter string="Open" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
+                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+						<filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="type" select="1" widget="selection"/>
