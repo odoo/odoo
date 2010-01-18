@@ -14,7 +14,7 @@
                 <field name="name" select="1"/>
                 <field name="probability"/>
                 <field name="section_id"/>
-				<field name="object_id" domain="[('object_id.model','ilike','crm.helpdesk')]"/>                
+				<field name="object_id" domain="[('model','ilike','crm.helpdesk')]"/>                
             </form>
         </field>
     </record>
@@ -27,7 +27,7 @@
                 <field name="name"/>
                 <field name="probability"/>
                 <field name="section_id"/>
-                <field name="object_id" domain="[('object_id.model','ilike','crm.helpdesk')]"/>  
+                <field name="object_id" /> 	  
             </tree>
         </field>
     </record>

@@ -16,7 +16,7 @@
                 <field name="name" select="1"/>
                 <field name="probability"/>
                 <field name="section_id"/>
- 				<field name="object_id" domain="[('object_id.model','ilike','crm.claim')]"/>                
+ 				<field name="object_id" domain="[('model','ilike','crm.claim')]"/>                
             </form>
         </field>
     </record>
@@ -29,7 +29,6 @@
                 <field name="name"/>
                 <field name="probability"/>
                 <field name="section_id"/>
-				<field name="object_id" domain="[('object_id.model','ilike','crm.claim')]"/>
             </tree>
         </field>
     </record>
@@ -54,7 +53,6 @@
 	                <field name="sequence"/>
 	                <field name="name"/>
 	                <field name="section_id"/>
- 					<field name="object_id" domain="[('object_id.model','ilike','crm.claim')]"/>      	                
 	            </tree>
 	        </field>
 	    </record>
@@ -66,7 +64,7 @@
 	            <form string="Stage">
 	            	<field name="name" select="1"/>
 	                <field name="section_id" select="1" widget="selection"/>
- 					<field name="object_id" domain="[('object_id.model','ilike','crm.claim')]"/>      	                
+ 					<field name="object_id" domain="[('model','ilike','crm.claim')]"/>      	                
 	                <field name="sequence"/>
 	            </form>
 	        </field>

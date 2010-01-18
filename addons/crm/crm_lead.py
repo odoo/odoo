@@ -37,6 +37,7 @@ import crm
 
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
+    _description = "Opportunity Cases"
 crm_opportunity()
     
 class crm_lead(osv.osv):
