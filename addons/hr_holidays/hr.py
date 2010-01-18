@@ -165,7 +165,6 @@ class hr_holidays(osv.osv):
     _order = 'date_from desc'
 
     def create(self, cr, uid, vals, context={}):
-        print 'create', vals, context
         if context:
             if context.has_key('type'):
                 vals['type'] = context['type']
