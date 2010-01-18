@@ -29,17 +29,17 @@ from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
-class fiscalyear_seq(osv.osv):
-    _name = "fiscalyear.seq"
-    _description = "Maintains Invoice sequences with Fiscal Year"
-    _rec_name = 'fiscalyear_id'
-    _columns = {
-        'journal_id': fields.many2one('account.journal', 'Journal'),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
-        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
-    }
-
-fiscalyear_seq()
+#class fiscalyear_seq(osv.osv):
+#    _name = "fiscalyear.seq"
+#    _description = "Maintains Invoice sequences with Fiscal Year"
+#    _rec_name = 'fiscalyear_id'
+#    _columns = {
+#        'journal_id': fields.many2one('account.journal', 'Journal'),
+#        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
+#        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
+#    }
+#
+#fiscalyear_seq()
 
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):
