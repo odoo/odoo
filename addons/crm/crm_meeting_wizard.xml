@@ -9,9 +9,12 @@
 			name="caldav.crm.subscribe" id="wizard_crm_cal_subscribe" multi="True"
 		/>
 		
-		<wizard string="Export ICS File" model="crm.meeting" name="caldav.crm.export"
-			id="wizard_crm_cal_export" multi="True"
-		/>
+		<wizard string="Export ICS File" model="crm.meeting"
+			name="caldav.crm.export" id="wizard_crm_cal_export" multi="True" />
+
+		<wizard string="Edit this meeting" model="crm.meeting"
+			name="crm.meeting.edit.this" id="wizard_meeting_edit_this"
+			menu="False" />
 
 	</data>
 </openerp>

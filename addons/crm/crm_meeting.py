@@ -26,8 +26,6 @@ from osv import fields, osv
 from tools.translate import _
 import base64
 import re
-import time
-import tools
 
 class crm_meeting_categ(osv.osv):
     _name = "crm.meeting.categ"
@@ -66,8 +64,7 @@ class crm_meeting(osv.osv):
         'transp': {'field': 'transparent', 'type': 'text'}, 
         'uid': {'field': 'id', 'type': 'text'}, 
         'url': {'field': 'caldav_url', 'type': 'text'}, 
-        'recurid': None, 
-#        'attach': {'field': 'attachment_ids', 'sub-field': 'datas', 'type': 'list'},
+        'recurrence-id': {'field': 'recurrent_id', 'type': 'datetime'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
         'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
         'comment': None, 
@@ -102,13 +99,13 @@ class crm_meeting(osv.osv):
                         where id=%s"% (end.strftime("%Y-%m-%d %H:%M:%S"), id))
         return True
 
-    def onchange_rrule_type(self, cr, uid, ids, type, *args, **argv):
-        if type == 'none':
+    def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
+        if rtype == 'none' or not rtype:
             return {'value': {'rrule': ''}}
-        if type == 'custom':
+        if rtype == 'custom':
             return {}
         rrule = self.pool.get('calendar.custom.rrule')
-        rrulestr = rrule.compute_rule_string(cr, uid, {'freq': type.upper(), \
+        rrulestr = rrule.compute_rule_string(cr, uid, {'freq': rtype.upper(), \
                                  'interval': 1})
         return {'value': {'rrule': rrulestr}}
 
@@ -132,7 +129,6 @@ account for mail gateway.'),
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
         'description': fields.text('Your action'), 
-        'user_id': fields.many2one('res.users', 'Responsible'), 
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
                  ('confidential', 'Confidential')], 'Mark as'), 
         'location': fields.char('Location', size=264, help="Location of Meeting"), 
@@ -151,6 +147,8 @@ rule or repeating pattern for anexception to a recurrence set"),
         'attendee_ids': fields.many2many('calendar.attendee', 'crm_attendee_rel', 'case_id', 'attendee_id', 'Attendees'), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
+        'recurrent_uid': fields.integer('Recurrent ID'),
+        'recurrent_id': fields.datetime('Recurrent ID date'), 
     }
 
     _defaults = {
@@ -175,7 +173,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         crm_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
         event_obj.__attribute__.update(self.__attribute__)
-        ical = event_obj.export_ical(cr, uid, crm_data, {'model': self._name})
+        ical = event_obj.export_ical(cr, uid, crm_data, context={'model': self._name})
         cal_val = ical.serialize()
         cal_val = cal_val.replace('"', '').strip()
         return cal_val
@@ -279,6 +277,18 @@ rule or repeating pattern for anexception to a recurrence set"),
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
+
+    def modify_this(self, cr, uid, ids, defaults, context=None, *args):
+        datas = self.read(cr, uid, ids[0], context=context)
+        date = datas.get('date')
+        defaults.update({
+               'recurrent_uid': common.caldav_id2real_id(datas['id']), 
+               'recurrent_id': defaults.get('date'), 
+               'rrule_type': 'none', 
+               'rrule': ''
+                    })
+        new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
+        return new_id
 
     def search(self, cr, uid, args, offset=0, limit=100, order=None, 
             context=None, count=False):

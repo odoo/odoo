@@ -127,6 +127,16 @@ class CalDAV(object):
                         if not model:
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        cr.execute('select id from %s  where recurrent_uid=%s' 
+                                               % (model.replace('.', '_'), data[map_field]))
+                        r_ids = map(lambda x: x[0], cr.fetchall())
+                        if r_ids: 
+                            rdata = self.pool.get(model).read(cr, uid, r_ids)
+                            rcal = self.export_ical(cr, uid, rdata, context=context)
+                            for revents in rcal.contents['vevent']:
+                                ical.contents['vevent'].append(revents)
+                        if data.get('recurrent_uid', None):
+                            uidval = common.openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
                         attendee_obj = self.pool.get('basic.calendar.attendee')
@@ -236,7 +246,7 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-    def export_ical(self, cr, uid, datas, context={}):
+    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
         return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
 
 Event()
@@ -279,7 +289,7 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None, 
             }
 
-    def export_ical(self, cr, uid, datas, context={}):
+    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
         return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
 
 ToDo()
