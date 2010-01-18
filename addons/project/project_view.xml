@@ -304,10 +304,10 @@
                             <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
-                                    <field name="date" />
-                                    <field name="user_id" />
-                                    <field name="hours" widget="float_time" />
                                     <field name="name" />
+                                    <field name="hours" widget="float_time" />
+                                    <field name="user_id" />
+                                    <field name="date" />
                                 </tree>
                             </field>
                             <newline/>
