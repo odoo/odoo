@@ -349,7 +349,6 @@ class orm_template(object):
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
     def read_group(self, cr, user, ids, fields, groupby, context=None):
-        print ":::::::::::::",fields[groupby],groupby
         context = context or {}
         if not ids:return
         if fields[groupby]['type'] not in ('many2one,date,datetime'):
@@ -363,10 +362,16 @@ class orm_template(object):
             qu2 += d2
 
         float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
-        sumof = ','.join(map(lambda field_name:'sum('+field_name+') as '+field_name+'',float_int_fields))
-        cr.execute('select '+groupby+','+sumof+' from ' + self._table +qu1+' group by '+groupby+qu2)
+        sum = {}
+
+        cr.execute('select '+groupby+' from ' + self._table +qu1+' group by '+groupby+qu2)
         parent_res = cr.fetchall()
+        try:
+            parent_res = [(m[0],m[1]) for m in parent_res if m[0]]
+        except:
+            parent_res = [(m[0],) for m in parent_res if m[0]]
         groupby_ids = map(lambda x:x[0],parent_res)
+
         groupby_name = {}
         child_ids_dict = {}
 
@@ -384,6 +389,7 @@ class orm_template(object):
                 else:
                     child_ids_dict[parent_id].append(val[0])
         #create [{},{}] for parent ids i.e for group by field
+
         result = []
         if fields[groupby]['type'] in ('date','datetime'):
             curr_date = datetime.date.today()
@@ -403,11 +409,16 @@ class orm_template(object):
                     date_format = 'Old'
                 date_result[date_format].update({'id':None,groupby:date_format})
                 date_result[date_format]['group_child'] += child_ids_dict[x[0]]
-                for sum in float_int_fields:
-                    if sum not in date_result[date_format]:
-                        date_result[date_format][sum] = x[float_int_fields.index(sum)+1]
-                    if float_int_fields.index(sum):
-                        date_result[date_format][sum] += x[float_int_fields.index(sum)+1]
+                float_int_sum = self.read(cr, user, child_ids_dict[x[0]], float_int_fields, context)
+                for value in float_int_sum:
+                    for field,val in value.items():
+                        if field == 'id':continue
+                        if field not in sum:
+                            sum[field] = 0.0
+                        sum[field] += val
+                for k,v in sum.items():
+                    date_result[date_format][k] = v
+                sum = {}
             for key,val in date_result.items():
                 if len(date_result[key]) == 1:
                     del date_result[key]
@@ -419,18 +430,24 @@ class orm_template(object):
                     result.insert(0,val)
                 else:
                     result.insert(-1,val)
-            print result
             return result
         else:
             for x in parent_res:
-                parent_val_dict = {'id':None,groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
-                for sum in float_int_fields:
-                    parent_val_dict[sum] = x[float_int_fields.index(sum)+1]
+                parent_val_dict = {'id':str(x[0])+':Gpby',groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
+                float_int_sum = self.read(cr, user, child_ids_dict[x[0]], float_int_fields, context)
+                for value in float_int_sum:
+                    for field,val in value.items():
+                        if field == 'id':continue
+                        if field not in sum:
+                            sum[field] = 0.0
+                        sum[field] += val
+                for k,v in sum.items():
+                    parent_val_dict[k] = v
+                sum = {}
                 for field in fields.keys():
                     if field not in parent_val_dict:
                         parent_val_dict[field] = False
                 result.append(parent_val_dict)
-            print result
             return result
 
     def _field_create(self, cr, context={}):
