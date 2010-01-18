@@ -21,11 +21,16 @@
 
 from lxml import etree
 import mx.DateTime
+import datetime
 import time
 from tools.translate import _
-
 from osv import fields, osv
 from tools.translate import _
+
+#from resource.faces import *
+#from resource.faces.lib import workbreakdown
+#from resource.faces.lib import generator
+#from resource.faces.lib import resource
 
 class project(osv.osv):
     _name = "project.project"

@@ -42,7 +42,7 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
         "process/task_process.xml"
     ],
     'demo_xml': [#'project_demo.xml'
-    'project_data_scheduler.xml'
+    
     ],
     'installable': True,
     'active': False,
