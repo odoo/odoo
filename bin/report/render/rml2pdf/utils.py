@@ -112,6 +112,8 @@ def _process_text(self, txt):
                 try:
                     expr = sps.pop(0)
                     txt = eval(expr,self.localcontext)
+                    if txt and (isinstance(txt, unicode) or isinstance(txt, str)):
+                        txt = self.localcontext.get('translate', lambda x:x)(txt)
                 except Exception,e:
                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,
@@ -119,7 +121,8 @@ def _process_text(self, txt):
                                 expr.encode('utf-8')))
                 if type(txt)==type('') or type(txt)==type(u''):
                     txt2 = str2xml(txt)
-                    result += tools.ustr(txt2)
+                    result1 = tools.ustr(txt2)
+                    result = result + str(result1) # To avoid concatenation of unicode and str
                 elif (txt is not None) and (txt is not False):
                     result += str(txt)
         return result
