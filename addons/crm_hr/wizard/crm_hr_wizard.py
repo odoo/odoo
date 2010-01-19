@@ -91,6 +91,12 @@ class job2phonecall(wizard.interface):
                         'date' : form['deadline'], 
                         'section_id' : form['section_id'],
                         'description':job.description,
+                        'partner_id':job.partner_id.id,
+                        'partner_address_id':job.partner_address_id.id,
+                        'partner_phone':job.partner_phone,
+                        'partner_mobile':job.partner_mobile,
+                        'description':job.description,
+                        'date':job.date,
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
             vals = {}
