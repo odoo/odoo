@@ -46,7 +46,7 @@ class opportunity2phonecall(wizard.interface):
 
     case_fields = {
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
-        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
+        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime' ,'required' :True},
         'note' : {'string' : 'Goals', 'type' : 'text'},
         'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' :True},
         'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
