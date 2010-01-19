@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -212,7 +212,7 @@ class browse_record(object):
             # create browse records for 'remote' objects
             for data in datas:
                 if len(str(data['id']).split('-')) > 1:
-                    data['id'] = int(str(data['id']).split('-')[0]) 
+                    data['id'] = int(str(data['id']).split('-')[0])
                 for n, f in ffields:
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
@@ -348,6 +348,112 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    def read_group(self, cr, user, ids, fields, groupby, context=None):
+        context = context or {}
+        if not ids:return
+
+        if fields[groupby]['type'] not in ('many2one','date','datetime'):
+            raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
+
+        qu1 = ' where id in (' + ','.join([str(id) for id in ids]) + ')'
+        qu2 = ''
+        # construct a clause for the rules :
+        d1, d2, d3 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+
+        if d1:
+            qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
+            qu2 += d2
+
+        float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
+        sum = {}
+
+        cr.execute('select '+groupby+' from ' + self._table +qu1+' group by '+groupby+qu2)
+        parent_res = cr.fetchall()
+        try:
+            parent_res = [(m[0],m[1]) for m in parent_res if m[0]]
+        except:
+            parent_res = [(m[0],) for m in parent_res if m[0]]
+        groupby_ids = map(lambda x:x[0],parent_res)
+
+        groupby_name = {}
+        child_ids_dict = {}
+
+        if fields[groupby]['type'] == 'many2one':
+            groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,user,groupby_ids,context))
+
+        chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
+
+        # get child ids
+        for parent_id in groupby_ids:
+            cr.execute('select id from '+self._table+chqu1 +groupby+" = '%s'"%(parent_id,))
+            child_ids = cr.fetchall()
+            for val in child_ids:
+                if parent_id not in child_ids_dict:
+                    child_ids_dict[parent_id] = [val[0]]
+                else:
+                    child_ids_dict[parent_id].append(val[0])
+        #create [{},{}] for parent ids i.e for group by field
+
+        result = []
+        if fields[groupby]['type'] in ('date','datetime'):
+            curr_date = datetime.date.today()
+            yesterday = (curr_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+            lastweek = (curr_date + datetime.timedelta(weeks=-1)).strftime('%Y-%m-%d')
+            date_result = {'Today':{'group_child':[]},'Yesterday':{'group_child':[]},
+                           'LastWeek':{'group_child':[]},'Old':{'group_child':[]}}
+            for x in parent_res:
+                db_date = x[0][:10]
+                if db_date == curr_date.strftime('%Y-%m-%d'):
+                    date_format = 'Today'
+                elif db_date == yesterday:
+                    date_format = 'Yesterday'
+                elif (db_date < yesterday) and (db_date >= lastweek):
+                    date_format = 'LastWeek'
+                else:
+                    date_format = 'Old'
+                date_result[date_format].update({'id':None,groupby:date_format})
+                date_result[date_format]['group_child'] += child_ids_dict[x[0]]
+                float_int_sum = self.read(cr, user, child_ids_dict[x[0]], float_int_fields, context)
+                for value in float_int_sum:
+                    for field,val in value.items():
+                        if field == 'id':continue
+                        if field not in sum:
+                            sum[field] = 0.0
+                        sum[field] += val
+                for k,v in sum.items():
+                    date_result[date_format][k] = v
+                sum = {}
+            for key,val in date_result.items():
+                if len(date_result[key]) == 1:
+                    del date_result[key]
+                    continue
+                for field in fields.keys():
+                    if field not in val:
+                        val[field] = False
+                if key in ('Today','Yesterday') and len(result):
+                    result.insert(0,val)
+                else:
+                    result.insert(-1,val)
+            return result
+        else:
+            for x in parent_res:
+                parent_val_dict = {'id':str(x[0])+':Gpby',groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
+                float_int_sum = self.read(cr, user, child_ids_dict[x[0]], float_int_fields, context)
+                for value in float_int_sum:
+                    for field,val in value.items():
+                        if field == 'id':continue
+                        if field not in sum:
+                            sum[field] = 0.0
+                        sum[field] += val
+                for k,v in sum.items():
+                    parent_val_dict[k] = v
+                sum = {}
+                for field in fields.keys():
+                    if field not in parent_val_dict:
+                        parent_val_dict[field] = False
+                result.append(parent_val_dict)
+            return result
+
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
         if not cr.rowcount:
@@ -392,7 +498,7 @@ class orm_template(object):
                 #setting value to let the problem NOT occur next time
                 else:
                     vals['select_level'] = cols[k]['select_level']
-            
+
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -473,7 +579,7 @@ class orm_template(object):
             elif field_type == 'boolean':
                 return False
             return ''
-        
+
         def selection_field(in_field):
             col_obj = self.pool.get(in_field.keys()[0])
             if f[i] in col_obj._columns.keys():
@@ -481,8 +587,8 @@ class orm_template(object):
             elif f[i] in col_obj._inherits.keys():
                 selection_field(col_obj._inherits)
             else:
-                return False    
-           
+                return False
+
 
         lines = []
         data = map(lambda x: '', range(len(fields)))
@@ -509,7 +615,7 @@ class orm_template(object):
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        if not context.get('import_comp',False):# Allow external name only if its not import compatible 
+                        if not context.get('import_comp',False):# Allow external name only if its not import compatible
                             cols = False
                             if f[i] in self._columns.keys():
                                 cols = self._columns[f[i]]
@@ -1138,7 +1244,7 @@ class orm_template(object):
                 # running -> done = signal_next (role Z)
                 # running -> cancel = signal_cancel (role Z)
 
-                # As we don't know the object state, in this scenario, 
+                # As we don't know the object state, in this scenario,
                 #   the button "signal_cancel" will be always shown as there is no restriction to cancel in draft
                 #   the button "signal_next" will be show if the user has any of the roles (X Y or Z)
                 # The verification will be made later in workflow process...
@@ -1214,23 +1320,23 @@ class orm_template(object):
         return arch
 
     def __get_default_search_view(self, cr, uid, context={}):
-        
+
         def encode(s):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
 
         view = self.fields_view_get(cr, uid, False, 'form', context)
-        
+
         root = etree.fromstring(encode(view['arch']))
         res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
         node = etree.Element("group")
         res.append(node)
-        
+
         fields = root.xpath("//field[@select=1]")
         for field in fields:
             node.append(field)
-        
+
         return etree.tostring(res, encoding="utf-8").replace('\t', '')
 
     #
@@ -1354,7 +1460,7 @@ class orm_template(object):
 
             if not sql_res:
                 break
-            
+
             ok = sql_res[5]
             view_id = ok or sql_res[3]
             model = False
@@ -1380,7 +1486,7 @@ class orm_template(object):
             result['name'] = sql_res[1]
             result['field_parent'] = sql_res[2] or False
         else:
-            
+
             # otherwise, build some kind of default view
             if view_type == 'form':
                 res = self.fields_get(cr, user, context=context)
@@ -1392,7 +1498,7 @@ class orm_template(object):
                         if res[x]['type'] == 'text':
                             xml += "<newline/>"
                 xml += "</form>"
-                
+
             elif view_type == 'tree':
                 _rec_name = self._rec_name
                 if _rec_name not in self._columns:
@@ -1400,13 +1506,13 @@ class orm_template(object):
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
                        % (self._description, self._rec_name)
-                       
+
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
-                                
+
             elif view_type == 'search':
                 xml = self.__get_default_search_view(cr, user, context)
-                
+
             else:
                 xml = '<?xml version="1.0"?>' # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
@@ -1956,7 +2062,7 @@ class orm(orm_template):
                             cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % ( self._table,f.oldname, k))
                             res = res_old
                             res[0]['attname'] = k
-                
+
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -2045,7 +2151,7 @@ class orm(orm_template):
                                             field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
                                             if field_size != f_pg_size:
                                                 field_size_change = True
-                                                
+
                                     if f_pg_type != f_obj_type or field_size_change:
                                         if f_pg_type != f_obj_type:
                                             logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
@@ -2403,7 +2509,7 @@ class orm(orm_template):
                     return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
-            order_by = self._parent_order or self._order            
+            order_by = self._parent_order or self._order
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
@@ -2415,7 +2521,7 @@ class orm(orm_template):
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' %
-                               (','.join(fields_pre2 + ['id']), self._table, 
+                               (','.join(fields_pre2 + ['id']), self._table,
                                 order_by), (sub_ids,))
                 res.extend(cr.dictfetchall())
         else:
@@ -3194,8 +3300,6 @@ class orm(orm_template):
                     ','.join(tables) +qu1 + limit_str + offset_str, qu2)
             res = cr.fetchall()
             return res[0][0]
-
-        # execute the "main" query to fetch the ids we were searching for
         cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
         res = cr.fetchall()
         return [x[0] for x in res]
