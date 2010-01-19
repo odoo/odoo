@@ -336,7 +336,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Type'),
+        'type': fields.many2one('project.task.type', 'Type', readonly=True),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
@@ -490,26 +490,34 @@ class task(osv.osv):
 
     def next_type(self, cr, uid, ids, *args):
         type_obj = self.pool.get('project.task.type')
-        type_ids = type_obj.search(cr,uid,[])
+        types = []
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            if typeid and  type_ids.index(typeid) != len(type_ids)-1 :
-                index = type_ids.index(typeid)
+            types = map(lambda x:x.id, typ.project_id.allowed_task_type)
+            if types:
+                if typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                    index = types.index(typeid)
+                else:
+                    index = -1
+                self.write(cr, uid, typ.id, {'type': types[index+1]})
             else:
-                index = -1
-            self.write(cr, uid, typ.id, {'type': type_ids[index+1]})
+                self.write(cr, uid, typ.id, {'type': ''})
         return True
 
     def prev_type(self, cr, uid, ids, *args):
         type_obj = self.pool.get('project.task.type')
-        type_ids = type_obj.search(cr,uid,[])
+        types = []
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            if typeid and  type_ids.index(typeid) != 0 :
-                index = type_ids.index(typeid)
+            types = map(lambda x:x.id, typ.project_id.allowed_task_type)
+            if types:
+                if typeid and typeid in types and types.index(typeid) != 0 :
+                    index = types.index(typeid)
+                else:
+                    index = len(types)
+                self.write(cr, uid, typ.id, {'type': types[index-1]})
             else:
-                index = len(type_ids)
-            self.write(cr, uid, typ.id, {'type': type_ids[index - 1]})
+                self.write(cr, uid, typ.id, {'type': ''})
         return True
 
 task()

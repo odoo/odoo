@@ -58,7 +58,8 @@ class job2phonecall(wizard.interface):
         case = case_obj.browse(cr, uid, data['id'])        
         return {
                 'user_id' : case.user_id and case.user_id.id,
-                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,                
+                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id, 
+                'section_id' : case.section_id and case.section_id.id or False,               
                 'note' : case.description
                }
 
@@ -84,17 +85,17 @@ class job2phonecall(wizard.interface):
             #TODO : Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
                         'name' : job.name,
-                        'case_id' : job.inherit_case_id.id,
                         'user_id' : form['user_id'],
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'], 
-                        'section_id' : form['section_id']
+                        'section_id' : form['section_id'],
+                        'description':job.description,
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
             vals = {}
             if not job.case_id:
-                vals.update({'case_id' : new_phonecall.inherit_case_id.id})
+                vals.update({'phonecall_id' : new_phonecall.id})
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
