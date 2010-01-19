@@ -187,15 +187,21 @@ class expression(object):
                     if right:
                         if isinstance(right, basestring):
                             ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
-                            operator = 'in' 
+                            if ids2:
+                                operator = 'in' 
                         else:
                             if not isinstance(right,list):
                                 ids2 = [right]
                             else:
                                 ids2 = right    
                         if not ids2:
-                            call_null = True
-                            operator = 'in' # operator changed because ids are directly related to main object
+                            if operator in ['like','ilike','in','=']:
+                                #no result found with given search criteria
+                                call_null = False
+                                self.__exp[i] = ('id','=',0)
+                            else:
+                                call_null = True
+                                operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null = False
                             o2m_op = 'in'
@@ -230,15 +236,21 @@ class expression(object):
                     if right:
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
-                            operator = 'in'
+                            if res_ids:
+                                opeartor = 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]
                             else:
                                 res_ids = right
                         if not res_ids:
-                            call_null_m2m = True
-                            operator = 'in' # operator changed because ids are directly related to main object
+                            if operator in ['like','ilike','in','=']:
+                                #no result found with given search criteria
+                                call_null_m2m = False
+                                self.__exp[i] = ('id','=',0)
+                            else: 
+                                call_null_m2m = True
+                                operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
                             m2m_op = 'in'        
@@ -251,7 +263,7 @@ class expression(object):
                         if operator in  ['not like','not ilike','not in','<>','!=']:
                             m2m_op = 'in'                         
                         self.__exp[i] = ('id', m2m_op, self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, [], operator,  field._type) or [0])
-                        
+
             elif field._type == 'many2one':
                 if operator == 'child_of':
                     if isinstance(right, basestring):
