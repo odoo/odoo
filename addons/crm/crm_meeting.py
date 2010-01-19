@@ -72,10 +72,11 @@ class crm_meeting(osv.osv):
         res = {}
         for meeting in self.browse(cr, uid, ids, context=context):
             start = datetime.strptime(meeting.date, "%Y-%m-%d %H:%M:%S")
-            end = datetime.strptime(meeting.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
-            diff = end - start
-            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
-            res[meeting.id] = round(duration, 2)
+            if meeting.date_deadline:
+                end = datetime.strptime(meeting.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
+                diff = end - start
+                duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+                res[meeting.id] = round(duration, 2)
         return res
 
     def _set_duration(self, cr, uid, id, name, value, arg, context):
