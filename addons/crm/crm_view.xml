@@ -82,7 +82,7 @@
 	        <field name="view_type">form</field>
 	        <field name="view_id" ref="crm_case_stage_tree"/>
 	    </record>
-		<menuitem  action="crm_case_stage_act" id="menu_crm_case_stage" name="Stages" parent="crm.menu_crm_configuration"/>
+		<menuitem  id="menu_crm_case_stage" name="Stages" parent="crm.menu_crm_configuration"/>
         <!-- Case Categories -->
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
@@ -116,7 +116,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
         </record>
-		<menuitem id="menu_crm_case_categ" action="crm_case_categ-act"  name="Categories"  parent="crm.menu_crm_configuration"/>
+		<menuitem id="menu_crm_case_categ"   name="Categories"  parent="crm.menu_crm_configuration"/>
         
         <menuitem action="crm_case_section_act" id="menu_crm_case_section_act" parent="crm.menu_crm_configuration"/>
 

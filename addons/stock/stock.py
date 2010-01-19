@@ -1468,7 +1468,7 @@ class stock_inventory(osv.osv):
         'name': fields.char('Inventory', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date': fields.datetime('Date create', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_done': fields.datetime('Date done'),
-        'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'draft': [('readonly', False)]}),
+        'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
         'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
@@ -1491,12 +1491,14 @@ class stock_inventory(osv.osv):
                 price = line.product_id.standard_price or 0.0
                 amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
                 change = line.product_qty - amount
+                lot_id = line.prod_lot_id.id
                 if change:
                     location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
                     value = {
                         'name': 'INV:' + str(line.inventory_id.id) + ':' + line.inventory_id.name,
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
+                        'prodlot_id': lot_id, 
                         'date': inv.date,
                         'date_planned': inv.date,
                         'state': 'assigned'
@@ -1512,6 +1514,11 @@ class stock_inventory(osv.osv):
                             'product_qty': -change,
                             'location_id': line.location_id.id,
                             'location_dest_id': location_id,
+                        })
+                    if lot_id:
+                        value.update({
+                            'prodlot_id': lot_id,
+                            'product_qty': line.product_qty 
                         })
                     move_ids.append(self.pool.get('stock.move').create(cr, uid, value))
             if len(move_ids):
@@ -1544,7 +1551,8 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]")
     }
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
