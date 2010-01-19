@@ -284,7 +284,7 @@ class task(osv.osv):
 
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
-        'name': fields.char('Task summary', size=128, required=True),
+        'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),

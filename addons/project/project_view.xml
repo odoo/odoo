@@ -306,10 +306,10 @@
                             <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
-                                    <field name="date" />
-                                    <field name="user_id" />
-                                    <field name="hours" widget="float_time" />
                                     <field name="name" />
+                                    <field name="hours" widget="float_time" />
+                                    <field name="user_id" />
+                                    <field name="date" />
                                 </tree>
                             </field>
                             <newline/>
@@ -322,7 +322,6 @@
                                 <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
@@ -484,7 +483,7 @@
                <search string="Task Edition">
                     <group col="8" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
-                        <filter string="Open" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
@@ -498,7 +497,7 @@
                     </group>
                     <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -519,85 +518,12 @@
         <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
 		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
 
-        <record id="action_view_task_department" model="ir.actions.act_window">
-            <field name="name">My Department Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid])]</field>
-            <field eval="True" name="filter"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_pending" model="ir.actions.act_window">
-            <field name="name">My Department's Pending Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','pending')]</field>
-            <field name="view_id" ref="my_pending_task"/>
-           <field name="filter" eval="True"/>
-           <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Current Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','in',('open','draft'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','open')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_draft" model="ir.actions.act_window">
-            <field name="name">My Department's Draft Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task6_prog" model="ir.actions.act_window">
-            <field name="name">Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="domain">[('state','=','open')]</field>
-        </record>
-menu_main
-        <record id="action_view_task7" model="ir.actions.act_window">
-            <field name="name">Unassigned Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="domain">[('user_id', '=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -665,7 +591,7 @@ menu_main
         <act_window
             domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
-            name="All Tasks"
+            name="Tasks"
             res_model="project.task"
             src_model="project.project"
             view_mode="tree,form,calendar,graph"

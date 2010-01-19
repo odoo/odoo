@@ -312,6 +312,7 @@
     </record>
 
 
+    <!--
     <record id='view_partner_address_form_inherited5' model='ir.ui.view'>
         <field name='name'>res.partner.address.form.inherited5</field>
         <field name='model'>res.partner.address</field>
@@ -319,7 +320,7 @@
         <field name='type'>form</field>
         <field name='arch' type='xml'>
             <group string="Communication" colspan="2" col="2" position="after">
-			<newline/>
+            <newline/>
                 <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>
@@ -341,17 +342,18 @@
             </group>
         </field>
     </record>
+    -->
 
-	<record id="view_res_partner_address_filter" model="ir.ui.view">
-	    <field name="name">res.partner.address.select</field>
-	    <field name="model">res.partner.address</field>
-	    <field name="type">search</field>
-	    <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
-	    <field name="arch" type="xml">
-	        <search string="Search Contact">
-               	<field name="job_ids" select='1'/>
-			</search>
-	    </field>
+    <record id="view_res_partner_address_filter" model="ir.ui.view">
+        <field name="name">res.partner.address.select</field>
+        <field name="model">res.partner.address</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
+        <field name="arch" type="xml">
+            <search string="Search Contact">
+                   <field name="job_ids" select='1'/>
+            </search>
+        </field>
     </record>
 
     <!-- Views for res.partner.job -->

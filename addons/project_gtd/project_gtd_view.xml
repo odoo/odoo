@@ -76,8 +76,8 @@
         <field name="arch" type="xml">
             <field name="project_id" position="after">
                 <field name="timebox_id"/>
-                <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
-                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
+                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
             </field>
         </field>
     </record>
@@ -103,12 +103,16 @@
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
             <tree editable="top" colors="grey:state in ('done',);red:state in ('cancelled');black:state not in ('done','cancelled')" string="Tasks">
+                <field name="sequence" invisible="1"/>
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="timebox_id" widget="selection"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
+                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
                 <field name="planned_hours" widget="float_time"/>
                 <field name="state" invisible="1"/>
                 <button name="%(project.wizard_close_task)d" states="draft,pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
+                <button groups="base.group_extended" name="%(project.wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks"/>
             </tree>
@@ -123,11 +127,11 @@
         <field name="search_view_id" ref="project.view_task_search_form"/>
     </record>
 
-  <!--  <menuitem name="Todo List"
+    <menuitem name="To-Dos"
         groups="group_project_getting"
         id="menu_task_inbox"
-        parent="project.menu_main"
-        action="action_prject_task_tree"/>-->
+        parent="project.menu_project_management"
+        action="action_prject_task_tree"/>
 
     <act_window name="My Inbox"
         domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
