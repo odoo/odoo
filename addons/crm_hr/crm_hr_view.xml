@@ -65,8 +65,6 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                	<button string="Schedule a Phone Call"
-                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -76,6 +74,10 @@
                     <field name="date" string="Next Interview"/>
                     <field name="duration" widget="float_time"/>
                     <button name="%(wizard_crm_job_meeting_set)d" string="Schedule Meeting" icon="terp-crm" type="action"/>
+                    <field name="phonecall_id" select="1"/>
+                	<button string="Schedule a Phone Call"
+                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
+   				                                          
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
