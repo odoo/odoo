@@ -24,7 +24,7 @@ import base64
 import pooler
 
 
-class crm_cal_export_wizard(wizard.interface):
+class cal_event_export_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="Export ICS">
         <field name="name"/>
@@ -35,8 +35,8 @@ class crm_cal_export_wizard(wizard.interface):
             'file_path': {
                 'string': 'Save ICS file', 
                 'type': 'binary', 
-                'required' : True, 
-                'filters' : '*.ics'
+                'required': True, 
+                'filters': '*.ics'
                 },
             'name': {
                     'string': 'File name', 
@@ -47,8 +47,9 @@ class crm_cal_export_wizard(wizard.interface):
             }
     
     def _process_export_ics(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
-        calendar = case_obj.export_cal(cr, uid, data['ids'], context)
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        calendar = model_obj.export_cal(cr, uid, data['ids'], context)
         return {'file_path': base64.encodestring(calendar), \
                                 'name': 'OpenERP Events.ics'}
     
@@ -59,6 +60,6 @@ class crm_cal_export_wizard(wizard.interface):
                        'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
-crm_cal_export_wizard('caldav.crm.export')
+cal_event_export_wizard('caldav.event.export')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

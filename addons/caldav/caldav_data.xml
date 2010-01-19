@@ -76,7 +76,7 @@
 
 		<record model="res.alarm" id="alarm9">
 			<field name="name">3 hours before</field>
-			
+
 			<field name="active" eval="1" />
 			<field name="trigger_duration" eval="3" />
 			<field name="trigger_interval">hours</field>
@@ -86,7 +86,7 @@
 
 		<record model="res.alarm" id="alarm10">
 			<field name="name">4 hours before</field>
-			
+
 			<field name="active" eval="1" />
 			<field name="trigger_duration" eval="4" />
 			<field name="trigger_interval">hours</field>
@@ -96,7 +96,7 @@
 
 		<record model="res.alarm" id="alarm11">
 			<field name="name">5 hours before</field>
-			
+
 			<field name="active" eval="1" />
 			<field name="trigger_duration" eval="5" />
 			<field name="trigger_interval">hours</field>
@@ -106,7 +106,7 @@
 
 		<record model="res.alarm" id="alarm12">
 			<field name="name">18 hours before</field>
-			
+
 			<field name="active" eval="1" />
 			<field name="trigger_duration" eval="18" />
 			<field name="trigger_interval">hours</field>
@@ -115,9 +115,9 @@
 		</record>
 
 
-        <!-- Scheduler for Event Alarm-->
-        <record forcecreate="True" id="ir_cron_scheduler_alarm"
-						model="ir.cron">
+		<!-- Scheduler for Event Alarm-->
+		<record forcecreate="True" id="ir_cron_scheduler_alarm"
+			model="ir.cron">
 			<field name="name">Run Event Reminder</field>
 			<field eval="True" name="active" />
 			<field name="user_id" ref="base.user_root" />

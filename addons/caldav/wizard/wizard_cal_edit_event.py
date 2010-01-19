@@ -22,16 +22,14 @@
 import wizard
 import pooler
 
-class meeting_edit_this(wizard.interface):
-    case_form = """<?xml version="1.0"?>
-                <form string="Edit Meeting">
+class event_edit_this(wizard.interface):
+    event_form = """<?xml version="1.0"?>
+                <form string="Edit Event">
                     <separator string="" colspan="4" />
                     <newline />
                     <field name='name' colspan="4" />
                     <newline />
                     <field name='location' colspan="4" />
-                    <newline />
-                    <field name='categ_id'/>
                     <newline />
                     <field name='date' />
                     <field name='date_deadline' />
@@ -39,29 +37,30 @@ class meeting_edit_this(wizard.interface):
                     <field name='alarm_id'/>
                 </form>"""
 
-    case_fields = {
+    event_fields = {
         'name': {'string': 'Title', 'type': 'char', 'size': 64}, 
         'date': {'string': 'Start Date', 'type': 'datetime'}, 
         'date_deadline': {'string': 'End Date', 'type': 'datetime'}, 
         'location': {'string': 'Location', 'type': 'char', 'size': 124}, 
-        'categ_id': {'string': 'Category', 'type': 'many2one', 'relation': 'crm.meeting.categ'}, 
         'alarm_id': {'string': 'Reminder', 'type': 'many2one', 'relation': 'res.alarm'}, 
     }
     
     def _default_values(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')        
-        case = case_obj.read(cr, uid, data['id'], ['name', 'location', 'date',\
-                                            'date_deadline', 'categ_id', 'alarm_id'])
-        return case
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        event = model_obj.read(cr, uid, data['id'], ['name', 'location', 'date',\
+                                            'date_deadline', 'alarm_id'])
+        return event
 
     def _modify_this(self, cr, uid, datas, *args):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
-        new_id = case_obj.modify_this(cr, uid, [datas['id']], datas['form'])
+        model = datas.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        new_id = model_obj.modify_this(cr, uid, [datas['id']], datas['form'])
         value = {
                 'name': 'New event', 
                 'view_type': 'form', 
                 'view_mode': 'form,tree', 
-                'res_model': 'crm.meeting', 
+                'res_model': model, 
                 'res_id': new_id, 
                 'view_id': False, 
                 'type': 'ir.actions.act_window', 
@@ -71,7 +70,7 @@ class meeting_edit_this(wizard.interface):
     states = {
         'init': {
             'actions': [_default_values], 
-            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields, 
+            'result': {'type': 'form', 'arch': event_form, 'fields': event_fields, 
                 'state': [('end', 'Cancel', 'gtk-cancel'), ('edit', '_Save', 'gtk-save')]}
         }, 
         'edit': {
@@ -80,6 +79,6 @@ class meeting_edit_this(wizard.interface):
         }
     }
 
-meeting_edit_this('crm.meeting.edit.this')
+event_edit_this('calendar.event.edit.this')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

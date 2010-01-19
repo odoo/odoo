@@ -23,7 +23,7 @@ import wizard
 import pooler
 
 
-class crm_cal_import_wizard(wizard.interface):
+class cal_event_import_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="Import ICS">
         <separator string="Select ICS file"/>
@@ -52,8 +52,9 @@ class crm_cal_import_wizard(wizard.interface):
             }
 
     def _process_imp_ics(self, cr, uid, data, context=None):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
-        vals = case_obj.import_cal(cr, uid, data['form']['file_path'], context)
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        vals = model_obj.import_cal(cr, uid, data['form']['file_path'], context)
         global cnt
         cnt = 0
         if vals:
@@ -72,7 +73,7 @@ class crm_cal_import_wizard(wizard.interface):
         'open': {
             'actions': [], 
             'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
-        },
+        }, 
        'display': {
             'actions': [_result_set], 
             'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
@@ -80,6 +81,6 @@ class crm_cal_import_wizard(wizard.interface):
         }, 
     }
     
-crm_cal_import_wizard('caldav.crm.import')
+cal_event_import_wizard('caldav.event.import')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

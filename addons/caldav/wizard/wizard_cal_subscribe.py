@@ -25,7 +25,7 @@ import pooler
 import urllib
 import wizard
 
-class crm_cal_subscribe_wizard(wizard.interface):
+class cal_event_subscribe_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="Subscribe to Remote ICS">
         <separator string="Provide path for Remote Calendar"/>
@@ -58,13 +58,14 @@ class crm_cal_subscribe_wizard(wizard.interface):
         cnt = 0
         try:
             f =  urllib.urlopen(data['form']['url_path'])
-            caldata= f.fp.read()
+            caldata = f.fp.read()
             f.close()
         except Exception,e:
             raise wizard.except_wizard(_('Error!'), _('Please provide Proper URL !'))
-        case_obj = pooler.get_pool(cr.dbname).get('crm.meeting')
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
         context.update({'url': data['form']['url_path']})
-        vals = case_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
+        vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
         if vals:
             cnt = vals['count']
         return {}
@@ -89,6 +90,6 @@ class crm_cal_subscribe_wizard(wizard.interface):
         }, 
     }
     
-crm_cal_subscribe_wizard('caldav.crm.subscribe')
+cal_event_subscribe_wizard('caldav.event.subscribe')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
