@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-graph" id="dashboard_menu" name="Reporting"/>
-		<menuitem icon="terp-graph" id="dashboard" name="Dashboards" sequence="2" parent="dashboard_menu"/>
+        <menuitem icon="terp-graph" id="base.reporting_menu" name="Reporting"/>
+		<menuitem icon="terp-graph" id="dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <record id="view_board_note_tree" model="ir.ui.view">
             <field name="name">board.note.tree</field>
             <field name="model">board.note</field>
@@ -81,16 +81,16 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem
-            id="next_id_50"
+            id="base.next_id_50"
             name="Configuration"
-            parent="board.dashboard_menu"
+            parent="base.reporting_menu"
             groups="base.group_system"
             sequence="3"/>
         <menuitem
             action="action_view_board_list_form"
             id="menu_view_board_form"
-            parent="next_id_50"/>
-        <menuitem action="action_view_board_note_form" id="menu_view_board_note_form" parent="next_id_50"
+            parent="base.next_id_50"/>
+        <menuitem action="action_view_board_note_form" id="menu_view_board_note_form" parent="base.next_id_50"
                   sequence="100"
                   groups="base.group_system" />
         <act_window context="{'view': active_id}" id="dashboard_open" multi="True" name="Open Dashboard" res_model="board.board" src_model="board.board"/>
