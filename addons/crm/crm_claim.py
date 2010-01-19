@@ -47,7 +47,7 @@ class crm_claim(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
