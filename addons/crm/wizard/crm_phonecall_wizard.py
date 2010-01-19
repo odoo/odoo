@@ -104,6 +104,8 @@ class phonecall2opportunity(wizard.interface):
                 'probability': data['form']['probability'],
                 'partner_id': data['form']['partner_id'],
                 'phonecall_id':phonecall.id, 
+                'section_id':phonecall.section_id.id,
+                'description':phonecall.description,                
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
