@@ -53,7 +53,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurrence-id': {'field': 'recurrent_id', 'type': 'datetime'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
-        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
+        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.case.categ'}, 
         'comment': None, 
         'contact': None, 
         'exdate': {'field': 'exdate', 'type': 'datetime'}, 
@@ -112,7 +112,7 @@ account for mail gateway.'),
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
-            domain="[('section_id','=',section_id)]", \
+            domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.meeting')]", \
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
         'description': fields.text('Your action'), 
