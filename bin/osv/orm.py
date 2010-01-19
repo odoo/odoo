@@ -351,7 +351,7 @@ class orm_template(object):
     def read_group(self, cr, user, ids, fields, groupby, context=None):
         context = context or {}
         if not ids:return
-        if fields[groupby]['type'] not in ('many2one,date,datetime'):
+        if fields[groupby]['type'] not in ('many2one','date','datetime'):
             raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
         qu1 = ' where id in (' + ','.join([str(id) for id in ids]) + ')'
         qu2 = ''
