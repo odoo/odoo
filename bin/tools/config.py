@@ -77,10 +77,11 @@ class configmanager(object):
             'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
-            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raise
+            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raised
             'cache_timeout': 100000,
             'login_message': False,
             'list_db' : True,
+            'timezone' : False, # to override the default TZ
         }
     
         self.misc = {}
@@ -111,6 +112,7 @@ class configmanager(object):
                           help="update a module (use \"all\" for all modules)")
         parser.add_option("--cache-timeout", dest="cache_timeout",
                           help="set the timeout for the cache system", default=100000, type="int")
+        parser.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
 
         # stops the server from launching after initialization
         parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
@@ -119,6 +121,8 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
             group.add_option("-S", "--secure", dest="secure",
@@ -162,7 +166,6 @@ class configmanager(object):
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", default='64',
                          help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("--list_db", dest="list_db", default=False, help="This option hides Database list for security purpose:\n \'False\' value disables listing of Databases")
         group.add_option("-P", "--import-partial", dest="import_partial",
                          help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
@@ -211,7 +214,8 @@ class configmanager(object):
         else:
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
-        self.rcfile = fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath
+        self.rcfile = os.path.abspath(
+            fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
 
@@ -226,7 +230,7 @@ class configmanager(object):
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
-                'netrpc', 'xmlrpc', 'syslog', 'without_demo']
+                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if hasSSL:
             keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
@@ -237,7 +241,10 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate']
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
+
+        if hasSSL and not  self.options['secure']:
+            keys.append('secure')
 
         for arg in keys:
             if getattr(opt, arg) is not None:
@@ -264,6 +271,17 @@ class configmanager(object):
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
+
+        if self.options['timezone']:
+            # If an explicit TZ was provided in the config, make sure it is known  
+            try:
+                import pytz
+                tz = pytz.timezone(self.options['timezone'])
+            except pytz.UnknownTimeZoneError:
+                die(True, "The specified timezone (%s) is invalid" % self.options['timezone'])
+            except:
+                # If pytz is missing, don't check the provided TZ, it will be ignored anyway.
+                pass
 
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path

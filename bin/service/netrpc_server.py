@@ -42,10 +42,8 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
     def __del__(self):
         if self.sock:
             try:
-                if hasattr(socket, 'SHUT_RDWR'):
-                    self.socket.shutdown(socket.SHUT_RDWR)
-                else:
-                    self.socket.shutdown(2)
+                self.socket.shutdown(
+                    getattr(socket, 'SHUT_RDWR', 2))
             except: pass
             # That should garbage-collect and close it, too
             self.sock = None
@@ -78,7 +76,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                     break
             except Exception, e:
                 # this code should not be reachable, therefore we warn
-                netsvc.Logger().notifyChannel("net-rpc", netsvc.LOG_WARNING, "exception: %" % str(e))
+                netsvc.Logger().notifyChannel("net-rpc", netsvc.LOG_WARNING, "exception: %s" % str(e))
                 break
 
         self.threads.remove(self)
@@ -131,10 +129,8 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         for t in self.threads:
             t.stop()
         try:
-            if hasattr(socket, 'SHUT_RDWR'):
-                self.socket.shutdown(socket.SHUT_RDWR)
-            else:
-                self.socket.shutdown(2)
+            self.socket.shutdown(
+                getattr(socket, 'SHUT_RDWR', 2))
             self.socket.close()
         except:
             return False

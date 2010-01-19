@@ -63,7 +63,7 @@ class res_currency(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
     }
     _order = "code"
 
@@ -82,7 +82,7 @@ class res_currency(osv.osv):
         if currency.rounding == 0:
             return 0.0
         else:
-            return round(amount / currency.rounding) * currency.rounding
+            return round(amount / currency.rounding,6) * currency.rounding
 
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding

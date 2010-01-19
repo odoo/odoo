@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-09 10:13+0000\n"
-"PO-Revision-Date: 2009-12-05 06:37+0000\n"
+"POT-Creation-Date: 2009-12-18 08:39+0000\n"
+"PO-Revision-Date: 2009-12-16 06:38+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-15 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-01-14 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -178,7 +178,7 @@ msgstr "ir.report.custom.fields"
 #. module: base
 #: view:res.partner:0
 msgid "Search Partner"
-msgstr ""
+msgstr "Αναζήτηση συνεργάτη"
 
 #. module: base
 #: code:addons/base/module/wizard/wizard_export_lang.py:0
@@ -201,11 +201,6 @@ msgstr "Σε πολλαπλά έγγραφα."
 #: field:ir.module.category,module_nr:0
 msgid "Number of Modules"
 msgstr "Αριθμός Αρθρωμάτων"
-
-#. module: base
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr ""
 
 #. module: base
 #: field:res.partner.bank.type.field,size:0
@@ -401,6 +396,8 @@ msgstr ""
 #: help:res.lang,iso_code:0
 msgid "This ISO code is the name of po files to use for translations"
 msgstr ""
+"Αυτός ο κωδικός ISO είναι το όνομα των αρχείων po που χρησιμοποιούνται στις "
+"μεταφράσεις"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -418,7 +415,7 @@ msgid "Country Name"
 msgstr "Όνομα Χώρας"
 
 #. module: base
-#: model:res.country,name:base.co
+#: model:res.country,name:base.coreturn
 msgid "Colombia"
 msgstr "Colombia"
 
@@ -599,7 +596,7 @@ msgstr ","
 #. module: base
 #: view:res.partner:0
 msgid "My Partners"
-msgstr ""
+msgstr "Οι Συνεργάτες μου"
 
 #. module: base
 #: model:res.country,name:base.es
@@ -749,6 +746,12 @@ msgid "Iran"
 msgstr "Iran"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.res_request-act
+#: model:ir.ui.menu,name:base.menu_res_request_act
+msgid "My Requests"
+msgstr ""
+
+#. module: base
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 msgid "Sequence Name"
@@ -859,7 +862,7 @@ msgstr "RML"
 #. module: base
 #: selection:ir.ui.view,type:0
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #. module: base
 #: code:addons/base/ir/ir_report_custom.py:0
@@ -1008,22 +1011,7 @@ msgstr "STOCK_COPY"
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"Model %s Does not Exist !\" % vals['relation']))\n"
-"                 \n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
-"                \n"
-"        return res\n"
-"ir_model_fields()\n"
-"\n"
-"class ir_model_access(osv.osv):\n"
-"    _name = 'ir.model.access'\n"
-"    _columns = {\n"
-"        'name': fields.char('Name', size=64, required=True),\n"
-"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
-"        'group_id': fields.many2one('res.groups', 'Group"
+msgid "Model %s Does not Exist !"
 msgstr ""
 
 #. module: base
@@ -1033,6 +1021,9 @@ msgid ""
 "You try to install the module '%s' that depends on the module:'%s'.\n"
 "But this module is not available in your system."
 msgstr ""
+"Προσπαθείτε να εγκαταστήσετε το πρόσθετο '%s' το οποίο εξαρτάται από το "
+"πρόσθετο: '%s',\n"
+"αλλά αυτό δεν είναι διαθέσιμο στο σύστημα σας."
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1123,6 +1114,14 @@ msgid "Fixed Width"
 msgstr "Προεπιλεγμένο Πλάτος"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).81.81.37.00."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-calendar"
 msgstr "terp-calendar"
@@ -1144,7 +1143,7 @@ msgstr "Ειδική Αναφορά"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (αντίγραφο)"
 
 #. module: base
 #: view:ir.sequence:0
@@ -1157,14 +1156,9 @@ msgid "7.  %H:%M:%S      ==> 18:25:20"
 msgstr "7.  %H:%M:%S      ==> 18:25:20"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_form
-#: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_partner_form
-#: view:res.partner:0
-#: view:res.partner.category:0
-#: field:res.partner.category,partner_ids:0
-msgid "Partners"
-msgstr "Συνεργάτες"
+#: help:res.users,company_id:0
+msgid "The company this user is currently working on."
+msgstr ""
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1266,6 +1260,8 @@ msgid ""
 "If set, sequence will only be used in case this python expression matches, "
 "and will precede other sequences."
 msgstr ""
+"Αν οριστεί, η αλληλουχία θα χρησιμοποιηθεί σε περίπτωση που ταιριάζει ο "
+"κώδικας python, και θα προηγηθεί από τις άλλες."
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -1315,7 +1311,7 @@ msgstr "STOCK_PROPERTIES"
 #. module: base
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Αναζήτηση επαφής"
 
 #. module: base
 #: view:ir.module.module:0
@@ -1377,6 +1373,11 @@ msgstr "Αριθμός Αρθρωμάτων που ενημερώθηκαν"
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "Ομάδες"
+
+#. module: base
+#: constraint:res.users:0
+msgid "This user can not connect using this company !"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1474,7 +1475,7 @@ msgstr ""
 #. module: base
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group"
-msgstr ""
+msgstr "Κάντε τον κανόνα γενικό, αλλιώς πρέπει να μπει σε ένα μια ομάδα"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -1492,7 +1493,7 @@ msgstr "Τρέχουσα Ισοτιμία"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Greek / Ελληνικά"
 
 #. module: base
 #: view:ir.values:0
@@ -1572,7 +1573,7 @@ msgstr "Email Address"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "French (BE) / Français (BE)"
-msgstr ""
+msgstr "Γαλλικά (BE) / Français (BE)"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
@@ -1605,6 +1606,12 @@ msgstr "Τιμές"
 #: view:ir.actions.server:0
 msgid "Field Mappings"
 msgstr "Field Mappings"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.res_request-closed
+#: model:ir.ui.menu,name:base.next_id_12_close
+msgid "My Closed Requests"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -1661,11 +1668,6 @@ msgstr "%p - Αντίστοιχο με το π.μ ή το μ.μ."
 #: view:ir.actions.server:0
 msgid "Iteration Actions"
 msgstr "Επαναληπτικές ενέργειες"
-
-#. module: base
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr ""
 
 #. module: base
 #: field:maintenance.contract,date_stop:0
@@ -1872,11 +1874,6 @@ msgid "Dependencies"
 msgstr "Dependencies"
 
 #. module: base
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "Κύρια Εταρεία"
-
-#. module: base
 #: field:ir.report.custom.fields,bgcolor:0
 msgid "Background Color"
 msgstr "Χρώμα Φόντου"
@@ -1996,6 +1993,12 @@ msgid "Module"
 msgstr "Άρθρωμα"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_res_bank_form
+#: model:ir.ui.menu,name:base.menu_action_res_bank_form
+msgid "Bank List"
+msgstr ""
+
+#. module: base
 #: field:ir.attachment,description:0
 #: field:ir.module.module,description:0
 #: view:res.partner:0
@@ -2062,7 +2065,7 @@ msgstr "Μπορείτε επίσης να εισαγάγετε αρχεία .po
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Unable to find a valid contract"
-msgstr ""
+msgstr "Αδύνατον να βρεθεί ένα έγκυρο συμβόλαιο"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:0
@@ -2368,11 +2371,6 @@ msgid "6.  %d, %m         ==> 05, 12"
 msgstr "6.  %d, %m         ==> 05, 12"
 
 #. module: base
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr ""
-
-#. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
 msgstr "Κάντε κλικ εδώ αν ο Συνεργάτης είναι Πελάτης."
@@ -2411,7 +2409,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Πελάτες"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -2486,11 +2484,6 @@ msgstr "Τομέας"
 #: field:res.request.history,name:0
 msgid "Summary"
 msgstr "Περίληψη"
-
-#. module: base
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr ""
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -2619,7 +2612,7 @@ msgstr "STOCK_SAVE_AS"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "SQL Constraint"
-msgstr ""
+msgstr "Περιορισμός της SQL"
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
@@ -2670,7 +2663,7 @@ msgstr "Δημιουργός"
 #. module: base
 #: model:res.country,name:base.mk
 msgid "FYROM"
-msgstr ""
+msgstr "FYROM"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2685,7 +2678,7 @@ msgstr "%c - Ορθή εμφάνιση ημερ/νίας και ώρας"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Finland / Suomi"
-msgstr ""
+msgstr "Φιλανδία / Suomi"
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -2954,7 +2947,7 @@ msgstr "Ισοτιμίες"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Albanian / Shqipëri"
-msgstr ""
+msgstr "Αλαβνικά / Shqipëri"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -3043,7 +3036,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_multicompany
 msgid "Multi company"
-msgstr ""
+msgstr "Πολλαπλές εταιρείες"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3110,6 +3103,7 @@ msgstr "Το Συβόλαιο Συντήρησης προστέθηκε!"
 #. module: base
 #: field:ir.rule,field_id:0
 #: selection:ir.translation,type:0
+#: field:multi_company.default,field_id:0
 msgid "Field"
 msgstr "Πεδίο"
 
@@ -3145,7 +3139,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Parent Partner"
-msgstr ""
+msgstr "Μητρικός Συνεργάτης"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3178,7 +3172,6 @@ msgstr "Kazakhstan"
 #: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
-#: field:multi_company.default,name:0
 #: field:res.bank,name:0
 #: field:res.config.view,name:0
 #: field:res.lang,name:0
@@ -3214,7 +3207,7 @@ msgstr "Demo δεδομένα"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Αγγλικά (Ηνωμένο Βασίλειο)"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -3239,7 +3232,7 @@ msgstr "Web"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (CA)"
-msgstr ""
+msgstr "Αγγλικά (Καναδά)"
 
 #. module: base
 #: field:res.partner.event,planned_revenue:0
@@ -3297,6 +3290,9 @@ msgid ""
 "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
+"\"%s\" περιέχει πολλές τελείες. Οι XML ταυτότητες (ids) δεν πρέπει να "
+"περιέχουν τελείες! Οι τελείες χρησιμοποιούνται σε αναφορές σε άλλες ενότητες "
+"όπως στο module.reference_id"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -3482,7 +3478,7 @@ msgstr "Διευθύνσεις Συνεργάτη"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Indonesian / Bahasa Indonesia"
-msgstr ""
+msgstr "Ινδονησιακά / Bahasa Indonesia"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -3496,6 +3492,8 @@ msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
 " %s"
 msgstr ""
+"Ορισμένα πρόσθετα εξαρτώνται από αυτό που σκοπεύεται να απεγκαταστήσετε:\n"
+" %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -3647,7 +3645,7 @@ msgstr "Δημιουργία Ενέργειας"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML from HTML"
-msgstr ""
+msgstr "HTML από HTML"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -3706,8 +3704,6 @@ msgid "Signal (button Name)"
 msgstr "Σινιάλο (όνομα πλήκτρου)"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_res_bank_form
-#: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:0
 #: field:res.partner,bank_ids:0
 msgid "Banks"
@@ -3960,7 +3956,7 @@ msgstr "Mozambique"
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Manage Menus"
-msgstr ""
+msgstr "Διαχείρηση των μενού"
 
 #. module: base
 #: field:ir.actions.server,message:0
@@ -3974,6 +3970,7 @@ msgid "On Multiple Doc."
 msgstr "On Multiple Doc."
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_base_config_contact
 #: field:res.partner,address:0
 #: view:res.partner.address:0
 msgid "Contacts"
@@ -3983,11 +3980,6 @@ msgstr "Στοιχεία"
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
 msgstr "Faroe Islands"
-
-#. module: base
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr ""
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_upgrade
@@ -4118,7 +4110,7 @@ msgstr "Μορφή Αρχείου"
 #. module: base
 #: field:res.lang,iso_code:0
 msgid "ISO code"
-msgstr ""
+msgstr "Κωδικός ISO"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_view
@@ -4254,7 +4246,7 @@ msgstr "Αλλαγή Προτιμήσεων"
 #. module: base
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: base
 #: wizard_field:res.partner.sms_send,init,text:0
@@ -4376,12 +4368,7 @@ msgstr "Πεδίο Αντικειμένου"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "French (CH) / Français (CH)"
-msgstr ""
-
-#. module: base
-#: model:ir.model,name:base.model_res_company
-msgid "List of Company"
-msgstr ""
+msgstr "Γαλλικά (CH) / Français (CH)"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4455,7 +4442,7 @@ msgstr "Ακύρωση Απεγκατάστασης"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Communication"
-msgstr ""
+msgstr "Επικοινωνία"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_server_object_lines
@@ -4498,6 +4485,11 @@ msgstr "Nigeria"
 #: model:ir.model,name:base.model_res_partner_event
 msgid "res.partner.event"
 msgstr "res.partner.event"
+
+#. module: base
+#: field:res.company,user_ids:0
+msgid "Accepted Users"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4622,13 +4614,6 @@ msgid "iCal id"
 msgstr "iCal id"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_function_form
-#: model:ir.ui.menu,name:base.menu_partner_function_form
-#: view:res.partner.function:0
-msgid "Partner Functions"
-msgstr "Λειτουργίες Συνεργατών"
-
-#. module: base
 #: wizard_view:res.partner.sms_send,init:0
 msgid "Bulk SMS send"
 msgstr "Bulk SMS send"
@@ -4682,7 +4667,7 @@ msgstr "Συνέχεια"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Thai / ภาษาไทย"
-msgstr ""
+msgstr "Ταϋλανδικά / ภาษาไทย"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -4765,11 +4750,6 @@ msgid "Full"
 msgstr "Πλήρες"
 
 #. module: base
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.as
 msgid "American Samoa"
 msgstr "American Samoa"
@@ -4784,7 +4764,7 @@ msgstr "Objects"
 #. module: base
 #: field:ir.model.fields,selectable:0
 msgid "Selectable"
-msgstr ""
+msgstr "Επιλέξιμο"
 
 #. module: base
 #: view:res.request.link:0
@@ -4975,12 +4955,12 @@ msgstr "STOCK_GO_BACK"
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "General Settings"
-msgstr ""
+msgstr "Γενικές Ρυθμίσεις"
 
 #. module: base
 #: model:ir.ui.menu,name:base.custom_shortcuts
 msgid "Custom Shortcuts"
-msgstr ""
+msgstr "Προσαρμοσμένες συντομεύσεις"
 
 #. module: base
 #: model:res.country,name:base.dz
@@ -5010,6 +4990,7 @@ msgstr "Gambia"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
 #: model:ir.ui.menu,name:base.menu_action_res_company_form
+#: model:ir.ui.menu,name:base.menu_res_company_global
 #: view:res.company:0
 msgid "Companies"
 msgstr "Εταιρείες"
@@ -5447,15 +5428,16 @@ msgid "Active Partner Events"
 msgstr "Ενεργά Συμβάντα Συνεργάτη"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_rule
-#: model:ir.ui.menu,name:base.menu_action_rule
-msgid "Record Rules"
-msgstr "Record Rules"
+#: model:ir.actions.act_window,name:base.action_partner_function_form
+#: model:ir.ui.menu,name:base.menu_partner_function_form
+#: view:res.partner.function:0
+msgid "Contact Functions"
+msgstr ""
 
 #. module: base
 #: view:multi_company.default:0
 msgid "Multi Company"
-msgstr ""
+msgstr "Πολλαπλή εταιρεία"
 
 #. module: base
 #: view:ir.sequence:0
@@ -5493,7 +5475,7 @@ msgstr "Επιλογή"
 #. module: base
 #: field:ir.actions.act_window,search_view:0
 msgid "Search View"
-msgstr ""
+msgstr "Αναζήτηση προβολής"
 
 #. module: base
 #: field:ir.rule,domain_force:0
@@ -5504,6 +5486,7 @@ msgstr "Επιβολή Τομέα"
 #: help:ir.sequence,weight:0
 msgid "If two sequences match, the highest weight will be used."
 msgstr ""
+"Αν δυο αλληλουχίες ταιριάζουν, αυτή με το μεγαλύτερο βάρος θα χρησιμοποιηθεί."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -5593,7 +5576,7 @@ msgstr "GPL-3 ή μεταγενέστερη έκδοση"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML from HTML(Mako)"
-msgstr ""
+msgstr "HTML από HTML(Mako)"
 
 #. module: base
 #: field:workflow.activity,action:0
@@ -5603,7 +5586,7 @@ msgstr "Python Action"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (US)"
-msgstr ""
+msgstr "Αγγλικά (Η.Π.Α.)"
 
 #. module: base
 #: field:res.partner.event,probability:0
@@ -5646,7 +5629,7 @@ msgstr "Activity"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Ταχυδρομική διεύθυνση"
 
 #. module: base
 #: field:res.company,parent_id:0
@@ -5746,8 +5729,6 @@ msgid "Martinique (French)"
 msgstr "Martinique (French)"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_request-act
-#: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
 #: view:res.request:0
 msgid "Requests"
@@ -5793,7 +5774,7 @@ msgstr "Problem in configuration `Record Id` in Server Action!"
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "This error occurs on database %s"
-msgstr ""
+msgstr "Αυτό το λάθος εμφανίζεται στην βάση %s"
 
 #. module: base
 #: wizard_button:base.module.import,init,import:0
@@ -5853,7 +5834,7 @@ msgstr "Το πεδίο %d πρέπει να έιναι αριθμός"
 #: model:ir.actions.act_window,name:base.action_inventory_form
 #: model:ir.ui.menu,name:base.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr ""
+msgstr "Προκαθορισμένη εταιρεία ανά αντκείμενο"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -5922,6 +5903,8 @@ msgstr "Εκκίνηση Εγκατάστασης"
 #: help:res.lang,code:0
 msgid "This field is used to set/get locales for user"
 msgstr ""
+"Αυτό το πεδίο χρησιμοποιείται για να θέσει/λάβει τις τοπικές ρυθμίσεις του "
+"χρήστη"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -5975,6 +5958,9 @@ msgid ""
 "' \\n                    'for the currency: %s \n"
 "' \\n                    'at the date: %s"
 msgstr ""
+"Δεν βρέθηκε ισοτιμία \n"
+"'\\n 'για το νόμισμα: %s \n"
+"'\\n 'την ημερομηνία: %s"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -6011,6 +5997,11 @@ msgstr "Ανοικτή Αναφορά"
 #: field:res.currency,rounding:0
 msgid "Rounding factor"
 msgstr "Παράγοντας στρογγυλοποίησης"
+
+#. module: base
+#: model:ir.model,name:base.model_res_company
+msgid "res.company"
+msgstr "res.company"
 
 #. module: base
 #: wizard_view:module.upgrade,end:0
@@ -6093,6 +6084,11 @@ msgid "Hour 00->24: %(h24)s"
 msgstr "Ώρα 00->24: %(h24)s"
 
 #. module: base
+#: help:multi_company.default,field_id:0
+msgid "Select field property"
+msgstr ""
+
+#. module: base
 #: field:res.request.history,date_sent:0
 msgid "Date sent"
 msgstr "Ημερ/νία Αποστολής"
@@ -6111,7 +6107,6 @@ msgstr "Μήνας: %(month)s"
 #: view:ir.sequence:0
 #: field:ir.ui.menu,sequence:0
 #: field:ir.ui.view_sc,sequence:0
-#: field:multi_company.default,sequence:0
 #: field:res.partner.bank,sequence:0
 #: field:wizard.ir.model.menu.create.line,sequence:0
 msgid "Sequence"
@@ -6161,7 +6156,7 @@ msgstr "Προδιαθέσεις"
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 msgid "Fed. States"
-msgstr ""
+msgstr "Ομόσπονδες Πολιτείες"
 
 #. module: base
 #: view:ir.model:0
@@ -6178,6 +6173,11 @@ msgstr "Table Ref."
 #: field:res.roles,parent_id:0
 msgid "Parent"
 msgstr "Ανήκει"
+
+#. module: base
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -6197,7 +6197,6 @@ msgstr "Ανήκει"
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
-#: field:multi_company.default,object_id:0
 #: field:res.request.link,object:0
 #: field:wizard.ir.model.menu.create,model_id:0
 #: field:workflow.triggers,model:0
@@ -6405,7 +6404,7 @@ msgstr "View Ref."
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Dutch (Belgium) / Nederlands (Belgïe)"
-msgstr ""
+msgstr "Ολλανδικά (Βέλγιο) / Nederlands (Belgïe)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.open_repository_tree
@@ -6461,11 +6460,13 @@ msgstr "Costa Rica"
 #, python-format
 msgid "Your can't submit bug reports due to uncovered modules: %s"
 msgstr ""
+"Δεν μπορείτε να υποβάλετε αναφορές λαθών επειδή τα πρόσθετα δεν καλύπτονται: "
+"%s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr ""
+msgstr "Άλλοι Συνεργάτες"
 
 #. module: base
 #: view:ir.model:0
@@ -6921,6 +6922,17 @@ msgid "Landscape"
 msgstr "Τοπίο"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_form
+#: model:ir.ui.menu,name:base.menu_base_config_partner
+#: model:ir.ui.menu,name:base.menu_base_partner
+#: model:ir.ui.menu,name:base.menu_partner_form
+#: view:res.partner:0
+#: view:res.partner.category:0
+#: field:res.partner.category,partner_ids:0
+msgid "Partners"
+msgstr "Συνεργάτες"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Administration"
 msgstr "Διαχείριση"
@@ -6934,7 +6946,7 @@ msgstr "child_of"
 #: view:res.users:0
 #: field:res.users,company_ids:0
 msgid "Accepted Companies"
-msgstr ""
+msgstr "Αποδεκτές Εταιρείες"
 
 #. module: base
 #: field:ir.report.custom.fields,operation:0
@@ -7141,11 +7153,6 @@ msgid "Second field should be figures"
 msgstr "Το δεύτερο πεδίο πρέπει να είναι αριθμητικό"
 
 #. module: base
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_grid_security
 #: model:ir.ui.menu,name:base.menu_ir_access_grid
 msgid "Access Controls Grid"
@@ -7227,7 +7234,7 @@ msgstr "Tanzania"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Danish / Dansk"
-msgstr ""
+msgstr "Δανέζικα / Dansk"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -7266,11 +7273,6 @@ msgstr "Προχωρημένη Αναζήτηση"
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
 msgstr "Τραπεζικοί Λογαριασμοί"
-
-#. module: base
-#: model:ir.model,name:base.model_multi_company_default
-msgid "Default multi company"
-msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -7370,12 +7372,6 @@ msgid "https://translations.launchpad.net/openobject"
 msgstr "https://translations.launchpad.net/openobject"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_title
-#: model:ir.ui.menu,name:base.menu_partner_title
-msgid "Titles"
-msgstr "Τίτλοι"
-
-#. module: base
 #: field:ir.actions.todo,start_date:0
 msgid "Start Date"
 msgstr "Ημερ/νία Εκκίνησης"
@@ -7450,6 +7446,11 @@ msgstr ">"
 #: field:ir.model.access,perm_unlink:0
 msgid "Delete Permission"
 msgstr "Διαγραφή Πρόσβασης"
+
+#. module: base
+#: model:ir.model,name:base.model_multi_company_default
+msgid "multi_company.default"
+msgstr ""
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -7542,7 +7543,7 @@ msgstr "Αυτόματη Φόρτωση Προβολής"
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Προμηθευτές"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -7579,7 +7580,7 @@ msgstr "Καταστάσεις"
 #. module: base
 #: view:multi_company.default:0
 msgid "Matching"
-msgstr ""
+msgstr "Ταίριασμα"
 
 #. module: base
 #: field:ir.actions.configuration.wizard,name:0
@@ -7643,7 +7644,7 @@ msgstr "Προσθήκη Συμβολαίου Συντήρησης"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
-msgstr ""
+msgstr "Βιετνάμ / Cộng hòa xã hội chủ nghĩa Việt Nam"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -7708,6 +7709,11 @@ msgid "Rwanda"
 msgstr "Rwanda"
 
 #. module: base
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "Ο ΦΠΑ δε φαίνεται σωστός"
+
+#. module: base
 #: selection:ir.report.custom.fields,operation:0
 msgid "Calculate Sum"
 msgstr "Υπολογισμός Αθροίσματος"
@@ -7741,7 +7747,7 @@ msgstr "Αδύνατο να ενημερωθεί"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Klingon"
-msgstr ""
+msgstr "Κλίγκον"
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -7798,12 +7804,12 @@ msgstr "Όνομα Κατηγορίας"
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "Select Groups"
-msgstr ""
+msgstr "Επιλογή ομάδων"
 
 #. module: base
 #: field:ir.sequence,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Βάρος"
 
 #. module: base
 #: view:res.lang:0
@@ -7859,6 +7865,12 @@ msgid "ir.actions.server"
 msgstr "ir.actions.server"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_rule
+#: model:ir.ui.menu,name:base.menu_action_rule
+msgid "Record Rules"
+msgstr "Record Rules"
+
+#. module: base
 #: view:ir.actions.report.custom:0
 msgid "Report custom"
 msgstr "Ειδική αναφορά"
@@ -7876,7 +7888,7 @@ msgstr "Οδηγοί Ρυθμίσεων"
 #. module: base
 #: field:res.lang,code:0
 msgid "Locale Code"
-msgstr ""
+msgstr "Κωδικός τοπικών ρυθμίσεων"
 
 #. module: base
 #: field:workflow.activity,split_mode:0
@@ -7969,7 +7981,7 @@ msgstr "Seychelles"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα!"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -8141,6 +8153,9 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "HR sector"
 #~ msgstr "Τμήμα Ανθρωπίνων Πόρων"
 
+#~ msgid "Main Company"
+#~ msgstr "Κύρια Εταρεία"
+
 #, python-format
 #~ msgid "Please check that all your lines have %d columns."
 #~ msgstr "Παρακαλώ ελέγξτε ότι όλες οι γραμμές σας έχουν %d στήλες."
@@ -8215,6 +8230,9 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "The copy method is not implemented on this object !"
 #~ msgstr "The copy method is not implemented on this object !"
 
+#~ msgid "Partner Functions"
+#~ msgstr "Λειτουργίες Συνεργατών"
+
 #, python-format
 #~ msgid "You cannot perform this operation."
 #~ msgstr "Δεν μπορείτε να εκτελέσετε αυτή τη λειτουργία."
@@ -8248,9 +8266,6 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Σφάλμα! Υπάρχει ήδη ίδια περιγραφή συνδεδεμένου μέλους."
 
-#~ msgid "res.company"
-#~ msgstr "res.company"
-
 #, python-format
 #~ msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 #~ msgstr "Η τιμή  \"%s\" για οτ πεδίο \"%s\" δεν είναι επιλεγμένη!"
@@ -8269,12 +8284,12 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Bad query."
 #~ msgstr "Bad query."
 
+#~ msgid "Titles"
+#~ msgstr "Τίτλοι"
+
 #, python-format
 #~ msgid "The search method is not implemented on this object !"
 #~ msgstr "Η μέθοδος αναζήτησης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
-
-#~ msgid "The VAT doesn't seem to be correct."
-#~ msgstr "Ο ΦΠΑ δε φαίνεται σωστός"
 
 #~ msgid "IT sector"
 #~ msgstr "IT sector"
@@ -8301,3 +8316,30 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Make the rule global, otherwise it needs to be put on a group or user"
 #~ msgstr "Θέστε τον κανόνα ως γενικό αλλιώς ορίστε τον σε μια ομάδα ή χρήστη"
+
+#~ msgid "Company to store the current record"
+#~ msgstr "Εταιρεία για αποθήκευση της τρέχουσας εγγραφής"
+
+#~ msgid "Expression"
+#~ msgstr "Έκφραση"
+
+#~ msgid "Expression, must be True to match"
+#~ msgstr "Έκφραση, πρέπει να είναι Αληθές για ισότητα"
+
+#~ msgid "Company where the user is connected"
+#~ msgstr "Η εταιρεία στην οπία έχει συνδεθεί ο χρήστης"
+
+#~ msgid "List of Company"
+#~ msgstr "Λίστα εταιρείας"
+
+#~ msgid "Default Company"
+#~ msgstr "Προκαθορισμένη εταορεία"
+
+#~ msgid "Name it to easily find a record"
+#~ msgstr "Ονομάστε την εγγραφή για εύκολη αναζήτηση"
+
+#~ msgid "Default multi company"
+#~ msgstr "Προκαθορισμένη πολλαπλή εταιρεία"
+
+#~ msgid "Object affect by this rules"
+#~ msgstr "Αντικείμενο που επηρεάζεται από αυτούς τους κανόνες"

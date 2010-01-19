@@ -108,23 +108,26 @@ class SecureMultiHandler2(SecureMultiHTTPHandler):
     def log_error(self, format, *args):
         netsvc.Logger().notifyChannel('http',netsvc.LOG_ERROR,format % args)
 
-class HttpDaemon(threading.Thread, netsvc.Server):
-    def __init__(self, interface, port):
+class BaseHttpDaemon(threading.Thread, netsvc.Server):
+    def __init__(self, interface, port, handler):
         threading.Thread.__init__(self)
         netsvc.Server.__init__(self)
         self.__port = port
         self.__interface = interface
 
         try:
-            self.server = ThreadedHTTPServer((interface, port), MultiHandler2)
+            self.server = ThreadedHTTPServer((interface, port), handler)
             self.server.vdirs = []
             self.server.logRequests = True
-            netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                "starting HTTP service at %s port %d" % (interface or '0.0.0.0', port,))
+            netsvc.Logger().notifyChannel(
+                "web-services", netsvc.LOG_INFO,
+                "starting HTTPS service at %s port %d" %
+                (interface or '0.0.0.0', port,))
         except Exception, e:
-            netsvc.Logger().notifyChannel('httpd', netsvc.LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
+            netsvc.Logger().notifyChannel(
+                'httpd', netsvc.LOG_CRITICAL,
+                "Error occur when starting the server daemon: %s" % (e,))
             raise
-
 
     def attach(self, path, gw):
         pass
@@ -132,53 +135,42 @@ class HttpDaemon(threading.Thread, netsvc.Server):
     def stop(self):
         self.running = False
         if os.name != 'nt':
-            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
+            try:
+                self.server.socket.shutdown(
+                    getattr(socket, 'SHUT_RDWR', 2))
+            except socket.error, e:
+                if e.errno != 57: raise
+                # OSX, socket shutdowns both sides if any side closes it
+                # causing an error 57 'Socket is not connected' on shutdown
+                # of the other side (or something), see
+                # http://bugs.python.org/issue4397
+                netsvc.Logger().notifyChannel(
+                    'server', netsvc.LOG_DEBUG,
+                    '"%s" when shutting down server socket, '
+                    'this is normal under OS X'%e)
         self.server.socket.close()
 
     def run(self):
-        #self.server.register_introspection_functions()
-
         self.running = True
         while self.running:
             self.server.handle_request()
         return True
+
+class HttpDaemon(BaseHttpDaemon):
+    def __init__(self, interface, port):
+        super(HttpDaemon, self).__init__(interface, port,
+                                         handler=MultiHandler2)
 
 class HttpSDaemon(threading.Thread, netsvc.Server):
     def __init__(self, interface, port):
-        threading.Thread.__init__(self)
-        netsvc.Server.__init__(self)
-        self.__port = port
-        self.__interface = interface
-
         try:
-            self.server = ThreadedHTTPServer((interface, port), SecureMultiHandler2)
-            self.server.vdirs = []
-            self.server.logRequests = True
-            netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                "starting HTTPS service at %s port %d" % (interface or '0.0.0.0', port,))
+            super(HttpDaemon, self).__init__(interface, port,
+                                             handler=SecureMultiHandler2)
         except SSLError, e:
-            netsvc.Logger().notifyChannel('httpd-ssl', netsvc.LOG_CRITICAL, "Can not load the certificate and/or the private key files")
+            netsvc.Logger().notifyChannel(
+                'httpd-ssl', netsvc.LOG_CRITICAL,
+                "Can not load the certificate and/or the private key files")
             raise
-        except Exception, e:
-            netsvc.Logger().notifyChannel('httpd-ssl', netsvc.LOG_CRITICAL, "Error occur when starting the server daemon: %s" % (e,))
-            raise
-
-    def attach(self, path, gw):
-        pass
-
-    def stop(self):
-        self.running = False
-        if os.name != 'nt':
-            self.server.socket.shutdown( hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2 )
-        self.server.socket.close()
-
-    def run(self):
-        #self.server.register_introspection_functions()
-
-        self.running = True
-        while self.running:
-            self.server.handle_request()
-        return True
 
 httpd = None
 httpsd = None

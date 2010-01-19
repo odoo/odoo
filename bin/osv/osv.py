@@ -171,56 +171,12 @@ class osv_pool(netsvc.Service):
             res.append(klass.createInstance(self, module, cr))
         return res
 
-
-class osv_memory(orm.orm_memory):
-    #__metaclass__ = inheritor
-    def __new__(cls):
-        module = str(cls)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
-        if not hasattr(cls, '_module'):
-            cls._module = module
-        module_class_list.setdefault(cls._module, []).append(cls)
-        class_pool[cls._name] = cls
-        if module not in module_list:
-            module_list.append(cls._module)
-        return None
-
-    #
-    # Goal: try to apply inheritancy at the instanciation level and
-    #       put objects in the pool var
-    #
-    def createInstance(cls, pool, module, cr):
-        name = hasattr(cls, '_name') and cls._name or cls._inherit
-        parent_name = hasattr(cls, '_inherit') and cls._inherit
-        if parent_name:
-            parent_class = pool.get(parent_name).__class__
-            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-            nattr = {}
-            for s in ('_columns', '_defaults'):
-                new = copy.copy(getattr(pool.get(parent_name), s))
-                if hasattr(new, 'update'):
-                    new.update(cls.__dict__.get(s, {}))
-                else:
-                    new.extend(cls.__dict__.get(s, []))
-                nattr[s] = new
-            name = hasattr(cls, '_name') and cls._name or cls._inherit
-            cls = type(name, (cls, parent_class), nattr)
-
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
-        return obj
-    createInstance = classmethod(createInstance)
-
+class osv_base(object):
     def __init__(self, pool, cr):
         pool.add(self._name, self)
         self.pool = pool
-        orm.orm_memory.__init__(self, cr)
+        super(osv_base, self).__init__(cr)
 
-
-
-class osv(orm.orm):
-    #__metaclass__ = inheritor
     def __new__(cls):
         module = str(cls)[6:]
         module = module[:len(module)-1]
@@ -233,45 +189,83 @@ class osv(orm.orm):
             module_list.append(cls._module)
         return None
 
+class osv_memory(osv_base, orm.orm_memory):
     #
     # Goal: try to apply inheritancy at the instanciation level and
     #       put objects in the pool var
     #
     def createInstance(cls, pool, module, cr):
-        parent_name = hasattr(cls, '_inherit') and cls._inherit
-        if parent_name:
-            parent_class = pool.get(parent_name).__class__
-            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-            nattr = {}
-            for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
-                new = copy.copy(getattr(pool.get(parent_name), s))
-                if hasattr(new, 'update'):
-                    new.update(cls.__dict__.get(s, {}))
-                else:
-                    if s=='_constraints':
-                        for c in cls.__dict__.get(s, []):
-                            exist = False
-                            for c2 in range(len(new)):
-                                if new[c2][2]==c[2]:
-                                    new[c2] = c
-                                    exist = True
-                                    break
-                            if not exist:
-                                new.append(c)
+        parent_names = getattr(cls, '_inherit', None)
+        if parent_names:
+            if isinstance(parent_names, (str, unicode)):
+                name = cls._name or parent_names
+                parent_names = [parent_names]
+            else:
+                name = cls._name
+            if not name:
+                raise TypeError('_name is mandatory in case of multiple inheritance')
+
+            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+                parent_class = pool.get(parent_name).__class__
+                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+                nattr = {}
+                for s in ('_columns', '_defaults'):
+                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    if hasattr(new, 'update'):
+                        new.update(cls.__dict__.get(s, {}))
                     else:
                         new.extend(cls.__dict__.get(s, []))
-                nattr[s] = new
-            name = hasattr(cls, '_name') and cls._name or cls._inherit
-            cls = type(name, (cls, parent_class), nattr)
+                    nattr[s] = new
+                cls = type(name, (cls, parent_class), nattr)
+
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
     createInstance = classmethod(createInstance)
 
-    def __init__(self, pool, cr):
-        pool.add(self._name, self)
-        self.pool = pool
-        orm.orm.__init__(self, cr)
+class osv(osv_base, orm.orm):
+    #
+    # Goal: try to apply inheritancy at the instanciation level and
+    #       put objects in the pool var
+    #
+    def createInstance(cls, pool, module, cr):
+        parent_names = getattr(cls, '_inherit', None)
+        if parent_names:
+            if isinstance(parent_names, (str, unicode)):
+                name = cls._name or parent_names
+                parent_names = [parent_names]
+            else:
+                name = cls._name
+            if not name:
+                raise TypeError('_name is mandatory in case of multiple inheritance')
+
+            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+                parent_class = pool.get(parent_name).__class__
+                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+                nattr = {}
+                for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
+                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    if hasattr(new, 'update'):
+                        new.update(cls.__dict__.get(s, {}))
+                    else:
+                        if s=='_constraints':
+                            for c in cls.__dict__.get(s, []):
+                                exist = False
+                                for c2 in range(len(new)):
+                                    if new[c2][2]==c[2]:
+                                        new[c2] = c
+                                        exist = True
+                                        break
+                                if not exist:
+                                    new.append(c)
+                        else:
+                            new.extend(cls.__dict__.get(s, []))
+                    nattr[s] = new
+                cls = type(name, (cls, parent_class), nattr)
+        obj = object.__new__(cls)
+        obj.__init__(pool, cr)
+        return obj
+    createInstance = classmethod(createInstance)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

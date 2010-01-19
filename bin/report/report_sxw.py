@@ -85,7 +85,7 @@ class _float_format(float, _format):
 
     def __str__(self):
         digits = 2
-        if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
+        if hasattr(self,'_field') and getattr(self._field, 'digits', None):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
@@ -108,7 +108,7 @@ class _date_format(str, _format):
 
     def __str__(self):
         if self.val:
-            if hasattr(self,'name') and (self.name):
+            if getattr(self,'name', None):
                 date = mx.DateTime.strptime(self.name,DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
@@ -120,7 +120,7 @@ class _dttime_format(str, _format):
 
     def __str__(self):
         if self.val:
-            if hasattr(self,'name') and self.name:
+            if getattr(self,'name', None):
                 datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
                 return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
         return self.val
@@ -255,10 +255,10 @@ class rml_parse(object):
                 parse_format = DHM_FORMAT
 
             # filtering time.strftime('%Y-%m-%d')
-            if type(value) == type(''):
-                parse_format = DHM_FORMAT
-                if (not date_time):
-                    return str(value)
+#            if type(value) == type(''):
+#                parse_format = DHM_FORMAT
+#                if (not date_time):
+#                    return str(value)
 
             if not isinstance(value, time.struct_time):
                 try:
@@ -302,7 +302,7 @@ class rml_parse(object):
             rml_head = rml_head.replace('<image','<!--image')
             rml_head = rml_head.replace('</image>','</image-->')
         head_dom = etree.XML(rml_head)
-        for tag in head_dom.getchildren():
+        for tag in head_dom:
             found = rml_dom.find('.//'+tag.tag)
             if found is not None and len(found):
                 if tag.get('position'):
@@ -361,8 +361,11 @@ class report_sxw(report_rml, preprocess.report):
         elif report_type=='mako2html':
             fnct = self.create_source_mako2html
         else:
-            raise Exception('Unknown Report Type: '+report_type)
-        return fnct(cr, uid, ids, data, report_xml, context)
+            raise 'Unknown Report Type'
+        fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
+        if not fnct_ret:
+            return (False,False)
+        return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_odt(cr, uid, ids, data, report_xml, context or {})
@@ -394,6 +397,8 @@ class report_sxw(report_rml, preprocess.report):
                         results.append((d,'pdf'))
                         continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
+                if not result:
+                    return False
                 try:
                     if aname:
                         name = aname+'.'+result[1]
@@ -431,6 +436,9 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         title = report_xml.name
         rml = report_xml.report_rml_content
+        # if no rml file is found
+        if not rml:
+            return False
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
@@ -466,13 +474,14 @@ class report_sxw(report_rml, preprocess.report):
         for pe in elements:
             if pe.get(rml_parser.localcontext['name_space']["meta"]+"name"):
                 if pe.get(rml_parser.localcontext['name_space']["meta"]+"name") == "Info 3":
-                    pe.getchildren()[0].text=data['id']
+                    pe[0].text=data['id']
                 if pe.get(rml_parser.localcontext['name_space']["meta"]+"name") == "Info 4":
-                    pe.getchildren()[0].text=data['model']
-        meta = etree.tostring(rml_dom_meta)
+                    pe[0].text=data['model']
+        meta = etree.tostring(rml_dom_meta, encoding='utf-8',
+                              xml_declaration=True)
 
         rml_dom =  etree.XML(rml)
-        body = rml_dom.getchildren()[-1]
+        body = rml_dom[-1]
         elements = []
         key1 = rml_parser.localcontext['name_space']["text"]+"p"
         key2 = rml_parser.localcontext['name_space']["text"]+"drop-down"
@@ -486,7 +495,7 @@ class report_sxw(report_rml, preprocess.report):
                     pp=de.getparent()
                     if de.text or de.tail:
                         pe.text = de.text or de.tail
-                    for cnd in de.getchildren():
+                    for cnd in de:
                         if cnd.text or cnd.tail:
                             if pe.text:
                                 pe.text +=  cnd.text or cnd.tail
@@ -512,12 +521,11 @@ class report_sxw(report_rml, preprocess.report):
 
         rml_dom = self.preprocess_rml(rml_dom,report_type)
         create_doc = self.generators[report_type]
-        odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext))
+        odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext),
+                             encoding='utf-8', xml_declaration=True)
         sxw_z = zipfile.ZipFile(sxw_io, mode='a')
-        sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
-                odt)
-        sxw_z.writestr('meta.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
-                meta)
+        sxw_z.writestr('content.xml', odt)
+        sxw_z.writestr('meta.xml', meta)
 
         if report_xml.header:
             #Add corporate header/footer
@@ -532,9 +540,9 @@ class report_sxw(report_rml, preprocess.report):
             odt = create_doc(rml_dom,rml_parser.localcontext)
             if report_xml.header:
                 rml_parser._add_header(odt)
-            odt = etree.tostring(odt)
-            sxw_z.writestr('styles.xml',"<?xml version='1.0' encoding='UTF-8'?>" + \
-                    odt)
+            odt = etree.tostring(odt, encoding='utf-8',
+                                 xml_declaration=True)
+            sxw_z.writestr('styles.xml', odt)
         sxw_z.close()
         final_op = sxw_io.getvalue()
         sxw_io.close()

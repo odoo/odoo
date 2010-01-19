@@ -32,11 +32,10 @@ class ExceptionNoTb(Exception):
         self.args = (msg, '')
 
 def login(db, login, password):
-    cr = pooler.get_db(db).cursor()
-    if password:
-        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
-    else:
-        cr.execute('select id from res_users where login=%s and password is null and active', (tools.ustr(login),))
+    if not password:
+        return False
+    cr = pooler.get_db(db).cursor()    
+    cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
     res = cr.fetchone()
     cr.close()
     if res:
@@ -51,14 +50,13 @@ def check_super(passwd):
         raise ExceptionNoTb('AccessDenied')
 
 def check(db, uid, passwd):
+    if not passwd:
+        return False
     cached_pass = _uid_cache.get(db, {}).get(uid)
     if (cached_pass is not None) and cached_pass == passwd:
         return True
-    cr = pooler.get_db(db).cursor()
-    if passwd:
-        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
-    else:
-        cr.execute('select count(1) from res_users where id=%s and password is null and active=%s', (int(uid), True))    
+    cr = pooler.get_db(db).cursor()    
+    cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))    
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
@@ -72,11 +70,10 @@ def check(db, uid, passwd):
     return bool(res)
 
 def access(db, uid, passwd, sec_level, ids):
-    cr = pooler.get_db(db).cursor()
-    if passwd:
-        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
-    else:
-        cr.execute('select id from res_users where id=%s and password is null', (uid,))    
+    if not passwd:
+        return False
+    cr = pooler.get_db(db).cursor()    
+    cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
     res = cr.fetchone()
     cr.close()
     if not res:

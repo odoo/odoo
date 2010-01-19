@@ -304,7 +304,7 @@ def get_pg_type(f):
         elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             f_size = -1
         else:
-            f_size = (hasattr(f, 'size') and f.size) or 16
+            f_size = getattr(f, 'size', None) or 16
 
         if f_size == -1:
             f_type = ('int4', 'INTEGER')
@@ -482,11 +482,19 @@ class orm_template(object):
                 'ttype': f._type,
                 'relation': f._obj or 'NULL',
                 'view_load': (f.view_load and 1) or 0,
-                'select_level': str(f.select or 0),
+                'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
                 'selectable' : (f.selectable and 1) or 0,
             }
+            # When its a custom field,it does not contain f.select
+            if context.get('field_state','base') == 'manual':
+                if context.get('field_name','') == k:
+                    vals['select_level'] = context.get('select','0')
+                #setting value to let the problem NOT occur next time
+                else:
+                    vals['select_level'] = cols[k]['select_level']
+
             if k not in cols:
                 cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
                 id = cr.fetchone()[0]
@@ -964,6 +972,7 @@ class orm_template(object):
             except Exception, e:
                 import psycopg2
                 import osv
+                cr.rollback()
                 if isinstance(e,psycopg2.IntegrityError):
                     msg= _('Insertion Failed! ')
                     for key in self.pool._sql_error.keys():
@@ -1069,8 +1078,7 @@ class orm_template(object):
                     res[f]['readonly'] = True
                     res[f]['states'] = {}
                 for arg in ('digits', 'invisible','filters'):
-                    if hasattr(self._columns[f], arg) \
-                            and getattr(self._columns[f], arg):
+                    if getattr(self._columns[f], arg, None):
                         res[f][arg] = getattr(self._columns[f], arg)
 
                 #TODO: optimize
@@ -1307,6 +1315,26 @@ class orm_template(object):
 
         return arch
 
+    def __get_default_search_view(self, cr, uid, context={}):
+
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+
+        view = self.fields_view_get(cr, uid, False, 'form', context)
+
+        root = etree.fromstring(encode(view['arch']))
+        res = etree.XML("<search string='%s'></search>" % root.get("string", ""))
+        node = etree.Element("group")
+        res.append(node)
+
+        fields = root.xpath("//field[@select=1]")
+        for field in fields:
+            node.append(field)
+
+        return etree.tostring(res, encoding="utf-8").replace('\t', '')
+
     #
     # if view_id, view_type is not required
     #
@@ -1359,7 +1387,7 @@ class orm_template(object):
                     if pos == 'replace':
                         parent = node.getparent()
                         if parent is None:
-                            src = copy.deepcopy(node2.getchildren()[0])
+                            src = copy.deepcopy(node2[0])
                         else:
                             for child in node2:
                                 node.addprevious(child)
@@ -1425,19 +1453,10 @@ class orm_template(object):
                         inherit_id IS NULL
                     ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
-            if not sql_res and view_type == 'search':
-                cr.execute('''SELECT
-                        arch,name,field_parent,id,type,inherit_id
-                    FROM
-                        ir_ui_view
-                    WHERE
-                        model=%s AND
-                        type=%s AND
-                        inherit_id IS NULL
-                    ORDER BY priority''', (self._name, 'form'))
-                sql_res = cr.fetchone()
+
             if not sql_res:
                 break
+
             ok = sql_res[5]
             view_id = ok or sql_res[3]
             model = False
@@ -1463,6 +1482,7 @@ class orm_template(object):
             result['name'] = sql_res[1]
             result['field_parent'] = sql_res[2] or False
         else:
+
             # otherwise, build some kind of default view
             if view_type == 'form':
                 res = self.fields_get(cr, user, context=context)
@@ -1474,6 +1494,7 @@ class orm_template(object):
                         if res[x]['type'] == 'text':
                             xml += "<newline/>"
                 xml += "</form>"
+
             elif view_type == 'tree':
                 _rec_name = self._rec_name
                 if _rec_name not in self._columns:
@@ -1481,11 +1502,16 @@ class orm_template(object):
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
                        % (self._description, self._rec_name)
+
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
+
+            elif view_type == 'search':
+                xml = self.__get_default_search_view(cr, user, context)
+
             else:
                 xml = '<?xml version="1.0"?>' # what happens here, graph case?
-                # raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
+                raise except_orm(_('Invalid Architecture!'),_("There is no view of type '%s' defined for the structure!") % view_type)
             result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
             result['field_parent'] = False
@@ -1502,7 +1528,7 @@ class orm_template(object):
                     act_id = int(data_menu.split(',')[1])
                     if act_id:
                         data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = hasattr(data_action,'menus') and data_action.menus or False
+                        result['submenu'] = getattr(data_action,'menus', False)
         if toolbar:
             def clean(x):
                 x = x[2]
@@ -1941,10 +1967,11 @@ class orm(orm_template):
         create = False
         todo_end = []
         self._field_create(cr, context=context)
-        if not hasattr(self, "_auto") or self._auto:
+        if getattr(self, '_auto', True):
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
             if not cr.rowcount:
-                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS" % self._table)
+                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS" % self._table)
+                cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'","''")))
                 create = True
             cr.commit()
             if self._parent_store:
@@ -2001,14 +2028,14 @@ class orm(orm_template):
                 elif isinstance(f, fields.many2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
-                        #FIXME: Remove this try/except
-                        try:
-                            ref = self.pool.get(f._obj)._table
-                        except AttributeError:
-                            ref = f._obj.replace('.', '_')
+                        if not self.pool.get(f._obj):
+                            raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                        ref = self.pool.get(f._obj)._table
+#                        ref = f._obj.replace('.', '_')
                         cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
+                        cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
                         cr.commit()
                 else:
                     cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
@@ -2037,6 +2064,7 @@ class orm(orm_template):
 
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
+                            cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'","''")))
 
                             # initialize it
                             if not create and k in self._defaults:
@@ -2061,11 +2089,10 @@ class orm(orm_template):
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
-                                #FIXME: Remove this try/except
-                                try:
-                                    ref = self.pool.get(f._obj)._table
-                                except AttributeError:
-                                    ref = f._obj.replace('.', '_')
+                                if not self.pool.get(f._obj):
+                                    raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                                ref = self.pool.get(f._obj)._table
+#                                ref = f._obj.replace('.', '_')
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
                                     cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
@@ -2083,7 +2110,8 @@ class orm(orm_template):
                         f_pg_type = f_pg_def['typname']
                         f_pg_size = f_pg_def['size']
                         f_pg_notnull = f_pg_def['attnotnull']
-                        if isinstance(f, fields.function) and not f.store and (not hasattr(f,'nodrop') or not f.nodrop):
+                        if isinstance(f, fields.function) and not f.store and\
+                                not getattr(f, 'nodrop', False):
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
                             cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
                             cr.commit()
@@ -2236,7 +2264,7 @@ class orm(orm_template):
 
         if not hasattr(self, '_log_access'):
             # if not access is not specify, it is the same value as _auto
-            self._log_access = not hasattr(self, "_auto") or self._auto
+            self._log_access = getattr(self, "_auto", True)
 
         self._columns = self._columns.copy()
         for store_field in self._columns:
@@ -2442,7 +2470,6 @@ class orm(orm_template):
                     if not id_exist:
                         cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
                         r[key] = ''
-
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
@@ -2457,7 +2484,7 @@ class orm(orm_template):
             fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
@@ -2472,25 +2499,26 @@ class orm(orm_template):
                     return "date_trunc('second', %s) as %s" % (f, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
-                        return "COALESCE(write_date, create_date, now())::timestamp AS %s" % (f,)
+                        return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
                     return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
+            order_by = self._parent_order or self._order
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table, d1,
-                                self._order),[sub_ids,]+d2)
+                    cr.execute('SELECT %s FROM %s WHERE %s.id = ANY (%%s) AND %s ORDER BY %s' % \
+                            (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
+                                order_by),[sub_ids,]+d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % self._description)
+                                _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                self._order), (sub_ids,))
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' %
+                               (','.join(fields_pre2 + ['id']), self._table,
+                                order_by), (sub_ids,))
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
@@ -2668,27 +2696,23 @@ class orm(orm_template):
         #   ids2 = [x[self._inherits[key]] for x in res]
         #   self.pool.get(key).unlink(cr, uid, ids2)
 
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
+        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         if d1:
-            d1 = ' AND '+d1
+            d1 = ' AND '+' and '.join(d1)
 
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
             str_d = string.join(('%s',)*len(sub_ids), ',')
             if d1:
-                cr.execute('SELECT id FROM "'+self._table+'" ' \
-                        'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
+                cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
 
-            if d1:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')'+d1, sub_ids+d2)
-            else:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')', sub_ids)
+            cr.execute('delete from '+self._table+' ' \
+                    'where id in ('+str_d+')', sub_ids)
 
         for order, object, store_ids, fields in result_store:
             if object<>self._name:
@@ -2788,19 +2812,19 @@ class orm(orm_template):
 
         if len(upd0):
 
-            d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
             if d1:
-                d1 = ' and '+d1
+                d1 = ' and '+' and '.join(d1)
 
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 ids_str = string.join(map(str, sub_ids), ',')
                 if d1:
-                    cr.execute('SELECT id FROM "'+self._table+'" ' \
-                            'WHERE id IN ('+ids_str+')'+d1, d2)
+                    cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
                     if not cr.rowcount == len({}.fromkeys(sub_ids)):
                         raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule (Document type: %s).') % \
+                                _('You try to bypass an access rule while writing (Document type: %s).') % \
                                         self._description)
                 else:
                     cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
@@ -2808,19 +2832,19 @@ class orm(orm_template):
                         raise except_orm(_('AccessError'),
                                 _('You try to write on an record that doesn\'t exist ' \
                                         '(Document type: %s).') % self._description)
-                if d1:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')'+d1, upd1+ d2)
-                else:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')', upd1)
+                cr.execute('update '+self._table+' set '+string.join(upd0, ',')+' ' \
+                    'where id in ('+ids_str+')', upd1)
 
             if totranslate:
                 # TODO: optimize
                 for f in direct:
                     if self._columns[f].translate:
-                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans[0][f])
+                        src_trans = self.pool.get(self._name).read(cr,user,ids,[f])[0][f]
+                        if not src_trans:
+                            src_trans = vals[f]
+                            # Inserting value to DB
+                            self.write(cr, user, ids, {f:vals[f]})
+                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
 
         # call the 'set' method of fields which are not classic_write
@@ -3106,7 +3130,9 @@ class orm(orm_template):
                     continue
 
             result.setdefault(fncts[fnct][0], {})
-            ids2 = fncts[fnct][2](self,cr, uid, ids, context)
+
+            # uid == 1 for accessing objects having rules defined on store fields
+            ids2 = fncts[fnct][2](self,cr, 1, ids, context)
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
@@ -3155,7 +3181,8 @@ class orm(orm_template):
         for key in keys:
             val = todo[key]
             if key:
-                result = self._columns[val[0]].get(cr, self, ids, val, uid, context=context)
+                # uid == 1 for accessing objects having rules defined on store fields
+                result = self._columns[val[0]].get(cr, self, ids, val, 1, context=context)
                 for id,value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -3179,7 +3206,8 @@ class orm(orm_template):
 
             else:
                 for f in val:
-                    result = self._columns[f].get(cr, self, ids, f, uid, context=context)
+                    # uid == 1 for accessing objects having rules defined on store fields
+                    result = self._columns[f].get(cr, self, ids, f, 1, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -3242,11 +3270,18 @@ class orm(orm_template):
             context = {}
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+        qu1 = qu1 + dom[0]
+        qu2 = qu2 + dom[1]
+        for t in dom[2]:
+            if t not in tables:
+                tables.append(t)
 
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')
         else:
             qu1 = ''
+
 
         if order:
             self._check_qorder(order)
@@ -3255,12 +3290,6 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
-
-        # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
-        if d1:
-            qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
-            qu2 += d2
 
         if count:
             cr.execute('select count(%s.id) from ' % self._table +
