@@ -53,7 +53,7 @@
                 </group>
                 <group colspan="2" col="4">
 	                <field name="opportunity_id" string="Opportunity Case"/>
-	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>
+	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Leads">
