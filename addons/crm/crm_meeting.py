@@ -40,24 +40,8 @@ class crm_meeting(osv.osv):
                             ('object_id.model', '=', 'crm.meeting')]", \
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
+        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
     }
-
-    def msg_new(self, cr, uid, msg):
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'], 
-            'email_from': msg['From'], 
-            'email_cc': msg['Cc'], 
-            'user_id': False, 
-            'description': msg_body['body'], 
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })], 
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)
-        return res
 
 crm_meeting()
 

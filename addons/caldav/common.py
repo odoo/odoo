@@ -542,7 +542,6 @@ rule or repeating pattern for anexception to a recurrence set"),
         'rrule_type': fields.selection([('none', 'None'), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
-        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
@@ -789,7 +788,131 @@ rule or repeating pattern for anexception to a recurrence set"),
 
 calendar_event()
 
+class calendar_todo(osv.osv):
+    _name = "calendar.todo"
+    _inherit = "calendar.event"
+    _description = "Calendar Task"
 
+    def _get_date(self, cr, uid, ids, name, arg, context):
+        res = {}
+        for event in self.browse(cr, uid, ids, context=context):
+            res[event.id] = event.date_start
+        return res
+
+    def _set_date(self, cr, uid, id, name, value, arg, context):
+        event = self.browse(cr, uid, id, context=context)
+        cr.execute("UPDATE %s set date_start='%s' where id=%s"  \
+                           % (self._table, value, id))
+        return True
+
+    _columns = {
+        'date': fields.function(_get_date, method=True,   fnct_inv=_set_date, \
+                                        string='Duration', store=True, type='datetime'),
+        'duration': fields.integer('Duration'), 
+    }
+    
+    #kept it until fields mapping implemented
+    __attribute__ = {
+        'class': {'field': 'class', 'type': 'text'}, 
+        'completed': {'field': 'date_close', 'type': 'datetime'}, 
+#        'created': {'field': 'field', 'type': 'text'},
+        'description': {'field': 'description', 'type': 'text'}, 
+#        'dtstamp': {'field': 'field', 'type': 'text'},
+        'dtstart': {'field': 'date_start', 'type': 'datetime'}, 
+        'duration': {'field': 'planned_hours', 'type': 'timedelta'}, 
+        'due': {'field': 'date_deadline', 'type': 'datetime'}, 
+#        'geo': {'field': 'field', 'type': 'text'},
+#        'last-mod ': {'field': 'field', 'type': 'text'},
+        'location': {'field': 'location', 'type': 'text'}, 
+        'organizer': {'field': 'partner_id', 'type': 'many2one', 'object': 'res.partner'}, 
+        'percent': {'field': 'progress_rate', 'type': 'int'}, 
+        'priority': {'field': 'priority', 'type': 'text'}, 
+#        'recurid': {'field': 'field', 'type': 'text'},
+        'seq': {'field': 'sequence', 'type': 'text'}, 
+        'status': {'field': 'state', 'type': 'selection', \
+                            'mapping': {'needs-action': 'draft', \
+                              'completed': 'done', 'in-process': 'open', \
+                              'cancelled': 'cancelled'}}, 
+        'summary': {'field': 'name', 'type': 'text'}, 
+        'uid': {'field': 'id', 'type': 'int'}, 
+        'url': {'field': 'caldav_url', 'type': 'text'}, 
+#        'attach': {'field': 'field', 'type': 'text'},
+        'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
+        'comment': {'field': 'notes', 'type': 'text'}, 
+#        'contact': {'field': 'field', 'type': 'text'},
+        'exdate': {'field':'exdate', 'type':'datetime'}, 
+        'exrule': {'field':'exrule', 'type':'text'}, 
+#        'rstatus': {'field': 'field', 'type': 'text'},
+#        'related': {'field': 'field', 'type': 'text'},
+#        'resources': {'field': 'field', 'type': 'text'},
+#        'rdate': {'field': 'field', 'type': 'text'},
+        'rrule': {'field': 'rrule', 'type': 'text'}, 
+        'valarm': {'field':'caldav_alarm_id', 'type':'many2one', 'object': 'calendar.alarm'}, 
+                     }
+    
+    def import_cal(self, cr, uid, data, context={}):
+        file_content = base64.decodestring(data)
+        todo_obj = self.pool.get('basic.calendar.todo')
+        todo = self.pool.get('calendar.todo')
+        todo_obj.__attribute__.update(todo.__attribute__)
+
+        attendee_obj = self.pool.get('basic.calendar.attendee')
+        crm_attendee = self.pool.get('calendar.attendee')
+        attendee_obj.__attribute__.update(crm_attendee.__attribute__)
+
+        alarm_obj = self.pool.get('basic.calendar.alarm')
+        crm_alarm = self.pool.get('calendar.alarm')
+        alarm_obj.__attribute__.update(crm_alarm.__attribute__)
+
+        vals = todo_obj.import_ical(cr, uid, file_content)
+        for val in vals:
+            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+            if not val.has_key('planned_hours'):
+                # 'Computes duration' in days
+                start = datetime.strptime(val['date_start'], '%Y-%m-%d %H:%M:%S')
+                end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                diff = end - start
+                plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
+                val['planned_hours'] = plan
+            else:
+                # Converts timedelta into hours
+                hours = (val['planned_hours'].seconds / float(3600)) + \
+                                        (val['planned_hours'].days * 24)
+                val['planned_hours'] = hours
+            exists, r_id = uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
+            val.pop('id')
+            if exists:
+                self.write(cr, uid, [exists], val)
+            else:
+                task_id = self.create(cr, uid, val)
+        return {'count': len(vals)}
+
+    def export_cal(self, cr, uid, ids, context={}):
+        task_datas = self.read(cr, uid, ids, [], context ={'read': True})
+        tasks = []
+        for task in task_datas:
+            if task.get('planned_hours', None) and task.get('date_deadline', None):
+                task.pop('planned_hours')
+            tasks.append(task)
+        todo_obj = self.pool.get('basic.calendar.todo')
+        todo = self.pool.get('calendar.todo')
+        todo_obj.__attribute__.update(todo.__attribute__)
+
+        attendee_obj = self.pool.get('basic.calendar.attendee')
+        attendee = self.pool.get('calendar.attendee')
+        attendee_obj.__attribute__.update(attendee.__attribute__)
+
+        alarm_obj = self.pool.get('basic.calendar.alarm')
+        alarm = self.pool.get('calendar.alarm')
+        alarm_obj.__attribute__.update(alarm.__attribute__)
+
+        ical = todo_obj.export_ical(cr, uid, tasks, {'model': 'project.task'})
+        calendar_val = ical.serialize()
+        calendar_val = calendar_val.replace('"', '').strip()
+        return calendar_val
+
+calendar_todo()
+ 
 class ir_attachment(osv.osv):
     _name = 'ir.attachment'
     _inherit = 'ir.attachment'
@@ -1056,7 +1179,6 @@ class invite_attendee_wizard(osv.osv_memory):
             vals.update({'email': datas['email']})
             att_id = att_obj.create(cr, uid, vals)
             obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
-
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
