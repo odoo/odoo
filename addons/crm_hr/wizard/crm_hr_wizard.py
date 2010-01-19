@@ -129,6 +129,20 @@ class job2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        job_case_obj = pool.get('crm.job')
+        meeting_case_obj = pool.get('crm.meeting')        
+        for job in job_case_obj.browse(cr, uid, data['ids']):
+            new_meeting_id = meeting_case_obj.create(cr, uid, {
+                'name': job.name,
+                'date': job.date,
+                'duration': job.duration,
+                })
+            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
+            vals = {}
+            job_case_obj.write(cr, uid, [job.id], vals)
+            job_case_obj.case_cancel(cr, uid, [job.id])
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id]) 
+                      
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
