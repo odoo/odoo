@@ -83,24 +83,9 @@
                                 <label string="Date Stop: %%(date_stop)s"/>
                             </group>
                         </page>
-                        <page string="Tasks">
-                           <field name="tasks" nolabel="1" attrs="{'readonly':[('state','in',['cancelled','done'])]}" colspan="4">
-                           <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                           <!--    <tree string="Tasks">-->
-                                   <field name="sequence"/>
-                                   <field name="name"/>
-                                   <field name="user_id" string="Project Manager"/>
-                                   <field name="date_deadline"/>
-                                   <field name="planned_hours" sum="Planned" widget="float_time"/>
-                                   <field name="delay_hours" sum="Delay" widget="float_time"/>
-                                   <field name="progress" widget="progressbar"/>
-                                   <field name="priority"/>
-                                   <field name="state"/>
-                                   <field name="remaining_hours" invisible="1"/>
-                                   </tree>
-                           </field>
-                           <separator string="Allowed Task Types"/>
-                           <field nolabel="1" name="allowed_task_type" colspan="4" groups="base.group_extended"/>
+                        <page string="Tasks" groups="base.group_extended">
+                           <separator string="Task Types"/>
+                           <field nolabel="1" name="type_ids" colspan="4"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="description" nolabel="1"/>
@@ -378,7 +363,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                    <field name="sequence" string="Seq."/>
+                    <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
                     <field name="user_id"/>
@@ -485,21 +470,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <search string="Task Edition">
-                    <group col="8" colspan="4">
+                    <group col="20" colspan="4">
+                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="type" select="1" widget="selection"/>
                         <field name="project_id" select="1" widget="selection">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
-                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-						<filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
-                    <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
                             <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
