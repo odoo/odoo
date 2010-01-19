@@ -71,7 +71,7 @@ class crm_lead(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.lead.categ').browse(cr, uid, categ, context).probability
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
         return {'value':{'probability':cat}}        
 
 crm_lead()
