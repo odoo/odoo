@@ -46,7 +46,7 @@
                 </tree>
             </field>
         </record>
-
+<!-- 
         <record id="hr_timesheet_day_form" model="ir.ui.view">
             <field name="name">hr.timesheet.day.form</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -61,7 +61,7 @@
                 </form>
             </field>
         </record>
-
+ 
         <record id="hr_timesheet_day_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -76,7 +76,7 @@
                 </tree>
             </field>
         </record>
-
+-->
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -266,7 +266,7 @@
         </record>
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_day" name="Timesheet by Account" res_model="hr_timesheet_sheet.sheet.account" src_model="hr_timesheet_sheet.sheet"/>
-        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>
+<!--         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>  -->
 
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" name="Timesheet Lines" res_model="hr.analytic.timesheet" src_model="hr_timesheet_sheet.sheet"/>

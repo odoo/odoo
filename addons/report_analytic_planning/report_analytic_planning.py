@@ -314,7 +314,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
                 WHERE holidays.employee_id IN 
                     (
                     SELECT emp.id 
-                    FROM hr_employee emp WHERE emp.user_id = users.id 
+                    FROM hr_employee emp, resource_resource res WHERE emp.resource_id = res.id and res.user_id = users.id 
                     )
                 AND holidays.state IN ('validate')
                 AND holidays.type = 'remove' 

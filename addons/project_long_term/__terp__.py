@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,37 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
 
 {
-    "name" : "Project Management",
+    "name" : "Long Term Project Management",
     "version": "1.1",
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr", "process", "mail_gateway","hr_timesheet_sheet","report_timesheet","account_budget"],
-    "description": """Project management module that track multi-level projects, tasks,
-works done on tasks, eso. It is able to render planning, order tasks, eso.
+    "depends" : ["project"],
+    "description": """Long Term Project management module that track planning, scheduling, resources allocation.
     """,
     "init_xml" : [],
-    "update_xml": [
-        "security/project_security.xml",
-        "security/ir.model.access.csv",
-        "project_data.xml",
-        "project_wizard.xml",
-        "project_view.xml",
-        "project_report.xml",
-        "process/task_process.xml",
-        "project_installer.xml",
-    ],
-    'demo_xml': [#'project_demo.xml'
-    
+    "demo_xml" : [#"project_demo.xml"
+],
+    "update_xml": [        
+        "project_view.xml",         
     ],
     'installable': True,
     'active': False,
-    'certificate': '0075116868317',
+    'certificate': None,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

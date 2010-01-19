@@ -30,11 +30,11 @@
             <field name="arch" type="xml">
                 <form string="Project">
                     <group colspan="6" col="6">
-                        <field name="name" select="1"/>
-                        <field name="parent_id"/>
-                        <field name="manager" select="1"/>
+                        <field name="name" string="Project Name" select="1"/>
+                        <field name="parent_id" string="Parent Project"/>
+                        <field name="user_id" string="Project Manager" select="1"/>
                         <field name="date_start"/>
-                        <field name="date_end"/>
+                        <field name="date"/>
                         <field name="progress_rate" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -42,14 +42,14 @@
                             <field name="warn_manager"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority"/>
-                            <field name="timesheet_id"/>
+                            <field name="resource_calendar_id"/>
                             <field name="active" select="2"/>
                             <field name="planned_hours" widget="float_time"/>
                             <field name="effective_hours" widget="float_time"/>
-                            <field name="category_id" select="2" context="{'default_name':name}"/>
+
                             <newline/>
                             <separator colspan="4" string="Project's members"/>
-                            <field colspan="4" name="members" nolabel="1"/>
+                            <field colspan="4" name="resource_ids" nolabel="1"/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
@@ -89,7 +89,7 @@
                            <!--    <tree string="Tasks">-->
                                    <field name="sequence"/>
                                    <field name="name"/>
-                                   <field name="user_id"/>
+                                   <field name="user_id" string="Project Manager"/>
                                    <field name="date_deadline"/>
                                    <field name="planned_hours" sum="Planned" widget="float_time"/>
                                    <field name="delay_hours" sum="Delay" widget="float_time"/>
@@ -103,7 +103,7 @@
                            <field nolabel="1" name="allowed_task_type" colspan="4" groups="base.group_extended"/>
                         </page>
                         <page string="Notes">
-                            <field colspan="4" name="notes" nolabel="1"/>
+                            <field colspan="4" name="description" nolabel="1"/>
                         </page>
                     </notebook>
                     <newline/>
@@ -117,9 +117,9 @@
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
                 <tree string="Projects">
-                    <field name="complete_name"/>
-                    <field name="manager"/>
-                    <field name="partner_id"/>
+                    <field name="complete_name" string="Project Name"/>
+                    <field name="user_id" string="Project Manager"/>
+                    <field name="partner_id" string="Partner"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="state"/>
@@ -134,11 +134,11 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='8' colspan='4'>
-                           <filter icon="terp-project" string="My Projects" domain="[('manager', '=', uid)]" help="My Projects"/>
+                           <filter icon="terp-project" string="My Projects" domain="[('user_id', '=', uid)]" help="My Projects"/>
                            <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
                            <separator orientation="vertical"/>
-                           <field name="name" select='1'/>
-                           <field name="partner_id" select='1'/>
+                           <field name="name" string="Project Name" select='1'/>
+                           <field name="partner_id" string="Partner" select='1'/>
                            <field name="state" select="1"/>
                    </group>
                </search>
@@ -149,12 +149,12 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
+            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Projects">
-                    <field name="name"/>
-                    <field name="manager"/>
-                    <field name="partner_id"/>
+                    <field name="name" string="Project Name"/>
+                    <field name="user_id" string="Project Manager"/>
+                    <field name="partner_id" string="Partner"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -218,11 +218,11 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
+            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="My projects">
-                    <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="name" string="Project Name"/>
+                    <field name="partner_id" string="Partner"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="progress_rate" widget="progressbar"/>
@@ -283,7 +283,10 @@
                         <field name="name" select="1"/>
                         <field name="project_id" required="1" select="1"/>
                         <field name="total_hours" widget="float_time"/>
+                        <field name="date_start"/>
                         <field name="date_deadline" select="2"/>
+                        <field name="occupation_rate"/>
+                        <field name="date_end"/>
                         <field name="user_id" select="1"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
@@ -294,7 +297,7 @@
                                 name="planned_hours"
                                 widget="float_time"
                                 attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(planned_hours,effective_hours)"/>
+                                on_change="onchange_planned(planned_hours,effective_hours,date_start,occupation_rate)"/>
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
@@ -325,8 +328,9 @@
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
-                            <field name="parent_id"/>
-                            <newline/>
+                        	<separator string="Parent Tasks" colspan="4"/>
+                            <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
+                            <separator string="Delegated tasks" colspan="4"/>
                             <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
@@ -340,6 +344,7 @@
                             </field>
                             <field colspan="4" name="history" nolabel="1"/>
                         </page>
+                        
                         <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
@@ -575,7 +580,7 @@
         </record>
         <menuitem action="open_task_type_form" id="menu_task_types" parent="project.menu_definitions"/>
 
-        <act_window domain="[('manager', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
+        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
             domain="[('project_id', '=', active_id)]"

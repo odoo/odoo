@@ -20,11 +20,10 @@
 ##############################################################################
 
 from lxml import etree
-from mx import DateTime
-from mx.DateTime import now
+import mx.DateTime
+import datetime
 import time
 from tools.translate import _
-
 from osv import fields, osv
 from tools.translate import _
 
@@ -46,7 +45,7 @@ project_task_type()
 class project(osv.osv):
     _name = "project.project"
     _description = "Project"
-
+    _inherits = {'account.analytic.account':"category_id"}
     def _complete_name(self, cr, uid, ids, name, args, context):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
@@ -88,7 +87,7 @@ class project(osv.osv):
             tocompute = [project]
             while tocompute:
                 p = tocompute.pop()
-                tocompute += p.child_id
+                tocompute += p.child_ids
                 for i in range(3):
                     s[i] += progress.get(p.id, (0.0,0.0,0.0))[i]
             res[project.id] = {
@@ -105,51 +104,59 @@ class project(osv.osv):
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
     _columns = {
-        'name': fields.char("Project Name", size=128, required=True),
-        'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=128),
+#       'name': fields.char("Project Name", size=128, required=True),
+#       'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=128),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
-        'manager': fields.many2one('res.users', 'Project Manager'),
+#       'manager': fields.many2one('res.users', 'Project Manager'),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
+        'resource_ids': fields.many2many('resource.resource', 'project_resource_rel', 'project_id', 'resource_id', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
-        'parent_id': fields.many2one('project.project', 'Parent Project',\
-            help="If you have [?] in the name, it means there are no analytic account linked to project."),
-        'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
+#        'parent_id': fields.many2one('project.project', 'Parent Project',\
+#            help="If you have [?] in the name, it means there are no analytic account linked to project."),
+#        'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project."),
         'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project."),
         'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project."),
         'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
-        'date_start': fields.date('Starting Date'),
-        'date_end': fields.date('Expected End'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'contact_id': fields.many2one('res.partner.address', 'Contact'),
+#        'partner_id': fields.many2one('res.partner', 'Partner'),
+#        'contact_id': fields.many2one('res.partner.address', 'Contact'),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
-        'notes': fields.text('Notes', help="Internal description of the project."),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
-                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-        'company_id': fields.many2one('res.company', 'Company'),
+#        'notes': fields.text('Notes', help="Internal description of the project."),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+#        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
+#                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
+#                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
+#        'company_id': fields.many2one('res.company', 'Company'),
+#        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
         'allowed_task_type': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Allowed Task Types'),
      }
 
     _defaults = {
         'active': lambda *a: True,
-        'manager': lambda object,cr,uid,context: uid,
+#        'manager': lambda object,cr,uid,context: uid,
         'priority': lambda *a: 1,
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'open',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', context=c)
+#        'state': lambda *a: 'open',
+#        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.project', context=c)
     }
+    def _check_dates(self, cr, uid, ids):
+         leave = self.read(cr, uid, ids[0],['date_start','date'])
+         if leave['date_start'] and leave['date']:
+             if leave['date_start'] > leave['date']:
+                 return False
+         return True
 
-    _order = "parent_id,priority,name"
     _constraints = [
-        (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
+        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
     ]
+
+#    _order = "parent_id,priority,name"
+#    _constraints = [
+#        (check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
+#    ]
 
     # toggle activity of projects, their sub projects and their tasks
     def set_template(self, cr, uid, ids, context={}):
@@ -226,6 +233,29 @@ class task(osv.osv):
     _name = "project.task"
     _description = "Tasks"
     _date_name = "date_start"
+
+#    def compute_date(self,cr,uid):
+#        project_id = self.pool.get('project.project').search(cr,uid,[])
+#        for i in range(len(project_id)):
+#            task_ids = self.pool.get('project.task').search(cr,uid,[('project_id','=',project_id[i])])
+#            if task_ids:
+#                task_obj = self.pool.get('project.task').browse(cr,uid,task_ids)
+#                task_1 = task_obj[0]
+#                task_1.date_start = self.pool.get('project.project').browse(cr,uid,project_id[i]).date_start
+#                dt = mx.DateTime.strptime(task_1.date_start,"%Y-%m-%d").strftime("%Y-%m-%d")
+#                def Project_1():
+#                   title = "New Project"
+#                   start = dt
+#
+#                   def task1():
+#                       start = dt
+#                       effort = task_1.planned_hours
+#                       title = "Task 1"
+##                project_1 = BalancedProject(Project_1)
+##                for t in project_1:
+##                    print 'details:::',t.indent_name(), t.start, t.end, t.effort
+
+
     def _str_get(self, task, level=0, border='***', context={}):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
@@ -235,12 +265,12 @@ class task(osv.osv):
         result = {}
         for task in self.browse(cr, uid, ids, context=context):
             result[task.id] = self._str_get(task, border='===')
-            t2 = task.parent_id
+            t2 = task.parent_ids
             level = 0
             while t2:
                 level -= 1
                 result[task.id] = self._str_get(t2, level) + result[task.id]
-                t2 = t2.parent_id
+                t2 = t2.parent_ids
             t3 = map(lambda x: (x,1), task.child_ids)
             while t3:
                 t2 = t3.pop(0)
@@ -265,8 +295,19 @@ class task(osv.osv):
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
-    def onchange_planned(self, cr, uid, ids, planned, effective=0.0):
-        return {'value':{'remaining_hours': planned-effective}}
+    def onchange_planned(self, cr, uid, ids, planned, effective, date_start,occupation_rate=0.0):
+        result = {}
+        for res in self.browse(cr, uid, ids):
+            if date_start and planned:
+                resource_id = self.pool.get('resource.resource').search(cr,uid,[('user_id','=',res.user_id.id)])
+                resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
+                d = mx.DateTime.strptime(date_start,'%Y-%m-%d %H:%M:%S')
+                hrs = (planned)/(occupation_rate)
+                work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, d, hrs or 0.0, resource_obj.id)
+                result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+        result['remaining_hours'] = planned-effective
+        return {'value':result}
+
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
@@ -282,6 +323,13 @@ class task(osv.osv):
         default['work_ids'] = []
         return super(task, self).copy_data(cr, uid, id, default, context)
 
+	def _check_date(self,cr,uid,ids):
+            for res in self.browse(cr,uid,ids):
+                if res.date_start and res.date_end:
+                    if res.date_start > res.date_end:
+                        return False
+                    return True
+
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
         'name': fields.char('Task Summary', size=128, required=True),
@@ -293,15 +341,16 @@ class task(osv.osv):
                                   help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
         'date_start': fields.datetime('Starting Date'),
+        'date_end': fields.datetime('Ending Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade',
             help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
-        'parent_id': fields.many2one('project.task', 'Parent Task'),
-        'child_ids': fields.one2many('project.task', 'parent_id', 'Delegated Tasks'),
+        'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
+        'child_ids': fields.many2many('project.task', 'project_task_child_rel', 'task_id', 'child_id', 'Delegated Tasks'),
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
-
+        'occupation_rate': fields.float('Occupation Rate', help='The occupation rate fields indicates how much of his time a user is working on a task. A 100% occupation rate means the user works full time on the tasks. The ending date of a task is computed like this: Starting Date + Duration / Occupation Rate.'),
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,4), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
@@ -325,6 +374,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
+        'occupation_rate':lambda *a: '1',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
     _order = "sequence, priority, date_deadline, id"
@@ -366,24 +416,24 @@ class task(osv.osv):
         for task in tasks:
             project = task.project_id
             if project:
-                if project.warn_manager and project.manager and (project.manager.id != uid):
+                if project.warn_manager and project.user_id and (project.user_id.id != uid):
                     request.create(cr, uid, {
                         'name': _("Task '%s' closed") % task.name,
                         'state': 'waiting',
                         'act_from': uid,
-                        'act_to': project.manager.id,
+                        'act_to': project.user_id.id,
                         'ref_partner_id': task.partner_id.id,
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
             self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
-            if task.parent_id and task.parent_id.state in ('pending','draft'):
+            if task.parent_ids and task.parent_ids.state in ('pending','draft'):
                 reopen = True
-                for child in task.parent_id.child_ids:
+                for child in task.parent_ids.child_ids:
                     if child.id != task.id and child.state not in ('done','cancelled'):
                         reopen = False
                 if reopen:
-                    self.do_reopen(cr, uid, [task.parent_id.id])
+                    self.do_reopen(cr, uid, [task.parent_ids.id])
         return True
 
     def do_reopen(self, cr, uid, ids, *args):
@@ -391,12 +441,12 @@ class task(osv.osv):
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             project = task.project_id
-            if project and project.warn_manager and project.manager.id and (project.manager.id != uid):
+            if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
                 request.create(cr, uid, {
                     'name': _("Task '%s' set in progress") % task.name,
                     'state': 'waiting',
                     'act_from': uid,
-                    'act_to': project.manager.id,
+                    'act_to': project.user_id.id,
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
@@ -410,12 +460,12 @@ class task(osv.osv):
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             project = task.project_id
-            if project.warn_manager and project.manager and (project.manager.id != uid):
+            if project.warn_manager and project.user_id and (project.user_id.id != uid):
                 request.create(cr, uid, {
                     'name': _("Task '%s' cancelled") % task.name,
                     'state': 'waiting',
                     'act_from': uid,
-                    'act_to': project.manager.id,
+                    'act_to': project.user_id.id,
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
