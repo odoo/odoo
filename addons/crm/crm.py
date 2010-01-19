@@ -388,7 +388,7 @@ class crm_case(osv.osv):
 
     def stage_next(self, cr, uid, ids, context={}):
         ok = False
-        sid = self.pool.get('crm.case.stage').search(cr, uid, [], context=context)
+        sid = self.pool.get('crm.case.stage').search(cr, uid, [('object_id.model', '=', self._name)], context=context)
         s = {}
         previous = {}
         for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
