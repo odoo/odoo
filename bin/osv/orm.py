@@ -351,12 +351,15 @@ class orm_template(object):
     def read_group(self, cr, user, ids, fields, groupby, context=None):
         context = context or {}
         if not ids:return
+
         if fields[groupby]['type'] not in ('many2one','date','datetime'):
             raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
+
         qu1 = ' where id in (' + ','.join([str(id) for id in ids]) + ')'
         qu2 = ''
         # construct a clause for the rules :
-        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        d1, d2, d3 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+
         if d1:
             qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
             qu2 += d2
@@ -377,6 +380,7 @@ class orm_template(object):
 
         if fields[groupby]['type'] == 'many2one':
             groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,user,groupby_ids,context))
+
         chqu1 =' where id in (' + ','.join([str(id) for id in ids]) + ') and '
 
         # get child ids
