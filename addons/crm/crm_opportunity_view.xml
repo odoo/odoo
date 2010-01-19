@@ -56,7 +56,7 @@
                         <field name="phonecall_id" select="1"/>
                     </group>
 					 <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" />                        
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}" />                        
                 </group>
                 <notebook colspan="4">
                 <page string="Description">

@@ -45,7 +45,7 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action"/>
+                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />                       
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
             </tree>
@@ -64,7 +64,7 @@
                 <field name="partner_address_id" string="Contact"/>
                 <group col="2">    
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action"/>
+                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />            
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
                 </group>        
@@ -82,7 +82,7 @@
                     <field name="name" string="Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Assigned to" select="2"/>
-                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action"/>
+                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />   
                     <newline/>
                     <field name="date" string="Planned Date"/>
                     <field name="duration"/>
@@ -102,7 +102,7 @@
                     <field name="active" string="Reminder"/>                    
                     <group colspan="2" col="3">
                         <field name="partner_id" string="Partner"/>
-                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_phonecall_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"/>
+                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_phonecall_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"  />   
                     </group>
                     <field name="partner_address_id" string="Contact"/>
                     <field name="partner_phone"/>
