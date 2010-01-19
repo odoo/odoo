@@ -37,6 +37,20 @@ class account_invoice(osv.osv):
     _defaults = {
         'price_type': lambda *a: 'tax_excluded',
     }
+    
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
+        map_old_new = {}
+        refund_ids = []
+        for old_inv_id in ids:
+            new_id = super(account_invoice,self).refund(cr, uid, ids, date=date, period_id=period_id, description=description)
+            refund_ids += new_id
+            map_old_new[old_inv_id] = new_id[0]
+        
+        for old_inv_id in map_old_new.keys():
+            old_inv_record = self.read(cr, uid, [old_inv_id], ['price_type'])[0]['price_type']
+            self.write(cr, uid, [map_old_new[old_inv_id]], {'price_type' : old_inv_record})
+        return refund_ids
+    
 account_invoice()
 
 class account_invoice_line(osv.osv):
