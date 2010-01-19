@@ -27,19 +27,6 @@ from tools.translate import _
 import base64
 import re
 
-class crm_meeting_categ(osv.osv):
-    _name = "crm.meeting.categ"
-    _description = "Category of Meetings"
-    _columns = {
-        'name': fields.char('Meeting Category Name', size=64, required=True, \
-                                 translate=True), 
-        'probability': fields.float('Probability (%)', required=True), 
-        'section_id': fields.many2one('crm.case.section', 'Case Section'), 
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_meeting_categ()
 
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
@@ -66,7 +53,7 @@ class crm_meeting(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurrence-id': {'field': 'recurrent_id', 'type': 'datetime'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
-        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
+        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.case.categ'}, 
         'comment': None, 
         'contact': None, 
         'exdate': {'field': 'exdate', 'type': 'datetime'}, 
@@ -124,8 +111,8 @@ account for mail gateway.'),
         'date_deadline': fields.datetime('Deadline'), 
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
-        'categ_id': fields.many2one('crm.meeting.categ', 'Category', \
-            domain="[('section_id','=',section_id)]", \
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+            domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.meeting')]", \
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
         'description': fields.text('Your action'), 
@@ -397,24 +384,6 @@ rule or repeating pattern for anexception to a recurrence set"),
         res = super(crm_meeting, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
-        return res
-
-
-    def msg_new(self, cr, uid, msg):
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'], 
-            'email_from': msg['From'], 
-            'email_cc': msg['Cc'], 
-            'user_id': False, 
-            'description': msg_body['body'], 
-            'history_line': [(0, 0, {'description': msg_body['body'], 'email': msg['From'] })], 
-        }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
-        if res:
-            data.update(res)
-        res = self.create(cr, uid, data)
         return res
 
 crm_meeting()

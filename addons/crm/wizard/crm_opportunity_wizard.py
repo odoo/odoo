@@ -41,20 +41,20 @@ class opportunity2phonecall(wizard.interface):
                     <field name='note' colspan="4"/>
                     <newline />
                     <field name='section_id' />    
-                    <field name='category_id' domain="[('section_id','=',section_id)]"/>
+                    <field name='category_id' domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"/>
                 </form>"""
 
     case_fields = {
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
         'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
         'note' : {'string' : 'Goals', 'type' : 'text'},
-        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.phonecall.categ', 'required' :True},
+        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' :True},
         'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
         
     }
     def _default_values(self, cr, uid, data, context):
         case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')        
-        categ_id = pooler.get_pool(cr.dbname).get('crm.phonecall.categ').search(cr, uid, [('name','=','Outbound')])            
+        categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
         case = case_obj.browse(cr, uid, data['id'])
         return {
                 'user_id' : case.user_id and case.user_id.id,
@@ -203,7 +203,7 @@ class partner_opportunity(wizard.interface):
         address = part_obj.address_get(cr, uid, data['ids' ])
         
         
-        categ_obj = pool.get('crm.opportunity.categ')
+        categ_obj = pool.get('crm.case.categ')
         categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
 
         case_obj = pool.get('crm.opportunity')

@@ -27,44 +27,7 @@ import netsvc
 from tools.translate import _
 import crm
 
-class crm_claim_categ(osv.osv):
-    _name = "crm.claim.categ"
-    _description = "Claim Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_claim_categ()
 
-class crm_claim_type(osv.osv):
-    _name = "crm.claim.type"
-    _description = "Claim Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Claim Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-
-crm_claim_type()
-
-class crm_claim_stage(osv.osv):
-    _name = "crm.claim.stage"
-    _description = "Stage of claim case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_claim_stage()
 
 class crm_claim(osv.osv):
     _name = "crm.claim"
@@ -82,14 +45,14 @@ class crm_claim(osv.osv):
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        'categ_id': fields.many2one('crm.claim.categ','Category', domain="[('section_id','=',section_id)]"),
+        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.claim.type', 'Claim Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.claim.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
     }
     
     _defaults = {
@@ -98,7 +61,7 @@ class crm_claim(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.claim.categ').browse(cr, uid, categ, context).probability
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
         return {'value':{'probability':cat}}    
 
 crm_claim()

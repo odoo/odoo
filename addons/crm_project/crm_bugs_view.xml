@@ -7,70 +7,25 @@
     # Bug Categories
     # ------------------------------------------------------
 
-       
-    <record id="crm_bug_categ_view_form" model="ir.ui.view">
-        <field name="name">crm.bug.categ.form</field>
-        <field name="model">crm.bug.categ</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Bug Category">
-                <field name="name" select="1"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-            </form>
-        </field>
-    </record>
-    <record id="crm_bug_categ_view_tree" model="ir.ui.view">
-        <field name="name">crm.bug.categ.tree</field>
-        <field name="model">crm.bug.categ</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Bug Category">
-                <field name="name"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-            </tree>
-        </field>
-    </record>
 
     <record id="crm_bug_categ_action" model="ir.actions.act_window">
         <field name="name">Bug Categories</field>
-        <field name="res_model">crm.bug.categ</field>
+        <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm_bug_categ_view_tree"/>
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>        
+       	<field name="domain">[('object_id.model', '=', 'crm.project.bug')]</field>
+		<field name="context">{'object_id':'crm.project.bug'}</field>     
     </record>
     # ------------------------------------------------------ 
 	    # Stage
 	 # ------------------------------------------------------ 
-	    <record model="ir.ui.view" id="crm_bug_stage_tree">
-	        <field name="name">crm.bug.stage.tree</field>
-	        <field name="model">crm.bug.stage</field>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <tree string="Stages">
-	                <field name="sequence"/>
-	                <field name="name"/>
-	                <field name="section_id"/>
-	            </tree>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="crm_bug_stage_form">
-	        <field name="name">crm.bug.stage.form</field>
-	        <field name="model">crm.bug.stage</field>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <form string="Stage">
-	            	<field name="name" select="1"/>
-	                <field name="section_id" select="1" widget="selection"/>
-	                <field name="sequence"/>
-	            </form>
-	        </field>
-	    </record>
 	    <record id="crm_bug_stage_act" model="ir.actions.act_window">
 	        <field name="name">Bug Stages</field>
-	        <field name="res_model">crm.bug.stage</field>
+	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
-	        <field name="view_id" ref="crm_bug_stage_tree"/>
+	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+       		<field name="domain">[('object_id.model', '=', 'crm.project.bug')]</field>
+			<field name="context">{'object_id':'crm.project.bug'}</field>     	        
 	    </record>
 	  <menuitem action="crm_bug_stage_act" id="menu_crm_bug_stage_act" parent="crm.menu_crm_case_stage"/>
 	  

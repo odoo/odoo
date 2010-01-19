@@ -34,44 +34,6 @@ from osv.orm import except_orm
 
 from crm import crm
 
-class crm_bug_categ(osv.osv):
-    _name = "crm.bug.categ"
-    _description = " Bug Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_bug_categ()
-
-class crm_bug_type(osv.osv):
-    _name = "crm.bug.type"
-    _description = "Bug Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('Claim Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-
-crm_bug_type()
-
-class crm_bug_stage(osv.osv):
-    _name = "crm.bug.stage"
-    _description = "Stage of Project Bug"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_bug_stage()
 
 class crm_project_bug(osv.osv):
     _name = "crm.project.bug"
@@ -89,14 +51,14 @@ class crm_project_bug(osv.osv):
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        'categ_id': fields.many2one('crm.bug.categ','Category', domain="[('section_id','=',section_id)]"),
+        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.bug.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration') ,
         'probability': fields.float('Probability (%)'),       
@@ -114,7 +76,7 @@ class crm_project_bug(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.bug.categ').browse(cr, uid, categ, context).probability
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
         return {'value':{'probability':cat}}    
     
 
