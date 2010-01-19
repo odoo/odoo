@@ -68,7 +68,7 @@
                     <notebook colspan="4">
                     <page string="General Informations">
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
-                            <tree string="Inventory Lines">
+                            <tree string="Inventory Lines" editable="bottom">
                                 <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
@@ -76,14 +76,15 @@
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                             </tree>
                             <form string="Inventory Lines">
-                                <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
+                                <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
-                                <group colspan="2" col="4">
+                                <field  domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                                <group colspan="2" col="3">
 	                                <field name="prod_lot_id"/>
 	                                <button name="%(split_inventory_lots)d" string="Split in Production Lots" type="action" icon="gtk-justify-fill"/>
                                 </group>
-                                <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                                
                             </form>
                         </field>
                     </page><page string="Posted Inventory">

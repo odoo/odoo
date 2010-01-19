@@ -60,7 +60,7 @@ class mrp_production_workcenter_line(osv.osv):
             res[op.id]= False
             if op.date_planned:
                 d = DateTime.strptime(op.date_planned,'%Y-%m-%d %H:%M:%S')
-                i = self.pool.get('hr.timesheet.group').interval_get(cr, uid, op.workcenter_id.timesheet_id.id or False, d, op.hour or 0.0)
+                i = self.pool.get('resource.calendar').interval_get(cr, uid, op.workcenter_id.calendar_id.id or False, d, op.hour or 0.0)
                 if i:
                     res[op.id] = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 else:
@@ -204,10 +204,10 @@ class mrp_production(osv.osv):
                     self.pool.get('mrp.production.workcenter.line').write(cr, uid, [wc.id],  {
                         'date_planned':dt.strftime('%Y-%m-%d %H:%M:%S')
                     }, context=context, update=False)
-                    i = self.pool.get('hr.timesheet.group').interval_get(
+                    i = self.pool.get('resource.calendar').interval_get(
                         cr,
                         uid,
-                        wc.workcenter_id.timesheet_id and wc.workcenter_id.timesheet_id.id or False,
+                        wc.workcenter_id.calendar_id and wc.workcenter_id.calendar_id.id or False,
                         dt,
                         wc.hour or 0.0
                     )
@@ -235,10 +235,10 @@ class mrp_production(osv.osv):
                 if l.production_id and (l.production_id.date_finnished>dt):
                     if l.production_id.state not in ('done','cancel'):
                         for wc in l.production_id.workcenter_lines:
-                            i = self.pool.get('hr.timesheet.group').interval_min_get(
+                            i = self.pool.get('resource.calendar').interval_min_get(
                                 cr,
                                 uid,
-                                wc.workcenter_id.timesheet_id.id or False,
+                                wc.workcenter_id.calendar_id.id or False,
                                 dt, wc.hour or 0.0
                             )
                             dt = i[0][0]

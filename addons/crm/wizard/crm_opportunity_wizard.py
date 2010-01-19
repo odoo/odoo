@@ -41,7 +41,7 @@ class opportunity2phonecall(wizard.interface):
                     <field name='note' colspan="4"/>
                     <newline />
                     <field name='section_id' />    
-                    <field name='category_id' domain="[('section_id','=',section_id)]"/>
+                    <field name='category_id' domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"/>
                 </form>"""
 
     case_fields = {

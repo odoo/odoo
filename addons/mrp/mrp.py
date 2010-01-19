@@ -40,21 +40,14 @@ from tools.translate import _
 class mrp_workcenter(osv.osv):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
+    _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'name': fields.char('Work Center Name', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the work center without removing it."),
-        'type': fields.selection([('machine','Machine'),('hr','Human Resource'),('tool','Tool')], 'Type', required=True),
-        'code': fields.char('Code', size=16),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="The normal working time of the workcenter."),
+#        'name': fields.char('Work Center Name', size=64, required=True),
         'note': fields.text('Description', help="Description of the workcenter. Explain here what's a cycle according to this workcenter."),
-
         'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this workcenter can do in parallel. If this workcenter represents a team of 5 workers, the capacity per cycle is 5."),
-
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'time_efficiency': fields.float('Efficiency factor', help="Factor to adjust the work center cycle and before and after production durations"),
-
         'costs_hour': fields.float('Cost per hour'),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
@@ -63,15 +56,12 @@ class mrp_workcenter(osv.osv):
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
         'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
-        'company_id': fields.many2one('res.company','Company',required=True),  
+#        'company_id': fields.many2one('res.company','Company',required=True),
+       'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
     }
     _defaults = {
-        'active': lambda *a: 1,
-        'type': lambda *a: 'machine',
-        'time_efficiency': lambda *a: 1.0,
         'capacity_per_cycle': lambda *a: 1.0,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.workcenter', context=c)
-    }
+     }
 mrp_workcenter()
 
 
@@ -130,7 +120,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Time in hours for doing one cycle."),
         'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade', 
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description')
@@ -175,7 +165,7 @@ class mrp_bom(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the bills of material without removing it."),
-        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, 
+        'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
                                  help= "If a sub-product is used in several products, it can be useful to create its own BoM."\
                                  "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type."\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
@@ -833,7 +823,7 @@ class mrp_procurement(osv.osv):
             help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
         'note' : fields.text('Note'),
-        'company_id': fields.many2one('res.company','Company',required=True),  
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -1205,7 +1195,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The requisition quantity will by rounded up to this multiple."),
         'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order'),
-        'company_id': fields.many2one('res.company','Company',required=True),   
+        'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'active': lambda *a: 1,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -85,7 +85,7 @@ class hr_contract(osv.osv):
         'function' : fields.many2one('res.partner.function', 'Function'),
         'date_start' : fields.date('Start Date', required=True),
         'date_end' : fields.date('End Date'),
-        'working_hours_per_day_id' : fields.many2one('hr.timesheet.group','Working hours per day'),
+        'working_hours_per_day_id' : fields.many2one('resource.calendar','Working hours per day'),
         'wage_type_id' : fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'wage' : fields.float('Wage', required=True),
         'notes' : fields.text('Notes'),
