@@ -44,7 +44,7 @@ class crm_fundraising(osv.osv):
     _columns = {        
             'date_closed': fields.datetime('Closed', readonly=True),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),            
-            'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id)]"),
+            'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'probability': fields.float('Probability (%)'),     
