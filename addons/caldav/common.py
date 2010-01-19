@@ -506,10 +506,12 @@ class calendar_event(osv.osv):
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-            end = datetime.strptime(event.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
-            diff = end - start
-            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
-            res[event.id] = round(duration, 2)
+            res[event.id] = 0
+            if event.date_deadline:
+                end = datetime.strptime(event.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
+                diff = end - start
+                duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+                res[event.id] = round(duration, 2)
         return res
 
     def _set_duration(self, cr, uid, id, name, value, arg, context):
