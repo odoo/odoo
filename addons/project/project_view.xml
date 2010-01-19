@@ -344,7 +344,7 @@
                             </field>
                             <field colspan="4" name="history" nolabel="1"/>
                         </page>
-                        
+
                         <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
@@ -358,13 +358,13 @@
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" select="2"/>
-                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>                            
+                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
                                 <field name="type" widget="selection" />
 	    						<button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Type"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Type"/>
 	                        </group>
-                            <field name="active" select="2"/>                            
+                            <field name="active" select="2"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
@@ -490,13 +490,16 @@
                     <group col="8" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>                        
+                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="type" select="1" widget="selection"/>
                         <field name="project_id" select="1" widget="selection">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
+                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+						<filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                     <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
