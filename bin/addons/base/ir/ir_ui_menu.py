@@ -53,6 +53,7 @@ class ir_ui_menu(osv.osv):
 
     def __init__(self, *args, **kwargs):
         self._cache = {}
+        self._parents = []
         r = super(ir_ui_menu, self).__init__(*args, **kwargs)
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
         return r
@@ -64,20 +65,35 @@ class ir_ui_menu(osv.osv):
     def clear_cache(self):
         # radical but this doesn't frequently happen
         self._cache = {}
+        self._parents = []
 
     def search(self, cr, uid, args, offset=0, limit=2000, order=None,
             context=None, count=False):
         if context is None:
             context = {}
-        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
+
+        if uid !=1:
+            flag = True
+            for dom in args:
+                if dom[0] == 'parent_id':
+                    flag = False
+                    break
+            #Args should add the following domain in order to maintain the integrity of search.
+            #i.e. if search is performed on list view.
+            if flag:
+                args += [('parent_id','child_of',self._parents)]
+            
+        ids = osv.orm.orm.search(self, cr, uid, args, offset, uid==1 and limit or None, order, context=context, count=(count and uid==1))
         if uid==1:
+            if limit and not count:
+                ids = ids[:int(limit)]
             return ids
 
         if not ids:
             if count:
                 return 0
             return []
-
+            
         modelaccess = self.pool.get('ir.model.access')
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
         result = []
@@ -87,7 +103,7 @@ class ir_ui_menu(osv.osv):
             if key in self._cache:
                 if self._cache[key]:
                     result.append(menu.id)
-                continue
+                    continue
 
             self._cache[key] = False
             if menu.groups_id:
@@ -96,6 +112,8 @@ class ir_ui_menu(osv.osv):
                     continue
                 result.append(menu.id)
                 self._cache[key] = True
+                if not menu.parent_id.id:
+                    self._parents.append(menu.id)
                 continue
 
             if menu.action:
@@ -120,12 +138,20 @@ class ir_ui_menu(osv.osv):
                 if not menu.child_id:
                     # not displayed if there is no children 
                     continue
+            
+            if not menu.parent_id.id:
+#                #For List view display,this list keeps the track of parents
+                self._parents.append(menu.id)
 
             result.append(menu.id)
-            self._cache[key] = True
+            self._cache[key] = True    
 
         if count:
             return len(result)
+        
+        if limit:
+            result = result[:int(limit)]
+        
         return result
 
     def _get_full_name(self, cr, uid, ids, name, args, context):
