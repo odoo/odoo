@@ -156,7 +156,7 @@ class report_crm_case_service_dashboard(osv.osv):
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
-    _order = 'date_closed, create_date'
+    _order = 'create_date'
     
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (
