@@ -110,8 +110,9 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
-            name="CRM Configuration" parent="board.dashboard"
+            name="CRM Configuration" parent="base.dashboard"
             id="menu_board_crm_config"
             groups="crm.group_crm_manager"/>
         <menuitem

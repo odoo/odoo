@@ -1,32 +1,60 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
+        <record id="cat1" model="product.category">
+            <field name="name">Paiement</field>
+        </record>
+        <record id="advance_product_pos" model="product.product">
+            <field name="name">Acompte</field>
+            <field name="categ_id" ref="cat1"/>
+            <field name="type">service</field>
+            <field name="list_price">0.0</field>
+            <field name="standard_price">0.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <!--  <field name="company_id" ref="base.main_company"/>  -->
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        </record>
 
-<!-- FIXME : -->
+        <record id="advance_product_pos2" model="product.product">
+            <field name="name">Reparation</field>
+            <field name="categ_id" ref="cat1"/>
+            <field name="type">service</field>
+            <field name="list_price">100.0</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <!--  <field name="company_id" ref="multi_company_stock.res_company_tinyshop0"/> -->
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        </record>
 
-<!-- model access -->
-<!-- 	<record id="access_pos" model="ir.model.access"> -->
-<!-- 		<field name="name">pos</field> -->
-<!-- 		<field name="model_id" eval="(6,0,pos.order)" /> -->
-<!-- 		<field name="group_id">admin</field> -->
-<!-- 		<field name="perm_read">True</field> -->
-<!-- 		<field name="perm_write">True</field> -->
-<!-- 		<field name="perm_create">True</field> -->
-<!-- 		<field name="perm_unlink">True</field> -->
-<!-- 	</record> -->
+        <record id="product_category_voucher" model="product.category">
+            <field name="name">Bon</field>
+        </record>
 
-    <function
-        eval="('default',False,'pricelist_id', [('pos.order', False)], ref('product.list0'), True, False, False, False, True)"
-        id="pos_pricelist_set"
-        model="ir.values"
-        name="set"/>
+        <record id="product_product_giftvoucher" model="product.product">
+            <field name="default_code">GIFT</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">1.0</field>
+            <field name="standard_price">1.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="sale_delay">0.0</field>
+            <field name="name">Cheque cadeau</field>
+            <field name="categ_id" ref="product_category_voucher"/>
+        </record>
 
-    <function
-        eval="('default',False,'shop_id', [('pos.order', False)], ref('sale.shop'), True, False, False, False, True)"
-        id="pos_shop_set"
-        model="ir.values"
-        name="set"/>
-
-
-</data>
+        <record id="product_product_shipping_cost" model="product.product">
+            <field name="default_code">PORT01</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">1.0</field>
+            <field name="standard_price">1.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="sale_delay">0.0</field>
+            <field name="name">Shipping cost</field>
+            <field name="categ_id" ref="product_category_voucher"/>
+            <field name="type">service</field>
+            <field name="produce_delay">0</field>
+            <field name="purchase_ok" eval="False" />
+        </record>
+    </data>
 </openerp>

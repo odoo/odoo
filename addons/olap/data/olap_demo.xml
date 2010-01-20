@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="True">
+
+    <record model="olap.fact.database" id="fact_database_terp">
+        <field name="name">Tiny ERP database</field>
+        <field name="db_name">terp</field>
+        <field name="db_login">postgres</field>
+        <field name="db_password">postgres</field>
+    </record>
+
+    <record model="olap.database.tables" id="database_table_res_partner">
+        <field name="name">res_partner</field>
+        <field name="table_db_name">res_partner</field>
+        <field name="fact_database_id" ref="fact_database_terp"/>
+        <field name="active">True</field>
+        
+    </record>
+
+    <record model="olap.database.tables" id="database_table_res_user">
+        <field name="name">res_users</field>
+        <field name="table_db_name">res_users</field>
+        <field name="fact_database_id" ref="fact_database_terp"/>
+        <field name="active">True</field>
+        
+    </record>
+
+    <record model="olap.database.columns" id="columns_res_partner_date">
+        <field name="name">date</field>
+        <field name="column_db_name">date</field>
+        <field name="type">date</field>
+        <field name="table_id" ref="database_table_res_partner"/>
+        <field name="active">True</field>
+    </record>
+        
+    <record model="olap.database.columns" id="columns_res_user_create_uid">
+        <field name="name">create_uid</field>
+        <field name="column_db_name">create_uid</field>
+        <field name="type">int4</field>
+        <field name="table_id" ref="database_table_res_user"/>
+        <field name="active">True</field>
+    </record>
+    <record model="olap.database.columns" id="columns_res_user_id">
+        <field name="name">id</field>
+        <field name="column_db_name">id</field>
+        <field name="type">int4</field>
+        <field name="table_id" ref="database_table_res_user"/>
+        <field name="primary_key">True</field>
+        <field name="active">True</field>
+    </record>
+    <record model="olap.database.columns" id="columns_res_partner_id">
+        <field name="name">id</field>
+        <field name="column_db_name">id</field>
+        <field name="type">int4</field>
+        <field name="table_id" ref="database_table_res_partner"/>
+        <field name="primary_key">True</field>
+        <field name="active">True</field>
+    </record>
+    <record model="olap.database.columns" id="columns_res_user_name">
+        <field name="name">name</field>
+        <field name="column_db_name">name</field>
+        <field name="type">varchar</field>
+        <field name="table_id" ref="database_table_res_user"/>
+        <field name="active">True</field>
+    </record>
+        
+    <record model="olap.database.columns" id="columns_res_partner_credit_limit">
+        <field name="name">credit_limit</field>
+        <field name="column_db_name">credit_limit</field>
+        <field name="type">int4</field>
+        <field name="table_id" ref="database_table_res_partner"/>
+        <field name="active">True</field>
+    </record>
+        
+        
+    <record model="olap.database.columns" id="columns_res_partner_user_id">
+        <field name="name">user_id</field>
+        <field name="column_db_name">user_id</field>
+        <field name="type">int4</field>
+        <field name="table_id" ref="database_table_res_partner"/>
+        <field name="related_to" ref="database_table_res_user"></field>
+        <field name="active">True</field>
+        
+    </record>
+    <record model="olap.schema" id="schema_main">
+        <field name="name">tinyerp</field>
+        <field name="state">none</field>
+        <field name="database_id" ref="fact_database_terp"/>
+    </record>
+
+    <record model="olap.cube.table" id="table_res_partner">
+        <field name="name">Partner</field>
+        <field name="schema_id" ref="schema_main"/>
+        <field name="column_link_id" ref="columns_res_partner_id"/>
+    </record>
+    <record model="olap.cube.table" id="table_res_user">
+        <field name="name">Partner(User)</field>
+        <field name="schema_id" ref="schema_main"/>
+        <field name="column_link_id" ref="columns_res_partner_user_id"/>
+    </record>
+    <record model="olap.cube" id="cube_partner">
+        <field name="name">Partner</field>
+        <field name="table_id" ref="table_res_partner"/>
+        <field name="schema_id" ref="schema_main"/>
+    </record>
+
+
+    <record model="olap.dimension" id="dimension_date">
+        <field name="name">Date</field>
+        <field name="cube_id" ref="cube_partner"/>
+    </record>
+    <record model="olap.hierarchy" id="hierarchy_date">
+        <field name="name">Date</field>
+        <field name="dimension_id" ref="dimension_date"/>
+        <field name="primary_key_table">res_partner</field>
+        <field name="table_id" ref="table_res_partner"/>
+    </record>
+    <record model="olap.level" id="hierarchy_level_date">
+        <field name="name">Date</field>
+        <field name="column_name" ref="columns_res_partner_date"></field>
+        <field name="column_id_name">date</field>
+        <field name="type">date_year</field>
+        <field name="table_name">res_partner</field>
+        <field name="hierarchy_id" ref="hierarchy_date"/>
+    </record>
+
+
+    <record model="olap.dimension" id="dimension_user">
+        <field name="name">User</field>
+        <field name="cube_id" ref="cube_partner"/>
+    </record>
+
+    <record model="olap.hierarchy" id="hierarchy_user">
+        <field name="name">User</field>
+        <field name="dimension_id" ref="dimension_user"/>
+        <field name="primary_key_table">res_users</field>
+        <field name="table_id" ref="table_res_user"/>
+    </record>
+    <record model="olap.level" id="hierarchy_user_level">
+        <field name="name">Name</field>
+        <field name="column_id_name">name</field>
+        <field name="column_name" ref="columns_res_user_name"></field>
+        <field name="table_name">res_users</field>
+        <field name="hierarchy_id" ref="hierarchy_user"/>
+    </record>
+
+
+    <record model="olap.measure" id="measure_credit_limit">
+        <field name="name">Credit Limit</field>
+        <field name="cube_id" ref="cube_partner"/>
+        <field name="value_column" ref="columns_res_partner_credit_limit"></field>
+        <field name="value_column_id_name">credit_limit</field>
+        <field name="table_name">res_partner</field>
+    </record>
+
+    <record model="olap.measure" id="measure_count">
+        <field name="name">Count</field>
+        <field name="cube_id" ref="cube_partner"/>
+        <field name="value_column" ref="columns_res_partner_id"></field>
+        <field name="value_column_id_name">id</field>
+        <field name="table_name">res_partner</field>
+        <field name="agregator">count</field>
+    </record>
+
+
+    <record model="olap.application" id="application_openerp">
+        <field name="name">OpenERP</field>
+        <field name="query">select * from res_users</field>
+    </record>
+</data>
+</openerp>
