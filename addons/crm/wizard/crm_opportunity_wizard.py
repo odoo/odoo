@@ -139,7 +139,9 @@ class opportunity2meeting(wizard.interface):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': opportunity.name,
                 'date': opportunity.date,
+                'section_id' : opportunity.section_id and opportunity.section_id.id or False,
                 'date_deadline': opportunity.date_deadline,
+                'description':opportunity.description,
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
