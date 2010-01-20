@@ -47,7 +47,7 @@
         </record>
 
         <act_window name="Leads Of The Month By User"
-            domain="[('name','=',time.strftime('%Y-%m-01')),('state','!=','cancel')]"
+            domain="[('month','=',time.strftime('%%m')),('state','!=','cancel')]"
             res_model="report.crm.lead.user"
             view_type="form"
             view_mode="graph,tree,form"
