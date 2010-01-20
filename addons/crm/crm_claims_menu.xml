@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-<!--    <menuitem id="menu_aftersale" name="After-Sale Services" parent="crm.menu_crm"/>-->
+    <menuitem id="base.menu_aftersale" name="After-Sale Services" parent="base.menu_base_partner" sequence="6"/>
 
     ######################## CLAIMS (menu) ###########################
     <record model="ir.actions.act_window" id="crm_case_categ_claim0">
-        <field name="name">All Claims</field>
+        <field name="name">Claims</field>
         <field name="res_model">crm.claim</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar,form,graph</field>
@@ -38,7 +38,7 @@
         <field name="act_window_id" ref="crm_case_categ_claim0"/>
     </record>  
 
-    <menuitem name="Claims" id="menu_crm_case_claims"  parent="base.menu_sales" action="crm_case_categ_claim0"/>
+    <menuitem name="Claims" id="menu_crm_case_claims"  parent="base.menu_aftersale" action="crm_case_categ_claim0"/>
 
 
     </data>

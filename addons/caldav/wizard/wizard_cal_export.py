@@ -24,7 +24,7 @@ import base64
 import pooler
 
 
-class project_cal_export_wizard(wizard.interface):
+class cal_event_export_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
     <form string="Export ICS">
         <field name="name"/>
@@ -35,8 +35,8 @@ class project_cal_export_wizard(wizard.interface):
             'file_path': {
                 'string': 'Save ICS file', 
                 'type': 'binary', 
-                'required' : True, 
-                'filters' : '*.ics'
+                'required': True, 
+                'filters': '*.ics'
                 },
             'name': {
                     'string': 'File name', 
@@ -47,19 +47,19 @@ class project_cal_export_wizard(wizard.interface):
             }
     
     def _process_export_ics(self, cr, uid, data, context):
-        task_obj = pooler.get_pool(cr.dbname).get('project.task')
-        calendar = task_obj.export_cal(cr, uid, data['ids'], context)
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        calendar = model_obj.export_cal(cr, uid, data['ids'], context)
         return {'file_path': base64.encodestring(calendar), \
-                                'name': 'OpenERP Tasks.ics'}
+                                'name': 'OpenERP Events.ics'}
     
     states = {
         'init': {
             'actions': [_process_export_ics], 
             'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
-                       'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}
-        }, 
+                       'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
-project_cal_export_wizard('caldav.project.export')
+cal_event_export_wizard('caldav.event.export')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

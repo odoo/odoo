@@ -2,18 +2,6 @@
 <openerp>
     <data>
         
-	<record id="caldav_project_task_view" model="ir.ui.view">
-            <field name="name">project.task.caldav.tree</field>
-            <field name="model">project.task</field>
-            <field name="type">tree</field>
-            <field name="inherit_id" ref="project.view_task_tree2"/>
-            <field name="arch" type="xml">
-           			<field name="sequence" position="before">
-           				<field name="id" widget="char"/>
-        			</field>
-            </field>
-        </record>
-        
     	<record id="view_project_caldav_task_form" model="ir.ui.view">
 			<field name="name">project.task.caldav.form</field>
 			<field name="model">project.task</field>

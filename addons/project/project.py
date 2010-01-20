@@ -132,7 +132,7 @@ class project(osv.osv):
 #                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
 #        'company_id': fields.many2one('res.company', 'Company'),
 #        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-        'allowed_task_type': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Allowed Task Types'),
+        'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Allowed Task Types'),
      }
 
     _defaults = {
@@ -489,35 +489,23 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, *args):
-        type_obj = self.pool.get('project.task.type')
-        types = []
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.allowed_task_type)
+            types = map(lambda x:x.id, typ.project_id.type_ids)
             if types:
                 if typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
-                else:
-                    index = -1
-                self.write(cr, uid, typ.id, {'type': types[index+1]})
-            else:
-                self.write(cr, uid, typ.id, {'type': ''})
+                    self.write(cr, uid, typ.id, {'type': types[index+1]})
         return True
 
     def prev_type(self, cr, uid, ids, *args):
-        type_obj = self.pool.get('project.task.type')
-        types = []
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.allowed_task_type)
+            types = map(lambda x:x.id, typ.project_id.type_ids)
             if types:
                 if typeid and typeid in types and types.index(typeid) != 0 :
                     index = types.index(typeid)
-                else:
-                    index = len(types)
-                self.write(cr, uid, typ.id, {'type': types[index-1]})
-            else:
-                self.write(cr, uid, typ.id, {'type': ''})
+                    self.write(cr, uid, typ.id, {'type': types[index-1]})
         return True
 
 task()
