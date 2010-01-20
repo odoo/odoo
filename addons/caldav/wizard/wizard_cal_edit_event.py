@@ -45,17 +45,20 @@ class event_edit_this(wizard.interface):
         'alarm_id': {'string': 'Reminder', 'type': 'many2one', 'relation': 'res.alarm'}, 
     }
     
-    def _default_values(self, cr, uid, data, context):
+    def _default_values(self, cr, uid, data, context=None):
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        event = model_obj.read(cr, uid, data['id'], ['name', 'location', 'date',\
-                                            'date_deadline', 'alarm_id'])
+        event = model_obj.read(cr, uid, data['id'], ['name', 'location', 'alarm_id'])
+        event.update({
+                      'date': context.get('date'), 
+                      'date_deadline': context.get('date_deadline')
+                      })
         return event
 
-    def _modify_this(self, cr, uid, datas, *args):
+    def _modify_this(self, cr, uid, datas, context=None):
         model = datas.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        new_id = model_obj.modify_this(cr, uid, [datas['id']], datas['form'])
+        new_id = model_obj.modify_this(cr, uid, [datas['id']], datas['form'], context)
         value = {
                 'name': 'New event', 
                 'view_type': 'form', 
