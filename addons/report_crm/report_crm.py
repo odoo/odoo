@@ -37,6 +37,7 @@ class report_crm_case_user(osv.osv):
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),        
         'nbr': fields.integer('# of Cases', readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
@@ -54,10 +55,11 @@ class report_crm_case_user(osv.osv):
                     to_char(c.create_date, 'MM') as month,
                     c.state,
                     c.user_id,
+                    c.section_id,
                     count(*) as nbr
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id
             )""")
 report_crm_case_user()
 
