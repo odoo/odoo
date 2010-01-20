@@ -65,7 +65,7 @@
             <field name="res_model">report.crm.lead.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_crm_lead_user_tree"/>
+            <field name="view_id" ref="view_crm_lead_user_graph"/>
             <field name="search_view_id" ref="view_crm_lead_user_filter"/>
         </record>
         <menuitem name="Leads" id="menu_crm_leads_tree" parent="crm.next_id_52"/>
@@ -133,7 +133,7 @@
             <field name="res_model">report.crm.lead.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_crm_lead_categ_tree"/>
+            <field name="view_id" ref="view_crm_lead_categ_graph"/>
             <field name="search_view_id" ref="view_crm_lead_categ_filter"/>
         </record>
         <menuitem action="action_report_crm_lead_categ_tree" id="menu_crm_lead_categ_tree" parent="menu_crm_leads_tree"/>
@@ -182,8 +182,8 @@
             <field name="name">Leads by Section</field>
             <field name="res_model">report.crm.lead.section</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_report_crm_lead_section_tree"/>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_report_crm_lead_section_graph"/>
             <field name="search_view_id" ref="view_report_crm_lead_section_filter"/>
         </record>
         <menuitem action="action_report_crm_lead_section_tree" id="menu_crm_lead_section_tree" parent="menu_crm_leads_tree"/>
