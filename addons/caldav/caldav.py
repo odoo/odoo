@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from dateutil import parser
 from osv import fields, osv
+from base_calendar import base_calendar
 from service import web_services
 from tools.translate import _
 import base64
@@ -56,32 +57,6 @@ def real_id2caldav_id(real_id, recurrent_date):
         return '%d-%s' % (real_id, recurrent_date)
     return real_id
 
-def uid2openobjectid(cr, uidval, oomodel, rdate):
-    __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
-    wematch = __rege.match(uidval.encode('utf8'))
-    if not wematch:
-        return (False, None)
-    else:
-        model, id, dbname = wematch.groups()
-        model_obj = pooler.get_pool(cr.dbname).get(model)
-        if (not model == oomodel) or (not dbname == cr.dbname):
-            return (False, None)
-        qry = 'select distinct(id) from %s' % model_obj._table
-        if rdate:
-            qry += " where recurrent_id='%s'" % (rdate)
-            cr.execute(qry)
-            r_id = cr.fetchone()
-            if r_id:
-                return (id, r_id[0])
-        cr.execute(qry)
-        ids = map(lambda x: str(x[0]), cr.fetchall())
-        if id in ids:
-            return (id, None)
-        return False
-
-def openobjectid2uid(cr, uidval, oomodel):
-    value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
-    return value
 
 def _links_get(self, cr, uid, context={}):
     obj = self.pool.get('res.request.link')
@@ -480,7 +455,7 @@ class calendar_event(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurrence-id': {'field': 'recurrent_id', 'type': 'datetime'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
-        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
+#        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
         'comment': None, 
         'contact': None, 
         'exdate': {'field': 'exdate', 'type': 'datetime'}, 
@@ -586,7 +561,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         vals = event_obj.import_ical(cr, uid, file_content)
         ids = []
         for val in vals:
-            exists, r_id = uid2openobjectid(cr, val['id'], self._name, \
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, \
                                                              val.get('recurrent_id'))
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
@@ -886,7 +861,7 @@ class calendar_todo(osv.osv):
                 hours = (val['planned_hours'].seconds / float(3600)) + \
                                         (val['planned_hours'].days * 24)
                 val['planned_hours'] = hours
-            exists, r_id = uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
             val.pop('id')
             if exists:
                 self.write(cr, uid, [exists], val)

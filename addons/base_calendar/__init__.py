@@ -19,33 +19,6 @@
 #
 ##############################################################################
 
-
-{
-    "name" : "CalDAV", 
-    "version" : "1.0", 
-    "depends" : [
-                    "base_calendar", 
-                ], 
-     'description': """
- Full featured caldav system that support:
-  - alerts (create requests)
-  - recurring events (*)
-  - invitations to others people (exactly like sunbird)
-""", 
-    "author" : "Tiny", 
-    'category': 'Generic Modules/Others', 
-    'website': 'http://www.openerp.com', 
-    "init_xml" : [
-                   'caldav_data.xml'
-                   ], 
-    "demo_xml" : [], 
-    "update_xml" : [
-                    'security/ir.model.access.csv', 
-                    'caldav_view.xml',
-                    'caldav_wizard.xml',
-                    ], 
-    "installable" : True, 
-    "active" : False, 
-}
+import base_calendar
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

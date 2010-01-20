@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
 from osv import osv
-import common
+import pooler
 import re
 import vobject
 
@@ -31,6 +31,33 @@ import vobject
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
 # R-n  Required and can come more than once
+
+def uid2openobjectid(cr, uidval, oomodel, rdate):
+    __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
+    wematch = __rege.match(uidval.encode('utf8'))
+    if not wematch:
+        return (False, None)
+    else:
+        model, id, dbname = wematch.groups()
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        if (not model == oomodel) or (not dbname == cr.dbname):
+            return (False, None)
+        qry = 'select distinct(id) from %s' % model_obj._table
+        if rdate:
+            qry += " where recurrent_id='%s'" % (rdate)
+            cr.execute(qry)
+            r_id = cr.fetchone()
+            if r_id:
+                return (id, r_id[0])
+        cr.execute(qry)
+        ids = map(lambda x: str(x[0]), cr.fetchall())
+        if id in ids:
+            return (id, None)
+        return False
+
+def openobjectid2uid(cr, uidval, oomodel):
+    value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
+    return value
 
 def map_data(cr, uid, obj):
     vals = {}
@@ -126,7 +153,7 @@ class CalDAV(object):
                         model = context.get('model', None)
                         if not model:
                             continue
-                        uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        uidval = openobjectid2uid(cr, data[map_field], model)
                         model_obj = self.pool.get(model)
                         cr.execute('select id from %s  where recurrent_uid=%s' 
                                                % (model_obj._table, data[map_field]))
@@ -137,7 +164,7 @@ class CalDAV(object):
                             for revents in rcal.contents['vevent']:
                                 ical.contents['vevent'].append(revents)
                         if data.get('recurrent_uid', None):
-                            uidval = common.openobjectid2uid(cr, data['recurrent_uid'], model)
+                            uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
                         model = self.__attribute__[field].get('object', False)
