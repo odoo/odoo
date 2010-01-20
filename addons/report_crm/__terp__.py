@@ -33,9 +33,10 @@
     'update_xml': ['security/ir.model.access.csv', 
                    'report_crm_view.xml', 
                    'report_crm_lead_view.xml',
-                   'report_crm_claim.xml',
+                   'report_crm_claim_view.xml',
                    'report_crm_opportunity_view.xml',
-                   'report_crm_phonecall_view.xml',                   
+                   'report_crm_phonecall_view.xml',
+                   'report_crm_fundraising_view.xml'
                    ],
     'demo_xml': [],
     'installable': True, #TODO : After fixed problems , set True
