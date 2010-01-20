@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from dateutil import parser
@@ -27,6 +26,7 @@ from osv import fields, osv
 from service import web_services
 from tools.translate import _
 import base64
+import pooler
 import re
 import time
 
@@ -63,9 +63,10 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         return (False, None)
     else:
         model, id, dbname = wematch.groups()
+        model_obj = pooler.get_pool(cr.dbname).get(model)
         if (not model == oomodel) or (not dbname == cr.dbname):
             return (False, None)
-        qry = 'select distinct(id) from %s' % model.replace('.', '_')
+        qry = 'select distinct(id) from %s' % model_obj._table
         if rdate:
             qry += " where recurrent_id='%s'" % (rdate)
             cr.execute(qry)
@@ -282,8 +283,8 @@ are both optional, but if one occurs, so MUST the other"""),
 
     def do_alarm_create(self, cr, uid, ids, model, date, context={}):
         alarm_obj = self.pool.get('calendar.alarm')
-        model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model', '=', model)])[0]
+        ir_obj = self.pool.get('ir.model')
+        model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
         
         model_obj = self.pool.get(model)
         for data in model_obj.browse(cr, uid, ids):
@@ -309,8 +310,8 @@ are both optional, but if one occurs, so MUST the other"""),
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
                 cr.execute('Update %s set caldav_alarm_id=%s, alarm_id=%s \
-                                        where id=%s' % (model.replace('.', '_'), \
-                                                    alarm_id, basic_alarm.id, data.id))
+                                        where id=%s' % (model_obj._table, \
+                                        alarm_id, basic_alarm.id, data.id))
         cr.commit()
         return True
 
@@ -323,8 +324,8 @@ are both optional, but if one occurs, so MUST the other"""),
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
             if alarm_ids and len(alarm_ids):
                 alarm_obj.unlink(cr, uid, alarm_ids)
-                cr.execute('Update %s set caldav_alarm_id=NULL, \
-                               alarm_id=NULL  where id=%s' % (self._table, datas.id))
+                cr.execute('Update %s set caldav_alarm_id=NULL, alarm_id=NULL\
+                             where id=%s' % (model_obj._table, datas.id))
         cr.commit()
         return True
 
@@ -716,7 +717,7 @@ rule or repeating pattern for anexception to a recurrence set"),
             if not id in new_ids:
                 new_ids.append(id)
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if vals.get('alarm_id'):
+        if vals.has_key('alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date')
         return res

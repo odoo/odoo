@@ -127,8 +127,9 @@ class CalDAV(object):
                         if not model:
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        model_obj = self.pool.get(model)
                         cr.execute('select id from %s  where recurrent_uid=%s' 
-                                               % (model.replace('.', '_'), data[map_field]))
+                                               % (model_obj._table, data[map_field]))
                         r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids: 
                             rdata = self.pool.get(model).read(cr, uid, r_ids)
@@ -139,11 +140,15 @@ class CalDAV(object):
                             uidval = common.openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
+                        model = self.__attribute__[field].get('object', False)
                         attendee_obj = self.pool.get('basic.calendar.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, data[map_field], vevent, context=context)
+                        vevent = attendee_obj.export_ical(cr, uid, model, \
+                                     data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
+                        model = self.__attribute__[field].get('object', False)
                         alarm_obj = self.pool.get('basic.calendar.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, data[map_field][0], vevent, context=context)
+                        vevent = alarm_obj.export_ical(cr, uid, model, \
+                                    data[map_field][0], vevent, context=context)
                     elif data[map_field]:
                         if map_type == "text":
                             vevent.add(field).value = str(data[map_field])
@@ -341,9 +346,9 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, alarm_id, vevent, context={}):
+    def export_ical(self, cr, uid, model, alarm_id, vevent, context={}):
         valarm = vevent.add('valarm')
-        alarm_object = self.pool.get('calendar.alarm')
+        alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
 
         # Compute trigger data
@@ -427,9 +432,9 @@ class Attendee(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, attendee_id, vevent, context={}):
-        attendee_object = self.pool.get('calendar.attendee')
-        for attendee in attendee_object.read(cr, uid, attendee_id, []):
+    def export_ical(self, cr, uid, model, attendee_ids, vevent, context={}):
+        attendee_object = self.pool.get(model)
+        for attendee in attendee_object.read(cr, uid, attendee_ids, []):
             attendee_add = vevent.add('attendee')
             for a_key, a_val in attendee_object.__attribute__.items():
                 if attendee[a_val['field']] and a_val['field'] != 'cn':
