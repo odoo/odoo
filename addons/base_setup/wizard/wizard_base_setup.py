@@ -25,7 +25,7 @@ import time
 import tools
 import os
 
-view_form_company = """<?xml version="1.0"?>
+view_form_company = '''<?xml version="1.0"?>
 <form string="Setup">
     <notebook colspan="4">
     <page string="General Information">
@@ -56,9 +56,9 @@ view_form_company = """<?xml version="1.0"?>
         <field colspan="4" name="logo" widget="image"/>
     </page>
     </notebook>
-</form>"""
+</form>'''
 
-view_form_finish = """<?xml version="1.0"?>
+view_form_finish = '''<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
@@ -67,7 +67,7 @@ view_form_finish = """<?xml version="1.0"?>
         <label align="0.0" colspan="4" string="You can start configuring the system or connect directly to the database using the default setup."/>
     </group>
 </form>
-"""
+'''
 
 class wizard_base_setup(wizard.interface):
 
@@ -187,12 +187,6 @@ class wizard_base_setup(wizard.interface):
             'view_mode': menu.view_mode,
             'views': menu.views,
         }
-
-    def _next(self, cr, uid, data, context):
-        return 'company'
-
-    def _previous(self, cr, uid, data, context):
-        return 'init'
 
     def _config(self, cr, uid, data, context=None):
         pool = pooler.get_pool(cr.dbname)
