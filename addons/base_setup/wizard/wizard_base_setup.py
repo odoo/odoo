@@ -93,10 +93,6 @@ class wizard_base_setup(wizard.interface):
                 if address[field]:
                     res[field] = address[field].id
 
-        serv_pro_id = pool.get('ir.module.module').search(cr, uid, [('name','=','profile_service')])
-        if serv_pro_id:
-            res['profile'] = serv_pro_id[0]
-
         return res
 
     def _get_all(self, cr, uid, context, model):
