@@ -43,7 +43,9 @@ def caldav_id2real_id(caldav_id=None, with_date=False):
             if with_date:
                 real_date = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(res[1], "%Y%m%d%H%M%S"))
-                return (int(real_id), real_date)
+                start = datetime.strptime(real_date, "%Y-%m-%d %H:%M:%S")
+                end = start + timedelta(hours=with_date)
+                return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
     return caldav_id and int(caldav_id) or caldav_id
 
@@ -621,8 +623,9 @@ rule or repeating pattern for anexception to a recurrence set"),
             ids = select
         result = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, m.date, m.exdate \
-                            from "  + self._table + " m where m.id in ("\
+            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
+                            m.exdate  from "  + self._table + \
+                            " m where m.id in ("\
                             + ','.join(map(lambda x: str(x), ids))+")")
 
             count = 0
@@ -635,9 +638,9 @@ rule or repeating pattern for anexception to a recurrence set"),
                 if start_date and start_date <= event_date:
                     start_date = event_date
                 if not data['rrule']:
-                    if start_date and event_date < start_date:
+                    if start_date and (event_date < start_date):
                         continue
-                    if until_date and event_date > until_date:
+                    if until_date and (event_date > until_date):
                         continue
                     idval = real_id2caldav_id(data['id'], data['date'])
                     result.append(idval)
@@ -741,9 +744,10 @@ rule or repeating pattern for anexception to a recurrence set"),
         for caldav_id, real_id in select:
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, \
                                               load=load)
-            ls = caldav_id2real_id(caldav_id, with_date=True)
+            ls = caldav_id2real_id(caldav_id, with_date=res.get('duration', 0))
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
+                res['date_deadline'] = ls[2]
             res['id'] = caldav_id
 
             result.append(res)
