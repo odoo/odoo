@@ -127,7 +127,7 @@ class report_crm_case_section(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
-    _order = 'name desc, section_id'
+    _order = 'name desc'
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_crm_case_section')
         cr.execute("""
@@ -137,12 +137,10 @@ class report_crm_case_section(osv.osv):
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     count(*) as nbr_cases,
-                    0 as avg_answers,
-                    0.0 as perc_done,
-                    0.0 as perc_cancel
+                    0 as avg_answers
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date, 'MM'),c.section_id
+                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date, 'MM')
             )""")
 report_crm_case_section()
 
