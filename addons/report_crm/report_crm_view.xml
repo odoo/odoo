@@ -30,6 +30,7 @@
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
+					<field name="section_id" select="1"/>                             
                     <field name="nbr" select="1"/>
                     <field name="state" select="1"/>
                 </form>
@@ -64,6 +65,7 @@
 						<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
 	                    <field name="user_id" select="1"/>
+						<field name="section_id" select="1"/>    	                    
 	                    <field name="nbr" select="1"/>
 	                    <field name="state" select="1"/>
                    </group>
@@ -92,6 +94,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
                     <field name="name"/>
+					<field name="section_id" select="1"/>                        
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
@@ -105,6 +108,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
+					<field name="section_id" select="1"/>                        
                     <field name="month" select="1"/>
                     <field name="nbr" select="1"/>
                     <field name="state" select="1"/>
@@ -123,6 +127,7 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
+						<field name="section_id" select="1"/>    						
 	                    <field name="nbr" select="1"/>
 	                    <field name="state" select="1"/>
                    </group>
@@ -157,6 +162,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by Section">
                     <field name="name" select="1"/>
+ 					<field name="section_id" select="1"/>                    
                     <field name="month" select="1"/>
                     <field name="nbr_cases" select="1"/>
                     <field name="avg_answers"/>
@@ -187,6 +193,7 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
+						<field name="section_id" select="1"/>   						
 	                    <field name="month" select="1"/>
 	                    <field name="nbr_cases" select="1"/>
                    </group>
