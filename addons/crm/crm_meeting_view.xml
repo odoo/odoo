@@ -1,6 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+	# ------------------------------------------------------
+    # Meetings Categories
+    # ------------------------------------------------------
+
+    <record id="crm_meeting_categ_action" model="ir.actions.act_window">
+        <field name="name">Meeting Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>        
+		<field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
+		<field name="context">{'object_id':'crm.meeting'}</field>                
+    </record>
+     <menuitem action="crm_meeting_categ_action" id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ"/>    
+
     # ------------------------------------------------------
     # Meetings
     # ------------------------------------------------------
