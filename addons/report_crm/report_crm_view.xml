@@ -188,7 +188,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by Section">
-                   <group col="4" colspan="4">
+                   <group col="8" colspan="4">
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
