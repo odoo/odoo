@@ -36,7 +36,7 @@
             		<field name="duration" widget="float_time" />
             		<field name="date_deadline" string="End Date" required="1" />
             		<field name="location" />
-            		<field name="categ_id" widget="selection" />
+            		<field name="categ_id"/>
             		<group colspan="2" col="3" attrs="{'readonly':[('recurrent_uid','!=',False)]}">
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"
