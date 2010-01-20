@@ -25,22 +25,6 @@ import time
 import tools
 import os
 
-view_form_profit = """<?xml version="1.0"?>
-<form string="Setup">
-    <image name="gtk-dialog-info"/>
-    <group>
-        <separator string="Select a Profile" colspan="2"/>
-        <newline/>
-        <field align="0.0" name="profile"/>
-        <newline/>
-        <label string="A profile sets a pre-selection of modules for specific needs. These profiles have been setup to help you discover the different aspects of OpenERP. This is just an overview, we have 300+ available modules." colspan="2" align="0.0"/>
-        <newline/>
-        <label string="You'll be able to install more modules later through the Administration menu." colspan="2" align="0.0"/>
-    </group>
-</form>"""
-
-
-
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
     <notebook colspan="4">
@@ -80,8 +64,6 @@ view_form_update = """<?xml version="1.0"?>
     <group>
         <separator string="Summary" colspan="2"/>
         <newline/>
-        <field name="profile" align="0.0" readonly="1"/>
-        <newline/>
         <field name="name" align="0.0" readonly="1"/>
     </group>
 </form>
@@ -100,15 +82,6 @@ view_form_finish = """<?xml version="1.0"?>
 
 class wizard_base_setup(wizard.interface):
 
-    def _get_profiles(self, cr, uid, context):
-        module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'),
-            ('state', '<>', 'uninstallable')])
-        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids, context=context)]
-        res.append((-1, 'Minimal Profile'))
-        res.sort()
-        return res
-
     def _get_company(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         company_obj = pool.get('res.company')
@@ -116,7 +89,7 @@ class wizard_base_setup(wizard.interface):
         if not ids:
             return {}
         company = company_obj.browse(cr, uid, ids)[0]
-        
+
         res = {'currency': company.currency_id.id}
 
         for field in 'name logo rml_header1 rml_footer1 rml_footer2'.split():
@@ -131,13 +104,12 @@ class wizard_base_setup(wizard.interface):
                 if address[field]:
                     res[field] = address[field].id
 
-        serv_pro_id = pool.get('ir.module.module').search(cr, uid, [('name','=','profile_service')]) or False
+        serv_pro_id = pool.get('ir.module.module').search(cr, uid, [('name','=','profile_service')])
         if serv_pro_id:
             res['profile'] = serv_pro_id[0]
-        
+
         return res
-    
-    
+
     def _get_all(self, cr, uid, context, model):
         pool = pooler.get_pool(cr.dbname)
         obj = pool.get(model)
@@ -159,9 +131,6 @@ class wizard_base_setup(wizard.interface):
     def _update(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
         form=data['form']
-        if 'profile' in data['form'] and data['form']['profile'] > 0:
-            module_obj=pool.get('ir.module.module')
-            module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
@@ -231,14 +200,10 @@ class wizard_base_setup(wizard.interface):
         }
 
     def _next(self, cr, uid, data, context):
-        if not data['form']['profile'] or data['form']['profile'] <= 0:
-            return 'company'
-        return 'charts'
+        return 'company'
 
     def _previous(self, cr, uid, data, context):
-        if 'profile' not in data['form'] or data['form']['profile'] <= 0:
-            return 'init'
-        return 'charts'
+        return 'init'
 
     def _config(self, cr, uid, data, context=None):
         pool = pooler.get_pool(cr.dbname)
@@ -256,13 +221,6 @@ class wizard_base_setup(wizard.interface):
         return pool.get('res.config').next(cr, uid, [], context=context)
 
     fields={
-        'profile':{
-            'string':'Profile',
-            'type':'selection',
-            'selection':_get_profiles,
-            'required': True,
-        },
-
         'name':{
             'string': 'Company Name',
             'type': 'char',
@@ -346,44 +304,18 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
     states={
         'init':{
             'actions': [_get_company],
-            'result': {'type': 'form', 'arch': view_form_profit, 'fields': fields,
-                'state': [
-                    ('menu', 'Cancel', 'gtk-cancel'),
-                    ('company', 'Next', 'gtk-go-forward', True)
-                ]
-            }
-        },
-#        'next': {
-#            'actions': [],
-#            'result': {'type': 'choice', 'next_state': _next}
-#        },
-#        'charts':{
-#            'actions': [],
-#            'result': {'type': 'form', 'arch': view_form_charts, 'fields': fields,
-#                'state':[
-#                    ('init', 'Previous', 'gtk-go-back'),
-#                    ('company', 'Next', 'gtk-go-forward', True)
-#                ]
-#            }
-#        },
-        'company':{
-            'actions': [],
             'result': {'type': 'form', 'arch': view_form_company, 'fields': fields,
                 'state': [
-                    ('init', 'Previous', 'gtk-go-back'),
+                    ('menu', 'Cancel', 'gtk-cancel'),
                     ('update', 'Next', 'gtk-go-forward', True)
                 ]
             }
         },
-#        'previous':{
-#            'actions': [],
-#            'result': {'type': 'choice', 'next_state': _previous}
-#        },
         'update':{
             'actions': [],
             'result': {'type': 'form', 'arch': view_form_update, 'fields': fields,
                 'state': [
-                    ('company', 'Previous', 'gtk-go-back'),
+                    ('init', 'Previous', 'gtk-go-back'),
                     ('finish', 'Install', 'gtk-ok', True)
                 ]
             }
