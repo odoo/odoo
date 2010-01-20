@@ -23,6 +23,7 @@ import report_crm
 import report_crm_lead
 import report_crm_claim
 import report_crm_opportunity
+import report_crm_phonecall
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
