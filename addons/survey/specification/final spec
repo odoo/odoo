@@ -1,0 +1,157 @@
+Date : 8th October, 2009
+Created by : Harshad Modi(hmo) and Yogesh(ysa)
+--------------------------------------------------------------------------------------
+
+                        ****  Specification of Survay module in OpenERP ****
+
+
+Basic Requirements :
+======================================================================================
+> Design own survey form
+> Desing own Questionaries
+> Collect Response
+> Analyze Result 
+
+Design own survey form:    
+---------------------------------------------------------------
+Allow to make multiple own survey pages with multiple questions with different question type.
+
+Note : After finish first Phase of Development, Allow to design page template to specify customize theme for bgcolor, bgimage, font style, font color
+
+
+Design Questinaries :
+-------------------------------------------------------
+Questinaries should has :
+* can specify question text
+* can make Answer sheet
+Question Type:
+* Survey Admin can able to  design answer option like:
+- Mutiple Choice with one answer 
+- Mutilpe Choice with multiple answer 
+
+
+Collect Response :
+---------------------------------------------------------
+Survey Admin can able to  :
+- Create a link
+- Send a survey invitation to others peple by mail
+- Allow to set max limit of  Response
+- Survey Admin can able to close survey
+
+Analyze Result :
+----------------------------------------------------------
+- Show Result with all Survey pages with total responses, responce count and calculate avarage response.
+
+
+
+
+
+
+
+
+OpenERP model Design :
+====================================================================
+survey :
+-------------------------------------------
+title - char(128)
+pages_ids   - one2many(survey_page)
+date_open
+date_close
+survey_link
+max_response_limit
+status (draft, open, close, cancel)
+resposible - many2one (res.user)
+
+survey_page:
+-------------------------------------------------------------------
+title - char(128)
+page_template_id - many2one( survey_page_template)
+survey_id - many2one(survey)
+question_ids  - one2many(survey_question)
+sequence - int
+note - char(256)
+
+survey_question:
+--------------------------------------------------------------
+page_id - many2one(survey_page)
+question  - char(128)
+answer_choice_ids - one2many(survey_answer)
+response_ids - one2many(survey_response)
+is_require_answer
+allow_comment
+sequence - int
+
+survey_answer:
+--------------------------------------------------------------------------
+question_id - many2one(survey_question)
+answer - char(128)
+sequence - int
+
+survey_response:
+--------------------------------------------------------------------
+date_create
+date_modify
+status (done, skip)
+response_by - many2one(res.users)
+question_id - many2one(survey_question)
+response_type ( from manual, link, mail)
+response_answer_ids - one2many(survey_response_answer)
+
+survey_response_answer:
+--------------------------------------------------------------------
+response_id - many2one(survey_response)
+question_id - many2one(survey_answer)
+comment
+
+
+OpenERP View Design:
+==================================================
+
+Survey View :
+
+see survey.png file
+
+Survey Pages  View:
+
+see survey_page.png file
+
+Survey Question View:
+
+see survey_qyestion.png file
+
+Survey Response View :
+
+see survey_response.png file
+
+
+
+OpenERP Report Design : 
+===================================================
+
+Design postgres view to display statistical information of response per question, response per user, etc..
+More detail will be provided later.
+
+
+OpenERP Menu Design : 
+=====================================================
+
+Survey Management :
+            > Surveys
+                > All Surveys
+                >  New Survey
+            > Survey Pages
+                > All Survey Pages
+                > New Survey Page
+            > Survey Response
+                > All Survey Responses
+                > New Survey Response
+            > Reports
+                > Response per Survey
+                > Response per Survey Page
+                > Response per Question
+                > Response per User
+
+References :
+===============================================
+http://www.surveymonkey.com/
+
