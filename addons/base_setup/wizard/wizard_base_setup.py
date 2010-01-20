@@ -58,17 +58,6 @@ view_form_company = """<?xml version="1.0"?>
     </notebook>
 </form>"""
 
-view_form_update = """<?xml version="1.0"?>
-<form string="Setup">
-    <image name="gtk-dialog-info" colspan="2"/>
-    <group>
-        <separator string="Summary" colspan="2"/>
-        <newline/>
-        <field name="name" align="0.0" readonly="1"/>
-    </group>
-</form>
-"""
-
 view_form_finish = """<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info" colspan="2"/>
@@ -307,16 +296,7 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'result': {'type': 'form', 'arch': view_form_company, 'fields': fields,
                 'state': [
                     ('menu', 'Cancel', 'gtk-cancel'),
-                    ('update', 'Next', 'gtk-go-forward', True)
-                ]
-            }
-        },
-        'update':{
-            'actions': [],
-            'result': {'type': 'form', 'arch': view_form_update, 'fields': fields,
-                'state': [
-                    ('init', 'Previous', 'gtk-go-back'),
-                    ('finish', 'Install', 'gtk-ok', True)
+                    ('finish', 'Next', 'gtk-go-forward', True)
                 ]
             }
         },
