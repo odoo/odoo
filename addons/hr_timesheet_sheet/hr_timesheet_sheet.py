@@ -639,8 +639,10 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             from
                                 hr_attendance a
                                 LEFT JOIN (hr_timesheet_sheet_sheet s
-                                    LEFT JOIN hr_employee e
-                                    ON (s.user_id = e.user_id))
+                                    LEFT JOIN resource_resource r
+                                        LEFT JOIN hr_employee e
+                                        ON (e.resource_id = r.id)
+                                    ON (s.user_id = r.user_id))
                                 ON (a.employee_id = e.id
                                     AND s.date_to >= date_trunc('day',a.name)
                                     AND s.date_from <= a.name)

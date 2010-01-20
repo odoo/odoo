@@ -3,17 +3,20 @@
 <data noupdate="1">   
 
     
-    <record model="crm.bug.categ" id="future_patch_categ">
+    <record model="crm.case.categ" id="future_patch_categ">
         <field name="name">Patches</field>
         <field name="section_id" ref="crm.section_sales_department"/>
+		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>          
     </record>
-    <record model="crm.bug.stage" id="future_fixed_categ">
+    <record model="crm.case.stage" id="future_fixed_categ">
         <field name="name">Fixed</field>
         <field name="section_id" ref="crm.section_sales_department"/>
+		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>           
     </record>
-    <record model="crm.bug.stage" id="future_awaiting_categ">
+    <record model="crm.case.stage" id="future_awaiting_categ">
         <field name="name">Awaiting Response</field>
         <field name="section_id" ref="crm.section_sales_department"/>
+		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>           
     </record>  
     
     

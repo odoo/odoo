@@ -19,29 +19,27 @@
 #
 ##############################################################################
 
-from tools.translate import _
-import base64
-import pooler
-import urllib
 import wizard
+import pooler
 
-class project_cal_subscribe_wizard(wizard.interface):
+
+class cal_event_import_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
-    <form string="Subscribe to Remote ICS">
-        <separator string="Provide path for Remote Calendar"/>
-        <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
+    <form string="Import ICS">
+        <separator string="Select ICS file"/>
+        <field name="file_path" colspan="4" width="300" nolabel="1"/>
     </form>'''
     
     form1_fields = {
-            'url_path': {
-                'string': 'Provide path for remote calendar', 
-                'type': 'char', 
+            'file_path': {
+                'string': 'Select ICS file', 
+                'type': 'binary', 
                 'required': True, 
-                'size': 124
+                'filters': '*.ics'
                 }
             }
     display = '''<?xml version="1.0"?>
-    <form string="Message...">
+    <form string="Import Message">
         <field name="msg" colspan="4" width="300" nolabel="1"/>
     </form>'''
     
@@ -54,35 +52,28 @@ class project_cal_subscribe_wizard(wizard.interface):
             }
 
     def _process_imp_ics(self, cr, uid, data, context=None):
+        model = data.get('model')
+        model_obj = pooler.get_pool(cr.dbname).get(model)
+        vals = model_obj.import_cal(cr, uid, data['form']['file_path'], context)
         global cnt
         cnt = 0
-        try:
-            f =  urllib.urlopen(data['form']['url_path'])
-            caldata= f.fp.read()
-            f.close()
-        except Exception,e:
-            raise wizard.except_wizard(_('Error!'), _('Please provide Proper URL !'))
-
-        task_obj = pooler.get_pool(cr.dbname).get('project.task')
-        context.update({'url': data['form']['url_path']})
-        vals = task_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
         if vals:
-            cnt = vals['count']
+            cnt = len(vals)
         return {}
     
     def _result_set(self, cr, uid, data, context=None):
-        return {'msg': 'Subscribed %s Task(s)' % cnt}
+        return {'msg': 'Imported %s Event(s)' % cnt}
     
     states = {
         'init': {
             'actions': [], 
             'result': {'type': 'form', 'arch': form1, 'fields': form1_fields, \
-                       'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Subscribe', 'gtk-ok')]}
+                       'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Import', 'gtk-ok')]}
         }, 
         'open': {
             'actions': [], 
             'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
-        },
+        }, 
        'display': {
             'actions': [_result_set], 
             'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
@@ -90,6 +81,6 @@ class project_cal_subscribe_wizard(wizard.interface):
         }, 
     }
     
-project_cal_subscribe_wizard('caldav.project.subscribe')
+cal_event_import_wizard('caldav.event.import')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

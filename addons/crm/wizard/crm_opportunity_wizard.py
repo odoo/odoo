@@ -41,20 +41,20 @@ class opportunity2phonecall(wizard.interface):
                     <field name='note' colspan="4"/>
                     <newline />
                     <field name='section_id' />    
-                    <field name='category_id' domain="[('section_id','=',section_id)]"/>
+                    <field name='category_id' domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"/>
                 </form>"""
 
     case_fields = {
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
-        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
+        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime' ,'required' :True},
         'note' : {'string' : 'Goals', 'type' : 'text'},
-        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.phonecall.categ', 'required' :True},
+        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' :True},
         'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
         
     }
     def _default_values(self, cr, uid, data, context):
         case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')        
-        categ_id = pooler.get_pool(cr.dbname).get('crm.phonecall.categ').search(cr, uid, [('name','=','Outbound')])            
+        categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
         case = case_obj.browse(cr, uid, data['id'])
         return {
                 'user_id' : case.user_id and case.user_id.id,
@@ -91,9 +91,15 @@ class opportunity2phonecall(wizard.interface):
                     'categ_id' : form['category_id'],
                     'description' : form['note'],
                     'date' : form['deadline'], 
-                    'section_id' : form['section_id']
+                    'section_id' : form['section_id'],
+                    'partner_id': opportunity.partner_id.id,
+                    'partner_address_id':opportunity.partner_address_id.id,
+                    'description':opportunity.description
             }, context=context)
-            
+            vals = {}
+            if not opportunity.phonecall_id:
+                vals.update({'phonecall_id' : new_case})
+            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
             opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
             phonecall_case_obj.case_open(cr, uid, [new_case])        
             
@@ -127,6 +133,19 @@ class opportunity2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        opportunity_case_obj = pool.get('crm.opportunity')
+        meeting_case_obj = pool.get('crm.meeting')        
+        for opportunity in opportunity_case_obj.browse(cr, uid, data['ids']):
+            new_meeting_id = meeting_case_obj.create(cr, uid, {
+                'name': opportunity.name,
+                'date': opportunity.date,
+                'date_deadline': opportunity.date_deadline,
+                })
+            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
+            vals = {}
+            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
+            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id])        
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -203,7 +222,7 @@ class partner_opportunity(wizard.interface):
         address = part_obj.address_get(cr, uid, data['ids' ])
         
         
-        categ_obj = pool.get('crm.opportunity.categ')
+        categ_obj = pool.get('crm.case.categ')
         categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
 
         case_obj = pool.get('crm.opportunity')

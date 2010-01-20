@@ -23,12 +23,8 @@ import crm_opportunity_wizard
 import crm_lead_wizard
 import crm_phonecall_wizard
 
-
 import wizard_crm_send_email
 import wizard_crm_new_send_email
-import wizard_cal_export
-import wizard_cal_import
-import wizard_cal_subscribe
 import wizard_history_event
 
 

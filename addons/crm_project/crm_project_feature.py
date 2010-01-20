@@ -50,14 +50,14 @@ class crm_project_future_request(osv.osv):
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        'categ_id': fields.many2one('crm.bug.categ','Category', domain="[('section_id','=',section_id)]"),
+        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.future')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.bug.type', 'Bug Type', domain="[('section_id','=',section_id)]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.future')]"),
         
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.bug.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.future')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration') ,
         'probability': fields.float('Probability (%)'), 
@@ -71,6 +71,12 @@ class crm_project_future_request(osv.osv):
     _defaults = {
           'project_id':_get_project
           }
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
+       
 
 crm_project_future_request()
 

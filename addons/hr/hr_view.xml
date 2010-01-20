@@ -12,8 +12,12 @@
             id="menu_hr_configuration"
             name="Configuration"
             parent="hr.menu_hr_root"
-            sequence="50" groups="group_hr_manager"/>
-
+            sequence="50" />
+<!--   <menuitem
+            id="menu_hr_time"
+            name="Time Tracking"
+            parent="hr.menu_hr_root"/>
+ -->
       <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_configuration" name="Employees" sequence="1"/>
         <!--
         ==========
@@ -105,6 +109,7 @@
         </record>
       <!--  <menuitem
             id="menu_open_view_employee_list"
+            name="Employees"
             action="open_view_employee_list"
             groups="group_hr_manager"
             parent="menu_hr_human_resources"/>
@@ -167,62 +172,6 @@
             <field eval="True" name="replace"/>
         </ir_set>
 
-
-        <!--
-        ============
-        Working Time
-        ============
-        -->
-        <record id="create_group" model="ir.ui.view">
-            <field name="name">hr.timesheet.group.form</field>
-            <field name="model">hr.timesheet.group</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Working Time Category">
-                    <field name="name" select="1"/>
-                    <field name="manager" select="1"/>
-                    <newline/>
-                    <field colspan="4" name="timesheet_id" nolabel="1" widget="one2many_list"/>
-                </form>
-            </field>
-        </record>
-        <record id="edit_workgroup" model="ir.actions.act_window">
-            <field name="name">Working Schedules</field>
-            <field name="res_model">hr.timesheet.group</field>
-            <field name="view_type">form</field>
-            <field name="view_id" eval="False"/>
-        </record>
-
-        <menuitem action="edit_workgroup" id="menu_edit_workgroup"  name="Work Schedules" parent="menu_view_employee_category_configuration_form" sequence="4"/>
-
-        <record id="view_timesheet_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.tree</field>
-            <field name="model">hr.timesheet</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Working Time">
-                    <field name="name"/>
-                    <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_timesheet_form" model="ir.ui.view">
-            <field name="name">hr.timesheet.form</field>
-            <field name="model">hr.timesheet</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Working Time">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date_from"/>
-                    <field name="dayofweek" select="1"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
-                </form>
-            </field>
-        </record>
-
         <!--
         ============
         Employee Category
@@ -271,7 +220,6 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form" parent="menu_view_employee_category_configuration_form" sequence="1"/>
-
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>

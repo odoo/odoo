@@ -36,7 +36,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['base', 'process', 'resource'],
     'init_xml': [],
     'update_xml': [
         'security/hr_security.xml',
@@ -46,7 +46,8 @@
         'process/hr_process.xml',
         'hr_installer.xml'
     ],
-    'demo_xml': ['hr_demo.xml', 'hr_department_demo.xml'],
+    'demo_xml': ['hr_demo.xml', 
+        'hr_department_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0086710558965',

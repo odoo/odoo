@@ -5,70 +5,25 @@
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
-    
-    <record id="crm_job_categ_view_form" model="ir.ui.view">
-        <field name="name">crm.job.categ.form</field>
-        <field name="model">crm.job.categ</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Job Category">
-                <field name="name" select="1"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-            </form>
-        </field>
-    </record>
-    <record id="crm_job_categ_view_tree" model="ir.ui.view">
-        <field name="name">crm.job.categ.tree</field>
-        <field name="model">crm.job.categ</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Job Category">
-                <field name="name"/>
-                <field name="probability"/>
-                <field name="section_id"/>
-            </tree>
-        </field>
-    </record>
 
     <record id="crm_job_categ_action" model="ir.actions.act_window">
         <field name="name">Job Categories</field>
-        <field name="res_model">crm.job.categ</field>
+        <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm_job_categ_view_tree"/>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>     
+       	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+		<field name="context">{'object_id':'crm.job'}</field>            
     </record>
     # ------------------------------------------------------ 
-	    # Stage
+	 # Stage
 	 # ------------------------------------------------------ 
-	    <record model="ir.ui.view" id="crm_job_stage_tree">
-	        <field name="name">crm.job.stage.tree</field>
-	        <field name="model">crm.job.stage</field>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <tree string="Stages">
-	                <field name="sequence"/>
-	                <field name="name"/>
-	                <field name="section_id"/>
-	            </tree>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="crm_job_stage_form">
-	        <field name="name">crm.job.stage.form</field>
-	        <field name="model">crm.job.stage</field>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <form string="Stage">
-	            	<field name="name" select="1"/>
-	                <field name="section_id" select="1" widget="selection"/>
-	                <field name="sequence"/>
-	            </form>
-	        </field>
-	    </record>
 	    <record id="crm_job_stage_act" model="ir.actions.act_window">
 	        <field name="name">Job Stages</field>
-	        <field name="res_model">crm.claim.stage</field>
+	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
-	        <field name="view_id" ref="crm_job_stage_tree"/>
+	        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
+       		<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+			<field name="context">{'object_id':'crm.job'}</field>    	        
 	    </record>
 	  <menuitem action="crm_job_stage_act" id="menu_crm_job_stage_act" parent="crm.menu_crm_case_stage"/>
     # ------------------------------------------------------
@@ -110,8 +65,6 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
-                	<button string="Schedule a Phone Call"
-                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action" />
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
@@ -121,6 +74,10 @@
                     <field name="date" string="Next Interview"/>
                     <field name="duration" widget="float_time"/>
                     <button name="%(wizard_crm_job_meeting_set)d" string="Schedule Meeting" icon="terp-crm" type="action"/>
+                    <field name="phonecall_id" select="1"/>
+                	<button string="Schedule a Phone Call"
+                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
+   				                                          
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">

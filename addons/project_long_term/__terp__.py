@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,8 +19,24 @@
 #
 ##############################################################################
 
-import wizard_cal_export
-import wizard_cal_import
-import wizard_cal_subscribe
 
+{
+    "name" : "Long Term Project Management",
+    "version": "1.1",
+    "author" : "Tiny",
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Projects & Services",
+    "depends" : ["project"],
+    "description": """Long Term Project management module that track planning, scheduling, resources allocation.
+    """,
+    "init_xml" : [],
+    "demo_xml" : [#"project_demo.xml"
+],
+    "update_xml": [        
+        "project_view.xml",         
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': None,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

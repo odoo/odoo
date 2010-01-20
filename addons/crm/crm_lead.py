@@ -34,45 +34,10 @@ from osv.orm import except_orm
 
 import crm
 
-class crm_lead_categ(osv.osv):
-    _name = "crm.lead.categ"
-    _description = "Lead Categories"
-    _columns = {
-            'name': fields.char('Category Name', size=64, required=True),
-            'probability': fields.float('Probability (%)', required=True),
-            'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-    _defaults = {
-        'probability': lambda *args: 0.0
-    }
-crm_lead_categ()
 
-class crm_lead_type(osv.osv):
-    _name = "crm.lead.type"
-    _description = "Lead Type"
-    _rec_name = "name"
-    _columns = {
-        'name': fields.char('lead Type Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-    }
-crm_lead_type()
-
-class crm_lead_stage(osv.osv):
-    _name = "crm.lead.stage"
-    _description = "Stage of claim case"
-    _rec_name = 'name'
-    _order = "sequence"
-    _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
-    }
-    _defaults = {
-        'sequence': lambda *args: 1
-    }
-crm_lead_stage()
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
+    _description = "Opportunity Cases"
 crm_opportunity()
     
 class crm_lead(osv.osv):
@@ -81,8 +46,8 @@ class crm_lead(osv.osv):
     _order = "id desc"
     _inherit = 'crm.case'    
     _columns = {
-            'categ_id': fields.many2one('crm.lead.categ', 'Category', domain="[('section_id','=',section_id)]"),
-            'type_id': fields.many2one('crm.lead.type', 'Lead Type Name', domain="[('section_id','=',section_id)]"),
+            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+            'type_id': fields.many2one('crm.case.resource.type', 'Lead Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
             'partner_name': fields.char("Employee's Name", size=64),
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
@@ -96,7 +61,7 @@ class crm_lead(osv.osv):
                                                                             " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'stage_id': fields.many2one ('crm.lead.stage', 'Stage', domain="[('section_id','=',section_id)]"),
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
@@ -106,7 +71,7 @@ class crm_lead(osv.osv):
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
-        cat = self.pool.get('crm.lead.categ').browse(cr, uid, categ, context).probability
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
         return {'value':{'probability':cat}}        
 
 crm_lead()

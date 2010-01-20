@@ -54,7 +54,7 @@ class hr_holidays_status(osv.osv):
         return_false = False
         if context and context.has_key('employee_id'):
             if not context['employee_id']:
-                return_false = True 
+                return_false = True
             employee_id = context['employee_id']
         else:
             employee_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
@@ -71,9 +71,9 @@ class hr_holidays_status(osv.osv):
         'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True, help='This color will be used in the leaves summary located in Reporting\Print Summary of Leaves'),
         'limit' : fields.boolean('Allow to override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the leave type without removing it."),
-        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'), 
-        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'), 
-        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', multi='user_left_days'), 
+        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
+        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
+        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', multi='user_left_days'),
 
     }
     _defaults = {
@@ -165,7 +165,6 @@ class hr_holidays(osv.osv):
     _order = 'date_from desc'
 
     def create(self, cr, uid, vals, context={}):
-        print 'create', vals, context
         if context:
             if context.has_key('type'):
                 vals['type'] = context['type']
@@ -182,7 +181,7 @@ class hr_holidays(osv.osv):
         #~ return True
 
     #_constraints = [(_check_date, 'Start date should not be greater than end date! ', ['number_of_days'])]
-    
+
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
         if date_to and date_from:
@@ -242,11 +241,10 @@ class hr_holidays(osv.osv):
             'state':'validate',
         }
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-        
         if ids2:
             vals['manager_id'] = ids2[0]
         else:
-            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))    
+            raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))
         self.write(cr, uid, ids, vals)
         return True
 
@@ -269,6 +267,16 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
+            vals= {
+                   'name':record.name,
+                   'date_from':record.date_from,
+                   'date_to':record.date_to,
+                   'calendar_id':record.employee_id.calendar_id.id,
+                   'company_id':record.employee_id.company_id.id,
+                   'resource_id':record.employee_id.resource_id.id
+                 }
+            self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
+
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
@@ -325,7 +333,7 @@ class hr_holidays(osv.osv):
                     'date_to' : record.date_to,
                     'notes' : record.notes,
                     'number_of_days': record.number_of_days,
-                    'number_of_days_temp': record.number_of_days_temp, 
+                    'number_of_days_temp': record.number_of_days_temp,
                     'type': record.type,
                     'allocation_type': record.allocation_type,
                     'parent_id': record.id,

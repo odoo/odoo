@@ -58,7 +58,8 @@ class job2phonecall(wizard.interface):
         case = case_obj.browse(cr, uid, data['id'])        
         return {
                 'user_id' : case.user_id and case.user_id.id,
-                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,                
+                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id, 
+                'section_id' : case.section_id and case.section_id.id or False,               
                 'note' : case.description
                }
 
@@ -84,17 +85,23 @@ class job2phonecall(wizard.interface):
             #TODO : Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
                         'name' : job.name,
-                        'case_id' : job.inherit_case_id.id,
                         'user_id' : form['user_id'],
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'], 
-                        'section_id' : form['section_id']
+                        'section_id' : form['section_id'],
+                        'description':job.description,
+                        'partner_id':job.partner_id.id,
+                        'partner_address_id':job.partner_address_id.id,
+                        'partner_phone':job.partner_phone,
+                        'partner_mobile':job.partner_mobile,
+                        'description':job.description,
+                        'date':job.date,
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
             vals = {}
             if not job.case_id:
-                vals.update({'case_id' : new_phonecall.inherit_case_id.id})
+                vals.update({'phonecall_id' : new_phonecall.id})
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
@@ -128,6 +135,20 @@ class job2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
+        job_case_obj = pool.get('crm.job')
+        meeting_case_obj = pool.get('crm.meeting')        
+        for job in job_case_obj.browse(cr, uid, data['ids']):
+            new_meeting_id = meeting_case_obj.create(cr, uid, {
+                'name': job.name,
+                'date': job.date,
+                'duration': job.duration,
+                })
+            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
+            vals = {}
+            job_case_obj.write(cr, uid, [job.id], vals)
+            job_case_obj.case_cancel(cr, uid, [job.id])
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id]) 
+                      
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])

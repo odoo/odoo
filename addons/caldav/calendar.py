@@ -42,7 +42,7 @@ def map_data(cr, uid, obj):
             if field_type == 'selection':
                 if not map_val:
                     continue
-                mapping =obj.__attribute__[map_dict].get('mapping', False)
+                mapping = obj.__attribute__[map_dict].get('mapping', False)
                 if mapping:
                     map_val = mapping[map_val.lower()]
                 else:
@@ -97,12 +97,12 @@ class CalDAV(object):
             val = self.__attribute__.get(name).get(type, None)
             valtype =  self.__attribute__.get(name).get('type', None)
             if type == 'value':
-                if valtype and valtype=='datetime' and val:
+                if valtype and valtype == 'datetime' and val:
                     if isinstance(val, list):
                         val = ','.join(map(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'), val))
                     else:
                         val = val.strftime('%Y-%m-%d %H:%M:%S')
-                if valtype and valtype=='integer' and val:
+                if valtype and valtype == 'integer' and val:
                     val = int(val)
             return  val
         else:
@@ -122,11 +122,21 @@ class CalDAV(object):
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
                 if map_field in data.keys():
-                    if field == 'uid' :
+                    if field == 'uid':
                         model = context.get('model', None)
                         if not model:
                             continue
                         uidval = common.openobjectid2uid(cr, data[map_field], model)
+                        cr.execute('select id from %s  where recurrent_uid=%s' 
+                                               % (model.replace('.', '_'), data[map_field]))
+                        r_ids = map(lambda x: x[0], cr.fetchall())
+                        if r_ids: 
+                            rdata = self.pool.get(model).read(cr, uid, r_ids)
+                            rcal = self.export_ical(cr, uid, rdata, context=context)
+                            for revents in rcal.contents['vevent']:
+                                ical.contents['vevent'].append(revents)
+                        if data.get('recurrent_uid', None):
+                            uidval = common.openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
                         attendee_obj = self.pool.get('basic.calendar.attendee')
@@ -145,7 +155,7 @@ class CalDAV(object):
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
-                             vevent.add(field).value = [data.get(map_field)[1]]
+                            vevent.add(field).value = [data.get(map_field)[1]]
                         if self.__attribute__.get(field).has_key('mapping'):
                             for key1, val1 in self.ical_get(field, 'mapping').items():
                                 if val1 == data[map_field]:
@@ -236,7 +246,7 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-    def export_ical(self, cr, uid, datas, context={}):
+    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
         return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
 
 Event()
@@ -279,7 +289,7 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None, 
             }
 
-    def export_ical(self, cr, uid, datas, context={}):
+    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
         return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
 
 ToDo()
@@ -367,15 +377,15 @@ class Alarm(CalDAV, osv.osv_memory):
                 related = 'before'
                 if not seconds:
                     duration = abs(days)
-                    related = days>0 and 'after' or 'before'
+                    related = days > 0 and 'after' or 'before'
                 elif (abs(diff) / 3600) == 0:
                     duration = abs(diff / 60)
                     interval = 'minutes'
-                    related = days>=0 and 'after' or 'before'
+                    related = days >= 0 and 'after' or 'before'
                 else:
                     duration = abs(diff / 3600)
                     interval = 'hours'
-                    related = days>=0 and 'after' or 'before'
+                    related = days >= 0 and 'after' or 'before'
                 self.ical_set('trigger_interval', interval, 'value')
                 self.ical_set('trigger_duration', duration, 'value')
                 self.ical_set('trigger_occurs', related.lower(), 'value')
@@ -429,7 +439,7 @@ class Attendee(CalDAV, osv.osv_memory):
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                 if a_val['field'] == 'cn':
                     cn_val = [str(attendee[a_val['field']])]
-            attendee_add.params['CN']= cn_val 
+            attendee_add.params['CN'] = cn_val 
         return vevent
 
 Attendee()
