@@ -119,7 +119,7 @@ class Cursor(object):
 
         if self.sql_log:
             now = mdt.now()
-        
+
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -195,11 +195,11 @@ class Cursor(object):
     def autocommit(self, on):
         offlevel = [ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE][bool(self._serialized)]
         self._cnx.set_isolation_level([offlevel, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
-    
+
     @check
     def commit(self):
         return self._cnx.commit()
-    
+
     @check
     def rollback(self):
         return self._cnx.rollback()
@@ -228,16 +228,13 @@ class ConnectionPool(object):
         self._lock = threading.Lock()
         self._logger = netsvc.Logger()
 
-    def _log(self, msg):
-        #self._logger.notifyChannel('ConnectionPool', netsvc.LOG_INFO, msg)
-        pass
     def _debug(self, msg):
-        #self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
-        pass
+        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
+        #pass
 
     @locked
     def borrow(self, dsn):
-        self._log('Borrow connection to %s' % (dsn,))
+        self._debug('Borrow connection to %s' % (dsn,))
 
         result = None
         for i, (cnx, used) in enumerate(self._connections):
@@ -270,7 +267,7 @@ class ConnectionPool(object):
 
     @locked
     def give_back(self, connection):
-        self._log('Give back connection to %s' % (connection.dsn,))
+        self._debug('Give back connection to %s' % (connection.dsn,))
         for i, (cnx, used) in enumerate(self._connections):
             if cnx is connection:
                 self._connections.pop(i)
@@ -281,6 +278,7 @@ class ConnectionPool(object):
 
     @locked
     def close_all(self, dsn):
+        self._debug('Close all connections to %s' % (dsn,))
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
             if dsn_are_equals(cnx.dsn, dsn):
                 cnx.close()
@@ -288,37 +286,17 @@ class ConnectionPool(object):
 
 
 class Connection(object):
-    __LOCKS = {}
+    def _debug(self, msg):
+        self._logger.notifyChannel('Connection', netsvc.LOG_DEBUG, msg)
 
-    def __init__(self, pool, dbname, unique=False):
+    def __init__(self, pool, dbname):
         self.dbname = dbname
         self._pool = pool
-        self._unique = unique
-
-    def __enter__(self):
-        if self._unique:
-            self.lock()
-        return self
-    
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self._unique:
-            self.release()
-
-    def lock(self):
-        if self.dbname not in self.__LOCKS:
-            self.__LOCKS[self.dbname] = threading.Lock()
-        self.__LOCKS[self.dbname].acquire()
-        
-    def release(self):
-        close_db(self.dbname)
-        self.__LOCKS[self.dbname].release()
+        self._logger = netsvc.Logger()
 
     def cursor(self, serialized=False):
-        if self._unique:
-            lock = self.__LOCKS.get(self.dbname, None)
-            if not (lock and lock.locked()):
-                netsvc.Logger().notifyChannel('Connection', netsvc.LOG_WARNING, 'Unprotected connection to %s' % (self.dbname,))
-
+        cursor_type = serialized and 'serialized ' or ''
+        self._debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):
@@ -354,8 +332,7 @@ def dsn_are_equals(first, second):
 _Pool = ConnectionPool(int(tools.config['db_maxconn']))
 
 def db_connect(db_name):
-    unique = db_name in ['template1', 'template0']
-    return Connection(_Pool, db_name, unique)
+    return Connection(_Pool, db_name)
 
 def close_db(db_name):
     _Pool.close_all(dsn(db_name))
