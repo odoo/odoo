@@ -210,6 +210,65 @@
             <field name="search_view_id" ref="view_report_crm_case_section_filter"/>
         </record>
 
+		#
+	    # Cases by section and stage
+	    #
+		<record model="ir.ui.view" id="view_crm_case_section_stage_tree">
+        <field name="name">CRM Report - Sections and Stage(Tree)</field>
+        <field name="model">report.crm.case.section.stage</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Cases by Section and Stage">
+                <field name="name"/>
+                <field name="month"/>
+                <field name="user_id"/>
+                <field name="section_id"/>
+                <field name="nbr"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_crm_case_section_stage_form">
+        <field name="name">CRM Report - Sections and Stage(Form)</field>
+        <field name="model">report.crm.case.section.stage</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Cases by Section and Stage">
+                <field name="name"/>
+                <field name="month"/>
+                <field name="user_id"/>
+                <field name="section_id" select="1" widget="selection"/>
+                <field name="nbr" select="1"/>
+                <field name="state" select="1"/>
+            </form>
+        </field>
+    </record>
+    
+	<record id="view_crm_case_section_stage_filter" model="ir.ui.view">
+            <field name="name">CRM Report - Sections and Stage(Select)</field>
+            <field name="model">report.crm.case.section.stage</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Cases by Section and Stage">
+                   <group col="8" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" help="Cases by Section and Stage for this year"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]" help="Cases by Section and Stage for this month"/>
+						<separator orientation="vertical"/>
+						<field name="section_id" select="1" widget="selection"/>
+                		<field name="nbr" select="1"/>
+                		<field name="state" select="1"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="action_report_crm_case_section_stage_tree">
+        <field name="res_model">report.crm.case.section.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="search_view_id" ref="view_crm_case_section_stage_filter"/>
+    </record>
+
         <!-- Closed & Open CRM Case view for Random Activities dashboard  -->
 
         <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">

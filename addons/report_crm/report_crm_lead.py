@@ -128,4 +128,40 @@ class report_crm_lead_section(osv.osv):
             )""")
 report_crm_lead_section()
 
+class report_crm_lead_section_stage(osv.osv):
+    _name = "report.crm.lead.section.stage"
+    _description = "Leads by section and stage"
+    _auto = False
+    _inherit = "report.crm.case.section.stage"
+    _columns = {
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),
+        'delay_close': fields.char('Delay Close', size=20, readonly=True),
+                }
+    _order = 'stage_id, section_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_lead_section_stage")
+        cr.execute("""
+              create view report_crm_lead_section_stage as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.state,
+                    c.stage_id,
+                    c.section_id,
+                    c.categ_id, 
+                    count(*) as nbr,
+                    sum(planned_revenue) as amount_revenue,
+                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                from
+                    crm_lead c
+                where c.stage_id is not null
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.categ_id, c.section_id)""")
+
+report_crm_lead_section_stage()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -187,5 +187,64 @@
             <field name="search_view_id" ref="view_report_crm_lead_section_filter"/>
         </record>
         <menuitem action="action_report_crm_lead_section_tree" id="menu_crm_lead_section_tree" parent="menu_crm_leads_tree"/>
+     
+     
+	<!--  Cases by section and stage   -->
+	   <record model="ir.ui.view" id="view_crm_lead_section_stage_tree">
+	        <field name="name">Leads Report - Sections and Stage(Tree)</field>
+	        <field name="model">report.crm.lead.section.stage</field>
+	        <field name="inherit_id" ref="view_crm_case_section_stage_tree"/>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <field name="nbr" position="after">
+	            	<field name="categ_id"/>
+	            	<field name="stage_id" select="2"/>
+	               	<field name="amount_revenue" select="2"/>
+	               	<field name="delay_close"/>
+	           </field>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="view_crm_lead_section_stage_form">
+	        <field name="name">Leads Report - Sections and Stage(Form)</field>
+	        <field name="model">report.crm.lead.section.stage</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <field name="nbr" position="after">
+	            	<field name="categ_id"/>
+	            	<field name="stage_id" select="2"/>
+	               	<field name="amount_revenue" select="2"/>
+	               	<field name="delay_close"/>
+	           </field>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="view_crm_lead_section_stage_graph">
+	        <field name="name">Leads Report - Sections and Stage(Graph)</field>
+	        <field name="model">report.crm.lead.section.stage</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	            <graph string="Leads by Section and Stage" type="bar" orientation="horizontal">
+	                <field name="stage_id"/>
+	                <field name="amount_revenue" operator="+"/>
+	                <field name="section_id" group="True"/>
+	            </graph>
+	        </field>
+	    </record>
+		<record id="view_crm_lead_section_stage_filter" model="ir.ui.view">
+	            <field name="name">Leads Report - Sections and Stage(Select)</field>
+	            <field name="model">report.crm.lead.section.stage</field>
+	            <field name="type">search</field>
+	            <field name="arch" type="xml">
+	                <field name="state" position="before">
+	                </field>
+	            </field>
+	        </record>
+	
+	    <record model="ir.actions.act_window" id="action_report_crm_lead_section_stage_tree">
+	        <field name="res_model">report.crm.lead.section.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="view_id" ref="view_crm_lead_section_stage_tree"/>
+	        <field name="search_view_id" ref="view_crm_lead_section_stage_filter"/>
+	    </record>
   </data>
 </openerp>
