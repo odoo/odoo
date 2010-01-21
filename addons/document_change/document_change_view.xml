@@ -268,8 +268,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_document_tree"/>
-        <field name="domain">[]</field>
-    </record>
+        <field name="domain">[('state','=','change_proposed')]</field>    
+        </record>
     <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
 	
 	<!-- 
@@ -358,7 +358,10 @@
                 			<field name="latest_modified_date"/>
                 			<field name="date_expected"/>
                 		</group>
-                		<field name="change_description" colspan="4"/>
+                		<newline />
+                		 <separator colspan="4" string="Change Description"/>
+                		<field name="change_description" colspan="4" nolabel="1"/>
+                		<newline />
                 		<field name="state"/>
                 	</page>
                 	<page string="Phases">

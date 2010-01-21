@@ -71,6 +71,9 @@ class doucment_change_process_phase(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
+    _defaults = {      
+     'state': lambda *a: 'draft',
+     }
 doucment_change_process_phase()
 
 class document_change_process_model(osv.osv):
@@ -145,6 +148,7 @@ class doucment_change_process(osv.osv):
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
+      'state': lambda *a: 'draft',
       }
     
 doucment_change_process()
