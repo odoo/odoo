@@ -42,6 +42,18 @@
         <field name="name">Structure</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_document_structure_tree"/>
+    </record>
+    <record id="action_document_structure_tree_view" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="action_document_structure_form"/>
+    </record>
+    <record id="action_document_structure_form_view" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_document_structure_form"/>
+        <field name="act_window_id" ref="action_document_structure_form"/>
     </record>
     <menuitem name="Structure" id="menu_document_structure_config" parent="menu_configuration"/>
     <menuitem action="action_document_structure_form" id="menu_structure_form" parent="menu_document_structure_config"/>
@@ -90,9 +102,10 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Document Types">
-                <field name="name" select="1"/>
+                <field name="name" select="1" string="Phase Type"/>
                 <field name="sequence"/>
-                <field name="document_type_ids" colspan="4"/>
+                <separator string="Associated Document Types" colspan="4"/>
+                <field name="document_type_ids" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -169,14 +182,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Documents">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" />
+                <group colspan="4" col="4">
+                    <field name="name" select="1" string="Document Name"/>
                     <field name="parent_id"/>
                     <field name="datas_fname"/>
-                    <field name="datas" filename="datas_fname"/>
+                    <field name="datas" filename="datas_fname" string="Content"/>
                 </group>
                 <separator string="Change Control" colspan="4"/>
-                <field colspan="4" name="description" string="Change Note"/>
+                <field name="state"/>
+                <newline/>
+                <field name="target_document_id"/>
+                <field name="target"/>
+                <newline/>
+                <separator string="Change Note" colspan="4"/>
+                <field colspan="4" name="description" nolabel="1"/>
                 <group colspan="2" col="2">
                     <separator string="Creation" colspan="2"/>
                     <field name="create_uid" readonly="1"/>
@@ -211,6 +230,20 @@
         <field name="res_model">ir.attachment</field>
         <field name="name">Documents</field>
         <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_document_tree"/>
+    </record>
+    
+    <record id="action_document_tree_view" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="action_document_form"/>
+    </record>
+    <record id="action_document_form_view" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_document_form"/>
+        <field name="act_window_id" ref="action_document_form"/>
     </record>
     <menuitem action="action_document_form" id="menu_documents_form" parent="menu_document_process_changes"/>
     
@@ -223,12 +256,15 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Phases">
-                <field name="name" select="1"/>
-                <field name="process_id" string="Process Change"/>
-                <field name="sequence"/>
-                <field name="update_document" string="Update documents"/>
-                <field name="type" string="Type"/>
-                <field name="date_control" string="Control date"/>
+				<group colspan="4" col="6">            
+	                <field name="name" select="1"/>
+	                <!--<field name="" string="Process Change"/>-->
+	                <field name="sequence"/>
+	                <newline/>
+	                <field name="update_document" string="Update documents"/>
+	                <field name="type" string="Type"/>
+	                <field name="date_control" string="Control date"/>
+	            </group>
                 <field name="phase_ids" string="Phase Type"/>
                 <newline/>
                 <field name="phase_document_ids" colspan="4" string="Documents"/>
