@@ -24,16 +24,14 @@
     "name" : "CalDAV", 
     "version" : "1.0", 
     "depends" : [
-                    "base", 
+                    "base_calendar", 
                 ], 
      'description': """
- To develop a full featured caldav system that support:
-  - access through webdav (based on xrg code)
+ Full featured caldav system that support:
   - alerts (create requests)
   - recurring events (*)
   - invitations to others people (exactly like sunbird)
-  - availabilities of users/calendars
-  - full day events""", 
+""", 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 

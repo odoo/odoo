@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-
+import crm
 
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
@@ -29,12 +29,7 @@ class crm_meeting(osv.osv):
     _inherit = ["crm.case", "calendar.event"]
 
     _columns = {
-        'priority': fields.selection([('5','Lowest'),
-                                    ('4','Low'),
-                                    ('3','Normal'),
-                                    ('2','High'),
-                                    ('1','Highest')
-                                    ], 'Priority'), 
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.meeting')]", \

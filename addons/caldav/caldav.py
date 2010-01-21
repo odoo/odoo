@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-
 from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from dateutil import parser
 from osv import fields, osv
+from base_calendar import base_calendar
 from service import web_services
 from tools.translate import _
 import base64
+import pooler
 import re
 import time
 
@@ -43,7 +44,9 @@ def caldav_id2real_id(caldav_id=None, with_date=False):
             if with_date:
                 real_date = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(res[1], "%Y%m%d%H%M%S"))
-                return (int(real_id), real_date)
+                start = datetime.strptime(real_date, "%Y-%m-%d %H:%M:%S")
+                end = start + timedelta(hours=with_date)
+                return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
     return caldav_id and int(caldav_id) or caldav_id
 
@@ -54,31 +57,6 @@ def real_id2caldav_id(real_id, recurrent_date):
         return '%d-%s' % (real_id, recurrent_date)
     return real_id
 
-def uid2openobjectid(cr, uidval, oomodel, rdate):
-    __rege = re.compile(r'OpenObject-([\w|\.]+)_([0-9]+)@(\w+)$')
-    wematch = __rege.match(uidval.encode('utf8'))
-    if not wematch:
-        return (False, None)
-    else:
-        model, id, dbname = wematch.groups()
-        if (not model == oomodel) or (not dbname == cr.dbname):
-            return (False, None)
-        qry = 'select distinct(id) from %s' % model.replace('.', '_')
-        if rdate:
-            qry += " where recurrent_id='%s'" % (rdate)
-            cr.execute(qry)
-            r_id = cr.fetchone()
-            if r_id:
-                return (id, r_id[0])
-        cr.execute(qry)
-        ids = map(lambda x: str(x[0]), cr.fetchall())
-        if id in ids:
-            return (id, None)
-        return False
-
-def openobjectid2uid(cr, uidval, oomodel):
-    value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
-    return value
 
 def _links_get(self, cr, uid, context={}):
     obj = self.pool.get('res.request.link')
@@ -280,8 +258,8 @@ are both optional, but if one occurs, so MUST the other"""),
 
     def do_alarm_create(self, cr, uid, ids, model, date, context={}):
         alarm_obj = self.pool.get('calendar.alarm')
-        model_obj = self.pool.get('ir.model')
-        model_id = model_obj.search(cr, uid, [('model', '=', model)])[0]
+        ir_obj = self.pool.get('ir.model')
+        model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
         
         model_obj = self.pool.get(model)
         for data in model_obj.browse(cr, uid, ids):
@@ -307,8 +285,8 @@ are both optional, but if one occurs, so MUST the other"""),
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
                 cr.execute('Update %s set caldav_alarm_id=%s, alarm_id=%s \
-                                        where id=%s' % (model.replace('.', '_'), \
-                                                    alarm_id, basic_alarm.id, data.id))
+                                        where id=%s' % (model_obj._table, \
+                                        alarm_id, basic_alarm.id, data.id))
         cr.commit()
         return True
 
@@ -321,8 +299,8 @@ are both optional, but if one occurs, so MUST the other"""),
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
             if alarm_ids and len(alarm_ids):
                 alarm_obj.unlink(cr, uid, alarm_ids)
-                cr.execute('Update %s set caldav_alarm_id=NULL, \
-                               alarm_id=NULL  where id=%s' % (self._table, datas.id))
+                cr.execute('Update %s set caldav_alarm_id=NULL, alarm_id=NULL\
+                             where id=%s' % (model_obj._table, datas.id))
         cr.commit()
         return True
 
@@ -477,7 +455,7 @@ class calendar_event(osv.osv):
         'url': {'field': 'caldav_url', 'type': 'text'}, 
         'recurrence-id': {'field': 'recurrent_id', 'type': 'datetime'}, 
         'attendee': {'field': 'attendee_ids', 'type': 'many2many', 'object': 'calendar.attendee'}, 
-        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
+#        'categories': {'field': 'categ_id', 'type': 'many2one', 'object': 'crm.meeting.categ'}, 
         'comment': None, 
         'contact': None, 
         'exdate': {'field': 'exdate', 'type': 'datetime'}, 
@@ -583,7 +561,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         vals = event_obj.import_ical(cr, uid, file_content)
         ids = []
         for val in vals:
-            exists, r_id = uid2openobjectid(cr, val['id'], self._name, \
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, \
                                                              val.get('recurrent_id'))
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
@@ -621,8 +599,9 @@ rule or repeating pattern for anexception to a recurrence set"),
             ids = select
         result = []
         if ids and (base_start_date or base_until_date):
-            cr.execute("select m.id, m.rrule, m.date, m.exdate \
-                            from "  + self._table + " m where m.id in ("\
+            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
+                            m.exdate  from "  + self._table + \
+                            " m where m.id in ("\
                             + ','.join(map(lambda x: str(x), ids))+")")
 
             count = 0
@@ -635,9 +614,9 @@ rule or repeating pattern for anexception to a recurrence set"),
                 if start_date and start_date <= event_date:
                     start_date = event_date
                 if not data['rrule']:
-                    if start_date and event_date < start_date:
+                    if start_date and (event_date < start_date):
                         continue
-                    if until_date and event_date > until_date:
+                    if until_date and (event_date > until_date):
                         continue
                     idval = real_id2caldav_id(data['id'], data['date'])
                     result.append(idval)
@@ -713,7 +692,7 @@ rule or repeating pattern for anexception to a recurrence set"),
             if not id in new_ids:
                 new_ids.append(id)
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if vals.get('alarm_id'):
+        if vals.has_key('alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date')
         return res
@@ -741,9 +720,10 @@ rule or repeating pattern for anexception to a recurrence set"),
         for caldav_id, real_id in select:
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, \
                                               load=load)
-            ls = caldav_id2real_id(caldav_id, with_date=True)
+            ls = caldav_id2real_id(caldav_id, with_date=res.get('duration', 0))
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
+                res['date_deadline'] = ls[2]
             res['id'] = caldav_id
 
             result.append(res)
@@ -881,7 +861,7 @@ class calendar_todo(osv.osv):
                 hours = (val['planned_hours'].seconds / float(3600)) + \
                                         (val['planned_hours'].days * 24)
                 val['planned_hours'] = hours
-            exists, r_id = uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
             val.pop('id')
             if exists:
                 self.write(cr, uid, [exists], val)

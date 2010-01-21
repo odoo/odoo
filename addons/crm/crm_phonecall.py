@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from caldav import common
 from dateutil.rrule import *
 from osv import fields, osv
 import  datetime

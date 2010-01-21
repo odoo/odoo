@@ -105,6 +105,8 @@ class lead2opportunity(wizard.interface):
                 'partner_id': data['form']['partner_id'],
                 'section_id':lead.section_id.id,
                 'description':lead.description,
+                'partner_address_id':lead.partner_address_id.id, 
+                'priority':lead.priority,         
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)

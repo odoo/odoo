@@ -102,8 +102,7 @@ class phonecall2opportunity(wizard.interface):
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
-                'partner_id': data['form']['partner_id'],
-                'phonecall_id':phonecall.id, 
+                'partner_id': data['form']['partner_id'],                 
                 'section_id':phonecall.section_id.id,
                 'description':phonecall.description,                
             })
@@ -200,7 +199,9 @@ class phonecall2meeting(wizard.interface):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': phonecall.name,
                 'date': phonecall.date,
+                'section_id' : phonecall.section_id and phonecall.section_id.id or False,
                 'duration': phonecall.duration,
+                'description':phonecall.description,
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
@@ -225,7 +226,7 @@ class phonecall2meeting(wizard.interface):
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }
