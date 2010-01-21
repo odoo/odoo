@@ -58,13 +58,28 @@ class doucment_change_process_phase_type(osv.osv):
         
     }
 doucment_change_process_phase_type()
+
+class doucment_change_process_phase(osv.osv):
+    _name = "document.change.process.phase"
+    _description = "Document Change Process Phase"
+    _columns = {
+        'name': fields.char("Name", size=64),
+        'sequence': fields.integer('Sequence'),
+        'update_document': fields.selection([('at_endPhase', 'At EndPhase'),('at_endprocess', 'At EndPorcess')], 'Update Document', required=True),        
+        'type': fields.selection([('required', 'Control Required'),('no_control', 'Control')], 'Type', required=True),
+        'date': fields.date('Date', select=True),        
+        'document_type_ids': many2many('document.type','Document'),
+        
+    }
+doucment_change_process_phase()
+
 class document_change_process_model(osv.osv):
     _name = "document.change.process.model"
     _description = "Document Change Process model"
     _columns = {
-        'name': fields.char("Changed Process Model", size=64),
+        'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
-        'phase_type_ids':many2many('document.change.process.phase.type','Change Process Phase Type')
+        'phase_type_ids':many2many('document.change.process.phase.type','Process Type', required=True),
 
     }
 document_change_process_model()
@@ -73,7 +88,10 @@ document_change_process_model()
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _columns = {
-        'type_id': many2one('document.change.type')
+        'type_id': many2one('document.change.type'),
+        'state': fields.selection([('changedrequest', 'Change Request'),('changedproposed', 'Change Proposed'), ('inproduction', 'In Production'), ('toupdate', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'target_document_id': fields.many2one('document.directory', 'Target Document'),
+        'target':fields.binary('Target'),
     }
 document_file()
 
