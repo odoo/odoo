@@ -218,8 +218,8 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Files">
-                <field name="name"/>
+            <tree string="Documents">
+                <field name="name" string="Document Name"/>
                 <field name="partner_id"/>
                 <field name="datas_fname"/>
                 <field name="create_date"/>
@@ -234,12 +234,12 @@
         <field name="name">Documents</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_document_tree"/>
     </record>
     
     <record id="action_document_tree_view" model="ir.actions.act_window.view">
         <field eval="1" name="sequence"/>
         <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_document_tree"/>
         <field name="act_window_id" ref="action_document_form"/>
     </record>
     <record id="action_document_form_view" model="ir.actions.act_window.view">
@@ -305,8 +305,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Phases">
-                <field name="name"/>
                 <field name="sequence"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>
@@ -382,7 +382,16 @@
                 		</field>
                 	</page>
                 	<page string="Documents">
-                		<field name="process_document_ids" colspan="4" nolabel="1"/>
+                		<field name="process_document_ids" mode="tree,form" colspan="4" nolabel="1">
+                			<tree string="Documents">
+                				<field name="name" string="Document Name"/>
+                				<field name="state"/>
+                			</tree>
+                			<form string="Documents">
+                				<field name="name" string="Document Name"/>
+                				<field name="state"/>
+                			</form>
+                		</field>
                 	</page>
                 	<page string="Notifications">
                 		<field name="email_notification_ids" mode="tree,form" widget="one2many_list" nolabel="1">
