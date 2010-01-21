@@ -106,6 +106,16 @@ class document_change_process_type(osv.osv):
         }
 document_change_process_type()
 
+class document_change_process_email(osv.osv):
+    _name = "document.change.process.mail"
+    _description = "Document Change Process Email Notification"  
+    
+    _columns = {
+        'name': fields.char("Email", size=64),
+        'type':fields.selection([('start_end', 'Start/End Process '),('change_all', 'Change in All Document')], 'Notification Type'),
+        'process_id':fields.many2one('document.change.process','Process Change'),        
+        }
+document_change_process_email()
 class doucment_change_process(osv.osv):
     
     _name = "document.change.process"
@@ -129,6 +139,9 @@ class doucment_change_process(osv.osv):
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
-        'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'), 
+        'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
+        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),
+        'email_notification_ids':fields.one2many('document.change.process.mail','process_id','Notifications'),        
+       
     }
 doucment_change_process()

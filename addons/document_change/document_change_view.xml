@@ -345,14 +345,18 @@
                 	<page string="Documents">
                 		<field name="process_document_ids" colspan="4" nolabel="1"/>
                 	</page>
-                	<!--page string="Notifications">
-                		<field name="email_notification_ids mode="tree,form" widget="one2many_list" nolabel="1">
+                	<page string="Notifications">
+                		<field name="email_notification_ids" mode="tree,form" widget="one2many_list" nolabel="1">
                 			<tree string="Notifications" editable="True">
+                				<field name="name"/>
+                				<field name="type"/>
                 			</tree>
                 			<form string="Notifications">
+                				<field name="name"/>
+                				<field name="type"/>                			
                 			</form>
                 		</field>
-                 	</page-->
+                 	</page>
                 </notebook>
             </form>
         </field>
