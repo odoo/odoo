@@ -2,85 +2,48 @@
 <openerp>
 	<data>
 	
-		<record id="view_calendar_fields_from" model="ir.ui.view">
-			<field name="name">Attributes Mapping</field>
-			<field name="model">basic.calendar.fields</field>
+		<record id="view_calendar_form" model="ir.ui.view">
+			<field name="name">Basic Calendar</field>
+			<field name="model">basic.calendar</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Attributes Mapping">
-					<field name="name" select="1" required="1" />
-					<field name="field_id" select="1" required="1" />
-					<field name="fn" select="1" required="1" />
-					<field name="expr" />
-					<newline/>
-					<separator string="Mapping" colspan="4"/>
-					<field name="mapping" select="1" colspan="4" nolabel="1"/>
+				<form string="Basic Calendar">                    
+					<field name="name" required="1" />
+                    <field name="line_ids" mode="form,tree" colspan="4" nolabel="1">
+					    <form string="Calendar Lines">
+					        <field name="name" required="1" select="1" />
+					        <field name="object_id" required="1" select="1" />					        
+					        <field name="mapping_ids" select="1" colspan="4" nolabel="1">
+						        <tree string="Attributes Mapping" editable="bottom">
+							        <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
+							        <field name="fn" select="1" />
+							        <field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]" />
+							        <field name="expr" />
+						        </tree>
+						        <form string="Attributes Mapping">
+							        <field name="name" select="1" required="1" domain="[('type', '=', parent.name)]"/>
+							        <field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]"
+								        required="1" />
+							        <field name="fn" select="1" required="1" />
+							        <field name="expr" />							        
+						        </form>
+					        </field>
+				        </form>				
+                        <tree string="Attributes Mapping" editable="bottom">
+					        <field name="name" select="1" />
+					        <field name="object_id" select="1" />					        
+				        </tree>
+                    </field>
 				</form>
 			</field>
 		</record>
 
-		<record id="view_calendar_fields_tree" model="ir.ui.view">
-			<field name="name">Attributes Mapping</field>
-			<field name="model">basic.calendar.fields</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Attributes Mapping">
-					<field name="name" select="1" />
-					<field name="fn" select="1" />
-					<field name="field_id" select="1" />
-					<field name="expr" />
-				</tree>
-			</field>
-		</record>
+		
 
-		<record id="view_calendar_fields_type_from" model="ir.ui.view">
-			<field name="name">Attributes Type Form</field>
-			<field name="model">basic.calendar.fields.type</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Calendar Attributes">
-					<field name="name" required="1" select="1" />
-					<field name="object_id" required="1" select="1" />
-					<newline/>
-					<field name="mapping_ids" select="1" colspan="4" nolabel="1">
-						<tree string="Attributes Mapping" editable="bottom">
-							<field name="name" select="1" />
-							<field name="fn" select="1" />
-							<field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]" />
-							<field name="expr" />
-						</tree>
-						<form string="Attributes Mapping">
-							<field name="name" select="1" required="1" />
-							<field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]"
-								required="1" />
-							<field name="fn" select="1" required="1" />
-							<field name="expr" />
-							<newline />
-							<separator string="Mapping" colspan="4" />
-							<field name="mapping" select="1" colspan="4"
-								nolabel="1" />
-						</form>
-					</field>
-				</form>
-			</field>
-		</record>
-
-		<record id="view_calendar_fields_type_tree" model="ir.ui.view">
-			<field name="name">Attributes Type Tree</field>
-			<field name="model">basic.calendar.fields.type</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Calendar Attributes">
-					<field name="name" select="1" />
-					<field name="object_id" select="1" />
-				</tree>
-			</field>
-		</record>
-
-		<record id="action_view_calendar_fields_type" model="ir.actions.act_window">
-            <field name="name">Calendar Attributes</field>
+		<record id="action_view_calendar" model="ir.actions.act_window">
+            <field name="name">Calendar</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">basic.calendar.fields.type</field>
+            <field name="res_model">basic.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -88,9 +51,9 @@
 		<menuitem id="menu_calendar_configuration" name="Calendar"
 			parent="base.menu_base_config" sequence="10" />
 		
-		<menuitem id="menu_calendar_fields_type"
-			name="Calendar Attributes" parent="menu_calendar_configuration"
-			sequence="5" action="action_view_calendar_fields_type" />
+		<menuitem id="menu_calendar"
+			name="Calendar" parent="menu_calendar_configuration"
+			sequence="5" action="action_view_calendar" />
 
 	</data>
 </openerp>

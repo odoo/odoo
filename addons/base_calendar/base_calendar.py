@@ -243,7 +243,7 @@ class CalDAV(object):
         return res
 
 
-class Calendar(CalDAV, osv.osv_memory):
+class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
     __attribute__ = {
         'prodid': None, # Use: R-1, Type: TEXT, Specifies the identifier for the product that created the iCalendar object.
@@ -258,40 +258,50 @@ class Calendar(CalDAV, osv.osv_memory):
         'vfreebusy': None, # Use: O-n, Type: Collection of FreeBusy class
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
     }
+    _columns = {
+            'name': fields.char("Name", size=64),             
+            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines')
+    }
 
 Calendar()
 
     
-class basic_calendar_fields_type(osv.osv):
-    _name = 'basic.calendar.fields.type'
-    _description = 'Calendar fields type'
-
+class basic_calendar_line(osv.osv):
+    _name = 'basic.calendar.lines'
+    _description = 'Calendar Lines'    
     _columns = {
             'name': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
                                     ('alarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64), 
             'object_id': fields.many2one('ir.model', 'Object'), 
+            'calendar_id': fields.many2one('basic.calendar', 'Calendar', required=True),
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
-                }
+    }   
 
-basic_calendar_fields_type()
+basic_calendar_line()
+
+class basic_calendar_attribute(osv.osv):
+    _name = 'basic.calendar.attributes'
+    _description = 'Calendar attributes'
+    _columns = {        
+        'name': fields.char("Name", size=64, required=True),
+        'type': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+                                    ('alarm', 'Alarm'), \
+                                    ('attendee', 'Attendee')], \
+                                    string="Type", size=64, required=True),        
+    }
+
+basic_calendar_attribute()
 
 class basic_calendar_fields(osv.osv):
     _name = 'basic.calendar.fields'
     _description = 'Calendar fields'
-    
-    def _get_fields_selection(self, cr, uid, context=None):
-        res = []
-        # To check
-        res += map(lambda x: (x, x), Event.__attribute__.keys())
-        res += map(lambda x: (x, x), ToDo.__attribute__.keys())
-        return res
 
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Open ERP Field'),
-        'name': fields.selection(_get_fields_selection, string='Name', required=True),
-        'type_id': fields.many2one('basic.calendar.fields.type', 'Type', required=True),
+        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
+        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True),
+        'type_id': fields.many2one('basic.calendar.lines', 'Type', required=True),
         'expr': fields.char("Expression", size=64),
         'fn': fields.selection( [('field', 'Use the field'),
                         ('const', 'Expression as constant'),
