@@ -34,7 +34,7 @@ class document_change_type(osv.osv):
     _description = "Document Change Type"
     
     _columns = {
-        'name': fields.char("Document Change Type", size=64),
+        'name': fields.char("Document Change Type", size=64,required=True),
         'phase_type_ids': fields.many2many('document.change.process.phase.type','document_process__rel','type_id','change_id','Phase Type'),
         'template_document_id':fields.many2one('ir.attachment','Document')
     }
@@ -61,18 +61,20 @@ class doucment_change_process_phase(osv.osv):
     _description = "Document Change Process Phase"
     
     _columns = {
-        'name': fields.char("Name", size=64),
+        'name': fields.char("Name", size=64, required=True),
         'process_id':fields.many2one('document.change.process','Process Change'),
         'sequence': fields.integer('Sequence'),
-        'update_document': fields.selection([('at_endPhase', 'At EndPhase'),('at_endprocess', 'At EndPorcess')], 'Update Document', required=True),        
-        'type': fields.selection([('required', 'Control Required'),('no_control', 'Control')], 'Type', required=True),
+        'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Process')], 'Update Document', required=True),        
+        'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
-        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status'),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
     _defaults = {      
      'state': lambda *a: 'draft',
+     'update_document': lambda *a:'at_endPhase',
+     'type':lambda *a: 'no_control',
      }
 doucment_change_process_phase()
 
@@ -93,7 +95,7 @@ class document_file(osv.osv):
     
     _columns = {
         'type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status'),
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
     }
@@ -142,7 +144,7 @@ class doucment_change_process(osv.osv):
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
-        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status', readonly=True),
+        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status'),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),

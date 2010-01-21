@@ -143,6 +143,39 @@
     <menuitem name="Process Changes" id="menu_process_changes_config" parent="menu_configuration"/>
     <menuitem action="action_process_phase_type_form" id="menu_phase_type_form" parent="menu_process_changes_config"/>
     
+    <!-- Document Change Process Type -->
+       <record model="ir.ui.view" id="view_change_process_type_form">
+        <field name="name">document.change.process.type.form</field>
+        <field name="model">document.change.process.type</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Phase Types">
+	                <field name="name" select="1" string="Phase Type"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_change_processe_type_tree">
+        <field name="name">document.change.process.type.tree</field>
+        <field name="model">document.change.process.type</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Phase Types">
+                <field name="name" string="Phase Type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_change_process_type_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.type</field>
+        <field name="name">Process Type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <menuitem action="action_change_process_type_form" id="menu_change_process_type_form" parent="menu_process_changes_config"/>
+    
     <!-- 
     	Model of Changes 
     -->
@@ -296,7 +329,7 @@
 	                <newline/>
 	                <field name="update_document" string="Update documents"/>
 	                <field name="type" string="Type"/>
-	                <field name="date_control" string="Control date"/>
+	                <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
 	                <field name="phase_ids" string="Phase Type"/>
 	            </group>
 				<separator colspan="4" string="Documents"/>
