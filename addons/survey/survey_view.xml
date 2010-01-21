@@ -12,9 +12,9 @@
 <!--        <menuitem name="Configuration" id="menu_survey_config"
             parent="main_menu_survey" groups="group_survey_manager"/>-->
 	<menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="5"/>
-        <menuitem name="survey" id="menu_survey_config"
-            parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
+         id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="5"/>
+    <menuitem name="survey" id="menu_survey_config"
+        parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
         <!--
             Survey
         -->
@@ -958,10 +958,15 @@
                 <form string="Survey Request">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
+                    <field name="user_id" on_change="on_change_user(user_id)"/>
                     <field name="email"/>
-                    <field name="user_id"/>
-                    <field name="answer_ids" nolabel="1" colspan="4"/>
-                    <field name="state"/>
+					<field name="answer_ids" nolabel="1" colspan="4"/>
+                    <group colspan="4" col="5">
+                    	<field name="state"/>
+                        <button name="survey_req_waiting_answer" string="Set to Watting Answer" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
+                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                    </group>
                 </form>
             </field>
         </record>

@@ -145,7 +145,11 @@ class survey_browse_response(report_rml):
                                   </tr>
                                  </blockTable>"""
                         answer = surv_resp_line_obj.browse(cr,uid, surv_resp_line_obj.search(cr, uid, [('question_id','=',que.id),('response_id','=',response.id)]))
-                        if que.type in ['table']:
+                        if que.type in ['descriptive_text']:
+                            rml +="""<blockTable colWidths="500" style="Table1">
+                             <tr>  <td> <para style="response">""" + to_xml(que.descriptive_text) + """</para></td> </tr>
+                            </blockTable>"""
+                        elif que.type in ['table']:
                             if len(answer) and answer[0].state == "done":
                                 col_heading = pooler.get_pool(cr.dbname).get('survey.tbl.column.heading')
                                 cols_widhts = []
@@ -262,7 +266,7 @@ class survey_browse_response(report_rml):
                                         value = """"""
                                         for res_ans in answer[0].response_answer_ids:
                                             if res_ans.answer_id.id == ans.id and res_ans.answer == matrix_ans[mat_col]:
-                                                comment_value = """<para style="response">""" + to_xml(tools.ustr(res_ans.comment_field)) + """</para>"""
+                                                comment_value =  to_xml(tools.ustr(res_ans.comment_field))
                                                 if que.type in ['matrix_of_drop_down_menus']:
                                                     value = """<para style="response">""" + to_xml(tools.ustr(res_ans.value_choice)) + """</para>"""
                                                 elif que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
@@ -292,7 +296,9 @@ class survey_browse_response(report_rml):
                                                         </illustration>"""
                                         rml+= """<td>""" + value + """</td>"""
                                     if que.comment_column:
-                                        rml+= """<td>""" + comment_value + """</td>"""
+                                        if comment_value=='False':
+                                            comment_value = ''
+                                        rml+= """<td><para style="response">"""+ comment_value + """</para></td>"""
                                     rml+="""  </tr></blockTable>"""
                                 if que.comment_field_type:
                                     rml+="""<blockTable colWidths="500" style="Table1"><tr>

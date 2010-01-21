@@ -29,6 +29,7 @@ from tools.translate import _
 from lxml import etree
 from tools import to_xml
 import tools
+from mx.DateTime import *
 
 class survey(osv.osv):
     _name = 'survey'
@@ -735,7 +736,8 @@ class survey_question_wiz(osv.osv_memory):
                                 etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_" + tools.ustr(ans['id'])})
                                 fields[tools.ustr(que) + "_" + tools.ustr(ans['id'])] = {'type':'datetime', 'string':ans['answer']}
                         elif que_rec['type'] == 'descriptive_text':
-                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec['descriptive_text']))})
+                            for que_test in que_rec['descriptive_text'].split('\n'):
+                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
                         elif que_rec['type'] == 'single_textbox':
                             etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_single", 'nolabel':"1" ,'colspan':"4"})
                             fields[tools.ustr(que) + "_single"] = {'type':'char', 'size' : 255, 'string':"single_textbox", 'views':{}}
@@ -1341,14 +1343,37 @@ res_users()
 class survey_request(osv.osv):
     _name = "survey.request"
     _order = 'date_deadline'
+    _rec_name = 'date_deadline'
     _columns = {
         'date_deadline' : fields.date("Deadline date"),
         'user_id' : fields.many2one("res.users", "User"),
         'email' : fields.char("E-mail", size=64),
         'survey_id' : fields.many2one("survey", "Survey", required=1),
         'answer_ids' : fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'state' : fields.selection([('waitin_answer', 'Wating Answer'),('done', 'Done'),('cancelled', 'Cancelled')], 'State')
+        'state' : fields.selection([('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
     }
+    _defaults = {
+        'state' : lambda * a: 'waiting_answer',
+        'date_deadline' : lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+    }
+    def survey_req_waiting_answer(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
+        return True
+
+    def survey_req_done(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'done'})
+        return True
+
+    def survey_req_cancel(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'cancel'})
+        return True
+
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        if user_id:
+            user_obj = self.pool.get('res.users')
+            user = user_obj.browse(cr, uid, user_id)
+            return {'value': {'email': user.address_id.email}}
+        return {}
 
 survey_request()
 
