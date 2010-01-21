@@ -29,6 +29,7 @@ import datetime
 import time
 import random
 import tools
+from tools.translate import _
 
 ICS_TAGS = {
     'summary':'normal',

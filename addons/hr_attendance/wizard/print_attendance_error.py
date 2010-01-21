@@ -23,6 +23,7 @@
 import wizard
 import time
 import pooler
+from tools.translate import _
 
 _date_form = '''<?xml version="1.0"?>
 <form string="Select a time span">

@@ -23,6 +23,7 @@
 import wizard
 import datetime
 import pooler
+from tools.translate import _
 
 form='''<?xml version="1.0"?>
 <form string="Choose">
