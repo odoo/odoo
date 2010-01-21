@@ -36,7 +36,7 @@
             <separator colspan="4"
                        string="Your Logo - Use a size of about 450x150 pixels."/>
             <field colspan="4" name="logo" widget="image"
-                   nolabel="True"/>
+                   nolabel="1"/>
           </group>
 
           <xpath expr='//button[@name="action_skip"]' position='replace'/>
@@ -51,7 +51,7 @@
       <field name="view_id" ref="view_base_setup_company"/>
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
-      <field name="targer">new</field>
+      <field name="target">new</field>
     </record>
 
     <record id="base_setup_company_todo" model="ir.actions.todo">
