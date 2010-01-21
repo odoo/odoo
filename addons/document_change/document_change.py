@@ -31,6 +31,7 @@ class document_type(osv.osv):
     _description = "Document Type"
     _columns = {
         'name': fields.char("Document Type", size=64)
+        
     }
 document_type()
 class document_change_type(osv.osv):
@@ -39,7 +40,7 @@ class document_change_type(osv.osv):
     _columns = {
         'name': fields.char("Document Change Type", size=64),
         'phase_type_ids': many2many('document.change.process.phase.type'),
-        'template_document_id': many2one('ir.attachement')
+        'template_document_id': many2one('ir.attachement','Document')
     }
 document_change_type()
 
@@ -50,6 +51,7 @@ class doucment_change_process_phase_type(osv.osv):
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
         'document_type_ids': many2many('document.type','Document'),
+        
     }
 doucment_change_process_phase_type()
 
@@ -65,4 +67,15 @@ class document_change_process_model(osv.osv):
 document_change_process_model()
 
 
+class document_file(osv.osv):
+    _inherit = 'ir.attachment'
+    _columns = {
+        'type_id': many2one('document.change.type')
+    }
+document_file()
 
+class document_change_process_type(osv.osv):
+    _name = "document.change.process.type"
+    _description = "Document Change Process Type"    
+
+document_change_process_type()
