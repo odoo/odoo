@@ -135,7 +135,7 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
             'email':payload.email,
             'phone':payload.phone,
             'country_id':int(payload.country_id),
-            'state_id':int(payload.country_id),
+            'state_id':int(payload.state_id),
         }
 
         if company.partner_id.address:
