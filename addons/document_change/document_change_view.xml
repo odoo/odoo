@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+	<menuitem name="Process Changes" icon="terp-stock" id="menu_process_changes"/>
+    <menuitem name="Process Changes" id="menu_document_process_changes" parent="menu_process_changes"/>
+
+	<!-- 
+		Document Types 
+	-->
+	<record model="ir.ui.view" id="view_document_type_form">
+        <field name="name">document.type.form</field>
+        <field name="model">document.type</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Document Types">
+                <field name="name" select="1" colspan="4"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_document_type_tree">
+        <field name="name">document.type.tree</field>
+        <field name="model">document.type</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Document Types">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_type_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.type</field>
+        <field name="name">Document Types</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+    <!-- 
+    	Phase Types 
+    -->
+    <record model="ir.ui.view" id="view_process_phase_type_form">
+        <field name="name">document.change.process.phase.type.form</field>
+        <field name="model">document.change.process.phase.type</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Document Types">
+                <field name="name" select="1"/>
+                <field name="sequence"/>
+                <field name="document_type_ids" colspan="4"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_phase_type_tree">
+        <field name="name">document.change.process.phase.type.tree</field>
+        <field name="model">document.change.process.phase.type</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Document Types">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="document_type_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_process_phase_type_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.phase.type</field>
+        <field name="name">Phase Types</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    
+	<!-- 
+		Documents 
+	-->
+    <record model="ir.ui.view" id="view_document_form">
+        <field name="name">ir.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority" eval="1"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Files">
+                <group colspan="4" col="6">
+                    <field name="name" select="1" />
+                    <field name="parent_id"/>
+                    <field name="datas_fname"/>
+                    <field name="datas" filename="datas_fname"/>
+                </group>
+                <separator string="Change Control" colspan="4"/>
+                <field colspan="4" name="description" string="Change Note"/>
+                <group colspan="2" col="2">
+                    <separator string="Creation" colspan="2"/>
+                    <field name="create_uid" readonly="1"/>
+                    <field name="create_date" readonly="1"/>
+                </group>
+                <group colspan="2" col="2">
+                    <separator string="Latest Modification" colspan="2"/>
+                    <field name="write_date" readonly="1"/>
+                    <field name="write_uid" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_document_tree">
+        <field name="name">ir.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Files">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="datas_fname"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_type">form</field>
+    </record>
+    
+	<!-- 
+		Phases 
+	-->
+	<record model="ir.ui.view" id="view_process_phase_form">
+        <field name="name">document.change.process.phase.form</field>
+        <field name="model">document.change.process.phase</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Phases">
+                <field name="name" select="1"/>
+                <field name="" string="Process Change"/>
+                <field name="sequence"/>
+                <field name="" string="Update documents"/>
+                <field name="" string="Type"/>
+                <field name="" string="Control date"/>
+                <field name="" string="Phase Type"/>
+                <newline/>
+                <field name="" colspan="4" string="Documents"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_phase_tree">
+        <field name="name">document.change.process.phase.tree</field>
+        <field name="model">document.change.process.phase</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Phases">
+                <field name="name"/>
+                <field name="sequence"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_process_phase_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.phase</field>
+        <field name="name">Phases</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+	
+	<!-- 
+		Process Change
+	-->
+	<record model="ir.ui.view" id="view_process_form">
+        <field name="name">document.change.process.form</field>
+        <field name="model">document.change.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Process Change">
+                <field name="name" select="1"/>
+                <notebook>
+                	<page string="Process Definition">
+                	</page>
+                	<page string="Phases">
+                		editable o2m
+                	</page>
+                	<page string="Documents">
+                		m2m
+                	</page>
+                	<page string="Notifications">
+                		editable o2m
+                	</page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_tree">
+        <field name="name">document.change.process.tree</field>
+        <field name="model">document.change.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Process Change">
+                <field name="name"/>
+                <field name="sequence"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_process_calendar">
+        <field name="name">document.change.process.calendar</field>
+        <field name="model">document.change.process</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Process Change" date_start="" color="" date_delay="">
+                <field name="name"/>
+                
+            </calendar>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_process_graph">
+        <field name="name">document.change.process.graph</field>
+        <field name="model">document.change.process</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph orientation="horizontal" string="Process Change" type="bar">
+                <field name=""/>
+                <field name="" operator="+"/>
+                <field group="True" name=""/>
+            </graph>
+        </field>
+	</record>
+
+    <record model="ir.actions.act_window" id="action_process_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process</field>
+        <field name="name">Process Changes</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar,graph</field>
+    </record>
+    <menuitem action="view_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
+</data>
+</openerp>

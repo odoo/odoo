@@ -34,6 +34,7 @@ class document_type(osv.osv):
         
     }
 document_type()
+
 class document_change_type(osv.osv):
     _name = "document.change.type"
     _description = "Document Change Type"
