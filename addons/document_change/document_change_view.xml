@@ -9,7 +9,7 @@
 		Document Types 
 	-->
 	<record model="ir.ui.view" id="view_document_type_form">
-        <field name="name">document.type.form</field>
+        <field name="name">document.change.type.form</field>
         <field name="model">document.type</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -20,8 +20,8 @@
     </record>
 
     <record model="ir.ui.view" id="view_document_type_tree">
-        <field name="name">document.type.tree</field>
-        <field name="model">document.type</field>
+        <field name="name">document.change.type.tree</field>
+        <field name="model">document.change.type</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Document Types">
@@ -32,7 +32,7 @@
 
     <record model="ir.actions.act_window" id="action_document_type_form">
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">document.type</field>
+        <field name="res_model">document.change.type</field>
         <field name="name">Document Types</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

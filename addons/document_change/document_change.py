@@ -26,15 +26,6 @@ import netsvc
 from tools.translate import _
 
 
-class document_type(osv.osv):
-    _name = "document.type"
-    _description = "Document Type"
-    _columns = {
-        'name': fields.char("Document Type", size=64)
-        
-    }
-document_type()
-
 class document_change_type(osv.osv):
     _name = "document.change.type"
     _description = "Document Change Type"
@@ -56,6 +47,17 @@ class doucment_change_process_phase_type(osv.osv):
     }
 doucment_change_process_phase_type()
 
+
+class doucment_change_process_phase_type(osv.osv):
+    _name = "document.change.process.phase.type"
+    _description = "Document Change Process Phase Type"
+    _columns = {
+        'name': fields.char("Document Changed Process Type", size=64),
+        'sequence': fields.integer('Sequence'),
+        'document_type_ids': many2many('document.type','Document'),
+        
+    }
+doucment_change_process_phase_type()
 class document_change_process_model(osv.osv):
     _name = "document.change.process.model"
     _description = "Document Change Process model"
@@ -80,5 +82,5 @@ class document_change_process_type(osv.osv):
     _description = "Document Change Process Type"  
     _columns = {
         'name': fields.char("Changed Process Type", size=64),
-
+        }
 document_change_process_type()
