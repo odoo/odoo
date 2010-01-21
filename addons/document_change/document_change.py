@@ -83,7 +83,7 @@ class document_change_process_model(osv.osv):
     _columns = {
         'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
-        'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type', required=True),
+        'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type'),
         }
 document_change_process_model()
 
@@ -139,7 +139,7 @@ class doucment_change_process(osv.osv):
         'structure_id' :fields.many2one('document.directory','Structure ID'),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Change Owner'),
-        'create_date':fields.datetime('Creation'),
+        'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status', readonly=True),
