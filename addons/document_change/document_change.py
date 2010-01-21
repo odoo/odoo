@@ -57,7 +57,7 @@ class doucment_change_process_phase(osv.osv):
         'type': fields.selection([('required', 'Control Required'),('no_control', 'Control')], 'Type', required=True),
         'date': fields.date('Date', select=True),        
         'document_type_ids': many2many('document.type','Document'),
-        
+        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
     }
 doucment_change_process_phase()
 
@@ -77,7 +77,7 @@ class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _columns = {
         'type_id': many2one('document.change.type'),
-        'state': fields.selection([('changedrequest', 'Change Request'),('changedproposed', 'Change Proposed'), ('inproduction', 'In Production'), ('toupdate', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
     }
