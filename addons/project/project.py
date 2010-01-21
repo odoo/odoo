@@ -491,7 +491,7 @@ class task(osv.osv):
     def next_type(self, cr, uid, ids, *args):
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids)
+            types = map(lambda x:x.id, typ.project_id.type_ids or [])
             if types:
                 if not typeid:
                     self.write(cr, uid, typ.id, {'type': types[0]})
