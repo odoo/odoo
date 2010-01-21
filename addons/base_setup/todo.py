@@ -106,6 +106,46 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
     }
 
+    def execute(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, "We should only get one object from the form"
+        payload = self.browse(cr, uid, ids[0], context=context)
+        if not getattr(payload, 'company_id', None):
+            raise ValueError('Case where no default main company is setup '
+                             'not handled yet')
+
+        company = payload.company_id
+        company.write({
+            'name':payload.name,
+            'rml_header1':payload.rml_header1,
+            'rml_footer1':payload.rml_footer1,
+            'rml_footer2':payload.rml_footer2,
+            'logo':payload.logo,
+        })
+
+        company.partner_id.write({
+            'name':payload.name,
+        })
+
+        address_data = {
+            'name':payload.name,
+            'street':payload.street,
+            'street2':payload.street2,
+            'zip':payload.zip,
+            'city':payload.city,
+            'email':payload.email,
+            'phone':payload.phone,
+            'country_id':int(payload.country_id),
+            'state_id':int(payload.country_id),
+        }
+
+        if company.partner_id.address:
+            company.partner_id.address[0].write(
+                address_data)
+        else:
+            self.pool.get('res.partner.address').create(cr, uid,
+                    dict(address_data,
+                         partner_id=int(company.partner_id)),
+                    context=context)
 base_setup_company()
 
 
