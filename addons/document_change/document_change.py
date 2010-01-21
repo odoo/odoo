@@ -57,6 +57,7 @@ class doucment_change_process_phase(osv.osv):
     _description = "Document Change Process Phase"
     _columns = {
         'name': fields.char("Name", size=64),
+        'process_id':fields.many2one('document.change.process'),
         'sequence': fields.integer('Sequence'),
         'update_document': fields.selection([('at_endPhase', 'At EndPhase'),('at_endprocess', 'At EndPorcess')], 'Update Document', required=True),        
         'type': fields.selection([('required', 'Control Required'),('no_control', 'Control')], 'Type', required=True),
@@ -98,16 +99,28 @@ class document_change_process_type(osv.osv):
 document_change_process_type()
 
 class doucment_change_process(osv.osv):
+    
     _name = "document.change.process"
     _description = "Document Change Process"
+    def _latestmodification(self, cr, uid, ids, field_name, arg, context={}):
+        res = {}
+        #TODOto calculate latest modified date from all related documents
+        return res
+    
     _columns = {
         'name': fields.char("Process Change", size=64),
         'sequence': fields.integer('Sequence'),
         'process_type_id' :fields.many2one('change.process.type','Type Change'),
         'description': fields.char("Small Description", size=64),
         'change_description':fields.text('Changed Description'),
-        'structure_id' : many2one('document.directory','Structure ID'),
-        'process_model_id' : many2one('document.change.process.model','Process Model')
-        
+        'structure_id' :fields.many2one('document.directory','Structure ID'),
+        'process_model_id':fields.many2one('document.change.process.model','Process Model'),
+        'user_id':field.many2one('res.users','Change Owner'),
+        'create_date':fields.datetime('Creation'),
+        'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
+        'date_expected':fields.datetime('Expected Production'), 
+        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status', readonly=True),
+        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
+        'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'), 
     }
 doucment_change_process()
