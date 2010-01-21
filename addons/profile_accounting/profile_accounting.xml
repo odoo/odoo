@@ -8,14 +8,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Install Extra Modules
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Install Extra Modules</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    Install more modules. A few modules are proposed according
-                    to the Account Profile you selected. You will be able to
-                    install them based on our requirements."/>
+                  <label colspan="4" align="0.0"
+                         string="Install more modules. A few modules are proposed according to the Account Profile you selected. You will be able to install them based on our requirements."/>
                   <separator string="Accounting Management" colspan="4"/>
                   <field name="account_analytic_analysis"/>
                   <field name="account_analytic_plans"/>

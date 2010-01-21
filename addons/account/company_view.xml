@@ -25,11 +25,11 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Overdue Payment Report Message
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Overdue Payment Report Message</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                    <field name="company_id" select="1" 
+                    <field name="company_id" select="1"
                            on_change="onchange_company_id(company_id)"
                            groups="base.group_multi_company"/>
                     <separator string="Message" colspan="4"/>

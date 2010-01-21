@@ -7,13 +7,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Account Journal
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Account Journal</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    Set accounts on financial journals defined by CamptoCamp
-                    l10n_ch module"/>
+                  <label colspan="4" align="0.0"
+                         string="Set accounts on financial journals defined by CamptoCamp l10n_ch module"/>
                   <separator colspan="4"/>
                   <group colspan="4" col="6">
                     <field name="name" select="1"/>

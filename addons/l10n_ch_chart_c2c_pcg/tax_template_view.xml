@@ -14,13 +14,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Account tax template
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Account tax template</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    Set account on financial taxes defined by 
-                    Camptocamp l10n_ch_c2c_pcg module"/>
+                  <label colspan="4" align="0.0"
+                         string="Set account on financial taxes defined by Camptocamp l10n_ch_c2c_pcg module"/>
                   <group colspan="4" col="6">
                     <field name="name" select="1"/>
                   </group>
