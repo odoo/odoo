@@ -127,7 +127,7 @@ class doucment_change_process(osv.osv):
         return res
     
     _columns = {
-        'name': fields.char("Process Change", size=64),
+        'name': fields.char("Process Change", size=64, required=True, select=True),
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
         'description': fields.char("Small Description", size=64),
         'change_description':fields.text('Changed Description'),
@@ -142,6 +142,9 @@ class doucment_change_process(osv.osv):
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),
         'email_notification_ids':fields.one2many('document.change.process.mail','process_id','Notifications'),        
-       
     }
+    _defaults = {      
+      'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
+      }
+    
 doucment_change_process()

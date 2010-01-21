@@ -32,7 +32,8 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document_ftp','mail_gateway'],
     'init_xml': [],
-    'update_xml': ['document_change_view.xml'
+    'update_xml': ['document_change_view.xml',
+                   'document_change_sequence.xml'
        
     ],
     'demo_xml': [ ],
