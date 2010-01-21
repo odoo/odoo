@@ -58,6 +58,12 @@
     <menuitem name="Structure" id="menu_document_structure_config" parent="menu_configuration"/>
     <menuitem action="action_document_structure_form" id="menu_structure_form" parent="menu_document_structure_config"/>
 	
+	<act_window domain="[('structure_id', '=', active_id)]" 
+		id="act_structure_process_changes" 
+		name="Process Changes" 
+		res_model="document.change.process" 
+		src_model="document.directory"/>
+	
 	<!-- 
 		Document Types 
 	-->
@@ -332,6 +338,12 @@
     </record>	
 	<menuitem action="action_process_phase_form_validate" id="menu_phases_to_validate_form" parent="menu_change_control"/>
 	
+	<act_window domain="[('type_id', '=', active_id)]" 
+		id="act_documents_phases" 
+		name="Documents" 
+		res_model="ir.attachment" 
+		src_model="document.change.process.phase"/>
+	
 	<!--
 	Process Change
 	-->
@@ -427,33 +439,7 @@
         </field>
     </record>
 
-  <!--  <record model="ir.ui.view" id="view_process_calendar">
-        <field name="name">document.change.process.calendar</field>
-        <field name="model">document.change.process</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Process Change" date_start="create_date" color="process_type_id" date_delay="latest_modified_date">
-                <field name="name"/>
-                <field name="process_type_id"/>
-                <field name="structure_id"/>
-            </calendar>
-        </field>
-    </record>
-    -->
-    <!--record model="ir.ui.view" id="view_process_graph">
-        <field name="name">document.change.process.graph</field>
-        <field name="model">document.change.process</field>
-        <field name="type">graph</field>
-        <field name="arch" type="xml">
-            <graph orientation="horizontal" string="Process Change" type="bar">
-                <field name=""/>
-                <field name="" operator="+"/>
-                <field group="True" name=""/>
-            </graph>
-        </field>
-	</record>
--->
+  
     <record model="ir.actions.act_window" id="action_process_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.process</field>
@@ -472,5 +458,18 @@
         <field name="domain">[('state','=','draft')]</field>
     </record>	
 	<menuitem action="action_process_change_form_validate" id="menu_process_to_validate_form" parent="menu_change_control"/>
+	
+	<act_window domain="[('phase_ids', '=', active_id)]" 
+		id="act_phase_change_process" 
+		name="Phases" 
+		res_model="document.change.process.phase" 
+		src_model="document.change.process"/>
+	
+	<act_window domain="[('type_id', '=', active_id)]" 
+		id="act_documents_change_process" 
+		name="Documents" 
+		res_model="ir.attachment" 
+		src_model="document.change.process"/>
+	
 </data>
 </openerp>
