@@ -113,7 +113,7 @@
                     <field name="title" select="1" />
                     <field name="category_id" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="my_vote"/>
+                    <!--<field name="my_vote"/>-->
                     <field name="vote_avg" />
                     <field name="description" colspan="4" select="2" widget="text_wiki"/>
                     <field name="state" select="2"/>
@@ -130,6 +130,9 @@
                             <field name="content" nolabel="1" />
                         </form>
                     </field>
+                </page>
+                <page string="Vote">
+                    <field name="vote_ids" nolabel="1" colspan="4" />
                 </page>
                 <page string="Statistics">
                     <field name="stat_vote_ids" colspan="4" mode="graph,tree" nolabel="1">
@@ -161,6 +164,7 @@
             <field name="vote_avg" />
             <field name="count_comments" />
             <field name="count_votes" />
+            <button name="%(wizard_idea_post_vote)d" icon="gtk-execute" type="action" states="draft,open" string="Vote"/>
         </tree>
         </field>
     </record>
@@ -204,7 +208,7 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_idea_idea_search"/>
     </record>
-    <menuitem name="All Ideas" parent="menu_ideas1" id="menu_idea_idea" action="action_idea_idea"/>
+    <menuitem name="Ideas" parent="menu_ideas1" id="menu_idea_idea" action="action_idea_idea"/>
 
     <record model="ir.actions.act_window" id="action_idea_idea_open">
         <field name="name">Open Ideas</field>

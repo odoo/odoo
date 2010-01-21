@@ -174,6 +174,7 @@ class idea_vote(osv.osv):
         'score': fields.selection( VoteValues, 'Score', required=True)
     }
     _defaults = {
+        #'user_id': lambda self, cr, uid, context: uid,
         'score': lambda *a: DefaultVoteValue,
     }
 idea_vote()
