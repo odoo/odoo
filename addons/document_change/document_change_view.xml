@@ -247,6 +247,28 @@
     </record>
     <menuitem action="action_document_form" id="menu_documents_form" parent="menu_document_process_changes"/>
     
+    <record model="ir.actions.act_window" id="action_document_without_type_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="name">Documents Without Type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_document_tree"/>
+        <field name="domain">[]</field>
+    </record>
+    <menuitem action="action_document_without_type_form" id="menu_documents_without_type_form" parent="menu_change_control"/>
+    
+    <record model="ir.actions.act_window" id="action_document_to_update_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="name">Documents to Update</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_document_tree"/>
+        <field name="domain">[]</field>
+    </record>
+    <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
+	
 	<!-- 
 		Phases 
 	-->
@@ -293,7 +315,16 @@
         <field name="view_mode">tree,form</field>
     </record>
 	<menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
-	
+
+	<record model="ir.actions.act_window" id="action_process_phase_form_validate">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.phase</field>
+        <field name="name">Phases to Validate</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+    </record>	
+	<menuitem action="action_process_phase_form_validate" id="menu_phases_to_validate_form" parent="menu_change_control"/>
 	<!--
 	Process Change
 	-->
@@ -337,7 +368,7 @@
                 			<form string="Process Phases">
                 				<field name="name"/>
                 				<field name="type"/>
-                				<field name="phase_document_ids"/>
+                				<field name="phase_document_ids" colspan="4"/>
                 				<field name="state"/>
                 			</form>
                 		</field>
@@ -411,5 +442,15 @@
         <field name="view_mode">tree,form,calendar,graph</field>
     </record>
     <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
+    
+    <record model="ir.actions.act_window" id="action_process_change_form_validate">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process</field>
+        <field name="name">Process Changes to Validate</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft')]</field>
+    </record>	
+	<menuitem action="action_process_change_form_validate" id="menu_process_to_validate_form" parent="menu_change_control"/>
 </data>
 </openerp>

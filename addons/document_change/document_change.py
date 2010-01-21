@@ -69,7 +69,7 @@ class doucment_change_process_phase(osv.osv):
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
-        'phase_document_ids':fields.many2many('ir.attachment','Document','phase_document_rel','phase_id','document_id','Phase Type'),
+        'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
 doucment_change_process_phase()
 
