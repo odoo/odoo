@@ -258,9 +258,9 @@
     </record>
 	<menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
 	
-	<!-- 
-		Process Change
-	
+	 
+		<!--Process Change-->
+	<!--
 	<record model="ir.ui.view" id="view_process_form">
         <field name="name">document.change.process.form</field>
         <field name="model">document.change.process</field>
@@ -268,17 +268,24 @@
         <field name="arch" type="xml">
             <form string="Process Change">
                 <field name="name" select="1"/>
+                <field name="process_type_id" select="1"/>
+                <field name="structure_id" select="1"/>
+                <field name="description"/>
+                <field name="process_model_id"/>
                 <notebook>
                 	<page string="Process Definition">
+                	<field name="user_id"/>
+                	<field name="create_date"/>
+                	<field name="latest_modified_date"/>
+                	<field name="date_expected"/>
                 	</page>
+                	<field name="change_description" colspan="4" select="2"/>
+                	<field name="state"/>
                 	<page string="Phases">
-                		<field name="process_id"/>
+                		<field name="process_phase_ids"/>
                 	</page>
                 	<page string="Documents">
-                		m2m
-                	</page>
-                	<page string="Notifications">
-                		editable o2m
+                		<field name="process_document_ids"/>
                 	</page>
                 </notebook>
             </form>

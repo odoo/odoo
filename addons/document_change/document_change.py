@@ -32,6 +32,7 @@ doucment_change_process_phase_type()
 class document_change_type(osv.osv):
     _name = "document.change.type"
     _description = "Document Change Type"
+    
     _columns = {
         'name': fields.char("Document Change Type", size=64),
         'phase_type_ids': fields.many2many('document.change.process.phase.type','document_process__rel','type_id','change_id','Phase Type'),
@@ -42,6 +43,7 @@ document_change_type()
 class doucment_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
     _description = "Document Change Process Phase Type"
+    
     _columns = {
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
@@ -57,6 +59,7 @@ doucment_change_process()
 class doucment_change_process_phase(osv.osv):
     _name = "document.change.process.phase"
     _description = "Document Change Process Phase"
+    
     _columns = {
         'name': fields.char("Name", size=64),
         'process_id':fields.many2one('document.change.process','Process Change'),
@@ -73,6 +76,7 @@ doucment_change_process_phase()
 class document_change_process_model(osv.osv):
     _name = "document.change.process.model"
     _description = "Document Change Process model"
+    
     _columns = {
         'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
@@ -84,6 +88,7 @@ document_change_process_model()
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
+    
     _columns = {
         'type_id':fields.many2one('document.change.type','Document Type'),
         'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
@@ -95,6 +100,7 @@ document_file()
 class document_change_process_type(osv.osv):
     _name = "document.change.process.type"
     _description = "Document Change Process Type"  
+    
     _columns = {
         'name': fields.char("Changed Process Type", size=64),
         }
@@ -104,6 +110,7 @@ class doucment_change_process(osv.osv):
     
     _name = "document.change.process"
     _description = "Document Change Process"
+    
     def _latestmodification(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
         #TODOto calculate latest modified date from all related documents
@@ -111,7 +118,6 @@ class doucment_change_process(osv.osv):
     
     _columns = {
         'name': fields.char("Process Change", size=64),
-        'sequence': fields.integer('Sequence'),
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
         'description': fields.char("Small Description", size=64),
         'change_description':fields.text('Changed Description'),
