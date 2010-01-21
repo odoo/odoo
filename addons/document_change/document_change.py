@@ -47,8 +47,8 @@ class doucment_change_process_phase_type(osv.osv):
     _columns = {
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
+        'active': fields.boolean('Active'),
         'document_type_ids': fields.many2many('document.change.type','document_phase_process__rel','phase_id','document_id','Document'),
-        
     }
 doucment_change_process_phase_type()
 

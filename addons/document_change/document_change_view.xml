@@ -101,9 +101,12 @@
         <field name="model">document.change.process.phase.type</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Document Types">
-                <field name="name" select="1" string="Phase Type"/>
-                <field name="sequence"/>
+            <form string="Phase Types">
+            	<group colspan="4" col="6">
+	                <field name="name" select="1" string="Phase Type"/>
+	                <field name="sequence"/>
+	                <field name="active"/>
+	            </group>
                 <separator string="Associated Document Types" colspan="4"/>
                 <field name="document_type_ids" colspan="4" nolabel="1"/>
             </form>
@@ -115,9 +118,9 @@
         <field name="model">document.change.process.phase.type</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Document Types">
-                <field name="name"/>
-                <field name="sequence"/>
+            <tree string="Phase Types">
+				<field name="sequence"/>
+                <field name="name" string="Phase Type"/>
                 <field name="document_type_ids"/>
             </tree>
         </field>
@@ -325,6 +328,7 @@
         <field name="domain">[('state','=','draft')]</field>
     </record>	
 	<menuitem action="action_process_phase_form_validate" id="menu_phases_to_validate_form" parent="menu_change_control"/>
+	
 	<!--
 	Process Change
 	-->
@@ -407,21 +411,22 @@
             </tree>
         </field>
     </record>
-    
+
   <!--  <record model="ir.ui.view" id="view_process_calendar">
         <field name="name">document.change.process.calendar</field>
         <field name="model">document.change.process</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Process Change" date_start="" color="" date_delay="">
+            <calendar string="Process Change" date_start="create_date" color="process_type_id" date_delay="latest_modified_date">
                 <field name="name"/>
-                
+                <field name="process_type_id"/>
+                <field name="structure_id"/>
             </calendar>
         </field>
     </record>
     
-    <record model="ir.ui.view" id="view_process_graph">
+    <!--record model="ir.ui.view" id="view_process_graph">
         <field name="name">document.change.process.graph</field>
         <field name="model">document.change.process</field>
         <field name="type">graph</field>
