@@ -1818,8 +1818,8 @@ class orm(orm_template):
             qu1 = ' where '+string.join(qu1, ' and ')
         else:
             qu1 = ''
-#        limit_str = limit and ' limit %d' % limit or ''
-#        offset_str = offset and ' offset %d' % offset or ''
+        limit_str = limit and ' limit %d' % limit or ''
+        offset_str = offset and ' offset %d' % offset or ''
 
         float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
         sum = {}
@@ -1828,7 +1828,7 @@ class orm(orm_template):
             if f not in ['id','sequence']:
                 flist += ',sum('+f+') as '+f
 
-        cr.execute('select '+flist+' from ' + self._table +qu1+' group by '+groupby,qu2)
+        cr.execute('select '+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
         parent_res = cr.fetchall()
         try:
             parent_res = [(m[0],m[1]) for m in parent_res if m[0]]
