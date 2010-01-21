@@ -259,7 +259,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_document_tree"/>
-        <field name="domain">[]</field>
+        <field name="domain">[('type_id','=',',False)]</field>
     </record>
     <menuitem action="action_document_without_type_form" id="menu_documents_without_type_form" parent="menu_change_control"/>
     
