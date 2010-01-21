@@ -493,7 +493,9 @@ class task(osv.osv):
             typeid = typ.type.id
             types = map(lambda x:x.id, typ.project_id.type_ids)
             if types:
-                if typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                if not typeid:
+                    self.write(cr, uid, typ.id, {'type': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
                     self.write(cr, uid, typ.id, {'type': types[index+1]})
         return True
