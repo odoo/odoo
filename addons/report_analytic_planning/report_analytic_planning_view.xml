@@ -217,12 +217,13 @@
 			<field name="view_mode">tree,form</field>
 			<field name="search_view_id" ref="account_analytic_planning_view_search"/>
 		</record>
-		<menuitem id="menu_pm_planning" name="Planning" parent="project.menu_main" sequence="5"/>
+		<menuitem id="base.menu_pm_planning" name="Planning" parent="project.menu_main" sequence="5"/>
 		<menuitem id="planning_main" name="Long Term Planning"
-			parent="menu_pm_planning" />
+			parent="base.menu_pm_planning" />
 
 		<menuitem action="action_account_analytic_planning_form"
 			id="menu_report_account_analytic_planning" parent="planning_main" />
+		<menuitem action="resource.action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="planning_main" />
 
 		<!--
 			Planning statistics

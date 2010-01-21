@@ -92,10 +92,9 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        domain="[('phase_id','=',active_id)]"/>
-        
-        <menuitem id="project.menu_all_project" parent="project.menu_main" name="Projects"/>
-        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_all_project"/>
+        domain="[('phase_id','=',active_id)]"/>        
+
+        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
 
 
     </data>

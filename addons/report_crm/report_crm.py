@@ -106,7 +106,7 @@ class report_crm_case_section(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
-    _order = 'name desc, section_id'
+    _order = 'name desc'
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_crm_case_section')
         cr.execute("""
@@ -119,7 +119,7 @@ class report_crm_case_section(osv.osv):
                     c.section_id as section_id
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date, 'MM'),c.section_id
+                group by to_char(c.create_date, 'YYYY'),to_char(c.create_date, 'MM'), c.section_id
             )""")
 report_crm_case_section()
 
@@ -135,7 +135,7 @@ class report_crm_case_service_dashboard(osv.osv):
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
-    _order = 'date_closed, create_date'
+    _order = 'create_date'
     
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (

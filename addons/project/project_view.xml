@@ -151,14 +151,14 @@
         <!--<menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
-            <field name="name">All projects</field>
+            <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <!--<menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/> -->
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
@@ -503,7 +503,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
-		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
+		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks" sequence="2"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>

@@ -76,11 +76,11 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_project_form"/>
         </record>
-
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
             id="next_id_86"
             name="Project"
-            parent="board.dashboard"/>
+            parent="base.dashboard"/>
         <menuitem
             action="open_board_project"
             icon="terp-graph"
