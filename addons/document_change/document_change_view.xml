@@ -3,14 +3,55 @@
 <data>
 
 	<menuitem name="Process Changes" icon="terp-stock" id="menu_process_changes"/>
-    <menuitem name="Process Changes" id="menu_document_process_changes" parent="menu_process_changes"/>
-
+	
+	<menuitem name="Process Changes" id="menu_document_process_changes" parent="menu_process_changes"/>
+	<menuitem name="Change Control" id="menu_change_control" parent="menu_process_changes"/>
+	<menuitem name="Reporting" id="menu_reporting" parent="menu_process_changes"/>
+	<menuitem name="Configuration" id="menu_configuration" parent="menu_process_changes"/>
+	
+	<!--    
+		Structure
+	-->
+    <record model="ir.ui.view" id="view_document_structure_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+        	<form string="Structure">
+	        	<field name="name"/>
+	        	<field name="parent_id"/>
+        	</form>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_document_structure_tree">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+        	<tree string="Structure">
+	        	<field name="name"/>
+	        	<field name="parent_id"/>
+	        </tree>
+        </field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="action_document_structure_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.directory</field>
+        <field name="name">Structure</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Structure" id="menu_document_structure_config" parent="menu_configuration"/>
+    <menuitem action="action_document_structure_form" id="menu_structure_form" parent="menu_document_structure_config"/>
+	
 	<!-- 
 		Document Types 
 	-->
 	<record model="ir.ui.view" id="view_document_type_form">
         <field name="name">document.change.type.form</field>
-        <field name="model">document.type</field>
+        <field name="model">document.change.type</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Document Types">
@@ -37,7 +78,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    
+    <menuitem name="Documents" id="menu_document_type_config" parent="menu_configuration"/>
+    <menuitem action="action_document_type_form" id="menu_document_type_form" parent="menu_document_type_config"/>
+	    
     <!-- 
     	Phase Types 
     -->
@@ -70,10 +113,51 @@
     <record model="ir.actions.act_window" id="action_process_phase_type_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.process.phase.type</field>
-        <field name="name">Phase Types</field>
+        <field name="name">Types of Phases</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+    
+    <menuitem name="Process Changes" id="menu_process_changes_config" parent="menu_configuration"/>
+    <menuitem action="action_process_phase_type_form" id="menu_phase_type_form" parent="menu_process_changes_config"/>
+    
+    <!-- 
+    	Model of Changes 
+    -->
+    <record model="ir.ui.view" id="view_model_change_form">
+        <field name="name">document.change.process.model.form</field>
+        <field name="model">document.change.process.model</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Model of Changes">
+                <field name="name" select="1"/>
+                <field name="sequence"/>
+                <field name="phase_type_ids" colspan="4"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_model_change_form">
+        <field name="name">document.change.process.model.tree</field>
+        <field name="model">document.change.process.model</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Model of Changes">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="phase_type_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_model_change_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.model</field>
+        <field name="name">Model of Changes</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem action="action_model_change_form" id="menu_model_change_form" parent="menu_process_changes_config"/>
     
 	<!-- 
 		Documents 
@@ -84,7 +168,7 @@
         <field name="priority" eval="1"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Files">
+            <form string="Documents">
                 <group colspan="4" col="6">
                     <field name="name" select="1" />
                     <field name="parent_id"/>
@@ -125,8 +209,10 @@
     <record model="ir.actions.act_window" id="action_document_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
+        <field name="name">Documents</field>
         <field name="view_type">form</field>
     </record>
+    <menuitem action="action_document_form" id="menu_documents_form" parent="menu_document_process_changes"/>
     
 	<!-- 
 		Phases 
@@ -146,6 +232,7 @@
                 <field name="" string="Phase Type"/>
                 <newline/>
                 <field name="" colspan="4" string="Documents"/>
+                <field name="state"/>
             </form>
         </field>
     </record>
@@ -169,6 +256,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+	<menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
 	
 	<!-- 
 		Process Change
@@ -242,6 +330,6 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
     </record>
-    <menuitem action="view_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
+    <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
 </data>
 </openerp>
