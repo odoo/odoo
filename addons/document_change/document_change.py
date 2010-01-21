@@ -47,18 +47,6 @@ class doucment_change_process_phase_type(osv.osv):
     }
 doucment_change_process_phase_type()
 
-
-class doucment_change_process_phase_type(osv.osv):
-    _name = "document.change.process.phase.type"
-    _description = "Document Change Process Phase Type"
-    _columns = {
-        'name': fields.char("Document Changed Process Type", size=64),
-        'sequence': fields.integer('Sequence'),
-        'document_type_ids': many2many('document.type','Document'),
-        
-    }
-doucment_change_process_phase_type()
-
 class doucment_change_process_phase(osv.osv):
     _name = "document.change.process.phase"
     _description = "Document Change Process Phase"
