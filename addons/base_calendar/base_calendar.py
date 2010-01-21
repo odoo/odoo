@@ -145,8 +145,6 @@ class CalDAV(object):
                         val = ','.join(map(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'), val))
                     else:
                         val = val.strftime('%Y-%m-%d %H:%M:%S')
-                if valtype and valtype == 'integer' and val:
-                    val = int(val)
             return  val
         else:
             return  self.__attribute__.get(name, None)
@@ -194,7 +192,7 @@ class CalDAV(object):
                         vevent = alarm_obj.export_ical(cr, uid, model, \
                                     data[map_field][0], vevent, context=context)
                     elif data[map_field]:
-                        if map_type == "text":
+                        if map_type in ("char", "text"):
                             vevent.add(field).value = str(data[map_field])
                         elif map_type == 'datetime' and data[map_field]:
                             if field in ('exdate'):
@@ -205,13 +203,19 @@ class CalDAV(object):
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
                             vevent.add(field).value = [data.get(map_field)[1]]
-                        if self.__attribute__.get(field).has_key('mapping'):
-                            for key1, val1 in self.ical_get(field, 'mapping').items():
-                                if val1 == data[map_field]:
-                                    vevent.add(field).value = key1
+                        elif map_type in ("float", "integer"):
+                            vevent.add(field).value = [data.get(map_field)]
+                        elif map_type == "selection":
+                            if not self.ical_get(field, 'mapping'):
+                                vevent.add(field).value = (data[map_field]).upper()
+                            else:
+                                for key1, val1 in self.ical_get(field, 'mapping').items():
+                                    if val1 == data[map_field]:
+                                        vevent.add(field).value = key1
         return ical
 
     def import_ical(self, cr, uid, ical_data):
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name)
         parsedCal = vobject.readOne(ical_data)
         att_data = []
         res = []

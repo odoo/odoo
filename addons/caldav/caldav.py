@@ -733,7 +733,7 @@ class calendar_todo(osv.osv):
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
             if not val.has_key('planned_hours'):
                 # 'Computes duration' in days
-                start = datetime.strptime(val['date_start'], '%Y-%m-%d %H:%M:%S')
+                start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
                 end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
                 diff = end - start
                 plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
@@ -759,7 +759,7 @@ class calendar_todo(osv.osv):
                 task.pop('planned_hours')
             tasks.append(task)
         todo_obj = self.pool.get('basic.calendar.todo')
-        ical = todo_obj.export_ical(cr, uid, tasks, {'model': 'project.task'})
+        ical = todo_obj.export_ical(cr, uid, tasks, context={'model': self._name})
         calendar_val = ical.serialize()
         calendar_val = calendar_val.replace('"', '').strip()
         return calendar_val
