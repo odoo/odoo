@@ -258,7 +258,7 @@
             <form string="Phases">
 				<group colspan="4" col="6">            
 	                <field name="name" select="1"/>
-	                <!--<field name="" string="Process Change"/>-->
+	                <field name="process_id" string="Process Change"/>
 	                <field name="sequence"/>
 	                <newline/>
 	                <field name="update_document" string="Update documents"/>
@@ -294,35 +294,65 @@
     </record>
 	<menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
 	
-	 
-		<!--Process Change-->
 	<!--
+	Process Change
+	-->
 	<record model="ir.ui.view" id="view_process_form">
         <field name="name">document.change.process.form</field>
         <field name="model">document.change.process</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Change">
-                <field name="name" select="1"/>
-                <field name="process_type_id" select="1"/>
-                <field name="structure_id" select="1"/>
-                <field name="description"/>
-                <field name="process_model_id"/>
-                <notebook>
+            	<group colspan="4" col="6">
+	                <field name="name" select="1"/>
+	                <field name="process_type_id" widget="selection" select="1"/>
+	                <field name="structure_id" select="1"/>
+	                <newline/>
+	                <field name="description"/>
+	                <field name="process_model_id"/>
+	            </group>
+                <notebook colspan="4">
                 	<page string="Process Definition">
-                	<field name="user_id"/>
-                	<field name="create_date"/>
-                	<field name="latest_modified_date"/>
-                	<field name="date_expected"/>
+                		<group col="2" colspan="2">
+                			<separator string="Responsibles" colspan="2"/>
+                			<field name="user_id"/>
+                		</group>
+                		<group col="2" colspan="2">
+                			<separator string="Dates" colspan="2"/>
+                			<field name="create_date"/>
+                			<field name="latest_modified_date"/>
+                			<field name="date_expected"/>
+                		</group>
+                		<field name="change_description" colspan="4"/>
+                		<field name="state"/>
                 	</page>
-                	<field name="change_description" colspan="4" select="2"/>
-                	<field name="state"/>
                 	<page string="Phases">
-                		<field name="process_phase_ids"/>
+                		<field name="process_phase_ids" mode="tree,form" widget="one2many_list" nolabel="1">
+                			<tree string="Process Phases" editable="True">
+                				<field name="name"/>
+                				<field name="type"/>
+                				<field name="phase_document_ids"/>
+                				<field name="state"/>
+                			</tree>
+                			<form string="Process Phases">
+                				<field name="name"/>
+                				<field name="type"/>
+                				<field name="phase_document_ids"/>
+                				<field name="state"/>
+                			</form>
+                		</field>
                 	</page>
                 	<page string="Documents">
-                		<field name="process_document_ids"/>
+                		<field name="process_document_ids" colspan="4" nolabel="1"/>
                 	</page>
+                	<!--page string="Notifications">
+                		<field name="email_notification_ids mode="tree,form" widget="one2many_list" nolabel="1">
+                			<tree string="Notifications" editable="True">
+                			</tree>
+                			<form string="Notifications">
+                			</form>
+                		</field>
+                 	</page-->
                 </notebook>
             </form>
         </field>
@@ -335,12 +365,15 @@
         <field name="arch" type="xml">
             <tree string="Process Change">
                 <field name="name"/>
-                <field name="sequence"/>
+                <field name="process_type_id"/>
+                <field name="structure_id"/>
+                <field name="description"/>
+                <field name="process_model_id"/>
             </tree>
         </field>
     </record>
     
-    <record model="ir.ui.view" id="view_process_calendar">
+    <!--record model="ir.ui.view" id="view_process_calendar">
         <field name="name">document.change.process.calendar</field>
         <field name="model">document.change.process</field>
         <field name="type">calendar</field>
@@ -364,7 +397,7 @@
                 <field group="True" name=""/>
             </graph>
         </field>
-	</record>
+	</record-->
 
     <record model="ir.actions.act_window" id="action_process_form">
         <field name="type">ir.actions.act_window</field>
@@ -373,6 +406,6 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
     </record>
-    <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>-->
+    <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
 </data>
 </openerp>
