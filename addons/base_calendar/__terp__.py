@@ -38,10 +38,12 @@
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
-    "init_xml" : ["base_calendar_data.xml"], 
+    "init_xml" : [], 
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
+                    'base_calendar_wizard.xml', 
+                    'base_calendar_view.xml'
                     ], 
     "installable" : True, 
     "active" : False, 

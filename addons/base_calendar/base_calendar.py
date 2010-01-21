@@ -71,8 +71,8 @@ def get_attribute_mapping(cr, uid, model, context={}):
             res[attr]['type'] = field.field_id.ttype
             if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
                 res[attr]['object'] = field.field_id.relation
-            elif res[attr]['type'] in ('selection') and field.info:
-                res[attr]['mapping'] = eval(field.info)
+            elif res[attr]['type'] in ('selection') and field.mapping:
+                res[attr]['mapping'] = eval(field.mapping)
         return res
 
 def map_data(cr, uid, obj):
@@ -261,14 +261,18 @@ class Calendar(CalDAV, osv.osv_memory):
 
 Calendar()
 
-
+    
 class basic_calendar_fields_type(osv.osv):
     _name = 'basic.calendar.fields.type'
     _description = 'Calendar fields type'
 
     _columns = {
-                'name': fields.char('Name', size=64), 
-                'object_id': fields.many2one('ir.model', 'Object'), 
+            'name': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+                                    ('alarm', 'Alarm'), \
+                                    ('attendee', 'Attendee')], \
+                                    string="Type", size=64), 
+            'object_id': fields.many2one('ir.model', 'Object'), 
+            'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
                 }
 
 basic_calendar_fields_type()
@@ -276,23 +280,30 @@ basic_calendar_fields_type()
 class basic_calendar_fields(osv.osv):
     _name = 'basic.calendar.fields'
     _description = 'Calendar fields'
-    _rec_name = 'attribute_id'
+    
+    def _get_fields_selection(self, cr, uid, context=None):
+        res = []
+        # To check
+        res += map(lambda x: (x, x), Event.__attribute__.keys())
+        res += map(lambda x: (x, x), ToDo.__attribute__.keys())
+        return res
 
     _columns = {
-            'attribute_id': fields.many2one('basic.calendar.fields.type', \
-                                    'Attribute', size=64), 
-            'attribute': fields.related('attribute_id', 'name', size=64, \
-                                 type='char', string='Attribute Name', \
-                                 store=True), 
-            'object_id': fields.related('attribute_id', 'object_id', \
-                             type='many2one', relation='ir.model', store=True,\
-                             string='Object'), 
-            'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'), 
-            'info': fields.text('Other info'), 
-            'value': fields.text('Value', help="For some attribute that \
-have some default value"), 
-            }
+        'field_id': fields.many2one('ir.model.fields', 'Open ERP Field'),
+        'name': fields.selection(_get_fields_selection, string='Name', required=True),
+        'type_id': fields.many2one('basic.calendar.fields.type', 'Type', required=True),
+        'expr': fields.char("Expression", size=64),
+        'fn': fields.selection( [('field', 'Use the field'),
+                        ('const', 'Expression as constant'),
+                        ('hours', 'Interval in hours'),
+                        ],'Function'), 
+        'mapping': fields.text('Mapping'), 
+    }
 
+    _defaults = {
+        'fn': lambda *a: 'field',
+    }
+    
 basic_calendar_fields()
 
 class Event(CalDAV, osv.osv_memory):

@@ -61,6 +61,6 @@ class cal_event_export_wizard(wizard.interface):
                             ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
-cal_event_export_wizard('caldav.event.export')
+cal_event_export_wizard('calendar.event.export')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
