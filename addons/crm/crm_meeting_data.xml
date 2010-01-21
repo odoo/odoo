@@ -1,30 +1,50 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
-    
+	<data noupdate="1">
+
         <!--    CASE CATEGORY(categ_id)        -->
 
-    <record model="crm.case.categ" id="categ_meet1">
-        <field name="name">Customer Meeting</field>
-        <field name="section_id" ref="section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>        
-    </record>
-    <record model="crm.case.categ" id="categ_meet2">
-        <field name="name">Internal Meeting</field>
-        <field name="section_id" ref="section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>        
-    </record>
-    <record model="crm.case.categ" id="categ_meet3">
-        <field name="name">Phone Call</field>
-        <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>
-    </record>
+	    <record model="crm.case.categ" id="categ_meet1">
+	        <field name="name">Customer Meeting</field>
+	        <field name="section_id" ref="section_sales_department"/>
+			<field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>
+	    </record>
 
-    <record model="res.request.link" id="request_link_meeting">
-        <field name="name">Case Meeting</field>
-        <field name="object">crm.meeting</field>
-        
-    </record>
+	    <record model="crm.case.categ" id="categ_meet2">
+	        <field name="name">Internal Meeting</field>
+	        <field name="section_id" ref="section_sales_department"/>
+			<field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>
+	    </record>
 
-</data>
+	    <record model="crm.case.categ" id="categ_meet3">
+	        <field name="name">Phone Call</field>
+	        <field name="section_id" ref="section_sales_department"/>
+	        <field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>
+	    </record>
+
+	    <record model="res.request.link" id="request_link_meeting">
+	        <field name="name">Case Meeting</field>
+	        <field name="object">crm.meeting</field>
+	    </record>
+
+
+		<!--		Event Attribute mapping-->
+
+		<record model="basic.calendar.fields" id="caldav.map_event_4">
+			<field name="attribute_id" ref="caldav.field_event_attendee"/>
+			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','crm.meeting')]" />
+		</record>
+
+		<record model="basic.calendar.fields" id="caldav.map_event_8">
+			<field name="attribute_id" ref="caldav.field_event_priority"/>
+			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','crm.meeting')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_event_11">
+			<field name="attribute_id" ref="caldav.field_event_status"/>
+			<field name="field_id" search="[('name','=','state'),('model_id.model','=','crm.meeting')]" />
+			<field name="info" eval="{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}"/>
+		</record>
+		
+	</data>
 </openerp>

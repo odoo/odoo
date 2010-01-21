@@ -231,7 +231,7 @@ calendar_attendee()
 
 class res_alarm(osv.osv):
     _name = 'res.alarm'
-    _description = 'basic alarm information'
+    _description = 'Basic Alarm Information'
     _columns = {
         'name':fields.char('Name', size=256, required=True), 
         'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
@@ -501,6 +501,7 @@ class calendar_event(osv.osv):
         return True
     
     _columns = {
+        'id': fields.integer('ID'), 
         'name': fields.char('Description', size=64, required=True), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 

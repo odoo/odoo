@@ -130,5 +130,673 @@
 			<field eval="'(False,)'" name="args" />
 		</record>
 
+		<!--		Event attributes-->
+
+		<record model="basic.calendar.fields.type" id="field_event_comment">
+			<field name="name">comment</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_uid">
+			<field name="name">uid</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_seq">
+			<field name="name">seq</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_recurrence-id">
+			<field name="name">recurrence-id</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_transp">
+			<field name="name">transp</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_attendee">
+			<field name="name">attendee</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_related">
+			<field name="name">related</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_rrule">
+			<field name="name">rrule</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_dtend">
+			<field name="name">dtend</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_valarm">
+			<field name="name">valarm</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_priority">
+			<field name="name">priority</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_location">
+			<field name="name">location</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_exrule">
+			<field name="name">exrule</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_resources">
+			<field name="name">resources</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_rstatus">
+			<field name="name">rstatus</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_status">
+			<field name="name">status</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_exdate">
+			<field name="name">exdate</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_dtstamp">
+			<field name="name">dtstamp</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_description">
+			<field name="name">description</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_rdate">
+			<field name="name">rdate</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_dtstart">
+			<field name="name">dtstart</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_class">
+			<field name="name">class</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_x-openobject-model">
+			<field name="name">x-openobject-model</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_created">
+			<field name="name">created</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_url">
+			<field name="name">url</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_summary">
+			<field name="name">summary</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_event_contact">
+			<field name="name">contact</field>
+			<field name="object_id" search="[('model','=','calendar.event')]" />
+		</record>
+
+
+<!--		Todo attributes-->
+
+		<record model="basic.calendar.fields.type" id="field_todo_status">
+			<field name="name">status</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_comment">
+			<field name="name">comment</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_attendee">
+			<field name="name">attendee</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_valarm">
+			<field name="name">valarm</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_description">
+			<field name="name">description</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_seq">
+			<field name="name">seq</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_url">
+			<field name="name">url</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_completed">
+			<field name="name">completed</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_percent">
+			<field name="name">percent</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_due">
+			<field name="name">due</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_summary">
+			<field name="name">summary</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_priority">
+			<field name="name">priority</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_exdate">
+			<field name="name">exdate</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_location">
+			<field name="name">location</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_exrule">
+			<field name="name">exrule</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_duration">
+			<field name="name">duration</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_organizer">
+			<field name="name">organizer</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_dtstart">
+			<field name="name">dtstart</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_rrule">
+			<field name="name">rrule</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_class">
+			<field name="name">class</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_todo_uid">
+			<field name="name">uid</field>
+			<field name="object_id" search="[('model','=','calendar.todo')]" />
+		</record>
+
+<!--		Attendee's attributes-->
+
+		<record model="basic.calendar.fields.type" id="field_attendee_cn">
+			<field name="name">cn</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_sent-by">
+			<field name="name">sent-by</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_language">
+			<field name="name">language</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_delegated-from">
+			<field name="name">delegated-from</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_member">
+			<field name="name">member</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_cutype">
+			<field name="name">cutype</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_role">
+			<field name="name">role</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_partstat">
+			<field name="name">partstat</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_delegated-to">
+			<field name="name">delegated-to</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_dir">
+			<field name="name">dir</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_attendee_rsvp">
+			<field name="name">rsvp</field>
+			<field name="object_id" search="[('model','=','calendar.attendee')]" />
+		</record>
+
+<!--	Alarm attributes-->
+
+		<record model="basic.calendar.fields.type" id="field_alarm_attendee">
+			<field name="name">attendee</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_trigger_duration">
+			<field name="name">trigger_duration</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_description">
+			<field name="name">description</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_attach">
+			<field name="name">attach</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_trigger_occurs">
+			<field name="name">trigger_occurs</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_trigger_interval">
+			<field name="name">trigger_interval</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_summary">
+			<field name="name">summary</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_duration">
+			<field name="name">duration</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_repeat">
+			<field name="name">repeat</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_action">
+			<field name="name">action</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+		<record model="basic.calendar.fields.type" id="field_alarm_trigger_related">
+			<field name="name">trigger_related</field>
+			<field name="object_id" search="[('model','=','calendar.alarm')]" />
+		</record>
+
+
+<!--alarm mapping -->
+
+		<record model="basic.calendar.fields" id="map_alarm_1">
+		    <field name="attribute_id" ref="field_alarm_attendee"/>
+			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_2">
+		    <field name="attribute_id" ref="field_alarm_trigger_duration"/>
+			<field name="field_id" search="[('name','=','trigger_duration'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_3">
+		    <field name="attribute_id" ref="field_alarm_description"/>
+			<field name="field_id" search="[('name','=','name'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_4">
+		    <field name="attribute_id" ref="field_alarm_attach"/>
+			<field name="field_id" search="[('name','=','attach'),('model_id.model','=','calendar.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_5">
+		    <field name="attribute_id" ref="field_alarm_trigger_occurs"/>
+			<field name="field_id" search="[('name','=','trigger_occurs'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_6">
+		    <field name="attribute_id" ref="field_alarm_trigger_interval"/>
+			<field name="field_id" search="[('name','=','trigger_interval'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_7">
+		    <field name="attribute_id" ref="field_alarm_summary"/>
+			<field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_8">
+		    <field name="attribute_id" ref="field_alarm_duration"/>
+			<field name="field_id" search="[('name','=','duration'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_9">
+		    <field name="attribute_id" ref="field_alarm_repeat"/>
+			<field name="field_id" search="[('name','=','repeat'),('model_id.model','=','res.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_10">
+		    <field name="attribute_id" ref="field_alarm_action"/>
+			<field name="field_id" search="[('name','=','action'),('model_id.model','=','calendar.alarm')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_alarm_11">
+		    <field name="attribute_id" ref="field_alarm_trigger_related"/>
+			<field name="field_id" search="[('name','=','trigger_related'),('model_id.model','=','res.alarm')]" />
+		</record>
+
+<!--		Attendee mapping-->
+
+		<record model="basic.calendar.fields" id="map_attendee_1">
+		    <field name="attribute_id" ref="field_attendee_cn"/>
+			<field name="field_id" search="[('name','=','cn'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_2">
+		    <field name="attribute_id" ref="field_attendee_sent-by"/>
+			<field name="field_id" search="[('name','=','sent_by'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_3">
+		    <field name="attribute_id" ref="field_attendee_language"/>
+			<field name="field_id" search="[('name','=','language'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_4">
+		    <field name="attribute_id" ref="field_attendee_delegated-from"/>
+			<field name="field_id" search="[('name','=','delegated_from'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_5">
+		    <field name="attribute_id" ref="field_attendee_member"/>
+			<field name="field_id" search="[('name','=','member'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_6">
+		    <field name="attribute_id" ref="field_attendee_cutype"/>
+			<field name="field_id" search="[('name','=','cutype'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_7">
+		    <field name="attribute_id" ref="field_attendee_role"/>
+			<field name="field_id" search="[('name','=','role'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_8">
+		    <field name="attribute_id" ref="field_attendee_partstat"/>
+			<field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_9">
+		    <field name="attribute_id" ref="field_attendee_delegated-to"/>
+			<field name="field_id" search="[('name','=','delegated_to'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_10">
+		    <field name="attribute_id" ref="field_attendee_dir"/>
+			<field name="field_id" search="[('name','=','dir'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_attendee_11">
+		    <field name="attribute_id" ref="field_attendee_rsvp"/>
+			<field name="field_id" search="[('name','=','rsvp'),('model_id.model','=','calendar.attendee')]" />
+		</record>
+
+<!--		Event mapping-->
+
+		<record model="basic.calendar.fields" id="map_event_1">
+		    <field name="attribute_id" ref="field_event_uid"/>
+			<field name="field_id" search="[('name','=','id'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_2">
+		    <field name="attribute_id" ref="field_event_recurrence-id"/>
+			<field name="field_id" search="[('name','=','recurrent_id'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+<!--		<record model="basic.calendar.fields" id="map_event_3">-->
+<!--		    <field name="attribute_id" ref="field_event_transp"/>-->
+<!--			<field name="field_id" search="[('name','=','transparent'),('model_id.model','=','calendar.event')]" />-->
+<!--		</record>-->
+		
+		<record model="basic.calendar.fields" id="map_event_4">
+		    <field name="attribute_id" ref="field_event_attendee"/>
+			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_5">
+		    <field name="attribute_id" ref="field_event_rrule"/>
+			<field name="field_id" search="[('name','=','rrule'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_6">
+		    <field name="attribute_id" ref="field_event_dtend"/>
+			<field name="field_id" search="[('name','=','date_deadline'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_7">
+		    <field name="attribute_id" ref="field_event_valarm"/>
+			<field name="field_id" search="[('name','=','caldav_alarm_id'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_8">
+		    <field name="attribute_id" ref="field_event_priority"/>
+			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_9">
+		    <field name="attribute_id" ref="field_event_location"/>
+			<field name="field_id" search="[('name','=','location'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_10">
+		    <field name="attribute_id" ref="field_event_exrule"/>
+			<field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_11">
+		    <field name="attribute_id" ref="field_event_status"/>
+			<field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_12">
+		    <field name="attribute_id" ref="field_event_exdate"/>
+			<field name="field_id" search="[('name','=','exdate'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_13">
+		    <field name="attribute_id" ref="field_event_dtstamp"/>
+			<field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_14">
+		    <field name="attribute_id" ref="field_event_description"/>
+			<field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_15">
+		    <field name="attribute_id" ref="field_event_dtstart"/>
+			<field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_16">
+		    <field name="attribute_id" ref="field_event_class"/>
+			<field name="field_id" search="[('name','=','class'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+<!--		<record model="basic.calendar.fields" id="map_event_17">-->
+<!--		    <field name="attribute_id" ref="field_event_created"/>-->
+<!--			<field name="field_id" search="[('name','=','create_date'),('model_id.model','=','calendar.event')]" />-->
+<!--		</record>-->
+		
+		<record model="basic.calendar.fields" id="map_event_18">
+		    <field name="attribute_id" ref="field_event_url"/>
+			<field name="field_id" search="[('name','=','caldav_url'),('model_id.model','=','calendar.event')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_event_19">
+		    <field name="attribute_id" ref="field_event_summary"/>
+			<field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.event')]" />
+		</record>
+
+<!--			task mapping-->
+
+		<record model="basic.calendar.fields" id="map_todo_1">
+		    <field name="attribute_id" ref="field_todo_status"/>
+			<field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_2">
+		    <field name="attribute_id" ref="field_todo_comment"/>
+			<field name="field_id" search="[('name','=','notes'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_3">
+		    <field name="attribute_id" ref="field_todo_attendee"/>
+			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_4">
+		    <field name="attribute_id" ref="field_todo_valarm"/>
+			<field name="field_id" search="[('name','=','caldav_alarm_id'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_5">
+		    <field name="attribute_id" ref="field_todo_description"/>
+			<field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_6">
+		    <field name="attribute_id" ref="field_todo_seq"/>
+			<field name="field_id" search="[('name','=','sequence'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_7">
+		    <field name="attribute_id" ref="field_todo_url"/>
+			<field name="field_id" search="[('name','=','caldav_url'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_9">
+		    <field name="attribute_id" ref="field_todo_percent"/>
+			<field name="field_id" search="[('name','=','progress_rate'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_10">
+		    <field name="attribute_id" ref="field_todo_due"/>
+			<field name="field_id" search="[('name','=','date_deadline'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_11">
+		    <field name="attribute_id" ref="field_todo_summary"/>
+			<field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_12">
+		    <field name="attribute_id" ref="field_todo_priority"/>
+			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_13">
+		    <field name="attribute_id" ref="field_todo_exdate"/>
+			<field name="field_id" search="[('name','=','exdate'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_14">
+		    <field name="attribute_id" ref="field_todo_location"/>
+			<field name="field_id" search="[('name','=','location'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_15">
+		    <field name="attribute_id" ref="field_todo_exrule"/>
+			<field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_16">
+		    <field name="attribute_id" ref="field_todo_duration"/>
+			<field name="field_id" search="[('name','=','planned_hours'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_18">
+		    <field name="attribute_id" ref="field_todo_dtstart"/>
+			<field name="field_id" search="[('name','=','date'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_19">
+		    <field name="attribute_id" ref="field_todo_rrule"/>
+			<field name="field_id" search="[('name','=','rrule'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_20">
+		    <field name="attribute_id" ref="field_todo_class"/>
+			<field name="field_id" search="[('name','=','class'),('model_id.model','=','calendar.todo')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="map_todo_21">
+		    <field name="attribute_id" ref="field_todo_uid"/>
+			<field name="field_id" search="[('name','=','id'),('model_id.model','=','calendar.todo')]" />
+		</record>
+
 	</data>
 </openerp>

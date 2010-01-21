@@ -22,7 +22,7 @@
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
-from osv import osv
+from osv import osv, fields
 import pooler
 import re
 import vobject
@@ -59,6 +59,22 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
+def get_attribute_mapping(cr, uid, context={}):
+        pool = pooler.get_pool(cr.dbname)
+        field_obj = pool.get('basic.calendar.fields')
+        fids = field_obj.search(cr, uid, [])
+        res = {}
+        for field in field_obj.browse(cr, uid, fids):
+            attr = field.attribute
+            res[attr] = {}
+            res[attr]['field'] = field.field_id.name
+            res[attr]['type'] = field.field_id.ttype
+            if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
+                res[attr]['object'] = field.field_id.relation
+            elif res[attr]['type'] in ('selection'):
+                res[attr]['mapping'] = field.info
+        return res
+    
 def map_data(cr, uid, obj):
     vals = {}
     for map_dict in obj.__attribute__:
@@ -236,10 +252,43 @@ class Calendar(CalDAV, osv.osv_memory):
         'vjournal': None, # Use: O-n, Type: Collection of Journal class
         'vfreebusy': None, # Use: O-n, Type: Collection of FreeBusy class
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
-
     }
 
 Calendar()
+
+
+class basic_calendar_fields_type(osv.osv):
+    _name = 'basic.calendar.fields.type'
+    _description = 'Calendar fields type'
+
+    _columns = {
+                'name': fields.char('Name', size=64), 
+                'object_id': fields.many2one('ir.model', 'Object'), 
+                }
+
+basic_calendar_fields_type()
+
+class basic_calendar_fields(osv.osv):
+    _name = 'basic.calendar.fields'
+    _description = 'Calendar fields'
+    _rec_name = 'attribute_id'
+
+    _columns = {
+            'attribute_id': fields.many2one('basic.calendar.fields.type', \
+                                    'Attribute', size=64), 
+            'attribute': fields.related('attribute_id', 'name', size=64, \
+                                 type='char', string='Attribute Name', \
+                                 store=True), 
+            'object_id': fields.related('attribute_id', 'object_id', \
+                             type='many2one', relation='ir.model', store=True,\
+                             string='Object'), 
+            'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'), 
+            'info': fields.text('Other info'), 
+            'value': fields.text('Value', help="For some attribute that \
+have some default value"), 
+            }
+
+basic_calendar_fields()
 
 class Event(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.event'
