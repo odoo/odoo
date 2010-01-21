@@ -25,6 +25,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
 <form string="Convert to Quote">

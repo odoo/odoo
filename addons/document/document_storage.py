@@ -25,6 +25,7 @@ import os
 import tools
 import base64
 from tools.misc import ustr
+from tools.translate import _
 
 from osv.orm import except_orm
 
