@@ -84,8 +84,7 @@ class document_change_process_model(osv.osv):
         'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
         'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type', required=True),
-
-    }
+        }
 document_change_process_model()
 
 
@@ -98,6 +97,9 @@ class document_file(osv.osv):
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
     }
+    _defaults = {      
+     'state': lambda *a: 'validate',
+     }    
 document_file()
 
 class document_change_process_type(osv.osv):
