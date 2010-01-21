@@ -19,7 +19,27 @@
 #
 ##############################################################################
 
-import idea
-import wizard
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+{
+    'name': 'Integrated Document Management System',
+    'version': '1.99',
+    'category': 'Generic Modules/Others',
+    'description': """The document_change module allows to track and manage process changes to
+    update documents in directories, and keep track of these updates. You
+    can define control points, phase of changes.
+""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'document_ftp','mail_gateway'],
+    'init_xml': [],
+    'update_xml': ['document_change_view.xml',
+                   'document_change_sequence.xml'
+       
+    ],
+    'demo_xml': [ ],
+    'installable': True,
+    'active': False,
+    'certificate': None,
+}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

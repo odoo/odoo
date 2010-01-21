@@ -416,15 +416,27 @@ class account_account(osv.osv):
             default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
+    def _check_moves(self, cr, uid, ids, method, context):
+        line_obj = self.pool.get('account.move.line')
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+            if method == 'write':
+                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
+            elif method == 'unlink':
+                raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        return True
+    
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}
         if 'active' in vals and not vals['active']:
-            line_obj = self.pool.get('account.move.line')
-            account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains Ledger Postings.'))
+            self._check_moves(cr, uid, ids, "write", context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, context={}):
+        self._check_moves(cr, uid, ids, "unlink", context)
+        return super(account_account, self).unlink(cr, uid, ids, context)
+    
 account_account()
 
 class account_journal_view(osv.osv):
@@ -767,6 +779,23 @@ class account_move(osv.osv):
         for id in ids:
             result.setdefault(id, 0.0)
         return result
+    
+    def _search_amount(self, cr, uid, obj, name, args, context):
+        ids = []
+        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
+        result = dict(cr.fetchall())
+
+        for item in args:
+            if item[1] == '>=':
+                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+            else:
+                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]    
+            ids += res
+
+        if not ids:    
+            return [('id', '>', '0')]
+
+        return ids
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -778,7 +807,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy']))),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy'])), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
@@ -956,7 +985,7 @@ class account_move(osv.osv):
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': _t(cr, None, 'selection', context.get('lang'), source=(mode.capitalize()+' Centralisation')) or (mode.capitalize()+' Centralisation'),
+                'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
@@ -1084,8 +1113,8 @@ class account_move_reconcile(osv.osv):
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
+        total = 0.0 
         for rec in self.browse(cr, uid, ids, context):
-            total = 0.0
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
@@ -1546,7 +1575,8 @@ class account_model(osv.osv):
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
         for model in self.browse(cr, uid, ids, context):
-            period_id = self.pool.get('account.period').find(cr,uid, context=context)
+            context.update({'date':datas['date']})
+            period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date',False))
             if not period_id:
                 raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
@@ -1554,6 +1584,7 @@ class account_model(osv.osv):
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
+                'date': context.get('date',time.strftime('%Y-%m-%d'))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -1571,7 +1602,7 @@ class account_model(osv.osv):
                     'move_id': move_id,
                     'ref': line.ref,
                     'partner_id': line.partner_id.id,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': time.strftime('%Y-%m-%d')
                 })
                 c = context.copy()

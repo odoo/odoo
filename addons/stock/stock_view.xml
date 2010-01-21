@@ -259,7 +259,7 @@
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
@@ -281,7 +281,7 @@
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>

@@ -19,42 +19,44 @@
 #
 ##############################################################################
 
-import time
 import wizard
+import ir
+from mx.DateTime import now
 import pooler
+import netsvc
 
-#
-# TODO: add an intermediate screen for checks
-#
+vote_form = """<?xml version="1.0" ?>
+<form string="Create Tasks">
+    <field name="vote"/>
+</form>"""
 
-_subscription_form = '''<?xml version="1.0"?>
-<form string="%s">
-    <separator string="Generate entries before:" colspan="4"/>
-    <field name="date"/>
-</form>''' % ('Subscription Compute',)
-
-_subscription_fields = {
-    'date': {'string':'Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
+vote_fields = {
+      'vote': {'string': 'Post Vote', 'type': 'selection',
+        'selection': [('-1','Not Voted'),('0','Very Bad'),('25', 'Bad'),('50','Normal'),('75','Good'),('100','Very Good') ]},
 }
 
-class wiz_subscription(wizard.interface):
-    def _action_generate(self, cr, uid, data, context={}):
-        cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['form']['date'],))
-        ids = map(lambda x: x[0], cr.fetchall())
-        pooler.get_pool(cr.dbname).get('account.subscription.line').move_create(cr, uid, ids)
-        return {}
+
+
+class idea_vote(wizard.interface):
+    def _do_vote(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        vote_obj = pool.get('idea.vote')
+        score=str(data['form']['vote'])
+        dic={'idea_id' : data['id'], 'user_id' : uid, 'score' : score }
+        vote=vote_obj.create(cr,uid,dic)
+        return True
 
     states = {
-        'init': {
+        'init':{
             'actions': [],
-            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel'),('generate','Compute Entry Dates')]}
+            'result': {'type':'form', 'arch':vote_form, 'fields':vote_fields, 'state':[('end', 'Cancel'), ('post', 'Post Vote')] },
         },
-        'generate': {
-            'actions': [_action_generate],
-            'result': {'type': 'state', 'state':'end'}
-        }
+        'post':{
+            'actions': [],
+            'result': {'type':'action', 'action': _do_vote, 'state':'end'},
+        },
     }
-wiz_subscription('account.subscription.generate')
+idea_vote('idea.post.vote')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

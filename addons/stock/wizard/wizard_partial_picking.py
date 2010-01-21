@@ -58,6 +58,8 @@ def _get_moves(self, cr, uid, data, context):
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
 
     for m in pick.move_lines:
+        if m.state in ('done', 'cancel'):
+            continue
         quantity = m.product_qty
         if m.state<>'assigned':
             quantity = 0

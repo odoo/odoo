@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-from xml import dom
-from lxml import etree
-
 from mx import DateTime
 from mx.DateTime import now
 import time
@@ -30,6 +27,15 @@ import netsvc
 from osv import fields, osv
 import ir
 from tools.translate import _
+
+import sys
+from tools.translate import _
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
