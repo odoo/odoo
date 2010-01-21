@@ -77,6 +77,8 @@ document_file()
 
 class document_change_process_type(osv.osv):
     _name = "document.change.process.type"
-    _description = "Document Change Process Type"    
+    _description = "Document Change Process Type"  
+    _columns = {
+        'name': fields.char("Changed Process Type", size=64),
 
 document_change_process_type()
