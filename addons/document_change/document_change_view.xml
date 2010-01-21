@@ -329,7 +329,7 @@
 	                <newline/>
 	                <field name="update_document" string="Update documents"/>
 	                <field name="type" string="Type"/>
-	                <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')]}"/>
+	                <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
 	                <field name="phase_ids" string="Phase Type"/>
 	            </group>
 				<separator colspan="4" string="Documents"/>

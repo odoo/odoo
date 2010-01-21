@@ -65,7 +65,7 @@ class doucment_change_process_phase(osv.osv):
         'process_id':fields.many2one('document.change.process','Process Change'),
         'sequence': fields.integer('Sequence'),
         'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Porcess')], 'Update Document', required=True),        
-        'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type', required=True),
+        'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status'),
