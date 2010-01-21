@@ -25,14 +25,17 @@ import pooler
 import netsvc
 from tools.translate import _
 
+class doucment_change_process_phase_type(osv.osv):
+ _name = "document.change.process.phase.type"
+doucment_change_process_phase_type()
 
 class document_change_type(osv.osv):
     _name = "document.change.type"
     _description = "Document Change Type"
     _columns = {
         'name': fields.char("Document Change Type", size=64),
-        'phase_type_ids': many2many('document.change.process.phase.type'),
-        'template_document_id': many2one('ir.attachement','Document')
+        'phase_type_ids': fields.many2many('document.change.process.phase.type','document_process__rel','type_id','change_id','Phase Type'),
+        'template_document_id':fields.many2one('ir.attachment','Document')
     }
 document_change_type()
 
@@ -42,7 +45,7 @@ class doucment_change_process_phase_type(osv.osv):
     _columns = {
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
-        'document_type_ids': many2many('document.type','Document'),
+        'document_type_ids': fields.many2many('document.change.type','Document','document_phase_process__rel','phase_id','document_id','Phase Type'),
         
     }
 doucment_change_process_phase_type()
@@ -55,9 +58,10 @@ class doucment_change_process_phase(osv.osv):
         'sequence': fields.integer('Sequence'),
         'update_document': fields.selection([('at_endPhase', 'At EndPhase'),('at_endprocess', 'At EndPorcess')], 'Update Document', required=True),        
         'type': fields.selection([('required', 'Control Required'),('no_control', 'Control')], 'Type', required=True),
-        'date': fields.date('Date', select=True),        
-        'document_type_ids': many2many('document.type','Document'),
+        'date_control': fields.date('Control Date', select=True),        
+        'phase_ids':fields.many2many('document.change.process.phase','phase_process__rel','process_id','phase_id','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
+        'phase_document_ids':fields.many2many('ir.attachment','Document','phase_document_rel','phase_id','document_id','Phase Type'),
     }
 doucment_change_process_phase()
 
@@ -67,7 +71,7 @@ class document_change_process_model(osv.osv):
     _columns = {
         'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
-        'phase_type_ids':many2many('document.change.process.phase.type','Process Type', required=True),
+        'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type', required=True),
 
     }
 document_change_process_model()
@@ -76,7 +80,7 @@ document_change_process_model()
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _columns = {
-        'type_id': many2one('document.change.type'),
+        'type_id':fields.many2one('document.change.type','Document Type'),
         'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
