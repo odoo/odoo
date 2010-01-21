@@ -648,7 +648,7 @@ class survey_question_wiz(osv.osv_memory):
                         que_rec = que_obj.read(cr, uid, que)
                         descriptive_text = ""
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec['question'])
-                        if que_rec['is_require_answer'] or que_rec['required_type'] != '':
+                        if not context.has_key('active') and (que_rec['is_require_answer'] or que_rec['required_type'] != ''):
                             star='*'
                         else:
                             star=''

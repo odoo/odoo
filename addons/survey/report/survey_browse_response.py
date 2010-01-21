@@ -83,6 +83,22 @@ class survey_browse_response(report_rml):
                       <lineStyle kind="LINEBEFORE" colorName="#777777" start="0,0" stop="-1,-1"/>
                       <lineStyle kind="LINEAFTER" colorName="#777777" start="0,0" stop="-1,-1"/>
                     </blockTableStyle>
+                    <blockTableStyle id="Table_heading">
+                      <blockAlignment value="LEFT"/>
+                      <blockValign value="TOP"/>
+                      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                    </blockTableStyle>
+                    <blockTableStyle id="Table_head_2">
+                      <blockAlignment value="LEFT"/>
+                      <blockValign value="TOP"/>
+                      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+                    </blockTableStyle>
                     <initialize>
                       <paraStyle name="all" alignment="justify"/>
                     </initialize>
@@ -102,11 +118,17 @@ class survey_browse_response(report_rml):
                     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="12" spaceBefore="0.0" spaceAfter="1.0"/>
                     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+                    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+                    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="9.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
                   </stylesheet>
                   <images/>
                   <story>
                     <para style="Title"><u>Browse Responses </u></para>
-                    <para style="Standard"><font></font></para>"""
+                    <para style="Standard"><font></font></para>
+                    <para style="P2">
+                      <font color="white"> </font>
+                    </para>
+                    """
         surv_resp_obj = pooler.get_pool(cr.dbname).get('survey.response')
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
@@ -116,18 +138,30 @@ class survey_browse_response(report_rml):
                     prefix = survey.question_prefix + " : "
                 else:
                     prefix = ''
-                rml += """<blockTable colWidths="150,350" style="Table2">
+                rml += """<blockTable colWidths="230.0,150.0,120.0" style="Table_heading">
                           <tr>
-                            <td><para style="Standard">Survey Title :-</para></td>
-                            <td><para style="header1">""" + to_xml(survey.title) + """</para></td>
+                            <td>
+                              <para style="terp_tblheader_General_Centre">Survey Title </para>
+                            </td>
+                            <td>
+                              <para style="terp_tblheader_General_Centre">Response Create Date </para>
+                            </td>
+                            <td>
+                              <para style="terp_tblheader_General_Centre">Respose By </para>
+                            </td>
                           </tr>
+                          </blockTable>
+                          <blockTable colWidths="230.0,150.0,120.0" style="Table_head_2">
                           <tr>
-                            <td><para style="Standard">Response Create Date :-</para></td>
-                            <td><para style="header1">""" + to_xml(response.date_create) + """</para></td>
-                            </tr>
-                            <tr>
-                            <td><para style="Standard">User Name :-</para></td>
-                            <td><para style="header1">""" + to_xml(response.user_id.name) + """</para></td>
+                            <td>
+                              <para style="terp_default_Centre_8">""" + to_xml(survey.title) + """</para>
+                            </td>
+                            <td>
+                              <para style="terp_default_Centre_8">""" + to_xml(response.date_create) + """</para>
+                            </td>
+                            <td>
+                              <para style="terp_default_Centre_8">""" + to_xml(response.user_id.name) + """</para>
+                            </td>
                           </tr>
                         </blockTable>"""
                 for page in survey.page_ids:
