@@ -3,38 +3,38 @@
 	<data noupdate="1">
 
 		<record model="basic.calendar.fields" id="caldav.map_todo_1">
-			<field name="attribute_id" ref="caldav.field_event_status"/>
+			<field name="attribute_id" ref="base_calendar.field_event_status"/>
 			<field name="field_id" search="[('name','=','state'),('model_id.model','=','project.task')]" />
 			<field name="info" eval="{'needs-action': 'draft', 'completed': 'done', 'in-process': 'open', 'cancelled': 'cancelled'}"/>
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_2">
-			<field name="attribute_id" ref="caldav.field_todo_comment"/>
+			<field name="attribute_id" ref="base_calendar.field_todo_comment"/>
 			<field name="field_id" search="[('name','=','notes'),('model_id.model','=','project.task')]" />
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_3">
-			<field name="attribute_id" ref="caldav.field_event_attendee"/>
+			<field name="attribute_id" ref="base_calendar.field_event_attendee"/>
 			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','project.task')]" />
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_6">
-			<field name="attribute_id" ref="caldav.field_event_seq"/>
+			<field name="attribute_id" ref="base_calendar.field_event_seq"/>
 			<field name="field_id" search="[('name','=','sequence'),('model_id.model','=','project.task')]" />
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_9">
-		    <field name="attribute_id" ref="caldav.field_todo_percent"/>
+		    <field name="attribute_id" ref="base_calendar.field_todo_percent"/>
 			<field name="field_id" search="[('name','=','progress'),('model_id.model','=','project.task')]" />
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_12">
-			<field name="attribute_id" ref="caldav.field_event_priority"/>
+			<field name="attribute_id" ref="base_calendar.field_event_priority"/>
 			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','project.task')]" />
 		</record>
 		
 		<record model="basic.calendar.fields" id="caldav.map_todo_16">
-		    <field name="attribute_id" ref="caldav.field_todo_duration"/>
+		    <field name="attribute_id" ref="base_calendar.field_todo_duration"/>
 			<field name="field_id" search="[('name','=','planned_hours'),('model_id.model','=','project.task')]" />
 		</record>
 		

@@ -59,10 +59,10 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
-def get_attribute_mapping(cr, uid, context={}):
+def get_attribute_mapping(cr, uid, model, context={}):
         pool = pooler.get_pool(cr.dbname)
         field_obj = pool.get('basic.calendar.fields')
-        fids = field_obj.search(cr, uid, [])
+        fids = field_obj.search(cr, uid, [('object_id.model', '=', model)])
         res = {}
         for field in field_obj.browse(cr, uid, fids):
             attr = field.attribute
@@ -71,10 +71,10 @@ def get_attribute_mapping(cr, uid, context={}):
             res[attr]['type'] = field.field_id.ttype
             if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
                 res[attr]['object'] = field.field_id.relation
-            elif res[attr]['type'] in ('selection'):
-                res[attr]['mapping'] = field.info
+            elif res[attr]['type'] in ('selection') and field.info:
+                res[attr]['mapping'] = eval(field.info)
         return res
-    
+
 def map_data(cr, uid, obj):
     vals = {}
     for map_dict in obj.__attribute__:
@@ -117,8 +117,8 @@ def map_data(cr, uid, obj):
     return vals
 
 class CalDAV(object):
-    __attribute__ = {
-    }
+    __attribute__ = {}
+
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
         if not startdate:
             startdate = datetime.now()
@@ -158,6 +158,7 @@ class CalDAV(object):
         return True
 
     def export_ical(self, cr, uid, datas, vobj=None, context={}):
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
         ical = vobject.iCalendar()
         for data in datas:
             vevent = ical.add(vobj)
@@ -446,7 +447,7 @@ class Alarm(CalDAV, osv.osv_memory):
         # Compute other details
         valarm.add('DESCRIPTION').value = alarm_data['name']
         valarm.add('ACTION').value = alarm_data['action']
-
+        return vevent
 
     def import_ical(self, cr, uid, ical_data):
         for child in ical_data.getChildren():
@@ -510,9 +511,11 @@ class Attendee(CalDAV, osv.osv_memory):
 
     def export_ical(self, cr, uid, model, attendee_ids, vevent, context={}):
         attendee_object = self.pool.get(model)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
         for attendee in attendee_object.read(cr, uid, attendee_ids, []):
             attendee_add = vevent.add('attendee')
-            for a_key, a_val in attendee_object.__attribute__.items():
+            cn_val = ''
+            for a_key, a_val in self.__attribute__.items():
                 if attendee[a_val['field']] and a_val['field'] != 'cn':
                     if a_val['type'] == 'text':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
