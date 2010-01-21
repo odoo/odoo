@@ -224,7 +224,7 @@
         <field name="arch" type="xml">
             <form string="Phases">
                 <field name="name" select="1"/>
-                <!--<field name="" string="Process Change"/>-->
+                <field name="process_id" string="Process Change"/>
                 <field name="sequence"/>
                 <field name="update_document" string="Update documents"/>
                 <field name="type" string="Type"/>
@@ -258,7 +258,7 @@
     </record>
 	<menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
 	
-<!--	 
+	<!-- 
 		Process Change
 	
 	<record model="ir.ui.view" id="view_process_form">
@@ -272,7 +272,7 @@
                 	<page string="Process Definition">
                 	</page>
                 	<page string="Phases">
-                		editable o2m
+                		<field name="process_id"/>
                 	</page>
                 	<page string="Documents">
                 		m2m
