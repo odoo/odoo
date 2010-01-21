@@ -374,4 +374,25 @@ class analytic_default(osv.osv):
     }
 analytic_default()
 
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    # Method overridden to set the analytic account by default on criterion match
+    def invoice_line_create(self, cr, uid, ids, context={}):
+        create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
+        if ids:
+            sale_line_obj = self.browse(cr, uid, ids[0], context)
+            pool_inv_line = self.pool.get('account.invoice.line')
+
+            for line in pool_inv_line.browse(cr, uid, create_ids, context):
+                rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+
+                if rec:
+                    pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
+                    cr.commit()
+        return create_ids
+
+sale_order_line()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
