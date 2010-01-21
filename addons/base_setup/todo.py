@@ -35,7 +35,7 @@ class base_setup_company(osv.osv_memory):
         models = self.pool.get(model)
         all_model_ids = models.search(cr, uid, [])
 
-        output = [(-1, None)]
+        output = [(False, '')]
         output.extend(
             sorted([(o.id, o.name)
                     for o in models.browse(cr, uid, all_model_ids,
