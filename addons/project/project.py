@@ -590,13 +590,15 @@ def _project_get(self, cr, uid, context={}):
     if uid==1:
         ids = self.pool.get('project.project').search(cr, uid, [])
         res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-    else:    
-        # Take Projects only user is manager or member  
-        cr.execute("""SELECT project.id,project.name FROM project_project project
+        res = [(str(r['id']),r['name']) for r in res]
+    else:
+        cr.execute("""SELECT project.id,account.name FROM project_project project
                    LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s)""", uid)
+                   WHERE (account.user_id = %s) OR project.id IN (SELECT project_id FROM project_resource_rel
+                                                                 WHERE resource_id IN (SELECT id FROM resource_resource
+                                                                                       WHERE (user_id= %s)))"""%(uid, uid))
         res = cr.fetchall()
-    res = [(str(r['id']),r['name']) for r in res]
+        res = [(str(r[0]),r[1]) for r in res]
     return res
 
 class users(osv.osv):
@@ -605,7 +607,6 @@ class users(osv.osv):
     _columns = {
         'context_project_id': fields.selection(_project_get, 'Project'),
         }
-
 users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
