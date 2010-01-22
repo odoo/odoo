@@ -68,7 +68,7 @@ class doucment_change_process_phase(osv.osv):
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
-        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('end', 'End')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('done', 'Done')], 'Status',readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
     _defaults = {      
@@ -76,6 +76,21 @@ class doucment_change_process_phase(osv.osv):
      'update_document': lambda *a:'at_endPhase',
      'type':lambda *a: 'no_control',
      }
+    def state_draft_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'draft'})
+        return True
+
+    def state_validate_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'validate'})
+        return True
+    def state_started_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'started'})
+        return True    
+    
+    def state_done_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'done'})
+        return True 
+
 doucment_change_process_phase()
 
 class document_change_process_model(osv.osv):
@@ -95,32 +110,29 @@ class document_file(osv.osv):
     
     _columns = {
         'type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status',readonly=True),
+        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status'),
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
     }
     _defaults = {      
      'state': lambda *a: 'change_request',
      }    
-    def button_change_request(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'change_request'})                
+    def state_set_request(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'change_request'},context=context)              
         return True
-    def button_change_proposed(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'change_proposed'})        
+    def state_set_proposed(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'change_proposed'},context=context)                
         return True              
-    def button_in_production(self, cr, uid, ids, context={}):
+    def state_set_in_production(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'in_production'})
         return True
-    def button_update(self, cr, uid, ids, context={}):
+    def state_set_update(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'to_update'})
         return True
-    def button_change_validated(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'validate'})
+    def state_set_validated(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'validate'},context=context)
         return True                
-    def button_cancel(self, cr, uid, ids, context={}):
-        workflow = netsvc.LocalService('workflow')
-        for oid in ids:
-            workflow.trg_create(uid, self._name, oid, cr)
+    def state_set_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
         
 document_file()

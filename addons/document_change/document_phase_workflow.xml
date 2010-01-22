@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="wkf" model="workflow">
+        <record id="wkf_change_process_phase" model="workflow">
             <field name="name">document.change.process.phase.basic</field>
             <field name="osv">document.change.process.phase</field>
             <field name="on_create">True</field>
@@ -9,26 +9,26 @@
         
 		<!-- States -->
         <record id="act_draft" model="workflow.activity">
-            <field name="wkf_id" ref="wkf"/>
+            <field name="wkf_id" ref="wkf_change_process_phase"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
         <record id="act_start" model="workflow.activity">
-            <field name="wkf_id" ref="wkf"/>
+            <field name="wkf_id" ref="wkf_change_process_phase"/>
             <field name="name">started</field>
-            <field name="action">button_start()</field>
+            <field name="action">state_started_set()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_validate" model="workflow.activity">
-            <field name="wkf_id" ref="wkf"/>
-            <field name="name">to validate</field>
-            <field name="action">button_done()</field>
+            <field name="wkf_id" ref="wkf_change_process_phase"/>
+            <field name="name">validate</field>
+            <field name="action">state_validate_set()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_end" model="workflow.activity">
-            <field name="wkf_id" ref="wkf"/>
+            <field name="wkf_id" ref="wkf_change_process_phase"/>
             <field name="name">end</field>
-            <field name="action">button_end()</field>
+            <field name="action">state_done_set()</field>
             <field name="kind">function</field>
         </record>
         
@@ -41,7 +41,7 @@
         <record id="start_to_validate" model="workflow.transition">
             <field name="act_from" ref="act_start"/>
             <field name="act_to" ref="act_validate"/>
-            <field name="signal">button_done</field>
+            <field name="signal">button_validate</field>
         </record>
         <record id="validate_to_end" model="workflow.transition">
             <field name="act_from" ref="act_validate"/>

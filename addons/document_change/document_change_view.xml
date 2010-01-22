@@ -234,10 +234,10 @@
                 <group col="7" colspan="4">
 	                <field name="state"/>
 					<button name="button_change_proposed" states="cancel,to_update" string="Request Change" icon="gtk-apply"/>
-					<button name="button_change_validated" states="change_request, validate, cancel" string="Propose Change" icon="gtk-apply"/>
-					<button name="button_update" states="change_proposed,in_production" string="To Update" type="object" icon="gtk-ok" />
+					<button name="button_change_validated" states="change_request,validate,cancel" string="Propose Change" icon="gtk-apply"/>
+					<button name="button_update" states="change_proposed,in_production" string="To Update"  icon="gtk-ok" />
 					<button name="button_change_request" states="to_update" string="In Production" icon="gtk-media-play"/>
-					<button name="button_cancel" states="change_request,change_proposed" string="Cancel" type="object" icon="gtk-cancel"/>
+					<button name="button_cancel" states="change_request,change_proposed" string="Cancel"  icon="gtk-cancel"/>
                 </group>
                 <newline/>
                 <field name="target_document_id"/>
@@ -343,7 +343,7 @@
                 <group col="5" colspan="4">
 	                <field name="state"/>
 	                <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
-	                <button name="button_done" states="started" string="Validate" icon="gtk-execute"/>
+	                <button name="button_validate" states="started" string="Validate" icon="gtk-execute"/>
 	                <button name="button_end" states="validate" string="End" icon="gtk-jump-to"/>
             	</group>
             </form>
