@@ -357,10 +357,8 @@
                 <group col="5" colspan="4">
 	                <field name="state"/>
 	                <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
-	                <button name="button_validate" states="started" string="Validate" icon="gtk-execute"/>
- 					<button name="button_pending" states="pending" string="Pending" icon="gtk-execute"/>	
-	                <button name="button_done" states="done" string="Done" icon="gtk-jump-to"/>
-	                <button name="button_progress" states="validate" string="Done" icon="gtk-jump-to"/>
+	                <button name="button_validate" states="in_process" string="Validate" icon="gtk-execute"/>
+ 					<button name="button_end" states="validated" string="Done" icon="gtk-jump-to"/>	                
             	</group>
             </form>
         </field>
@@ -438,7 +436,7 @@
                 		<newline/>
                 		<group col="6" colspan="4">
                 			<field name="state"/>
-                			<button name="button_in_progress" states="draft" string="Start" icon="gtk-go-forward"/>
+                			<button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
                 			<button name="button_validate" states="progress" string="Validate" icon="gtk-execute"/>
                 			<button name="button_pending" states="progress,confirmed" string="Pending" icon="gtk-media-pause"/>
                 			<button name="button_done" states="confirmed" string="Done" icon="gtk-jump-to"/>

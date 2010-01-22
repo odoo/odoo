@@ -8,44 +8,44 @@
         </record>
         
 		<!-- States -->
-        <record id="act_draft" model="workflow.activity">
+        <record id="act_phase_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process_phase"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
-        <record id="act_start" model="workflow.activity">
+        <record id="act_phase_start" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process_phase"/>
             <field name="name">started</field>
-            <field name="action">state_started_set()</field>
+            <field name="action">do_start()</field>
             <field name="kind">function</field>
         </record>
-        <record id="act_validate" model="workflow.activity">
+        <record id="act_phase_validate" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process_phase"/>
-            <field name="name">validate</field>
-            <field name="action">state_validate_set()</field>
+            <field name="name">validated</field>
+            <field name="action">do_validate()</field>
             <field name="kind">function</field>
         </record>
-        <record id="act_end" model="workflow.activity">
+        <record id="act_phase_end" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process_phase"/>
-            <field name="name">end</field>
-            <field name="action">state_done_set()</field>
+            <field name="name">done</field>
+            <field name="action">do_done()</field>
             <field name="kind">function</field>
         </record>
         
 		<!-- Transitions -->
         <record id="draft_to_start" model="workflow.transition">
-            <field name="act_from" ref="act_draft"/>
-            <field name="act_to" ref="act_start"/>
+            <field name="act_from" ref="act_phase_draft"/>
+            <field name="act_to" ref="act_phase_start"/>
             <field name="signal">button_start</field>
         </record>
         <record id="start_to_validate" model="workflow.transition">
-            <field name="act_from" ref="act_start"/>
-            <field name="act_to" ref="act_validate"/>
+            <field name="act_from" ref="act_phase_start"/>
+            <field name="act_to" ref="act_phase_validate"/>
             <field name="signal">button_validate</field>
         </record>
         <record id="validate_to_end" model="workflow.transition">
-            <field name="act_from" ref="act_validate"/>
-            <field name="act_to" ref="act_end"/>
+            <field name="act_from" ref="act_phase_validate"/>
+            <field name="act_to" ref="act_phase_end"/>
             <field name="signal">button_end</field>
         </record>
     </data>

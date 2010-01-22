@@ -68,7 +68,7 @@ class doucment_change_process_phase(osv.osv):
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
-        'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('validate', 'To Validate'),('pending', 'Pending'), ('done', 'Done')], 'Status',readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('validated', 'Validated'),('done', 'Done')], 'State',readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
     _defaults = {      
@@ -76,19 +76,19 @@ class doucment_change_process_phase(osv.osv):
      'update_document': lambda *a:'at_endPhase',
      'type':lambda *a: 'no_control',
      }
-    def state_draft_set(self, cr, uid, ids, *args):
+    def do_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
-    def state_validate_set(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'validate'})
+
+    def do_validate(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'validated'})
         return True
-    def state_started_set(self, cr, uid, ids, *args):
+
+    def do_start(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'in_process'})
-        return True    
-    def state_pending_set(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'pending'})
-        return True     
-    def state_done_set(self, cr, uid, ids, *args):
+        return True           
+
+    def do_done(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'done'})
         return True 
 
@@ -179,7 +179,7 @@ class doucment_change_process(osv.osv):
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
-        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('cancel','Cancelled')], 'Status', readonly=True),
+        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('validated', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),        
@@ -188,5 +188,23 @@ class doucment_change_process(osv.osv):
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
       'state': lambda *a: 'draft',
       }
+    def do_start(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'progress'},context=context)              
+        return True
+
+    def do_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'pending'},context=context)                
+        return True             
+    
+    def do_validate(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'validated'},context=context)
+        return True   
+
+    def do_done(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'},context=context)
+        return True   
+             
+    def do_cancel(self, cr, uid, ids, context={}):
+        return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
     
 doucment_change_process()
