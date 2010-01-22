@@ -419,8 +419,14 @@
                 		<newline />
                 		 <separator colspan="4" string="Change Description"/>
                 		<field name="change_description" colspan="4" nolabel="1"/>
-                		<newline />
-                		<field name="state"/>
+                		<newline/>
+                		<group col="6" colspan="4">
+                			<field name="state"/>
+                			<button name="button_in_progress" states="draft" string="Start" icon="gtk-go-forward"/>
+                			<button name="button_validate" states="progress" string="Validate" icon="gtk-execute"/>
+                			<button name="button_pending" states="progress,confirmed" string="Pending" icon="gtk-media-pause"/>
+                			<button name="button_done" states="confirmed" string="Done" icon="gtk-jump-to"/>
+                		</group>
                 	</page>
                 	<page string="Phases">
                 		<field name="process_phase_ids" mode="tree,form" widget="one2many_list" nolabel="1">
