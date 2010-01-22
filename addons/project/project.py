@@ -587,10 +587,14 @@ def _project_get(self, cr, uid, context={}):
     if uid==1:
         ids = self.pool.get('project.project').search(cr, uid, [])
         res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-        return [(str(r['id']),r['name']) for r in res]
-    cr.execute("""SELECT to_char(id, '99999'),name FROM project_project where manager=%s OR
-               id IN (SELECT project_id from project_user_rel where uid=%s)""" % (uid, uid))
-    return cr.fetchall()
+    else:    
+        # Take Projects only user is manager or member  
+        cr.execute("""SELECT project.id,project.name FROM project_project project
+                   LEFT JOIN account_analytic_account account ON account.id = project.category_id
+                   WHERE (account.user_id = %s)""", uid)
+        res = cr.fetchall()
+    res = [(str(r['id']),r['name']) for r in res]
+    return res
 
 class users(osv.osv):
     _inherit = 'res.users'
