@@ -111,29 +111,30 @@ class document_file(osv.osv):
     
     _columns = {
         'type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status'),
-        'target_document_id': fields.many2one('document.directory', 'Target Document'),
-        'target':fields.binary('Target'),
+        'state': fields.selection([('in_production', 'In Production'), ('requested', 'Change Request'),('proposed', 'Change Proposed'), ('validated', 'To Validate'), ('cancel', 'Cancel')], 'State'),
+        'target_directory_id': fields.many2one('document.directory', 'Target Document'),
+        'target_document_id':fields.binary('Target'),
     }
     _defaults = {      
-     'state': lambda *a: 'change_request',
+     'state': lambda *a: 'in_production',
      }    
-    def state_set_request(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'change_request'},context=context)              
+    def do_request(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'requested'},context=context)              
         return True
-    def state_set_proposed(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'change_proposed'},context=context)                
-        return True              
-    def state_set_in_production(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'in_production'})
-        return True
-    def state_set_update(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'to_update'})
-        return True
-    def state_set_validated(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'validate'},context=context)
-        return True                
-    def state_set_cancel(self, cr, uid, ids, context={}):
+
+    def do_propose(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'proposed'},context=context)                
+        return True             
+    
+    def do_validate(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'validated'},context=context)
+        return True   
+
+    def do_production(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'in_production'},context=context)
+        return True   
+             
+    def do_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
         
 document_file()

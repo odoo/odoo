@@ -8,72 +8,73 @@
         </record>
         
 		<!-- States -->
-        <record id="act_request" model="workflow.activity">
+        <record id="act_document_production" model="workflow.activity">
             <field name="wkf_id" ref="wkf_attachment"/>
             <field name="flow_start">True</field>
-            <field name="name">state_set_request</field>
-        </record>
-        <record id="act_propose" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_attachment"/>
-            <field name="name">change_proposed</field>
-            <field name="action">state_set_proposed()</field>
-            <field name="kind">function</field>
-        </record>
-        <record id="act_update" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_attachment"/>
-            <field name="name">to_update</field>
-            <field name="action">state_set_update()</field>
-            <field name="kind">function</field>
-        </record>
-        <record id="act_production" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_attachment"/>
             <field name="name">in_production</field>
-            <field name="action">state_set_in_production()</field>
+            <field name="action">do_production()</field>
+        </record>
+        <record id="act_document_request" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attachment"/>            
+            <field name="name">requested</field>
+            <field name="action">do_request()</field>
             <field name="kind">function</field>
         </record>
-        <record id="act_cancel" model="workflow.activity">
+        <record id="act_document_propose" model="workflow.activity">
             <field name="wkf_id" ref="wkf_attachment"/>
-            <field name="name">cancel</field>
-            <field name="action">state_set_cancel()</field>
+            <field name="name">proposed</field>
+            <field name="action">do_propose()</field>
             <field name="kind">function</field>
+        </record>
+        <record id="act_document_validate" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attachment"/>
+            <field name="name">validated</field>
+            <field name="action">do_validate()</field>
+            <field name="kind">function</field>
+        </record>        
+        <record id="act_document_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_attachment"/>
+            <field name="name">cancel</field>            
+            <field name="action">do_cancel()</field>
+            <field name="kind">function</field>            
         </record>
         
 		<!-- Transitions -->
+        <record id="production_to_request" model="workflow.transition">
+            <field name="act_from" ref="act_document_production"/>
+            <field name="act_to" ref="act_document_request"/>
+            <field name="signal">button_request</field>
+        </record>
         <record id="request_to_propose" model="workflow.transition">
-            <field name="act_from" ref="act_request"/>
-            <field name="act_to" ref="act_propose"/>
-            <field name="signal">button_change_proposed</field>
+            <field name="act_from" ref="act_document_request"/>
+            <field name="act_to" ref="act_document_propose"/>
+            <field name="signal">button_propose</field>
             <field name="condition">(target_document_id != False)</field>
         </record>
         <record id="request_to_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_request"/>
-            <field name="act_to" ref="act_cancel"/>
+            <field name="act_from" ref="act_document_request"/>
+            <field name="act_to" ref="act_document_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record id="propose_to_update" model="workflow.transition">
-            <field name="act_from" ref="act_propose"/>
-            <field name="act_to" ref="act_update"/>
-            <field name="signal">button_change_validated</field>
+        <record id="propose_to_validate" model="workflow.transition">
+            <field name="act_from" ref="act_document_propose"/>
+            <field name="act_to" ref="act_document_validate"/>
+            <field name="signal">button_validate</field>
         </record>
         <record id="propose_to_cancel" model="workflow.transition">
-            <field name="act_from" ref="act_propose"/>
-            <field name="act_to" ref="act_cancel"/>
+            <field name="act_from" ref="act_document_propose"/>
+            <field name="act_to" ref="act_document_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
         <record id="cancel_to_request" model="workflow.transition">
-            <field name="act_from" ref="act_cancel"/>
-            <field name="act_to" ref="act_request"/>
-            <field name="signal">button_change_request</field>
+            <field name="act_from" ref="act_document_cancel"/>
+            <field name="act_to" ref="act_document_request"/>
+            <field name="signal">button_request</field>
         </record>
-        <record id="update_to_production" model="workflow.transition">
-            <field name="act_from" ref="act_update"/>
-            <field name="act_to" ref="act_production"/>
-            <field name="signal">button_update</field>
-        </record>
-        <record id="production_to_request" model="workflow.transition">
-            <field name="act_from" ref="act_production"/>
-            <field name="act_to" ref="act_request"/>
-            <field name="signal">button_change_request</field>
-        </record>
+        <record id="validate_to_production" model="workflow.transition">
+            <field name="act_from" ref="act_document_validate"/>
+            <field name="act_to" ref="act_document_production"/>  
+            <field name="condition">True</field>          
+        </record>        
     </data>
 </openerp>

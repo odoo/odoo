@@ -232,16 +232,15 @@
                 </group>
                 <separator string="Change Control" colspan="4"/>
                 <group col="7" colspan="4">
-	                <field name="state"/>
-					<button name="button_change_proposed" states="cancel,to_update" string="Request Change" icon="gtk-apply"/>
-					<button name="button_change_validated" states="change_request,validate,cancel" string="Propose Change" icon="gtk-apply"/>
-					<button name="button_update" states="change_proposed,in_production" string="To Update"  icon="gtk-ok" />
-					<button name="button_change_request" states="to_update" string="In Production" icon="gtk-media-play"/>
-					<button name="button_cancel" states="change_request,change_proposed" string="Cancel"  icon="gtk-cancel"/>
+	                <field name="state" readonly="1"/>
+					<button name="button_propose" states="requested" string="Propose Change" icon="gtk-apply"/>
+					<button name="button_validate" states="proposed" string="To Validate" icon="gtk-apply"/>					
+					<button name="button_request" states="cancel,in_production" string="Request Change" icon="gtk-media-play"/>
+					<button name="button_cancel" states="requested,proposed" string="Cancel"  icon="gtk-cancel"/>
                 </group>
                 <newline/>
-                <field name="target_document_id"/>
-                <field name="target"/>
+                <field name="target_directory_id"/>
+                <field name="target_document_id"/>                
                 <newline/>
                 <separator string="Change Note" colspan="4"/>
                 <field colspan="4" name="description" nolabel="1"/>
