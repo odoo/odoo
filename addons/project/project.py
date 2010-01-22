@@ -197,21 +197,24 @@ class project(osv.osv):
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
+        result = []
         for proj in self.browse(cr, uid, ids):
-            parent_id=context.get('parent_id',False)
-            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
+            parent_id = context.get('parent_id',False)
+            new_id = self.pool.get('project.project').copy(cr, uid, proj.id, default = {
+                                    'name': proj.name +_(' (copy)'),
+                                    'state':'open',
+                                    'parent_id':parent_id})
+            result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
             for (tasks_id,) in res:
-                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
+                self.pool.get('project.task').copy(cr, uid, tasks_id, default = {
+                                    'project_id': new_id,
+                                    'active':True}, context=context)
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])            
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id':new_id})
-
-        # TODO : Improve this to open the new project (using a wizard)
-
-        cr.commit()
-        raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
+        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):
