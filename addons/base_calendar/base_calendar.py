@@ -59,13 +59,13 @@ def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
 
-def get_attribute_mapping(cr, uid, model, context={}):
+def get_attribute_mapping(cr, uid, calname, context={}):
         pool = pooler.get_pool(cr.dbname)
         field_obj = pool.get('basic.calendar.fields')
-        fids = field_obj.search(cr, uid, [('object_id.model', '=', model)])
+        fids = field_obj.search(cr, uid, [('type_id', '=', calname)])
         res = {}
         for field in field_obj.browse(cr, uid, fids):
-            attr = field.attribute
+            attr = field.name.name
             res[attr] = {}
             res[attr]['field'] = field.field_id.name
             res[attr]['type'] = field.field_id.ttype
@@ -156,7 +156,7 @@ class CalDAV(object):
         return True
 
     def export_ical(self, cr, uid, datas, vobj=None, context={}):
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         ical = vobject.iCalendar()
         for data in datas:
             vevent = ical.add(vobj)
@@ -204,7 +204,7 @@ class CalDAV(object):
                         elif map_type == "many2one":
                             vevent.add(field).value = [data.get(map_field)[1]]
                         elif map_type in ("float", "integer"):
-                            vevent.add(field).value = [data.get(map_field)]
+                            vevent.add(field).value = str(data.get(map_field))
                         elif map_type == "selection":
                             if not self.ical_get(field, 'mapping'):
                                 vevent.add(field).value = (data[map_field]).upper()
@@ -215,7 +215,7 @@ class CalDAV(object):
         return ical
 
     def import_ical(self, cr, uid, ical_data):
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._name)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname)
         parsedCal = vobject.readOne(ical_data)
         att_data = []
         res = []
@@ -245,6 +245,7 @@ class CalDAV(object):
 
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
+    _calname = 'calendar'
     __attribute__ = {
         'prodid': None, # Use: R-1, Type: TEXT, Specifies the identifier for the product that created the iCalendar object.
         'version': None, # Use: R-1, Type: TEXT, Specifies the identifier corresponding to the highest version number
@@ -259,10 +260,15 @@ class Calendar(CalDAV, osv.osv):
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
     }
     _columns = {
-            'name': fields.char("Name", size=64),             
-            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines')
+            'name': fields.char("Name", size=64), 
+            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'), 
+            'active': fields.boolean('Active'), 
     }
 
+    _defaults = {
+                'active': lambda *a: True,
+                 }
+    
 Calendar()
 
     
@@ -320,6 +326,7 @@ basic_calendar_fields()
 
 class Event(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.event'
+    _calname = 'event'
     __attribute__ = {
         'class': None, # Use: O-1, Type: TEXT, Defines the access classification for a calendar  component like "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
         'created': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the calendar information  was created by the calendar user agent in the calendar store.
@@ -362,6 +369,7 @@ Event()
 
 class ToDo(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.todo'
+    _calname = 'todo'
 
     __attribute__ = {
                 'class': None, 
@@ -438,6 +446,8 @@ class Timezone(CalDAV):
 
 class Alarm(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.alarm'
+    _calname = 'alarm'
+
     __attribute__ = {
     'action': None, # Use: R-1, Type: Text, defines the action to be invoked when an alarm is triggered LIKE "AUDIO" / "DISPLAY" / "EMAIL" / "PROCEDURE"
     'description': None, #      Type: Text, Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property. Use:- R-1 for DISPLAY,Use:- R-1 for EMAIL,Use:- R-1 for PROCEDURE
@@ -510,6 +520,8 @@ Alarm()
 
 class Attendee(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.attendee'
+    _calname = 'attendee'
+
     __attribute__ = {
     'cutype': None, # Use: 0-1    Specify the type of calendar user specified by the property like "INDIVIDUAL"/"GROUP"/"RESOURCE"/"ROOM"/"UNKNOWN".
     'member': None, # Use: 0-1    Specify the group or list membership of the calendar user specified by the property.
@@ -538,7 +550,7 @@ class Attendee(CalDAV, osv.osv_memory):
 
     def export_ical(self, cr, uid, model, attendee_ids, vevent, context={}):
         attendee_object = self.pool.get(model)
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         for attendee in attendee_object.read(cr, uid, attendee_ids, []):
             attendee_add = vevent.add('attendee')
             cn_val = ''
