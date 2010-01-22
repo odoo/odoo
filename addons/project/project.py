@@ -164,7 +164,7 @@ class project(osv.osv):
         return res
 
     def set_done(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'close'}, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context={}):
@@ -192,7 +192,8 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
+        if ids:
+            cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
@@ -203,11 +204,9 @@ class project(osv.osv):
             res = cr.fetchall()
             for (tasks_id,) in res:
                 self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
-            res = cr.fetchall()
-            project_ids = [x[0] for x in res]
-            for child in project_ids:
-                self.duplicate_template(cr, uid, [child],context={'parent_id':new_id})
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])            
+            if child_ids:
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id':new_id})
 
         # TODO : Improve this to open the new project (using a wizard)
 
@@ -222,10 +221,9 @@ class project(osv.osv):
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
-            project_ids = [x[0] for x in cr.fetchall()]
-            for child in project_ids:
-                self.setActive(cr, uid, [child], value, context)
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)]) 
+            if child_ids:
+                self.setActive(cr, uid, child_ids, value, context)
         return True
 project()
 
