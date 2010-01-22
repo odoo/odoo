@@ -52,11 +52,13 @@ class survey(osv.osv):
         'history' : fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
         'question_prefix' : fields.char('Question Prefix', size=128),
+        'send_response' : fields.boolean('E-mail Notification on Response'),
     }
     _defaults = {
         'state' : lambda * a: "draft",
         'tot_start_survey' : lambda * a: 0,
         'tot_comp_survey' : lambda * a: 0,
+        'send_response' : lambda * a: 1,
     }
 
     def survey_draft(self, cr, uid, ids, arg):
@@ -796,33 +798,33 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     if not context.has_key('active'):
                         survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
-                        surv_name_wiz = self.pool.get('survey.name.wiz')
-                        user_obj = self.pool.get('res.users')
-                        survey_data = self.pool.get('survey').browse(cr, uid, int(context['survey_id']))
-                        response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
-                        context.update({'response_id':response_id})
-                        report = self.create_report(cr, uid, [int(context.get('survey_id',False))], 'report.survey.browse.response', survey_data.title,context)
-                        attachments = []
-                        file = open("/tmp/" + survey_data.title + ".pdf")
-                        file_data = ""
-                        while 1:
-                            line = file.readline()
-                            file_data += line
-                            if not line:
-                                break
-                        attachments.append((survey_data.title + ".pdf",file_data))
-                        user_email = False
-                        resp_email = False
-                        if user_obj.browse(cr, uid, uid).address_id.id:
-                            cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
-                            user_email = cr.fetchone()[0]
-                        resp_id = survey_data.responsible_id.address_id
-                        if resp_id:
-                            cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
-                            resp_email = cr.fetchone()[0]
-                        if user_email and resp_email:
-                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks," 
-                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
+                        if sur_rec['send_response']:
+                            user_obj = self.pool.get('res.users')
+                            survey_data = survey_obj.browse(cr, uid, int(survey_id))    
+                            response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
+                            context.update({'response_id':response_id})
+                            report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
+                            attachments = []
+                            file = open("/tmp/" + survey_data.title + ".pdf")
+                            file_data = ""
+                            while 1:
+                                line = file.readline()
+                                file_data += line
+                                if not line:
+                                    break
+                            attachments.append((survey_data.title + ".pdf",file_data))
+                            user_email = False
+                            resp_email = False
+                            if user_obj.browse(cr, uid, uid).address_id.id:
+                                cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
+                                user_email = cr.fetchone()[0]
+                            resp_id = survey_data.responsible_id.address_id
+                            if resp_id:
+                                cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
+                                resp_email = cr.fetchone()[0]
+                            if user_email and resp_email:
+                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks," 
+                                tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
                         
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
