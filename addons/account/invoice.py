@@ -63,8 +63,9 @@ class account_invoice(osv.osv):
             context = {}
         type_inv = context.get('type', 'out_invoice')
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
         journal_obj = self.pool.get('account.journal')
-        res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale'))], limit=1)
+        res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')), ('refund_journal', '=', refund_journal.get(type_inv, False))], limit=1)
         if res:
             return res[0]
         else:
