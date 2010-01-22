@@ -275,7 +275,8 @@ class basic_calendar_line(osv.osv):
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64), 
             'object_id': fields.many2one('ir.model', 'Object'), 
-            'calendar_id': fields.many2one('basic.calendar', 'Calendar', required=True),
+            'calendar_id': fields.many2one('basic.calendar', 'Calendar', \
+                                       required=True, ondelete='cascade',),
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
     }   
 
@@ -301,7 +302,8 @@ class basic_calendar_fields(osv.osv):
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
         'name': fields.many2one('basic.calendar.attributes', 'Name', required=True),
-        'type_id': fields.many2one('basic.calendar.lines', 'Type', required=True),
+        'type_id': fields.many2one('basic.calendar.lines', 'Type', \
+                                   required=True, ondelete='cascade'),
         'expr': fields.char("Expression", size=64),
         'fn': fields.selection( [('field', 'Use the field'),
                         ('const', 'Expression as constant'),

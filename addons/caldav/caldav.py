@@ -444,9 +444,11 @@ class calendar_event(osv.osv):
     
     _columns = {
         'id': fields.integer('ID'), 
+        'sequence': fields.integer('Sequence'), 
         'name': fields.char('Description', size=64, required=True), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
+        'create_date': fields.datetime('Created' ,readonly=True), 
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
         'description': fields.text('Your action'), 
