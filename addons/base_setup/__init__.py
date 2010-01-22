@@ -33,7 +33,7 @@ class base_setup_config_choice(osv.osv_memory):
     logger = netsvc.Logger()
 
     def set_default_menu(self, cr, uid, menu, context=None):
-        users = self.pool.get('res_users')
+        users = self.pool.get('res.users')
         users.write(cr, uid,
                     users.search(cr, uid,
                                  [('action_id','=','Setup')],
