@@ -95,7 +95,7 @@ class document_file(osv.osv):
     
     _columns = {
         'type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status'),
+        'state': fields.selection([('change_request', 'Change Request'),('change_proposed', 'Change Proposed'), ('in_production', 'In Production'), ('to_update', 'To Update'), ('validate', 'To Validate'), ('cancel', 'Cancel')], 'Status',readonly=True),
         'target_document_id': fields.many2one('document.directory', 'Target Document'),
         'target':fields.binary('Target'),
     }
@@ -103,10 +103,6 @@ class document_file(osv.osv):
      'state': lambda *a: 'validate',
      }    
     def button_change_request(self, cr, uid, ids, context={}):
-#        for document in self.browse(cr, uid, ids, context):
-#            if document.target_document_id:
-#                self.write(cr, uid, ids, {'state':'change_proposed'})
-#            else:
         self.write(cr, uid, ids, {'state':'change_request'})                
         return True
     def button_change_proposed(self, cr, uid, ids, context={}):
@@ -115,9 +111,7 @@ class document_file(osv.osv):
     def button_in_production(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'in_production'})
         return True
-    def button_to_update(self, cr, uid, ids, context={}):
-#        for document in self.browse(cr, uid, ids, context):
-#            if document.target_document_id:        
+    def button_update(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'to_update'})
         return True
     def button_change_validated(self, cr, uid, ids, context={}):

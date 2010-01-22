@@ -11,18 +11,18 @@
         <record id="act_request" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="flow_start">True</field>
-            <field name="name">change requested</field>
+            <field name="name">change_requested</field>
         </record>
         <record id="act_propose" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">change proposed</field>
-            <field name="action">change_proposed()</field>
+            <field name="action">button_change_proposed()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_update" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">to update</field>
-            <field name="action">to_update()</field>
+            <field name="action">button_update()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_production" model="workflow.activity">
