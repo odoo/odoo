@@ -862,6 +862,8 @@ class orm_template(object):
                 if isinstance(e, osv.orm.except_orm ):
                     msg = _('Insertion Failed! ' + e[1])
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
+                #Raising Uncaught exception
+                raise
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
