@@ -28,13 +28,13 @@
         <record id="act_production" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">in production</field>
-            <field name="action">in_production()</field>
+            <field name="action">button_in_production()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">cancel</field>
-            <field name="action">cancel()</field>
+            <field name="action">button_cancel()</field>
             <field name="kind">function</field>
         </record>
         
@@ -68,7 +68,7 @@
         <record id="update_to_production" model="workflow.transition">
             <field name="act_from" ref="act_update"/>
             <field name="act_to" ref="act_production"/>
-            <field name="signal">button_update</field>
+            <field name="signal">button_to_update</field>
         </record>
         <record id="production_to_request" model="workflow.transition">
             <field name="act_from" ref="act_production"/>

@@ -35,6 +35,7 @@
     'update_xml': ['document_change_view.xml',
                    'document_change_sequence.xml',
                    'document_change_workflow.xml',
+                   'document_phase_workflow.xml',
     ],
     'demo_xml': [ ],
     'installable': True,
