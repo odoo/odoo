@@ -68,7 +68,7 @@ class doucment_change_process_phase(osv.osv):
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
-        'state': fields.selection([('draft', 'Draft'),('started', 'Started'),('validate', 'To Validate'), ('done', 'Done')], 'Status',readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('validate', 'To Validate'),('pending', 'Pending'), ('done', 'Done')], 'Status',readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
     _defaults = {      
@@ -79,14 +79,15 @@ class doucment_change_process_phase(osv.osv):
     def state_draft_set(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
-
     def state_validate_set(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'validate'})
         return True
     def state_started_set(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'started'})
+        self.write(cr, uid, ids, {'state':'in_process'})
         return True    
-    
+    def state_pending_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'pending'})
+        return True     
     def state_done_set(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'done'})
         return True 
