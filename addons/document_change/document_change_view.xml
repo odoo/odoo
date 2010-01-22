@@ -192,7 +192,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_model_change_form">
+    <record model="ir.ui.view" id="view_model_change_tree">
         <field name="name">document.change.process.model.tree</field>
         <field name="model">document.change.process.model</field>
         <field name="type">tree</field>
@@ -218,7 +218,7 @@
 		Documents 
 	-->
     <record model="ir.ui.view" id="view_document_form">
-        <field name="name">ir.attachment</field>
+        <field name="name">ir.attachment.form</field>
         <field name="model">ir.attachment</field>
         <field name="priority" eval="1"/>
         <field name="type">form</field>
@@ -259,7 +259,7 @@
         </field>
     </record>
     <record model="ir.ui.view" id="view_document_tree">
-        <field name="name">ir.attachment</field>
+        <field name="name">ir.attachment.tree</field>
         <field name="model">ir.attachment</field>
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
@@ -270,7 +270,30 @@
                 <field name="datas_fname"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
+                <field name="state"/>
             </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_document_search">
+        <field name="name">ir.attachment.search</field>
+        <field name="model">ir.attachment</field>
+        <field name="type">search</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <search string="Documents">
+            	<group col="7" colspan="4">
+	                <filter domain="[('state','=','change_request')]" string="To Change" icon="gtk-apply" help="Documents in state Change Requested"/>
+	                <filter domain="[('state','=','change_proposed')]" string="To Validate" icon="gtk-execute" help="Documents in state Change Proposed"/>
+	            	<field name="type_id" string="Type of Documents" select="1"/>
+	            	<field name="parent_id" select="1"/>
+	            	<field name="create_uid" string="Owner" select="1"/>
+	            </group>
+	            <group expand="1" string="Group By..." col="20" colspan="4">
+	            	<filter domain="[]" string="By Owner" icon="terp-hr" context="{'group_by':'create_uid'}" help="Documents by owner"/>
+	            	<filter domain="[]" string="By Directory" icon="terp-hr" context="{'group_by':'parent_id'}" help="Documents by directory"/>
+	            	<filter domain="[]" string="By Type of Documents" icon="terp-hr" context="{'group_by':'type_id'}" help="Documents by type"/>
+	            </group>
+            </search>
         </field>
     </record>
 
@@ -280,6 +303,7 @@
         <field name="name">Documents</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_search"/>
     </record>
     
     <record id="action_document_tree_view" model="ir.actions.act_window.view">
@@ -486,17 +510,41 @@
                 <field name="structure_id"/>
                 <field name="description"/>
                 <field name="process_model_id"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
-
-  
+	<record model="ir.ui.view" id="view_process_serach">
+        <field name="name">document.change.process.search</field>
+        <field name="model">document.change.process</field>
+        <field name="type">search</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <search string="Documents">
+            	<group col="8" colspan="4">
+            		<filter domain="[('user_id','=',uid)]" string="My Process Changes" icon="gtk-execute" help="My Process Changes"/>
+	                <filter domain="[('state','=','validate')]" string="To Validate" icon="gtk-apply" help="Process Changes to be validated"/>
+	                <filter domain="[('state','=','in_progress')]" string="Late" icon="gtk-execute" help="Process changes having the next Phase to validate that is late"/>
+	            	<field name="name" string="Process Change Title" select="1"/>
+	            	<field name="process_type_id" select="1"/>
+	            	<field name="structure_id" select="1"/>
+	            	<field name="user_id" string="Owner" select="1"/>
+	            </group>
+	            <group expand="1" string="Group By..." col="20" colspan="4">
+	            	<filter domain="[]" string="By Owner" icon="terp-hr" context="{'group_by':'user_id'}" help="Process Changes by owner"/>
+	            	<filter domain="[]" string="By Directory" icon="terp-hr" context="{'group_by':'structure_id'}" help="Process Changes by directory"/>
+	            </group>
+            </search>
+        </field>
+    </record>
+	  
     <record model="ir.actions.act_window" id="action_process_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.process</field>
         <field name="name">Process Changes</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_serach"/>
     </record>
     <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
     
