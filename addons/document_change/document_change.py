@@ -103,11 +103,11 @@ class document_file(osv.osv):
      'state': lambda *a: 'validate',
      }    
     def button_change_request(self, cr, uid, ids, context={}):
-        for document in self.browse(cr, uid, ids, context):
-            if document.target_document_id:
-                self.write(cr, uid, ids, {'state':'change_proposed'})
-            else:
-                self.write(cr, uid, ids, {'state':'change_request'})                
+#        for document in self.browse(cr, uid, ids, context):
+#            if document.target_document_id:
+#                self.write(cr, uid, ids, {'state':'change_proposed'})
+#            else:
+        self.write(cr, uid, ids, {'state':'change_request'})                
         return True
     def button_change_proposed(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'change_proposed'})        
@@ -119,12 +119,17 @@ class document_file(osv.osv):
 #        for document in self.browse(cr, uid, ids, context):
 #            if document.target_document_id:        
         self.write(cr, uid, ids, {'state':'to_update'})
+        return True
+    def button_change_validated(self, cr, uid, ids, context={}):
+#        for document in self.browse(cr, uid, ids, context):
+#            if document.target_document_id:        
+        self.write(cr, uid, ids, {'state':'validate'})
         return True                
     def button_cancel(self, cr, uid, ids, context={}):
         workflow = netsvc.LocalService('workflow')
         for oid in ids:
             workflow.trg_create(uid, self._name, oid, cr)
-        return self.write(cr, uid, ids, {'state':'to_cancel'},context=context)        
+        return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
         
 document_file()
 
