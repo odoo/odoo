@@ -58,8 +58,7 @@ class crm_cases(osv.osv):
         mailgate_obj = self.pool.get('mail.gateway')
         msg_actions, body_data = mailgate_obj.msg_act_get(msg)           
         data.update({
-            'description': body_data,
-            'history_line': [(0, 0, {'description': body_data, 'email': msg['From']})],
+            'description': body_data,            
         })
         act = 'case_'+default_act
         if 'state' in msg_actions:
@@ -79,7 +78,9 @@ class crm_cases(osv.osv):
         if 'partner' in msg_actions:
             data['email_from'] = msg_actions['partner'][:128]
 
-        res = self.write(cr, uid, ids, data)        
+        res = self.write(cr, uid, ids, data)
+        cases = self.browse(cr, uid, [res])       
+        self.__history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])        
         getattr(self,act)(cr, uid, ids)
         return res
 
