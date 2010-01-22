@@ -42,6 +42,8 @@
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
+                    'base_calendar_wizard.xml', 
+                    'base_calendar_view.xml'
                     ], 
     "installable" : True, 
     "active" : False, 

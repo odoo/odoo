@@ -28,7 +28,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 from tools import config
 
-class Account(osv.osv):
+class account_account(osv.osv):
     _inherit = "account.account"
     
     def _get_level(self, cr, uid, ids, field_name, arg, context={}):
@@ -108,7 +108,7 @@ class Account(osv.osv):
              vals['type1'] = 'none'
         journal_ids=self.pool.get('account.journal').search(cr,uid,[('name','=','Opening Journal')])
         vals['journal_id'] = journal_ids and journal_ids[0] or False
-        account_id = super(Account, self).create(cr, uid, vals, context)
+        account_id = super(account_account, self).create(cr, uid, vals, context)
         if vals.get('type1', False) != False:
             journal_id = vals.get('journal_id',False)
             if journal_id and vals.has_key('open_bal'):
@@ -157,7 +157,7 @@ class Account(osv.osv):
                  vals['type1'] = 'cr'
             else:
                  vals['type1'] = 'none'
-        super(Account, self).write(cr, uid,ids, vals, context)
+        super(account_account, self).write(cr, uid,ids, vals, context)
         if vals.has_key('open_bal'):
             self_obj= self.browse(cr,uid,ids)
             move_pool=self.pool.get('account.move')
@@ -213,16 +213,16 @@ class Account(osv.osv):
         return {
             'value' : {'type1' : type1}
     }
-Account()
+account_account()
 
-class AccountMove(osv.osv):
+class account_move(osv.osv):
     _inherit = "account.move"
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
 
-AccountMove()
+account_move()
 
 class res_currency(osv.osv):
     _inherit = "res.currency"

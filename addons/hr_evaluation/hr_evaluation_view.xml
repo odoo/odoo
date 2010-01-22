@@ -54,6 +54,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Evaluation Plan Phase">
+					<field name="plan_id" invisible="1"/>
 					<group col="6" colspan="4">
 						<field name="name"/>
 						<field name="wait"/>
@@ -124,7 +125,7 @@
 						<field name="employee_id" select="1"/>
 						<field name="manager_id" select="1"/>
 						<field name="plan_id"/>
-						<field name="phase_id"/>
+						<field name="phase_id" domain="[('plan_id', '=', plan_id)]"/>
 					</group>
 					<notebook colspan="4">
 			            <page string="Appraisal">

@@ -52,7 +52,7 @@ class hr_evaluation_plan_phase(osv.osv):
             ('bottom-up','Bottom-Up Appraisal Requests'),
             ('self','Self Appraisal Requests'),
             ('final','Final Interview')], 'Action', required=True),
-        'survey_id': fields.many2one('survey','Appraisal Form'),
+        'survey_id': fields.many2one('survey','Appraisal Form',required=True),
         'send_answer_manager': fields.boolean('All Answers',
             help="Send all answers to the manager"),
         'send_answer_employee': fields.boolean('All Answers',

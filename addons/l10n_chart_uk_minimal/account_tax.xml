@@ -21,6 +21,7 @@
         <record id="vat_code_input" model="account.tax.code.template">
             <field name="name">Input VAT</field>
             <field name="parent_id" ref="vat_code_balance_net"/>
+            <field eval="-1" name="sign"/>
         </record>
 
         <record id="vat_code_input_S" model="account.tax.code.template">

@@ -51,15 +51,16 @@ class cal_event_export_wizard(wizard.interface):
         model_obj = pooler.get_pool(cr.dbname).get(model)
         calendar = model_obj.export_cal(cr, uid, data['ids'], context)
         return {'file_path': base64.encodestring(calendar), \
-                                'name': 'OpenERP Events.ics'}
+                        'name': 'OpenERP %s.ics' % (model_obj._description)}
     
     states = {
         'init': {
             'actions': [_process_export_ics], 
             'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
-                       'state': [('end', '_Cancel', 'gtk-cancel'), ('end', 'Ok', 'gtk-ok')]}}, 
+                       'state': [('end', '_Cancel', 'gtk-cancel'), \
+                            ('end', 'Ok', 'gtk-ok')]}}, 
     }
     
-cal_event_export_wizard('caldav.event.export')
+cal_event_export_wizard('calendar.event.export')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

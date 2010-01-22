@@ -30,6 +30,7 @@ import random
 import tools
 import re
 
+from tools.translate import _
 from document.nodes import node_content
 
 from tools.safe_eval import safe_eval

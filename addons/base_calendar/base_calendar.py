@@ -22,7 +22,7 @@
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
-from osv import osv
+from osv import osv, fields
 import pooler
 import re
 import vobject
@@ -58,6 +58,22 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
 def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
     return value
+
+def get_attribute_mapping(cr, uid, model, context={}):
+        pool = pooler.get_pool(cr.dbname)
+        field_obj = pool.get('basic.calendar.fields')
+        fids = field_obj.search(cr, uid, [('object_id.model', '=', model)])
+        res = {}
+        for field in field_obj.browse(cr, uid, fids):
+            attr = field.attribute
+            res[attr] = {}
+            res[attr]['field'] = field.field_id.name
+            res[attr]['type'] = field.field_id.ttype
+            if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
+                res[attr]['object'] = field.field_id.relation
+            elif res[attr]['type'] in ('selection') and field.mapping:
+                res[attr]['mapping'] = eval(field.mapping)
+        return res
 
 def map_data(cr, uid, obj):
     vals = {}
@@ -101,8 +117,8 @@ def map_data(cr, uid, obj):
     return vals
 
 class CalDAV(object):
-    __attribute__ = {
-    }
+    __attribute__ = {}
+
     def get_recurrent_dates(self, rrulestring, exdate, startdate=None):
         if not startdate:
             startdate = datetime.now()
@@ -129,8 +145,6 @@ class CalDAV(object):
                         val = ','.join(map(lambda x: x.strftime('%Y-%m-%d %H:%M:%S'), val))
                     else:
                         val = val.strftime('%Y-%m-%d %H:%M:%S')
-                if valtype and valtype == 'integer' and val:
-                    val = int(val)
             return  val
         else:
             return  self.__attribute__.get(name, None)
@@ -142,6 +156,7 @@ class CalDAV(object):
         return True
 
     def export_ical(self, cr, uid, datas, vobj=None, context={}):
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
         ical = vobject.iCalendar()
         for data in datas:
             vevent = ical.add(vobj)
@@ -177,7 +192,7 @@ class CalDAV(object):
                         vevent = alarm_obj.export_ical(cr, uid, model, \
                                     data[map_field][0], vevent, context=context)
                     elif data[map_field]:
-                        if map_type == "text":
+                        if map_type in ("char", "text"):
                             vevent.add(field).value = str(data[map_field])
                         elif map_type == 'datetime' and data[map_field]:
                             if field in ('exdate'):
@@ -188,13 +203,19 @@ class CalDAV(object):
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
                             vevent.add(field).value = [data.get(map_field)[1]]
-                        if self.__attribute__.get(field).has_key('mapping'):
-                            for key1, val1 in self.ical_get(field, 'mapping').items():
-                                if val1 == data[map_field]:
-                                    vevent.add(field).value = key1
+                        elif map_type in ("float", "integer"):
+                            vevent.add(field).value = [data.get(map_field)]
+                        elif map_type == "selection":
+                            if not self.ical_get(field, 'mapping'):
+                                vevent.add(field).value = (data[map_field]).upper()
+                            else:
+                                for key1, val1 in self.ical_get(field, 'mapping').items():
+                                    if val1 == data[map_field]:
+                                        vevent.add(field).value = key1
         return ical
 
     def import_ical(self, cr, uid, ical_data):
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name)
         parsedCal = vobject.readOne(ical_data)
         att_data = []
         res = []
@@ -222,7 +243,7 @@ class CalDAV(object):
         return res
 
 
-class Calendar(CalDAV, osv.osv_memory):
+class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
     __attribute__ = {
         'prodid': None, # Use: R-1, Type: TEXT, Specifies the identifier for the product that created the iCalendar object.
@@ -236,10 +257,64 @@ class Calendar(CalDAV, osv.osv_memory):
         'vjournal': None, # Use: O-n, Type: Collection of Journal class
         'vfreebusy': None, # Use: O-n, Type: Collection of FreeBusy class
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
-
+    }
+    _columns = {
+            'name': fields.char("Name", size=64),             
+            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines')
     }
 
 Calendar()
+
+    
+class basic_calendar_line(osv.osv):
+    _name = 'basic.calendar.lines'
+    _description = 'Calendar Lines'    
+    _columns = {
+            'name': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+                                    ('alarm', 'Alarm'), \
+                                    ('attendee', 'Attendee')], \
+                                    string="Type", size=64), 
+            'object_id': fields.many2one('ir.model', 'Object'), 
+            'calendar_id': fields.many2one('basic.calendar', 'Calendar', required=True),
+            'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
+    }   
+
+basic_calendar_line()
+
+class basic_calendar_attribute(osv.osv):
+    _name = 'basic.calendar.attributes'
+    _description = 'Calendar attributes'
+    _columns = {        
+        'name': fields.char("Name", size=64, required=True),
+        'type': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+                                    ('alarm', 'Alarm'), \
+                                    ('attendee', 'Attendee')], \
+                                    string="Type", size=64, required=True),        
+    }
+
+basic_calendar_attribute()
+
+class basic_calendar_fields(osv.osv):
+    _name = 'basic.calendar.fields'
+    _description = 'Calendar fields'
+
+    _columns = {
+        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
+        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True),
+        'type_id': fields.many2one('basic.calendar.lines', 'Type', required=True),
+        'expr': fields.char("Expression", size=64),
+        'fn': fields.selection( [('field', 'Use the field'),
+                        ('const', 'Expression as constant'),
+                        ('hours', 'Interval in hours'),
+                        ],'Function'), 
+        'mapping': fields.text('Mapping'), 
+    }
+
+    _defaults = {
+        'fn': lambda *a: 'field',
+    }
+    
+basic_calendar_fields()
 
 class Event(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.event'
@@ -397,7 +472,7 @@ class Alarm(CalDAV, osv.osv_memory):
         # Compute other details
         valarm.add('DESCRIPTION').value = alarm_data['name']
         valarm.add('ACTION').value = alarm_data['action']
-
+        return vevent
 
     def import_ical(self, cr, uid, ical_data):
         for child in ical_data.getChildren():
@@ -461,9 +536,11 @@ class Attendee(CalDAV, osv.osv_memory):
 
     def export_ical(self, cr, uid, model, attendee_ids, vevent, context={}):
         attendee_object = self.pool.get(model)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._name, context)
         for attendee in attendee_object.read(cr, uid, attendee_ids, []):
             attendee_add = vevent.add('attendee')
-            for a_key, a_val in attendee_object.__attribute__.items():
+            cn_val = ''
+            for a_key, a_val in self.__attribute__.items():
                 if attendee[a_val['field']] and a_val['field'] != 'cn':
                     if a_val['type'] == 'text':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]

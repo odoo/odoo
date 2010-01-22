@@ -761,6 +761,11 @@
             <field name="question_id" ref="survey_question_odoo_continue_using_odoo" />
             <field name="sequence" eval="1"/>
         </record>
+        <record id="survey_answer_no" model="survey.answer">
+            <field name="answer">No</field>
+            <field name="question_id" ref="survey_question_odoo_continue_using_odoo" />
+            <field name="sequence" eval="2"/>
+        </record>
         <record id="survey_question_odoo_continue_using_odoo" model="survey.question">
             <field name="make_comment_field">True</field>
             <field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -984,11 +989,17 @@
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
         </record>
-        <record id="survey_answer_No" model="survey.answer">
-            <field name="answer">No</field>
+        <record id="survey_answer_YES" model="survey.answer">
+            <field name="answer">YES</field>
             <field name="question_id" ref="survey_question_odoo_dms" />
             <field name="sequence" eval="1"/>
         </record>
+        <record id="survey_answer_No" model="survey.answer">
+            <field name="answer">No</field>
+            <field name="question_id" ref="survey_question_odoo_dms" />
+            <field name="sequence" eval="2"/>
+        </record>
+
         <record id="survey_question_odoo_dms" model="survey.question">
             <field name="make_comment_field">True</field>
             <field name="make_comment_field_err_msg">Please enter a comment.</field>

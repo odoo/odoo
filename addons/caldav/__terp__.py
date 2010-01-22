@@ -41,8 +41,7 @@
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
-                    'caldav_view.xml',
-                    'caldav_wizard.xml',
+                    'caldav_view.xml'
                     ], 
     "installable" : True, 
     "active" : False, 

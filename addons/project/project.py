@@ -362,7 +362,7 @@ class task(osv.osv):
         'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager'),
+        'manager_id': fields.related('project_id','category_id','user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
@@ -491,9 +491,11 @@ class task(osv.osv):
     def next_type(self, cr, uid, ids, *args):
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids)
+            types = map(lambda x:x.id, typ.project_id.type_ids or [])
             if types:
-                if typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                if not typeid:
+                    self.write(cr, uid, typ.id, {'type': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
                     self.write(cr, uid, typ.id, {'type': types[index+1]})
         return True

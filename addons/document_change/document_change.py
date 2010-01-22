@@ -64,7 +64,7 @@ class doucment_change_process_phase(osv.osv):
         'name': fields.char("Name", size=64, required=True),
         'process_id':fields.many2one('document.change.process','Process Change'),
         'sequence': fields.integer('Sequence'),
-        'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Porcess')], 'Update Document', required=True),        
+        'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Process')], 'Update Document', required=True),        
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
@@ -73,6 +73,7 @@ class doucment_change_process_phase(osv.osv):
     }
     _defaults = {      
      'state': lambda *a: 'draft',
+     'update_document': lambda *a:'at_endPhase',
      'type':lambda *a: 'no_control',
      }
 doucment_change_process_phase()

@@ -12,9 +12,9 @@
 <!--        <menuitem name="Configuration" id="menu_survey_config"
             parent="main_menu_survey" groups="group_survey_manager"/>-->
 	<menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="5"/>
-        <menuitem name="survey" id="menu_survey_config"
-            parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
+         id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="5"/>
+    <menuitem name="survey" id="menu_survey_config"
+        parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
         <!--
             Survey
         -->
@@ -43,7 +43,7 @@
 						                    <field name="in_visible_menu_choice" invisible="1"/>
                                             <notebook colspan="4">
 						                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-												   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">                        
+												   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
 							                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
 							                       </group>
 							                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
@@ -93,7 +93,7 @@
 							                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
 							                                <field name="column_name" colspan="2"/>
 							                            </group>
-													</group>                                                    
+													</group>
                                                 </page>
                                                 <page string="Validation" attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
                                                     <group col="6" colspan="4">
@@ -279,7 +279,7 @@
 	                    <field name="in_visible_menu_choice" invisible="1"/>
                         <notebook colspan="4">
 	                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-							   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">                        
+							   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
 		                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
 		                       </group>
 		                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
@@ -463,7 +463,7 @@
                     <field name="in_visible_menu_choice" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-						   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">                        
+						   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
 	                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
 	                       </group>
 	                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
@@ -957,11 +957,16 @@
             <field name="arch" type="xml">
                 <form string="Survey Request">
                     <field name="date_deadline"/>
-                    <field name="survey_id"/>
+                    <field name="survey_id" widget="selection"/>
+                    <field name="user_id" on_change="on_change_user(user_id)"/>
                     <field name="email"/>
-                    <field name="user_id"/>
-                    <field name="answer_ids" nolabel="1" colspan="4"/>
-                    <field name="state"/>
+					<field name="answer_ids" nolabel="1" colspan="4"/>
+                    <group colspan="4" col="5">
+                    	<field name="state"/>
+                        <button name="survey_req_waiting_answer" string="Set to Watting Answer" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
+                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -973,7 +978,7 @@
             <field name="arch" type="xml">
                 <tree string="Survey Request">
                     <field name="date_deadline"/>
-                    <field name="survey_id" />
+                    <field name="survey_id" widget="selection"/>
                     <field name="email" />
                     <field name="state" />
                 </tree>

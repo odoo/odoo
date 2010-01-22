@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,26 +15,8 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-{
-    "name" : "Human Resources Evaluation",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "depends" : ["hr",'crm_hr'],
-    "description": "Ability to create employees evaluation.",
-    "init_xml" : [],
-    "demo_xml" : ["hr_evaluation_demo.xml"],
-    "update_xml" : [
-#                    "security/ir.model.access.csv",
-                    "hr_evaluation_view.xml",
-                    "hr_evaluation_data.xml"],
-    "active": False,
-    "installable": True
-}
+import idea_vote
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
