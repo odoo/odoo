@@ -115,8 +115,6 @@ class document_file(osv.osv):
         self.write(cr, uid, ids, {'state':'to_update'})
         return True
     def button_change_validated(self, cr, uid, ids, context={}):
-#        for document in self.browse(cr, uid, ids, context):
-#            if document.target_document_id:        
         self.write(cr, uid, ids, {'state':'validate'})
         return True                
     def button_cancel(self, cr, uid, ids, context={}):
