@@ -180,16 +180,18 @@
                             </group>
                         </page>
                         <page string="Other">
-                        	<group colspan="4" col='4'>
+                        	<group colspan="6" col='4'>
 	                            <field name="max_response_limit" select="1"
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
 	                            <field name="response_user" select="2"
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
-	                        </group>
-	                        <group colspan="4" col='4'>
 	                            <field name="question_prefix"/>
 	                            <field name="send_response"/>
-							</group>
+	                        </group>
+	                        <!--group colspan="4" col='4'>
+	                            <field name="question_prefix"/>
+	                            <field name="send_response"/>
+							</group-->
                             <separator colspan="4" string="Survey Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
