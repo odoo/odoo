@@ -81,8 +81,8 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def send_body(self,DATA,code,msg,desc,ctype='application/octet-stream',headers=None):
         """ send a body in one part """
 
-	if not headers:
-		headers = {}
+        if not headers:
+            headers = {}
         self.send_response(code,message=msg)
         self.send_header("Connection", "keep-alive")
         self.send_header("Accept-Ranges", "bytes")
@@ -122,7 +122,7 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Allow", "GET, HEAD, COPY, MOVE, POST, PUT, PROPFIND, PROPPATCH, OPTIONS, MKCOL, DELETE, TRACE")
         self.send_header("Content-Type", "text/plain")
-	self.send_header("Connection", "keep-alive")
+        self.send_header("Connection", "keep-alive")
         self.send_header("DAV", "1")
         self.end_headers()
 
@@ -162,9 +162,9 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             DATA=pf.createResponse()
             DATA=DATA+"\n"
-	    # print "Data:", DATA
-	except DAV_NotFound,(ec,dd):
-	    return self.send_notFound(dd, uri)
+            # print "Data:", DATA
+        except DAV_NotFound,(ec,dd):
+            return self.send_notFound(dd, uri)
         except DAV_Error, (ec,dd):
             return self.send_error(ec,dd)
 
@@ -172,10 +172,10 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def geturi(self):
         buri = self.IFACE_CLASS.baseuri
-	if buri[-1] == '/':
-		return urllib.unquote(buri[:-1]+self.path)
-	else:
-		return urllib.unquote(buri+self.path)
+        if buri[-1] == '/':
+            return urllib.unquote(buri[:-1]+self.path)
+        else:
+            return urllib.unquote(buri+self.path)
 
     def do_GET(self):
         """Serve a GET request."""
@@ -209,7 +209,7 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         """ Send a HEAD response """
         dc=self.IFACE_CLASS
         uri=self.geturi()
-	
+    
         # get the last modified date
         try:
             lm=dc.get_prop(uri,"DAV:","getlastmodified")
@@ -243,12 +243,12 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         uri=self.geturi()
         try:
             res = dc.mkcol(uri)
-	    if res:
-		self.send_body(None,201,"Created",'')
-	    else:
-		self.send_body(None,415,"Cannot create",'')
-	    #self.send_header("Connection", "keep-alive")
-	    # Todo: some content, too
+            if res:
+                self.send_body(None,201,"Created",'')
+            else:
+                self.send_body(None,415,"Cannot create",'')
+            #self.send_header("Connection", "keep-alive")
+            # Todo: some content, too
         except DAV_Error, (ec,dd):
             self.send_body(None,int(ec),dd,dd)
 
@@ -370,10 +370,10 @@ class DAVRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def send_notFound(self,descr,uri):
         body = """<?xml version="1.0" encoding="utf-8" ?>
-	<D:response xmlns:D="DAV:">
-		<D:href>%s</D:href>
-		<D:error/>
-		<D:responsedescription>%s</D:responsedescription>
-	</D:response>
-	"""
-	return self.send_status(404,descr, body=body % (uri,descr))
+        <D:response xmlns:D="DAV:">
+            <D:href>%s</D:href>
+            <D:error/>
+            <D:responsedescription>%s</D:responsedescription>
+        </D:response>
+        """
+        return self.send_status(404,descr, body=body % (uri,descr))

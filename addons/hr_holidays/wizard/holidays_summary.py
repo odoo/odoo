@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #    $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
 #
 #    This program is free software: you can redistribute it and/or modify

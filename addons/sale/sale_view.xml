@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"
-            groups="group_sale_user"/>
+<!--        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"-->
+<!--            groups="group_sale_user"/>-->
+		<menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
+
+		<menuitem id="menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
+		<menuitem action="product.product_normal_action" id="product.menu_products" parent="menu_product" sequence="1"/>
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -41,8 +45,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="60"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -131,7 +134,8 @@
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
-                                            <field name="company_id" groups="base.group_multi_company"/>
+
+                                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                             <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name" select="2"/>
                                             <field name="price_unit" select="2"/>
@@ -251,7 +255,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
-        <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
+        <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
 
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -265,7 +269,7 @@
         </record>
 
         <record id="action_order_tree3" model="ir.actions.act_window">
-            <field name="name">Sales Order To Be Invoiced</field>
+            <field name="name">Sales To Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
@@ -282,7 +286,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
 
@@ -293,7 +297,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="search_view_id" ref="view_sales_order_filter"/>            
+            <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
 		<record id="action_order_tree" model="ir.actions.act_window">
@@ -355,7 +359,7 @@
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1" select="1"/>
                             <field name="invoiced" select="2"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name" select="2"/>
                             <field name="price_unit" select="2"/>
@@ -415,8 +419,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_sales_order_line_filter"/>
         </record>
-        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"
-            groups="base.group_extended"/>
+        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="base.menu_sales"
+            groups="base.group_extended" sequence="4"/>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Lines</field>
@@ -442,27 +446,36 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
+		<menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
+		<menuitem action="action_order_tree3" id="menu_invoicing_sales_order" parent="menu_invoiced" sequence="1"/>
+		<menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
             <field name="name">Configure Picking Policy for Sale Order </field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Sales Configuration">
-                    <separator colspan="4" string="Configure Sale Order Logistic"/>
-                    <newline/>
-                    <field name="picking_policy"/>
-                    <newline/>
-                    <field name="order_policy"/>
-                    <newline/>
-                    <field name="step"/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
-                        <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>
-                    </group>
-                </form>
+              <data>
+                <form position="attributes"><attribute name="string">
+                  Sales Configuration
+                </attribute></form>
+                <group string="res_config_contents" position="replace">
+                  <label colspan="4" align="0.0" string="
+                    Set the policies selected by default when creating a new
+                    sale order."/>
+                  <separator colspan="4"
+                             string="Configure Sale Order Logistic"/>
+                  <newline/>
+                  <field name="picking_policy"/>
+                  <newline/>
+                  <field name="order_policy"/>
+                  <newline/>
+                  <field name="step"/>
+                </group>
+                <xpath expr='//button[@name="action_skip"]' position='replace'/>
+              </data>
             </field>
         </record>
 
@@ -470,6 +483,7 @@
             <field name="name">Configure Picking Policy for Sale Order</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
+            <field name="view_id" ref="view_config_picking_policy"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -477,11 +491,8 @@
 
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
-            <field name="name">Select the default picking policy for Sale Order</field>
-            <field name="note">This Configuration step use to set default picking policy when make sale order</field>
             <field name="action_id" ref="action_config_picking_policy"/>
         </record>
-
 
     </data>
 </openerp>

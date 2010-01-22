@@ -4,13 +4,29 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities - Quote Inherit</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.opportunity</field>
         <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
-                <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
+            <field name="user_id" position="replace">
+                <label string="Responsible: " align="1.0"/>
+                <group colspan="1" col="2">
+                    <field name="user_id" select="2" nolabel="1" string="Responsible"/>
+                    <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
+                </group>
             </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="sale_view_inherit123">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/notebook/page[@string='Other data']/field[@name='company_id']" position="after">
+                <field name="section_id" widget='selection'/>
+            </xpath>
         </field>
     </record>
 

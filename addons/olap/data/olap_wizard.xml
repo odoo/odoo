@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+    <wizard
+            string="Query Builder"
+            model="olap.schema"
+            name="olap.query_builder"
+            menu= "False"
+            multi="True"
+            id="bi_conf_cube_query_builder"/>
+        <!--        <menuitem name="Query Builder" action="bi_conf_cube_query_builder" type="wizard"  id="menu_bi_conf_cube_query_builder" sequence="40" parent="menu_bi_conf_tools"/>
+        -->
+
+    <wizard
+            string="Load Tables"
+            model="olap.schema"
+            name="olap.load.table"
+            menu= "False"
+            multi="True"
+            id="bi_menu_olap_load_table"/>
+
+
+        <wizard
+            string="Load Tables"
+            model="olap.schema"
+            name="olap.load.table"
+            menu= "False"
+            multi="True"
+            id="bi_menu_olap_load_table"/>
+            
+        <wizard
+            string="Open Configuration"
+            model="olap.schema"
+            name="olap.load.configuration.table"
+            menu= "False"
+            multi="True"
+            id="bi_load_configuration_table"/>          
+
+        <wizard
+            string="Configure from Application"
+            model="olap.schema"
+            name="olap.application.configuration"
+            menu="False"
+            multi="True"
+            id="bi_application_configuration"/>
+
+        <wizard
+            string="Test Connection"
+            model="olap.fact.database"
+            name="olap.fact.database.test_connection"
+            menu="False"
+            id="bi_test_connection"/> 
+
+        <wizard
+            string="Open Columns"
+            model="olap.database.columns"
+            name="olap.load.column"
+            menu= "False"
+            multi="True"
+            id="bi_load_column"/> 
+            
+        <wizard
+            string="Clear Logs"
+            model="olap.query.logs"
+            name="olap.query.logs.clear"
+            menu="True"
+            id="bi_clear_logs"/>    
+        <menuitem name="Clear Logs" action="bi_clear_logs" type="wizard"  id="menu_bi_clear_logs" sequence="30" parent="menu_bi_conf_tools"/>
+
+
+    </data>
+</openerp>

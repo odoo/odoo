@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,7 @@ import netsvc
 import pooler
 import tools
 from tools.translate import _
+from crm import crm
 
 class crm_case_log(osv.osv):
     _inherit = 'crm.case.log'
@@ -241,6 +242,16 @@ class event_registration(osv.osv):
         "invoice_label":fields.char("Label Invoice",size=128,required=True),
         "tobe_invoiced":fields.boolean("To be Invoiced"),
         "invoice_id":fields.many2one("account.invoice","Invoice"),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),  
+        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id)]"),
+        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
+                                                                       "the partner mentality in relation to our services.The scale has" \
+                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
+                      
     }
     _defaults = {
         'nb_register': lambda *a: 1,

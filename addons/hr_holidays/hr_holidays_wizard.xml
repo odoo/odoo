@@ -1,14 +1,18 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
+	  <menuitem
+            id="hr.menu_hr_reporting"
+            name="Reporting"
+            parent="hr.menu_hr_root"
+            sequence="40" />
 	<wizard string="Print Summary of Holidays"
 		  name="hr.holidays.summary"
 		  id="holidays_summary"/>
-
 	<menuitem name="Print Summary of Holidays" parent="hr.menu_hr_reporting"
 		 action="holidays_summary"
 		 type="wizard"
-		 id="menu_holidays_summary"/>
+		 id="menu_holidays_summary" sequence="20"/>
 
 	 <!-- restrict menu access to HR Manager -->
 	 <record model='ir.ui.menu' id="menu_holidays_summary">

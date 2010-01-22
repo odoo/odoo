@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,7 +29,7 @@ import pooler
 
 _subscription_form = '''<?xml version="1.0"?>
 <form string="%s">
-    <seperator string="Generate entries before:" colspan="4"/>
+    <separator string="Generate entries before:" colspan="4"/>
     <field name="date"/>
 </form>''' % ('Subscription Compute',)
 
@@ -38,7 +38,7 @@ _subscription_fields = {
 }
 
 class wiz_subscription(wizard.interface):
-    def _action_generate(self, cr, uid, data, context):
+    def _action_generate(self, cr, uid, data, context={}):
         cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['form']['date'],))
         ids = map(lambda x: x[0], cr.fetchall())
         pooler.get_pool(cr.dbname).get('account.subscription.line').move_create(cr, uid, ids)

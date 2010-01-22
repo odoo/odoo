@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -215,7 +215,7 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     _columns = {
-        'name': fields.char('Description', size=64, select=1, 
+        'name': fields.char('Description', size=64, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'User', required=True, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -229,7 +229,14 @@ class hr_timesheet_sheet(osv.osv):
                 'new': [('readonly', False)]}
             ),
         'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
-        'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'Status', select=True, required=True, readonly=True),
+        'state' : fields.selection([
+            ('new', 'New'),
+            ('draft','Draft'),
+            ('confirm','Confirmed'),
+            ('done','Done')], 'State', select=True, required=True, readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
+                \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
+                \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
         'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance', multi="_total_day"),
         'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet', multi="_total_day"),
@@ -270,7 +277,7 @@ class hr_timesheet_sheet(osv.osv):
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': lambda *a: 'new',
-         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', c)
+         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 
     def _sheet_date(self, cr, uid, ids):
@@ -312,9 +319,12 @@ class hr_timesheet_sheet(osv.osv):
                     context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
-        sheets = self.read(cr, uid, ids, ['state'])
-        if any(s['state'] in ('confirm', 'done') for s in sheets):
-            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+        sheets = self.read(cr, uid, ids, ['state','total_attendance'])
+        for sheet in sheets:
+            if sheet['state'] in ('confirm', 'done'):
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+            elif sheet['total_attendance'] <> 0.00:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
 hr_timesheet_sheet()
@@ -355,7 +365,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -632,8 +642,10 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             from
                                 hr_attendance a
                                 LEFT JOIN (hr_timesheet_sheet_sheet s
-                                    LEFT JOIN hr_employee e
-                                    ON (s.user_id = e.user_id))
+                                    LEFT JOIN resource_resource r
+                                        LEFT JOIN hr_employee e
+                                        ON (e.resource_id = r.id)
+                                    ON (s.user_id = r.user_id))
                                 ON (a.employee_id = e.id
                                     AND s.date_to >= date_trunc('day',a.name)
                                     AND s.date_from <= a.name)

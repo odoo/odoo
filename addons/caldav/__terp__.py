@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,23 +24,24 @@
     "name" : "CalDAV", 
     "version" : "1.0", 
     "depends" : [
-                    "base", 
+                    "base_calendar", 
                 ], 
      'description': """
- To develop a full featured caldav system that support:
-  - access through webdav (based on xrg code)
+ Full featured caldav system that support:
   - alerts (create requests)
   - recurring events (*)
   - invitations to others people (exactly like sunbird)
-  - availabilities of users/calendars
-  - full day events""", 
+""", 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
-    "init_xml" : [], 
+    "init_xml" : [
+                   'caldav_data.xml'
+                   ], 
     "demo_xml" : [], 
     "update_xml" : [
-                    'security/ir.model.access.csv'
+                    'security/ir.model.access.csv', 
+                    'caldav_view.xml'
                     ], 
     "installable" : True, 
     "active" : False, 

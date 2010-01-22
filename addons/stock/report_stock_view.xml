@@ -16,7 +16,7 @@
             </field>
         </record>
         <record id="action_stock_report_prodlots_form" model="ir.actions.act_window">
-            <field name="name">Stock by Lots</field>
+            <field name="name">Locations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.report.prodlots</field>
             <field name="view_type">form</field>
@@ -38,22 +38,22 @@
                 </tree>
             </field>
         </record>
-        
+
 
         <menuitem
             id="next_id_61"
             name="Reporting"
-            parent="stock.menu_stock_root"/>
+            parent="stock.menu_stock_root" sequence="5"/>
 
-        <menuitem
-            id="next_id_62"
-            name="Traceability"
-            parent="next_id_61"/>
+<!--        <menuitem-->
+<!--            id="next_id_62"-->
+<!--            name="Traceability"-->
+<!--            parent="next_id_61"/>-->
 
         <menuitem
             action="action_stock_report_prodlots_form"
             id="menu_stock_report_prodlots"
-            parent="next_id_62"/>
+            parent="stock.menu_stock_inventory_control" sequence="1"/>
 
         <act_window
             context="{'product_id': active_id}"
@@ -81,7 +81,7 @@
             id="act_stock_production_lot_2_stock_report_prodlots"
             name="Stock" res_model="stock.report.prodlots"
             src_model="stock.production.lot"/>
-	
+
 		<act_window
             domain="[('tracking_id', '=', active_id)]"
             id="act_stock_tracking_lot_2_stock_report_tracklots"
@@ -116,20 +116,20 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_line_date">
-            <field name="name">Dates of Inventories</field>
+            <field name="name">Latest Inventory Date by Product</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
-        <menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date"/>
-        
+
+        <menuitem parent="next_id_61" action="action_stock_line_date" id="menu_report_stock_line_date" sequence="2"/>
+
         <record id="view_location_tree_3" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real_value" />
@@ -137,15 +137,15 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_location_tree_3" model="ir.actions.act_window">
-            <field name="name">Locations' Values</field>
+            <field name="name">Inventory Valuation</field>
             <field name="res_model">stock.location</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_location_tree_3"/>
         </record>
-        <menuitem action="action_location_tree_3" id="menu_action_location_tree_3" parent="next_id_61" />
+        <menuitem action="action_location_tree_3" id="menu_action_location_tree_3" parent="next_id_61" sequence="1"/>
 
     <!-- end...  -->
 

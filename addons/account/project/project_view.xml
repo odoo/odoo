@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:date and (date&lt;=current_date)" string="Analytic account">
+                <tree colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
                     <field name="code"/>
                     <field name="complete_name"/>
                     <field name="quantity"/>
@@ -43,7 +43,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:date and (date&lt;=current_date)" string="Analytic account">
+                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date"/>
@@ -77,7 +77,7 @@
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
-                            <field name="active" select="2"/>
+
                             <newline/>
                             <field name="quantity_max"/>
                             <field name="user_id"/>
@@ -130,7 +130,7 @@
 		<wizard id="wizard_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.account.chart" string="Analytic Chart of Accounts"/>
         <menuitem icon="STOCK_INDENT" action="wizard_analytic_account_chart" id="menu_action_analytic_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
 
-        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_reporting"/>
+        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
@@ -280,7 +280,7 @@
                     <field name="code" select="1"/>
                     <field name="type" select="2"/>
                     <field name="active" select="2"/>
-                    <field name="company_id"/>
+                    <field name="company_id" widget="selection"/>
                 </form>
             </field>
         </record>

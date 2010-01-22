@@ -2,19 +2,44 @@
 <openerp>
 <data>
 
-    # ------------------------------------------------------ 
+	# ------------------------------------------------------
+    # Fund Raising Categories
+    # ------------------------------------------------------
+    <record id="crm_fund_categ_action" model="ir.actions.act_window">
+        <field name="name">Fundraising Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>       
+		<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field> 
+		<field name="context">{'object_id':'crm.fundraising'}</field>  		       
+    </record>
+   <menuitem action="crm_fund_categ_action" id="menu_crm_case_fundraising-act" parent="crm.menu_crm_case_categ"/>
+    # ------------------------------------------------------
+    # Fund Stage
+    # ------------------------------------------------------
+	    <record id="crm_fundraising_stage_act" model="ir.actions.act_window">
+	        <field name="name">Fundraising Stages</field>
+	        <field name="res_model">crm.case.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+   			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+   			<field name="context">{'object_id':'crm.fundraising'}</field>  		        
+	    </record>
+	  <menuitem action="crm_fundraising_stage_act" id="menu_crm_fundraising_stage_act" parent="crm.menu_crm_case_stage"/>
+	    
+    # ------------------------------------------------------
     # Fund Raising
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
         <field name="name">CRM - Funds Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Funds Tree"  colors="red:state=='open'">
+            <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Funds"/>
                 <field name="categ_id"/>
-                <field name="category2_id" string="Payment Mode"/>
+                <field name="type_id" string="Payment Mode"/>
                 <field name="planned_cost" string="Amount"/>
                 <field name="probability"/>
                 <field name="user_id"/>
@@ -24,13 +49,13 @@
                 <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
                 <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>                
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
             </tree>
         </field>
     </record>
     <record model="ir.ui.view" id="crm_case_form_view_fund">
         <field name="name">CRM - Funds Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Funds Form">
@@ -41,7 +66,7 @@
                     <newline/>
                     <field name="date" string="Next Meeting"/>
                     <field name="duration"/>
-                    <field name="category2_id" select="1" string="Payment Mode"/>
+                    <field name="type_id" select="1" string="Payment Mode"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Funds">
@@ -58,7 +83,7 @@
                         <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/> 
+                        <field name="state" select="2"/>
                         <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
                         <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
                         <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
@@ -73,7 +98,7 @@
                     <field name="priority" string="Priority"/>
                     <newline/>
                     <field name="canal_id"/>
-                    <field name="som"/>                    
+                    <field name="som"/>
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
@@ -82,7 +107,7 @@
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
-                
+
                     <field name="log_ids" nolabel="1" colspan="4">
                         <form string="Actions">
                             <separator string="Action Information" colspan="4"/>
@@ -111,7 +136,7 @@
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>                            
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                             <field name="description"/>
@@ -127,7 +152,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_calendar_view_fund">
         <field name="name">CRM - Funds Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -139,7 +164,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_graph_view_fund">
         <field name="name">CRM - Funds Graph</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Funds by Categories" type="bar" orientation="horizontal">
@@ -149,10 +174,10 @@
             </graph>
         </field>
     </record>
-    
+
     <record id="view_crm_case_fund_filter" model="ir.ui.view">
-            <field name="name">crm.case.fund.select</field>
-            <field name="model">crm.case</field>
+            <field name="name">CRM - Funds Search</field>
+            <field name="model">crm.fundraising</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Funds">
@@ -169,10 +194,16 @@
                        </field>
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection"/>
+					   <field name="section_id" select="1" widget="selection" string="Section">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />	
+                       </field>		
                    </group>
                </search>
             </field>
         </record>
-        
+
 </data>
 </openerp>

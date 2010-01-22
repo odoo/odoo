@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -47,15 +47,15 @@ def _record_to_report_line(record):
             }
 
 class account_tax_code_report(rml_parse.rml_parse):
-    #_name = 'report.account.tax.code.entries'
-    
+    _name = 'report.account.tax.code.entries'
+
     def __init__(self, cr, uid, name, context):
         super(account_tax_code_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
             'get_line':self.get_line,
         })
-        
+
     def get_line(self, obj):
         line_ids = self.pool.get('account.move.line').search(self.cr, self.uid, [('tax_code_id','=',obj.id)])
         if not line_ids: return []

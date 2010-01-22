@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,17 +29,17 @@ from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
-class fiscalyear_seq(osv.osv):
-    _name = "fiscalyear.seq"
-    _description = "Maintains Invoice sequences with Fiscal Year"
-    _rec_name = 'fiscalyear_id'
-    _columns = {
-        'journal_id': fields.many2one('account.journal', 'Journal'),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
-        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
-    }
-
-fiscalyear_seq()
+#class fiscalyear_seq(osv.osv):
+#    _name = "fiscalyear.seq"
+#    _description = "Maintains Invoice sequences with Fiscal Year"
+#    _rec_name = 'fiscalyear_id'
+#    _columns = {
+#        'journal_id': fields.many2one('account.journal', 'Journal'),
+#        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
+#        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
+#    }
+#
+#fiscalyear_seq()
 
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):
@@ -153,7 +153,9 @@ class account_invoice(osv.osv):
             if not move_lines:
                 res[id] = []
                 continue
+            res[id] = []
             data_lines = self.pool.get('account.move.line').browse(cr,uid,move_lines)
+            partial_ids = []# Keeps the track of ids where partial payments are done with payment terms
             for line in data_lines:
                 ids_line = []
                 if line.reconcile_id:
@@ -161,7 +163,8 @@ class account_invoice(osv.osv):
                 elif line.reconcile_partial_id:
                     ids_line = line.reconcile_partial_id.line_partial_ids
                 l = map(lambda x: x.id, ids_line)
-                res[id]=[x for x in l if x <> line.id]
+                partial_ids.append(line.id)
+                res[id] =[x for x in l if x <> line.id and x not in partial_ids]
         return res
 
     def _get_invoice_line(self, cr, uid, ids, context=None):
@@ -183,11 +186,14 @@ class account_invoice(osv.osv):
             src = []
             lines = []
             for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
+                temp_lines = []#Added temp list to avoid duplicate records
                 if m.reconcile_id:
-                    lines += map(lambda x: x.id, m.reconcile_id.line_id)
+                    temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
                 elif m.reconcile_partial_id:
-                    lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                    temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                lines += [x for x in temp_lines if x not in lines]
                 src.append(m.id)
+                
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
@@ -236,7 +242,7 @@ class account_invoice(osv.osv):
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
             required=True),
-        'comment': fields.text('Additional Information'),
+        'comment': fields.text('Additional Information', translate=True),
 
         'state': fields.selection([
             ('draft','Draft'),
@@ -245,8 +251,12 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-        ],'State', select=True, readonly=True),
-
+            ],'State', select=True, readonly=True,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
+            \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
+            \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
+            \n* The \'Done\' state is set automatically when invoice is paid.\
+            \n* The \'Cancelled\' state is used when user cancel invoice.'),
         'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)],'close':[('readonly',True)]}, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
@@ -318,7 +328,7 @@ class account_invoice(osv.osv):
         'state': lambda *a: 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
     }
@@ -358,7 +368,7 @@ class account_invoice(osv.osv):
                 if p.property_account_receivable.company_id.id != company_id and p.property_account_payable.company_id.id != company_id:
                     rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
                     pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
-                    if not rec_pro_id: 
+                    if not rec_pro_id:
                         rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
@@ -394,7 +404,7 @@ class account_invoice(osv.osv):
 
         if type in ('in_invoice', 'in_refund'):
             result['value']['partner_bank'] = bank_id
-            
+
         if payment_term != partner_payment_term:
             if partner_payment_term:
                 to_update = self.onchange_payment_term_date_invoice(
@@ -408,7 +418,12 @@ class account_invoice(osv.osv):
             result['value'].update(to_update['value'])
         return result
 
-    def onchange_currency_id(self, cr, uid, ids, curr_id):
+    def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
+        if curr_id:
+            currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
+            if currency.company_id.id != company_id:
+                raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
@@ -446,7 +461,7 @@ class account_invoice(osv.osv):
                 if partner_obj.property_account_payable.company_id.id != company_id and partner_obj.property_account_receivable.company_id.id != company_id:
                     rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
                     pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(part_id)+''),('company_id','=',company_id)])
-                    if not rec_pro_id: 
+                    if not rec_pro_id:
                         rec_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id)])
                     if not pay_pro_id:
                         pay_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id)])
@@ -982,14 +997,17 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
-
+        if invoice.type in ('in_invoice', 'in_refund'):
+            ref = invoice.reference
+        else:
+            ref = self._convert_ref(cr, uid, invoice.number)        
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
             'partner_id': invoice.partner_id.id,
-            'ref':invoice.number,
+            'ref':ref,
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and direction * amount_currency or 0.0,
@@ -1000,7 +1018,7 @@ class account_invoice(osv.osv):
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
             'partner_id': invoice.partner_id.id,
-            'ref':invoice.number,
+            'ref':ref,
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and - direction * amount_currency or 0.0,
@@ -1013,7 +1031,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
@@ -1084,7 +1102,7 @@ class account_invoice_line(osv.osv):
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits=(16, int(config['price_accuracy']))),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
-        'note': fields.text('Notes'),
+        'note': fields.text('Notes', translate=True),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
@@ -1120,7 +1138,7 @@ class account_invoice_line(osv.osv):
         context.update({'lang': lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        
+
         if company_id:
             in_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_income'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
             if not in_pro_id:
@@ -1128,9 +1146,9 @@ class account_invoice_line(osv.osv):
             exp_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_expense'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
             if not exp_pro_id:
                 exp_pro_id = self.pool.get('ir.property').search(cr,uid,[('name','=','property_account_expense_categ'),('res_id','=','product.template,'+str(res.categ_id.id)+''),('company_id','=',company_id)])
-            
+
             if not in_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income 
+                in_acc = res.product_tmpl_id.property_account_income
                 in_acc_cate = res.categ_id.property_account_income_categ
                 if in_acc:
                     app_acc_in = in_acc
@@ -1148,7 +1166,7 @@ class account_invoice_line(osv.osv):
             else:
                 app_acc_exp = self.pool.get('account.account').browse(cr,uid,exp_pro_id)[0]
             if not in_pro_id and not exp_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income 
+                in_acc = res.product_tmpl_id.property_account_income
                 in_acc_cate = res.categ_id.property_account_income_categ
                 ex_acc = res.product_tmpl_id.property_account_expense
                 ex_acc_cate = res.categ_id.property_account_expense_categ
@@ -1212,18 +1230,22 @@ class account_invoice_line(osv.osv):
             res2 = res.uom_id.category_id.id
             if res2 :
                 domain = {'uos_id':[('category_id','=',res2 )]}
-        
-        prod_pool=self.pool.get('product.product')            
+
+        prod_pool=self.pool.get('product.product')
         result['categ_id'] = res.categ_id.id
         res_final = {'value':result, 'domain':domain}
-        
+
         if not company_id and not currency_id:
             return res_final
-        
+
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
         
-        if company.currency_id.id != currency.id and currency.company_id.id == company.id:
+        if not currency.company_id.id == company.id:
+            raise osv.except_osv(_('Configration Error !'),
+                        _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
+        
+        if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
         return res_final

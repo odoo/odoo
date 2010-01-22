@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-09 01:26+0000\n"
+"PO-Revision-Date: 2009-12-28 01:06+0000\n"
 "Last-Translator: Paulino <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
+"X-Launchpad-Export-Date: 2009-12-29 04:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -29,7 +29,7 @@ msgstr "Recriar Aquisição"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_confirmquotation0
 msgid "Confirm Quotation"
-msgstr ""
+msgstr "Confirmar cotação"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_deliveryorder0
@@ -39,7 +39,7 @@ msgstr "Ordem de entrega"
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr ""
+msgstr "Lote do parceiro"
 
 #. module: sale
 #: constraint:ir.actions.act_window:0
@@ -68,7 +68,7 @@ msgstr "de stock"
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr ""
+msgstr "Etapas para entregar uma ordem de venda"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,qtty:0
@@ -107,7 +107,7 @@ msgstr "Excepção da Factura"
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr ""
+msgstr "Esta é a lista de recolha gerada para esta factura"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -140,6 +140,8 @@ msgid ""
 "Whenever confirm button is clicked, the draft state is moved to manual. that "
 "is, quotation is moved to  sale order."
 msgstr ""
+"Quando o butão 'confirmar' é clicado, o estado passa de 'rascunho' a "
+"'manual'. A cotação passa a ordem de venda."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -215,7 +217,7 @@ msgstr "Endereço de facturação"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Artigos de saida"
 
 #. module: sale
 #: view:sale.order:0
@@ -225,7 +227,7 @@ msgstr "Referência"
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Tudo de uma vez"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
@@ -272,7 +274,7 @@ msgstr "Minhas ordens de venda em curso"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Quantidade (UdV)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -322,7 +324,7 @@ msgstr "Quantidades Enviadas"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr ""
+msgstr "Factura baseada nas ordens de venda"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -338,7 +340,7 @@ msgstr "Armazem"
 #. module: sale
 #: rml:sale.order:0
 msgid "Order N°"
-msgstr ""
+msgstr "Ordem Nº"
 
 #. module: sale
 #: field:sale.order,order_line:0
@@ -349,7 +351,7 @@ msgstr "Lindas do pedido"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Desc.(%)"
 
 #. module: sale
 #: view:sale.order:0
@@ -361,7 +363,7 @@ msgstr "Linhas da Factura"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr ""
+msgstr "Forçar atribuição"
 
 #. module: sale
 #: view:sale.order:0
@@ -374,6 +376,9 @@ msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
 msgstr ""
+"A lista de empacotamento é criada quando 'Atribuir' é clicado após "
+"confirmação da ordem de venda. Esta transição move a ordem de venda para "
+"lista de empacotamento."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -392,11 +397,13 @@ msgid ""
 "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
 "will automatic create after delivery."
 msgstr ""
+"Ao escolher a política de entrega 'Facturar automaticamente após a entrega', "
+"a factura será criada automaticamente após a entrega."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Completar expedição"
 
 #. module: sale
 #: view:sale.order:0
@@ -406,7 +413,7 @@ msgstr "Descrição do Manual"
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr ""
+msgstr "Quantidade (UdM)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
@@ -423,12 +430,12 @@ msgstr "Quantidades Pedidas"
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sale Order Procurement"
-msgstr ""
+msgstr "Aprovisionamento da ordem de venda"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr ""
+msgstr "Empacotamento"
 
 #. module: sale
 #: rml:sale.order:0
@@ -466,7 +473,7 @@ msgstr "Configuração"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr ""
+msgstr "Facturar pela ordem, após expedição"
 
 #. module: sale
 #: constraint:ir.ui.view:0
@@ -476,12 +483,12 @@ msgstr "XML inválido para a arquitectura de vista"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Packing"
-msgstr ""
+msgstr "Empacotamento relacionado"
 
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Contas de pagamento"
 
 #. module: sale
 #: constraint:product.template:0
@@ -491,7 +498,7 @@ msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref do Cliente"
 
 #. module: sale
 #: view:sale.order:0
@@ -512,13 +519,13 @@ msgstr "Contas de Pagamento"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,end:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Factura rascunho"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -540,7 +547,7 @@ msgstr "Desconto (%)"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Factura rascunho a clientes a ser revista pela contabilidade"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
@@ -551,7 +558,7 @@ msgstr "Ordem de Venda a ser facturado"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Procurement for each line"
-msgstr ""
+msgstr "Aprovisionamento para cada linha"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree10
@@ -562,7 +569,7 @@ msgstr "Minhas Cotações"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr ""
+msgstr "Facturas"
 
 #. module: sale
 #: view:sale.order:0
@@ -572,22 +579,22 @@ msgstr "Linda do pedido"
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Packing Default Policy"
-msgstr ""
+msgstr "Política padrão de empacotamento"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Manages the delivery and invoicing progress"
-msgstr ""
+msgstr "Gere o progresso da expedição e facturação"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
-msgstr ""
+msgstr "Ploítica de expedição pré-definida"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
 msgid "Packaging"
-msgstr ""
+msgstr "Empacotamento"
 
 #. module: sale
 #: model:ir.module.module,shortdesc:sale.module_meta_information
@@ -616,11 +623,13 @@ msgid ""
 "In sale order , procuerement for each line and it comes into the procurement "
 "order"
 msgstr ""
+"Na ordem de venda, aprovisionamento por cada linha e é transposto para a "
+"ordem de aprovisionamento"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Impostos"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -631,7 +640,7 @@ msgstr "Facturado"
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Adiantamento à factura"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -642,7 +651,7 @@ msgstr "Estado da venda"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree2
 msgid "Uninvoiced Lines"
-msgstr ""
+msgstr "Linhas por facturar"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -650,11 +659,13 @@ msgid ""
 "This Configuration step use to set default picking policy when make sale "
 "order"
 msgstr ""
+"Este passo da configuração define a política de recolha pré-definida ao "
+"criar ordens de venda"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 msgid "Sales Process"
-msgstr ""
+msgstr "Processo das vendas"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -680,7 +691,7 @@ msgstr "Minhas vendas na excepção de envio"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Sales Configuration"
-msgstr ""
+msgstr "Configuração das Vendas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
@@ -717,12 +728,12 @@ msgstr "Factura manual e de envio"
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Sale Procurement"
-msgstr ""
+msgstr "Aprovisionamento das vendas"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr ""
+msgstr "Configurar a logística da ordem de venda"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -752,12 +763,12 @@ msgstr "Nosso vendedor"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
 msgid "Create Advance Invoice"
-msgstr ""
+msgstr "Criar adiantamento à factura"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid "One procurement for each product."
-msgstr ""
+msgstr "Um aprovisionamento por artigo"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -768,7 +779,7 @@ msgstr "Ordens de venda"
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr ""
+msgstr "Lista de preços de venda"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -791,7 +802,7 @@ msgstr "Cotação"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance Product"
-msgstr ""
+msgstr "Artigo 'Adiantamento'"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -799,6 +810,8 @@ msgid ""
 "Invoice is created when 'Create Invoice' is being clicked after confirming "
 "the sale order. This transaction moves the sale order to invoices."
 msgstr ""
+"A factura é criada ao clicar 'Criar Factura' após a confirmação da ordem de "
+"venda. Esta transacção transforma a ordem de venda em factura"
 
 #. module: sale
 #: view:sale.order:0
@@ -826,7 +839,7 @@ msgstr "Orden de venda em curso"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr ""
+msgstr "Atribuir"
 
 #. module: sale
 #: view:sale.order:0
@@ -856,7 +869,7 @@ msgstr "Sua referência"
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Delivery Order Only"
-msgstr ""
+msgstr "Ordem de expedição apenas"
 
 #. module: sale
 #: view:sale.order:0
@@ -900,7 +913,7 @@ msgstr "Preço Unitário"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posição Fiscal"
 
 #. module: sale
 #: rml:sale.order:0
@@ -944,7 +957,7 @@ msgstr "UdM"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Número de embalagens"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -956,12 +969,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Em progresso"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
 msgid "Advance Payment"
-msgstr ""
+msgstr "Pagamento adiantado"
 
 #. module: sale
 #: constraint:ir.model:0
@@ -973,17 +986,17 @@ msgstr ""
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
 msgid "Confirm sale order and Create invoice."
-msgstr ""
+msgstr "Confirmar ordem de venda e criar factura"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr ""
+msgstr "ista de empacotamento & Guia de entrega"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr ""
+msgstr "Excepção"
 
 #. module: sale
 #: view:sale.order:0
@@ -1020,17 +1033,17 @@ msgstr "Ordem de Venda"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Quotation (A sale order in draft state)"
-msgstr ""
+msgstr "Cotação (uma ordem de venda em rascunho)"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "Sale Invoice"
-msgstr ""
+msgstr "Factura de venda"
 
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,product_id:0
@@ -1041,7 +1054,7 @@ msgstr "Produto"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,open:0
 msgid "Open Advance Invoice"
-msgstr ""
+msgstr "Abrir adiantamento"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -1062,22 +1075,22 @@ msgstr "Preço"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Deliver"
-msgstr ""
+msgstr "Expedir"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Cotação / Ordem de venda"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "Cotação nº"
 
 #. module: sale
 #: field:stock.move,sale_line_id:0
@@ -1087,12 +1100,12 @@ msgstr "Linha de Ordem de venda"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr ""
+msgstr "Cancelar atribuição"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Facturar pelo empacotamento"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1116,7 +1129,7 @@ msgstr "Cliente"
 #. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr ""
+msgstr "Lista de Preços de Compras"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1141,7 +1154,7 @@ msgstr "Factura sobre"
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
-msgstr ""
+msgstr "Nova cotação"
 
 #. module: sale
 #: view:sale.order:0
@@ -1157,17 +1170,17 @@ msgstr "Data do pedido"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "UdV do artigo"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manual em andamento"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "UdM do artigo"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1186,7 +1199,7 @@ msgstr "Configurar as politicas de empacotamento para ordem de venda"
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
 msgid "Order"
-msgstr ""
+msgstr "Ordem"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1211,7 +1224,7 @@ msgstr "Facturas relacionadas"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Nome da loja"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1221,7 +1234,7 @@ msgstr "Termo do Pagamento"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Pagamento antes da expedição"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1248,7 +1261,7 @@ msgstr "Peso"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "After confirming order, Create the invoice."
-msgstr ""
+msgstr "Criar factura após a confirmação da ordem"
 
 #. module: sale
 #: constraint:product.product:0
@@ -1264,12 +1277,12 @@ msgstr "Escolhido"
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilidade"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr ""
+msgstr "Facturar com base na expedição"
 
 #. module: sale
 #: view:sale.order:0

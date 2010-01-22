@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+        <menuitem
+            id="hr.menu_hr_reporting"
+            name="Reporting"
+            parent="hr.menu_hr_root"
+            sequence="40" />
         <report auto="False" id="account_analytic_account_cost_ledger" menu="False" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger" rml="account/project/report/cost_ledger.rml" string="Cost Ledger"/>
 
         <wizard id="account_analytic_account_cost_ledger_report" keyword="client_print_multi" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger.report" string="Cost Ledger"/>
@@ -23,11 +27,11 @@
             string="Timesheet Profit"
             groups="account.group_account_manager"/>
 
-       <menuitem action="account_analytic_profit" 
-        id="print_account_analytic_profit" 
-        parent="hr.menu_hr_reporting"
-        type="wizard"
-        groups="hr.group_hr_manager"/>
+       <menuitem action="account_analytic_profit"
+           id="print_account_analytic_profit"
+           parent="hr.menu_hr_reporting"
+           type="wizard"
+           groups="hr.group_hr_manager"/>
 
     </data>
 </openerp>

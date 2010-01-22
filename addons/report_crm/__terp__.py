@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,9 +30,16 @@
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'report_crm_view.xml'],
+    'update_xml': ['security/ir.model.access.csv', 
+                   'report_crm_view.xml', 
+                   'report_crm_lead_view.xml',
+                   'report_crm_claim_view.xml',
+                   'report_crm_opportunity_view.xml',
+                   'report_crm_phonecall_view.xml',
+                   'report_crm_fundraising_view.xml'
+                   ],
     'demo_xml': [],
-    'installable': True,
+    'installable': True, #TODO : After fixed problems , set True
     'active': False,
     'certificate': '0030422968285',
 }

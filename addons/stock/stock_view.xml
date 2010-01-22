@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Inventory Management"/>
-        <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="1"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"/>
+        <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="3"/>
+   		<menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
+        <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="6"/>
+        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
 
         =============================
         Inventory Line
@@ -13,10 +17,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock Inventory Lines">
-                    <field name="location_id"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
+                    <field name="prod_lot_id"/>
+                    <field name="location_id"/>
                 </tree>
             </field>
         </record>
@@ -26,10 +31,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines">
-                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                     <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
+                    <field name="prod_lot_id"/>
+                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                    <button name="%(split_inventory_lots)d" string="Split Inventory Lines" type="action" icon="gtk-justify-fill"/>
                 </form>
             </field>
         </record>
@@ -57,10 +64,29 @@
                 <form string="Lot Inventory">
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
                     <page string="General Informations">
-                        <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list"/>
+                        <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
+                            <tree string="Inventory Lines" editable="bottom">
+                                <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom"/>
+                                <field name="prod_lot_id"/>                                
+                                <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                            </tree>
+                            <form string="Inventory Lines">
+                                <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
+                                <field name="product_qty"/>
+                                <field name="product_uom"/>
+                                <field  domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                                <group colspan="2" col="3">
+	                                <field name="prod_lot_id"/>
+	                                <button name="%(split_inventory_lots)d" string="Split in Production Lots" type="action" icon="gtk-justify-fill"/>
+                                </group>
+                                
+                            </form>
+                        </field>
                     </page><page string="Posted Inventory">
                         <field colspan="4" name="move_ids" nolabel="1"/>
                     </page>
@@ -82,7 +108,7 @@
             <field name="view_id" ref="view_inventory_tree"/>
             <field name="context">{'full':'1'}</field>
         </record>
-        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_root"/>
+        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="2"/>
 
         <record id="action_inventory_form_draft" model="ir.actions.act_window">
             <field name="name">Draft Periodical Inventories</field>
@@ -130,7 +156,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tracking_tree"/>
         </record>
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="2"/>
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="4"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form" parent="menu_traceability"/>
 
         <record id="lot_line_tree" model="ir.ui.view">
@@ -139,7 +165,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree color="grey:not active" string="Tracking Number">
+                <tree colors="grey:not active" string="Tracking Number">
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
@@ -228,12 +254,12 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
@@ -250,12 +276,12 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
                     <field name="prodlot_id" select="1"/>
-                    <field name="product_packaging"/>
+                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
                     <field name="picking_id"/>
                     <field name="location_id" select="1"/>
                     <field name="location_dest_id" select="1"/>
@@ -335,7 +361,7 @@
                     <field name="name" select="1"/>
                     <field name="active" select="2"/>
                     <field name="usage" select="1"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="account_id" select="1"/>
                     <field name="location_id"/>
                     <field name="address_id" context="{'contact_display':'partner'}"/>
@@ -364,7 +390,7 @@
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real" invisible="'product_id' not in context"/>
@@ -402,7 +428,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
         </record>
-        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>
+<!--        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>-->
 
         =============================
         Warehouse
@@ -417,7 +443,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="partner_address_id" context="{'contact_display':'partner'}"/>
                 </form>
@@ -481,6 +507,32 @@
         =============================
         Picking
         =============================
+    	<record id="view_stock_split_production_lots" model="ir.ui.view">
+            <field name="name">Split Production Lots</field>
+            <field name="model">stock.split.production.lots</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Split Production Lots">
+                	<group col="4" colspan="4">
+	                   <field name="name"/>
+	                   <field name="qty" attrs="{'readonly':[('action','!=','split')]}"/>
+	                   <field name="action" colspan="4"/>
+                    </group>
+                    <newline/>
+                    <button name="split_lines" string="Ok" type="object" icon="gtk-go-forward"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_stock_split_production_lots" model="ir.actions.act_window">
+            <field name="name">Split Production Lots</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.split.production.lots</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -499,7 +551,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -523,40 +575,47 @@
                         <field name="name" readonly="1"/>
                         <field name="date"/>
                         <field name="min_date" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
-                                    <separator colspan="4" string="Move Information"/>
-                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
-                                    <field name="location_dest_id" select="1" domain="[('usage','=','internal')]"/>
-                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
-                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" select="1"/>
-                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
-                                    <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field invisible="1" name="date"/>
-                                    <field name="date_planned"/>
-                                    <field name="address_id" select="1" context="{'contact_display':'partner'}"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="2"
-                                        context="{'location_id':location_id, 'product_id':product_id}"
-                                        domain="[('product_id','=?',product_id)]"
-                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                    <field groups="base.group_extended" name="tracking_id" select="2"/>
-                                    <newline/>
-                                    <label/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
-                                    <separator colspan="4" string="Move State"/>
-                                    <field name="state" select="1"/>
-                                    <group>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-no"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
-                                    </group>
+                                	<notebook colspan="4">
+                                		<page string="General Information">
+		                                    <separator colspan="4" string="Move Information"/>
+		                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+		                                    <field name="location_dest_id" select="1" domain="[('usage','=','internal')]"/>
+		                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
+		                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field name="product_uom" select="1"/>
+		                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field groups="product.group_uos" name="product_uos_qty"/>
+		                                    <field colspan="4" invisible="1" name="name" select="1"/>
+		                                    <field invisible="1" name="date"/>
+		                                    <field name="date_planned"/>
+		                                    <field name="address_id" select="1" context="{'contact_display':'partner'}"/>
+		                                    <field groups="base.group_extended" name="product_packaging"/>
+		                                    <field name="prodlot_id" select="2"
+		                                        context="{'location_id':location_id, 'product_id':product_id}"
+		                                        domain="[('product_id','=?',product_id)]"
+		                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                                    <field groups="base.group_extended" name="tracking_id" select="2"/>
+		                                    <newline/>
+		                                    <label/>
+		                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                                    <separator colspan="4" string="Move State"/>
+		                                    <field name="state" select="1"/>
+		                                    <group>
+		                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+		                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-no"/>
+		                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+		                                    </group>
+		                                </page>
+		                                <page string="Return Packing History">
+                        					<field name="move_stock_return_history" nolabel="1"/>
+                        				</page>
+                        			</notebook>
                                 </form>
                             </field>
                             <group col="7" colspan="4">
@@ -589,8 +648,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_stock_picking_filter" model="ir.ui.view">
             <field name="name">stock.picking.list.select</field>
             <field name="model">stock.picking</field>
@@ -619,7 +678,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id" select="1"/>
@@ -643,36 +702,43 @@
                         <field name="min_date" select="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
-                                    <separator colspan="4" string="Move Information"/>
-                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
-                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
-                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
-                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" select="1"/>
-                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
-                                    <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field invisible="1" name="date"/>
-                                    <field name="date_planned"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="2"
-                                        context="{'location_id':location_id, 'product_id':product_id}"
-                                        domain="[('product_id','=?',product_id)]"
-                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
-                                    <separator colspan="4" string="Move State"/>
-                                    <field name="state" select="1"/>
-                                    <group>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
-                                    </group>
+                                	<notebook colspan="4">
+                                		<page string="General Information">
+		                                    <separator colspan="4" string="Move Information"/>
+		                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+		                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+		                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
+		                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field name="product_uom" select="1"/>
+		                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field groups="product.group_uos" name="product_uos_qty"/>
+		                                    <field colspan="4" invisible="1" name="name" select="1"/>
+		                                    <field invisible="1" name="date"/>
+		                                    <field name="date_planned"/>
+		                                    <field groups="base.group_extended" name="product_packaging"/>
+		                                    <field name="prodlot_id" select="2"
+		                                        context="{'location_id':location_id, 'product_id':product_id}"
+		                                        domain="[('product_id','=?',product_id)]"
+		                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
+		                                    <separator colspan="4" string="Move State"/>
+		                                    <field name="state" select="1"/>
+		                                    <group>
+		                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
+		                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
+		                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
+		                                    </group>
+		                                </page>
+		                                <page string="Return Packing History">
+                        					<field name="move_stock_return_history" nolabel="1"/>
+                        				</page>
+                        			</notebook>
                                 </form>
                             </field>
                             <group col="7" colspan="4">
@@ -761,8 +827,8 @@
             <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
-		
-        <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_root" sequence="20"/>
+
+        <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="20"/>
         <menuitem action="action_picking_calendar_delivery" id="menu_action_picking_calendar_delivery" parent="menu_action_picking_tree_delivery"/>
 
         #
@@ -774,7 +840,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state=='cancel';grey:state=='confirmed';blue:state=='done'" string="Picking list">
+                <tree colors="red:state in ('cancel');grey:state in ('confirmed');blue:state in ('done');black:state not in ('cancel','confirmed','done')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -800,39 +866,46 @@
                         <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
-                                    <separator colspan="4" string="Move Information"/>
-                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
-                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
-                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
-                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" />
-                                    <field name="product_uom" select="1"/>
-                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
-                                    <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field invisible="1" name="date"/>
-                                    <field name="date_planned"/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
-                                    <field name="prodlot_id" select="1"
-                                        context="{'location_id':location_id, 'product_id':product_id}"
-                                        domain="[('product_id','=?',product_id)]"
-                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
-                                    <label/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
-                                    <separator colspan="4" string="Move State"/>
-                                    <field name="state" select="1"/>
-                                    <group>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"  icon="gtk-jump-to"/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"  icon="gtk-no"/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"  icon="gtk-cancel"/>
-                                    </group>
-                                </form>
+                                	<notebook colspan="4">
+ 										<page string="General Information">
+		                                    <separator colspan="4" string="Move Information"/>
+		                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+		                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+		                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
+		                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" />
+		                                    <field name="product_uom" select="1"/>
+		                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field groups="product.group_uos" name="product_uos_qty"/>
+		                                    <field colspan="4" invisible="1" name="name" select="1"/>
+		                                    <field invisible="1" name="date"/>
+		                                    <field name="date_planned"/>
+		                                    <field groups="base.group_extended" name="product_packaging"/>
+		                                    <field name="prodlot_id" select="1"
+		                                        context="{'location_id':location_id, 'product_id':product_id}"
+		                                        domain="[('product_id','=?',product_id)]"
+		                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
+		                                    <label/>
+		                                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                                    <separator colspan="4" string="Move State"/>
+		                                    <field name="state" select="1"/>
+		                                    <group>
+		                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"  icon="gtk-jump-to"/>
+		                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"  icon="gtk-no"/>
+		                                        <button name="action_cancel" states="assigned" string="Cancel" type="object"  icon="gtk-cancel"/>
+		                                    </group>
+                                    	</page>
+                                		<page string="Return Packing History">
+                        					<field name="move_stock_return_history" nolabel="1"/>
+                        				</page>
+                        			</notebook>
+								</form>
                             </field>
                             <group col="7" colspan="4">
                                 <label colspan="6"/>
@@ -863,7 +936,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search</field>
             <field name="model">stock.picking</field>
@@ -876,12 +949,12 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
         </record>
-	
+
         <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Outgoing Products</field>
             <field name="res_model">stock.picking</field>
@@ -909,7 +982,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
+<!--        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>-->
 
         #
         # Reception of Products
@@ -919,7 +992,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree color="red:state=='cancel'" string="Picking list">
+                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
                     <field name="name"/>
                     <field name="origin"/>
                     <field name="address_id"/>
@@ -945,7 +1018,7 @@
                         <field name="name" readonly="1" select="1"/>
                         <field name="min_date" select="2" readonly="1"/>
                         <field name="backorder_id" select="2" readonly="1"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -959,35 +1032,42 @@
                                     <field name="state"/>
                                 </tree>
                                 <form string="Stock Moves">
-                                    <separator colspan="4" string="Move Information"/>
-                                    <field name="location_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
-                                    <field domain="[('usage','=','internal')]" name="location_dest_id" select="1"/>
-                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
-                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" select="1"/>
-                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field groups="product.group_uos" name="product_uos_qty"/>
-                                    <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field groups="base.group_extended" name="date_planned"/>
-                                    <newline/>
-                                    <newline/>
-                                    <field groups="base.group_extended" name="product_packaging"/>
-                                    <newline/>
-                                    <field name="prodlot_id" select="1"
-                                        context="{'location_id':location_id, 'product_id':product_id}"
-                                        domain="[('product_id','=?',product_id)]"
-                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
-                                    <newline/>
-                                    <label/>
-                                    <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
-                                    <separator colspan="4" string="Move State"/>
-                                    <field name="state" select="1"/>
-                                    <group>
-                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon=""/>
-                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon=""/>
-                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon=""/>
-                                    </group>
+                                	<notebook colspan="4">
+                                		<page string="General Information">
+		                                    <separator colspan="4" string="Move Information"/>
+		                                    <field name="location_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+		                                    <field domain="[('usage','=','internal')]" name="location_dest_id" select="1"/>
+		                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
+		                                    <field name="product_qty" select="1" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field name="product_uom" select="1"/>
+		                                    <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                                    <field groups="product.group_uos" name="product_uos_qty"/>
+		                                    <field colspan="4" invisible="1" name="name" select="1"/>
+		                                    <field groups="base.group_extended" name="date_planned"/>
+		                                    <newline/>
+		                                    <newline/>
+		                                    <field groups="base.group_extended" name="product_packaging"/>
+		                                    <newline/>
+		                                    <field name="prodlot_id" select="1"
+		                                        context="{'location_id':location_id, 'product_id':product_id}"
+		                                        domain="[('product_id','=?',product_id)]"
+		                                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
+		                                    <newline/>
+		                                    <label/>
+		                                    <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                                    <separator colspan="4" string="Move State"/>
+		                                    <field name="state" select="1"/>
+		                                    <group>
+		                                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon=""/>
+		                                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon=""/>
+		                                        <button name="action_cancel" states="assigned" string="Cancel" type="object" icon=""/>
+		                                    </group>
+		                                </page>
+		                                <page string="Return Packing History">
+                        					<field name="move_stock_return_history" nolabel="1"/>
+                        				</page>
+		                            </notebook>
                                 </form>
                             </field>
                             <group col="7" colspan="4">
@@ -1011,7 +1091,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<record id="view_picking_in_search" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
             <field name="model">stock.picking</field>
@@ -1024,7 +1104,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1032,7 +1112,7 @@
 
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Incoming Products</field>
+            <field name="name">Incoming shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1058,7 +1138,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
-        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_root" sequence="17"/>
+        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
 	<record id="view_picking_internal_search" model="ir.ui.view">
             <field name="name">stock.picking.internal.search</field>
@@ -1072,7 +1152,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
                    </group>
                 </search>
             </field>
@@ -1088,8 +1168,7 @@
             <field name="context">{'contact_display': 'partner'}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
-        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_root" sequence="18"/>
-
+		<menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
         =============================
         Move Tracking
         =============================
@@ -1105,7 +1184,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree color="grey:state=='cancel'" string="Moves">
+                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1120,7 +1199,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/>
+<!--        <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/> -->
 
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
@@ -1129,42 +1208,49 @@
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves">
-                    <separator colspan="4" string="Move Information"/>
-                    <field name="location_id" select="1"/>
-                    <field name="location_dest_id" select="1"/>
-                    <field colspan="4" name="product_id" select="1"/>
-                    <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                    <field name="product_uom" select="2"/>
-                    <field name="product_uos" select="2"/>
-                    <field colspan="4" name="name" select="2"/>
-                    <field name="date"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company"/>
-                    <field name="date_planned"/>
-                    <field name="priority"/>
-                    <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
-                    <newline/>
-                    <field name="picking_id" select="2"/>
-                    <newline/>
-                    <field name="prodlot_id" select="2"
-                        context="{'location_id':location_id, 'product_id':product_id}"
-                        domain="[('product_id','=?',product_id)]"
-                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                    <field name="tracking_id" select="2"/>
-                    <newline/>
-                    <label/>
-                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
-                    <separator colspan="4" string="Move State"/>
-                    <field name="state" select="1"/>
-                    <group col="4" colspan="2">
-                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                        <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="action_done" states="assigned" string="Make Parcel" type="object" icon="gtk-jump-to"/>
-                    </group>
+                	<notebook colspan="4">
+                		<page string="General Information">
+		                    <separator colspan="4" string="Move Information"/>
+		                    <field name="location_id" select="1"/>
+		                    <field name="location_dest_id" select="1"/>
+		                    <field colspan="4" name="product_id" select="1"/>
+		                    <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                    <field name="product_uom" select="2"/>
+		                    <field name="product_uos" select="2"/>
+		                    <field colspan="4" name="name" select="2"/>
+		                    <field name="date"/>
+		                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+		                    <field name="date_planned"/>
+		                    <field name="priority"/>
+		                    <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
+		                    <newline/>
+		                    <field name="picking_id" select="2"/>
+		                    <newline/>
+		                    <field name="prodlot_id" select="2"
+		                        context="{'location_id':location_id, 'product_id':product_id}"
+		                        domain="[('product_id','=?',product_id)]"
+		                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                    <field name="tracking_id" select="2"/>
+		                    <newline/>
+		                    <label/>
+		                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                    <separator colspan="4" string="Move State"/>
+		                    <field name="state" select="1"/>
+		                    <group col="4" colspan="2">
+		                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+		                        <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+		                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+		                        <button name="action_done" states="assigned" string="Make Parcel" type="object" icon="gtk-jump-to"/>
+		                    </group>
+		                </page>
+		                <page string="Return Packing History">
+							<field name="move_stock_return_history" nolabel="1"/>
+ 						</page>
+		            </notebook>
                 </form>
             </field>
         </record>
-        
+
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
@@ -1183,16 +1269,16 @@
             	</search>
             </field>
         </record>
-        
+
         <record id="action_move_form2" model="ir.actions.act_window">
-            <field name="name">Stock Moves</field>
+            <field name="name">All Moves</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
         </record>
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability_low"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
 
         <record id="action_picking_all" model="ir.actions.act_window">
             <field name="name">Picking</field>
@@ -1203,21 +1289,21 @@
             <field name="search_view_id" ref="view_stock_picking_filter"/>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_traceability_low"/>
+        <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
-	====================================
+	    ====================================
         Reception Picking (By Stock Move)
         ====================================
-        
-	<record id="view_move_tree_reception_picking" model="ir.ui.view">
+
+	    <record id="view_move_tree_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.tree2</field>
             <field name="model">stock.move</field>
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
-                    <field name="picking_id" string="Reference"/> 
-                    <field name="origin" string="Purchase Order"/>               	
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin" string="Purchase Order"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
@@ -1225,33 +1311,65 @@
                     <field name="prodlot_id" string="Lot"/>
                     <field name="date_planned"/>
                     <field name="backorder_id"/>
-                    <field name="state"/>
-                    <button name="action_done" states="done" string="Done" type="object" icon="gtk-close"/>
-                    <button name="%(partial_move)d" string="Partial" type="action" icon="gtk-justify-fill"/>
+                    <field name="state"/>                    
+                    <button name="%(partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
                     <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
-	
-	<record id="view_move_form_reception_picking" model="ir.ui.view">
+
+	    <record id="view_move_form_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.form2</field>
             <field name="model">stock.move</field>
             <field name="type">form</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Moves">
-                	<field name="picking_id"/>                    
-                	<field name="product_id"/>
-                	<field name="product_qty" />
-                    <field name="product_uom" string="UOM"/>
-                    <field name="prodlot_id"/>
-                    <field name="date_planned"/>
-                    <field name="state"/>
+                	<notebook colspan="4">
+                		<page string="General Information">
+		                    <separator colspan="4" string="Move Information"/>
+		                    <field name="location_id" select="1"/>
+		                    <field name="location_dest_id" select="1"/>
+		                    <field colspan="4" name="product_id" select="1"/>
+		                    <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+		                    <field name="product_uom" select="2"/>
+		                    <field name="product_uos" select="2"/>
+		                    <field colspan="4" name="name" select="2"/>
+		                    <field name="date"/>
+		                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+		                    <field name="date_planned"/>
+		                    <field name="priority"/>
+		                    <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
+		                    <newline/>
+		                    <field name="picking_id" select="2"/>
+		                    <newline/>
+		                    <field name="prodlot_id" select="2"
+		                        context="{'location_id':location_id, 'product_id':product_id}"
+		                        domain="[('product_id','=?',product_id)]"
+		                        on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
+		                    <field name="tracking_id" select="2"/>
+		                    <newline/>
+		                    <label/>
+		                    <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+		                    <separator colspan="4" string="Move State"/>
+		                    <field name="state" select="1"/>
+		                    <group col="5" colspan="2">
+		                        <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
+		                        <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
+		                        <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button name="%(partial_move)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
+		                        <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
+		                    </group>
+		                </page>
+		                <page string="Return Packing History">
+							<field name="move_stock_return_history" nolabel="1"/>
+ 						</page>
+		            </notebook>
                 </form>
             </field>
         </record>
-	
-	<record id="view_move_search_reception_picking" model="ir.ui.view">
+
+	    <record id="view_move_search_reception_picking" model="ir.ui.view">
             <field name="name">stock.move.search2</field>
             <field name="model">stock.move</field>
             <field name="type">search</field>
@@ -1263,26 +1381,39 @@
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
-                        <field name="origin" string="Purchase Order" select="1"/> 
+                        <field name="origin" string="Purchase Order" select="1"/>
 	            		<field name="partner_id" string="Supplier" select="1"/>
-	                    <field name="product_id"/>	                    
+	                    <field name="product_id"/>
                     </group>
             	</search>
             </field>
-        </record>
+        </record>        
 
-	<record id="action_reception_picking_move" model="ir.actions.act_window">
-            <field name="name">Reception Picking Stock Moves</field>
+    	<record id="action_reception_picking_move" model="ir.actions.act_window">
+            <field name="name">Reception Picking Stock Move</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('picking_id.type','=','in')]</field>
+            <field name="domain">[('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
-        <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_root"/>
-		
+
+        <record model="ir.actions.act_window.view" id="action_move_reception_picking_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_move_tree_reception_picking"/>
+	        <field name="act_window_id" ref="action_reception_picking_move"/>
+	    </record>
+        <record model="ir.actions.act_window.view" id="action_move_reception_picking_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="view_move_form_reception_picking"/>
+	        <field name="act_window_id" ref="action_reception_picking_move"/>
+	    </record>
+        <menuitem action="action_reception_picking_move" id="menu_action_reception_picking_move" parent="menu_stock_warehouse_mgmt" sequence="4"/>
+
 
         # -------------------------------------------------------------
         # Stock incoterms
@@ -1317,7 +1448,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>
+<!--        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>-->
 
         <act_window
             context="{'location': active_id}"

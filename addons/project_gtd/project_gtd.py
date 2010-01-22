@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-from xml import dom
-from lxml import etree
-
 from mx import DateTime
 from mx.DateTime import now
 import time
@@ -29,6 +26,16 @@ import tools
 import netsvc
 from osv import fields, osv
 import ir
+from tools.translate import _
+
+import sys
+from tools.translate import _
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
@@ -130,17 +137,17 @@ class project_task(osv.osv):
     _defaults = {
         'context_id': _get_context
     }
-    
     def next_timebox(self, cr, uid, ids, *args):
         timebox_obj = self.pool.get('project.gtd.timebox')
         timebox_ids = timebox_obj.search(cr,uid,[])
+        if not timebox_ids: return True
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != len(timebox_ids)-1 :
+            if not timebox:
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[0]})
+            elif timebox_ids.index(timebox) != len(timebox_ids)-1:
                 index = timebox_ids.index(timebox)
-            else:
-                index = -1
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
         return True
 
     def prev_timebox(self, cr, uid, ids, *args):
@@ -148,28 +155,29 @@ class project_task(osv.osv):
         timebox_ids = timebox_obj.search(cr,uid,[])
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != 0 :
-                index = timebox_ids.index(timebox)
-            else:
-                index = len(timebox_ids)
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+            if timebox:
+                if timebox_ids.index(timebox):
+                    index = timebox_ids.index(timebox)
+                    self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+                else:
+                    self.write(cr, uid, task.id, {'timebox_id': False})
         return True
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d">''' % (len(tt)+6,)
-            search_extended += '''<filter domain="[('timebox_id','=', 0)]" icon="gtk-new" string="Inbox"/>'''
+            search_extended ='''<newline/><group col="%d" expand="1" string="%s">''' % (len(tt)+6,_('Getting Things Done'))
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += ''' <filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
             <field name="context_id" select="1" widget="selection"/> 

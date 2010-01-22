@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -104,13 +104,14 @@ class report_crm_case_section_stage(osv.osv):
                     c.state,
                     c.stage_id,
                     c.section_id,
+                    c.categ_id, 
                     count(*) as nbr,
                     sum(planned_revenue) as amount_revenue,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_case c
                 where c.stage_id is not null
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.categ_id, c.section_id)""")
 
 report_crm_case_section_stage()
 

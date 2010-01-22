@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -325,7 +325,7 @@ class account_account(osv.osv):
         'active': lambda *a: True,
         'check_history': lambda *a: True,
         'currency_mode': lambda *a: 'current',
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -416,15 +416,27 @@ class account_account(osv.osv):
             default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
+    def _check_moves(self, cr, uid, ids, method, context):
+        line_obj = self.pool.get('account.move.line')
+        account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+            if method == 'write':
+                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
+            elif method == 'unlink':
+                raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        return True
+    
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}
         if 'active' in vals and not vals['active']:
-            line_obj = self.pool.get('account.move.line')
-            account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains Ledger Postings.'))
+            self._check_moves(cr, uid, ids, "write", context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, context={}):
+        self._check_moves(cr, uid, ids, "unlink", context)
+        return super(account_account, self).unlink(cr, uid, ids, context)
+    
 account_account()
 
 class account_journal_view(osv.osv):
@@ -471,7 +483,7 @@ class account_journal(osv.osv):
                                  " Select 'Cash' to be used at the time of making payment."\
                                  " Select 'General' to be used at the time of stock input/output."\
                                  " Select 'Situation' to be used at the time of making vouchers."),
-        'refund_journal': fields.boolean('Refund Journal'),
+        'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
 
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
@@ -767,6 +779,23 @@ class account_move(osv.osv):
         for id in ids:
             result.setdefault(id, 0.0)
         return result
+    
+    def _search_amount(self, cr, uid, obj, name, args, context):
+        ids = []
+        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
+        result = dict(cr.fetchall())
+
+        for item in args:
+            if item[1] == '>=':
+                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+            else:
+                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]    
+            ids += res
+
+        if not ids:    
+            return [('id', '>', '0')]
+
+        return ids
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -778,7 +807,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy']))),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy'])), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
@@ -956,7 +985,7 @@ class account_move(osv.osv):
         else:
             context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
             line_id = self.pool.get('account.move.line').create(cr, uid, {
-                'name': _t(cr, None, 'selection', context.get('lang'), source=(mode.capitalize()+' Centralisation')) or (mode.capitalize()+' Centralisation'),
+                'name': _(mode.capitalize()+' Centralisation'),
                 'centralisation': mode,
                 'account_id': account_id,
                 'move_id': move.id,
@@ -1084,8 +1113,8 @@ class account_move_reconcile(osv.osv):
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
+        total = 0.0 
         for rec in self.browse(cr, uid, ids, context):
-            total = 0.0
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
@@ -1546,7 +1575,8 @@ class account_model(osv.osv):
     def generate(self, cr, uid, ids, datas={}, context={}):
         move_ids = []
         for model in self.browse(cr, uid, ids, context):
-            period_id = self.pool.get('account.period').find(cr,uid, context=context)
+            context.update({'date':datas['date']})
+            period_id = self.pool.get('account.period').find(cr, uid, dt=context.get('date',False))
             if not period_id:
                 raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
             period_id = period_id[0]
@@ -1554,6 +1584,7 @@ class account_model(osv.osv):
                 'ref': model.ref,
                 'period_id': period_id,
                 'journal_id': model.journal_id.id,
+                'date': context.get('date',time.strftime('%Y-%m-%d'))
             })
             move_ids.append(move_id)
             for line in model.lines_id:
@@ -1571,7 +1602,7 @@ class account_model(osv.osv):
                     'move_id': move_id,
                     'ref': line.ref,
                     'partner_id': line.partner_id.id,
-                    'date': time.strftime('%Y-%m-%d'),
+                    'date': context.get('date',time.strftime('%Y-%m-%d')),
                     'date_maturity': time.strftime('%Y-%m-%d')
                 })
                 c = context.copy()
@@ -1608,8 +1639,8 @@ class account_model_line(osv.osv):
     }
     _order = 'sequence'
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model !'),
-        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model !'),
+        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model (Credit Or Debit Must Be "0")!'),
+        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model (Credit + Debit Must Be greater "0")!'),
     ]
 account_model_line()
 
@@ -1716,21 +1747,28 @@ account_subscription_line()
 
 class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
+    _inherit = 'res.config'
 
     def _get_charts(self, cr, uid, context):
         module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'), ('state', '<>', 'installed')])
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'),
+                                        ('state', '<>', 'installed')])
         res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
         res.append((-1, 'None'))
         res.sort(key=lambda x: x[1])
         return res
 
     _columns = {
-        'name':fields.char('Name', required=True, size=64, help="Name of the fiscal year as displayed on screens."),
-        'code':fields.char('Code', required=True, size=64, help="Name of the fiscal year as displayed in reports."),
+        'name':fields.char(
+            'Name', required=True, size=64,
+            help="Name of the fiscal year as displayed on screens."),
+        'code':fields.char(
+            'Code', required=True, size=64,
+            help="Name of the fiscal year as displayed in reports."),
         'date1': fields.date('Start Date', required=True),
         'date2': fields.date('End Date', required=True),
-        'period':fields.selection([('month','Month'),('3months','3 Months')], 'Periods', required=True),
+        'period':fields.selection([('month','Month'), ('3months','3 Months')],
+                                  'Periods', required=True),
         'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
     }
     _defaults = {
@@ -1740,15 +1778,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
     }
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
     def install_account_chart(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
             chart_id = res['charts']
@@ -1758,7 +1787,7 @@ class account_config_wizard(osv.osv_memory):
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
-    def action_create(self, cr, uid,ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
             if 'date1' in res and 'date2' in res:
                 res_obj = self.pool.get('account.fiscalyear')
@@ -1777,16 +1806,6 @@ class account_config_wizard(osv.osv_memory):
                 elif res['period']=='3months':
                     res_obj.create_period3(cr,uid,[new_id])
         self.install_account_chart(cr,uid,ids)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-
-
 account_config_wizard()
 
 
@@ -2125,6 +2144,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         * generates all accounting properties and assigns them correctly
     """
     _name='wizard.multi.charts.accounts'
+    _inherit = 'res.config'
 
     _columns = {
         'company_id':fields.many2one('res.company','Company',required=True),
@@ -2145,7 +2165,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits': lambda *a:6,
     }
 
-    def action_create(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr,uid,ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
@@ -2408,24 +2428,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 'position_id' : new_fp,
                                 }
                     obj_ac_fp.create(cr, uid, vals_acc)
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-
 wizard_multi_charts_accounts()
 
 class account_bank_accounts_wizard(osv.osv_memory):
