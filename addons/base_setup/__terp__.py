@@ -42,7 +42,6 @@
     'depends': ['base'],
     'init_xml': ['base_setup_data.xml'],
     'update_xml': ['security/ir.model.access.csv',
-                   'base_setup_wizard.xml',
                    'base_setup_installer.xml',
                    'base_setup_todo.xml',],
     'demo_xml': ['base_setup_demo.xml'],
