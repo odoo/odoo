@@ -14,6 +14,7 @@
 					    <form string="Calendar Lines">
 					        <field name="name" required="1" select="1" />
 					        <field name="object_id" required="1" select="1" />
+					        <field name="domain" select="1" />
 					        <field name="mapping_ids" select="1" colspan="4" nolabel="1">
 						        <tree string="Attributes Mapping" editable="bottom">
 							        <field name="name" required="1" domain="[('type', '=', parent.name)]"/>

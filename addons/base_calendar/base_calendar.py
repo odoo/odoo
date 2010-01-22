@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
 from osv import osv, fields
+import base64
 import pooler
 import re
 import vobject
@@ -69,6 +70,8 @@ def get_attribute_mapping(cr, uid, calname, context={}):
             res[attr] = {}
             res[attr]['field'] = field.field_id.name
             res[attr]['type'] = field.field_id.ttype
+            if field.fn == 'hours':
+                res[attr]['type'] = "timedelta"
             if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
                 res[attr]['object'] = field.field_id.relation
             elif res[attr]['type'] in ('selection') and field.mapping:
@@ -154,12 +157,28 @@ class CalDAV(object):
             if self.__attribute__[name]:
                 self.__attribute__[name][type] = None
         return True
+    
+    def parse_ics(self, cr, uid, child):
+        att_data = []
+        for cal_data in child.getChildren():
+            if cal_data.name.lower() == 'attendee':
+                attendee = self.pool.get('basic.calendar.attendee')
+                att_data.append(attendee.import_cal(cr, uid, cal_data))
+                self.ical_set(cal_data.name.lower(), att_data, 'value')
+                continue
+            if cal_data.name.lower() == 'valarm':
+                alarm = self.pool.get('basic.calendar.alarm')
+                vals = alarm.import_cal(cr, uid, cal_data)
+                self.ical_set(cal_data.name.lower(), vals, 'value')
+                continue
+            if cal_data.name.lower() in self.__attribute__:
+                self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
+        vals = map_data(cr, uid, self)
+        return vals
 
-    def export_ical(self, cr, uid, datas, vobj=None, context={}):
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
-        ical = vobject.iCalendar()
+    def create_ics(self, cr, uid, datas, name, ical, context=None):
         for data in datas:
-            vevent = ical.add(vobj)
+            vevent = ical.add(name)
             for field in self.__attribute__.keys():
                 map_field = self.ical_get(field, 'field')
                 map_type = self.ical_get(field, 'type')
@@ -171,11 +190,11 @@ class CalDAV(object):
                         uidval = openobjectid2uid(cr, data[map_field], model)
                         model_obj = self.pool.get(model)
                         cr.execute('select id from %s  where recurrent_uid=%s' 
-                                               % (model_obj._table, data[map_field]))
+                                       % (model_obj._table, data[map_field]))
                         r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids: 
                             rdata = self.pool.get(model).read(cr, uid, r_ids)
-                            rcal = self.export_ical(cr, uid, rdata, context=context)
+                            rcal = self.export_cal(cr, uid, rdata, context=context)
                             for revents in rcal.contents['vevent']:
                                 ical.contents['vevent'].append(revents)
                         if data.get('recurrent_uid', None):
@@ -184,12 +203,12 @@ class CalDAV(object):
                     elif field == 'attendee' and data[map_field]:
                         model = self.__attribute__[field].get('object', False)
                         attendee_obj = self.pool.get('basic.calendar.attendee')
-                        vevent = attendee_obj.export_ical(cr, uid, model, \
+                        vevent = attendee_obj.export_cal(cr, uid, model, \
                                      data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
                         model = self.__attribute__[field].get('object', False)
                         alarm_obj = self.pool.get('basic.calendar.alarm')
-                        vevent = alarm_obj.export_ical(cr, uid, model, \
+                        vevent = alarm_obj.export_cal(cr, uid, model, \
                                     data[map_field][0], vevent, context=context)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
@@ -212,29 +231,23 @@ class CalDAV(object):
                                 for key1, val1 in self.ical_get(field, 'mapping').items():
                                     if val1 == data[map_field]:
                                         vevent.add(field).value = key1
+        return vevent
+
+    def export_cal(self, cr, uid, datas, vobj=None, context={}):
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
+        ical = vobject.iCalendar()
+        self.create_ics(cr, uid, datas, vobj, ical, context=context)
         return ical
 
-    def import_ical(self, cr, uid, ical_data):
+    def import_cal(self, cr, uid, content, data_id=None, context=None):
+        ical_data = base64.decodestring(content)
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname)
         parsedCal = vobject.readOne(ical_data)
         att_data = []
         res = []
         for child in parsedCal.getChildren():
-            for cal_data in child.getChildren():
-                if cal_data.name.lower() == 'attendee':
-                    attendee = self.pool.get('basic.calendar.attendee')
-                    att_data.append(attendee.import_ical(cr, uid, cal_data))
-                    self.ical_set(cal_data.name.lower(), att_data, 'value')
-                    continue
-                if cal_data.name.lower() == 'valarm':
-                    alarm = self.pool.get('basic.calendar.alarm')
-                    vals = alarm.import_ical(cr, uid, cal_data)
-                    self.ical_set(cal_data.name.lower(), vals, 'value')
-                    continue
-                if cal_data.name.lower() in self.__attribute__:
-                    self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
             if child.name.lower() in ('vevent', 'vtodo'):
-                vals = map_data(cr, uid, self)
+                vals = self.parse_ics(cr, uid, child)
             else:
                 vals = {}
                 continue
@@ -245,7 +258,9 @@ class CalDAV(object):
 
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
+    _description = 'Calendar'
     _calname = 'calendar'
+
     __attribute__ = {
         'prodid': None, # Use: R-1, Type: TEXT, Specifies the identifier for the product that created the iCalendar object.
         'version': None, # Use: R-1, Type: TEXT, Specifies the identifier corresponding to the highest version number
@@ -268,24 +283,61 @@ class Calendar(CalDAV, osv.osv):
     _defaults = {
                 'active': lambda *a: True,
                  }
-    
-Calendar()
 
+    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
+        cal = self.browse(cr, uid, datas[0])
+        ical = vobject.iCalendar()
+        for line in cal.line_ids:
+            if line.name in ('alarm', 'attendee'):
+                continue
+            mod_obj = self.pool.get(line.object_id.model)
+            data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
+            datas = mod_obj.read(cr, uid, data_ids, context=context)
+            context.update({'model': line.object_id.model})
+            self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
+            self.create_ics(cr, uid, datas, line.name, ical, context=context)
+        return ical.serialize()
+    
+    def import_cal(self, cr, uid, content, data_id=None, context=None):
+        ical_data = base64.decodestring(content)
+        parsedCal = vobject.readOne(ical_data)
+        if not data_id:
+            data_id = self.search(cr, uid, [])[0]
+        cal = self.browse(cr, uid, data_id)
+        cal_children = {}
+        count = 0
+        for line in cal.line_ids:
+            cal_children[line.name] = line.object_id.model
+        for child in parsedCal.getChildren():
+            if child.name.lower() in cal_children:
+                self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower())
+                val = self.parse_ics(cr, uid, child)
+                obj = self.pool.get(cal_children[child.name.lower()])
+                if hasattr(obj, 'check_import'):
+                    obj.check_import(cr, uid, [val], context={})
+        return {}
+
+Calendar()
     
 class basic_calendar_line(osv.osv):
     _name = 'basic.calendar.lines'
-    _description = 'Calendar Lines'    
+    _description = 'Calendar Lines'
     _columns = {
-            'name': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+            'name': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
                                     ('alarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64), 
             'object_id': fields.many2one('ir.model', 'Object'), 
             'calendar_id': fields.many2one('basic.calendar', 'Calendar', \
-                                       required=True, ondelete='cascade',),
+                                       required=True, ondelete='cascade'), 
+            'domain': fields.char('Domain', size=124), 
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
     }   
 
+    _defaults = {
+        'domain': lambda *a: '[]',
+    }
+    
 basic_calendar_line()
 
 class basic_calendar_attribute(osv.osv):
@@ -293,7 +345,7 @@ class basic_calendar_attribute(osv.osv):
     _description = 'Calendar attributes'
     _columns = {        
         'name': fields.char("Name", size=64, required=True),
-        'type': fields.selection([('event', 'Event'), ('todo', 'TODO'), \
+        'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
                                     ('alarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64, required=True),        
@@ -321,12 +373,12 @@ class basic_calendar_fields(osv.osv):
     _defaults = {
         'fn': lambda *a: 'field',
     }
-    
+
 basic_calendar_fields()
 
 class Event(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.event'
-    _calname = 'event'
+    _calname = 'vevent'
     __attribute__ = {
         'class': None, # Use: O-1, Type: TEXT, Defines the access classification for a calendar  component like "PUBLIC" / "PRIVATE" / "CONFIDENTIAL"
         'created': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the calendar information  was created by the calendar user agent in the calendar store.
@@ -362,14 +414,14 @@ class Event(CalDAV, osv.osv_memory):
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
-    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
-        return super(Event, self).export_ical(cr, uid, datas, 'vevent', context=context)
+    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
+        return super(Event, self).export_cal(cr, uid, datas, 'vevent', context=context)
 
 Event()
 
 class ToDo(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.todo'
-    _calname = 'todo'
+    _calname = 'vtodo'
 
     __attribute__ = {
                 'class': None, 
@@ -406,8 +458,8 @@ class ToDo(CalDAV, osv.osv_memory):
                 'rrule': None, 
             }
 
-    def export_ical(self, cr, uid, datas, vobj='vevent', context={}):
-        return super(ToDo, self).export_ical(cr, uid, datas, 'vtodo', context=context)
+    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
+        return super(ToDo, self).export_cal(cr, uid, datas, 'vtodo', context=context)
 
 ToDo()
 
@@ -460,7 +512,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'x-prop': None, 
     }
 
-    def export_ical(self, cr, uid, model, alarm_id, vevent, context={}):
+    def export_cal(self, cr, uid, model, alarm_id, vevent, context={}):
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -486,7 +538,7 @@ class Alarm(CalDAV, osv.osv_memory):
         valarm.add('ACTION').value = alarm_data['action']
         return vevent
 
-    def import_ical(self, cr, uid, ical_data):
+    def import_cal(self, cr, uid, ical_data):
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
@@ -536,7 +588,7 @@ class Attendee(CalDAV, osv.osv_memory):
     'language': None, # Use: 0-1    Specify the language for text values in a property or property parameter.
     }
 
-    def import_ical(self, cr, uid, ical_data):
+    def import_cal(self, cr, uid, ical_data):
         for para in ical_data.params:
             if para.lower() == 'cn':
                 self.ical_set(para.lower(), ical_data.params[para][0]+':'+ \
@@ -548,7 +600,7 @@ class Attendee(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self)
         return vals
 
-    def export_ical(self, cr, uid, model, attendee_ids, vevent, context={}):
+    def export_cal(self, cr, uid, model, attendee_ids, vevent, context={}):
         attendee_object = self.pool.get(model)
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         for attendee in attendee_object.read(cr, uid, attendee_ids, []):

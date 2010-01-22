@@ -54,7 +54,7 @@ class cal_event_import_wizard(wizard.interface):
     def _process_imp_ics(self, cr, uid, data, context=None):
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        vals = model_obj.import_cal(cr, uid, data['form']['file_path'], context)
+        vals = model_obj.import_cal(cr, uid, data['form']['file_path'], data['id'], context)
         global cnt
         cnt = 0
         if vals:

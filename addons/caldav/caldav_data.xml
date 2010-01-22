@@ -131,13 +131,13 @@
 		</record>
 
 		<record model="basic.calendar.lines" id="calendar_lines_event">
-			<field name="name">event</field>
+			<field name="name">vevent</field>
 			<field name="calendar_id" ref="base_calendar.basic_calendar1" />
 			<field name="object_id" search="[('model','=','calendar.event')]" />
 		</record>
 		
 		<record model="basic.calendar.lines" id="calendar_lines_todo">
-			<field name="name">todo</field>
+			<field name="name">vtodo</field>
 			<field name="calendar_id" ref="base_calendar.basic_calendar1" />
 			<field name="object_id" search="[('model','=','calendar.todo')]" />
 		</record>
