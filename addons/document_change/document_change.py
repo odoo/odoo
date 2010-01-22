@@ -147,8 +147,7 @@ class doucment_change_process(osv.osv):
         'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('confirmed', 'To Validate'), ('done', 'Done'),('done', 'Done'),('cancel','Cancelled')], 'Status'),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
-        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),
-        'email_notification_ids':fields.one2many('document.change.process.mail','process_id','Notifications'),        
+        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),        
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),

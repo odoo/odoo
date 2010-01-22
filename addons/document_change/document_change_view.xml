@@ -250,6 +250,21 @@
                     <field name="write_date" readonly="1"/>
                     <field name="write_uid" readonly="1"/>
                 </group>
+                
+        		<field name="email_notification_ids" colspan="4" mode="tree, form" readonly="1" widget="one2many_list" nolabel="1">
+        			<tree string="Notifications">
+        				<field name="email"/>
+        				<field name="create_date"/>
+        			</tree>
+        			<form string="Notifications">
+        				<field name="email"/>
+        				<field name="create_date"/>
+                        <field name="name" string="Subject" colspan="4"/> 
+                        <separator string="Description" colspan="4"/>               			
+                        <field colspan="4" name="description" nolabel="1"/>
+        			</form>
+        		</field>
+                
             </form>
         </field>
     </record>
@@ -439,19 +454,7 @@
                 				<field name="state"/>
                 			</form>
                 		</field>
-                	</page>
-                	<page string="Notifications">
-                		<field name="email_notification_ids" mode="tree,form" widget="one2many_list" nolabel="1">
-                			<tree string="Notifications" editable="True">
-                				<field name="name"/>
-                				<field name="type"/>
-                			</tree>
-                			<form string="Notifications">
-                				<field name="name"/>
-                				<field name="type"/>                			
-                			</form>
-                		</field>
-                 	</page>
+                	</page>                	
                 </notebook>
             </form>
         </field>
