@@ -142,21 +142,21 @@ class survey_form(report_rml):
             if datas.has_key('form') and datas['form']['survey_title']:
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="title_tbl">
-                    <tr><td><para style="title">""" + to_xml(survey.title) + """</para><para style="P2"><font></font></para></td></tr>
+                    <tr><td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td></tr>
                 </blockTable>"""
             seq = 0
             for page in survey.page_ids:
                 seq+=1
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="page_tbl">
-                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + tools.ustr(page.title) + """</para></td></tr>
+                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
                 </blockTable>"""
                 for que in page.question_ids:
                     cols_widhts=[]
                     rml +="""
                     <para style="P2"><font></font></para>
                     <blockTable colWidths='"""+_tbl_widths+"""' style="question_tbl">
-                        <tr><td><para style="question">""" + tools.ustr(prefix) + tools.ustr(que.question) + """</para></td></tr>
+                        <tr><td><para style="question">""" + to_xml(tools.ustr(prefix)) + to_xml(tools.ustr(que.question)) + """</para></td></tr>
                     </blockTable>
                     <para style="P2"><font></font></para>"""
                     if que.type in ['descriptive_text']:
@@ -246,14 +246,14 @@ class survey_form(report_rml):
                             if col.title not in matrix_ans:
                                 matrix_ans.append(col.title)
                         if que.comment_column:
-                            matrix_ans.append(tools.ustr(que.column_name))
+                            matrix_ans.append(to_xml(tools.ustr(que.column_name)))
 
                         rml+="""
                         <blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
                             <tr>"""
                         for mat_col in matrix_ans:
                             rml+="""
-                            <td><para style="response">""" + to_xml(mat_col) + """</para></td>"""
+                            <td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
                         rml+="""</tr></blockTable>"""
                         i=0
                         for ans in que.answer_choice_ids:
@@ -346,7 +346,7 @@ class survey_form(report_rml):
                         colWidths = colWidths+'cm'
                         rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table4"><tr>"""
                         for col in que.column_heading_ids:
-                            rml+="""<td><para style="terp_tblheader_Details">""" + tools.ustr(col.title) + """</para></td>"""
+                            rml+="""<td><para style="terp_tblheader_Details">""" + to_xml(tools.ustr(col.title)) + """</para></td>"""
                         rml+="""</tr></blockTable>
                         <blockTable colWidths=" """ + colWidths + """ " style="Table5">"""
                         for r in range(0,que.no_of_rows):

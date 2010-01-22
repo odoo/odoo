@@ -30,6 +30,7 @@ from lxml import etree
 from tools import to_xml
 import tools
 from mx.DateTime import *
+import netsvc
 
 class survey(osv.osv):
     _name = 'survey'
@@ -795,6 +796,34 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     if not context.has_key('active'):
                         survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
+                        surv_name_wiz = self.pool.get('survey.name.wiz')
+                        user_obj = self.pool.get('res.users')
+                        survey_data = self.pool.get('survey').browse(cr, uid, int(context['survey_id']))
+                        response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
+                        context.update({'response_id':response_id})
+                        report = self.create_report(cr, uid, [int(context.get('survey_id',False))], 'report.survey.browse.response', survey_data.title,context)
+                        attachments = []
+                        file = open("/tmp/" + survey_data.title + ".pdf")
+                        file_data = ""
+                        while 1:
+                            line = file.readline()
+                            file_data += line
+                            if not line:
+                                break
+                        attachments.append((survey_data.title + ".pdf",file_data))
+                        user_email = False
+                        resp_email = False
+                        if user_obj.browse(cr, uid, uid).address_id.id:
+                            cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
+                            user_email = cr.fetchone()[0]
+                        resp_id = survey_data.responsible_id.address_id
+                        if resp_id:
+                            cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
+                            resp_email = cr.fetchone()[0]
+                        if user_email and resp_email:
+                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks," 
+                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
+                        
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your response'})
@@ -805,6 +834,21 @@ class survey_question_wiz(osv.osv_memory):
                     result['fields'] = {}
                     result['context'] = context
         return result
+
+    def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
+        if not report_name or not res_ids:
+            return (False, Exception('Report name and Resources ids are required !!!'))
+        try:
+            ret_file_name = '/tmp/'+file_name+'.pdf'
+            service = netsvc.LocalService(report_name);
+            (result, format) = service.create(cr, uid, res_ids, {}, context)
+            fp = open(ret_file_name, 'wb+');
+            fp.write(result);
+            fp.close();
+        except Exception,e:
+            print 'Exception in create report:',e
+            return (False, str(e))
+        return (True, ret_file_name)
 
     def default_get(self, cr, uid, fields_list, context=None):
         value = {}

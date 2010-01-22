@@ -212,7 +212,7 @@
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="comment_field_type">text</field>
-            <field name="comment_label">Never... Why?</field>
+            <field name="comment_label">Why?</field>
             <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
         </record>
@@ -226,9 +226,12 @@
             <field name="question_id" ref="survey_question_contract_customers" />
             <field name="sequence" eval="2"/>
         </record>
+        <record id="survey_answer_never" model="survey.answer">
+            <field name="answer">Never... </field>
+            <field name="question_id" ref="survey_question_contract_customers" />
+            <field name="sequence" eval="2"/>
+        </record>
         <record id="survey_question_contract_customers" model="survey.question">
-            <field name="make_comment_field">True</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
 			<field eval="True" name="is_require_answer"/>
         </record>
 
@@ -767,8 +770,6 @@
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_odoo_continue_using_odoo" model="survey.question">
-            <field name="make_comment_field">True</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
 			<field eval="True" name="is_require_answer"/>
         </record>
 
@@ -985,12 +986,12 @@
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="comment_field_type">text</field>
-            <field name="comment_label">Yes, I plan to use (GB) :</field>
+            <field name="comment_label">Comment</field>
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_YES" model="survey.answer">
-            <field name="answer">YES</field>
+            <field name="answer">Yes, I plan to use (GB)</field>
             <field name="question_id" ref="survey_question_odoo_dms" />
             <field name="sequence" eval="1"/>
         </record>
@@ -999,10 +1000,7 @@
             <field name="question_id" ref="survey_question_odoo_dms" />
             <field name="sequence" eval="2"/>
         </record>
-
         <record id="survey_question_odoo_dms" model="survey.question">
-            <field name="make_comment_field">True</field>
-            <field name="make_comment_field_err_msg">Please enter a comment.</field>
 			<field eval="True" name="is_require_answer"/>
         </record>
 
