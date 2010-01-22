@@ -1798,9 +1798,11 @@ class orm(orm_template):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         context = context or {}
-
-        if fields[groupby]['type'] not in ('many2one','date','datetime'):
-            raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
+        
+        fields_detail = self._columns
+        fields_detail.update(self._inherit_fields)
+        if fields_detail[groupby]._type not in ('many2one','date','datetime'):
+            raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields_detail[groupby]._type,))
 
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
@@ -1821,7 +1823,7 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
-        float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
+        float_int_fields = list(field_name for field_name,values in fields_detail.items() if values._type in ('float','integer') and field_name in fields)
         sum = {}
         flist = groupby
         for f in float_int_fields:
@@ -1839,8 +1841,8 @@ class orm(orm_template):
         groupby_name = {}
         child_ids_dict = {}
 
-        if fields[groupby]['type'] == 'many2one':
-            groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,uid,groupby_ids,context))
+        if fields_detail[groupby]._type == 'many2one':
+            groupby_name = dict(self.pool.get(fields_detail[groupby]._obj).name_get(cr,uid,groupby_ids,context))
 
         # get child ids
         for parent_id in groupby_ids:
@@ -1854,7 +1856,7 @@ class orm(orm_template):
         #create [{},{}] for parent ids i.e for group by field
 
         result = []
-        if fields[groupby]['type'] in ('date','datetime'):
+        if fields_detail[groupby]._type in ('date','datetime'):
             curr_date = datetime.date.today()
             yesterday = (curr_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
             lastweek = (curr_date + datetime.timedelta(weeks=-1)).strftime('%Y-%m-%d')
@@ -1886,7 +1888,7 @@ class orm(orm_template):
                 if len(date_result[key]) == 1:
                     del date_result[key]
                     continue
-                for field in fields.keys():
+                for field in fields:
                     if field not in val:
                         val[field] = False
                 if key in ('Today','Yesterday') and len(result):
@@ -1907,7 +1909,7 @@ class orm(orm_template):
                 for k,v in sum.items():
                     parent_val_dict[k] = v
                 sum = {}
-                for field in fields.keys():
+                for field in fields:
                     if field not in parent_val_dict:
                         parent_val_dict[field] = False
                 result.append(parent_val_dict)
