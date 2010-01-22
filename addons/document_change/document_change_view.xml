@@ -73,7 +73,8 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Document Types">
-                <field name="name" select="1" colspan="4"/>
+                <field name="name" select="1"/>
+                <field name="phase_type_ids" colspan="4"/>
             </form>
         </field>
     </record>
@@ -85,6 +86,7 @@
         <field name="arch" type="xml">
             <tree string="Document Types">
                 <field name="name"/>
+                <field name="phase_type_ids"/>
             </tree>
         </field>
     </record>
@@ -224,11 +226,13 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Documents">
-                <group colspan="4" col="4">
-                    <field name="name" select="1" string="Document Name"/>
+                <group colspan="4" col="6">
+                    <field name="name" select="1" string="Document Name" colspan="4"/>
                     <field name="parent_id"/>
+                    <newline/>
                     <field name="datas_fname"/>
                     <field name="datas" filename="datas_fname" string="Content"/>
+                    <field name="type_id"/>
                 </group>
                 <separator string="Change Control" colspan="4"/>
                 <group col="7" colspan="4">
@@ -274,6 +278,17 @@
             </tree>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_document_graph">
+	    <field name="name">ir.attachment.graph</field>
+	    <field name="model">ir.attachment</field>
+	    <field name="type">graph</field>
+	    <field name="arch" type="xml">
+	        <graph string="Documents by type" type="bar" orientation="vertical">
+				<field name="type_id"/>
+	            <field name="name" operator="+"/>
+	        </graph>
+	    </field>
+    </record>
     <record model="ir.ui.view" id="view_document_search">
         <field name="name">ir.attachment.search</field>
         <field name="model">ir.attachment</field>
@@ -316,6 +331,12 @@
         <field eval="2" name="sequence"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_document_form"/>
+        <field name="act_window_id" ref="action_document_form"/>
+    </record>
+    <record id="action_document_graph_view" model="ir.actions.act_window.view">
+        <field eval="3" name="sequence"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_document_graph"/>
         <field name="act_window_id" ref="action_document_form"/>
     </record>
     <menuitem action="action_document_form" id="menu_documents_form" parent="menu_document_process_changes"/>
@@ -427,8 +448,9 @@
 	                <field name="process_type_id" widget="selection" select="1"/>
 	                <field name="structure_id" select="1"/>
 	                <newline/>
-	                <field name="description" colspan="4"/>
+	                <field name="description"/>
 	                <field name="process_model_id" widget="selection"/>
+	                <field name="pending_directory_id"/>
 	            </group>
                 <notebook colspan="4">
                 	<page string="Process Definition">
@@ -514,13 +536,24 @@
             </tree>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_process_graph">
+	    <field name="name">document.change.process.graph</field>
+	    <field name="model">document.change.process</field>
+	    <field name="type">graph</field>
+	    <field name="arch" type="xml">
+	        <graph string="Process changes by month" type="bar" orientation="vertical">
+				<field name="create_date"/>
+	            <field name="process_document_ids" operator="+"/>
+	        </graph>
+	    </field>
+    </record>
 	<record model="ir.ui.view" id="view_process_serach">
         <field name="name">document.change.process.search</field>
         <field name="model">document.change.process</field>
         <field name="type">search</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <search string="Documents">
+            <search string="Process Changes">
             	<group col="8" colspan="4">
             		<filter domain="[('user_id','=',uid)]" string="My Process Changes" icon="gtk-execute" help="My Process Changes"/>
 	                <filter domain="[('state','=','validate')]" string="To Validate" icon="gtk-apply" help="Process Changes to be validated"/>
@@ -543,7 +576,7 @@
         <field name="res_model">document.change.process</field>
         <field name="name">Process Changes</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,graph</field>
         <field name="search_view_id" ref="view_process_serach"/>
     </record>
     <menuitem action="action_process_form" id="menu_process_changes_form" parent="menu_document_process_changes"/>
