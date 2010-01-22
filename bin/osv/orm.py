@@ -1798,15 +1798,10 @@ class orm(orm_template):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         context = context or {}
-
-        if fields[groupby]['type'] not in ('many2one','date','datetime'):
-            raise Exception(_("Type Not supported for Group By: %s :Only many2one,date and datetime are supported ") %(fields[groupby]['type'],))
-
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
+            fields = self._columns.keys()
 
-        # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, uid, domain, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         qu1 = qu1 + dom[0]
@@ -1821,97 +1816,27 @@ class orm(orm_template):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
-        float_int_fields = list(field_name for field_name,values in fields.items() if values['type'] in ('float','integer'))
+        fget = self.fields_get(cr, uid, fields)
+        float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
         flist = groupby
         for f in float_int_fields:
             if f not in ['id','sequence']:
                 flist += ',sum('+f+') as '+f
 
-        cr.execute('select '+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
-        parent_res = cr.fetchall()
-        try:
-            parent_res = [(m[0],m[1]) for m in parent_res if m[0]]
-        except:
-            parent_res = [(m[0],) for m in parent_res if m[0]]
-        groupby_ids = map(lambda x:x[0],parent_res)
+        cr.execute('select min(id) as id,'+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
+        alldata = {}
+        for r in cr.dictfetchall():
+            alldata[r['id']] = r
+            del r['id']
 
-        groupby_name = {}
-        child_ids_dict = {}
-
-        if fields[groupby]['type'] == 'many2one':
-            groupby_name = dict(self.pool.get(fields[groupby]['relation']).name_get(cr,uid,groupby_ids,context))
-
-        # get child ids
-        for parent_id in groupby_ids:
-            cr.execute('select id from '+self._table+qu1 +' AND '+groupby+" = '%s'",qu2+[parent_id])
-            child_ids = cr.fetchall()
-            for val in child_ids:
-                if parent_id not in child_ids_dict:
-                    child_ids_dict[parent_id] = [val[0]]
-                else:
-                    child_ids_dict[parent_id].append(val[0])
-        #create [{},{}] for parent ids i.e for group by field
-
-        result = []
-        if fields[groupby]['type'] in ('date','datetime'):
-            curr_date = datetime.date.today()
-            yesterday = (curr_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-            lastweek = (curr_date + datetime.timedelta(weeks=-1)).strftime('%Y-%m-%d')
-            date_result = {'Today':{'group_child':[]},'Yesterday':{'group_child':[]},
-                           'LastWeek':{'group_child':[]},'Old':{'group_child':[]}}
-            for x in parent_res:
-                db_date = x[0][:10]
-                if db_date == curr_date.strftime('%Y-%m-%d'):
-                    date_format = 'Today'
-                elif db_date == yesterday:
-                    date_format = 'Yesterday'
-                elif (db_date < yesterday) and (db_date >= lastweek):
-                    date_format = 'LastWeek'
-                else:
-                    date_format = 'Old'
-                date_result[date_format].update({'id':None,groupby:date_format})
-                date_result[date_format]['group_child'] += child_ids_dict[x[0]]
-                float_int_sum = self.read(cr, uid, child_ids_dict[x[0]], float_int_fields, context)
-                for value in float_int_sum:
-                    for field,val in value.items():
-                        if field in ['id','sequence']:continue
-                        if field not in sum:
-                            sum[field] = 0.0
-                        sum[field] += val
-                for k,v in sum.items():
-                    date_result[date_format][k] = v
-                sum = {}
-            for key,val in date_result.items():
-                if len(date_result[key]) == 1:
-                    del date_result[key]
-                    continue
-                for field in fields.keys():
-                    if field not in val:
-                        val[field] = False
-                if key in ('Today','Yesterday') and len(result):
-                    result.insert(0,val)
-                else:
-                    result.insert(-1,val)
-            return result
-        else:
-            for x in parent_res:
-                parent_val_dict = {'id':str(x[0])+':Gpby',groupby:(x[0],groupby_name[x[0]]),'group_child':child_ids_dict[x[0]]}
-                float_int_sum = self.read(cr, uid, child_ids_dict[x[0]], float_int_fields, context)
-                for value in float_int_sum:
-                    for field,val in value.items():
-                        if field == 'id':continue
-                        if field not in sum:
-                            sum[field] = 0.0
-                        sum[field] += val
-                for k,v in sum.items():
-                    parent_val_dict[k] = v
-                sum = {}
-                for field in fields.keys():
-                    if field not in parent_val_dict:
-                        parent_val_dict[field] = False
-                result.append(parent_val_dict)
-            return result
+        data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
+        for d in data:
+            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)]
+            del alldata[d['id']][groupby]
+            d.update(alldata[d['id']])
+            del d['id']
+        return data
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
