@@ -2265,6 +2265,8 @@ class orm(orm_template):
                 del r['id']
 
             for record in res:
+                if not record[col]:# if the record is deleted from _inherits table?
+                    continue
                 record.update(res3[record[col]])
                 if col not in fields_to_read:
                     del record[col]
