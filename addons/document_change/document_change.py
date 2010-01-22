@@ -100,7 +100,7 @@ class document_file(osv.osv):
         'target':fields.binary('Target'),
     }
     _defaults = {      
-     'state': lambda *a: 'validate',
+     'state': lambda *a: 'change_request',
      }    
     def button_change_request(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'change_request'})                
