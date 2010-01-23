@@ -22,6 +22,7 @@
 from operator import attrgetter
 
 from osv import osv, fields
+from tools.translate import _
 import netsvc
 import pooler
 
@@ -121,13 +122,49 @@ class res_config_installer(osv.osv_memory):
 
     _install_if = {}
 
+    def _already_installed(self, cr, uid, context=None):
+        """ For each module (boolean fields in a res.config.installer),
+        check if it's already installed (neither uninstallable nor uninstalled)
+        and if it is, check it by default
+        """
+        modules = self.pool.get('ir.module.module')
+
+        selectable = [field for field in self._columns
+                      if type(self._columns[field]) is fields.boolean]
+        return modules.browse(
+            cr, uid,
+            modules.search(cr, uid,
+                           [('name','in',selectable),
+                            ('state','not in',['uninstallable', 'uninstalled'])],
+                           context=context),
+            context=context)
+
+
     def _modules_to_install(self, cr, uid, ids, context=None):
+        """ selects all modules to install:
+
+        * checked boolean fields
+        * return values of hook methods. Hook methods are of the form
+          ``_if_%(addon_name)s``, and are called if the corresponding
+          addon is marked for installation. They take the arguments
+          cr, uid, ids and context, and return an iterable of addon
+          names
+        * additionals, additionals are setup through the ``_install_if``
+          class variable. ``_install_if`` is a dict of {iterable:iterable}
+          where key and value are iterables of addon names.
+
+          If all the addons in the key are selected for installation
+          (warning: addons added through hooks don't count), then the
+          addons in the value are added to the set of modules to install
+        * not already installed
+        """
         base = set(module_name
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
                    if type(self._columns[module_name]) is fields.boolean
                    if to_install)
+
         hooks_results = set()
         for module in base:
             hook = getattr(self, '_if_%s'%(module), None)
@@ -140,27 +177,36 @@ class res_config_installer(osv.osv_memory):
                    if base.issuperset(requirements)
                    for module in consequences)
 
-        return base | hooks_results | additionals
+        return (base | hooks_results | additionals) - set(
+            map(attrgetter('name'), self._already_installed(cr, uid, context)))
 
     def default_get(self, cr, uid, fields_list, context=None):
-        modules = self.pool.get('ir.module.module')
+        ''' If an addon is already installed, check it by default
+        '''
         defaults = super(res_config_installer, self).default_get(
             cr, uid, fields_list, context=context)
 
-        selectable = [field for field in self._columns
-                      if type(self._columns[field]) is fields.boolean]
-        already_installed = modules.browse(
-            cr, uid,
-            modules.search(cr, uid,
-                           [('name','in',selectable),
-                            ('state','not in',['uninstallable', 'uninstalled'])],
-                           context=context),
-            context=context)
-
         return dict(defaults,
                     **dict.fromkeys(
-                        map(attrgetter('name'), already_installed),
+                        map(attrgetter('name'),
+                            self._already_installed(cr, uid, context=context)),
                         True))
+
+    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+        """ If an addon is already installed, set it to readonly as
+        res.config.installer doesn't handle uninstallations of already
+        installed addons
+        """
+        fields = super(res_config_installer, self).fields_get(
+            cr, uid, fields, context, read_access)
+
+        for module in self._already_installed(cr, uid, context=context):
+            fields[module.name].update(
+                readonly=True,
+                help=fields[module.name].get('help', '') +
+                     '\n\nThis module is already installed on your system')
+
+        return fields
 
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
