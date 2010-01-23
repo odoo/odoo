@@ -15,7 +15,7 @@
         </record>
         <record id="act_process_in_progress" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process"/>
-            <field name="name">progress</field>
+            <field name="name">in_progress</field>
             <field name="action">do_start()</field>
             <field name="kind">function</field>
         </record>
@@ -25,10 +25,10 @@
             <field name="action">do_pending()</field>
             <field name="kind">function</field>
         </record>
-        <record id="act_process_validate" model="workflow.activity">
+        <record id="act_process_confirm" model="workflow.activity">
             <field name="wkf_id" ref="wkf_change_process"/>
-            <field name="name">validated</field>
-            <field name="action">do_validate()</field>
+            <field name="name">to_validate</field>
+            <field name="action">do_confirm()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_process_done" model="workflow.activity">
@@ -39,28 +39,28 @@
         </record>
         
 		<!-- Transitions -->
-        <record id="draft_to_progress" model="workflow.transition">
+        <record id="tran_process_draft_to_progress" model="workflow.transition">
             <field name="act_from" ref="act_process_draft"/>
             <field name="act_to" ref="act_process_in_progress"/>
             <field name="signal">button_start</field>
         </record>
-        <record id="progress_to_pending" model="workflow.transition">
+        <record id="tran_process_progress_to_pending" model="workflow.transition">
             <field name="act_from" ref="act_process_in_progress"/>
             <field name="act_to" ref="act_process_pending"/>
             <field name="signal">button_pending</field>
         </record>
-        <record id="pending_to_progress" model="workflow.transition">
+        <record id="tran_process_pending_to_progress" model="workflow.transition">
             <field name="act_from" ref="act_process_pending"/>
             <field name="act_to" ref="act_process_in_progress"/>
-            <field name="signal">button_progress</field>
+            <field name="signal">button_start</field>
         </record>
-        <record id="progress_to_validate" model="workflow.transition">
+        <record id="tran_process_progress_to_confirm" model="workflow.transition">
             <field name="act_from" ref="act_process_in_progress"/>
-            <field name="act_to" ref="act_process_validate"/>
-            <field name="signal">button_validate</field>
+            <field name="act_to" ref="act_process_confirm"/>
+            <field name="signal">button_confirm</field>
         </record>
-        <record id="validate_to_end" model="workflow.transition">
-            <field name="act_from" ref="act_process_validate"/>
+        <record id="tran_process_confirm_to_end" model="workflow.transition">
+            <field name="act_from" ref="act_process_confirm"/>
             <field name="act_to" ref="act_process_done"/>
             <field name="signal">button_done</field>
         </record>

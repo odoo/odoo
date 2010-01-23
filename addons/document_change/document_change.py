@@ -68,7 +68,7 @@ class doucment_change_process_phase(osv.osv):
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
         'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
-        'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('validated', 'Validated'),('done', 'Done')], 'State',readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('to_validate', 'To Validate'),('done', 'Done')], 'State',readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
     _defaults = {      
@@ -80,8 +80,8 @@ class doucment_change_process_phase(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
-    def do_validate(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state':'validated'})
+    def do_confirm(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'to_validate'})
         return True
 
     def do_start(self, cr, uid, ids, *args):
@@ -104,40 +104,6 @@ class document_change_process_model(osv.osv):
         'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type'),
         }
 document_change_process_model()
-
-
-class document_file(osv.osv):
-    _inherit = 'ir.attachment'
-    
-    _columns = {
-        'type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('in_production', 'In Production'), ('requested', 'Change Request'),('proposed', 'Change Proposed'), ('validated', 'To Validate'), ('cancel', 'Cancel')], 'State'),
-        'target_directory_id': fields.many2one('document.directory', 'Target Document'),
-        'target_document_id':fields.binary('Target'),
-    }
-    _defaults = {      
-     'state': lambda *a: 'in_production',
-     }    
-    def do_request(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'requested'},context=context)              
-        return True
-
-    def do_propose(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'proposed'},context=context)                
-        return True             
-    
-    def do_validate(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'validated'},context=context)
-        return True   
-
-    def do_production(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'in_production'},context=context)
-        return True   
-             
-    def do_cancel(self, cr, uid, ids, context={}):
-        return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
-        
-document_file()
 
 class document_change_process_type(osv.osv):
     _name = "document.change.process.type"
@@ -179,25 +145,28 @@ class doucment_change_process(osv.osv):
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
-        'state':fields.selection([('draft', 'Draft'),('progress', 'Progress'),('validated', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
+        'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
-        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),        
+        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),   
+        'date_control': fields.date('Control Date'),
+        'progress': fields.float('Progress'),
+        'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'),  
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
       'state': lambda *a: 'draft',
       }
     def do_start(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'progress'},context=context)              
+        self.write(cr, uid, ids, {'state':'in_progress'},context=context)              
         return True
 
     def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'pending'},context=context)                
         return True             
     
-    def do_validate(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'validated'},context=context)
+    def do_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'to_validate'},context=context)
         return True   
 
     def do_done(self, cr, uid, ids, context={}):
@@ -208,3 +177,37 @@ class doucment_change_process(osv.osv):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
     
 doucment_change_process()
+
+class document_file(osv.osv):
+    _inherit = 'ir.attachment'
+    
+    _columns = {
+        'type_id':fields.many2one('document.change.type','Document Type'),
+        'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Request'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
+        'target_directory_id': fields.many2one('document.directory', 'Target Document'),
+        'target_document_id':fields.binary('Target'),
+        'change_process_id' :fields.many2one('document.change.process','Process Change'),
+    }
+    _defaults = {      
+     'state': lambda *a: 'in_production',
+     }    
+    def do_change_request(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'change_request'},context=context)              
+        return True
+
+    def do_change_propose(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'change_propose'},context=context)                
+        return True             
+    
+    def do_to_update(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'to_update'},context=context)
+        return True   
+
+    def do_production(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'in_production'},context=context)
+        return True   
+             
+    def do_cancel(self, cr, uid, ids, context={}):
+        return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
+        
+document_file()
