@@ -204,7 +204,7 @@ class res_config_installer(osv.osv_memory):
             fields[module.name].update(
                 readonly=True,
                 help=fields[module.name].get('help', '') +
-                     '\n\nThis addon is already installed on your system')
+                     _('\n\nThis addon is already installed on your system'))
 
         return fields
 
