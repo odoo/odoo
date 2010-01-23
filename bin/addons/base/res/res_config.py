@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,9 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+from operator import attrgetter
 
 from osv import osv, fields
 import netsvc
@@ -139,6 +141,26 @@ class res_config_installer(osv.osv_memory):
                    for module in consequences)
 
         return base | hooks_results | additionals
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        modules = self.pool.get('ir.module.module')
+        defaults = super(res_config_installer, self).default_get(
+            cr, uid, fields_list, context=context)
+
+        selectable = [field for field in self._columns
+                      if type(self._columns[field]) is fields.boolean]
+        already_installed = modules.browse(
+            cr, uid,
+            modules.search(cr, uid,
+                           [('name','in',selectable),
+                            ('state','not in',['uninstallable', 'uninstalled'])],
+                           context=context),
+            context=context)
+
+        return dict(defaults,
+                    **dict.fromkeys(
+                        map(attrgetter('name'), already_installed),
+                        True))
 
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
