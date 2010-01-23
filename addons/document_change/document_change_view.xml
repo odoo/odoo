@@ -74,7 +74,8 @@
         <field name="arch" type="xml">
             <form string="Document Types">
                 <field name="name" select="1"/>
-                <field name="phase_type_ids" colspan="4"/>
+                <separator string="Associated Phase Types" colspan="4"/>
+                <field name="phase_type_ids" colspan="4" nolabel="1"/>  
             </form>
         </field>
     </record>
@@ -85,8 +86,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Document Types">
-                <field name="name"/>
-                <field name="phase_type_ids"/>
+                <field name="name"/>                              
             </tree>
         </field>
     </record>
@@ -189,7 +189,8 @@
             <form string="Model of Changes">
                 <field name="name" select="1"/>
                 <field name="sequence"/>
-                <field name="phase_type_ids" colspan="4"/>
+                <separator string="Phase Type" colspan="4"/>        
+                <field name="phase_type_ids" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -199,10 +200,9 @@
         <field name="model">document.change.process.model</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Model of Changes">
-                <field name="name"/>
+            <tree string="Model of Changes">                
                 <field name="sequence"/>
-                <field name="phase_type_ids"/>
+                <field name="name"/>                
             </tree>
         </field>
     </record>
@@ -232,7 +232,7 @@
                     <newline/>
                     <field name="datas_fname"/>
                     <field name="datas" filename="datas_fname" string="Content"/>
-                    <field name="type_id"/>
+                    <field name="change_type_id"/>
                 </group>
                 <separator string="Change Control" colspan="4"/>
                 <group col="7" colspan="4">
@@ -285,7 +285,7 @@
         <field name="arch" type="xml">
             <tree string="Documents">
                 <field name="parent_id" string="Directory"/>
-                <field name="type_id" string="Type"/>
+                <field name="change_type_id" string="Type"/>
                 <field name="state"/>
                 <field name="change_process_id" string="Proc Chg #"/>
                 <field name="user_id" string="Owner"/>
@@ -298,7 +298,7 @@
 	    <field name="type">graph</field>
 	    <field name="arch" type="xml">
 	        <graph string="Documents by type" type="bar" orientation="vertical">
-				<field name="type_id"/>
+				<field name="change_type_id"/>
 	            <field name="name" operator="+"/>
 	        </graph>
 	    </field>
@@ -313,7 +313,7 @@
             	<group col="7" colspan="4">
 	                <filter domain="[('state','=','change_request')]" string="To Change" icon="gtk-apply"/>
 	                <filter domain="[('state','=','to_update')]" string="To Validate" icon="gtk-execute"/>
-	            	<field name="type_id" string="Type of Documents" select="1"/>
+	            	<field name="change_type_id" string="Type of Documents" select="1"/>
 	            	<field name="parent_id" select="1"/>
 	            	<field name="create_uid" string="Owner" select="1"/>
 	            </group>
@@ -373,7 +373,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_document_tree"/>
-        <field name="domain">[('state','=','proposed')]</field>    
+        <field name="domain">[('state','=','to_update')]</field>    
         </record>
     <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
 	
@@ -394,7 +394,7 @@
 	                <field name="update_document" string="Update documents"/>
 	                <field name="type" string="Type"/>
 	                <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
-	                <field name="phase_ids" string="Phase Type"/>
+	                <field name="phase_type_id" string="Phase Type"/>
 	            </group>
 				<separator colspan="4" string="Documents"/>
                 <field name="phase_document_ids" colspan="4"  nolabel="1"/>
@@ -461,7 +461,10 @@
 	                <field name="structure_id" select="1"/>
 	                <newline/>
 	                <field name="description"/>
-	                <field name="process_model_id" widget="selection"/>
+                    <group colspan="2" col="3">
+    	                <field name="process_model_id" widget="selection"/>
+                        <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>
+                    </group>
 	                <field name="pending_directory_id"/>
 	            </group>
                 <notebook colspan="4">
@@ -503,19 +506,12 @@
                 				<field name="state"/>
                 			</form>
                 		</field>
-                	</page>
-                	<page string="Documents">
-                		<field name="process_document_ids" mode="tree,form" colspan="4" nolabel="1">
-                			<tree string="Documents">
-                				<field name="name" string="Document Name"/>
-                				<field name="state"/>
-                			</tree>
-                			<form string="Documents">
-                				<field name="name" string="Document Name"/>
-                				<field name="state"/>
-                			</form>
+                	</page>     
+                    <page string="Documents">
+                		<field name="process_document_ids">                			            			
                 		</field>
-                	</page>                	
+                	</page>
+                           	                	
                 </notebook>
             </form>
         </field>
@@ -534,8 +530,8 @@
                 <field name="current_phase_id" string="Current Phase"/>
                 <field name="date_control" string="Date Control Point"/>
                 <field name="process_model_id"/>
-                <field name="progress" string="Progress"/>
-                <field name="process_document_ids" string="# Doc Required"/>
+                <field name="progress" string="Progress"/>                
+                <field name="process_document_ids" string="# Documents"/>
             </tree>
         </field>
     </record>
@@ -549,7 +545,7 @@
 	            <field name="process_document_ids" operator="+"/>
 	        </graph>
 	    </field>
-    </record>
+    </record> 
 	<record model="ir.ui.view" id="view_process_serach">
         <field name="name">document.change.process.search</field>
         <field name="model">document.change.process</field>

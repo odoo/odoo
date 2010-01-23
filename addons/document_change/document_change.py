@@ -35,7 +35,7 @@ class document_change_type(osv.osv):
     
     _columns = {
         'name': fields.char("Document Change Type", size=64,required=True),
-        'phase_type_ids': fields.many2many('document.change.process.phase.type','document_process__rel','type_id','change_id','Phase Type'),
+        'phase_type_ids': fields.many2many('document.change.process.phase.type','document_type_phase_type_rel','document_type_id','phase_type_id','Phase Type'),
         'template_document_id':fields.many2one('ir.attachment','Document')
     }
 document_change_type()
@@ -48,7 +48,7 @@ class doucment_change_process_phase_type(osv.osv):
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'document_type_ids': fields.many2many('document.change.type','document_phase_process__rel','phase_id','document_id','Document'),
+        'document_type_ids': fields.many2many('document.change.type','phase_type_document_type_rel','phase_type_id','document_type_id','Document Type'),
     }
 doucment_change_process_phase_type()
 
@@ -67,7 +67,7 @@ class doucment_change_process_phase(osv.osv):
         'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Process')], 'Update Document', required=True),        
         'type': fields.selection([('control_required', 'Control Required'),('no_control', 'No Control')], 'Type'),
         'date_control': fields.date('Control Date', select=True),        
-        'phase_ids':fields.many2one('document.change.process.phase','Phase Type'),
+        'phase_type_id':fields.many2one('document.change.process.phase.type','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('to_validate', 'To Validate'),('done', 'Done')], 'State',readonly=True),
         'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
     }
@@ -101,7 +101,7 @@ class document_change_process_model(osv.osv):
     _columns = {
         'name': fields.char("Changed Process Model", size=64,required=True),
         'sequence': fields.integer('Sequence'),
-        'phase_type_ids':fields.many2many('document.change.process.phase.type','phase_type_rel','phase_id','phase_model_id','Process Type'),
+        'phase_type_ids':fields.many2many('document.change.process.phase.type','process_model_phase_type_rel','process_model_id','phase_type_id','Phase Type'),
         }
 document_change_process_model()
 
@@ -124,6 +124,7 @@ class document_change_process_email(osv.osv):
         'process_id':fields.many2one('document.change.process','Process Change'),        
         }
 document_change_process_email()
+
 class doucment_change_process(osv.osv):
     
     _name = "document.change.process"
@@ -146,12 +147,12 @@ class doucment_change_process(osv.osv):
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
-        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
-        'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
+        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),        
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),   
-        'date_control': fields.date('Control Date'),
-        'progress': fields.float('Progress'),
-        'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'),  
+        'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
+        'progress': fields.float('Progress'), #TODO : functio field: calculate progress
+        'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
+        'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
@@ -175,6 +176,33 @@ class doucment_change_process(osv.osv):
              
     def do_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
+
+    def generate_phases(self, cr, uid, ids, *args):
+        phase_obj = self.pool.get('document.change.process.phase')
+        phase_type_obj = self.pool.get('document.change.process.phase.type')  
+        document_type_obj = self.pool.get('document.change.type') 
+        document_obj = self.pool.get('ir.attachment')     
+        for process in self.browse(cr, uid, ids):
+            if process.process_model_id:
+                for phase_type_id in process.process_model_id.phase_type_ids:
+                    phase_type = phase_type_obj.browse(cr, uid, phase_type_id)
+                    phase_value = {
+                        'name' : '%s-%s' %(phase_type, process.name),
+                        'phase_type_id': phase_type_id,
+                        'process_id': process.id   
+                        }            
+                    phase_id = phase_obj.create(cr, uid, phase_value)
+                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' ,phase_type_id)
+                    document_type_ids = map(lambda x: x[0], cr.fetchall())
+                    document_ids = document_obj.search(cr, uid, [
+                            ('parent_id','=',process.structure_id and process.structure_id.id),
+                            ('change_type_id','in',document_type_ids)])
+                    for document_id in document_ids:
+                        vals = {'process_phase_id':phase_id}
+                        if process.pending_directory_id:
+                            vals.update({'parent_id':process.pending_directory_id.id})
+                        document_obj.copy(cr, uid, document_id, vals)
+                     
     
 doucment_change_process()
 
@@ -182,14 +210,16 @@ class document_file(osv.osv):
     _inherit = 'ir.attachment'
     
     _columns = {
-        'type_id':fields.many2one('document.change.type','Document Type'),
+        'change_type_id':fields.many2one('document.change.type','Document Type'),
         'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Request'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
         'target_directory_id': fields.many2one('document.directory', 'Target Document'),
         'target_document_id':fields.binary('Target'),
-        'change_process_id' :fields.many2one('document.change.process','Process Change'),
+        'process_phase_id' :fields.many2one('document.change.process.phase','Process Phase'),
+        'progress': fields.float('Progress'), #TODO : functio field: calculate progress
+        'change_process_id': fields.related('process_phase_id', 'process_id', type='many2one', relation='document.change.process', string='Change Process'),
     }
     _defaults = {      
-     'state': lambda *a: 'in_production',
+        'state': lambda *a: 'in_production',
      }    
     def do_change_request(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'change_request'},context=context)              
