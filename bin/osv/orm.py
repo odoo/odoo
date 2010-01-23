@@ -1832,7 +1832,7 @@ class orm(orm_template):
 
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
         for d in data:
-            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)]
+            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
