@@ -4,33 +4,26 @@
       <field name="name">knowledge.installer.view</field>
       <field name="model">knowledge.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_view_base"/>
+      <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
             <attribute name="string">Knowledge Modules Installation</attribute>
           </form>
 
-          <group string="res_config_contents" position="replace">
-            <separator string="Configure Your Knowledge Management System"
-                       colspan="4"/>
-            <image name="gtk-dialog-info"/>
-            <newline/>
-            <label align="0.0" string=""/>
-            <group>
-              <separator string="Knowledge Management" colspan="4"/>
-              <field name="document_ftp"/>
-              <field name="document_webdav"/>
-              <field name="wiki"/>
-              <separator string="Templates of Content" colspan="4"/>
-              <field name="wiki_faq"/>
-              <field name="wiki_quality_manual"/>
-            </group>
+          <separator string="title" position="attributes">
+            <attribute name="string"
+                       >Configure Your Knowledge Management System</attribute>
+          </separator>
+          <group colspan="8">
+            <separator string="Knowledge Management" colspan="4"/>
+            <field name="document_ftp"/>
+            <field name="document_webdav"/>
+            <field name="wiki"/>
+            <separator string="Templates of Content" colspan="4"/>
+            <field name="wiki_faq"/>
+            <field name="wiki_quality_manual"/>
           </group>
-
-          <xpath expr='//button[@name="action_next"]' position='attributes'>
-            <attribute name='string'>Install Modules</attribute>
-          </xpath>
         </data>
       </field>
     </record>

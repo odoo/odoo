@@ -4,31 +4,24 @@
       <field name="name">mrp.installer.view</field>
       <field name="model">mrp.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_view_base"/>
+      <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
             <attribute name="string">MRP Modules Installation</attribute>
           </form>
 
-          <group string="res_config_contents" position="replace">
-            <separator string="Configure Your Manufacturing" colspan="4"/>
-            <image name="gtk-dialog-info"/>
-            <newline/>
-            <label align="0.0" string=""/>
-            <group>
-              <separator string="Manufacturing Resource Planning" colspan="4"/>
-              <!-- Advanced Routes -->
-              <field name="mrp_jit"/>
-              <field name="mrp_operations"/>
-              <field name="mrp_subproduct"/>
-              <field name="mrp_repair"/>
-            </group>
+          <separator string="title" position="attributes">
+            <attribute name="string">Configure Your Manufacturing</attribute>
+          </separator>
+          <group colspan="8">
+            <separator string="Manufacturing Resource Planning" colspan="4"/>
+            <!-- Advanced Routes -->
+            <field name="mrp_jit"/>
+            <field name="mrp_operations"/>
+            <field name="mrp_subproduct"/>
+            <field name="mrp_repair"/>
           </group>
-
-          <xpath expr='//button[@name="action_next"]' position='attributes'>
-            <attribute name='string'>Install Modules</attribute>
-          </xpath>
         </data>
       </field>
     </record>
