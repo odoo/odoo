@@ -26,11 +26,22 @@ class account_installer(osv.osv_memory):
 
     _columns = {
         # Accounting
-        'account_analytic_default':fields.boolean('Analytic Accounting'),
-        'account_analytic_plans':fields.boolean('Multiple Analytic Plans'),
-        'account_payment':fields.boolean('Suppliers Payment Management'),
-        'account_followup':fields.boolean('Followups Management'),
-        'account_asset':fields.boolean('Assets Management')
+        'account_analytic_default':fields.boolean('Analytic Accounting',
+            help="Automatically selects analytic accounts based on various "
+                 "criteria."),
+        'account_analytic_plans':fields.boolean('Multiple Analytic Plans',
+            help="Allows invoice lines to impact multiple analytic accounts "
+                 "simultaneously."),
+        'account_payment':fields.boolean('Suppliers Payment Management',
+            help="Streamlines invoice payment and creates hooks to plug "
+                 "automated payment systems in."),
+        'account_followup':fields.boolean('Followups Management',
+            help="Helps you generate reminder letters for unpaid invoices, "
+                 "including multiple levels of reminding and customized "
+                 "per-partner policies."),
+        'account_asset':fields.boolean('Assets Management',
+            help="Enables asset management in the accounting application, "
+                 "including asset categories and usage periods.")
         }
     _defaults = {
         'account_analytic_default':True,
