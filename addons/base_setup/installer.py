@@ -60,27 +60,59 @@ class base_setup_installer(osv.osv_memory):
                  "."),
         'project':fields.boolean('Project Management',
             help="Helps you manage your projects and tasks by tracking them, "
-                 "generating planings, etc..."),
+                 "generating plannings, etc..."),
         'knowledge':fields.boolean('Knowledge Management',
             help="Lets you install addons geared towards sharing knowledge "
                  "with and between your employees."),
         'stock':fields.boolean('Warehouse Management',
             help="Helps you manage your stocks and stocks locations, as well "
                  "as the flow of stock between warehouses."),
-        'mrp':fields.boolean('Manufacturing'),
-        'account':fields.boolean('Financial & Accounting'),
-        'charts':fields.selection(_get_charts, 'Chart of Accounts'),
-        'purchase':fields.boolean('Purchase Management'),
-        'hr':fields.boolean('Human Resources'),
-        'point_of_sale':fields.boolean('Point of Sales'),
-        'marketing':fields.boolean('Marketing'),
-        'misc_tools':fields.boolean('Miscellaneous Tools'),
-        'report_designer':fields.boolean('Advanced Reporting'),
+        'mrp':fields.boolean('Manufacturing',
+            help="Helps you manage your manufacturing processes and generate "
+                 "reports on those processes."),
+        'account':fields.boolean('Financial & Accounting',
+            help="Helps you handle your accounting needs, as well as create "
+                 "and track your budgets."),
+        'charts':fields.selection(_get_charts, 'Chart of Accounts',
+            help="Installs localized accounting charts to match as closely as "
+                 "possible the accounting needs of your company based on your "
+                 "country."),
+        'purchase':fields.boolean('Purchase Management',
+            help="Helps you manage your purchase-related processes such as "
+                 "requests for quotations, supplier invoices, etc..."),
+        'hr':fields.boolean('Human Resources',
+            help="Helps you manage your human resources by encoding your "
+                 "employee structure, generating work sheets, tracking "
+                 "attendance and more."),
+        'point_of_sale':fields.boolean('Point of Sales',
+            help="Helps you get the most out of your points of sales with "
+                 "fast sale encoding, simplified payment mode encoding, "
+                 "automatic picking lists generation and more."),
+        'marketing':fields.boolean('Marketing',
+            help="Helps you manage your marketing campaigns step by step."),
+        'misc_tools':fields.boolean('Miscellaneous Tools',
+            help="Lets you install various interesting but non-essential "
+                 "tools."),
+        'report_designer':fields.boolean('Advanced Reporting',
+            help="Lets you install various tools to simplify and enhance "
+                 "OpenERP's report creation."),
         # Vertical modules
-        'profile_association':fields.boolean('Associations'),
-        'profile_training':fields.boolean('Training Centers'),
-        'profile_auction':fields.boolean('Auction Houses'),
-        'profile_bookstore':fields.boolean('Book Stores'),
+        'profile_association':fields.boolean('Associations',
+            help="Installs a preselected set of OpenERP "
+                 "applications which will help you manage your association "
+                 "more efficiently."),
+        'profile_training':fields.boolean('Training Centers',
+            help="Helps you manage your training sessions and "
+                 "centers, from the conception of a training project to the "
+                 "gathering of trainee feedback."),
+        'profile_auction':fields.boolean('Auction Houses',
+            help="Installs a preselected set of OpenERP "
+                 "applications selected to help you manage your auctions "
+                 "as well as the business processes around them."),
+        'profile_bookstore':fields.boolean('Book Stores',
+            help="Installs a preselected set of OpenERP "
+                 "applications which will help you manage your book store "
+                 "or your library."),
         }
     _defaults = {
         'crm': True,
