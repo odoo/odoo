@@ -32,7 +32,7 @@ class project_installer(osv.osv_memory):
         'hr_timesheet_invoice':fields.boolean('Invoice Based on Hours'),
         'account_budget':fields.boolean('Budgets'),
         'project_messages':fields.boolean('Project Messages'),
-        'project_crm':fields.boolean('Issues Tracker & Features Requests'),
+        'project_crm':fields.boolean('Issues Tracker'),
         # Methodologies
         'scrum':fields.boolean('SCRUM'),
         'project_gtd':fields.boolean('Getting Things Done'),
