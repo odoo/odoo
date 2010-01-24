@@ -50,11 +50,23 @@ class base_setup_installer(osv.osv_memory):
         }
     _columns = {
         # Generic modules
-        'crm':fields.boolean('Customer Relationship Management'),
-        'sale':fields.boolean('Sales Management'),
-        'project':fields.boolean('Project Management'),
-        'knowledge':fields.boolean('Knowledge Management'),
-        'stock':fields.boolean('Warehouse Management'),
+        'crm':fields.boolean('Customer Relationship Management',
+            help="Helps you track and manage relations with customers such as"
+                 " leads, requests or issues. Can automatically send "
+                 "reminders, escalate requests or trigger business-specific "
+                 "actions based on standard events."),
+        'sale':fields.boolean('Sales Management',
+            help="Helps you handle your quotations, sale orders and invoicing"
+                 "."),
+        'project':fields.boolean('Project Management',
+            help="Helps you manage your projects and tasks by tracking them, "
+                 "generating planings, etc..."),
+        'knowledge':fields.boolean('Knowledge Management',
+            help="Lets you install addons geared towards sharing knowledge "
+                 "with and between your employees."),
+        'stock':fields.boolean('Warehouse Management',
+            help="Helps you manage your stocks and stocks locations, as well "
+                 "as the flow of stock between warehouses."),
         'mrp':fields.boolean('Manufacturing'),
         'account':fields.boolean('Financial & Accounting'),
         'charts':fields.selection(_get_charts, 'Chart of Accounts'),
