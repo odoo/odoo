@@ -24,7 +24,7 @@ import pooler
 
 class profile_service_config_install_modules_wizard(osv.osv_memory):
     _name='profile.service.config.install_modules_wizard'
-    _inherit = 'res.config'
+    _inherit = 'res.config.installer'
     _rec_name = 'crm_configuration'
     _columns = {
         'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
@@ -47,16 +47,6 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
             help="An integrated wiki content management system. This is really "\
                 "useful to manage FAQ, quality manuals, etc.")
     }
-    def execute(self, cr, uid, ids, context=None):
-        result = self.read(cr, uid, ids)
-        mod_obj = self.pool.get('ir.module.module')
-        for res in result:
-            for r in res:
-                if r != 'id' and res[r]:
-                    ids = mod_obj.search(cr, uid, [('name', '=', r)])
-                    mod_obj.button_install(cr, uid, ids, context=context)
-        cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 profile_service_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

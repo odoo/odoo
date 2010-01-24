@@ -25,7 +25,7 @@ import pooler
 
 class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
     _name='profile.manufacturing.config.install_modules_wizard'
-    _inherit = 'res.config'
+    _inherit = 'res.config.installer'
 
     _columns = {
         'mrp_jit':fields.boolean('Just in Time Scheduling',
@@ -78,16 +78,6 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
             help="Allows to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
 
     }
-    def execute(self, cr, uid, ids, context=None):
-        result = self.read(cr,uid,ids)
-        mod_obj = self.pool.get('ir.module.module')
-        for res in result:
-            for r in res:
-                if r != 'id' and res[r]:
-                    ids = mod_obj.search(cr, uid, [('name', '=', r)])
-                    mod_obj.button_install(cr, uid, ids, context=context)
-        cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 profile_manufacturing_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
