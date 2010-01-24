@@ -26,10 +26,24 @@ class mrp_installer(osv.osv_memory):
 
     _columns = {
         # Manufacturing Resource Planning
-        'stock_location':fields.boolean('Advanced Routes'),
-        'mrp_jit':fields.boolean('Just In Time Scheduling'),
-        'mrp_operations':fields.boolean('Manufacturing Operations'),
-        'mrp_subproduct':fields.boolean('MRP Subproducts'),
-        'mrp_repair':fields.boolean('Repairs'),
+        'stock_location':fields.boolean('Advanced Routes',
+            help="Manages product routes and paths within and between "
+                 "locations (e.g. warehouses)"),
+        'mrp_jit':fields.boolean('Just In Time Scheduling',
+            help="Enables Just In Time computation of procurement orders."
+                 "\n\nWhile it's more resource intensive than the default "
+                 "setup, the JIT computer avoids having to wait for the "
+                 "procurement scheduler to run or having to run the "
+                 "procurement scheduler manually."),
+        'mrp_operations':fields.boolean('Manufacturing Operations',
+            help="Enhances production orders with readiness states as well "
+                 "as the dates of start and end of execution of the order."),
+        'mrp_subproduct':fields.boolean('MRP Subproducts',
+            help="Enables multiple product output from a single production "
+                 "order: without this, a productio order can have only one "
+                 "output product."),
+        'mrp_repair':fields.boolean('Repairs',
+            help="Enables warranty and repair management (and their impact "
+                 "on stocks and invoicing)."),
         }
 mrp_installer()

@@ -14,9 +14,15 @@
           <separator string="title" position="attributes">
             <attribute name="string">Configure Your Manufacturing</attribute>
           </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string">After having installed the core
+ manufacturing application, you can extend it with a few more depending on the
+ needs of your organization</attribute>
+          </xpath>
           <group colspan="8">
             <separator string="Manufacturing Resource Planning" colspan="4"/>
-            <!-- Advanced Routes -->
+            <field name="stock_location"/>
             <field name="mrp_jit"/>
             <field name="mrp_operations"/>
             <field name="mrp_subproduct"/>
