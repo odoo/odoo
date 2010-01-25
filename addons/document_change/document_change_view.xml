@@ -445,7 +445,7 @@
     </record>	
 	<menuitem action="action_process_phase_form_validate" id="menu_phases_to_validate_form" parent="menu_change_control"/>
 	
-	<act_window domain="[('change_type_id', '=', active_id)]" 
+	<act_window domain="[('process_phase_id', '=', active_id)]" 
 		id="act_documents_phases" 
 		name="Documents" 
 		res_model="ir.attachment" 
@@ -462,13 +462,13 @@
             <form string="Process Change">
             	<group colspan="4">
 	                <field name="name"/>	                
-	                <field name="structure_id" select="1"/>
-                    <field name="description" colspan="4"/>	                
+	                <field name="structure_id" select="1"/>                                    
                     <group colspan="4" col="7">
                         <field name="process_type_id" widget="selection"/>	                
     	                <field name="process_model_id" widget="selection"/>
                         <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>                        
                     </group>	                
+                    <field name="description" colspan="4"/>	
 	            </group>
                 <notebook colspan="4">
                 	<page string="Process Definition">
@@ -593,13 +593,13 @@
     </record>	
 	<menuitem action="action_process_change_form_validate" id="menu_process_to_validate_form" parent="menu_change_control"/>
 	
-	<act_window domain="[('phase_ids', '=', active_id)]" 
+	<act_window domain="[('process_id', '=', active_id)]" 
 		id="act_phase_change_process" 
 		name="Phases" 
 		res_model="document.change.process.phase" 
 		src_model="document.change.process"/>
 	
-	<act_window domain="[('change_type_id', '=', active_id)]" 
+	<act_window domain="[('change_process_id', '=', active_id)]" 
 		id="act_documents_change_process" 
 		name="Documents" 
 		res_model="ir.attachment" 
