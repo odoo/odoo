@@ -51,6 +51,9 @@ class doucment_change_process_phase_type(osv.osv):
         'active': fields.boolean('Active'),
         'document_type_ids': fields.many2many('document.change.type','phase_type_document_type_rel','phase_type_id','document_type_id','Document Type'),
     }
+    _defaults = {      
+                 'active': lambda *a:1,
+    }
 doucment_change_process_phase_type()
 
 class doucment_change_process(osv.osv):    
@@ -186,14 +189,14 @@ class doucment_change_process(osv.osv):
         for process in self.browse(cr, uid, ids):
             if process.process_model_id:
                 for phase_type_id in process.process_model_id.phase_type_ids:
-                    phase_type = phase_type_obj.browse(cr, uid, phase_type_id)
+                    phase_type = phase_type_obj.browse(cr, uid, phase_type_id.id)
                     phase_value = {
-                        'name' : '%s-%s' %(phase_type, process.name),
-                        'phase_type_id': phase_type_id,
+                        'name' : '%s-%s' %(phase_type.name, process.name),
+                        'phase_type_id': phase_type_id.id,
                         'process_id': process.id   
                         }            
                     phase_id = phase_obj.create(cr, uid, phase_value)
-                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' ,phase_type_id)
+                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' %phase_type_id.id)
                     document_type_ids = map(lambda x: x[0], cr.fetchall())
                     document_ids = document_obj.search(cr, uid, [
                             ('parent_id','=',process.structure_id and process.structure_id.id),

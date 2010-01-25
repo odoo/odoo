@@ -69,6 +69,26 @@
     </record>
 
 	<!-- Documents -->
+	<record model="ir.attachment" id="doc_FIE_template">
+        <field name="name">FIE_template</field>
+        <field name="datas_fname">FIE_template.xls</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_SFMEA_template">
+        <field name="name">SFMEA_template</field>
+        <field name="datas_fname">SFMEA_template.xls</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_ProjectCharter_Template">
+        <field name="name">ProjectCharter_Template</field>
+        <field name="datas_fname">ProjectCharter_Template.ppt</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_TaktTime_template">
+        <field name="name">TaktTime_template</field>
+        <field name="datas_fname">TaktTime_template.xls</field>
+        <field name="parent_id" ref="dir_takt_time"/>
+    </record>
 	<record model="ir.attachment" id="doc_FIE_05466_001">
         <field name="name">FIE_05466_001</field>
         <field name="datas_fname">FIE_05466_001.xls</field>
@@ -93,45 +113,49 @@
 	<!-- Document Change Types -->
 	<record model="document.change.type" id="type_project_charter">
         <field name="name">Project Charter</field>
+        <field name="template_document_id" ref="doc_ProjectCharter_Template"/>
     </record>
     <record model="document.change.type" id="type_vsm">
         <field name="name">VSM</field>
     </record>
 	<record model="document.change.type" id="type_takt_time">
         <field name="name">Takt Time</field>
+        <field name="template_document_id" ref="doc_TaktTime_template"/>
     </record>
     <record model="document.change.type" id="type_FIE">
         <field name="name">FIE</field>
+        <field name="template_document_id" ref="doc_FIE_template"/>
     </record>
     <record model="document.change.type" id="type_SFMEA">
         <field name="name">SFMEA</field>
+        <field name="template_document_id" ref="doc_SFMEA_template"/>
     </record>
 
 	<!-- Phase Types -->
 	<record model="document.change.process.phase.type" id="phase_type_concept">
         <field name="name">Concept</field>
         <field name="sequence">1</field>
-        <field name="document_type_ids" eval="[(6, 0, [ref('type_project_charter'),ref('type_vsm'),ref('type_takt_time')])]"/>
+        <field eval="[(6, 0, [ref('type_project_charter'),ref('type_vsm'),ref('type_takt_time')])]" name="document_type_ids"/>
     </record>
     <record model="document.change.process.phase.type" id="phase_type_development">
         <field name="name">Development</field>
         <field name="sequence">2</field>
-        <field name="document_type_ids" eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]"/>
+        <field eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]" name="document_type_ids"/>
     </record>
     <record model="document.change.process.phase.type" id="phase_type_validation">
         <field name="name">Validation</field>
         <field name="sequence">3</field>
-        <field name="document_type_ids" eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]"/>
+        <field eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]" name="document_type_ids"/>
     </record>
 
 	<!-- Change of Models Data -->
 	<record model="document.change.process.model" id="model_NPI">
         <field name="name">NPI</field>
-        <field name="phase_type_ids" eval="[(6, 0, [ref('phase_type_concept'),ref('phase_type_development'),ref('phase_type_validation')])]"/>
+        <field eval="[(6, 0, [ref('phase_type_concept'),ref('phase_type_development'),ref('phase_type_validation')])]" name="phase_type_ids"/>
     </record>
     <record model="document.change.process.model" id="model_minor_change">
         <field name="name">Minor_change</field>
-        <field name="phase_type_ids" eval="[(6, 0, [ref('phase_type_concept'),ref('phase_type_development'),ref('phase_type_validation')])]"/>
+        <field eval="[(6, 0, [ref('phase_type_development')])]" name="phase_type_ids"/>
     </record>
     
 	<!-- Process Types -->
