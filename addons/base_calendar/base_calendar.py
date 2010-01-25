@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil.rrule import *
 from osv import osv, fields
+from tools.translate import _
 import base64
 import pooler
 import re
@@ -177,6 +178,10 @@ class CalDAV(object):
         return vals
 
     def create_ics(self, cr, uid, datas, name, ical, context=None):
+        if not datas:
+            model = context.get('model', None)
+            war_str = "No data available" + (model and " for " + model) or "" 
+            raise osv.except_osv(_('Warning !'), _(war_str))
         for data in datas:
             vevent = ical.add(name)
             for field in self.__attribute__.keys():

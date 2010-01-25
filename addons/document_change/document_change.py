@@ -196,7 +196,7 @@ class doucment_change_process(osv.osv):
                         'process_id': process.id   
                         }            
                     phase_id = phase_obj.create(cr, uid, phase_value)
-                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' %phase_type_id.id)
+                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' , phase_type_id.id)
                     document_type_ids = map(lambda x: x[0], cr.fetchall())
                     document_ids = document_obj.search(cr, uid, [
                             ('parent_id','=',process.structure_id and process.structure_id.id),
