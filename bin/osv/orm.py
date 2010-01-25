@@ -1832,6 +1832,9 @@ class orm(orm_template):
 
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
         for d in data:
+            if fget.has_key(groupby):
+                if fget[groupby]['type'] == 'many2one':
+                    d[groupby] = d[groupby] and d[groupby][1] or ''
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
