@@ -80,6 +80,7 @@
 		<record id="survey_job_0" model="survey">
 			<field name="title">Job Survey</field>
 			<field name="state">draft</field>
+			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
 		</record>
 	</data>
@@ -92,7 +93,7 @@
 	</data>
 	<data>
 		<record id="survey_page_job_1" model="survey.page">
-			<field name="title">Education &amp;amp; Activities</field>
+			<field name="title">Education &amp; Activities</field>
 			<field name="survey_id" ref="survey_job_0"/>
 			<field eval="2" name="sequence"/>
 		</record>
