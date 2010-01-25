@@ -501,6 +501,7 @@
                 	<page string="Phases">
                 		<field name="process_phase_ids" mode="tree,form" widget="one2many_list" nolabel="1">
                 			<tree string="Process Phases" editable="True">
+                				<field name="sequence"/>
                 				<field name="name"/>
                 				<field name="type"/>
                 				<field name="phase_document_ids"/>
@@ -508,6 +509,7 @@
                 			</tree>
                 			<form string="Process Phases">
                 				<field name="name"/>
+                				<field name="sequence"/>
                 				<field name="type"/>
                 				<field name="phase_document_ids" colspan="4"/>
                 				<field name="state"/>

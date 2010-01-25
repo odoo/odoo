@@ -147,16 +147,25 @@ class doucment_change_process(osv.osv):
     
     def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
-        update_docs = []
         progress = 0.0
         for proc_change in self.browse(cr, uid, ids):
+            update_docs = []
+            result[proc_change.id] = 0.0
             for doc in proc_change.process_document_ids:
                 if doc.state in ('to_update', 'change_propose'):
                     update_docs.append(doc)
-            if proc_change.process_document_ids:
-                progress = len(update_docs)/len(proc_change.process_document_ids)
-            result[proc_change.id] = progress
+                progress = (float(len(update_docs))/float(len(proc_change.process_document_ids)))*100
+                result[proc_change.id] = progress
         return result
+    
+    def _get_current_phase(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for proc in self.browse(cr, uid, ids):
+            result[proc.id] = False
+            for phase in proc.process_phase_ids:
+                if phase.state in ('in_process','to_validate'):
+                    result[proc.id] = phase.id
+        return result 
     
     _columns = {
         'name': fields.char("Process Change", size=64, required=True, select=True),
@@ -167,13 +176,13 @@ class doucment_change_process(osv.osv):
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Change Owner'),
         'create_date':fields.datetime('Creation',readonly=True),
-        'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
+        'latest_modified_date':fields.function(_latestmodification, method=True, type='datetime', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),                
-        'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
+        'current_phase_id': fields.function(_get_current_phase, method=True, type='many2one', relation='document.change.process.phase', string='Current Phase'),
+        'date_control': fields.related('current_phase_id','date_control', type='date', string='Control Date'), 
         'progress': fields.function(_get_progress, method=True, type='float', string='Progress'),
-        'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
     }
@@ -223,7 +232,7 @@ class doucment_change_process(osv.osv):
                     for document_id in document_ids:
                         vals = {'process_phase_id': phase_id}
                         if process.pending_directory_id:
-                            vals.update({'parent_id':process.pending_directory_id.id})
+                            vals.update({'parent_id': process.pending_directory_id.id})
                         new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
                     phase_obj.write(cr, uid, [phase_id], {'phase_document_ids': [(6,0,document_ids)]})
                     self.write(cr, uid, [process.id],{'process_document_ids': [(6,0,new_doc_ids)]})
