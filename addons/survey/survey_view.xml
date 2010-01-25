@@ -7,14 +7,14 @@
             groups="group_survey_manager,group_survey_user"/>-->
     <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools"/>
 	<menuitem name="Survey" id="main_menu_survey"
-            icon="terp-crm" sequence="1"
-            groups="group_survey_manager,group_survey_user" parent="base.menu_tools"/>
+            icon="terp-crm" sequence="3"
+            groups="group_survey_manager,group_survey_user" parent="base.menu_tools" />
 <!--        <menuitem name="Configuration" id="menu_survey_config"
             parent="main_menu_survey" groups="group_survey_manager"/>-->
 	<menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="5"/>
+         id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="6"/>
     <menuitem name="survey" id="menu_survey_config"
-        parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
+        parent="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="2"/>
         <!--
             Survey
         -->
