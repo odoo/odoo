@@ -711,15 +711,18 @@ class related(function):
                     field_detail = self._relations[i]
                     relation = field_detail['object']
                     if not t_data[self.arg[i]]:
+                        if self._type not in ('one2many', 'many2many'):
+                            t_id = t_data['id']
                         t_data = False
                         break
                     if field_detail['type'] in ('one2many', 'many2many'):
                         if self._type != "many2one":
-                            t_id=t_data.id
+                            t_id = t_data.id
                             t_data = t_data[self.arg[i]][0]
                     else:
-                        t_id=t_data['id']
+                        t_id = t_data['id']
                         t_data = t_data[self.arg[i]]
+
                 if t_id:
                     obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 
