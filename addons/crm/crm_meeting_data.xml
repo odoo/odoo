@@ -27,6 +27,12 @@
 	        <field name="object">crm.meeting</field>
 	    </record>
 
+		<record model="basic.calendar.lines" id="caldav.calendar_lines_event">
+			<field name="name">vevent</field>
+			<field name="calendar_id" ref="base_calendar.basic_calendar1" />
+			<field name="object_id" search="[('model','=','crm.meeting')]" />
+		</record>
+		
 
 <!--		Event Attribute mapping-->
 
