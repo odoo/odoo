@@ -50,7 +50,7 @@ class doucment_change_process_phase_type(osv.osv):
         'name': fields.char("Document Changed Process Type", size=64),
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'document_type_ids': fields.many2many('document.change.type','phase_type_document_type_rel','phase_type_id','document_type_id','Document Type'),
+        'document_type_ids': fields.many2many('document.change.type','document_type_phase_type_rel','phase_type_id','document_type_id','Document Type'),
     }
     _defaults = {      
                  'active': lambda *a:1,
@@ -188,16 +188,19 @@ class doucment_change_process(osv.osv):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
 
     def generate_phases(self, cr, uid, ids, *args):
+        import random
         phase_obj = self.pool.get('document.change.process.phase')
         phase_type_obj = self.pool.get('document.change.process.phase.type')  
-        document_type_obj = self.pool.get('document.change.type') 
-        document_obj = self.pool.get('ir.attachment')     
+        document_type_obj = self.pool.get('document.change.type')
+        directory_obj = self.pool.get('document.directory') 
+        document_obj = self.pool.get('ir.attachment')
+        new_doc_ids = []     
         for process in self.browse(cr, uid, ids):
             if process.process_model_id:
+                directory_ids = directory_obj.search(cr, uid, [('parent_id','child_of',process.structure_id and process.structure_id.id)])
                 for phase_type_id in process.process_model_id.phase_type_ids:
-                    phase_type = phase_type_obj.browse(cr, uid, phase_type_id.id)
                     phase_value = {
-                        'name' : '%s-%s' %(phase_type.name, process.name),
+                        'name' : '%s-%s' %(phase_type_id.name, process.name),
                         'phase_type_id': phase_type_id.id,
                         'process_id': process.id   
                         }            
@@ -205,14 +208,15 @@ class doucment_change_process(osv.osv):
                     cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' % phase_type_id.id)
                     document_type_ids = map(lambda x: x[0], cr.fetchall())
                     document_ids = document_obj.search(cr, uid, [
-                            ('parent_id','=',process.structure_id and process.structure_id.id),
-                            ('change_type_id','in',document_type_ids)])
+                                            ('parent_id','in',directory_ids),
+                                            ('change_type_id','in',document_type_ids)])
                     for document_id in document_ids:
-                        vals = {'process_phase_id':phase_id}
+                        vals = {'process_phase_id': phase_id}
                         if process.pending_directory_id:
                             vals.update({'parent_id':process.pending_directory_id.id})
-                        document_obj.copy(cr, uid, document_id, vals)
-                     
+                        new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
+                    phase_obj.write(cr, uid, [phase_id], {'phase_document_ids': [(6,0,document_ids)]})
+                    self.write(cr, uid, [process.id],{'process_document_ids': [(6,0,new_doc_ids)]})
     
 doucment_change_process()
 
@@ -231,6 +235,32 @@ class document_file(osv.osv):
     _defaults = {      
         'state': lambda *a: 'in_production',
      }    
+    
+    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):
+        name=vals.get('name',False)
+        parent_id=vals.get('parent_id',False)
+        res_model=vals.get('res_model',False)
+        res_id=vals.get('res_id',0)
+        type_id=vals.get('change_type_id',False)
+        if op=='write':
+            for file in self.browse(cr,uid,ids):
+                if not name:
+                    name=file.name
+                if not parent_id:
+                    parent_id=file.parent_id and file.parent_id.id or False
+                if not res_model:
+                    res_model=file.res_model and file.res_model or False
+                if not res_id:
+                    res_id=file.res_id and file.res_id or 0
+                res=self.search(cr,uid,[('id','<>',file.id),('name','=',name),('parent_id','=',parent_id),('res_model','=',res_model),('res_id','=',res_id),('change_type_id','=',type_id)])
+                if len(res):
+                    return False
+        if op=='create':
+            res=self.search(cr,uid,[('name','=',name),('parent_id','=',parent_id),('res_id','=',res_id),('res_model','=',res_model),('change_type_id','=',type_id)])
+            if len(res):
+                return False
+        return True
+    
     def do_change_request(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'change_request'},context=context)              
         return True
