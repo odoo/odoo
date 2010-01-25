@@ -199,7 +199,6 @@ class doucment_change_process(osv.osv):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
 
     def generate_phases(self, cr, uid, ids, *args):
-        import random
         phase_obj = self.pool.get('document.change.process.phase')
         phase_type_obj = self.pool.get('document.change.process.phase.type')  
         document_type_obj = self.pool.get('document.change.type')
