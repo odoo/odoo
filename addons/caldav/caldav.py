@@ -444,9 +444,11 @@ class calendar_event(osv.osv):
     
     _columns = {
         'id': fields.integer('ID'), 
+        'sequence': fields.integer('Sequence'), 
         'name': fields.char('Description', size=64, required=True), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
+        'create_date': fields.datetime('Created' ,readonly=True), 
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
         'description': fields.text('Your action'), 
@@ -480,15 +482,17 @@ rule or repeating pattern for anexception to a recurrence set"),
         ids = map(lambda x: caldav_id2real_id(x), ids)
         event_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
-        ical = event_obj.export_ical(cr, uid, event_data, context={'model': self._name})
+        ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
         cal_val = ical.serialize()
         cal_val = cal_val.replace('"', '').strip()
         return cal_val
 
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)
+    def import_cal(self, cr, uid, data, data_id=None, context={}):
         event_obj = self.pool.get('basic.calendar.event')
-        vals = event_obj.import_ical(cr, uid, file_content)
+        vals = event_obj.import_cal(cr, uid, data)
+        return self.check_import(cr, uid, vals, context=context)
+    
+    def check_import(self, cr, uid, vals, context={}):
         ids = []
         for val in vals:
             exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, \
@@ -507,7 +511,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                 event_id = self.create(cr, uid, val)
                 ids.append(event_id)
         return ids
-
+        
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
         datas = self.read(cr, uid, ids[0], context=context)
         date = datas.get('date')
@@ -725,10 +729,13 @@ class calendar_todo(osv.osv):
     
     __attribute__ = {}
     
-    def import_cal(self, cr, uid, data, context={}):
-        file_content = base64.decodestring(data)
+    def import_cal(self, cr, uid, data, data_id=None,  context={}):
         todo_obj = self.pool.get('basic.calendar.todo')
-        vals = todo_obj.import_ical(cr, uid, file_content)
+        vals = todo_obj.import_cal(cr, uid, data)
+        return self.check_import(cr, uid, vals, context=context)
+    
+    def check_import(self, cr, uid, vals, context={}):
+        ids = []
         for val in vals:
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
             if not val.has_key('planned_hours'):
@@ -747,10 +754,12 @@ class calendar_todo(osv.osv):
             val.pop('id')
             if exists:
                 self.write(cr, uid, [exists], val)
+                ids.append(exists)
             else:
                 task_id = self.create(cr, uid, val)
-        return {'count': len(vals)}
-
+                ids.append(task_id)
+        return ids
+        
     def export_cal(self, cr, uid, ids, context={}):
         task_datas = self.read(cr, uid, ids, [], context ={'read': True})
         tasks = []
@@ -759,7 +768,7 @@ class calendar_todo(osv.osv):
                 task.pop('planned_hours')
             tasks.append(task)
         todo_obj = self.pool.get('basic.calendar.todo')
-        ical = todo_obj.export_ical(cr, uid, tasks, context={'model': self._name})
+        ical = todo_obj.export_cal(cr, uid, tasks, context={'model': self._name})
         calendar_val = ical.serialize()
         calendar_val = calendar_val.replace('"', '').strip()
         return calendar_val

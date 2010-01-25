@@ -79,7 +79,7 @@
                                                             <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
                                                         </group>
                                                     </group>
-                                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
+                                                    <!-- group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
                                                         <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
                                                             <field name="make_comment_field"/>
                                                             <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
@@ -87,7 +87,7 @@
                                                                 <field name="make_comment_field_err_msg" nolabel="1"/>
                                                             </group>
                                                         </group>
-                                                    </group>
+                                                    </group-->
 						                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
 							                            <field name="comment_column"/>
 							                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
@@ -180,13 +180,18 @@
                             </group>
                         </page>
                         <page string="Other">
-                        	<group colspan="4" col='6'>
+                        	<group colspan="6" col='4'>
 	                            <field name="max_response_limit" select="1"
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
 	                            <field name="response_user" select="2"
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
 	                            <field name="question_prefix"/>
-							</group>
+	                            <field name="send_response"/>
+	                        </group>
+	                        <!--group colspan="4" col='4'>
+	                            <field name="question_prefix"/>
+	                            <field name="send_response"/>
+							</group-->
                             <separator colspan="4" string="Survey Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
@@ -315,7 +320,7 @@
                                         <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
                                     </group>
                                 </group>
-                                <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
+                                <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
                                     <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
                                         <field name="make_comment_field"/>
                                         <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
@@ -323,7 +328,7 @@
                                             <field name="make_comment_field_err_msg" nolabel="1"/>
                                         </group>
                                     </group>
-                                </group>
+                                </group-->
 	                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
 		                            <field name="comment_column"/>
 		                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
@@ -499,7 +504,7 @@
                                     <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
                                 </group>
                             </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
+                            <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
                                 <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
                                     <field name="make_comment_field"/>
                                     <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
@@ -507,7 +512,7 @@
                                         <field name="make_comment_field_err_msg" nolabel="1"/>
                                     </group>
                                 </group>
-                            </group>
+                            </group-->
                             <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
 	                            <field name="comment_column"/>
 	                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
@@ -636,7 +641,7 @@
                                     <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
                                 </group>
                             </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
+                            <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
                                 <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
                                     <field name="make_comment_field"/>
                                     <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
@@ -644,7 +649,7 @@
                                         <field name="make_comment_field_err_msg" nolabel="1"/>
                                     </group>
                                 </group>
-                            </group>
+                            </group-->
                             <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
 	                            <field name="comment_column"/>
 	                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">

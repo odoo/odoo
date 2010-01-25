@@ -52,7 +52,7 @@ class cal_event_export_wizard(wizard.interface):
         calendar = model_obj.export_cal(cr, uid, data['ids'], context)
         return {'file_path': base64.encodestring(calendar), \
                         'name': 'OpenERP %s.ics' % (model_obj._description)}
-    
+
     states = {
         'init': {
             'actions': [_process_export_ics], 

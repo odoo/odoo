@@ -74,7 +74,8 @@
         <field name="arch" type="xml">
             <form string="Document Types">
                 <field name="name" select="1"/>
-                <field name="phase_type_ids" colspan="4"/>
+                <separator string="Associated Phase Types" colspan="4"/>
+                <field name="phase_type_ids" colspan="4" nolabel="1"/>  
             </form>
         </field>
     </record>
@@ -85,8 +86,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Document Types">
-                <field name="name"/>
-                <field name="phase_type_ids"/>
+                <field name="name"/>                              
             </tree>
         </field>
     </record>
@@ -189,7 +189,8 @@
             <form string="Model of Changes">
                 <field name="name" select="1"/>
                 <field name="sequence"/>
-                <field name="phase_type_ids" colspan="4"/>
+                <separator string="Phase Type" colspan="4"/>        
+                <field name="phase_type_ids" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -199,10 +200,9 @@
         <field name="model">document.change.process.model</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Model of Changes">
-                <field name="name"/>
+            <tree string="Model of Changes">                
                 <field name="sequence"/>
-                <field name="phase_type_ids"/>
+                <field name="name"/>                
             </tree>
         </field>
     </record>
@@ -232,20 +232,20 @@
                     <newline/>
                     <field name="datas_fname"/>
                     <field name="datas" filename="datas_fname" string="Content"/>
-                    <field name="type_id"/>
+                    <field name="change_type_id"/>
                 </group>
                 <separator string="Change Control" colspan="4"/>
                 <group col="7" colspan="4">
-	                <field name="state"/>
-					<button name="button_change_proposed" states="cancel,to_update" string="Request Change" icon="gtk-apply"/>
-					<button name="button_change_validated" states="change_request,validate,cancel" string="Propose Change" icon="gtk-apply"/>
-					<button name="button_update" states="change_proposed,in_production" string="To Update"  icon="gtk-ok" />
-					<button name="button_change_request" states="to_update" string="In Production" icon="gtk-media-play"/>
-					<button name="button_cancel" states="change_request,change_proposed" string="Cancel"  icon="gtk-cancel"/>
+	                <field name="state" readonly="1"/>
+					<button name="button_propose" states="change_request" string="Propose Change" icon="gtk-apply"/>
+					<button name="button_confirm" states="change_propose" string="To Validate" icon="gtk-apply"/>					
+                    <button name="button_validate" states="to_update" string="In Production" icon="gtk-apply"/>
+					<button name="button_request" states="cancel,in_production" string="Request Change" icon="gtk-media-play"/>
+					<button name="button_cancel" states="change_request,change_propose" string="Cancel"  icon="gtk-cancel"/>
                 </group>
                 <newline/>
-                <field name="target_document_id"/>
-                <field name="target"/>
+                <field name="target_directory_id"/>
+                <field name="target_document_id"/>                
                 <newline/>
                 <separator string="Change Note" colspan="4"/>
                 <field colspan="4" name="description" nolabel="1"/>
@@ -259,6 +259,21 @@
                     <field name="write_date" readonly="1"/>
                     <field name="write_uid" readonly="1"/>
                 </group>
+                
+        		<field name="email_notification_ids" colspan="4" mode="tree, form" readonly="1" widget="one2many_list" nolabel="1">
+        			<tree string="Notifications">
+        				<field name="email"/>
+        				<field name="create_date"/>
+        			</tree>
+        			<form string="Notifications">
+        				<field name="email"/>
+        				<field name="create_date"/>
+                        <field name="name" string="Subject" colspan="4"/> 
+                        <separator string="Description" colspan="4"/>               			
+                        <field colspan="4" name="description" nolabel="1"/>
+        			</form>
+        		</field>
+                
             </form>
         </field>
     </record>
@@ -269,12 +284,11 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <tree string="Documents">
-                <field name="name" string="Document Name"/>
-                <field name="partner_id"/>
-                <field name="datas_fname"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
+                <field name="parent_id" string="Directory"/>
+                <field name="change_type_id" string="Type"/>
                 <field name="state"/>
+                <field name="change_process_id" string="Proc Chg #"/>
+                <field name="user_id" string="Owner"/>
             </tree>
         </field>
     </record>
@@ -284,7 +298,7 @@
 	    <field name="type">graph</field>
 	    <field name="arch" type="xml">
 	        <graph string="Documents by type" type="bar" orientation="vertical">
-				<field name="type_id"/>
+				<field name="change_type_id"/>
 	            <field name="name" operator="+"/>
 	        </graph>
 	    </field>
@@ -297,9 +311,9 @@
         <field name="arch" type="xml">
             <search string="Documents">
             	<group col="7" colspan="4">
-	                <filter domain="[('state','=','change_request')]" string="To Change" icon="gtk-apply" help="Documents in state Change Requested"/>
-	                <filter domain="[('state','=','change_proposed')]" string="To Validate" icon="gtk-execute" help="Documents in state Change Proposed"/>
-	            	<field name="type_id" string="Type of Documents" select="1"/>
+	                <filter domain="[('state','=','change_request')]" string="To Change" icon="gtk-apply"/>
+	                <filter domain="[('state','=','to_update')]" string="To Validate" icon="gtk-execute"/>
+	            	<field name="change_type_id" string="Type of Documents" select="1"/>
 	            	<field name="parent_id" select="1"/>
 	            	<field name="create_uid" string="Owner" select="1"/>
 	            </group>
@@ -359,7 +373,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_document_tree"/>
-        <field name="domain">[('state','=','change_proposed')]</field>    
+        <field name="domain">[('state','=','to_update')]</field>    
         </record>
     <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
 	
@@ -380,7 +394,7 @@
 	                <field name="update_document" string="Update documents"/>
 	                <field name="type" string="Type"/>
 	                <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
-	                <field name="phase_ids" string="Phase Type"/>
+	                <field name="phase_type_id" string="Phase Type"/>
 	            </group>
 				<separator colspan="4" string="Documents"/>
                 <field name="phase_document_ids" colspan="4"  nolabel="1"/>
@@ -388,10 +402,8 @@
                 <group col="5" colspan="4">
 	                <field name="state"/>
 	                <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
-	                <button name="button_validate" states="started" string="Validate" icon="gtk-execute"/>
- 					<button name="button_pending" states="pending" string="Pending" icon="gtk-execute"/>	
-	                <button name="button_done" states="done" string="Done" icon="gtk-jump-to"/>
-	                <button name="button_progress" states="validate" string="Done" icon="gtk-jump-to"/>
+	                <button name="button_confirm" states="in_process" string="To Validate" icon="gtk-execute"/>
+ 					<button name="button_end" states="to_validate" string="Done" icon="gtk-jump-to"/>	                
             	</group>
             </form>
         </field>
@@ -449,7 +461,10 @@
 	                <field name="structure_id" select="1"/>
 	                <newline/>
 	                <field name="description"/>
-	                <field name="process_model_id" widget="selection"/>
+                    <group colspan="2" col="3">
+    	                <field name="process_model_id" widget="selection"/>
+                        <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>
+                    </group>
 	                <field name="pending_directory_id"/>
 	            </group>
                 <notebook colspan="4">
@@ -470,10 +485,10 @@
                 		<newline/>
                 		<group col="6" colspan="4">
                 			<field name="state"/>
-                			<button name="button_in_progress" states="draft" string="Start" icon="gtk-go-forward"/>
-                			<button name="button_validate" states="progress" string="Validate" icon="gtk-execute"/>
-                			<button name="button_pending" states="progress,confirmed" string="Pending" icon="gtk-media-pause"/>
-                			<button name="button_done" states="confirmed" string="Done" icon="gtk-jump-to"/>
+                			<button name="button_start" states="draft,pending" string="Start" icon="gtk-go-forward"/>
+                			<button name="button_confirm" states="in_progress" string="Validate" icon="gtk-execute"/>
+                			<button name="button_pending" states="in_progress" string="Pending" icon="gtk-media-pause"/>
+                			<button name="button_done" states="to_validate" string="Done" icon="gtk-jump-to"/>
                 		</group>
                 	</page>
                 	<page string="Phases">
@@ -491,31 +506,12 @@
                 				<field name="state"/>
                 			</form>
                 		</field>
-                	</page>
-                	<page string="Documents">
-                		<field name="process_document_ids" mode="tree,form" colspan="4" nolabel="1">
-                			<tree string="Documents">
-                				<field name="name" string="Document Name"/>
-                				<field name="state"/>
-                			</tree>
-                			<form string="Documents">
-                				<field name="name" string="Document Name"/>
-                				<field name="state"/>
-                			</form>
+                	</page>     
+                    <page string="Documents">
+                		<field name="process_document_ids">                			            			
                 		</field>
                 	</page>
-                	<page string="Notifications">
-                		<field name="email_notification_ids" mode="tree,form" widget="one2many_list" nolabel="1">
-                			<tree string="Notifications" editable="True">
-                				<field name="name"/>
-                				<field name="type"/>
-                			</tree>
-                			<form string="Notifications">
-                				<field name="name"/>
-                				<field name="type"/>                			
-                			</form>
-                		</field>
-                 	</page>
+                           	                	
                 </notebook>
             </form>
         </field>
@@ -527,12 +523,15 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process Change">
-                <field name="name"/>
-                <field name="process_type_id"/>
                 <field name="structure_id"/>
-                <field name="description"/>
+                <field name="name" string="Proc Chg #"/>
+                <field name="description" string="Proc Chg Title"/>
+                <field name="user_id" string="Owner"/>
+                <field name="current_phase_id" string="Current Phase"/>
+                <field name="date_control" string="Date Control Point"/>
                 <field name="process_model_id"/>
-                <field name="state"/>
+                <field name="progress" string="Progress"/>                
+                <field name="process_document_ids" string="# Documents"/>
             </tree>
         </field>
     </record>
@@ -546,7 +545,7 @@
 	            <field name="process_document_ids" operator="+"/>
 	        </graph>
 	    </field>
-    </record>
+    </record> 
 	<record model="ir.ui.view" id="view_process_serach">
         <field name="name">document.change.process.search</field>
         <field name="model">document.change.process</field>
@@ -556,7 +555,7 @@
             <search string="Process Changes">
             	<group col="8" colspan="4">
             		<filter domain="[('user_id','=',uid)]" string="My Process Changes" icon="gtk-execute" help="My Process Changes"/>
-	                <filter domain="[('state','=','validate')]" string="To Validate" icon="gtk-apply" help="Process Changes to be validated"/>
+	                <filter domain="[('state','=','to_validate')]" string="To Validate" icon="gtk-apply" help="Process Changes to be validated"/>
 	                <filter domain="[('state','=','in_progress')]" string="Late" icon="gtk-execute" help="Process changes having the next Phase to validate that is late"/>
 	            	<field name="name" string="Process Change Title" select="1"/>
 	            	<field name="process_type_id" select="1"/>
