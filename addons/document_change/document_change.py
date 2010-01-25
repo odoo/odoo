@@ -24,7 +24,7 @@ import os
 import pooler
 import netsvc
 from tools.translate import _
-import datetime
+import time
 
 class doucment_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
@@ -279,7 +279,7 @@ class document_file(osv.osv):
                 for data in read_data:
                     t=datetime.datetime.now()
                     file_name=data['datas_fname'].split('.')
-                    new_name=str(file_name[0]+'.old'+str(t.year)+str(t.month)+str(t.day)+'.'+file_name[1])
+                    new_name=str(file_name[0]+'.old'+time.strftime("%y%m%d")+'.'+file_name[1])
                     res['name']=attach.name
                     res['datas']=data['datas'] 
                     res['datas_fname']=new_name
