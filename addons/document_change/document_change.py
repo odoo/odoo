@@ -240,6 +240,7 @@ class document_file(osv.osv):
     
     def do_to_update(self, cr, uid, ids, context={}):
         for attach in self.browse(cr, uid, ids, context=context):
+            
             attach_ids = self.pool.get('ir.attachment').search(cr,uid, [('id', '=',attach.target_document_id.id)])
             self.write(cr, uid, attach_ids, {'state':'to_update','datas':attach.datas,'datas_fname':attach.datas_fname},context=context)
         self.write(cr, uid, ids, {'state':'to_update'},context=context)            
@@ -251,5 +252,8 @@ class document_file(osv.osv):
              
     def do_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context)        
+    
+    def test_change_request(self, cr, uid, ids, context=None):
+        return all(bool(attch.target_document_id) != False for attch in self.browse(cr, uid, ids, context=context))
         
 document_file()

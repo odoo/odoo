@@ -41,12 +41,13 @@
         <record id="tran_phase_start_to_confirm" model="workflow.transition">
             <field name="act_from" ref="act_phase_start"/>
             <field name="act_to" ref="act_phase_confirm"/>
+            <field name="role_id" ref="role_NPPI" />
             <field name="signal">button_confirm</field>
         </record>
         <record id="tran_phase_confirm_to_end" model="workflow.transition">
             <field name="act_from" ref="act_phase_confirm"/>
             <field name="act_to" ref="act_phase_end"/>
-             <field name="role_id" ref="role_NPPI" />
+            <field name="role_id" ref="role_NPPI" />
             <field name="signal">button_end</field>
         </record>
     </data>
