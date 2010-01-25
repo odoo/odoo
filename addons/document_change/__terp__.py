@@ -31,7 +31,7 @@
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document_ftp','mail_gateway'],
-    'init_xml': [],
+    'init_xml': ['document_change_data.xml'],
     'update_xml': ['document_change_view.xml',
                    'document_change_sequence.xml',
                    'document_change_workflow.xml',

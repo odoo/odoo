@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+	
+	<!-- Structure Data -->
+	<record model="document.directory" id="dir_root">
+        <field name="name">Gosselies</field>
+    </record>
+    <record model="document.directory" id="dir_bat_e">
+        <field name="name">Bat E</field>
+    	<field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="document.directory" id="dir_bat_z">
+        <field name="name">Bat Z</field>
+    	<field name="parent_id" ref="dir_root"/>
+    </record>
+    
+    <record model="document.directory" id="dir_mq_section">
+        <field name="name">MQ Section</field>
+        <field name="parent_id" ref="dir_bat_e"/>
+    </record>
+    
+    <record model="document.directory" id="dir_section_x">
+        <field name="name">Section X</field>
+        <field name="parent_id" ref="dir_mq_section"/>
+    </record>
+    <record model="document.directory" id="dir_section_y">
+        <field name="name">Section Y</field>
+        <field name="parent_id" ref="dir_mq_section"/>
+    </record>
+    
+    <record model="document.directory" id="dir_ws_1bc">
+        <field name="name">Work Station 1BC</field>
+        <field name="parent_id" ref="dir_section_x"/>
+    </record>
+    <record model="document.directory" id="dir_ws_2bc">
+        <field name="name">Work Station 2BC</field>
+        <field name="parent_id" ref="dir_section_x"/>
+    </record>
+    <record model="document.directory" id="dir_ws_3bc">
+        <field name="name">Work Station 3BC</field>
+        <field name="parent_id" ref="dir_section_y"/>
+    </record>
+    
+    <record model="document.directory" id="dir_family1">
+        <field name="name">Family 1</field>
+        <field name="parent_id" ref="dir_ws_1bc"/>
+    </record>
+    <record model="document.directory" id="dir_family2">
+        <field name="name">Family 2</field>
+        <field name="parent_id" ref="dir_ws_1bc"/>
+    </record>
+    <record model="document.directory" id="dir_family3">
+        <field name="name">Family 3</field>
+        <field name="parent_id" ref="dir_ws_2bc"/>
+    </record>
+    <record model="document.directory" id="dir_family4">
+        <field name="name">Family 4</field>
+        <field name="parent_id" ref="dir_ws_3bc"/>
+    </record>
+    
+    <record model="document.directory" id="dir_vsm">
+        <field name="name">VSM</field>
+        <field name="parent_id" ref="dir_bat_z"/>
+    </record>
+    <record model="document.directory" id="dir_takt_time">
+        <field name="name">Takt Time</field>
+        <field name="parent_id" ref="dir_bat_z"/>
+    </record>
+
+	<!-- Documents -->
+	<record model="ir.attachment" id="doc_FIE_05466_001">
+        <field name="name">FIE_05466_001</field>
+        <field name="datas_fname">FIE_05466_001.xls</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_SFMEA_0581_001">
+        <field name="name">SFMEA_0581_001</field>
+        <field name="datas_fname">SFMEA_0581_001.xls</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_SFMEA_0581_002">
+        <field name="name">SFMEA_0581_002</field>
+        <field name="datas_fname">SFMEA_0581_002.xls</field>
+        <field name="parent_id" ref="dir_root"/>
+    </record>
+    <record model="ir.attachment" id="doc_TaktTime_0549">
+        <field name="name">TaktTime_0549</field>
+        <field name="datas_fname">TaktTime_0549.xls</field>
+        <field name="parent_id" ref="dir_takt_time"/>
+    </record>
+	
+	<!-- Document Change Types -->
+	<record model="document.change.type" id="type_project_charter">
+        <field name="name">Project Charter</field>
+    </record>
+    <record model="document.change.type" id="type_vsm">
+        <field name="name">VSM</field>
+    </record>
+	<record model="document.change.type" id="type_takt_time">
+        <field name="name">Takt Time</field>
+    </record>
+    <record model="document.change.type" id="type_FIE">
+        <field name="name">FIE</field>
+    </record>
+    <record model="document.change.type" id="type_SFMEA">
+        <field name="name">SFMEA</field>
+    </record>
+
+	<!-- Phase Types -->
+	<record model="document.change.process.phase.type" id="phase_type_concept">
+        <field name="name">Concept</field>
+        <field name="sequence">1</field>
+        <field name="document_type_ids" eval="[(6, 0, [ref('type_project_charter'),ref('type_vsm'),ref('type_takt_time')])]"/>
+    </record>
+    <record model="document.change.process.phase.type" id="phase_type_development">
+        <field name="name">Development</field>
+        <field name="sequence">2</field>
+        <field name="document_type_ids" eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]"/>
+    </record>
+    <record model="document.change.process.phase.type" id="phase_type_validation">
+        <field name="name">Validation</field>
+        <field name="sequence">3</field>
+        <field name="document_type_ids" eval="[(6, 0, [ref('type_FIE'),ref('type_SFMEA')])]"/>
+    </record>
+
+	<!-- Change of Models Data -->
+	<record model="document.change.process.model" id="model_NPI">
+        <field name="name">NPI</field>
+        <field name="phase_type_ids" eval="[(6, 0, [ref('phase_type_concept'),ref('phase_type_development'),ref('phase_type_validation')])]"/>
+    </record>
+    <record model="document.change.process.model" id="model_minor_change">
+        <field name="name">Minor_change</field>
+        <field name="phase_type_ids" eval="[(6, 0, [ref('phase_type_concept'),ref('phase_type_development'),ref('phase_type_validation')])]"/>
+    </record>
+    
+	<!-- Process Types -->
+    <record model="document.change.process.type" id="process_quality_alert">
+    	<field name="name">Quality Alert</field>
+    </record>
+    <record model="document.change.process.type" id="process_new_product">
+    	<field name="name">New Product</field>
+    </record>
+    <record model="document.change.process.type" id="process_red_risk">
+    	<field name="name">Red Risk</field>
+    </record>
+    <record model="document.change.process.type" id="process_ci_card">
+    	<field name="name">CI Card</field>
+    </record>
+</data>
+</openerp>
