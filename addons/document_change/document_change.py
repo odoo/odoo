@@ -148,11 +148,13 @@ class doucment_change_process(osv.osv):
     def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         update_docs = []
+        progress = 0.0
         for proc_change in self.browse(cr, uid, ids):
             for doc in proc_change.process_document_ids:
                 if doc.state in ('to_update', 'change_propose'):
                     update_docs.append(doc)
-            progress = len(update_docs)/len(proc_change.process_document_ids)
+            if proc_change.process_document_ids:
+                progress = len(update_docs)/len(proc_change.process_document_ids)
             result[proc_change.id] = progress
         return result
     
@@ -200,8 +202,6 @@ class doucment_change_process(osv.osv):
 
     def generate_phases(self, cr, uid, ids, *args):
         phase_obj = self.pool.get('document.change.process.phase')
-        phase_type_obj = self.pool.get('document.change.process.phase.type')  
-        document_type_obj = self.pool.get('document.change.type')
         directory_obj = self.pool.get('document.directory') 
         document_obj = self.pool.get('ir.attachment')
         new_doc_ids = []     
