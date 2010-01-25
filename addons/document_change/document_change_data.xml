@@ -68,7 +68,7 @@
         <field name="parent_id" ref="dir_bat_z"/>
     </record>
 
-	<!-- Documents -->
+	<!-- Document Templates -->
 	<record model="ir.attachment" id="doc_FIE_template">
         <field name="name">FIE_template</field>
         <field name="datas_fname">FIE_template.xls</field>
@@ -87,26 +87,6 @@
     <record model="ir.attachment" id="doc_TaktTime_template">
         <field name="name">TaktTime_template</field>
         <field name="datas_fname">TaktTime_template.xls</field>
-        <field name="parent_id" ref="dir_takt_time"/>
-    </record>
-	<record model="ir.attachment" id="doc_FIE_05466_001">
-        <field name="name">FIE_05466_001</field>
-        <field name="datas_fname">FIE_05466_001.xls</field>
-        <field name="parent_id" ref="dir_root"/>
-    </record>
-    <record model="ir.attachment" id="doc_SFMEA_0581_001">
-        <field name="name">SFMEA_0581_001</field>
-        <field name="datas_fname">SFMEA_0581_001.xls</field>
-        <field name="parent_id" ref="dir_root"/>
-    </record>
-    <record model="ir.attachment" id="doc_SFMEA_0581_002">
-        <field name="name">SFMEA_0581_002</field>
-        <field name="datas_fname">SFMEA_0581_002.xls</field>
-        <field name="parent_id" ref="dir_root"/>
-    </record>
-    <record model="ir.attachment" id="doc_TaktTime_0549">
-        <field name="name">TaktTime_0549</field>
-        <field name="datas_fname">TaktTime_0549.xls</field>
         <field name="parent_id" ref="dir_takt_time"/>
     </record>
 	
@@ -131,6 +111,32 @@
         <field name="template_document_id" ref="doc_SFMEA_template"/>
     </record>
 
+	<!-- Documents -->
+	<record model="ir.attachment" id="doc_FIE_05466_001">
+        <field name="name">FIE_05466_001</field>
+        <field name="datas_fname">FIE_05466_001.xls</field>
+        <field name="parent_id" ref="dir_family1"/>
+        <field name="change_type_id" ref="type_FIE"/>
+    </record>
+    <record model="ir.attachment" id="doc_SFMEA_0581_001">
+        <field name="name">SFMEA_0581_001</field>
+        <field name="datas_fname">SFMEA_0581_001.xls</field>
+        <field name="parent_id" ref="dir_family1"/>
+        <field name="change_type_id" ref="type_SFMEA"/>
+    </record>
+    <record model="ir.attachment" id="doc_SFMEA_0581_002">
+        <field name="name">SFMEA_0581_002</field>
+        <field name="datas_fname">SFMEA_0581_002.xls</field>
+        <field name="parent_id" ref="dir_family2"/>
+        <field name="change_type_id" ref="type_SFMEA"/>
+    </record>
+    <record model="ir.attachment" id="doc_TaktTime_0549">
+        <field name="name">TaktTime_0549</field>
+        <field name="datas_fname">TaktTime_0549.xls</field>
+        <field name="parent_id" ref="dir_takt_time"/>
+        <field name="change_type_id" ref="type_takt_time"/>
+    </record>
+    
 	<!-- Phase Types -->
 	<record model="document.change.process.phase.type" id="phase_type_concept">
         <field name="name">Concept</field>
