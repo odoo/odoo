@@ -25,7 +25,7 @@ import pooler
 import netsvc
 from tools.translate import _
 import time
-
+import datetime
 class doucment_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
 doucment_change_process_phase_type()
