@@ -96,6 +96,11 @@ class doucment_change_process_phase(osv.osv):
     def do_done(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state':'done'})
         return True 
+    def test_control_request(self, cr, uid, ids, context=None):
+        return all(bool(process.type) =='control_required' for process in self.browse(cr, uid, ids, context=context))
+
+    def test_nocontrol_request(self, cr, uid, ids, context=None):
+        return all(bool(process.type) =='no_control' for process in self.browse(cr, uid, ids, context=context))
 
 doucment_change_process_phase()
 
