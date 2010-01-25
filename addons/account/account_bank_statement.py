@@ -287,7 +287,14 @@ class account_bank_statement(osv.osv):
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+
+                        writeoff_acc_id = False
+                        #There should only be one write-off account!
+                        for entry in move.reconcile_id.line_new_ids:
+                            writeoff_acc_id = entry.account_id.id
+                            break
+
+                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
