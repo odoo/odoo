@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="1">
+		
+		<record model="basic.calendar.lines" id="caldav.calendar_lines_todo">
+			<field name="name">vtodo</field>
+			<field name="calendar_id" ref="base_calendar.basic_calendar1" />
+			<field name="object_id" search="[('model','=','project.task')]" />
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_todo_1">
+			<field name="name" ref="base_calendar.field_todo_status" />
+			<field name="type_id" ref="caldav.calendar_lines_todo" />
+			<field name="field_id" search="[('name','=','state'),('model_id.model','=','project.task')]" />
+			<field name="mapping">{'needs-action': 'draft', 'completed': 'done', 'in-process': 'open', 'cancelled': 'cancelled'}</field>
+			<field name="fn">field</field>
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_todo_3">
+			<field name="name" ref="base_calendar.field_todo_attendee" />
+			<field name="type_id" ref="caldav.calendar_lines_todo" />
+			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','project.task')]" />
+			<field name="fn">field</field>
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_todo_9">
+		    <field name="name" ref="base_calendar.field_todo_percent"/>
+		    <field name="type_id" ref="caldav.calendar_lines_todo" />
+			<field name="field_id" search="[('name','=','progress'),('model_id.model','=','project.task')]" />
+			<field name="fn">field</field>
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_todo_12">
+			<field name="name" ref="base_calendar.field_event_priority"/>
+			<field name="type_id" ref="caldav.calendar_lines_todo" />
+			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','project.task')]" />
+			<field name="fn">field</field>
+		</record>
+		
+		<record model="basic.calendar.fields" id="caldav.map_todo_15">
+		    <field name="name" ref="base_calendar.field_todo_duration"/>
+		    <field name="type_id" ref="caldav.calendar_lines_todo" />
+			<field name="field_id" search="[('name','=','planned_hours'),('model_id.model','=','project.task')]" />
+			<field name="fn">hours</field>
+		</record>
+		
+	</data>
+</openerp>

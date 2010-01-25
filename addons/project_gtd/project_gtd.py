@@ -19,9 +19,6 @@
 #
 ##############################################################################
 
-from xml import dom
-from lxml import etree
-
 from mx import DateTime
 from mx.DateTime import now
 import time
@@ -29,6 +26,16 @@ import tools
 import netsvc
 from osv import fields, osv
 import ir
+from tools.translate import _
+
+import sys
+from tools.translate import _
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
@@ -148,9 +155,12 @@ class project_task(osv.osv):
         timebox_ids = timebox_obj.search(cr,uid,[])
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != 0 :
-                index = timebox_ids.index(timebox)
-                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+            if timebox:
+                if timebox_ids.index(timebox):
+                    index = timebox_ids.index(timebox)
+                    self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+                else:
+                    self.write(cr, uid, task.id, {'timebox_id': False})
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -159,7 +169,7 @@ class project_task(osv.osv):
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d">''' % (len(tt)+6,)
+            search_extended ='''<newline/><group col="%d" expand="1" string="%s">''' % (len(tt)+6,_('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:

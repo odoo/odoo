@@ -97,7 +97,7 @@ class res_users(osv.osv):
             result[user_id] = parent_ids
         return result
 
-    def _parent_search(self, cr, uid, obj, name, args):
+    def _parent_search(self, cr, uid, obj, name, args, context):
         parent = []
         for arg in args:
             if arg[0] == 'parent_id':
@@ -132,7 +132,7 @@ class res_users(osv.osv):
             result[manager_id] = child_ids
         return result
 
-    def _child_search(self, cr, uid, obj, name, args):
+    def _child_search(self, cr, uid, obj, name, args, context):
         parent = []
         for arg in args:
             if arg[0] == 'child_ids':

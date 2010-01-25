@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="view_crm_job_categ_graph">
+            <field name="name">report.crm.job.categ.graph</field>
+            <field name="model">report.crm.job.categ</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Jobs by Sections and Categories" type="bar" orientation="horizontal">
+                    <field name="categ_id"/>
+                    <field name="nbr" operator="+"/>
+                    <field name="state" group="True"/>
+                </graph>
+            </field>
+        </record>
+        
+        <act_window name="Jobs Requests Of The Month by Applied Job"
+            domain="[('month','=',time.strftime('%%m')),('state','!=','done'),('state','!=','cancel')]"
+            res_model="report.crm.job.categ"
+            view_type="form"
+            view_mode="graph,tree,form"
+            view_id="view_crm_job_categ_graph"
+            id="act_jobs_categ"/>
+            
+        <record model="ir.ui.view" id="board_crm_hr_statistical_form">
+            <field name="name">CRM - Statistical Dashboard Form</field>
+            <field name="model">board.board</field>
+            <field name="inherit_id" ref="board_crm_configuration.board_crm_statistical_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Statistics Dashboard">
+                    <hpaned>
+                        <child2>
+							<action
+                                string="Jobs Requests Of The Month by Applied Job"
+                                name="%(act_jobs_categ)d"
+                                colspan="4"/>
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>    

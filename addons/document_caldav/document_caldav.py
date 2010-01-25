@@ -36,8 +36,9 @@ class document_directory_content(osv.osv):
             return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         content = self.browse(cr, uid, node.cnt_id, context)
         fobj = self.pool.get(content.object_id.model)
+        if not context:
+            context = {}
         fobj.import_cal(cr, uid, base64.encodestring(data), context=context)
-
         return True
 
     def process_read(self, cr, uid, node, context=None):

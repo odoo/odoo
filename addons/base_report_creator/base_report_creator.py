@@ -64,8 +64,12 @@ class report_creator(osv.osv):
         fields = {}
         i = 0
         for f in report.field_ids:
-            fields['field'+str(i)] = models[f.field_id.model][f.field_id.name]
-            i+=1
+            if f.field_id.model:
+                fields['field'+str(i)] = models[f.field_id.model][f.field_id.name]
+                i+=1
+            else:
+                fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
+            
         return fields
 
     #
@@ -81,8 +85,12 @@ class report_creator(osv.osv):
         fields = {}
         i = 0
         for f in report.field_ids:
-            fields['field'+str(i)] = models[f.field_id.model][f.field_id.name]
-            i+=1
+            if f.field_id.model:
+                fields['field'+str(i)] = models[f.field_id.model][f.field_id.name]
+                i+=1
+            else:
+                fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
+            
         arch = '<?xml version="1.0" encoding="utf-8"?>\n'
         if view_type=='graph':
             arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type,report.view_graph_orientation)
@@ -90,8 +98,12 @@ class report_creator(osv.osv):
                 i = 0
                 for f in report.field_ids:
                     if f.graph_mode==val:
-                        arch += '<field name="%s" select="1"/>' % ('field'+str(i),)
-                    i+=1
+                        if f.field_id.model:
+                            arch += '<field name="%s" select="1"/>' % ('field'+str(i),)
+                            i+=1
+                        else:
+                            arch += '<field name="%s" select="1"/>' % ('column_count',)
+                    
         elif view_type=='calendar':
             required_types = ['date_start','date_delay','color']
             set_dict = {'view_type':view_type,'string':report.name}
@@ -99,13 +111,21 @@ class report_creator(osv.osv):
             i=0
             for f in report.field_ids:
                 if f.calendar_mode and f.calendar_mode in required_types:
-                    set_dict[f.calendar_mode] = 'field'+str(i)
-                    i+=1
+                    if f.field_id.model:
+                        field_cal = 'field'+str(i)
+                        i+=1
+                    else:
+                        field_cal = 'column_count'
+                    set_dict[f.calendar_mode] = field_cal   
                     del required_types[required_types.index(f.calendar_mode)]
 
                 else:
-                    temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'field'+str(i)})
-                    i+=1
+                    if f.field_id.model:
+                        temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'field'+str(i)})
+                        i+=1
+                    else:
+                        temp_list.append('''<field name="%(name)s" select="1"/>''' % {'name':'column_count'})    
+                    
             arch += '''<%(view_type)s string="%(string)s" date_start="%(date_start)s" ''' %set_dict
             if set_dict.get('date_delay',False):
                 arch +=''' date_delay="%(date_delay)s"  '''%set_dict
@@ -121,8 +141,11 @@ class report_creator(osv.osv):
             arch += '<%s string="%s">\n' % (view_type, report.name)
             i = 0
             for f in report.field_ids:
-                arch += '<field name="%s" select="1"/>' % ('field'+str(i),)
-                i+=1
+                if f.field_id.model:
+                    arch += '<field name="%s" select="1"/>' % ('field'+str(i),)
+                    i+=1
+                else:
+                    arch += '<field name="%s" select="1"/>' % ('column_count',)
         arch += '</%s>' % (view_type,)
         result = {
             'arch': arch,
@@ -166,14 +189,20 @@ class report_creator(osv.osv):
         i = 0
         fields = {}
         for f in report.field_ids:
-            fields['field'+str(i)] = (f.field_id.model, f.field_id.name)
-            i+=1
+            if f.field_id.model:
+                fields['field'+str(i)] = (f.field_id.model, f.field_id.name)
+                i+=1
+            else:
+                fields['column_count'] = (False, 'Count')   
         newargs = []
         newargs2 = []
         for a in args:
-            res =  self.pool.get(fields[a[0]][0])._where_calc(cr, user, [[fields[a[0]][1],a[1],a[2]]], active_test=False, context=context)
-            newargs+=res[0]
-            newargs2+=res[1]
+            if fields[a[0]][0]:
+                res = self.pool.get(fields[a[0]][0])._where_calc(cr, user, [[fields[a[0]][1],a[1],a[2]]], active_test=False, context=context)
+                newargs+=res[0]
+                newargs2+=res[1]
+            else:
+                newargs += [("count(*) " + a[1] +" " + str(a[2]))]
         ctx = context or {}
         ctx['getid'] = True
         report = self._sql_query_get(cr, user, [context['report_id']], 'sql_query', None, ctx, where_plus=newargs, limit=limit, offset=offset)
@@ -198,7 +227,7 @@ class report_creator(osv.osv):
         filter_list = []
         for model in models:
             model_dict[model.model] = self.pool.get(model.model)._table
-
+            
         model_list = model_dict.keys()
         reference_model_dict = {}
         for model in model_dict:
@@ -207,10 +236,22 @@ class report_creator(osv.osv):
             rest_list.remove(model)
             model_pool = self.pool.get(model)
             fields_get = model_pool.fields_get(cr,uid)
-            fields_filter = dict(filter(lambda x:x[1].get('relation',False)
-                                        and x[1].get('relation') in rest_list
-                                        and x[1].get('type')=='many2one'
-                                        and not (isinstance(model_pool._columns[x[0]],fields.function) or isinstance(model_pool._columns[x[0]],fields.related) or isinstance(model_pool._columns[x[0]],fields.dummy)), fields_get.items()))
+            model_columns = {}
+            
+            def _get_inherit_fields(obj):
+                pool_model = self.pool.get(obj)
+                #Adding the columns of the model itself
+                model_columns.update(pool_model._columns)
+                #Adding the columns of its _inherits
+                for record in pool_model._inherits.keys():
+                     _get_inherit_fields(record)
+
+            _get_inherit_fields(model)         
+            
+            fields_filter = dict(filter(lambda x:x[1].get('relation',False) 
+                                        and x[1].get('relation') in rest_list 
+                                        and x[1].get('type')=='many2one' 
+                                        and not (isinstance(model_columns[x[0]],fields.function) or isinstance(model_columns[x[0]],fields.related)), fields_get.items()))
             if fields_filter:
                 model in model_list and model_list.remove(model)
             model_count = reference_model_dict.get(model,False)
@@ -225,9 +266,10 @@ class report_creator(osv.osv):
                     reference_model_dict[v.get('relation')] = relation_count+1
                 else:
                     reference_model_dict[v.get('relation')]=1
-
-                str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
-                where_list.append(str_where)
+                if k in self.pool.get(model)._columns:
+                    str_where = model_dict.get(model)+"."+ k + "=" + model_dict.get(v.get('relation'))+'.id'
+                    where_list.append(str_where)
+                    
         if reference_model_dict:
             self.model_set_id = model_dict.get(reference_model_dict.keys()[reference_model_dict.values().index(min(reference_model_dict.values()))])
         if model_list and not len(model_dict.keys()) == 1:
@@ -250,6 +292,7 @@ class report_creator(osv.osv):
 
 
         if where_list:
+            where_list = list(set(where_list))
             ret_str+="\n where \n"+" and\n".join(where_list)
             ret_str = ret_str.strip()
         if filter_list:
@@ -272,12 +315,16 @@ class report_creator(osv.osv):
             groupby = []
             i = 0
             for f in obj.field_ids:
+                # Allowing to use count(*)
+                if not f.field_id.model and f.group_method == 'count':
+                    fields.insert(0,('count(*) as column_count'))
+                    continue
                 t = self.pool.get(f.field_id.model_id.model)._table
                 if f.group_method == 'group':
                     fields.append('\t'+t+'.'+f.field_id.name+' as field'+str(i))
-                    groupby.append(t+'.'+f.field_id.name)
                 else:
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
+                groupby.append(t+'.'+f.field_id.name)
                 i+=1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
             check = self._id_get(cr, uid, ids[0], context)
@@ -336,6 +383,9 @@ class report_creator(osv.osv):
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:
             for fld in obj.field_ids:
+                # Allowing to use count(*)
+                if not fld.field_id.model and fld.group_method == 'count':
+                    continue
                 model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                 if (isinstance(model_column,fields.function) or isinstance(model_column,fields.related)) and not model_column.store:
                     return False
@@ -347,7 +397,10 @@ class report_creator(osv.osv):
         this_objs = self.browse(cr, uid, ids)
         for obj in this_objs:
             for fld in obj.field_ids:
-                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
+                # Allowing to use count(*)
+                if not fld.field_id.model and fld.group_method == 'count':
+                    continue
+                model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]                
                 if model_column._type not in aggregate_columns and fld.group_method in apply_functions:
                     return False
         return True
@@ -359,6 +412,9 @@ class report_creator(osv.osv):
         for obj in this_objs:
             if obj.view_type1=='calendar' or obj.view_type2=='calendar' or obj.view_type3=='calendar':
                 for fld in obj.field_ids:
+                    # Allowing to use count(*)
+                    if not fld.field_id.model and fld.group_method == 'count':
+                        continue
                     model_column = self.pool.get(fld.field_id.model)._columns[fld.field_id.name]
                     if fld.calendar_mode in ('date_start','date_end') and model_column._type not in ('date','datetime'):
                         return False

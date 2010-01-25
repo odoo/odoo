@@ -58,9 +58,9 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button name="duplicate_template"
+                                <button 
                                     string="New Project Based on Template"
-                                    type="object"
+                                    name="%(wizard_duplicate_template)d"  type="action" 
                                     states="template" icon="gtk-new"/>
                             </group>
                         </page>
@@ -151,14 +151,14 @@
         <!--<menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
-            <field name="name">All projects</field>
+            <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <!--<menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/> -->
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
@@ -471,10 +471,6 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
@@ -487,6 +483,11 @@
                             <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
+                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
@@ -503,7 +504,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
-		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks"/>
+		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks" sequence="2"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>

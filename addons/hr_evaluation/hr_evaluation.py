@@ -52,7 +52,7 @@ class hr_evaluation_plan_phase(osv.osv):
             ('bottom-up','Bottom-Up Appraisal Requests'),
             ('self','Self Appraisal Requests'),
             ('final','Final Interview')], 'Action', required=True),
-        'survey_id': fields.many2one('survey','Appraisal Form'),
+        'survey_id': fields.many2one('survey','Appraisal Form',required=True),
         'send_answer_manager': fields.boolean('All Answers',
             help="Send all answers to the manager"),
         'send_answer_employee': fields.boolean('All Answers',
@@ -114,12 +114,29 @@ class hr_evaluation(osv.osv):
             ('progress','Final Validation'),
             ('done','Done'),
             ('cancel','Cancelled'),
-        ], 'State', required=True)
+        ], 'State', required=True,readonly=True)
     }
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'state' : lambda *a: 'draft',
     }
+
+    def button_plan_in_progress(self,cr, uid, ids, context):
+        self.write(cr,uid,ids,{'state':'wait'})
+        return True
+
+    def button_final_validation(self,cr, uid, ids, context):
+        self.write(cr,uid,ids,{'state':'progress'})
+        return True
+
+    def button_done(self,cr, uid, ids, context):
+        self.write(cr,uid,ids,{'state':'done'})
+        return True
+
+    def button_cancel(self,cr, uid, ids, context):
+        self.write(cr,uid,ids,{'state':'cancel'})
+        return True
+
 hr_evaluation()
 
 

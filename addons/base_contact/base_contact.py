@@ -39,6 +39,13 @@ class res_partner_contact(osv.osv):
         res = [(r['shortcut'], r['name']) for r in res if r['domain']=='contact']
         return res
 
+    def _main_job(self, cr, uid, ids, fields, arg, context=None):
+        res = dict.fromkeys(ids, False)
+        for contact in self.browse(cr, uid, ids, context):
+            if contact.job_ids:
+                res[contact.id] = contact.job_ids[0].name_get()[0]
+        return res
+
     _columns = {
         'name': fields.char('Last Name', size=30,required=True),
         'first_name': fields.char('First Name', size=30),
@@ -52,7 +59,7 @@ class res_partner_contact(osv.osv):
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the partner contact without removing it."),
         'partner_id':fields.related('job_ids','address_id','partner_id',type='many2one', relation='res.partner', string='Main Employer'),
         'function_id':fields.related('job_ids','function_id',type='many2one', relation='res.partner.function', string='Main Function'),
-        'job_id':fields.related('job_ids',type='many2one', relation='res.partner.job', string='Main Job'),
+        'job_id': fields.function(_main_job, method=True, type='many2one', relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment' : fields.text('Notes', translate=True),
         'photo' : fields.binary('Image'),
@@ -80,6 +87,12 @@ class res_partner_contact(osv.osv):
 res_partner_contact()
 
 class res_partner_address(osv.osv):
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        if context and context.has_key('address_partner_id' ) and context['address_partner_id']:
+            args.append(('partner_id', '=', context['address_partner_id']))
+        return super(res_partner_address, self).search(cr, user, args, offset, limit, order, context, count)
 
     #overriding of the name_get defined in base in order to remove the old contact name
     def name_get(self, cr, user, ids, context={}):
@@ -155,7 +168,7 @@ class res_partner_job(osv.osv):
 
     _defaults = {
         'sequence_contact' : lambda *a: 0,
-        'state' : lambda *a: 'current', 
+        'state' : lambda *a: 'current',
     }
 res_partner_job()
 

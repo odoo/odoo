@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-hr" id="base.menu_resource_root" name="Resources Management"/>
+<!--        <menuitem icon="terp-hr" id="base.menu_resource_root" name="Resources Management"/> -->
 <!--        <menuitem-->
 <!--            id="menu_resource_reporting"-->
 <!--            name="Reporting"-->
@@ -129,7 +129,9 @@
             <field name="res_model">resource.resource</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="menu_resource_root" />-->
+        <menuitem icon="terp-project" id="base.menu_main" name="Project Management"/>
+        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
+        <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="base.menu_pm_planning" />
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.form</field>

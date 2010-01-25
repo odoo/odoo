@@ -164,7 +164,7 @@ class project(osv.osv):
         return res
 
     def set_done(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'close'}, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context={}):
@@ -192,27 +192,29 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
+        if ids:
+            cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
+        result = []
         for proj in self.browse(cr, uid, ids):
-            parent_id=context.get('parent_id',False)
-            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+_(' (copy)'),'state':'open','parent_id':parent_id})
+            parent_id = context.get('parent_id',False)
+            new_id = self.pool.get('project.project').copy(cr, uid, proj.id, default = {
+                                    'name': proj.name +_(' (copy)'),
+                                    'state':'open',
+                                    'parent_id':parent_id})
+            result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
             for (tasks_id,) in res:
-                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':True}, context=context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
-            res = cr.fetchall()
-            project_ids = [x[0] for x in res]
-            for child in project_ids:
-                self.duplicate_template(cr, uid, [child],context={'parent_id':new_id})
-
-        # TODO : Improve this to open the new project (using a wizard)
-
-        cr.commit()
-        raise osv.except_osv(_('Operation Done'), _('A new project has been created !\nWe suggest you to close this one and work on this new project.'))
+                self.pool.get('project.task').copy(cr, uid, tasks_id, default = {
+                                    'project_id': new_id,
+                                    'active':True}, context=context)
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])            
+            if child_ids:
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id':new_id})
+        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):
@@ -222,10 +224,9 @@ class project(osv.osv):
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            cr.execute('select id from project_project where parent_id=%s', (proj.id,))
-            project_ids = [x[0] for x in cr.fetchall()]
-            for child in project_ids:
-                self.setActive(cr, uid, [child], value, context)
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)]) 
+            if child_ids:
+                self.setActive(cr, uid, child_ids, value, context)
         return True
 project()
 
@@ -362,7 +363,7 @@ class task(osv.osv):
         'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-        'manager_id': fields.related('project_id','manager', type='many2one', relation='res.users', string='Project Manager'),
+        'manager_id': fields.related('project_id','category_id','user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
@@ -491,9 +492,11 @@ class task(osv.osv):
     def next_type(self, cr, uid, ids, *args):
         for typ in self.browse(cr, uid, ids):
             typeid = typ.type.id
-            types = map(lambda x:x.id, typ.project_id.type_ids)
+            types = map(lambda x:x.id, typ.project_id.type_ids or [])
             if types:
-                if typeid and typeid in types and types.index(typeid) != len(types)-1 :
+                if not typeid:
+                    self.write(cr, uid, typ.id, {'type': types[0]})
+                elif typeid and typeid in types and types.index(typeid) != len(types)-1 :
                     index = types.index(typeid)
                     self.write(cr, uid, typ.id, {'type': types[index+1]})
         return True
@@ -587,10 +590,16 @@ def _project_get(self, cr, uid, context={}):
     if uid==1:
         ids = self.pool.get('project.project').search(cr, uid, [])
         res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-        return [(str(r['id']),r['name']) for r in res]
-    cr.execute("""SELECT to_char(id, '99999'),name FROM project_project where manager=%s OR
-               id IN (SELECT project_id from project_user_rel where uid=%s)""" % (uid, uid))
-    return cr.fetchall()
+        res = [(str(r['id']),r['name']) for r in res]
+    else:
+        cr.execute("""SELECT project.id,account.name FROM project_project project
+                   LEFT JOIN account_analytic_account account ON account.id = project.category_id
+                   WHERE (account.user_id = %s) OR project.id IN (SELECT project_id FROM project_resource_rel
+                                                                 WHERE resource_id IN (SELECT id FROM resource_resource
+                                                                                       WHERE (user_id= %s)))"""%(uid, uid))
+        res = cr.fetchall()
+        res = [(str(r[0]),r[1]) for r in res]
+    return res
 
 class users(osv.osv):
     _inherit = 'res.users'
@@ -598,7 +607,6 @@ class users(osv.osv):
     _columns = {
         'context_project_id': fields.selection(_project_get, 'Project'),
         }
-
 users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

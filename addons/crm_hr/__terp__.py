@@ -26,19 +26,21 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-        This module provide  Store the Job 
+        This module provide  Store the Job
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['crm','hr'],
+    'depends': ['crm','hr','board_crm_configuration','survey'],
     'init_xml': [
         'crm_hr_data.xml'
     ],
     'update_xml': [
-        'crm_hr_wizard.xml',                   
+        'crm_hr_wizard.xml',
         'crm_hr_view.xml',
         'crm_hr_menu.xml',
-        'security/crm_hr_security.xml', 
+        'report_crm_hr_view.xml',
+        'security/crm_hr_security.xml',
+        'board_crm_hr_statistical_view.xml',
      ],
     'demo_xml': [
         'crm_hr_demo.xml'

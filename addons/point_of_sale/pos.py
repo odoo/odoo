@@ -510,19 +510,20 @@ class pos_order(osv.osv):
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
 
-                    self.pool.get('stock.move').create(cr, uid, {
-                        'name': 'Stock move (POS %d)' % (order.id, ),
-                        'product_uom': line.product_id.uom_id.id,
-                        'product_uos': line.product_id.uom_id.id,
-                        'picking_id': picking_id,
-                        'product_id': line.product_id.id,
-                        'product_uos_qty': abs(line.qty),
-                        'product_qty': abs(line.qty),
-                        'tracking_id': False,
-                        'state': 'waiting',
-                        'location_id': location_id,
-                        'location_dest_id': stock_dest_id,
-                    })
+                        self.pool.get('stock.move').create(cr, uid, {
+                            'name': 'Stock move (POS %d)' % (order.id, ),
+                            'product_uom': line.product_id.uom_id.id,
+                            'product_uos': line.product_id.uom_id.id,
+                            'picking_id': picking_id,
+                            'product_id': line.product_id.id,
+                            'product_uos_qty': abs(line.qty),
+                            'product_qty': abs(line.qty),
+                            'tracking_id': False,
+                            'pos_line_id': line.id,
+                            'state': 'waiting',
+                            'location_id': location_id,
+                            'location_dest_id': stock_dest_id,
+                        })
 
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)

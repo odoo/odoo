@@ -544,7 +544,7 @@ class mrp_production(osv.osv):
 
     #TODO Review materials in function in_prod and prod_end.
     def action_production_end(self, cr, uid, ids):
-        move_ids = []
+#        move_ids = []
         for production in self.browse(cr, uid, ids):
             for res in production.move_lines:
                 for move in production.move_created_ids:
@@ -552,7 +552,7 @@ class mrp_production(osv.osv):
                     cr.execute('INSERT INTO stock_move_history_ids \
                             (parent_id, child_id) VALUES (%s,%s)',
                             (res.id, move.id))
-                move_ids.append(res.id)
+#                move_ids.append(res.id)
             vals= {'state':'confirmed'}
             new_moves = [x.id for x in production.move_created_ids]
             self.pool.get('stock.move').write(cr, uid, new_moves, vals)
@@ -562,7 +562,7 @@ class mrp_production(osv.osv):
             self.pool.get('stock.move').check_assign(cr, uid, new_moves)
             self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
-        self.pool.get('stock.move').action_done(cr, uid, move_ids)
+#        self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr,  uid, ids, {'state': 'done'})
         return True
 
@@ -1009,7 +1009,7 @@ class mrp_procurement(osv.osv):
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 
-    def action_move_assigned(self, cr, uid, ids):
+    def action_move_assigned(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'running','message':_('from stock: products assigned.')})
         return True
 
@@ -1085,11 +1085,13 @@ class mrp_procurement(osv.osv):
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             newdate = newdate - procurement.product_id.seller_ids[0].delay
 
-            context.update({'lang':partner.lang})
+            #Passing partner_id to context for purchase order line integrity of Line name
+            context.update({'lang':partner.lang, 'partner_id':partner_id})
+            
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 
             line = {
-                'name': product.name,
+                'name': product.partner_ref,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,

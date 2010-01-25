@@ -54,6 +54,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Evaluation Plan Phase">
+					<field name="plan_id" invisible="1"/>
 					<group col="6" colspan="4">
 						<field name="name"/>
 						<field name="wait"/>
@@ -62,7 +63,7 @@
 					<group col="4" colspan="4">
 						<separator string="Action to Perform" colspan="4"/>
 						<field name="action"/>
-						<field name="survey_id"/>
+						<field name="survey_id" widget="selection"/>
 					</group>
 					<group col="4" colspan="4">
 						<group col="4" colspan="2">
@@ -119,14 +120,14 @@
 			<field name="arch" type="xml">
 				<form string="Evaluation">
 					<group col="4" colspan="4">
-						<field name="date"/>
+						<field name="date" select="1"/>
 						<field name="rating"/>
-						<field name="employee_id"/>
-						<field name="manager_id"/>
+						<field name="employee_id" select="1"/>
+						<field name="manager_id" select="1"/>
 						<field name="plan_id"/>
-						<field name="phase_id"/>
+						<field name="phase_id" domain="[('plan_id', '=', plan_id)]"/>
 					</group>
-					<notebook>
+					<notebook colspan="4">
 			            <page string="Appraisal">
 	                    	<field name="survey_request_ids" nolabel="1" colspan="4"/>
 					    </page>
@@ -138,8 +139,26 @@
 					    </page>
                 	</notebook>
                 	<newline/>
-                	<field name="state"/>
-				</form>
+					<group col="6" colspan="4">
+					<field name="state"/>
+                	<button name="button_plan_in_progress"
+                			string="Plan In Progress"
+                            states="draft"
+                            type="object"/>
+                    <button name="button_final_validation"
+                			string="Final Validation"
+                            states="wait"
+                            type="object"/>
+                    <button name="button_done"
+                			string="Done"
+                            states="progress"
+                            type="object"/>
+                    <button name="button_cancel"
+                			string="Cancel"
+                            states="draft,wait,progress"
+                            type="object"/>
+                    </group>
+              </form>
 			</field>
 		</record>
 		<record model="ir.ui.view" id="view_hr_evaluation_tree">

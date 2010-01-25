@@ -294,7 +294,7 @@ class account_move_line(osv.osv):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
 
-    def _invoice_search(self, cursor, user, obj, name, args):
+    def _invoice_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         invoice_obj = self.pool.get('account.invoice')

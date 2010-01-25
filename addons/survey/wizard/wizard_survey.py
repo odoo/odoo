@@ -31,6 +31,7 @@ import tools
 import os
 import datetime
 import netsvc
+import socket
 
 _survey_form = '''<?xml version="1.0"?>
 <form string="Send Invitation">
@@ -91,7 +92,7 @@ def check_survey(self, cr, uid, data, context):
         raise  wizard.except_wizard(_('Attention!'), _('%sSurvey is not in open state') % msg)
     data['form']['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                 \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
-    \n link :- http://localhost:8080 \n\n Thanks,''' 
+    \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,''' 
     return data['form']
 
 def send_mail(self, cr, uid, data, context):
