@@ -33,7 +33,7 @@
     'depends': ['base', 'document_ftp','mail_gateway'],
     'init_xml': ['document_change_data.xml'],
     'update_xml': [   
-                   'security/crm_project_security.xml',
+                   'security/document_process_security.xml',
                    'document_change_view.xml',
                    'document_change_sequence.xml',
                    'document_change_workflow.xml',
