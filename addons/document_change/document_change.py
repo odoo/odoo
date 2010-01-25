@@ -36,7 +36,7 @@ class document_change_type(osv.osv):
     _columns = {
         'name': fields.char("Document Change Type", size=64,required=True),
         'phase_type_ids': fields.many2many('document.change.process.phase.type','document_type_phase_type_rel','document_type_id','phase_type_id','Phase Type'),
-        'directory_id' :fields.many2one('document.directory','Directory'),        
+        'directory_id' :fields.many2one('document.directory','Pending Directory'),        
         'template_document_id':fields.many2one('ir.attachment','Document')
     }
 document_change_type()
@@ -213,8 +213,8 @@ class document_file(osv.osv):
     _columns = {
         'change_type_id':fields.many2one('document.change.type','Document Type'),
         'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Request'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
-        'target_directory_id': fields.many2one('document.directory', 'Target Document'),
-        'target_document_id':fields.binary('Target'),
+        'target_document_id': fields.many2one('ir.attachment', 'Target Document'),
+        'target':fields.binary('Target'),
         'process_phase_id' :fields.many2one('document.change.process.phase','Process Phase'),
         'progress': fields.float('Progress'), #TODO : functio field: calculate progress
         'change_process_id': fields.related('process_phase_id', 'process_id', type='many2one', relation='document.change.process', string='Change Process'),
