@@ -24,8 +24,8 @@ import os
 import pooler
 import netsvc
 from tools.translate import _
+import time
 import datetime
-
 class doucment_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
 doucment_change_process_phase_type()
@@ -74,7 +74,7 @@ class doucment_change_process_phase(osv.osv):
         'date_control': fields.date('Control Date', select=True),        
         'phase_type_id':fields.many2one('document.change.process.phase.type','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('to_validate', 'To Validate'),('done', 'Done')], 'State',readonly=True),
-        'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
+        'phase_document_ids':fields.one2many('ir.attachment','process_phase_id','Documents'),
     }
     _defaults = {      
      'state': lambda *a: 'draft',
@@ -144,6 +144,41 @@ class doucment_change_process(osv.osv):
         res = {}
         #TODOto calculate latest modified date from all related documents
         return res
+    def _get_document(self, cr, uid, ids, context={}, *arg):
+        if not ids:
+            return {}
+        res = {}
+        attach = self.pool.get('ir.attachment') 
+        directory_obj = self.pool.get('document.directory') 
+        for process_change in self.browse(cr, uid, ids):
+            res1 = []            
+            for phase_id in  process_change.process_phase_ids:
+                res1 += map(lambda x:x.id, phase_id.phase_document_ids or [])    
+            res[process_change.id] = res1       
+        return res
+
+    
+    def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        progress = 0.0
+        for proc_change in self.browse(cr, uid, ids):
+            update_docs = []
+            result[proc_change.id] = 0.0
+            for doc in proc_change.process_document_ids:
+                if doc.state in ('to_update', 'change_propose'):
+                    update_docs.append(doc)
+                progress = (float(len(update_docs))/float(len(proc_change.process_document_ids)))*100
+                result[proc_change.id] = progress
+        return result
+    
+    def _get_current_phase(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for proc in self.browse(cr, uid, ids):
+            result[proc.id] = False
+            for phase in proc.process_phase_ids:
+                if phase.state in ('in_process','to_validate'):
+                    result[proc.id] = phase.id
+        return result 
     
     _columns = {
         'name': fields.char("Process Change", size=64, required=True, select=True),
@@ -154,13 +189,13 @@ class doucment_change_process(osv.osv):
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Change Owner'),
         'create_date':fields.datetime('Creation',readonly=True),
-        'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
+        'latest_modified_date':fields.function(_latestmodification, method=True, type='datetime', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),                
-        'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
-        'progress': fields.float('Progress'), #TODO : functio field: calculate progress
-        'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
+        'current_phase_id': fields.function(_get_current_phase, method=True, type='many2one', relation='document.change.process.phase', string='Current Phase'),
+        'date_control': fields.related('current_phase_id','date_control', type='date', string='Control Date'), 
+        'progress': fields.function(_get_progress, method=True, type='float', string='Progress'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
     }
@@ -188,10 +223,7 @@ class doucment_change_process(osv.osv):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context) 
 
     def generate_phases(self, cr, uid, ids, *args):
-        import random
         phase_obj = self.pool.get('document.change.process.phase')
-        phase_type_obj = self.pool.get('document.change.process.phase.type')  
-        document_type_obj = self.pool.get('document.change.type')
         directory_obj = self.pool.get('document.directory') 
         document_obj = self.pool.get('ir.attachment')
         new_doc_ids = []     
@@ -199,25 +231,26 @@ class doucment_change_process(osv.osv):
             if process.process_model_id:
                 directory_ids = directory_obj.search(cr, uid, [('parent_id','child_of',process.structure_id and process.structure_id.id)])
                 for phase_type_id in process.process_model_id.phase_type_ids:
+                    for document_type_id in phase_type_id.document_type_ids:
+                        document_ids = document_obj.search(cr, uid, [
+                                                ('parent_id','in',directory_ids),
+                                                ('change_type_id','=',document_type_id.id)])
+                        new_doc_ids = []                        
+                        for document_id in document_ids: 
+                            vals = {}                           
+                            if process.pending_directory_id:
+                                vals.update({'parent_id':process.pending_directory_id.id})
+                            new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))                            
                     phase_value = {
                         'name' : '%s-%s' %(phase_type_id.name, process.name),
                         'phase_type_id': phase_type_id.id,
-                        'process_id': process.id   
-                        }            
-                    phase_id = phase_obj.create(cr, uid, phase_value)
-                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' % phase_type_id.id)
-                    document_type_ids = map(lambda x: x[0], cr.fetchall())
-                    document_ids = document_obj.search(cr, uid, [
-                                            ('parent_id','in',directory_ids),
-                                            ('change_type_id','in',document_type_ids)])
-                    for document_id in document_ids:
-                        vals = {'process_phase_id': phase_id}
-                        if process.pending_directory_id:
-                            vals.update({'parent_id':process.pending_directory_id.id})
-                        new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
-                    phase_obj.write(cr, uid, [phase_id], {'phase_document_ids': [(6,0,document_ids)]})
-                    self.write(cr, uid, [process.id],{'process_document_ids': [(6,0,new_doc_ids)]})
-    
+                        'process_id': process.id,
+                        'phase_document_ids': [(6,0,new_doc_ids)]   
+                    }            
+                    phase_obj.create(cr, uid, phase_value)   
+                                     
+        return True
+
 doucment_change_process()
 
 class document_file(osv.osv):
@@ -236,7 +269,7 @@ class document_file(osv.osv):
         'state': lambda *a: 'in_production',
      }    
     
-    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)
         parent_id=vals.get('parent_id',False)
         res_model=vals.get('res_model',False)
@@ -279,7 +312,7 @@ class document_file(osv.osv):
                 for data in read_data:
                     t=datetime.datetime.now()
                     file_name=data['datas_fname'].split('.')
-                    new_name=str(file_name[0]+'.old'+str(t.year)+str(t.month)+str(t.day)+'.'+file_name[1])
+                    new_name=str(file_name[0]+'.old'+time.strftime("%y%m%d")+'.'+file_name[1])
                     res['name']=attach.name
                     res['datas']=data['datas'] 
                     res['datas_fname']=new_name

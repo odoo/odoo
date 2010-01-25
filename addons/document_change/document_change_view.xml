@@ -468,7 +468,7 @@
                 <group colspan="4" col="5">
                     <field name="process_type_id" widget="selection"/>	                
                     <field name="process_model_id" widget="selection"/>
-                    <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>                        
+                    <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert" />  
                 </group>
                 <group colspan="4">                                    
                     <field name="description" colspan="4"/>
@@ -501,6 +501,7 @@
                 	<page string="Phases">
                 		<field name="process_phase_ids" mode="tree,form" widget="one2many_list" nolabel="1">
                 			<tree string="Process Phases" editable="True">
+                				<field name="sequence"/>
                 				<field name="name"/>
                 				<field name="type"/>
                 				<field name="phase_document_ids"/>
@@ -508,6 +509,7 @@
                 			</tree>
                 			<form string="Process Phases">
                 				<field name="name"/>
+                				<field name="sequence"/>
                 				<field name="type"/>
                 				<field name="phase_document_ids" colspan="4"/>
                 				<field name="state"/>
@@ -515,12 +517,17 @@
                 		</field>
                 	</page>     
                     <page string="Documents">
-                		<field name="process_document_ids" mode="tree,form" widget="many2many" nolabel="1">
+                		<field name="process_document_ids" mode="tree,form"  widget="one2many_list" nolabel="1">
                 			<tree string="Documents">
 		                		<field name="process_phase_id"/>
 		                		<field name="name" string="Document"/>
 		                		<field name="state"/>
 		                	</tree>
+                			<form string="Documents">
+		                		<field name="process_phase_id"/>
+		                		<field name="name" string="Document"/>
+		                		<field name="state"/>
+		                	</form>		                	
 		                </field>			            			
                 	</page>
                            	                	
