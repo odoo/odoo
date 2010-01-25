@@ -230,11 +230,19 @@ class document_file(osv.osv):
         return True
 
     def do_change_propose(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'change_propose'},context=context)                
+        attach_obj = self.pool.get('ir.attachment')
+        for attach in attach_obj.browse(cr, uid, ids, context=context):
+            if attach.target_document_id:
+                if attach.change_type_id.directory_id.id:
+                    self.copy(cr, uid, attach.id,{'parent_id':attach.change_type_id.directory_id.id}, context=context)
+        self.write(cr, uid, ids, {'state':'change_propose'},context=context)      
         return True             
     
     def do_to_update(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'to_update'},context=context)
+        for attach in self.browse(cr, uid, ids, context=context):
+            attach_ids = self.pool.get('ir.attachment').search(cr,uid, [('id', '=',attach.target_document_id.id)])
+            self.write(cr, uid, attach_ids, {'state':'to_update','datas':attach.datas,'datas_fname':attach.datas_fname},context=context)
+        self.write(cr, uid, ids, {'state':'to_update'},context=context)            
         return True   
 
     def do_production(self, cr, uid, ids, context={}):
