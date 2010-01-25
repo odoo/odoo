@@ -145,6 +145,17 @@ class doucment_change_process(osv.osv):
         #TODOto calculate latest modified date from all related documents
         return res
     
+    def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        update_docs = []
+        for proc_change in self.browse(cr, uid, ids):
+            for doc in proc_change.process_document_ids:
+                if doc.state in ('to_update', 'change_propose'):
+                    update_docs.append(doc)
+            progress = len(update_docs)/len(proc_change.process_document_ids)
+            result[proc_change.id] = progress
+        return result
+    
     _columns = {
         'name': fields.char("Process Change", size=64, required=True, select=True),
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
@@ -159,7 +170,7 @@ class doucment_change_process(osv.osv):
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),                
         'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
-        'progress': fields.float('Progress'), #TODO : functio field: calculate progress
+        'progress': fields.function(_get_progress, method=True, type='float', string='Progress'),
         'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
         'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
@@ -236,7 +247,7 @@ class document_file(osv.osv):
         'state': lambda *a: 'in_production',
      }    
     
-    def _check_duplication(self, cr, uid,vals,ids=[],op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)
         parent_id=vals.get('parent_id',False)
         res_model=vals.get('res_model',False)
