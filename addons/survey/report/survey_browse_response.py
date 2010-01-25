@@ -24,6 +24,7 @@ import pooler
 from report.interface import report_rml
 from tools import to_xml
 import tools
+import time
 
 class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -162,7 +163,7 @@ class survey_browse_response(report_rml):
                                   <para style="terp_default_Centre_8">""" + to_xml(tools.ustr(survey.title)) + """</para>
                                 </td>
                                 <td>
-                                  <para style="terp_default_Centre_8">""" + to_xml(response.date_create) + """</para>
+                                  <para style="terp_default_Centre_8">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para>
                                 </td>
                                 <td>
                                   <para style="terp_default_Centre_8">""" + to_xml(response.user_id.name) + """</para>

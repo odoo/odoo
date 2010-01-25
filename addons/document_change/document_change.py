@@ -26,7 +26,7 @@ import netsvc
 from tools.translate import _
 
 class doucment_change_process_phase_type(osv.osv):
- _name = "document.change.process.phase.type"
+    _name = "document.change.process.phase.type"
 doucment_change_process_phase_type()
 
 class document_change_type(osv.osv):
@@ -144,19 +144,19 @@ class doucment_change_process(osv.osv):
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
         'description': fields.char("Small Description", size=64),
         'change_description':fields.text('Changed Description'),
-        'structure_id' :fields.many2one('document.directory','Structure ID'),
+        'structure_id' :fields.many2one('document.directory','Structure Directory'),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Change Owner'),
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
-        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),        
-        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),   
+        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),                
         'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
         'progress': fields.float('Progress'), #TODO : functio field: calculate progress
         'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
+        'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
