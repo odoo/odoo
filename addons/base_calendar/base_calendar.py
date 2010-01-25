@@ -62,9 +62,13 @@ def openobjectid2uid(cr, uidval, oomodel):
     return value
 
 def get_attribute_mapping(cr, uid, calname, context={}):
+        if not context:
+            context = {}
         pool = pooler.get_pool(cr.dbname)
         field_obj = pool.get('basic.calendar.fields')
-        fids = field_obj.search(cr, uid, [('type_id', '=', calname)])
+        type_obj = pool.get('basic.calendar.lines')
+        type_id = type_obj.search(cr, uid, [('object_id.model', '=', context.get('model'))])
+        fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
         res = {}
         for field in field_obj.browse(cr, uid, fids):
             attr = field.name.name
@@ -77,6 +81,10 @@ def get_attribute_mapping(cr, uid, calname, context={}):
                 res[attr]['object'] = field.field_id.relation
             elif res[attr]['type'] in ('selection') and field.mapping:
                 res[attr]['mapping'] = eval(field.mapping)
+        if not res.get('uid', None):
+            res['uid'] = {}
+            res['uid']['field'] = 'id'
+            res[attr]['type'] = "integer"
         return res
 
 def map_data(cr, uid, obj):
@@ -116,6 +124,9 @@ def map_data(cr, uid, obj):
                 id = modobj.create(cr, uid, map_val)
                 vals[field] = id
                 continue
+            if field_type == 'timedelta':
+                if map_val:
+                    vals[field] = (map_val.seconds/float(86400) + map_val.days)
             if map_val:
                 vals[field] = map_val
     return vals
@@ -180,7 +191,7 @@ class CalDAV(object):
     def create_ics(self, cr, uid, datas, name, ical, context=None):
         if not datas:
             model = context.get('model', None)
-            war_str = "No data available" + (model and " for " + model) or "" 
+            war_str = "No data available" + (model and " for " + model) or ""
             raise osv.except_osv(_('Warning !'), _(war_str))
         for data in datas:
             vevent = ical.add(name)
@@ -194,9 +205,11 @@ class CalDAV(object):
                             continue
                         uidval = openobjectid2uid(cr, data[map_field], model)
                         model_obj = self.pool.get(model)
-                        cr.execute('select id from %s  where recurrent_uid=%s' 
-                                       % (model_obj._table, data[map_field]))
-                        r_ids = map(lambda x: x[0], cr.fetchall())
+                        r_ids = []
+                        if model_obj._columns.get('recurrent_uid', None):
+                            cr.execute('select id from %s  where recurrent_uid=%s' 
+                                           % (model_obj._table, data[map_field]))
+                            r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids: 
                             rdata = self.pool.get(model).read(cr, uid, r_ids)
                             rcal = self.export_cal(cr, uid, rdata, context=context)
@@ -218,7 +231,7 @@ class CalDAV(object):
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             vevent.add(field).value = str(data[map_field])
-                        elif map_type == 'datetime' and data[map_field]:
+                        elif map_type in ('datetime', 'date') and data[map_field]:
                             if field in ('exdate'):
                                 vevent.add(field).value = [parser.parse(data[map_field])]
                             else:
@@ -226,7 +239,7 @@ class CalDAV(object):
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
-                            vevent.add(field).value = [data.get(map_field)[1]]
+                            vevent.add(field).value = data.get(map_field)[1]
                         elif map_type in ("float", "integer"):
                             vevent.add(field).value = str(data.get(map_field))
                         elif map_type == "selection":
@@ -237,16 +250,42 @@ class CalDAV(object):
                                     if val1 == data[map_field]:
                                         vevent.add(field).value = key1
         return vevent
+    
+    def check_import(self, cr, uid, vals, context={}):
+        ids = []
+        model_obj = self.pool.get(context.get('model'))
+        try:
+            for val in vals:
+                exists, r_id = uid2openobjectid(cr, val['id'], context.get('model'), \
+                                                                 val.get('recurrent_id'))
+                if val.has_key('create_date'): val.pop('create_date')
+                val.pop('id')
+                if exists and r_id:
+                    val.update({'recurrent_uid': exists})
+                    model_obj.write(cr, uid, [r_id], val)
+                    ids.append(r_id)
+                elif exists:
+                    model_obj.write(cr, uid, [exists], val)
+                    ids.append(exists)
+                else:
+                    event_id = model_obj.create(cr, uid, val)
+                    ids.append(event_id)
+        except Exception, e:
+            raise osv.except_osv(('Error !'), (str(e)))
+        return ids
 
     def export_cal(self, cr, uid, datas, vobj=None, context={}):
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
-        ical = vobject.iCalendar()
-        self.create_ics(cr, uid, datas, vobj, ical, context=context)
-        return ical
+        try:
+            self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
+            ical = vobject.iCalendar()
+            self.create_ics(cr, uid, datas, vobj, ical, context=context)
+            return ical
+        except Exception, e:
+            raise osv.except_osv(('Error !'), (str(e)))
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
         ical_data = base64.decodestring(content)
-        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname)
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         parsedCal = vobject.readOne(ical_data)
         att_data = []
         res = []
@@ -290,19 +329,22 @@ class Calendar(CalDAV, osv.osv):
                  }
 
     def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
-        cal = self.browse(cr, uid, datas[0])
-        ical = vobject.iCalendar()
-        for line in cal.line_ids:
-            if line.name in ('alarm', 'attendee'):
-                continue
-            mod_obj = self.pool.get(line.object_id.model)
-            data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
-            datas = mod_obj.read(cr, uid, data_ids, context=context)
-            context.update({'model': line.object_id.model})
-            self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
-            self.create_ics(cr, uid, datas, line.name, ical, context=context)
-        return ical.serialize()
-    
+        try:
+            cal = self.browse(cr, uid, datas[0])
+            ical = vobject.iCalendar()
+            for line in cal.line_ids:
+                if line.name in ('alarm', 'attendee'):
+                    continue
+                mod_obj = self.pool.get(line.object_id.model)
+                data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
+                datas = mod_obj.read(cr, uid, data_ids, context=context)
+                context.update({'model': line.object_id.model})
+                self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
+                self.create_ics(cr, uid, datas, line.name, ical, context=context)
+            return ical.serialize()
+        except Exception, e:
+            raise osv.except_osv(('Error !'), (str(e)))
+
     def import_cal(self, cr, uid, content, data_id=None, context=None):
         ical_data = base64.decodestring(content)
         parsedCal = vobject.readOne(ical_data)
@@ -315,11 +357,14 @@ class Calendar(CalDAV, osv.osv):
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
-                self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower())
+                context.update({'model': cal_children[child.name.lower()]})
+                self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child)
                 obj = self.pool.get(cal_children[child.name.lower()])
                 if hasattr(obj, 'check_import'):
-                    obj.check_import(cr, uid, [val], context={})
+                    obj.check_import(cr, uid, [val], context=context)
+                else:
+                    self.check_import(cr, uid, [val], context=context)
         return {}
 
 Calendar()
