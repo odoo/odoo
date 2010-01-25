@@ -26,7 +26,7 @@ import netsvc
 from tools.translate import _
 
 class doucment_change_process_phase_type(osv.osv):
- _name = "document.change.process.phase.type"
+    _name = "document.change.process.phase.type"
 doucment_change_process_phase_type()
 
 class document_change_type(osv.osv):
@@ -151,8 +151,7 @@ class doucment_change_process(osv.osv):
         'latest_modified_date':fields.function(_latestmodification, method=True, type='date', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'), 
         'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
-        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),        
-        'pending_directory_id' :fields.many2one('document.directory','Pending Directory ID'),   
+        'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),                
         'date_control': fields.date('Control Date'), #TODO: make relate field with current_phase_id.date_control
         'progress': fields.float('Progress'), #TODO : functio field: calculate progress
         'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
@@ -196,7 +195,7 @@ class doucment_change_process(osv.osv):
                         'process_id': process.id   
                         }            
                     phase_id = phase_obj.create(cr, uid, phase_value)
-                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' , phase_type_id.id)
+                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' % phase_type_id.id)
                     document_type_ids = map(lambda x: x[0], cr.fetchall())
                     document_ids = document_obj.search(cr, uid, [
                             ('parent_id','=',process.structure_id and process.structure_id.id),
