@@ -515,8 +515,13 @@
                 		</field>
                 	</page>     
                     <page string="Documents">
-                		<field name="process_document_ids">                			            			
-                		</field>
+                		<field name="process_document_ids" mode="tree,form" widget="many2many" nolabel="1">
+                			<tree string="Documents">
+		                		<field name="process_phase_id"/>
+		                		<field name="name" string="Document"/>
+		                		<field name="state"/>
+		                	</tree>
+		                </field>			            			
                 	</page>
                            	                	
                 </notebook>
