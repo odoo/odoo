@@ -459,17 +459,21 @@
         <field name="model">document.change.process</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Process Change">
-            	<group colspan="4">
-	                <field name="name"/>	                
-	                <field name="structure_id" select="1"/>                                    
-                    <group colspan="4" col="7">
-                        <field name="process_type_id" widget="selection"/>	                
-    	                <field name="process_model_id" widget="selection"/>
-                        <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>                        
-                    </group>	                
-                    <field name="description" colspan="4"/>	
-	            </group>
+            <form string="Process Change">            	
+                <group colspan="4" col="6">
+                    <field name="name"/>	                
+                    <field name="structure_id"/> 
+                    <field name="pending_directory_id"/>    
+                </group>                              
+                <group colspan="4" col="5">
+                    <field name="process_type_id" widget="selection"/>	                
+                    <field name="process_model_id" widget="selection"/>
+                    <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert"/>                        
+                </group>
+                <group colspan="4">                                    
+                    <field name="description" colspan="4"/>
+                </group>
+
                 <notebook colspan="4">
                 	<page string="Process Definition">
                 		<group col="2" colspan="2">

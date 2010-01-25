@@ -144,7 +144,7 @@ class doucment_change_process(osv.osv):
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
         'description': fields.char("Small Description", size=64),
         'change_description':fields.text('Changed Description'),
-        'structure_id' :fields.many2one('document.directory','Structure ID'),
+        'structure_id' :fields.many2one('document.directory','Structure Directory'),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Change Owner'),
         'create_date':fields.datetime('Creation',readonly=True),
@@ -156,6 +156,7 @@ class doucment_change_process(osv.osv):
         'progress': fields.float('Progress'), #TODO : functio field: calculate progress
         'current_phase_id': fields.many2one('document.change.process.phase','Current Phase'), # TODO: function field. find out in process phase 
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
+        'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
     }
     _defaults = {      
       'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
