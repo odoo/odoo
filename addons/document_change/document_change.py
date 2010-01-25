@@ -36,6 +36,7 @@ class document_change_type(osv.osv):
     _columns = {
         'name': fields.char("Document Change Type", size=64,required=True),
         'phase_type_ids': fields.many2many('document.change.process.phase.type','document_type_phase_type_rel','document_type_id','phase_type_id','Phase Type'),
+        'directory_id' :fields.many2one('document.directory','Directory'),        
         'template_document_id':fields.many2one('ir.attachment','Document')
     }
 document_change_type()

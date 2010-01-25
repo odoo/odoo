@@ -74,6 +74,8 @@
         <field name="arch" type="xml">
             <form string="Document Types">
                 <field name="name" select="1"/>
+                <field name="directory_id"/>      
+				<field name ="template_document_id"/>                    
                 <separator string="Associated Phase Types" colspan="4"/>
                 <field name="phase_type_ids" colspan="4" nolabel="1"/>  
             </form>
@@ -86,7 +88,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Document Types">
-                <field name="name"/>                              
+                <field name="name"/>      
+                <field name="directory_id"/>      
+				<field name ="template_document_id"/>                                            
             </tree>
         </field>
     </record>
