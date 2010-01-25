@@ -24,6 +24,7 @@ import os
 import pooler
 import netsvc
 from tools.translate import _
+import datetime
 
 class doucment_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
@@ -230,19 +231,25 @@ class document_file(osv.osv):
         return True
 
     def do_change_propose(self, cr, uid, ids, context={}):
-        attach_obj = self.pool.get('ir.attachment')
-        for attach in attach_obj.browse(cr, uid, ids, context=context):
-            if attach.target_document_id:
-                if attach.change_type_id.directory_id.id:
-                    self.copy(cr, uid, attach.id,{'parent_id':attach.change_type_id.directory_id.id}, context=context)
         self.write(cr, uid, ids, {'state':'change_propose'},context=context)      
         return True             
     
     def do_to_update(self, cr, uid, ids, context={}):
         for attach in self.browse(cr, uid, ids, context=context):
-            
-            attach_ids = self.pool.get('ir.attachment').search(cr,uid, [('id', '=',attach.target_document_id.id)])
-            self.write(cr, uid, attach_ids, {'state':'to_update','datas':attach.datas,'datas_fname':attach.datas_fname},context=context)
+            if attach.change_type_id.directory_id.id:
+                attach_ids = self.pool.get('ir.attachment').search(cr,uid, [('id', '=',attach.target_document_id.id)])
+                read_data=self.read(cr,uid, attach_ids,['datas','datas_fname'])
+                self.write(cr, uid, attach_ids, {'state':'to_update','datas':attach.datas,'datas_fname':attach.datas_fname},context=context)
+                res={}
+                for data in read_data:
+                    t=datetime.datetime.now()
+                    file_name=data['datas_fname'].split('.')
+                    new_name=str(file_name[0]+'.old'+str(t.year)+str(t.month)+str(t.day)+'.'+file_name[1])
+                    res['name']=attach.name
+                    res['datas']=data['datas'] 
+                    res['datas_fname']=new_name
+                    res['parent_id']=attach.change_type_id.directory_id.id
+                    old_id = self.create(cr, uid, res)
         self.write(cr, uid, ids, {'state':'to_update'},context=context)            
         return True   
 
