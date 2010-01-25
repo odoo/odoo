@@ -74,7 +74,7 @@ class doucment_change_process_phase(osv.osv):
         'date_control': fields.date('Control Date', select=True),        
         'phase_type_id':fields.many2one('document.change.process.phase.type','Phase Type'),
         'state': fields.selection([('draft', 'Draft'),('in_process', 'Started'),('to_validate', 'To Validate'),('done', 'Done')], 'State',readonly=True),
-        'phase_document_ids':fields.many2many('ir.attachment','phase_document_rel','phase_id','document_id','Document'),
+        'phase_document_ids':fields.one2many('ir.attachment','process_phase_id','Documents'),
     }
     _defaults = {      
      'state': lambda *a: 'draft',
@@ -144,6 +144,19 @@ class doucment_change_process(osv.osv):
         res = {}
         #TODOto calculate latest modified date from all related documents
         return res
+    def _get_document(self, cr, uid, ids, context={}, *arg):
+        if not ids:
+            return {}
+        res = {}
+        attach = self.pool.get('ir.attachment') 
+        directory_obj = self.pool.get('document.directory') 
+        for process_change in self.browse(cr, uid, ids):
+            res1 = []            
+            for phase_id in  process_change.process_phase_ids:
+                res1 += map(lambda x:x.id, phase_id.phase_document_ids or [])    
+            res[process_change.id] = res1       
+        return res
+
     
     def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
@@ -218,25 +231,26 @@ class doucment_change_process(osv.osv):
             if process.process_model_id:
                 directory_ids = directory_obj.search(cr, uid, [('parent_id','child_of',process.structure_id and process.structure_id.id)])
                 for phase_type_id in process.process_model_id.phase_type_ids:
+                    for document_type_id in phase_type_id.document_type_ids:
+                        document_ids = document_obj.search(cr, uid, [
+                                                ('parent_id','in',directory_ids),
+                                                ('change_type_id','=',document_type_id.id)])
+                        new_doc_ids = []                        
+                        for document_id in document_ids: 
+                            vals = {}                           
+                            if process.pending_directory_id:
+                                vals.update({'parent_id':process.pending_directory_id.id})
+                            new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))                            
                     phase_value = {
                         'name' : '%s-%s' %(phase_type_id.name, process.name),
                         'phase_type_id': phase_type_id.id,
-                        'process_id': process.id   
-                        }            
-                    phase_id = phase_obj.create(cr, uid, phase_value)
-                    cr.execute('select document_type_id from document_type_phase_type_rel where phase_type_id = %s' % phase_type_id.id)
-                    document_type_ids = map(lambda x: x[0], cr.fetchall())
-                    document_ids = document_obj.search(cr, uid, [
-                                            ('parent_id','in',directory_ids),
-                                            ('change_type_id','in',document_type_ids)])
-                    for document_id in document_ids:
-                        vals = {'process_phase_id': phase_id}
-                        if process.pending_directory_id:
-                            vals.update({'parent_id': process.pending_directory_id.id})
-                        new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
-                    phase_obj.write(cr, uid, [phase_id], {'phase_document_ids': [(6,0,document_ids)]})
-                    self.write(cr, uid, [process.id],{'process_document_ids': [(6,0,new_doc_ids)]})
-    
+                        'process_id': process.id,
+                        'phase_document_ids': [(6,0,new_doc_ids)]   
+                    }            
+                    phase_obj.create(cr, uid, phase_value)   
+                                     
+        return True
+
 doucment_change_process()
 
 class document_file(osv.osv):
