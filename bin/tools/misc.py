@@ -455,8 +455,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
     msg['X-OpenERP-Server-Host'] = socket.gethostname()
     msg['X-OpenERP-Server-Version'] = release.version
-    if priority:
-        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
+
+    msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
     for key, value in x_headers.items():
