@@ -430,13 +430,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not email_bcc:
         email_bcc = []
 
-    if not attach:
-        try:
-            msg = MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
-        except:
-            msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
-    else:
+    if attach:
         msg = MIMEMultipart()
+    else:
+        if not body: body = u''
+        try:
+            msg = MIMEText(body.encode('utf8'),_subtype=subtype,_charset='utf-8')
+        except UnicodeEncodeError:
+            msg = MIMEText(body,_subtype=subtype,_charset='utf-8')
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
