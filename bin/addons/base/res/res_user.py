@@ -331,12 +331,12 @@ class config_users(osv.osv_memory):
     _inherit = ['res.users', 'res.config']
 
     WELCOME_MAIL_SUBJECT = _(u"Welcome to OpenERP")
-    WELCOME_MAIL_BODY = _(u"An OpenERP account has been created for \
-        \"%(name)s\" on the server ???.\n\nYour login is %(login)s, \
-        you should ask your supervisor or system administrator if you \
-        haven't been given your password yet.\n\n\
-        If you aren't %(name)s, this email reached you by errorneously, \
-        please delete it.")
+    WELCOME_MAIL_BODY = _(u"An OpenERP account has been created for "
+        "\"%(name)s\" on the server ???.\n\nYour login is %(login)s, "
+        "you should ask your supervisor or system administrator if you "
+        "haven't been given your password yet.\n\n"
+        "If you aren't %(name)s, this email reached you errorneously, "
+        "please delete it.")
 
     def _generate_signature(self, cr, name, email, context=None):
         return _('--\n%(name)s %(email)s\n') % {
