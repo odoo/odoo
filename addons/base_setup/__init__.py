@@ -33,19 +33,11 @@ class base_setup_config_choice(osv.osv_memory):
     logger = netsvc.Logger()
 
     def set_default_menu(self, cr, uid, menu, context=None):
-        users = self.pool.get('res.users')
-        users.write(cr, uid,
-                    users.search(cr, uid,
-                                 [('action_id','=','Setup')],
-                                 context=context),
-                    {'action_id': menu.id},
-                    context=context)
-        users.write(cr, uid,
-                    users.search(cr, uid,
-                                 [('menu_id','=','Setup')],
-                                 context=context),
-                    {'menu_id': menu.id},
-                    context=context)
+        user = self.pool.get('res.users')\
+                        .browse(cr, uid, uid, context=context)
+
+        user.write({'action_id': menu.id,
+                    'menu_id': menu.id})
 
     def get_default_menu(self, cr, uid, context=None):
         actions = self.pool.get('ir.actions.act_window')
@@ -53,7 +45,7 @@ class base_setup_config_choice(osv.osv_memory):
         current_menu_id = actions.search(cr, uid, [('name','=','Menu')],
                                          context=context)
         assert len(current_menu_id) == 1,\
-               'A given user should only have menu item'
+               'A given user should only have one menu item'
         return actions.browse(cr, uid, current_menu_id[0], context=context)
 
     def menu(self, cr, uid, ids, context=None):
