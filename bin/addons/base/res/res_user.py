@@ -330,16 +330,42 @@ class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _inherit = ['res.users', 'res.config']
 
+    WELCOME_MAIL_SUBJECT = _(u"Welcome to OpenERP")
+    WELCOME_MAIL_BODY = _(u"An OpenERP account has been created for \
+        \"%(name)s\" on the server ???.\n\nYour login is %(login)s, \
+        you should ask your supervisor or system administrator if you \
+        haven't been given your password yet.\n\n\
+        If you aren't %(name)s, this email reached you by errorneously, \
+        please delete it.")
+
     def _generate_signature(self, cr, name, email, context=None):
         return _('--\n%(name)s %(email)s\n') % {
             'name': name or '',
             'email': email and ' <'+email+'>' or '',
             }
 
+    def get_welcome_mail_subject(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_SUBJECT
+        """
+        return self.WELCOME_MAIL_SUBJECT
+    def get_welcome_mail_body(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_BODY
+        """
+        return self.WELCOME_MAIL_BODY
+
     def create_user(self, cr, uid, new_id, context=None):
-        ''' create a new res.user instance from the data stored
-        in the current res.config.users
-        '''
+        """ create a new res.user instance from the data stored
+        in the current res.config.users.
+
+        If an email address was filled in for the user, sends a mail
+        composed of the return values of ``get_welcome_mail_subject``
+        and ``get_welcome_mail_body`` (which should be unicode values),
+        with the user's data %-formatted into the mail body
+        """
         base_data = self.read(cr, uid, new_id, context=context)
         partner_id = self.pool.get('res.partner').main_partner(cr, uid)
         address = self.pool.get('res.partner.address').create(
@@ -355,6 +381,13 @@ class config_users(osv.osv_memory):
             )
         self.pool.get('res.users').create(
             cr, uid, user_data, context)
+        if user_data['email']:
+            tools.email_send(email_from=None, email_to=user_data['email'],
+                             subject=self.get_welcome_mail_subject(
+                                 cr, uid, context=context),
+                             body=self.get_welcome_mail_body(
+                                 cr, uid, context=context) % user_data,
+                             reply_to="no@reply.to")
 
     def execute(self, cr, uid, ids, context=None):
         self.create_user(cr, uid, ids[0], context=context)
