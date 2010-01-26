@@ -1820,10 +1820,12 @@ class orm(orm_template):
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
         flist = groupby
-        for f in float_int_fields:
+        fields_pre = [f for f in float_int_fields if
+                   f == self.CONCURRENCY_CHECK_FIELD
+                or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        for f in fields_pre:
             if f not in ['id','sequence']:
                 flist += ',sum('+f+') as '+f
-
         cr.execute('select min(id) as id,'+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
         alldata = {}
         for r in cr.dictfetchall():
@@ -2395,7 +2397,6 @@ class orm(orm_template):
             select = [ids]
         else:
             select = ids
-
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
         for r in result:
