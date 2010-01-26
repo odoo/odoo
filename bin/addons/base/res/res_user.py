@@ -388,8 +388,11 @@ class config_users(osv.osv_memory):
                              body=self.get_welcome_mail_body(
                                  cr, uid, context=context) % user_data,
                              reply_to="no@reply.to")
-
     def execute(self, cr, uid, ids, context=None):
+        'Do nothing on execution, just launch the next action/todo'
+        pass
+    def action_add(self, cr, uid, ids, context=None):
+        'Create a user, and re-display the view'
         self.create_user(cr, uid, ids[0], context=context)
         return {
             'view_type': 'form',

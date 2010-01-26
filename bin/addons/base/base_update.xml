@@ -230,15 +230,30 @@
                   <field colspan="4" nolabel="1" name="groups_id"/>
                 </group>
 
-                <xpath expr='//button[@name="action_skip"]'
-                       position='attributes'>
-                  <attribute name='string'>Done</attribute>
-                  <attribute name='icon'>gtk-go-forward</attribute>
-                </xpath>
                 <xpath expr='//button[@name="action_next"]'
                        position='attributes'>
+                  <attribute name="name">action_add</attribute>
                   <attribute name='string'>Add User</attribute>
                   <attribute name='icon'>gtk-add</attribute>
+                </xpath>
+
+                <xpath expr='//button[@name="action_skip"]'
+                       position='attributes'>
+                  <!-- if this one is performed first, it transforms
+                       the action_skip into action_next, and the
+                       transformation of action_next to action_add,
+                       since it uses first-match, transforms the same
+                       button. And we end up with [add] [next] instead
+                       of [next] [add]
+
+                       Would probably be simpler to just replace both
+                       by nothing and create a pair of brand new
+                       buttons... but we'd have to handle the groups
+                       around the buttons... oh well...
+                  -->
+                  <attribute name="name">action_next</attribute>
+                  <attribute name='string'>Done</attribute>
+                  <attribute name='icon'>gtk-go-forward</attribute>
                 </xpath>
               </data>
             </field>
