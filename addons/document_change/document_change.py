@@ -134,7 +134,6 @@ class document_change_process_email(osv.osv):
 document_change_process_email()
 
 class document_change_process(osv.osv):
-
     _name = "document.change.process"
     _description = "Process"
 
@@ -179,11 +178,11 @@ class document_change_process(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char("Process Change", size=64, required=True, select=True),
-        'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
-        'description': fields.char("Small Description", size=64, required=True),
+        'name': fields.char("Process ID", size=64, required=True, select=True),
+        'process_type_id' :fields.many2one('document.change.process.type','Type of Change'),
+        'description': fields.char("Title", size=64, required=True),
         'change_description':fields.text('Changed Description'),
-        'structure_id' :fields.many2one('document.directory','Structure Directory'),
+        'structure_id' :fields.many2one('document.directory','Directory', required=True),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
         'user_id':fields.many2one('res.users','Owner',required=True),
         'create_date':fields.datetime('Creation',readonly=True),
@@ -195,11 +194,11 @@ class document_change_process(osv.osv):
         'date_control': fields.related('current_phase_id','date_control', type='date', string='Control Date'),
         'progress': fields.function(_get_progress, method=True, type='float', string='Progress'),
         'process_document_ids': fields.many2many('ir.attachment','document_changed_process_rel','process_id','change_id','Document To Change'),
-        'pending_directory_id' :fields.many2one('document.directory','Pending Directory'),
     }
     _defaults = {
-      'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
-      'state': lambda *a: 'draft',
+        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'document.change.process'),
+        'state': lambda *a: 'draft',
+        'user_id': lambda laurence,henrion,est,cool: est
       }
     def do_start(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'in_progress'},context=context)
@@ -236,8 +235,6 @@ class document_change_process(osv.osv):
                         new_doc_ids = []
                         for document_id in document_ids:
                             vals = {}
-                            if process.pending_directory_id:
-                                vals.update({'parent_id':process.pending_directory_id.id})
                             new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
                     phase_value = {
                         'name' : '%s-%s' %(phase_type_id.name, process.name),

@@ -20,15 +20,15 @@
     <menuitem name="Reporting" id="menu_reporting" parent="menu_process_changes" sequence="10"/>
     <menuitem name="Configuration" id="menu_configuration" parent="menu_process_changes" sequence="15"/>
 
-    <!--
     <record model="ir.ui.view" id="view_document_structure_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
         <field name="type">form</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Structure">
-                <field name="name"/>
-                <field name="parent_id"/>
+                <field name="parent_id" string="Work Station" select="1"/>
+                <field name="name" string="Family" select="1"/>
             </form>
         </field>
     </record>
@@ -39,12 +39,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Structure">
-                <field name="name"/>
-                <field name="parent_id"/>
+                <field name="parent_id" string="Work Station"/>
+                <field name="name" string="Family"/>
             </tree>
         </field>
     </record>
-    -->
 
     <record model="ir.actions.act_window" id="action_document_structure_form">
         <field name="type">ir.actions.act_window</field>
@@ -246,7 +245,6 @@
                 <field name="datas" filename="datas_fname" string="Content"/>
                 <field name="change_type_id" widget="selection"/>
                 <field name="datas_fname"/>
-
                 <notebook colspan="4">
                 <page string="Information">
                     <group colspan="2" col="2">
@@ -303,9 +301,9 @@
             <tree string="Documents">
                 <field name="name" string="Document"/>
                 <field name="parent_id" string="Directory"/>
-                <field name="change_type_id" string="Type"/>
+                <field name="change_type_id"/>
                 <field name="state"/>
-                <field name="change_process_id" string="Proc Chg #"/>
+                <field name="change_process_id"/>
                 <field name="user_id" string="Owner"/>
             </tree>
         </field>
@@ -489,18 +487,16 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Change">
-                <group colspan="4" col="6">
-                    <field name="name"/>
-                    <field name="structure_id"/>
-                    <field name="pending_directory_id"/>
-                </group>
-                <group colspan="4" col="5">
-                    <field name="process_type_id" widget="selection"/>
-                    <field name="process_model_id" widget="selection"/>
-                    <button name="generate_phases" string="Generate Phases" type="object" icon="gtk-convert" />
-                </group>
-                <group colspan="4">
+                <group colspan="4" col="8">
                     <field name="description" colspan="4"/>
+                    <field name="process_type_id" widget="selection"/>
+                    <field name="name" readonly="1"/>
+                    <newline/>
+                    <field name="structure_id" colspan="4"/>
+                    <field name="process_model_id" widget="selection"/>
+                    <button name="generate_phases"
+                        string="Generate Phases" type="object" 
+                        icon="gtk-convert" colspan="2"/>
                 </group>
 
                 <notebook colspan="4">
@@ -586,7 +582,7 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <search string="Process Changes">
-                <group col="8" colspan="4">
+                <group col="14" colspan="4">
                     <filter domain="[('user_id','=',uid)]" string="My Process" icon="gtk-execute" help="My Process Changes"/>
                     <separator orientation="vertical"/>
                     <filter domain="[('state','=','to_validate')]"
