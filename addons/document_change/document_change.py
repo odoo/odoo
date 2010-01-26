@@ -27,9 +27,9 @@ from tools.translate import _
 import time
 import datetime
 
-class doucment_change_process_phase_type(osv.osv):
+class document_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
-doucment_change_process_phase_type()
+document_change_process_phase_type()
 
 class document_change_type(osv.osv):
     _name = "document.change.type"
@@ -42,7 +42,7 @@ class document_change_type(osv.osv):
     }
 document_change_type()
 
-class doucment_change_process_phase_type(osv.osv):
+class document_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
     _description = "Document Change Process Phase Type"
     _columns = {
@@ -54,13 +54,13 @@ class doucment_change_process_phase_type(osv.osv):
     _defaults = {
         'active': lambda *a:1,
     }
-doucment_change_process_phase_type()
+document_change_process_phase_type()
 
-class doucment_change_process(osv.osv):
+class document_change_process(osv.osv):
     _name = "document.change.process"
-doucment_change_process()
+document_change_process()
 
-class doucment_change_process_phase(osv.osv):
+class document_change_process_phase(osv.osv):
     _name = "document.change.process.phase"
     _description = "Document Change Process Phase"
     _columns = {
@@ -100,7 +100,7 @@ class doucment_change_process_phase(osv.osv):
     def test_nocontrol_request(self, cr, uid, ids, context=None):
         return all(bool(process.type) =='no_control' for process in self.browse(cr, uid, ids, context=context))
 
-doucment_change_process_phase()
+document_change_process_phase()
 
 class document_change_process_model(osv.osv):
     _name = "document.change.process.model"
@@ -133,7 +133,7 @@ class document_change_process_email(osv.osv):
         }
 document_change_process_email()
 
-class doucment_change_process(osv.osv):
+class document_change_process(osv.osv):
 
     _name = "document.change.process"
     _description = "Document Change Process"
@@ -142,6 +142,7 @@ class doucment_change_process(osv.osv):
         res = {}
         #TODOto calculate latest modified date from all related documents
         return res
+
     def _get_document(self, cr, uid, ids, context={}, *arg):
         if not ids:
             return {}
@@ -154,7 +155,6 @@ class doucment_change_process(osv.osv):
                 res1 += map(lambda x:x.id, phase_id.phase_document_ids or [])
             res[process_change.id] = res1
         return res
-
 
     def _get_progress(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
@@ -181,7 +181,7 @@ class doucment_change_process(osv.osv):
     _columns = {
         'name': fields.char("Process Change", size=64, required=True, select=True),
         'process_type_id' :fields.many2one('document.change.process.type','Type Change'),
-        'description': fields.char("Small Description", size=64),
+        'description': fields.char("Small Description", size=64, required=True),
         'change_description':fields.text('Changed Description'),
         'structure_id' :fields.many2one('document.directory','Structure Directory'),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
@@ -249,7 +249,7 @@ class doucment_change_process(osv.osv):
 
         return True
 
-doucment_change_process()
+document_change_process()
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'

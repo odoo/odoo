@@ -100,13 +100,14 @@ class document_directory(osv.osv):
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
     ]
     def name_get(self, cr, uid, ids, context={}):
-        res = {}
+        res = []
         for d in self.browse(cr, uid, ids, context=context):
-            s = d.name
-            while d:
-                s = d.name + (s and ('/' + s) or '')
-                d = d.parent_id
-            res[d] = s
+            s = ''
+            d2 = d
+            while d2:
+                s = d2.name + (s and ('/' + s) or '')
+                d2 = d2.parent_id
+            res.append((d.id, s))
         return res
 
     def ol_get_resource_path(self,cr,uid,dir_id,res_model,res_id):
