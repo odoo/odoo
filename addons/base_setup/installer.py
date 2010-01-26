@@ -19,30 +19,11 @@
 #
 ##############################################################################
 from osv import fields, osv
-from itertools import chain
-from operator import itemgetter
 import netsvc
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
     _inherit = 'res.config.installer'
-
-    def _get_charts(self, cr, uid, context=None):
-        modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('category_id','=','Account Charts'),
-                                       ('state','!=','installed')])
-        return list(
-            sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids)),
-                   key=itemgetter(1)))
-
-    def _if_account(self, cr, uid, ids, context=None):
-        chart = self.read(cr, uid, ids, ['charts'],
-                          context=context)[0]['charts']
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_DEBUG,
-            'Addon "account" selected, installing chart of accounts %s'%chart)
-        return [chart]
 
     _install_if = {
         ('sale','crm'): ['sale_crm'],
@@ -73,10 +54,6 @@ class base_setup_installer(osv.osv_memory):
         'account':fields.boolean('Financial & Accounting',
             help="Helps you handle your accounting needs, as well as create "
                  "and track your budgets."),
-        'charts':fields.selection(_get_charts, 'Chart of Accounts',
-            help="Installs localized accounting charts to match as closely as "
-                 "possible the accounting needs of your company based on your "
-                 "country."),
         'purchase':fields.boolean('Purchase Management',
             help="Helps you manage your purchase-related processes such as "
                  "requests for quotations, supplier invoices, etc..."),

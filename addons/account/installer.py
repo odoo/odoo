@@ -18,14 +18,30 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from operator import itemgetter
+
 from osv import fields, osv
+import netsvc
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
 
+    def _get_charts(self, cr, uid, context=None):
+        modules = self.pool.get('ir.module.module')
+        ids = modules.search(cr, uid, [('category_id','=','Account Charts')])
+        return list(
+            sorted(((m.name, m.shortdesc)
+                    for m in modules.browse(cr, uid, ids)),
+                   key=itemgetter(1)))
+
     _columns = {
         # Accounting
+        'charts':fields.selection(_get_charts, 'Chart of Accounts',
+            required=True,
+            help="Installs localized accounting charts to match as closely as "
+                 "possible the accounting needs of your company based on your "
+                 "country."),
         'account_analytic_default':fields.boolean('Analytic Accounting',
             help="Automatically selects analytic accounts based on various "
                  "criteria."),
@@ -46,4 +62,17 @@ class account_installer(osv.osv_memory):
     _defaults = {
         'account_analytic_default':True,
         }
+
+    def modules_to_install(self, cr, uid, ids, context=None):
+        modules = super(account_installer, self).modules_to_install(
+            cr, uid, ids, context=context)
+
+        chart = self.read(cr, uid, ids, ['charts'],
+                          context=context)[0]['charts']
+        self.logger.notifyChannel(
+            'installer', netsvc.LOG_DEBUG,
+            'Installing chart of accounts %s'%chart)
+        return modules | set([chart])
+
+
 account_installer()
