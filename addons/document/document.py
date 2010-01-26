@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -140,7 +140,7 @@ class document_file(osv.osv):
         if not len(res):
             return False
         if not self._check_duplication(cr,uid,vals,ids,'write'):
-            raise except_orm(_('ValidateError'), _('File name must be unique!'))
+            raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file,self).write(cr,uid,ids,vals,context=context)
         cr.commit()
         return result
@@ -185,7 +185,7 @@ class document_file(osv.osv):
             datas=vals.get('datas',False)
         vals['file_size']= datas and len(datas) or 0
         if not self._check_duplication(cr,uid,vals):
-            raise except_orm(_('ValidateError'), _('File name must be unique!'))
+            raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file,self).create(cr, uid, vals, context)
         cr.commit()
         return result

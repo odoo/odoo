@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -67,8 +67,8 @@ class hr_employee(osv.osv):
 
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'work_phone': fields.char('Work Phone', size=32),
-        'work_email': fields.char('Work Email', size=128),
+        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),
+        'work_email': fields.related('address_id', 'email', type='char', string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
 
         'notes': fields.text('Notes'),

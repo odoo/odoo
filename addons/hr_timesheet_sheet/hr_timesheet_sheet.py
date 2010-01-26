@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -319,9 +319,12 @@ class hr_timesheet_sheet(osv.osv):
                     context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
-        sheets = self.read(cr, uid, ids, ['state'])
-        if any(s['state'] in ('confirm', 'done') for s in sheets):
-            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+        sheets = self.read(cr, uid, ids, ['state','total_attendance'])
+        for sheet in sheets:
+            if sheet['state'] in ('confirm', 'done'):
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+            elif sheet['total_attendance'] <> 0.00:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
 hr_timesheet_sheet()
@@ -362,7 +365,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -639,8 +642,10 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                             from
                                 hr_attendance a
                                 LEFT JOIN (hr_timesheet_sheet_sheet s
-                                    LEFT JOIN hr_employee e
-                                    ON (s.user_id = e.user_id))
+                                    LEFT JOIN resource_resource r
+                                        LEFT JOIN hr_employee e
+                                        ON (e.resource_id = r.id)
+                                    ON (s.user_id = r.user_id))
                                 ON (a.employee_id = e.id
                                     AND s.date_to >= date_trunc('day',a.name)
                                     AND s.date_from <= a.name)

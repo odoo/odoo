@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -35,6 +35,13 @@ class invoice_create(wizard.interface):
     def _get_accounts(self, cr, uid, data, context):
         if not len(data['ids']):
             return {}
+        #Checking whether the analytic line is invoiced or not
+        pool = pooler.get_pool(cr.dbname)
+        analytic_line_obj = pool.get('account.analytic.line').browse(cr, uid, data['ids'], context)
+        for obj_acc in analytic_line_obj:
+            if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
+                raise wizard.except_wizard(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
+        
         cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN (%s)"% (','.join(map(str,data['ids'])),))
         account_ids = cr.fetchall()
         return {'accounts': [x[0] for x in account_ids]}

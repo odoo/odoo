@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -114,7 +114,11 @@ class hr_employee(osv.osv):
     def attendance_action_change(self, cr, uid, ids, type='action', context={}, dt=False, *args):
         id = False
         warning_sign = 'sign'
-        
+
+        #Special case when button calls this method :type=context
+        if isinstance(type,dict):
+            type = type.get('type','action')
+            
         if type == 'sign_in':
             warning_sign = "Sign In"
         elif type == 'sign_out':
@@ -125,7 +129,7 @@ class hr_employee(osv.osv):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
             
             res = {'action' : type, 'employee_id' : emp['id']}
-            
+
             if dt:
                 res['name'] = dt
                 

@@ -4,8 +4,14 @@
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Requisitions" parent="stock.menu_stock_root" sequence="4"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
+		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="1"/>
 
+        <menuitem name="Control" id="menu_mrp_control" parent="menu_mrp_root"  sequence="3" />
+     	<menuitem name="Master Data"
+                  id="menu_mrp_bom"
+                  parent="menu_mrp_root"
+                  sequence="5" />
         <!--
         Property / Property Group
         -->
@@ -34,7 +40,7 @@
             name="Configuration"
             parent="menu_mrp_root"
             groups="group_mrp_manager"
-            sequence="-50" />
+            sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -74,7 +80,7 @@
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
             groups="base.group_extended"
-            sequence="10" />
+            sequence="20" />
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
@@ -220,10 +226,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
         </record>
-        <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="menu_mrp_configuration" groups="base.group_extended"
-                  sequence="100" />
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_routing_and_workcenters" groups="base.group_extended" />
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_routing_and_workcenters" groups="base.group_extended"/>
+ <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
+                  sequence="100" />-->
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="40" />
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="30"/>
 
         <!--
           Bill of Materials
@@ -309,10 +315,11 @@
         </record>
 
         <!-- BOM menus -->
-        <menuitem name="Bill of Materials"
+
+  <!--      <menuitem name="Bill of Materials"
                   id="menu_mrp_bom"
-                  parent="menu_mrp_configuration"
-                  sequence="50" />
+                  parent="menu_mrp_bom"
+                  sequence="50" />-->
         <menuitem action="mrp_bom_form_action"
                   id="menu_mrp_bom_form_action"
                   parent="menu_mrp_bom"
@@ -375,7 +382,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state in ('done','cancel') " string="Production orders">
+                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
@@ -395,7 +402,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="routing_id" date_start="date_planned" string="Production Orders">
+                <calendar color="routing_id" date_start="date_planned" string="Manufacturing Orders">
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -424,7 +431,7 @@
             <field name="model">mrp.production</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Production orders" type="bar">
+                <graph string="Manufacturing Orders" type="bar">
                     <field name="date_planned_date"/>
                     <field name="hour_total" operator="+"/>
                     <field name="cycle_total" operator="+"/>
@@ -444,7 +451,7 @@
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Production orders">
+                <form string="Manufacturing Orders">
                     <group colspan="4" col="7">
                         <field name="name" select="1"/>
                         <field name="date_planned" select="1"/>
@@ -525,8 +532,8 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Ready" domain="[('state','=','ready')]" help="Production orders which are ready to produce"/>
-                       <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
+                       <filter icon="terp-mrp" string="Ready" domain="[('state','=','ready')]" help="Manufacturing Orders which are ready to produce"/>
+                       <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Manufacturing Orders which are in production"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
                        <field name="product_id" select='1'/>
@@ -538,7 +545,7 @@
         </record>
 
         <record id="mrp_production_action" model="ir.actions.act_window">
-            <field name="name">Production Orders</field>
+            <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
@@ -546,10 +553,10 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root" sequence="-30"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
-            <field name="name">Production Orders Planning</field>
+            <field name="name">Manufacturing Orders Planning</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
@@ -558,7 +565,7 @@
         </record>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
-            <field name="name">Production Orders To Start</field>
+            <field name="name">Manufacturing Orders To Start</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
@@ -569,7 +576,7 @@
         </record>
 
         <record id="mrp_production_action3" model="ir.actions.act_window">
-            <field name="name">Production Orders in Progress</field>
+            <field name="name">Manufacturing Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
@@ -580,7 +587,7 @@
         </record>
 
         <record id="mrp_production_action4" model="ir.actions.act_window">
-            <field name="name">Production Orders Waiting Products</field>
+            <field name="name">Manufacturing Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
@@ -654,7 +661,7 @@
         </record>
 
         <!--
-    	Requisition
+    	Procurement
     -->
 
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
@@ -662,7 +669,7 @@
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Requisition Lines">
+                <tree string="Procurement Lines">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -680,10 +687,10 @@
             <field name="model">mrp.procurement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Requisition">
+                <form string="Procurement">
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
-                        <field name="name" select="1" string="Requisition Reason"/>
+                        <field name="name" select="1" string="Procurement Reason"/>
                         <field name="origin" select="2"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
@@ -694,7 +701,7 @@
                         <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
-                    <page string="Requisition Details">
+                    <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" select="2"/>
@@ -710,9 +717,8 @@
                         <group col="7" colspan="2">
                             <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
                             <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
-                            <button name="button_cancel" states="exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_check" states="confirmed" string="Run 	Requisition" icon="gtk-media-play"/>
-                            <button name="button_cancel" states="draft,running" string="Cancel" icon="gtk-cancel"/>
+                            <button name="button_cancel" states="draft,exception,waiting" string="Cancel" icon="gtk-cancel"/>
+                            <button name="button_check" states="confirmed" string="Run 	Procurement" icon="gtk-media-play"/>
                         </group>
                     </page>
                     <page string="Extra Information">
@@ -738,9 +744,9 @@
             <field name="model">mrp.procurement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Requisition">
+                <search string="Search Procurement">
                        <group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Requisition orders with exceptions"/>
+                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
                        <field name="product_id" select='1'/>
@@ -751,18 +757,18 @@
             </field>
         </record>
         <record id="mrp_procurement_action" model="ir.actions.act_window">
-            <field name="name">Requisition Orders</field>
+            <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"
-                  sequence="-40" />
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"
+                  sequence="2" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
-            <field name="name">Unscheduled Requisitions</field>
+            <field name="name">Requisitions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -770,8 +776,23 @@
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
 
+      <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
+                  name="Requisitions" sequence="5" />
+		<record id="mrp_procurement_action_quotation" model="ir.actions.act_window">
+            <field name="name">Quotation Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.procurement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
+        </record>
+	    <menuitem action="mrp_procurement_action_quotation" id="menu_procurement_request_quotation" parent="purchase.menu_procurement_management"
+                  name="Request for Quotations" sequence="6" />
+
+
+
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Requisition Exceptions</field>
+            <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -779,8 +800,10 @@
             <field name="domain">[('state','=','exception')]</field>
         </record>
 
+		<menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_exception_action" parent="mrp.menu_mrp_control"
+                  sequence="1" />
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Requisition Exceptions to Fix</field>
+            <field name="name">Procurement Exceptions to Fix</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -790,7 +813,7 @@
         </record>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
-            <field name="name">Temporary Requisition Exceptions</field>
+            <field name="name">Temporary Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>

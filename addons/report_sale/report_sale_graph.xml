@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
-        <menuitem id="next_id_83" name="Graphs" parent="report_sale.next_id_80"/><menuitem icon="STOCK_PRINT" id="ir_ui_menu1" name="Monthly Sales Turnover Over One Year" parent="next_id_83"/>
+
+        <menuitem id="next_id_83" name="Graphs" parent="base.next_id_64"/><menuitem icon="STOCK_PRINT" id="ir_ui_menu1" name="Monthly Sales Turnover Over One Year" parent="next_id_83" sequence="1"/>
         <menuitem icon="STOCK_PRINT" id="ir_ui_menu2" name="Daily Sales Turnover Over One Year" parent="report_sale.next_id_83"/>
         <menuitem icon="STOCK_PRINT" id="ir_ui_menu3" name="Monthly Cumulated Sales Turnover Over One Year" parent="report_sale.next_id_83"/>
-        
+
         <!-- reports -->
         <record id="ir_report_custom_4" model="ir.report.custom">
             <field model="ir.model" name="model_id" search="[('model','=','sale.order')]"/>
@@ -15,7 +15,7 @@
             <field name="type">bar</field>
             <field name="menu_id" ref="ir_ui_menu1"/>
         </record>
-        
+
         <record id="ir_report_custom_5" model="ir.report.custom">
             <field model="ir.model" name="model_id" search="[('model','=','sale.order')]"/>
             <field name="title">Daily sales turnover over one year</field>
@@ -24,7 +24,7 @@
             <field name="type">bar</field>
             <field name="menu_id" ref="ir_ui_menu2"/>
         </record>
-        
+
         <record id="ir_report_custom_6" model="ir.report.custom">
             <field model="ir.model" name="model_id" search="[('model','=','sale.order')]"/>
             <field name="title">Monthly cumulated sales turnover over one year</field>
@@ -33,7 +33,7 @@
             <field name="type">bar</field>
             <field name="menu_id" ref="ir_ui_menu3"/>
         </record>
-        
+
         <!-- fields -->
         <record id="ir_report_custom_fields_0" model="ir.report.custom.fields">
             <field model="ir.model.fields" name="field_child0" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
@@ -51,7 +51,7 @@
             <field name="report_id" ref="ir_report_custom_4"/>
             <field name="name">sales</field>
         </record>
-        
+
         <record id="ir_report_custom_fields_2" model="ir.report.custom.fields">
             <field model="ir.model.fields" name="field_child0" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
             <field name="sequence">1</field>
@@ -69,7 +69,7 @@
             <field name="report_id" ref="ir_report_custom_5"/>
             <field name="name">sale</field>
         </record>
-        
+
         <record id="ir_report_custom_fields_1" model="ir.report.custom.fields">
             <field model="ir.model.fields" name="field_child0" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
             <field name="sequence">1</field>
@@ -87,10 +87,10 @@
             <field name="report_id" ref="ir_report_custom_6"/>
             <field name="name">sales</field>
         </record>
-        
+
         <function eval="[[ir_report_custom_4]]" model="ir.report.custom" name="subscribe"/>
         <function eval="[[ir_report_custom_5]]" model="ir.report.custom" name="subscribe"/>
         <function eval="[[ir_report_custom_6]]" model="ir.report.custom" name="subscribe"/>
-        
+
     </data>
 </openerp>

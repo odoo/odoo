@@ -31,7 +31,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="sale.menu_shop_configuration" action="action_definition_journal_invoice_type"/>
+<!--    <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="sale.menu_shop_configuration" action="action_definition_journal_invoice_type"/>-->
 
     <record model="ir.ui.view" id="view_sale_journal_form">
         <field name="name">sale_journal.sale.journal.form</field>
@@ -118,7 +118,9 @@
         <field name="search_view_id" ref="view_sale_journal_search"/>
     </record>
 
-    <menuitem name="Sales Journals" id="menu_definition_journal" parent="sale.menu_shop_configuration" action="action_definition_journal"/>
+<!--    <menuitem name="Sales Journals" id="menu_definition_journal" parent="sale.menu_shop_configuration" action="action_definition_journal"/>-->
+	<menuitem id="menu_sale_journal" name="Journal" parent="base.menu_base_config" sequence="60" />
+	<menuitem name="Sales Journals" id="menu_definition_journal" parent="menu_sale_journal" action="action_definition_journal"/>
 
     <record model="ir.ui.view" id="sale_journal_sale_order">
         <field name="name">sale.order.journal.view.form</field>
@@ -321,7 +323,7 @@
         <field name="search_view_id" ref="view_sale_journal_sale_stats_search"/>
     </record>
 
-	<menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>
+	<menuitem name="Reporting" id="menu_definition_report_sales" parent="base.menu_base_partner" sequence="8"/>
     <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
 
     <act_window name="Monthly sales"

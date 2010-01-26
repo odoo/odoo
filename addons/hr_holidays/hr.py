@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##################################################################################
 #
-# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
-# and 2004-2009 Tiny SPRL (<http://tiny.be>).
+# Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com) 
+# and 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 # $Id: hr.py 4656 2006-11-24 09:58:42Z Cyp $
 #
@@ -164,24 +164,6 @@ class hr_holidays(osv.osv):
     }
     _order = 'date_from desc'
 
-    def create(self, cr, uid, vals, context={}):
-        if context:
-            if context.has_key('type'):
-                vals['type'] = context['type']
-            if context.has_key('allocation_type'):
-                vals['allocation_type'] = context['allocation_type']
-        return super(osv.osv,self).create(cr, uid, vals, context)
-
-    #~ def _check_date(self, cr, uid, ids):
-        #~ if ids:
-             #~ cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
-             #~ res = cr.fetchall()
-             #~ if res and res[0][0] <= 0:
-                 #~ return False
-        #~ return True
-
-    #_constraints = [(_check_date, 'Start date should not be greater than end date! ', ['number_of_days'])]
-
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
         if date_to and date_from:
@@ -196,6 +178,51 @@ class hr_holidays(osv.osv):
             'number_of_days_temp': 0,
         }
         return result
+
+    def _update_user_holidays(self, cr, uid, ids):
+        for record in self.browse(cr, uid, ids):
+            if record.state=='validate':
+                holiday_id=self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status.id)])
+                if holiday_id:
+                    obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
+                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken - record.number_of_days})
+                if record.case_id:
+                    if record.case_id.state <> 'draft':
+                        raise osv.except_osv(_('Warning !'),
+                    _('You can not cancel this holiday request. first You have to make its case in draft state.'))
+                    else:
+                        self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
+                        
+    def _check_date(self, cr, uid, ids):
+        if ids:
+            cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
+            res =  cr.fetchall()
+            if res and res[0][0] < 0:
+                return False
+        return True
+
+    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
+
+    def create(self, cr, uid, vals, *args, **kwargs):
+        id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
+        self._create_holiday(cr, uid, [id_holiday])
+        return id_holiday
+    
+    def unlink(self, cr, uid, ids, context={}):
+        self._update_user_holidays(cr, uid, ids)
+        return super(hr_holidays, self).unlink(cr, uid, ids, context)
+
+    def _create_holiday(self, cr, uid, ids):
+        holidays_user_obj = self.pool.get('hr.holidays.per.user')
+        holidays_data = self.browse(cr, uid, ids[0])
+        list_holiday = []
+        ids_user_hdays = holidays_user_obj.search(cr, uid, [('employee_id', '=', holidays_data.employee_id.id),('holiday_status', '=', holidays_data.holiday_status.id)])
+        for hdays in holidays_user_obj.browse(cr, uid, ids_user_hdays):
+            for req in hdays.holiday_ids:
+                list_holiday.append(req.id)
+        list_holiday.append(ids[0])
+        holidays_user_obj.write(cr, uid, ids_user_hdays, {'holiday_ids': [(6, 0, list_holiday)]})
+        return True
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
         result = {}
@@ -290,16 +317,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
-        for record in self.browse(cr, uid, ids):
-            if record.state=='validate':
-                if record.case_id:
-                    self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
-                if record.linked_request_ids:
-                    list_ids = []
-                    for id in record.linked_request_ids:
-                        list_ids.append(id.id)
-                    self.holidays_cancel(cr,uid,list_ids)
-                    self.unlink(cr,uid,list_ids)
+        self._update_user_holidays(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'cancel'
             })

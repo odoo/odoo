@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -174,6 +174,7 @@ class idea_vote(osv.osv):
         'score': fields.selection( VoteValues, 'Score', required=True)
     }
     _defaults = {
+        #'user_id': lambda self, cr, uid, context: uid,
         'score': lambda *a: DefaultVoteValue,
     }
 idea_vote()

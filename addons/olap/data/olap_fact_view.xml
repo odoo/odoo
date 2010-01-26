@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    # --------------------------------------------------------------------
+    # Fact databases
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_fact_database_tree">
+        <field name="name">olap.fact.database.tree</field>
+        <field name="model">olap.fact.database</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Olap fact database">
+                <field name="name"/>
+                <field name="db_name"/>
+                <field name="type"/>
+                <field name="loaded"/>
+            </tree>
+        </field>
+    </record>
+<record model="ir.ui.view" id="view_olap_fact_database_form">
+        <field name="name">olap.fact.database.form</field>
+        <field name="model">olap.fact.database</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Fact database">
+                <notebook>
+                    <page string="Information">
+                        <separator string="General information" colspan="4"/>
+                        <field name="name" select="1" colspan="4"/>
+                        <field name="db_name" select="2"/>
+                        <field name="type" select="2"/>
+                        <separator string="Connection parameters" colspan="4"/>
+                        <field name="connection_type"/>
+                        <newline/>
+                        <field name="db_host"/>
+                        <field name="db_port"/>
+                        <field name="db_login"/>
+                        <field name="db_password" password="True"/>
+                        <field name="loaded"/>
+                        <separator string="Connection url" colspan="4"/>
+                        <field name="connection_url" nolabel="1" colspan="2"/>
+<!--
+                        <button name="test_connection" string="Test Connection" type="object" colspan="2"/>
+-->
+                        <button name="%(bi_test_connection)d" string="Test Connection" type="action" colspan="2"/>
+                    </page>
+                    <page string="Tables">
+                        <field name="table_ids" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_fact_database_form">
+                <field name="name">Fact Databases</field>
+                <field name="res_model">olap.fact.database</field>
+                <field name="view_type">form</field>
+            </record>
+    <menuitem
+        name="Databases"
+        action="action_view_olap_fact_database_form"
+        id="menu_view_olap_fact_database_form"
+        parent="menu_bi_conf_fact"/>
+
+
+    # --------------------------------------------------------------------
+    # Fact Database Tables
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_database_tables_tree">
+        <field name="name">olap.database.tables.tree</field>
+        <field name="model">olap.database.tables</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Olap database tables">
+                <field name="name"/>
+                <field name="table_db_name"/>
+                <field name="fact_database_id" select="2"/>
+                <field name="active"/>
+                <field name="hide"/>
+<!--                <button name="show_col_view" string="Columns" type="object"/>-->
+                <!--<button string="Columns_wiz" name="%(bi_load_column)d" type="action"/>-->
+                <button name="hide_col" string="Hide" type="object"/>
+                <button name="show_col" string="Show" type="object"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_olap_database_tables_form">
+        <field name="name">olap.database.tables.form</field>
+        <field name="model">olap.database.tables</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Database tables">
+                <field name="name" select="1" colspan="2"/>
+                <field name="table_db_name"/>
+                <field name="columns" colspan="4" mode="tree" nolabel="1">
+                    <tree string="Olap database columns">
+                        <field name="name"/>
+                        <field name="column_db_name"/>
+                        <field name="type"/>
+                        <field name="table_id"/>
+                        <field name="primary_key"/>
+                        <field name="related_to"/>
+                        <field name="active"/>
+                        <field name="hide"/>
+                        <button name="hide_col" string="Hide" type="object"/>
+                        <button name="show_col" string="Show" type="object"/>
+                    </tree>
+                </field>            
+                <field name="fact_database_id" select="1" colspan="2"/>
+                <field name="active"/>
+                <field name="hide"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_database_tables_form">
+        <field name="name">Database Tables</field>
+        <field name="res_model">olap.database.tables</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem
+        name="Tables"
+        action="action_view_olap_database_tables_form"
+        id="menu_view_olap_database_tables_form"
+        parent="menu_bi_conf_fact"/>
+
+    # --------------------------------------------------------------------
+    # Fact Database Columns
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_database_columns_tree">
+        <field name="name">olap.database.columns.tree</field>
+        <field name="model">olap.database.columns</field>
+        <field name="type">tree</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <tree string="Olap database columns">
+                <field name="name"/>
+                <field name="column_db_name"/>
+                <field name="type"/>
+                <field name="table_id"/>
+                <field name="primary_key"/>
+                <field name="related_to"/>
+                <field name="active"/>
+                <field name="hide"/>
+                <button name="hide_col" string="Hide" type="object"/>
+                <button name="show_col" string="Show" type="object"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_olap_database_columns_tree_m20">
+        <field name="name">olap.database.columns.tree.m20</field>
+        <field name="model">olap.database.columns</field>
+        <field name="type">tree</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <tree string="Olap database columns">
+                <field name="name"/>
+                <field name="column_db_name"/>
+                <field name="table_id"/>
+                <field name="related_to"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_olap_database_columns_form">
+        <field name="name">olap.database.columns.form</field>
+        <field name="model">olap.database.columns</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Database columns">
+                <field name="name" select="1" colspan="2"/>
+                <field name="column_db_name"/>
+                <field name="type"/>
+                <field name="table_id" select="1" colspan="2"/>
+                <field name="primary_key"/>
+                <field name="related_to"/>
+                <field name="active"/>
+                <field name="hide"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_database_columns_form">
+        <field name="name">Database Columns</field>
+        <field name="res_model">olap.database.columns</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_olap_database_columns_form">
+        <field name="name">Database Columns</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="res_model">olap.database.columns</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_olap_database_columns_tree"></field>
+    </record>
+
+    <menuitem
+        name="Columns"
+        action="action_view_olap_database_columns_form"
+        id="menu_view_olap_database_columns_form"
+        parent="menu_bi_conf_fact"/>
+
+
+
+    # --------------------------------------------------------------------
+    # Olap Application
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_application_tree">
+        <field name="name">olap.application.tree</field>
+        <field name="model">olap.application</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Olap Application">
+                <field name="name"/>
+                <field name="query"/>
+                <field name="table_ids"/>
+                <field name="field_ids"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_olap_application_form">
+        <field name="name">olap.application.form</field>
+        <field name="model">olap.application</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Olap Application">
+                <newline/>
+                <field name="name" select="1" colspan="2"/>
+                <field name="query" select="1" colspan="2"/>
+                <field name="table_ids" select="1" colspan="4" nolabel="1"/>
+                <field name="field_ids" select="1" colspan="4" nolabel="1" rowspan="1"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_application_form">
+        <field name="name">Olap Applicatiion</field>
+        <field name="res_model">olap.application</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem
+        name="Application"
+        action="action_view_olap_application_form"
+        id="menu_view_olap_application_form"
+        parent="menu_bi_conf_known_application"/>
+
+    # --------------------------------------------------------------------
+    # Olap Application table
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_application_table_tree">
+        <field name="name">olap.application.table.tree</field>
+        <field name="model">olap.application.table</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Olap Application Table">
+                <field name="name"/>
+                <field name="table_name"/>
+                <field name="is_hidden"/>
+                <field name="application_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_olap_application_table_form">
+        <field name="name">olap.application.table.form</field>
+        <field name="model">olap.application.table</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Olap Application Table">
+                <newline/>
+                <field name="name" select="1" colspan="2"/>
+                <field name="table_name" select="1" />
+                <field name="is_hidden" select="1" colspan="2" />
+                <field name="application_id" select="1" />
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_application_table_form">
+        <field name="name">Olap Applicatiion Table</field>
+        <field name="res_model">olap.application.table</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem
+        name="Application Table"
+        action="action_view_olap_application_table_form"
+        id="menu_view_olap_application_table_form"
+        parent="menu_bi_conf_known_application"/>
+
+
+
+    # --------------------------------------------------------------------
+    # Olap Application Field
+    # --------------------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_olap_application_field_tree">
+        <field name="name">olap.application.field.tree</field>
+        <field name="model">olap.application.field</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Olap Application Field">
+                <field name="name"/>
+                <field name="table_name"/>
+                <field name="field_name"/>
+                <field name="is_hidden" />
+                <field name="application_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_olap_application_field_form">
+        <field name="name">olap.application.field.form</field>
+        <field name="model">olap.application.field</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Olap Application Field">
+                <newline/>
+                <field name="name" select="1" colspan="2"/>
+                <field name="field_name" select="1" />              
+                <field name="table_name" select="1" />
+                <newline/>
+                <field name="is_hidden" select="1" colspan="2"/>
+                <field name="application_id" select="1" />
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_view_olap_application_field_form">
+        <field name="name">Olap Applicatiion Field</field>
+        <field name="res_model">olap.application.field</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem
+        name="Application Field"
+        action="action_view_olap_application_field_form"
+        id="menu_view_olap_application_field_form"
+        parent="menu_bi_conf_known_application"/>
+
+
+
+
+
+</data>
+</openerp>

@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -102,15 +102,16 @@ class phonecall2opportunity(wizard.interface):
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
-                'partner_id': data['form']['partner_id'],
-                'case_id':phonecall.inherit_case_id.id, 
+                'partner_id': data['form']['partner_id'],                 
+                'section_id':phonecall.section_id.id,
+                'description':phonecall.description,                
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
                 'partner_id': data['form']['partner_id'],                
                 }
-            if not phonecall.case_id:
-                vals.update({'case_id' : new_opportunity.inherit_case_id.id})
+            if not phonecall.opportunity_id:
+                vals.update({'opportunity_id' : new_opportunity.id})
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
@@ -189,43 +190,24 @@ class phonecall2opportunity(wizard.interface):
 phonecall2opportunity('crm.phonecall.opportunity_set')
 
 class phonecall2meeting(wizard.interface):
-    case_form = """<?xml version="1.0"?>
-    <form string="Plan Meeting">
-        <field name="date"/>
-        <field name="duration" widget="float_time"/>
-        <label string="Note that you can also use the calendar view to graphically schedule your next meeting." colspan="4"/>
-    </form>"""
-
-    case_fields = {
-        'date': {'string': 'Meeting date', 'type': 'datetime', 'required': 1},
-        'duration': {'string': 'Duration (Hours)', 'type': 'float', 'required': 1}
-    }
-
-    def _selectPartner(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.phonecall')
-        case = case_obj.browse(cr, uid, data['id'])
-        return {'date': case.date, 'duration': case.duration or 2.0}
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         phonecall_case_obj = pool.get('crm.phonecall')
         meeting_case_obj = pool.get('crm.meeting')        
-        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):         
-            #TODO : Take other info from phonecall
+        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': phonecall.name,
-                'date': data['form']['date'],
-                'duration': data['form']['duration'],
-                'case_id': phonecall.inherit_case_id.id,
+                'date': phonecall.date,
+                'section_id' : phonecall.section_id and phonecall.section_id.id or False,
+                'duration': phonecall.duration,
+                'description':phonecall.description,
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
-            if not phonecall.case_id:
-                vals.update({'case_id' : new_meeting.inherit_case_id.id})
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
-
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id])             
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -244,25 +226,22 @@ class phonecall2meeting(wizard.interface):
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }
 
     states = {
         'init': {
-            'actions': [_selectPartner],
-            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Set Meeting','gtk-go-forward')]}
+            'actions': [],
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
         },
         'order': {
             'actions': [],
-            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'end'}
+            'result': {'type': 'state', 'state': 'end'}
         }
     }
-
 phonecall2meeting('crm.phonecall.meeting_set')
-
 
 class partner_create(wizard.interface):
 

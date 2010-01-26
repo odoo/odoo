@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -36,8 +36,9 @@ class document_directory_content(osv.osv):
             return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         content = self.browse(cr, uid, node.cnt_id, context)
         fobj = self.pool.get(content.object_id.model)
+        if not context:
+            context = {}
         fobj.import_cal(cr, uid, base64.encodestring(data), context=context)
-
         return True
 
     def process_read(self, cr, uid, node, context=None):

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -148,7 +148,7 @@ class sale_order(osv.osv):
                 res[sale.id] = False
         return res
 
-    def _invoiced_search(self, cursor, user, obj, name, args):
+    def _invoiced_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         clause = ''
@@ -453,7 +453,23 @@ class sale_order(osv.osv):
                 self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
         self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
         return True
-
+    
+    def action_invoice_end(self, cr, uid, ids, context={}):
+        for order in self.browse(cr, uid, ids):
+            val = {'invoiced': True}
+            if order.state == 'invoice_except':
+                val['state'] = 'progress'
+                
+            for line in order.order_line:
+                towrite = []
+                if line.state == 'exception':
+                    towrite.append(line.id)
+                if towrite:
+                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'confirmed'}, context=context)
+            self.write(cr, uid, [order.id], val)
+            
+        return True
+    
     def action_cancel(self, cr, uid, ids, context={}):
         ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
@@ -517,25 +533,9 @@ class sale_order(osv.osv):
         notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
-        stock_move_obj = self.pool.get('stock.move')
         for order in self.browse(cr, uid, ids, context={}):
-
-            #check for pending deliveries
-            pending_deliveries = False
-            # check => if order_lines do not exist,don't proceed for any mode.
-            if not order.order_line:
-                return False
             for line in order.order_line:
-                move_ids = stock_move_obj.search(cr, uid, [('sale_line_id','=', line.id)])
-                for move in stock_move_obj.browse( cr, uid, move_ids ):
-                    #if one of the related order lines is in state draft, auto or confirmed
-                    #this order line is not yet delivered
-                    if move.state in ('draft', 'waiting', 'confirmed'):
-                        pending_deliveries = True
-                # Reason => if there are no move lines,the following condition will always set to be true,and will set SO to 'DONE'.
-                # Added move_ids check to SOLVE.
-                if move_ids and ((not line.procurement_id) or (line.procurement_id.state=='done')) and not pending_deliveries:
-#                    finished = True
+                if (not line.procurement_id) or (line.procurement_id.state=='done'):
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
@@ -1062,6 +1062,8 @@ sale_order_line()
 
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
+    _inherit = 'res.config'
+
     _columns = {
         'name': fields.char('Name', size=64),
         'picking_policy': fields.selection([
@@ -1087,7 +1089,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'step': lambda *a: 'one'
     }
 
-    def set_default(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
@@ -1104,23 +1106,5 @@ class sale_config_picking_policy(osv.osv_memory):
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
                 location_id = md.browse(cr, uid, location_id, context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-         }
-
 sale_config_picking_policy()
 

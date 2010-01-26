@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management', 
-    'version': '1.0', 
-    'category': 'Generic Modules/CRM & SRM', 
+    'name': 'Customer & Supplier Relationship Management',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
 leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
@@ -54,25 +54,24 @@ between mails and Open ERP.""",
                  'crm_claims_data.xml', 
                  'crm_fund_data.xml', 
                  'crm_helpdesk_data.xml', 
-                 'crm_jobs_data.xml', 
                  'crm_lead_data.xml', 
                  'crm_meeting_data.xml', 
                  'crm_opportunity_data.xml', 
                  'crm_phonecall_data.xml', 
     ], 
+
     'update_xml': [
         'crm_wizard.xml', 
         'crm_view.xml', 
-        'crm_config_view.xml', 
-        'crm_job_wizard.xml', 
-        'crm_jobs_view.xml', 
-        'crm_jobs_menu.xml', 
         'crm_lead_wizard.xml', 
         'crm_lead_view.xml', 
         'crm_lead_menu.xml', 
         'crm_meeting_wizard.xml', 
         'crm_meeting_view.xml', 
         'crm_meeting_menu.xml', 
+        'crm_phonecall_wizard.xml', 
+        'crm_phonecall_view.xml', 
+        'crm_phonecall_menu.xml',         
         'crm_opportunity_wizard.xml', 
         'crm_opportunity_view.xml', 
         'crm_opportunity_menu.xml', 
@@ -80,22 +79,21 @@ between mails and Open ERP.""",
         'crm_fund_menu.xml', 
         'crm_claims_view.xml', 
         'crm_claims_menu.xml', 
-        'crm_phonecall_wizard.xml', 
-        'crm_phonecall_view.xml', 
-        'crm_phonecall_menu.xml', 
-        'crm_report_view.xml', 
-        'crm_helpdesk_view.xml', 
-        'crm_report.xml', 
+
+#        'crm_report_view.xml', 
+        'crm_helpdesk_view.xml',
+        'crm_helpdesk_menu.xml', 
+        #'crm_report.xml', 
         'security/crm_security.xml', 
-        'security/ir.model.access.csv', 
+        #'security/ir.model.access.csv', 
+
         'process/crm_configuration_process.xml'
-    ], 
+    ],
     'demo_xml': [
         'crm_demo.xml', 
         'crm_claims_demo.xml', 
         'crm_fund_demo.xml', 
         'crm_helpdesk_demo.xml', 
-        'crm_jobs_demo.xml', 
         'crm_lead_demo.xml', 
         'crm_meeting_demo.xml', 
         'crm_opportunity_demo.xml', 

@@ -4,37 +4,31 @@
 <!--    <menuitem name="CRM &amp; SRM" icon="terp-crm" id="menu_crm1"/>    -->
 
     # ------------------------------------------------------
-    # Bug Tracking
+    # Bug Categories
     # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="crm_bug_assign_wizard_form">
-        <field name="name">crm.project.bug.assign_wizard.form</field>
-        <field name="model">crm.project.bug.assign_wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="To Assign">
-                <group col="2">            	
-                    <field name="section_id" select="1" widget="selection"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>                    
-                <separator colspan="4"/>                             
-                <group col="2" colspan="2">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="action_crm_bug_assign_wizard" model="ir.actions.act_window">
-        <field name="name">To Assign</field>
-        <field name="res_model">crm.project.bug.assign_wizard</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm_bug_assign_wizard_form"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-    </record>
 
+    <record id="crm_bug_categ_action" model="ir.actions.act_window">
+        <field name="name">Bug Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>        
+       	<field name="domain">[('object_id.model', '=', 'crm.project.bug')]</field>
+		<field name="context">{'object_id':'crm.project.bug'}</field>     
+    </record>
+    # ------------------------------------------------------ 
+	    # Stage
+	 # ------------------------------------------------------ 
+	    <record id="crm_bug_stage_act" model="ir.actions.act_window">
+	        <field name="name">Bug Stages</field>
+	        <field name="res_model">crm.case.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+       		<field name="domain">[('object_id.model', '=', 'crm.project.bug')]</field>
+			<field name="context">{'object_id':'crm.project.bug'}</field>     	        
+	    </record>
+	  <menuitem action="crm_bug_stage_act" id="menu_crm_bug_stage_act" parent="crm.menu_crm_case_stage"/>
+	  
     <record model="ir.ui.view" id="crm_case_form_view">
         <field name="name">CRM - Bug Tracker Form</field>
         <field name="model">crm.project.bug</field>
@@ -59,13 +53,9 @@
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                     <field name="email_from" colspan="2"/>
                     <separator colspan="4"/>
-                    <field name="category2_id" string="Version"/>
+                    <field name="type_id" string="Version"/>
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
                     <field name="priority" string="Severity"/>
-                    <group colspan="2">
-                        <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(action_crm_bug_assign_wizard)d"  type="action" />
-                    </group>
                     <newline/>
                     <separator string= "Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -106,19 +96,6 @@
                         </form>
                     </field>
                 </page>
-                <page string="Events">
-                   <field name="child_ids" colspan="4" nolabel="1">
-                       <tree string="Related Cases">
-                           <field name="id"/>
-                           <field name="date"/>
-                           <field name="name"/>
-                           <field name="partner_id"/>
-                           <field name="user_id"/>
-                           <field name="section_id" widget="selection"/>
-                           <field name="state"/>
-                       </tree>
-                    </field>
-                 </page>
                 <page string="Emails">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
@@ -162,7 +139,7 @@
                 <field name="priority" string="Severity"/>
                 <field name="categ_id"/>
                 <field name="stage_id" string="Resolution"/>
-                <field name="category2_id" string="Version"/>
+                <field name="type_id" string="Version"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>

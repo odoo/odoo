@@ -9,35 +9,40 @@
             <field name="model">caldav.invite.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Invite Attendees"> 
-                    <separator string="Atendee details" colspan="4"/>                   
-                    <field name="attendee_ids" mode="tree,form" nolabel="1" widget="one2many_list" colspan="4"> 
-                            <form string="Attendee details">
-                                <field name="user_id" on_change="onchange_user_id(user_id)" />
-                                <field name="availability" />
-                        		<field name="email" select="1"/>                                
-                        		<newline />
-                        		<field name="role" select="1" />
-                        		<field name="cutype" select="1" />
-                        		<newline />
-                        		<field name="rsvp" />
-                            </form>
-                            <tree string="Attendee details" editable="bottom">
-                                <field name="user_id" on_change="onchange_user_id(user_id)" />
-                                <field name="availability" />
-                        		<field name="email" select="1"/>                                                  		
-                        		<field name="role" select="1" />
-                        		<field name="cutype" select="1" />
-                                <field name="language" />                        		
-                        		<field name="rsvp" />
-                            </tree>
-                    </field>
-                    <separator string="" colspan="6" />
-                    <label string="" colspan="2"/>
-                    <button icon='gtk-cancel' special="cancel" string="Cancel"/>
-                    <button string="Invite"
-            				name="do_invite"
-            				icon="gtk-ok" type="object" />
+                <form string="Invite People">
+                	<field name="type" />
+                	<newline/>
+                	<group col="1" colspan="4"
+                		attrs="{'invisible': [('type', '!=', 'external')]}">
+                		<field name="email" colspan="4"
+                			attrs="{'required': [('type', '=', 'external')]}" />
+                	</group>
+                	<group col="1" colspan="4"
+                		attrs="{'invisible': [('type', '!=', 'internal')]}">
+                		<separator string="Users" colspan="4" />
+                		<field name="user_ids" select="1" colspan="4"
+                			nolabel="1" />
+                		<newline />
+                	</group>
+                	<group col="2" colspan="4"
+                		attrs="{'invisible': [('type', '!=', 'partner')]}">
+                		<field name="partner_id" colspan="2"
+                			on_change="onchange_partner_id(partner_id)"
+                			attrs="{'required': [('type', '=', 'partner')]}" />
+                		<newline />
+                		<separator string="Partner Contacts"
+                			colspan="4" />
+                		<field name="contact_ids" select="1" colspan="4"
+                			nolabel="1" domain="[('partner_id', '=', partner_id)]"
+                			attrs="{'readonly': [('type', '!=', 'partner')]}" />
+                	</group>
+                	<newline/>
+                	<separator string="" colspan="6" />
+                	<label string="" colspan="2" />
+                	<button icon='gtk-cancel' special="cancel"
+                		string="Cancel" />
+                	<button name="do_invite" string="Invite"
+                		type="object" icon="gtk-ok" />
                 </form>
             </field>
         </record>
@@ -114,11 +119,11 @@
             <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Atendee details">
-            		<field name="cn" select="1" />
-            		<field name="state" />
-            		<field name="cutype" select="1" />
+            	<tree string="Atendee details" editable="top">
+            		<field name="email" select="1" />
             		<field name="role" select="1" />
+            		<field name="cutype" select="1" />
+            		<field name="state" />
             	</tree>
             </field>
         </record>
@@ -148,61 +153,27 @@
 	 	<field name="act_window_id" ref="action_view_attendee_form" />
 	 </record>
 	 
-	 
-	 <record id="caldav_attendee_tree_model" model="ir.ui.view">
-            <field name="name">calendar.attendee.tree1</field>
-            <field name="model">calendar.attendee</field>
-            <field name="type">tree</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-            	<tree string="Atendee details">
-            		<field name="user_id" select="1" />
-            		<field name="email" />
-            		<field name="state" />
-            		<field name="cutype" select="1" />
-            		<field name="role" select="1" />
-            	</tree>
-            </field>
-        </record>
-        
-        <record id="caldav_attendee_form_model" model="ir.ui.view">
-            <field name="name">calendar.attendee.form1</field>
-            <field name="model">calendar.attendee</field>
-            <field name="type">form</field>
-            <field name="priority">10</field>
-            <field name="arch" type="xml">
-            	<form string="Atendee details">
-            		<field name="user_id" select="1"/>
-            		<field name="state" />
-            		<field name="cutype" select="1" />
-            		<field name="role" select="1" />
-            		<newline/>
-            		<field name="rsvp" select="1" />
-            	</form>
-            </field>
-        </record>
-   
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Reminder details">
-                    <field name="name" select="1"/>	                      
-                    <field name="active"/>                 
-           			<group string="Reminder details" col="4" colspan="4">
-						<field name="trigger_duration" nolabel="1" select="1"/>
-						<field name="trigger_interval" nolabel="1" select="1"/>
-						<field name="trigger_occurs" nolabel="1" select="1"/>
-						<field name="trigger_related" nolabel="1" select="1"/>
-					</group>					
-                    <field name="duration"/> 
-                    <field name="repeat"/>                     
-				</form>
+                    <field name="name" />
+                    <field name="active" />
+                    <separator string="Reminder Details" colspan="4" />
+                    <field name="trigger_duration" select="1" />
+                    <field name="trigger_interval" select="1" />
+                    <field name="trigger_occurs" select="1" />
+                    <field name="trigger_related" select="1" />
+                    <separator string="" colspan="4" />
+                    <field name="duration" />
+                    <field name="repeat" />
+            	</form>
             </field>
         </record>
 
-         <record id="res_tree_view" model="ir.ui.view">
+         <record id="res_alarm_tree_view" model="ir.ui.view">
                 <field name="name">res.alarm.tree</field>
                 <field name="model">res.alarm</field>
                 <field name="type">tree</field>
@@ -215,15 +186,23 @@
 			            <field name="trigger_occurs" select="1"/>			            
 		            </tree>
                 </field>
-            </record>        
+            </record>
 
-		<record id="view_caldav_set_rrule_wizard" model="ir.ui.view">
-            <field name="name">Add RRule</field>
-            <field name="model">caldav.set.rrule</field>
+         <record id="action_res_alarm_view" model="ir.actions.act_window">
+         	<field name="name">Available Alarms</field>
+         	<field name="type">ir.actions.act_window</field>
+         	<field name="res_model">res.alarm</field>
+         	<field name="view_type">form</field>
+         	<field name="view_mode">tree,form</field>
+         </record>
+
+         <record id="view_custom_rule_form" model="ir.ui.view">
+            <field name="name">Custom Rule</field>
+            <field name="model">calendar.custom.rrule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add RRule">
-                    <separator string="Select data for Rule" colspan="4"/>
+            	<form string="Custom Rule">
+            		<separator string="Select data for Custom Rule" colspan="4"/>
                     <field name="freq" />
                     <field name="interval" />
                     <newline />
@@ -249,18 +228,15 @@
                     	<group col="2" colspan="4">
                     		<field name="select1"/>
                     	</group>
-                    	<group col="3" colspan="4" attrs="{'readonly' : [('select1','=','day')]}">
+                    	<group col="3" colspan="4" attrs="{'invisible' : [('select1','=','day')]}">
                     		<field name="day" attrs="{'required' : [('select1','=','date')]}"/>
                    		</group>
                    		<newline />
-                    	<group col="5" colspan="4" attrs="{'readonly' : [('select1','=','date')]}">
-                    		<label string="The" />
-                    		<field name="byday" nolabel="1"
+                    	<group col="3" colspan="4" attrs="{'invisible' : [('select1','=','date')]}">
+                    		<field name="byday"  string="The"
                     					attrs="{'required' : [('select1','=','day')]}"/>
                     		<field name="week_list" nolabel="1"
                     					attrs="{'required' : [('select1','=','day')]}"/>
-                    		<label string="of the Month" />
-                    		<newline />
                     	</group>
                     	<group col="2" colspan="4" attrs="{'invisible' : [('freq','!=','yearly')]}">
                     		<field name="month_list" string="of" colspan="1"
@@ -274,11 +250,11 @@
                 </form>
             </field>
         </record>
-
-        <record id="action_view_caldav_set_rrule_wizard" model="ir.actions.act_window">
-            <field name="name">Add RRule</field>
+	
+	<record id="action_calendar_custom_rrule_wizard" model="ir.actions.act_window">
+            <field name="name">Custom Rule</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">caldav.set.rrule</field>
+            <field name="res_model">calendar.custom.rrule</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>

@@ -2,8 +2,25 @@
 <openerp>
     <data>
         <menuitem icon="terp-project" id="menu_main" name="Project Management"/>
-        <menuitem id="menu_tasks" name="Tasks" parent="menu_main"/>
-        <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="1"/>
+         <menuitem id="menu_project_management" name="Project Management" parent="menu_main" sequence="1"/>
+        <!-- <menuitem id="menu_tasks" name="Tasks" parent="menu_main"/>-->
+
+        <menuitem id="menu_pm_invoicing" name="Invoicing" parent="menu_main" sequence="7"/>
+        <menuitem id="menu_pm_budget" name="Budgets" parent="menu_pm_invoicing"/>
+        <menuitem action="account_budget.open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
+        <menuitem parent="menu_pm_budget"
+             id="menu_act_pm_crossovered_budget_view"
+             action="account_budget.act_crossovered_budget_view" />
+         <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="60"/>
+         <!--Time Tracking menu-->
+ 		<menuitem
+             id="menu_project_management_time_tracking"
+             name="Time Tracking"
+             parent="menu_main" sequence="3"/>
+         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="menu_project_management_time_tracking"
+             groups="hr.group_hr_manager"/>
+        <menuitem action="report_timesheet.action_random_timesheet_lines_board" id="menu_project_management_timesheet_lines_board" parent="menu_project_management_time_tracking"/>
+        <menuitem action="hr_attendance.si_so" id="menu_project_management_si_so" parent="menu_project_management_time_tracking" type="wizard"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -41,9 +58,9 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button name="duplicate_template"
+                                <button 
                                     string="New Project Based on Template"
-                                    type="object"
+                                    name="%(wizard_duplicate_template)d"  type="action" 
                                     states="template" icon="gtk-new"/>
                             </group>
                         </page>
@@ -66,22 +83,9 @@
                                 <label string="Date Stop: %%(date_stop)s"/>
                             </group>
                         </page>
-                        <page string="Tasks">
-                           <field name="tasks" nolabel="1" attrs="{'readonly':[('state','in',['cancelled','done'])]}">
-                           <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                           <!--    <tree string="Tasks">-->
-                                   <field name="sequence"/>
-                                   <field name="name"/>
-                                   <field name="user_id" string="Project Manager"/>
-                                   <field name="date_deadline"/>
-                                   <field name="planned_hours" sum="Planned" widget="float_time"/>
-                                   <field name="delay_hours" sum="Delay" widget="float_time"/>
-                                   <field name="progress" widget="progressbar"/>
-                                   <field name="priority"/>
-                                   <field name="state"/>
-                                   <field name="remaining_hours" invisible="1"/>
-                                   </tree>
-                           </field>
+                        <page string="Tasks" groups="base.group_extended">
+                           <separator string="Task Types"/>
+                           <field nolabel="1" name="type_ids" colspan="4"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="description" nolabel="1"/>
@@ -144,17 +148,17 @@
                 </tree>
             </field>
         </record>
-        <menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/>
+        <!--<menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
-            <field name="name">All projects</field>
+            <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
-        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_all_project"/>
+        <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
         <record id="open_view_template_project" model="ir.actions.act_window">
             <field name="name">Templates of Projects</field>
@@ -163,8 +167,9 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>
-
+        <!--<menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>-->
+		<menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
+        <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_template_project_specification" name="Specification Template"/>
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
             <field name="model">project.task.work</field>
@@ -218,10 +223,10 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_id" ref="view_my_project"/>
         </record>
-        <menuitem
+        <!--<menuitem
             action="open_view_my_project_open"
             id="menu_open_view_my_project_open"
-            parent="project.menu_all_project"/>
+            parent="project.menu_all_project"/>-->
 
     <!-- Wizard for compute remaining hours -->
 
@@ -289,10 +294,10 @@
                             <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
-                                    <field name="date" />
-                                    <field name="user_id" />
-                                    <field name="hours" widget="float_time" />
                                     <field name="name" />
+                                    <field name="hours" widget="float_time" />
+                                    <field name="user_id" />
+                                    <field name="date" />
                                 </tree>
                             </field>
                             <newline/>
@@ -305,7 +310,6 @@
                                 <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
@@ -325,7 +329,7 @@
                             </field>
                             <field colspan="4" name="history" nolabel="1"/>
                         </page>
-                        
+
                         <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
@@ -334,14 +338,17 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Dates" colspan="2"/>
-                                <field name="date_start" select="2"/>
                                 <field name="date_close" select="2"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
-                            <field name="type" widget="selection"/>
-                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                            <field name="active" select="2"/>
                             <field name="partner_id" select="2"/>
+                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                            <group col="4" colspan="2">
+                                <field name="type" widget="selection" />
+	    						<button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Type"/>
+                                <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Type"/>
+	                        </group>
+                            <field name="active" select="2"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
@@ -356,12 +363,14 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                    <field name="sequence" string="Seq."/>
+                    <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="remaining_hours" widget="float_time"/>
+                    <field name="type"/>
+                    <button name="next_type" states="draft,open,pending" string="Change Type" type="object" icon="gtk-go-forward" help="Change Type"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="state"/>
                     <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state"/>
@@ -461,89 +470,41 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <search string="Task Edition">
-                    <group col="8" colspan="4">
+                    <group col="20" colspan="4">
                         <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
-                        <filter string="Open" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1" widget="selection">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
-                    </group>
-                    <group col="4" colspan="1">
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
-                            <filter domain="[('user_id', 'child_of', [uid])]" help="My Department tasks" icon="gtk-execute" separator="1"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
+                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record id="action_view_task" model="ir.actions.act_window">
-            <field name="name">All Tasks</field>
+            <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="view_id"/>
             <field eval="True" name="filter"/>
-        </record>
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/>
-
-        <record id="action_view_task_department" model="ir.actions.act_window">
-            <field name="name">My Department Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid])]</field>
-            <field eval="True" name="filter"/>
+            <field name="view_id" ref="view_task_tree2"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-
-        <record id="action_view_task5_departments_pending" model="ir.actions.act_window">
-            <field name="name">My Department's Pending Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','pending')]</field>
-            <field name="view_id" ref="my_pending_task"/>
-           <field name="filter" eval="True"/>
-           <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Current Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field eval="True" name="filter"/>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','in',('open','draft'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_prog" model="ir.actions.act_window">
-            <field name="name">My Department's Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','open')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task5_departments_prog_draft" model="ir.actions.act_window">
-            <field name="name">My Department's Draft Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','draft')]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
+        <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
+		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks" sequence="2"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -551,26 +512,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
-
-        <record id="action_view_task6_prog" model="ir.actions.act_window">
-            <field name="name">Tasks in Progress</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="domain">[('state','=','open')]</field>
-        </record>
-menu_main
-        <record id="action_view_task7" model="ir.actions.act_window">
-            <field name="name">Unassigned Tasks</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
-            <field name="domain">[('user_id', '=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -599,7 +540,8 @@ menu_main
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Task type">
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="sequence"/>
                     <field colspan="4" name="description" select="1"/>
                 </form>
             </field>
@@ -610,6 +552,7 @@ menu_main
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Task type">
+                	<field name="sequence"/>
                     <field name="name"/>
                 </tree>
             </field>
@@ -636,7 +579,7 @@ menu_main
         <act_window
             domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
-            name="All Tasks"
+            name="Tasks"
             res_model="project.task"
             src_model="project.project"
             view_mode="tree,form,calendar,graph"
@@ -734,8 +677,8 @@ menu_main
             <field name="view_id" ref="view_project_message_tree"/>
        </record>
 
-		<menuitem id="menu_message_main" name="Message" parent="menu_main"/>
-        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_message_main"/>
+		<!--<menuitem id="menu_message_main" name="Message" parent="menu_main"/>-->
+        <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
 

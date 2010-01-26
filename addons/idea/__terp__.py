@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,10 +30,11 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
+        'idea_wizard.xml',
         'idea_view.xml',
         'idea_workflow.xml',
         'security/idea_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',        
     ],
     'demo_xml': [],
     'installable': True,

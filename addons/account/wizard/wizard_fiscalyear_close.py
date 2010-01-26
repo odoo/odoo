@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -79,10 +79,12 @@ def _data_save(self, cr, uid, data, context):
     if move_ids:
         raise wizard.except_wizard(_('UserError'),
                 _('The opening journal must not have any entry in the new fiscal year !'))
-
-
+    query = "SELECT id FROM account_fiscalyear WHERE date_stop < '" + str(new_fyear.date_start) + "'"
+    cr.execute(query)
+    result = cr.dictfetchall()
+    fy_ids = ','.join([str(x['id']) for x in result])
     query_line = pool.get('account.move.line')._query_get(cr, uid,
-            obj='account_move_line', context={'fiscalyear': fy_id})
+            obj='account_move_line', context={'fiscalyear': fy_ids})
     cr.execute('select id from account_account WHERE active')
     ids = map(lambda x: x[0], cr.fetchall())
     for account in pool.get('account.account').browse(cr, uid, ids,

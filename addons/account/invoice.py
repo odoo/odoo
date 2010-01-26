@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,17 +29,17 @@ from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
-class fiscalyear_seq(osv.osv):
-    _name = "fiscalyear.seq"
-    _description = "Maintains Invoice sequences with Fiscal Year"
-    _rec_name = 'fiscalyear_id'
-    _columns = {
-        'journal_id': fields.many2one('account.journal', 'Journal'),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
-        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
-    }
-
-fiscalyear_seq()
+#class fiscalyear_seq(osv.osv):
+#    _name = "fiscalyear.seq"
+#    _description = "Maintains Invoice sequences with Fiscal Year"
+#    _rec_name = 'fiscalyear_id'
+#    _columns = {
+#        'journal_id': fields.many2one('account.journal', 'Journal'),
+#        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
+#        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
+#    }
+#
+#fiscalyear_seq()
 
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):
@@ -153,7 +153,9 @@ class account_invoice(osv.osv):
             if not move_lines:
                 res[id] = []
                 continue
+            res[id] = []
             data_lines = self.pool.get('account.move.line').browse(cr,uid,move_lines)
+            partial_ids = []# Keeps the track of ids where partial payments are done with payment terms
             for line in data_lines:
                 ids_line = []
                 if line.reconcile_id:
@@ -161,7 +163,8 @@ class account_invoice(osv.osv):
                 elif line.reconcile_partial_id:
                     ids_line = line.reconcile_partial_id.line_partial_ids
                 l = map(lambda x: x.id, ids_line)
-                res[id]=[x for x in l if x <> line.id]
+                partial_ids.append(line.id)
+                res[id] =[x for x in l if x <> line.id and x not in partial_ids]
         return res
 
     def _get_invoice_line(self, cr, uid, ids, context=None):
@@ -183,11 +186,14 @@ class account_invoice(osv.osv):
             src = []
             lines = []
             for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
+                temp_lines = []#Added temp list to avoid duplicate records
                 if m.reconcile_id:
-                    lines += map(lambda x: x.id, m.reconcile_id.line_id)
+                    temp_lines = map(lambda x: x.id, m.reconcile_id.line_id)
                 elif m.reconcile_partial_id:
-                    lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                    temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                lines += [x for x in temp_lines if x not in lines]
                 src.append(m.id)
+                
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
@@ -415,7 +421,7 @@ class account_invoice(osv.osv):
     def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
         if curr_id:
             currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
-            if currency.company_id != company_id:
+            if currency.company_id.id != company_id:
                 raise osv.except_osv(_('Configration Error !'),
                         _('Can not select currency that is not related to current company.\nPlease select accordingly !.'))
         return {}
@@ -991,14 +997,17 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
-
+        if invoice.type in ('in_invoice', 'in_refund'):
+            ref = invoice.reference
+        else:
+            ref = self._convert_ref(cr, uid, invoice.number)        
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
             'partner_id': invoice.partner_id.id,
-            'ref':invoice.number,
+            'ref':ref,
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and direction * amount_currency or 0.0,
@@ -1009,7 +1018,7 @@ class account_invoice(osv.osv):
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
             'partner_id': invoice.partner_id.id,
-            'ref':invoice.number,
+            'ref':ref,
             'date': date,
             'currency_id':currency_id,
             'amount_currency':amount_currency and - direction * amount_currency or 0.0,
@@ -1022,7 +1031,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': invoice.number, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []

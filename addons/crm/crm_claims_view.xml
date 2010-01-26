@@ -4,35 +4,29 @@
     # ------------------------------------------------------
     # Claims
     # ------------------------------------------------------
-
-    <record model="ir.ui.view" id="crm_claim_assign_wizard_form">
-        <field name="name">crm.claim.assign_wizard.form</field>
-        <field name="model">crm.claim.assign_wizard</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="To Assign">
-                <group col="2">            	
-                    <field name="section_id" select="1" widget="selection"/>
-                    <field name="user_id"/>
-                </group>
-                <newline/>                    
-                <separator colspan="4"/>                             
-                <group col="2" colspan="2">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-execute" name="action_create" string="Assign" type="object"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="action_crm_claim_assign_wizard" model="ir.actions.act_window">
-        <field name="name">To Assign</field>
-        <field name="res_model">crm.claim.assign_wizard</field>
+    <record id="crm_claim_categ_action" model="ir.actions.act_window">
+        <field name="name">Claim Categories</field>
+        <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm_claim_assign_wizard_form"/>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>        
+       	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+		<field name="context">{'object_id':'crm.claim'}</field>       	
     </record>
-
+    <menuitem action="crm_claim_categ_action" id="menu_crm_case_claim-act" parent="crm.menu_crm_case_categ"/>
+    # ------------------------------------------------------
+    # Stages
+    # ------------------------------------------------------	    
+	    <record id="crm_claim_stage_act" model="ir.actions.act_window">
+	        <field name="name">Claim Stages</field>
+	        <field name="res_model">crm.case.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+	       <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+	      <field name="context">{'object_id':'crm.claim'}</field>  
+	    </record>
+	  <menuitem action="crm_claim_stage_act" id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage"/>
+	    
+	<!-- Claims	-->
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
         <field name="model">crm.claim</field>
@@ -44,7 +38,7 @@
                 <field name="partner_id"/>
                 <field name="date" string="Date"/>
                 <field name="categ_id" string="Type" select="1"/>
-                <field name="user_id" string="Responsible" select="2"/>
+                <field name="probability"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -69,10 +63,6 @@
                         <field name="stage_id" select="1" nolabel="1"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <group colspan="2">
-                        <field name="case_id" select="1"/>
-                        <button string="Assign" name="%(action_crm_claim_assign_wizard)d"  type="action" />
-                    </group>
                 </group>
                 <notebook>
                 <page string="Claims Info">
@@ -82,9 +72,10 @@
                     <field name="partner_mobile"/>
                     <newline/>
                     <field name="planned_cost" string="Claim Cost"/>
+                    <field name="probability"/>
                     <newline/>
                     <field name="priority"/>
-                    <field name="category2_id" string="Type of Action" select="1"/>
+                    <field name="type_id" string="Type of Action" select="1"/>
                     <field name="ref"/>
                     <field name="ref2"/>
                     <separator colspan="4" string="Claim/Action Description"/>
@@ -118,19 +109,6 @@
                             <field name="som"/>
                             <field name="canal_id"/>
                         </form>
-                    </field>
-                </page>
-                <page string="Events">
-                   <field name="child_ids" colspan="4" nolabel="1">
-                       <tree string="Related Cases">
-                           <field name="id"/>
-                           <field name="date"/>
-                           <field name="name"/>
-                           <field name="partner_id"/>
-                           <field name="user_id"/>
-                           <field name="section_id" widget="selection"/>
-                           <field name="state"/>
-                        </tree>
                     </field>
                 </page>
                 <page string="Emails" groups="base.group_extended">
@@ -179,6 +157,19 @@
         </field>
     </record>
 
+	<record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
+	    <field name="name">CRM -Graph</field>
+	    <field name="model">crm.claim</field>
+	    <field name="type">graph</field>
+	    <field name="arch" type="xml">
+	        <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
+	            <field name="stage_id"/>
+	            <field name="planned_cost" operator="+"/>
+	            <field name="planned_revenue" operator="+"/>
+	        </graph>
+	    </field>
+    </record>
+        
    <record id="view_crm_case_claims_filter" model="ir.ui.view">
             <field name="name">CRM - Claims Search</field>
             <field name="model">crm.claim</field>
@@ -187,17 +178,17 @@
                 <search string="Search Claims">
                    <group col="4" colspan="1">
                        <filter icon="gtk-new" string="New Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','draft')]"
+                       	domain="[('state','=','draft')]"
                        	separator="1" help="New Claims"
                        />
                        <filter icon="gtk-execute"
                        	string="In Progress Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','open')]"
+                       	domain="[('state','=','open')]"
                        	separator="1" help="In Progress Claims"
                        />
                        <filter icon="gtk-media-pause"
                        	string="Pending Claims"
-                       	domain="[('section_id.name','=','Claims'),('state','=','pending')]"
+                       	domain="[('state','=','pending')]"
                        	separator="1" help="All pending Claims"
                        />
                    </group>
@@ -207,6 +198,12 @@
                        <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
+					<field name="section_id" select="1" widget="selection" string="Section">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />		
+                 </field>          
                </search>
             </field>
         </record>

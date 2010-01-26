@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -58,6 +58,8 @@ def _get_moves(self, cr, uid, data, context):
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
 
     for m in pick.move_lines:
+        if m.state in ('done', 'cancel'):
+            continue
         quantity = m.product_qty
         if m.state<>'assigned':
             quantity = 0
