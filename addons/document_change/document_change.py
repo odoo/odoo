@@ -33,20 +33,20 @@ document_change_process_phase_type()
 
 class document_change_type(osv.osv):
     _name = "document.change.type"
-    _description = "Document Change Type"
+    _description = "Document Type"
     _columns = {
-        'name': fields.char("Document Change Type", size=64,required=True),
+        'name': fields.char("Document Type", size=64,required=True),
         'phase_type_ids': fields.many2many('document.change.process.phase.type','document_type_phase_type_rel','document_type_id','phase_type_id','Phase Type'),
         'directory_id' :fields.many2one('document.directory','Pending Directory'),
-        'template_document_id':fields.many2one('ir.attachment','Document')
+        'template_document_id':fields.many2one('ir.attachment','Template Document')
     }
 document_change_type()
 
 class document_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
-    _description = "Document Change Process Phase Type"
+    _description = "Process Phase Type"
     _columns = {
-        'name': fields.char("Document Changed Process Type", size=64),
+        'name': fields.char("Process Type", required=True, size=64),
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
         'document_type_ids': fields.many2many('document.change.type','document_type_phase_type_rel','phase_type_id','document_type_id','Document Type'),
@@ -62,7 +62,7 @@ document_change_process()
 
 class document_change_process_phase(osv.osv):
     _name = "document.change.process.phase"
-    _description = "Document Change Process Phase"
+    _description = "Process Phase"
     _columns = {
         'name': fields.char("Name", size=64, required=True),
         'process_id':fields.many2one('document.change.process','Process Change'),
@@ -104,10 +104,10 @@ document_change_process_phase()
 
 class document_change_process_model(osv.osv):
     _name = "document.change.process.model"
-    _description = "Document Change Process model"
+    _description = "Process model"
 
     _columns = {
-        'name': fields.char("Changed Process Model", size=64,required=True),
+        'name': fields.char("Model of Process", size=64,required=True),
         'sequence': fields.integer('Sequence'),
         'phase_type_ids':fields.many2many('document.change.process.phase.type','process_model_phase_type_rel','process_model_id','phase_type_id','Phase Type'),
         }
@@ -115,7 +115,7 @@ document_change_process_model()
 
 class document_change_process_type(osv.osv):
     _name = "document.change.process.type"
-    _description = "Document Change Process Type"
+    _description = "Process Type"
 
     _columns = {
         'name': fields.char("Changed Process Type", size=64),
@@ -124,7 +124,7 @@ document_change_process_type()
 
 class document_change_process_email(osv.osv):
     _name = "document.change.process.mail"
-    _description = "Document Change Process Email Notification"
+    _description = "Process Email Notification"
 
     _columns = {
         'name': fields.char("Email", size=64),
@@ -136,7 +136,7 @@ document_change_process_email()
 class document_change_process(osv.osv):
 
     _name = "document.change.process"
-    _description = "Document Change Process"
+    _description = "Process"
 
     def _latestmodification(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
@@ -185,7 +185,7 @@ class document_change_process(osv.osv):
         'change_description':fields.text('Changed Description'),
         'structure_id' :fields.many2one('document.directory','Structure Directory'),
         'process_model_id':fields.many2one('document.change.process.model','Process Model'),
-        'user_id':fields.many2one('res.users','Change Owner'),
+        'user_id':fields.many2one('res.users','Owner',required=True),
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='datetime', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'),
@@ -256,7 +256,7 @@ class document_file(osv.osv):
 
     _columns = {
         'change_type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Request'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
+        'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Requested'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
         'target_document_id': fields.many2one('ir.attachment', 'Target Document'),
         'target':fields.binary('Target'),
         'process_phase_id' :fields.many2one('document.change.process.phase','Process Phase'),

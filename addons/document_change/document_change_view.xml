@@ -2,13 +2,25 @@
 <openerp>
 <data>
 
-    <menuitem name="Process Changes" icon="terp-stock" id="menu_process_changes"/>
-
-    <menuitem name="Process Changes" id="menu_document_process_changes" parent="menu_process_changes" sequence="1"/>
+    <menuitem 
+        name="Process Changes" 
+        icon="terp-stock" 
+        id="menu_process_changes"/>
+    <menuitem
+        name="Process Changes" 
+        id="menu_document_process_changes" 
+        parent="menu_process_changes" 
+        sequence="1"/>
+    <menuitem
+        id="menu_documents" 
+        name="Documents"
+        sequence="3"
+        parent="menu_process_changes"/>
     <menuitem name="Change Control" id="menu_change_control" parent="menu_process_changes" sequence="5"/>
     <menuitem name="Reporting" id="menu_reporting" parent="menu_process_changes" sequence="10"/>
     <menuitem name="Configuration" id="menu_configuration" parent="menu_process_changes" sequence="15"/>
 
+    <!--
     <record model="ir.ui.view" id="view_document_structure_form">
         <field name="name">document.directory</field>
         <field name="model">document.directory</field>
@@ -32,14 +44,15 @@
             </tree>
         </field>
     </record>
+    -->
 
     <record model="ir.actions.act_window" id="action_document_structure_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.directory</field>
-        <field name="name">Structure</field>
+        <field name="name">Directory Structure</field>
         <field name="view_type">tree</field>
         <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_document_structure_tree"/>
+        <field name="view_id" eval="False"/>
     </record>
     <menuitem name="Structure" id="menu_document_structure_config" parent="menu_configuration"/>
 
@@ -61,6 +74,7 @@
         <field name="arch" type="xml">
             <form string="Document Types">
                 <field name="name" select="1"/>
+                <newline/>
                 <field name="directory_id"/>
                 <field name ="template_document_id"/>
                 <separator string="Associated Phase Types" colspan="4"/>
@@ -76,7 +90,6 @@
         <field name="arch" type="xml">
             <tree string="Document Types">
                 <field name="name"/>
-                <field name="directory_id"/>
                 <field name ="template_document_id"/>
             </tree>
         </field>
@@ -89,8 +102,15 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem name="Documents" id="menu_document_type_config" parent="menu_configuration"/>
-    <menuitem action="action_document_type_form" id="menu_document_type_form" parent="menu_document_type_config"/>
+    <menuitem
+        name="Documents" 
+        id="menu_document_type_config" 
+        parent="menu_configuration"/>
+
+    <menuitem
+        action="action_document_type_form" 
+        id="menu_document_type_form" 
+        parent="menu_document_type_config"/>
 
     <record model="ir.ui.view" id="view_process_phase_type_form">
         <field name="name">document.change.process.phase.type.form</field>
@@ -166,7 +186,7 @@
     <record model="ir.actions.act_window" id="action_change_process_type_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.process.type</field>
-        <field name="name">Type Process</field>
+        <field name="name">Process Type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -205,7 +225,7 @@
     <record model="ir.actions.act_window" id="action_model_change_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.process.model</field>
-        <field name="name">Model of Changes</field>
+        <field name="name">Model of Process</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -217,58 +237,60 @@
     <record model="ir.ui.view" id="view_document_form">
         <field name="name">ir.attachment.form</field>
         <field name="model">ir.attachment</field>
-        <field name="priority" eval="1"/>
+        <field name="priority" eval="-1"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Documents">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" string="Document Name" colspan="4"/>
-                    <field name="parent_id"/>
+                <field name="name" select="1"/>
+                <field name="parent_id" select="1"/>
+                <field name="datas" filename="datas_fname" string="Content"/>
+                <field name="change_type_id" widget="selection"/>
+                <field name="datas_fname"/>
+
+                <notebook colspan="4">
+                <page string="Information">
+                    <group colspan="2" col="2">
+                        <separator string="Creation" colspan="2"/>
+                        <field name="create_uid" readonly="1"/>
+                        <field name="create_date" readonly="1"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Latest Modification" colspan="2"/>
+                        <field name="write_uid" readonly="1"/>
+                        <field name="write_date" readonly="1"/>
+                    </group>
+                </page><page string="Change Request">
+                    <separator string="Change Control" colspan="4"/>
+                    <group col="7" colspan="4">
+                        <field name="state" readonly="1"/>
+                        <button name="button_propose" states="change_request" string="Propose Change" icon="gtk-apply"/>
+                        <button name="button_confirm" states="change_propose" string="To Validate" icon="gtk-apply"/>
+                        <button name="button_validate" states="to_update" string="In Production" icon="gtk-apply"/>
+                        <button name="button_request" states="cancel,in_production" string="Request Change" icon="gtk-media-play"/>
+                        <button name="button_cancel" states="change_request,change_propose" string="Cancel"  icon="gtk-cancel"/>
+                    </group>
                     <newline/>
-                    <field name="datas_fname"/>
-                    <field name="datas" filename="datas_fname" string="Content"/>
-                    <field name="change_type_id"/>
-                </group>
-                <separator string="Change Control" colspan="4"/>
-                <group col="7" colspan="4">
-                    <field name="state" readonly="1"/>
-                    <button name="button_propose" states="change_request" string="Propose Change" icon="gtk-apply"/>
-                    <button name="button_confirm" states="change_propose" string="To Validate" icon="gtk-apply"/>
-                    <button name="button_validate" states="to_update" string="In Production" icon="gtk-apply"/>
-                    <button name="button_request" states="cancel,in_production" string="Request Change" icon="gtk-media-play"/>
-                    <button name="button_cancel" states="change_request,change_propose" string="Cancel"  icon="gtk-cancel"/>
-                </group>
-                <newline/>
-                <field name="target_document_id"/>
-                <field name="target"/>
-                <newline/>
-                <separator string="Change Note" colspan="4"/>
-                <field colspan="4" name="description" nolabel="1"/>
-                <group colspan="2" col="2">
-                    <separator string="Creation" colspan="2"/>
-                    <field name="create_uid" readonly="1"/>
-                    <field name="create_date" readonly="1"/>
-                </group>
-                <group colspan="2" col="2">
-                    <separator string="Latest Modification" colspan="2"/>
-                    <field name="write_date" readonly="1"/>
-                    <field name="write_uid" readonly="1"/>
-                </group>
-
-                <field name="email_notification_ids" colspan="4" mode="tree, form" readonly="1" widget="one2many_list" nolabel="1">
-                    <tree string="Notifications">
-                        <field name="email"/>
-                        <field name="create_date"/>
-                    </tree>
-                    <form string="Notifications">
-                        <field name="email"/>
-                        <field name="create_date"/>
-                        <field name="name" string="Subject" colspan="4"/>
-                        <separator string="Description" colspan="4"/>
-                        <field colspan="4" name="description" nolabel="1"/>
-                    </form>
-                </field>
-
+                    <field name="target_document_id"/>
+                    <field name="target"/>
+                    <newline/>
+                    <separator string="Change Note" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
+                </page><page string="Email Notifications">
+                    <field name="email_notification_ids" colspan="4" mode="tree, form" readonly="1" widget="one2many_list" nolabel="1">
+                        <tree string="Notifications">
+                            <field name="email"/>
+                            <field name="create_date"/>
+                        </tree>
+                        <form string="Notifications">
+                            <field name="email"/>
+                            <field name="create_date"/>
+                            <field name="name" string="Subject" colspan="4"/>
+                            <separator string="Description" colspan="4"/>
+                            <field colspan="4" name="description" nolabel="1"/>
+                        </form>
+                    </field>
+                </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -276,7 +298,7 @@
         <field name="name">ir.attachment.tree</field>
         <field name="model">ir.attachment</field>
         <field name="type">tree</field>
-        <field name="priority" eval="1"/>
+        <field name="priority" eval="-1"/>
         <field name="arch" type="xml">
             <tree string="Documents">
                 <field name="name" string="Document"/>
@@ -306,31 +328,33 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <search string="Documents">
-                <group col="7" colspan="4">
-                    <filter domain="[('state','=','change_request')]" string="To Change" icon="gtk-apply"/>
-                    <filter domain="[('state','=','to_update')]" string="To Validate" icon="gtk-execute"/>
-                    <field name="change_type_id" string="Type of Documents" select="1"/>
-                    <field name="parent_id" select="1"/>
-                    <field name="create_uid" string="Owner" select="1"/>
+                <group col="13" colspan="4">
+                    <filter domain="[('state','=','in_production')]" string="In Production" icon="gtk-apply"/>
+                    <filter domain="[('state','=','change_request')]" string="Change Req." icon="gtk-apply"/>
+                    <filter domain="[('state','=','change_propose')]" string="Change Proposed" icon="gtk-execute"/>
+                    <filter domain="[('state','=','to_update')]" string="To Update" icon="gtk-execute"/>
+                    <separator orientation="vertical"/>
+                    <field name="change_type_id" widget="selection"/>
+                    <field name="parent_id"/>
+                    <field name="create_uid"/>
                 </group>
                 <group expand="1" string="Group By..." col="20" colspan="4">
                     <filter domain="[]" string="By Owner" icon="terp-hr" context="{'group_by':'create_uid'}" help="Documents by owner"/>
                     <filter domain="[]" string="By Directory" icon="terp-hr" context="{'group_by':'parent_id'}" help="Documents by directory"/>
-                    <filter domain="[]" string="By Type of Documents" icon="terp-hr" context="{'group_by':'change_type_id'}" help="Documents by type"/>
+                    <filter domain="[]" string="By Type" icon="terp-hr" context="{'group_by':'change_type_id'}" help="Documents by type"/>
+                    <filter domain="[]" string="By State" icon="terp-hr" context="{'group_by':'state'}" help="Documents by type"/>
                 </group>
             </search>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="action_document_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
-        <field name="name">Documents</field>
+        <field name="name">Search a Document</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,graph</field>
         <field name="search_view_id" ref="view_document_search"/>
     </record>
-
     <record id="action_document_tree_view" model="ir.actions.act_window.view">
         <field eval="1" name="sequence"/>
         <field name="view_mode">tree</field>
@@ -349,7 +373,18 @@
         <field name="view_id" ref="view_document_graph"/>
         <field name="act_window_id" ref="action_document_form"/>
     </record>
-    <menuitem action="action_document_form" id="menu_documents_form" parent="menu_document_process_changes"/>
+    <menuitem
+        action="action_document_form" 
+        id="menu_documents_form" 
+        parent="menu_documents"
+        sequence="20"/>
+    <menuitem
+        name="Documents by Directories"
+        action="document.action_document_directory_form"
+        sequence="1"
+        id="menu_document_directories"
+        parent="menu_documents"/>
+
 
     <record model="ir.actions.act_window" id="action_document_without_type_form">
         <field name="type">ir.actions.act_window</field>
@@ -357,7 +392,6 @@
         <field name="name">Documents Without Type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_document_tree"/>
         <field name="domain">[('change_type_id','=',False)]</field>
     </record>
     <menuitem action="action_document_without_type_form" id="menu_documents_without_type_form" parent="menu_change_control"/>
@@ -368,7 +402,6 @@
         <field name="name">Documents to Update</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_document_tree"/>
         <field name="domain">[('state','=','to_update')]</field>
         </record>
     <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
@@ -389,7 +422,7 @@
                     <newline/>
                     <field name="update_document" string="Update documents"/>
                     <field name="type" string="Type"/>
-                    <field name="date_control" string="Control date" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
+                    <field name="date_control" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
                     <field name="phase_type_id" string="Phase Type"/>
                 </group>
                 <separator colspan="4" string="Documents"/>
@@ -399,12 +432,11 @@
                     <field name="state"/>
                     <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
                     <button name="button_confirm" states="in_process" string="To Validate" icon="gtk-execute"/>
-                     <button name="button_end" states="to_validate" string="Done" icon="gtk-jump-to"/>
+                    <button name="button_end" states="to_validate" string="Done" icon="gtk-jump-to"/>
                 </group>
             </form>
         </field>
     </record>
-
     <record model="ir.ui.view" id="view_process_phase_tree">
         <field name="name">document.change.process.phase.tree</field>
         <field name="model">document.change.process.phase</field>
@@ -412,7 +444,13 @@
         <field name="arch" type="xml">
             <tree string="Phases">
                 <field name="sequence" invisible="1"/>
+                <field name="process_id"/>
                 <field name="name"/>
+                <field name="phase_type_id"/>
+                <field name="state"/>
+                <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
+                <button name="button_confirm" states="in_process" string="To Validate" icon="gtk-execute"/>
+                <button name="button_end" states="to_validate" string="Done" icon="gtk-jump-to"/>
             </tree>
         </field>
     </record>
@@ -519,13 +557,13 @@
         <field name="arch" type="xml">
             <tree string="Process Change">
                 <field name="structure_id"/>
-                <field name="name" string="Proc Chg #"/>
-                <field name="description" string="Proc Chg Title"/>
-                <field name="user_id" string="Owner"/>
-                <field name="current_phase_id" string="Current Phase"/>
-                <field name="date_control" string="Date Control Point"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="user_id"/>
+                <field name="current_phase_id"/>
+                <field name="date_control"/>
                 <field name="process_model_id"/>
-                <field name="progress" string="Progress"/>
+                <field name="progress"/>
                 <field name="process_document_ids" string="# Documents"/>
             </tree>
         </field>
@@ -551,8 +589,13 @@
                 <group col="8" colspan="4">
                     <filter domain="[('user_id','=',uid)]" string="My Process" icon="gtk-execute" help="My Process Changes"/>
                     <separator orientation="vertical"/>
-                    <filter domain="[('state','=','to_validate')]" string="To Validate" icon="gtk-apply" help="Process Changes to be validated"/>
-                    <filter domain="[('state','=','in_progress')]" string="Late" icon="gtk-execute" help="Process changes having the next Phase to validate that is late"/>
+                    <filter domain="[('state','=','to_validate')]"
+                        string="To Validate"
+                        icon="gtk-apply"
+                        help="Process Changes to be validated"/>
+                    <filter domain="[('state','=','in_progress')]"
+                        string="Late" icon="gtk-execute"
+                        help="Process changes having the next Phase to validate that is late"/>
 
                     <separator orientation="vertical"/>
                     <field name="name" string="Process Change Title" select="1"/>
