@@ -75,7 +75,8 @@ class res_config_configurable(osv.osv_memory):
         anything ir_actions_todo.write can throw
         """
         # this is ultra brittle, but apart from storing the todo id
-        # into the res.config view, I'm not sure how to do it
+        # into the res.config view, I'm not sure how to get the
+        # "previous" todo
         previous_todo = self._next_action(cr, uid)
         if not previous_todo:
             raise LookupError(_("Couldn't find previous ir.actions.todo"))
@@ -111,7 +112,7 @@ class res_config_configurable(osv.osv_memory):
             .read(cr, uid, current_user_menu.id)
 
     def next(self, cr, uid, ids, context=None):
-        """ Returns the next action to execute execute (using the default
+        """ Returns the next todo action to execute (using the default
         sort order)
         """
         return self._next(cr, uid)
@@ -135,6 +136,9 @@ class res_config_configurable(osv.osv_memory):
         executed in stead of the default (going to the next configuration item)
 
         The default implementation is a NOOP.
+
+        ``cancel`` is also called by the default implementation of
+        ``action_cancel``.
         """
         pass
 
