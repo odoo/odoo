@@ -426,16 +426,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not email_cc: email_cc = []
     if not email_bcc: email_bcc = []
     if not body: body = u''
-    try:
-        email_text = MIMEText(body.encode('utf-8'),_subtype=subtype,
-                              _charset='utf-8')
+    try: email_body = body.encode('utf-8')
     except (UnicodeEncodeError, UnicodeDecodeError):
-        email_text = MIMEText(body,_subtype=subtype,_charset='utf-8')
+        email_body = body
 
-    if attach:
-        msg = MIMEMultipart()
-    else:
-        msg = email_text
+    email_text = MIMEText(mail_body, _subtype=subtype, _charset='utf-8')
+
+    if attach: msg = MIMEMultipart()
+    else: msg = email_text
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
