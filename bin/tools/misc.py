@@ -415,29 +415,27 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if x_headers is None:
         x_headers = {}
 
-    if not ssl:
-        ssl = config.get('smtp_ssl', False)
+    if not ssl: ssl = config.get('smtp_ssl', False)
 
     if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
                          "address or having configured one")
 
-    if not email_from:
-        email_from = config.get('email_from', False)
+    if not email_from: email_from = config.get('email_from', False)
 
-    if not email_cc:
-        email_cc = []
-    if not email_bcc:
-        email_bcc = []
+    if not email_cc: email_cc = []
+    if not email_bcc: email_bcc = []
+    if not body: body = u''
+    try:
+        email_text = MIMEText(body.encode('utf-8'),_subtype=subtype,
+                              _charset='utf-8')
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        email_text = MIMEText(body,_subtype=subtype,_charset='utf-8')
 
     if attach:
         msg = MIMEMultipart()
     else:
-        if not body: body = u''
-        try:
-            msg = MIMEText(body.encode('utf8'),_subtype=subtype,_charset='utf-8')
-        except UnicodeEncodeError:
-            msg = MIMEText(body,_subtype=subtype,_charset='utf-8')
+        msg = email_text
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -468,10 +466,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     if attach:
-        try:
-            msg.attach(MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8'))
-        except:
-            msg.attach(MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
+        msg.attach(email_text)
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )
