@@ -395,7 +395,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     for i, url in enumerate(url_index):
         if i == 0:
             html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)       
+        html += '[%s] %s\n' % (i+1, url)
     return html
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
@@ -410,7 +410,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
-    import netsvc    
+    import netsvc
 
     if x_headers is None:
         x_headers = {}
@@ -418,8 +418,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not ssl:
         ssl = config.get('smtp_ssl', False)
 
-    if not email_from and not config['email_from']:
-        raise Exception("No Email sender by default, see config file")
+    if not (email_from or config['email_from']):
+        raise ValueError("Sending an email requires either providing a sender "
+                         "address or having configured one")
 
     if not email_from:
         email_from = config.get('email_from', False)
@@ -459,7 +460,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
-    for key, value in x_headers.items():
+    for key, value in x_headers.iteritems():
         msg['X-OpenERP-%s' % key] = str(value)
 
     if openobject_id:
