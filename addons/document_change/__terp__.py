@@ -24,22 +24,24 @@
     'name': 'Integrated Document Management System',
     'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """The document_change module allows to track and manage process changes to
-    update documents in directories, and keep track of these updates. You
-    can define control points, phase of changes.
+    'description': """
+The document_change module allows to track and manage process changes to
+update documents in directories, and keep track of these updates. You
+can define control points, phase of changes. This module has been
+developed for Caterpilar Belgium.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'document_ftp','mail_gateway'],
     'init_xml': ['document_change_data.xml'],
-    'update_xml': [   
-                   'security/document_process_security.xml',
-                   'document_change_view.xml',
-                   'document_change_sequence.xml',
-                   'document_change_workflow.xml',
-                   'document_phase_workflow.xml',
-                   'document_process_workflow.xml',
-                
+    'update_xml': [
+        'security/document_process_security.xml',
+        'document_change_view.xml',
+        'document_change_sequence.xml',
+        'document_change_workflow.xml',
+        'document_phase_workflow.xml',
+        'document_process_workflow.xml',
+        'cat_demo.xml'
     ],
     'demo_xml': [ ],
     'installable': True,

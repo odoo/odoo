@@ -32,6 +32,7 @@ from tools.translate import _
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Document directory'
+    _order = 'name desc'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -98,6 +99,15 @@ class document_directory(osv.osv):
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
     ]
+    def name_get(self, cr, uid, ids, context={}):
+        res = {}
+        for d in self.browse(cr, uid, ids, context=context):
+            s = d.name
+            while d:
+                s = d.name + (s and ('/' + s) or '')
+                d = d.parent_id
+            res[d] = s
+        return res
 
     def ol_get_resource_path(self,cr,uid,dir_id,res_model,res_id):
         # this method will be used in process module
