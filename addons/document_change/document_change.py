@@ -27,6 +27,23 @@ from tools.translate import _
 import time
 import datetime
 
+class document_directory(osv.osv):
+    _inherit = 'document.directory'
+    def _level_compute(self, cr, uid, ids, field_name, arg, context):
+        result = {}
+        for d in self.browse(cr, uid, ids, context=context):
+            result[d.id] = 0
+            d2 = d
+            while d2:
+                d2 = d2.parent_id
+                result[d.id] += 1
+        return result
+    _columns = {
+        'level': fields.function(_level_compute, method=True,
+            string='level', type='integer', store=True),
+    }
+document_directory()
+
 class document_change_process_phase_type(osv.osv):
     _name = "document.change.process.phase.type"
 document_change_process_phase_type()
@@ -64,7 +81,7 @@ class document_change_process_phase(osv.osv):
     _name = "document.change.process.phase"
     _description = "Process Phase"
     _columns = {
-        'name': fields.char("Name", size=64, required=True),
+        'name': fields.char("Phase Name", size=64, required=True),
         'process_id':fields.many2one('document.change.process','Process Change'),
         'sequence': fields.integer('Sequence'),
         'update_document': fields.selection([('at_endPhase', 'End Phase'),('at_endprocess', 'End Process')], 'Update Document', required=True),
@@ -188,7 +205,7 @@ class document_change_process(osv.osv):
         'create_date':fields.datetime('Creation',readonly=True),
         'latest_modified_date':fields.function(_latestmodification, method=True, type='datetime', string="Lastest Modification"), #TODO no year!
         'date_expected':fields.datetime('Expected Production'),
-        'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'state', readonly=True),
+        'state':fields.selection([('draft', 'Draft'),('in_progress', 'In Progress'),('to_validate', 'To Validate'), ('pending', 'Pending'), ('done', 'Done'),('cancel','Cancelled')], 'State', readonly=True),
         'process_phase_ids':fields.one2many('document.change.process.phase','process_id','Phase'),
         'current_phase_id': fields.function(_get_current_phase, method=True, type='many2one', relation='document.change.process.phase', string='Current Phase'),
         'date_control': fields.related('current_phase_id','date_control', type='date', string='Control Date'),
@@ -250,10 +267,10 @@ document_change_process()
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
-
     _columns = {
         'change_type_id':fields.many2one('document.change.type','Document Type'),
-        'state': fields.selection([('in_production', 'In Production'), ('change_request', 'Change Requested'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
+        'state': fields.selection([('draft','To Create'),('in_production', 'In Production'), ('change_request', 'Change Requested'),('change_propose', 'Change Proposed'), ('to_update', 'To Update'), ('cancel', 'Cancel')], 'State'),
+        'style': fields.selection([('run','Run'),('setup','Setup'),('pma','PMA'),('pmp','PMP')],'Document Style'),
         'target_document_id': fields.many2one('ir.attachment', 'Target Document'),
         'target':fields.binary('Target'),
         'process_phase_id' :fields.many2one('document.change.process.phase','Process Phase'),
@@ -262,7 +279,7 @@ class document_file(osv.osv):
     }
     _defaults = {
         'state': lambda *a: 'in_production',
-     }
+    }
 
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name=vals.get('name',False)
@@ -317,8 +334,18 @@ class document_file(osv.osv):
         return True
 
     def do_production(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'in_production'},context=context)
+        return self.write(cr, uid, ids, {'state':'in_production'},context=context)
+
+    def write(self, cr, uid, ids, data, context={}):
+        for d in self.browse(cr, uid, ids, context=context):
+            if d.state=='draft' and d.datas:
+                super(document_file,self).write(cr,uid,[d.id],
+                    {'state':'in_production'},context=context)
+        result = super(document_file,self).write(cr,uid,ids,data,context=context)
         return True
+
+    def do_draft(self, cr, uid, ids, context={}):
+        return self.write(cr, uid, ids, {'state':'draft'},context=context)
 
     def do_cancel(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {'state':'cancel'},context=context)

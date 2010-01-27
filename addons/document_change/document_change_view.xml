@@ -245,6 +245,7 @@
                 <field name="datas" filename="datas_fname" string="Content"/>
                 <field name="change_type_id" widget="selection"/>
                 <field name="datas_fname"/>
+                <field name="style"/>
                 <notebook colspan="4">
                 <page string="Information">
                     <group colspan="2" col="2">
@@ -302,6 +303,7 @@
                 <field name="name" string="Document"/>
                 <field name="parent_id" string="Directory"/>
                 <field name="change_type_id"/>
+                <field name="style"/>
                 <field name="state"/>
                 <field name="change_process_id"/>
                 <field name="user_id" string="Owner"/>
@@ -492,7 +494,8 @@
                     <field name="process_type_id" widget="selection"/>
                     <field name="name" readonly="1"/>
                     <newline/>
-                    <field name="structure_id" colspan="4"/>
+                    <!-- Big Hack For Demo Purpose Caterpillar -->
+                    <field name="structure_id" colspan="4" domain="[('name','ilike','fam')]"/>
                     <field name="process_model_id" widget="selection"/>
                     <button name="generate_phases"
                         string="Generate Phases" type="object" 
@@ -552,15 +555,15 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process Change">
-                <field name="structure_id"/>
                 <field name="name"/>
-                <field name="description"/>
+                <field name="structure_id"/>
                 <field name="user_id"/>
                 <field name="current_phase_id"/>
                 <field name="date_control"/>
                 <field name="process_model_id"/>
-                <field name="progress"/>
+                <field name="progress" widget="progressbar"/>
                 <field name="process_document_ids" string="# Documents"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -585,12 +588,16 @@
                 <group col="14" colspan="4">
                     <filter domain="[('user_id','=',uid)]" string="My Process" icon="gtk-execute" help="My Process Changes"/>
                     <separator orientation="vertical"/>
+                    <filter domain="[('state','in',('in_progress','draft','to_validate'))]"
+                        string="In Progress" icon="gtk-execute"
+                        default="1"
+                        help="Process changes having the next Phase to validate that is late"/>
                     <filter domain="[('state','=','to_validate')]"
                         string="To Validate"
                         icon="gtk-apply"
                         help="Process Changes to be validated"/>
-                    <filter domain="[('state','=','in_progress')]"
-                        string="Late" icon="gtk-execute"
+                    <filter domain="[('state','=','pending')]"
+                        string="Pending" icon="gtk-execute"
                         help="Process changes having the next Phase to validate that is late"/>
 
                     <separator orientation="vertical"/>
@@ -602,6 +609,7 @@
                 <group expand="1" string="Group By..." col="20" colspan="4">
                     <filter domain="[]" string="By Owner" icon="terp-hr" context="{'group_by':'user_id'}" help="Process Changes by owner"/>
                     <filter domain="[]" string="By Directory" icon="terp-hr" context="{'group_by':'structure_id'}" help="Process Changes by directory"/>
+                    <filter domain="[]" string="By State" icon="terp-hr" context="{'group_by':'state'}" help="Process Changes by directory"/>
                 </group>
             </search>
         </field>

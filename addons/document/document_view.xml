@@ -145,6 +145,7 @@
         <field name="name">Directorie's Structure</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">tree</field>
+        <field name="view_id" ref="view_document_directory_tree"/>
         <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
     </record>
     <menuitem
@@ -245,7 +246,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
-        <field name="domain">[('parent_id','=',active_id)]</field>
+        <field name="domain">[('parent_id','child_of',active_id)]</field>
         <field name="context">{'parent_id':'active_id'}</field>
     </record>
 
@@ -295,10 +296,10 @@
         </field>
     </record>
 
-        <act_window domain="[('partner_id', '=', active_id)]"
-            id="act_res_partner_document" name="Related Documents"
-            res_model="ir.attachment"
-            src_model="res.partner"/>
+    <act_window domain="[('partner_id', '=', active_id)]"
+        id="act_res_partner_document" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="res.partner"/>
 
 </data>
 </openerp>

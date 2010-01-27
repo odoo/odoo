@@ -104,7 +104,7 @@ class document_directory(osv.osv):
         for d in self.browse(cr, uid, ids, context=context):
             s = ''
             d2 = d
-            while d2:
+            while d2 and d2.parent_id:
                 s = d2.name + (s and ('/' + s) or '')
                 d2 = d2.parent_id
             res.append((d.id, s))

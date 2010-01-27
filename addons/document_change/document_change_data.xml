@@ -4,15 +4,15 @@
     
     <!-- Structure Data -->
     <record model="document.directory" id="dir_root">
-        <field name="name">Gosselies</field>
+        <field name="name">Bat E</field>
         <field name="parent_id" eval="False"/>
     </record>
     <record model="document.directory" id="dir_bat_e">
-        <field name="name">Bat E</field>
+        <field name="name">Commodity A</field>
         <field name="parent_id" ref="dir_root"/>
     </record>
     <record model="document.directory" id="dir_bat_z">
-        <field name="name">Bat Z</field>
+        <field name="name">Commodity B</field>
         <field name="parent_id" ref="dir_root"/>
     </record>
     
@@ -95,7 +95,7 @@
         <field name="datas_fname">TaktTime_template.xls</field>
         <field name="parent_id" ref="dir_template"/>
     </record>
-    
+
     <!-- Document Change Types -->
     <record model="document.change.type" id="type_project_charter">
         <field name="name">Project Charter</field>

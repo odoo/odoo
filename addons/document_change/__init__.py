@@ -20,6 +20,6 @@
 ##############################################################################
 
 import document_change
+import document_change_report
 import document_change_mailgate
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

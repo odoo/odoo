@@ -28,7 +28,7 @@
 The document_change module allows to track and manage process changes to
 update documents in directories, and keep track of these updates. You
 can define control points, phase of changes. This module has been
-developed for Caterpilar Belgium.
+developed for Caterpillar Belgium.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
@@ -39,6 +39,7 @@ developed for Caterpilar Belgium.
         'document_change_view.xml',
         'document_change_sequence.xml',
         'document_change_workflow.xml',
+        'document_change_report_view.xml',
         'document_phase_workflow.xml',
         'document_process_workflow.xml',
         'cat_demo.xml'
