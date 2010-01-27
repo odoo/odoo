@@ -100,8 +100,8 @@ class account_invoice_line(osv.osv):
                     res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
                     res[line.id]['data'].append( tax)
 
-        res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], int(config['price_accuracy']))
-        res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], int(config['price_accuracy']))
+            res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], int(config['price_accuracy']))
+            res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], int(config['price_accuracy']))
         return res
 
     def _price_unit_default(self, cr, uid, context=None):
