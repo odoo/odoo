@@ -100,10 +100,6 @@ class survey_analysis(report_rml):
                     </para>"""
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         for survey in surv_obj.browse(cr, uid, ids):
-            if survey.question_prefix:
-                prefix = survey.question_prefix + " : "
-            else:
-                prefix = ''
             rml += """<blockTable colWidths="280.0,100.0,120.0" style="Table_heading">
                           <tr>
                             <td>
@@ -139,7 +135,7 @@ class survey_analysis(report_rml):
                 for que in page.question_ids:
                     rml +="""<blockTable colWidths="500" style="Table5">
                               <tr>
-                                <td><para style="question">""" + to_xml(tools.ustr(prefix)) + to_xml(tools.ustr(que.question)) + """</para></td>
+                                <td><para style="question">Que : """  + to_xml(tools.ustr(que.question)) + """</para></td>
                               </tr>
                              </blockTable>"""
                     cols_widhts = []
