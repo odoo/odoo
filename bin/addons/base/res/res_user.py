@@ -169,8 +169,7 @@ class users(osv.osv):
                                 subject=self.get_welcome_mail_subject(
                                     cr, uid, context=context),
                                 body=self.get_welcome_mail_body(
-                                    cr, uid, context=context) % user,
-                                reply_to="no@reply.to")
+                                    cr, uid, context=context) % user))
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True,
