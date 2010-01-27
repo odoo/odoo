@@ -1478,8 +1478,8 @@ class account_tax(osv.osv):
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
             elif tax.type=='balance':
-                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
-                data['balance'] = cur_price_unit
+                amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+#                data['balance'] = cur_price_unit
 
 
             if tax.include_base_amount:
