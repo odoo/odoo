@@ -430,7 +430,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     except (UnicodeEncodeError, UnicodeDecodeError):
         email_body = body
 
-    email_text = MIMEText(mail_body, _subtype=subtype, _charset='utf-8')
+    email_text = MIMEText(email_body, _subtype=subtype, _charset='utf-8')
 
     if attach: msg = MIMEMultipart()
     else: msg = email_text
