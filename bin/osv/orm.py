@@ -2426,7 +2426,7 @@ class orm(orm_template):
             context = {}
         if not ids:
             return []
-        ids = map(lambda x:int(x), ids)
+        #ids = map(lambda x:int(x), ids)
         if fields_to_read == None:
             fields_to_read = self._columns.keys()
 
