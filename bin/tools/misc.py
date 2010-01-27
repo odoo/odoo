@@ -401,7 +401,16 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
 
-    """Send an email."""
+    """Send an email.
+
+    Arguments:
+
+    `email_from`: A string used to fill the `From` header, if falsy,
+                  config['email_from'] is used instead.  Also used for
+                  the `Reply-To` header if `reply_to` is not provided
+
+    `email_to`: a sequence of addresses to send the mail to.
+    """
     import smtplib
     from email.MIMEText import MIMEText
     from email.MIMEBase import MIMEBase

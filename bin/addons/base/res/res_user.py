@@ -124,8 +124,8 @@ class users(osv.osv):
     _name = "res.users"
 
     WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
-    WELCOME_MAIL_BODY = u"An OpenERP account has been created for "\
-        "\"%(name)s\" on the server ???.\n\nYour login is %(login)s, "\
+    WELCOME_MAIL_BODY = u"An OpenERP account has been created for you, "\
+        "\"%(name)s\".\n\nYour login is %(login)s, "\
         "you should ask your supervisor or system administrator if you "\
         "haven't been given your password yet.\n\n"\
         "If you aren't %(name)s, this email reached you errorneously, "\
@@ -165,7 +165,7 @@ class users(osv.osv):
         if not user.get('email'):
             return False
 
-        return tools.email_send(email_from=None, email_to=user['email'],
+        return tools.email_send(email_from=None, email_to=[user['email']],
                                 subject=self.get_welcome_mail_subject(
                                     cr, uid, context=context),
                                 body=self.get_welcome_mail_body(
