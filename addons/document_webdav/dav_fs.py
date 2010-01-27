@@ -129,7 +129,7 @@ class tinydav_handler(dav_interface):
 
     @memoize(4)
     def db_list(self):
-        s = netsvc.LocalService('db')
+        s = netsvc.ExportService.getService('db')
         result = s.list()
         self.db_name_list=[]
         for db_name in result:
@@ -149,7 +149,7 @@ class tinydav_handler(dav_interface):
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         
         if not dbname:
-            s = netsvc.LocalService('db')
+            s = netsvc.ExportService.getService('db')
             cr.close()
             return map(lambda x: self.urijoin(x), self.db_list())
         result = []
