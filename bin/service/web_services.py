@@ -523,7 +523,7 @@ GNU Public Licence.
         try:
             rev_id = os.popen('bzr revision-info').read()
         except Exception,e:
-             rev_id = 'Exception: %s\n' % (tools.ustr(e))
+            rev_id = 'Exception: %s\n' % (tools.ustr(e))
 
         os_lang = '.'.join( [x for x in locale.getdefaultlocale() if x] )
         if not os_lang:
