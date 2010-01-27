@@ -230,7 +230,7 @@ class CalDAV(object):
                                     data[map_field][0], vevent, context=context)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
-                            vevent.add(field).value = str(data[map_field])
+                            vevent.add(field).value = str(data[map_field].encode('utf8'))
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             if field in ('exdate'):
                                 vevent.add(field).value = [parser.parse(data[map_field])]
@@ -239,12 +239,12 @@ class CalDAV(object):
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
-                            vevent.add(field).value = data.get(map_field)[1]
+                            vevent.add(field).value = (data.get(map_field)[1]).encode('utf8')
                         elif map_type in ("float", "integer"):
                             vevent.add(field).value = str(data.get(map_field))
                         elif map_type == "selection":
                             if not self.ical_get(field, 'mapping'):
-                                vevent.add(field).value = (data[map_field]).upper()
+                                vevent.add(field).value = (data[map_field].encode('utf8')).upper()
                             else:
                                 for key1, val1 in self.ical_get(field, 'mapping').items():
                                     if val1 == data[map_field]:
