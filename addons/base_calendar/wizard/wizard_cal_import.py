@@ -54,6 +54,7 @@ class cal_event_import_wizard(wizard.interface):
     def _process_imp_ics(self, cr, uid, data, context=None):
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
+        context.update({'model': model})
         vals = model_obj.import_cal(cr, uid, data['form']['file_path'], data['id'], context)
         global cnt
         cnt = 0
@@ -62,7 +63,8 @@ class cal_event_import_wizard(wizard.interface):
         return {}
     
     def _result_set(self, cr, uid, data, context=None):
-        return {'msg': 'Imported %s Event(s)' % cnt}
+        msg = (cnt and "Imported %s components" % cnt) or 'Import Sucessful' 
+        return {'msg': msg}
     
     states = {
         'init': {

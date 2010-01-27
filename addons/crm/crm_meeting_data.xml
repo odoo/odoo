@@ -55,6 +55,7 @@
 			<field name="name" ref="base_calendar.field_event_status"/>
 		    <field name="type_id" ref="caldav.calendar_lines_event" />
 			<field name="field_id" search="[('name','=','state'),('model_id.model','=','crm.meeting')]" />
+			<field name="mapping">{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}</field>
 		    <field name="fn">field</field>
 		</record>
 

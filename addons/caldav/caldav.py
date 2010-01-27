@@ -489,7 +489,7 @@ rule or repeating pattern for anexception to a recurrence set"),
 
     def import_cal(self, cr, uid, data, data_id=None, context={}):
         event_obj = self.pool.get('basic.calendar.event')
-        vals = event_obj.import_cal(cr, uid, data)
+        vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
     
     def check_import(self, cr, uid, vals, context={}):
@@ -731,7 +731,7 @@ class calendar_todo(osv.osv):
     
     def import_cal(self, cr, uid, data, data_id=None,  context={}):
         todo_obj = self.pool.get('basic.calendar.todo')
-        vals = todo_obj.import_cal(cr, uid, data)
+        vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
     
     def check_import(self, cr, uid, vals, context={}):
@@ -740,10 +740,12 @@ class calendar_todo(osv.osv):
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
             if not val.has_key('planned_hours'):
                 # 'Computes duration' in days
-                start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
-                end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
-                diff = end - start
-                plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
+                plan = 0.0
+                if val.get('date') and  val.get('date_deadline'):
+                    start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
+                    end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                    diff = end - start
+                    plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
                 val['planned_hours'] = plan
             else:
                 # Converts timedelta into hours

@@ -15,7 +15,7 @@
                     <field name="name" />
                     <field name="month"/>
                     <field name="user_id"/>
- 					<field name="section_id"/>                    
+ 					<field name="section_id"/>
                     <field name="nbr"/>
                     <field name="state"/>
                 </tree>
@@ -30,7 +30,7 @@
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
-					<field name="section_id" select="1"/>                             
+					<field name="section_id" select="1"/>
                     <field name="nbr" select="1"/>
                     <field name="state" select="1"/>
                 </form>
@@ -65,16 +65,16 @@
 						<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
 	                    <field name="user_id" select="1"/>
-						<field name="section_id" select="1"/>    	                    
+						<field name="section_id" select="1"/>
 	                    <field name="nbr" select="1"/>
 	                    <field name="state" select="1"/>
                    </group>
                </search>
             </field>
         </record>
+	    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
+        <menuitem id="crm.next_id_52" name="Cases" parent="base.next_id_64" sequence="0"/>
 
-        <menuitem id="crm.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
-        <menuitem id="crm.next_id_52" name="Cases" parent="crm.next_id_64" sequence="0"/>
 
         <record id="action_report_crm_case_user_tree" model="ir.actions.act_window">
             <field name="name">Cases by User and Section</field>
@@ -94,7 +94,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by User and Section">
                     <field name="name"/>
-					<field name="section_id" select="1"/>                        
+					<field name="section_id" select="1"/>
                     <field name="month"/>
                     <field name="nbr"/>
                     <field name="state"/>
@@ -108,7 +108,7 @@
             <field name="arch" type="xml">
                 <form string="Cases by User and Section">
                     <field name="name" select="1"/>
-					<field name="section_id" select="1"/>                        
+					<field name="section_id" select="1"/>
                     <field name="month" select="1"/>
                     <field name="nbr" select="1"/>
                     <field name="state" select="1"/>
@@ -127,7 +127,7 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
-						<field name="section_id" select="1"/>    						
+						<field name="section_id" select="1"/>
 	                    <field name="nbr" select="1"/>
 	                    <field name="state" select="1"/>
                    </group>
@@ -162,7 +162,7 @@
             <field name="arch" type="xml">
                 <tree string="Cases by Section">
                     <field name="name" select="1"/>
- 					<field name="section_id" select="1"/>                    
+ 					<field name="section_id" select="1"/>
                     <field name="month" select="1"/>
                     <field name="nbr_cases" select="1"/>
                     <field name="avg_answers"/>
@@ -193,7 +193,7 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
-						<field name="section_id" select="1"/>   						
+						<field name="section_id" select="1"/>
 	                    <field name="month" select="1"/>
 	                    <field name="nbr_cases" select="1"/>
                    </group>
@@ -243,7 +243,7 @@
             </form>
         </field>
     </record>
-    
+
 	<record id="view_crm_case_section_stage_filter" model="ir.ui.view">
             <field name="name">CRM Report - Sections and Stage(Select)</field>
             <field name="model">report.crm.case.section.stage</field>

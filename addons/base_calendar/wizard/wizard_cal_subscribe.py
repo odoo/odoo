@@ -27,7 +27,7 @@ import wizard
 
 class cal_event_subscribe_wizard(wizard.interface):
     form1 = '''<?xml version="1.0"?>
-    <form string="Subscribe to Remote ICS">
+    <form string="Subscribe to Remote Calendar">
         <separator string="Provide path for Remote Calendar"/>
         <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
     </form>'''
@@ -64,7 +64,8 @@ class cal_event_subscribe_wizard(wizard.interface):
             raise wizard.except_wizard(_('Error!'), _('Please provide Proper URL !'))
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        context.update({'url': data['form']['url_path']})
+        context.update({'url': data['form']['url_path'],
+                                    'model': data.get('model')})
         vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
         if vals:
             cnt = vals['count']
