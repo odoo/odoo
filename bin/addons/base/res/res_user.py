@@ -83,7 +83,6 @@ class groups(osv.osv):
 
 groups()
 
-
 class roles(osv.osv):
     _name = "res.roles"
     _columns = {
@@ -124,11 +123,54 @@ class users(osv.osv):
     _uid_cache = {}
     _name = "res.users"
 
+    WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
+    WELCOME_MAIL_BODY = u"An OpenERP account has been created for "\
+        "\"%(name)s\" on the server ???.\n\nYour login is %(login)s, "\
+        "you should ask your supervisor or system administrator if you "\
+        "haven't been given your password yet.\n\n"\
+        "If you aren't %(name)s, this email reached you errorneously, "\
+        "please delete it."
+
+    def get_welcome_mail_subject(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_SUBJECT
+        """
+        return self.WELCOME_MAIL_SUBJECT
+    def get_welcome_mail_body(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_BODY
+        """
+        return self.WELCOME_MAIL_BODY
+
     def get_current_company(self, cr, uid):
         res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
         res = cr.fetchall()
         return res
+
+    def send_welcome_email(self, cr, uid, id, context=None):
+        logger= netsvc.Logger()
+        user = self.pool.get('res.users').read(cr, uid, id, context=context)
+        if not tools.config.get('smtp_server'):
+            logger.notifyChannel('mails', netsvc.LOG_WARNING,
+                _('"smtp_server" needs to be set to send mails to users'))
+            return False
+        if not tools.config.get('email_from'):
+            logger.notifyChannel("mails", netsvc.LOG_WARNING,
+                _('"email_from" needs to be set to send welcome mails '
+                  'to users'))
+            return False
+        if not user.get('email'):
+            return False
+
+        return tools.email_send(email_from=None, email_to=user['email'],
+                                subject=self.get_welcome_mail_subject(
+                                    cr, uid, context=context),
+                                body=self.get_welcome_mail_body(
+                                    cr, uid, context=context) % user,
+                                reply_to="no@reply.to")
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True,
@@ -137,8 +179,11 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'email': fields.char('E-mail', size=64, help='If an email is provided,'
-                             ' the user will be sent a message welcoming him'),
+        'email': fields.char('E-mail', size=64,
+            help='If an email is provided, the user will be sent a message '
+                 'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
+                 " aren't configured, it won't be possible to email new "
+                 "users."),
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
@@ -330,32 +375,11 @@ class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _inherit = ['res.users', 'res.config']
 
-    WELCOME_MAIL_SUBJECT = _(u"Welcome to OpenERP")
-    WELCOME_MAIL_BODY = _(u"An OpenERP account has been created for "
-        "\"%(name)s\" on the server ???.\n\nYour login is %(login)s, "
-        "you should ask your supervisor or system administrator if you "
-        "haven't been given your password yet.\n\n"
-        "If you aren't %(name)s, this email reached you errorneously, "
-        "please delete it.")
-
     def _generate_signature(self, cr, name, email, context=None):
         return _('--\n%(name)s %(email)s\n') % {
             'name': name or '',
             'email': email and ' <'+email+'>' or '',
             }
-
-    def get_welcome_mail_subject(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_SUBJECT
-        """
-        return self.WELCOME_MAIL_SUBJECT
-    def get_welcome_mail_body(self, cr, uid, context=None):
-        """ Returns the subject of the mail new users receive (when
-        created via the res.config.users wizard), default implementation
-        is to return config_users.WELCOME_MAIL_BODY
-        """
-        return self.WELCOME_MAIL_BODY
 
     def create_user(self, cr, uid, new_id, context=None):
         """ create a new res.user instance from the data stored
@@ -379,15 +403,9 @@ class config_users(osv.osv_memory):
                 cr, base_data['name'], base_data['email'], context=context),
             address_id=address,
             )
-        self.pool.get('res.users').create(
+        new_user = self.pool.get('res.users').create(
             cr, uid, user_data, context)
-        if user_data['email']:
-            tools.email_send(email_from=None, email_to=user_data['email'],
-                             subject=self.get_welcome_mail_subject(
-                                 cr, uid, context=context),
-                             body=self.get_welcome_mail_body(
-                                 cr, uid, context=context) % user_data,
-                             reply_to="no@reply.to")
+        self.send_welcome_email(cr, uid, new_user, context=context)
     def execute(self, cr, uid, ids, context=None):
         'Do nothing on execution, just launch the next action/todo'
         pass
