@@ -184,13 +184,14 @@ class node_dir(node_class):
         dc2.update(self.dctx)
         dc2['dir_id'] = self.dir_id
         self.displayname = dirr.name
-        for dfld in dirr.dctx_ids:
-            try:
-                self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-            except Exception,e:
-                print "Cannot eval %s" % dfld.expr
-                print e
-                pass
+        if dirr.dctx_ids:
+            for dfld in dirr.dctx_ids:
+                try:
+                    self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
+                except Exception,e:
+                    print "Cannot eval %s" % dfld.expr
+                    print e
+                    pass
 
     def children(self,cr):
         return self._child_get(cr) + self._file_get(cr)
