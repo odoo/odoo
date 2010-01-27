@@ -52,7 +52,6 @@ class document_change_report(osv.osv):
         'level': fields.integer('Level', readonly=True),
         'amount_required': fields.function(_amount_all, method=True,
             string='Required', multi='sums', type='integer'),
-        'date': fields.date('Date', readonly=True),
         'amount_exist': fields.function(_amount_all, method=True,
             string='Existing', multi='sums', type='integer'),
         'amount_percent': fields.function(_amount_all, method=True,
