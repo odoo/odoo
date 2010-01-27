@@ -32,7 +32,7 @@ developed for Caterpillar Belgium.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'document_ftp','mail_gateway'],
+    'depends': ['base', 'document_ftp','mail_gateway','board'],
     'init_xml': ['document_change_data.xml'],
     'update_xml': [
         'security/document_process_security.xml',
