@@ -41,17 +41,9 @@
         <record id="tran_phase_start_to_confirm_control" model="workflow.transition">
             <field name="act_from" ref="act_phase_start"/>
             <field name="act_to" ref="act_phase_confirm"/>
-            <field name="role_id" ref="role_NPPI" />
-    		<field name="condition">test_control_request()</field>            
+            <field name="condition">True</field>
             <field name="signal">button_confirm</field>
         </record>
-        <record id="tran_phase_start_to_confirm_not_control" model="workflow.transition">
-            <field name="act_from" ref="act_phase_start"/>
-            <field name="act_to" ref="act_phase_confirm"/>
-    		<field name="condition">test_nocontrol_request()</field>            
-            <field name="signal">button_confirm</field>
-        </record>
-        
         <record id="tran_phase_confirm_to_end" model="workflow.transition">
             <field name="act_from" ref="act_phase_confirm"/>
             <field name="act_to" ref="act_phase_end"/>

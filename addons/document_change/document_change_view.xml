@@ -51,7 +51,7 @@
         <field name="name">Directory Structure</field>
         <field name="view_type">tree</field>
         <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" eval="False"/>
+        <field name="view_id" eval="document.view_document_directory_tree"/>
     </record>
     <menuitem name="Structure" id="menu_document_structure_config" parent="menu_configuration"/>
 
@@ -73,9 +73,9 @@
         <field name="arch" type="xml">
             <form string="Document Types">
                 <field name="name" select="1"/>
-                <newline/>
                 <field name="directory_id"/>
                 <field name ="template_document_id"/>
+                <field name ="filename" attrs="{'invisible':[('template_document_id','&lt;&gt;',False)]}"/>
                 <separator string="Associated Phase Types" colspan="4"/>
                 <field name="phase_type_ids" colspan="4" nolabel="1"/>
             </form>
@@ -260,17 +260,16 @@
                     </group>
                 </page><page string="Change Request">
                     <separator string="Change Control" colspan="4"/>
-                    <group col="7" colspan="4">
+                    <group col="11" colspan="2">
                         <field name="state" readonly="1"/>
-                        <button name="button_propose" states="change_request" string="Propose Change" icon="gtk-apply"/>
-                        <button name="button_confirm" states="change_propose" string="To Validate" icon="gtk-apply"/>
-                        <button name="button_validate" states="to_update" string="In Production" icon="gtk-apply"/>
-                        <button name="button_request" states="cancel,in_production" string="Request Change" icon="gtk-media-play"/>
-                        <button name="button_cancel" states="change_request,change_propose" string="Cancel"  icon="gtk-cancel"/>
+                        <group attrs="{'invisible':[('state','in', ('in_production','draft'))]}">
+                            <field name="target" filename="target_fname"/>
+                        </group>
+                        <button type="object" name="button_request" states="draft,in_production" string="Request Change" icon="gtk-media-play"/>
+                        <button type="object" name="button_propose" states="change_request" string="Propose Change" icon="gtk-apply"/>
+                        <button type="object" name="button_validate" states="change_propose" string="Update Production" icon="gtk-apply"/>
+                        <button type="object" name="button_cancel" states="change_request,change_propose,to_update" string="Cancel"  icon="gtk-cancel"/>
                     </group>
-                    <newline/>
-                    <field name="target_document_id"/>
-                    <field name="target"/>
                     <newline/>
                     <separator string="Change Note" colspan="4"/>
                     <field colspan="4" name="description" nolabel="1"/>
@@ -307,6 +306,7 @@
                 <field name="state"/>
                 <field name="change_process_id"/>
                 <field name="user_id" string="Owner"/>
+                <button type="object" name="button_request" states="draft,in_production" string="Request Change" icon="gtk-media-play"/>
             </tree>
         </field>
     </record>
@@ -329,14 +329,16 @@
         <field name="arch" type="xml">
             <search string="Documents">
                 <group col="13" colspan="4">
+                    <filter domain="[('user_id','=',uid)]" string="My Docs" icon="gtk-apply"/>
+                    <separator orientation="vertical"/>
                     <filter domain="[('state','=','in_production')]" string="In Production" icon="gtk-apply"/>
                     <filter domain="[('state','=','change_request')]" string="Change Req." icon="gtk-apply"/>
                     <filter domain="[('state','=','change_propose')]" string="Change Proposed" icon="gtk-execute"/>
                     <filter domain="[('state','=','to_update')]" string="To Update" icon="gtk-execute"/>
                     <separator orientation="vertical"/>
-                    <field name="change_type_id" widget="selection"/>
-                    <field name="parent_id"/>
-                    <field name="create_uid"/>
+                    <field name="change_type_id" widget="selection" select="1"/>
+                    <field name="parent_id" select="1"/>
+                    <field name="create_uid" select="1"/>
                 </group>
                 <group expand="1" string="Group By..." col="20" colspan="4">
                     <filter domain="[]" string="By Owner" icon="terp-hr" context="{'group_by':'create_uid'}" help="Documents by owner"/>
@@ -380,11 +382,15 @@
         sequence="20"/>
     <menuitem
         name="Documents by Directories"
-        action="document.action_document_directory_form"
+        action="document.action_document_directory_tree"
         sequence="1"
         id="menu_document_directories"
         parent="menu_documents"/>
 
+
+    <record model="ir.actions.act_window" id="document.action_document_file_directory_form">
+        <field name="search_view_id" ref="view_document_search"/>
+    </record>
 
     <record model="ir.actions.act_window" id="action_document_without_type_form">
         <field name="type">ir.actions.act_window</field>
@@ -392,6 +398,7 @@
         <field name="name">Documents Without Type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_search"/>
         <field name="domain">[('change_type_id','=',False)]</field>
     </record>
     <menuitem action="action_document_without_type_form" id="menu_documents_without_type_form" parent="menu_change_control"/>
@@ -402,6 +409,7 @@
         <field name="name">Documents to Update</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_search"/>
         <field name="domain">[('state','=','to_update')]</field>
         </record>
     <menuitem action="action_document_to_update_form" id="menu_documents_to_update_form" parent="menu_change_control"/>
@@ -423,10 +431,11 @@
                     <field name="update_document" string="Update documents"/>
                     <field name="type" string="Type"/>
                     <field name="date_control" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
-                    <field name="phase_type_id" string="Phase Type"/>
+                    <field name="phase_type_id"/>
+                    <field name="directory_id" readonly="1" colspan="4"/>
                 </group>
                 <separator colspan="4" string="Documents"/>
-                <field name="phase_document_ids" colspan="4"  nolabel="1"/>
+                <field name="phase_document_ids" colspan="4"  nolabel="1" context="{'default_parent_id': directory_id}"/>
                 <newline/>
                 <group col="5" colspan="4">
                     <field name="state"/>
@@ -437,6 +446,32 @@
             </form>
         </field>
     </record>
+    <record model="ir.ui.view" id="view_process_phase_search">
+        <field name="name">document.change.process.phase.search</field>
+        <field name="model">document.change.process.phase</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Phases" col="20">
+                <filter domain="[('state','=','draft')]" string="To Start" icon="gtk-execute"
+                    help="To Start"/>
+                <filter domain="[('state','=','in_process')]" string="In Progress" icon="gtk-execute"
+                    help="In Progress"/>
+                <filter domain="[('state','=','to_validate')]" string="To Validate" icon="gtk-execute"
+                    help="To Validate"/>
+                <group string="Group By..." expand="1">
+                    <filter domain="[]" string="By Process" icon="terp-hr" context="{'group_by':'process_id'}" help="Process Changes by owner"/>
+                    <filter domain="[]" string="By Type" icon="terp-hr" context="{'group_by':'phase_type_id'}" help="Process Changes by owner"/>
+
+                </group>
+                <separator orientation="vertical"/>
+                <field name="process_id" select="1"/>
+                <field name="name" select="1"/>
+                <field name="phase_type_id" select="1"/>
+                <field name="date_control" select="1"/>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_process_phase_tree">
         <field name="name">document.change.process.phase.tree</field>
         <field name="model">document.change.process.phase</field>
@@ -447,6 +482,7 @@
                 <field name="process_id"/>
                 <field name="name"/>
                 <field name="phase_type_id"/>
+                <field name="date_control"/>
                 <field name="state"/>
                 <button name="button_start" states="draft" string="Start" icon="gtk-go-forward"/>
                 <button name="button_confirm" states="in_process" string="To Validate" icon="gtk-execute"/>
@@ -461,6 +497,7 @@
         <field name="name">Phases</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_process_phase_search"/>
     </record>
     <menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
 
@@ -471,6 +508,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state','=','to_validate')]</field>
+        <field name="search_view_id" ref="view_process_phase_search"/>
     </record>
     <menuitem action="action_process_phase_form_validate" id="menu_phases_to_validate_form" parent="menu_change_control"/>
 
@@ -479,6 +517,11 @@
         name="Documents"
         res_model="ir.attachment"
         src_model="document.change.process.phase"/>
+
+    <record model="ir.actions.act_window" id="act_documents_phases">
+        <field name="search_view_id" ref="view_process_phase_search"/>
+    </record>
+
 
     <!--
     Process Change
@@ -532,6 +575,7 @@
                                 <field name="sequence" invisible="1"/>
                                 <field name="name"/>
                                 <field name="type"/>
+                                <field name="date_control" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
                                 <field name="phase_document_ids"/>
                                 <field name="state"/>
                             </tree>
@@ -539,6 +583,7 @@
                                 <field name="name"/>
                                 <field name="sequence"/>
                                 <field name="type"/>
+                                <field name="date_control" attrs="{'required':[('type','=','control_required')], 'invisible': [('type','!=','control_required')]}"/>
                                 <field name="phase_document_ids" colspan="4"/>
                                 <field name="state"/>
                             </form>
@@ -556,6 +601,7 @@
         <field name="arch" type="xml">
             <tree string="Process Change">
                 <field name="name"/>
+                <field name="description"/>
                 <field name="structure_id"/>
                 <field name="user_id"/>
                 <field name="current_phase_id"/>
@@ -641,11 +687,19 @@
         res_model="document.change.process.phase"
         src_model="document.change.process"/>
 
+    <record model="ir.actions.act_window" id="act_phase_change_process">
+        <field name="search_view_id" ref="view_process_phase_search"/>
+    </record>
+
     <act_window domain="[('change_process_id', '=', active_id)]"
         id="act_documents_change_process"
         name="Documents"
         res_model="ir.attachment"
         src_model="document.change.process"/>
+
+    <record model="ir.actions.act_window" id="act_documents_change_process">
+        <field name="search_view_id" ref="view_document_search"/>
+    </record>
 
 </data>
 </openerp>
