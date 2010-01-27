@@ -27,8 +27,7 @@ class document_change_report(osv.osv):
     _auto = False
     def _amount_all(self, cr, uid, ids, field_name, arg, context):
         res = {}
-        for id in ids:
-            print context
+        for id in ids:            
             dir, type = id.split(' ')
             att = self.pool.get('ir.attachment')
             fids = att.search(cr, uid, [('parent_id','child_of',[int(dir)]),('change_type_id','=',int(type))], context=context)
