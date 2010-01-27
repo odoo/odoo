@@ -458,20 +458,34 @@
                     help="In Progress"/>
                 <filter domain="[('state','=','to_validate')]" string="To Validate" icon="gtk-execute"
                     help="To Validate"/>
-                <group string="Group By..." expand="1">
-                    <filter domain="[]" string="By Process" icon="terp-hr" context="{'group_by':'process_id'}" help="Process Changes by owner"/>
-                    <filter domain="[]" string="By Type" icon="terp-hr" context="{'group_by':'phase_type_id'}" help="Process Changes by owner"/>
-
-                </group>
                 <separator orientation="vertical"/>
                 <field name="process_id" select="1"/>
                 <field name="name" select="1"/>
                 <field name="phase_type_id" select="1"/>
                 <field name="date_control" select="1"/>
+                <newline/>
+                <group string="Group By..." expand="1" colspan="10">
+                    <filter domain="[]" string="By Process" icon="terp-hr" context="{'group_by':'process_id'}" help="Process Changes by owner"/>
+                    <filter domain="[]" string="By Type" icon="terp-hr" context="{'group_by':'phase_type_id'}" help="Process Changes by owner"/>
+                </group>
             </search>
         </field>
     </record>
 
+        <record id="view_process_phase_calendar" model="ir.ui.view">
+            <field name="name">document.change.process.phase.calendar</field>
+            <field name="model">document.change.process.phase</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="state" date_start="date_control" string="Phases Deadlines">
+                    <field name="name"/>
+                    <field name="process_id"/>
+                </calendar>
+            </field>
+        </record>
+
+ 
     <record model="ir.ui.view" id="view_process_phase_tree">
         <field name="name">document.change.process.phase.tree</field>
         <field name="model">document.change.process.phase</field>
@@ -496,7 +510,7 @@
         <field name="res_model">document.change.process.phase</field>
         <field name="name">Phases</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,calendar</field>
         <field name="search_view_id" ref="view_process_phase_search"/>
     </record>
     <menuitem action="action_process_phase_form" id="menu_phases_form" parent="menu_document_process_changes"/>
@@ -700,6 +714,18 @@
     <record model="ir.actions.act_window" id="act_documents_change_process">
         <field name="search_view_id" ref="view_document_search"/>
     </record>
+
+
+    <record model="ir.actions.act_window" id="action_process_phase_cal">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.process.phase</field>
+        <field name="name">Calendar of Phases</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="search_view_id" ref="view_process_phase_search"/>
+    </record>
+    <menuitem action="action_process_phase_cal" id="menu_phases_cal" parent="menu_change_control"/>
+
 
 </data>
 </openerp>
