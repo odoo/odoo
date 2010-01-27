@@ -701,5 +701,61 @@
         <field name="search_view_id" ref="view_document_search"/>
     </record>
 
+	<!-- Dashboard -->
+	<record model="ir.ui.view" id="view_document_change_report_graph">
+        <field name="name">document.change.report.graph</field>
+        <field name="model">document.change.report</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Coverage Analysis" type="bar">
+                <field name="change_type_id"/>
+                <field name="amount_exist"/>
+                <field name="amount_required"/>
+            </graph>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_document_change_report">
+        <field name="name">Coverage Analysis</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.change.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+    </record>
+	<record id="board_document_change_form" model="ir.ui.view">
+            <field name="name">board.document.change.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Process Change Board">
+                    <hpaned>
+                        <child1>
+                        	<action colspan="4" height="220" name="%(action_document_to_update_form)d" string="Documents to Update" width="510"/>
+                        </child1>
+                        <child2>
+                        	<!--action colspan="4" height="220" name="%(action_document_change_report)d" string="Coverage Analysis" width="510"/-->
+                        </child2>
+                    </hpaned>
+                 </form>
+            </field>
+    </record>
+	<record id="open_board_document_change" model="ir.actions.act_window">
+            <field name="name">Process Change Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_document_change_form"/>
+    </record>
+	<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+    <menuitem
+        id="menu_document_change_dashboard"
+        name="Process Change"
+        parent="base.dashboard"/>
+    <menuitem
+        action="open_board_document_change"
+        icon="terp-graph"
+        id="menu_board_document_change"
+        parent="menu_document_change_dashboard"
+        sequence="1"/>
 </data>
 </openerp>
