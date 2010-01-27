@@ -481,7 +481,7 @@ class actions_server(osv.osv):
             result = eval(exp, {'object':obj, 'context': context,'time':time})
             if result in (None, False):
                 return str("--------")
-            return str(result)
+            return tools.ustr(result)
         
         com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
