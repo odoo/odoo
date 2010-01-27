@@ -49,8 +49,9 @@
         <record id="tran_document_request_to_propose" model="workflow.transition">
             <field name="act_from" ref="act_document_request"/>
             <field name="act_to" ref="act_document_propose"/>
+            <field name="condition">test_change_request()</field>
             <field name="signal">button_propose</field>
-            <field name="condition">(target_document_id != False)</field>
+            
         </record>
         <record id="tran_document_request_to_cancel" model="workflow.transition">
             <field name="act_from" ref="act_document_request"/>
