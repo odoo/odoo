@@ -900,6 +900,13 @@
                     <field name="user_id" select="1"/>
                     <field name="response_type" select="1"/>
                     <field name="question_ids" nolabel="1" colspan="4" />
+                    <group col="5" colspan="4">
+                        <field name="state"/>
+                        <button name="response_done" string="Done"
+                            states="skip" type="object" icon="gtk-go-forward"/>
+                        <button name="response_skip" string="Skip"
+                            states="done" type="object" icon="gtk-close"/>
+                    </group>
                 </form>
             </field>
         </record>
