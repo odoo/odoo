@@ -258,18 +258,15 @@ class document_change_process(osv.osv):
             for phase_type_id in process.process_model_id.phase_type_ids:
                 new_doc_ids = []
                 for document_type_id in phase_type_id.document_type_ids:
-                    print 'Creating', phase_type_id.name, document_type_id.name
                     document_ids = document_obj.search(cr, uid, [
                         ('parent_id','in',directory_ids),
                         ('change_type_id','=',document_type_id.id)
                     ])
                     for document_id in document_ids:
-                        print 'Found Some...'
                         vals = {}
                         new_doc_ids.append(document_obj.copy(cr, uid, document_id, vals))
                     if not document_ids:
                         if document_type_id.template_document_id:
-                            print 'Copy'
                             new_doc_ids.append(document_obj.copy(cr, uid, document_type_id.template_document_id.id, {
                                 'name': document_type_id.template_document_id.name,
                                 'datas_fname': document_type_id.template_document_id.datas_fname,
@@ -277,7 +274,6 @@ class document_change_process(osv.osv):
                                 'change_type_id': document_type_id.id
                             }))
                         else:
-                            print 'Create'
                             new_doc_ids.append(document_obj.create(cr, uid, {
                                 'name': document_type_id.filename,
                                 'datas_fname': document_type_id.filename,
@@ -363,9 +359,10 @@ class document_file(osv.osv):
                 'state': 'in_production'
             },
             context=context)
+            file('/tmp/debug.png','wb+').write(base64.decodestring(attach.target))
             self.write(cr, uid, [attach.id], {
-                'target': False,
-                'datas': base64.encodestring(attach.target),
+                #'target': False,
+                'datas': attach.target,
                 'state': 'in_production'
             })
         return True
