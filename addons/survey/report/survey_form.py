@@ -135,10 +135,6 @@ class survey_form(report_rml):
         <story>"""
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         for survey in surv_obj.browse(cr,uid,ids):
-            if survey.question_prefix:
-                prefix = survey.question_prefix + " : "
-            else:
-                prefix = ''
             if datas.has_key('form') and datas['form']['survey_title']:
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="title_tbl">
@@ -156,7 +152,7 @@ class survey_form(report_rml):
                     rml +="""
                     <para style="P2"><font></font></para>
                     <blockTable colWidths='"""+_tbl_widths+"""' style="question_tbl">
-                        <tr><td><para style="question">""" + to_xml(tools.ustr(prefix)) + to_xml(tools.ustr(que.question)) + """</para></td></tr>
+                        <tr><td><para style="question">Que : """  + to_xml(tools.ustr(que.question)) + """</para></td></tr>
                     </blockTable>
                     <para style="P2"><font></font></para>"""
                     if que.type in ['descriptive_text']:

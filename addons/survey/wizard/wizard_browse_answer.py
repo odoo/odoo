@@ -20,8 +20,33 @@
 #
 ##############################################################################
 
-import wizard_survey
-import wizard_print_survey
-import wizard_browse_answer
+import wizard
+import time
+import pooler
+from random import choice
+import string
+import tools
+from tools.translate import _
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+_survey_form = '''<?xml version="1.0"?>
+<form string="Browse Answer">
+    <field name="response_ids" colspan="4" nolabel="1"/>
+</form>'''
+
+_survey_fields = {
+    'response_ids': {'string': 'Survey', 'type': 'many2many', 'relation': 'survey.response'},
+    }
+
+class browse_answer_wizard(wizard.interface):
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type' : 'form', 'arch' :_survey_form, 'fields' :_survey_fields,\
+                             'state' : [('end', 'Cancel', 'gtk-cancel'), ('print', 'Print', 'gtk-print')]}
+                },
+        'print': {
+            'actions': [],
+            'result': {'type':'print', 'report':'survey.browse.response', 'state':'end'}
+        }
+    }
+browse_answer_wizard('wizard.browse.answer')
