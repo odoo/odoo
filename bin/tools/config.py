@@ -347,6 +347,18 @@ class configmanager(object):
         res = os.path.abspath(os.path.expanduser(value))
         if not os.path.exists(res):
             raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+        
+        contains_addons = False
+        for f in os.listdir(res):
+            modpath = os.path.join(res, f)
+            if os.path.isdir(modpath) and os.path.exists(os.path.join(modpath, '__init__.py')) and \
+            os.path.exists(os.path.join(modpath, '__terp__.py')):
+                contains_addons = True
+                break
+
+        if not contains_addons:
+            raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, value))
+        
         setattr(parser.values, option.dest, res)
 
     def load(self):
