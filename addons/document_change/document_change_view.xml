@@ -733,8 +733,10 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.change.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_document_change_report_graph"/>
     </record>
+        
 	<record id="board_document_change_form" model="ir.ui.view">
             <field name="name">board.document.change.form</field>
             <field name="model">board.board</field>

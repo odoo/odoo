@@ -215,6 +215,15 @@ request was delegated to"),
     def do_decline(self, cr, uid, ids, context=None, *args):
         self.write(cr, uid, ids, {'state': 'declined'}, context)
 
+    def create(self, cr, uid, vals, context={}):
+        if not vals.get("email") and vals.get("cn"):
+            cnval = vals.get("cn").split(':')
+            email =  filter(lambda x:x.__contains__('@'), cnval)
+            vals['email'] = email[0]
+            vals['cn'] = vals.get("cn")
+        res = super(calendar_attendee, self).create(cr, uid, vals, context)
+        return res
+
 calendar_attendee()
 
 class res_alarm(osv.osv):
