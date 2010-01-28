@@ -996,7 +996,8 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Menu">
+                <tree string="Menu" editable="top">
+					<field name="sequence"/>
                     <field icon="icon" name="complete_name"/>
                 </tree>
             </field>
