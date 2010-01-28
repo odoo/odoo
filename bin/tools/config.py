@@ -330,8 +330,9 @@ class configmanager(object):
 
         contains_addons = False
         for f in os.listdir(res):
-            if os.path.exists(res, f, '__init__.py') and \
-            os.path.exists(res, f, '__terp__.py'):
+            modpath = os.path.join(res, f)
+            if os.path.isdir(modpath) and os.path.exists(os.path.join(modpath, '__init__.py')) and \
+            os.path.exists(os.path.join(modpath, '__terp__.py')):
                 contains_addons = True
                 break
 
