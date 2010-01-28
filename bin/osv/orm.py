@@ -1832,11 +1832,23 @@ class orm(orm_template):
             alldata[r['id']] = r
             del r['id']
 
+        today = ''
+        if fget.has_key(groupby) and fget[groupby]['type'] in ('date','datetime'):
+            today = datetime.date.today()
+            yesterday = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
         for d in data:
             if fget.has_key(groupby):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
+            if today:
+                if d[groupby] == str(today):
+                    d[groupby] = 'Today'
+                elif d[groupby] == yesterday:
+                    d[groupby] = 'Yesterday'
+                else:
+                    d[groupby] = 'Old'
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
@@ -2424,7 +2436,7 @@ class orm(orm_template):
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
-        #ids = map(lambda x:int(x), ids)        
+        #ids = map(lambda x:int(x), ids)
         if not ids:
             return []
         if fields_to_read == None:
