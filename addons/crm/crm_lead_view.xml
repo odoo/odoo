@@ -183,10 +183,6 @@
                                domain="[('user_id','=',uid)]" help="My Leads"
                                default="1"
                            />
-                           <filter icon="terp-crm"
-                               domain="[('user_id','child_of',[uid])]"
-                               help="My department's Leads"
-                           />
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Leads"/>
