@@ -2424,9 +2424,9 @@ class orm(orm_template):
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
+        #ids = map(lambda x:int(x), ids)        
         if not ids:
             return []
-        ids = map(lambda x:int(x), ids)
         if fields_to_read == None:
             fields_to_read = self._columns.keys()
 
@@ -2520,6 +2520,7 @@ class orm(orm_template):
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
                 for pos in val:
                     for record in res:
+                        if isinstance(res2[record['id']], str):res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
                         record[pos] = res2[record['id']][pos]
             else:
                 for f in val:
