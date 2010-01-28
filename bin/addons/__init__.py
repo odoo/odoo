@@ -311,7 +311,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
-            cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
+            #Removed the query which was setting the module state uninstallable if module is not found
             continue
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
