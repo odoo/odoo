@@ -3243,9 +3243,12 @@ class orm(orm_template):
             qu1 = ''
 
 
+        order_by = self._order
         if order:
             self._check_qorder(order)
-        order_by = order or self._order
+            o = order.split(' ')[0]
+            if (o in self._columns) and getattr(self._columns[o], '_classic_write'):
+                order_by = order
 
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
