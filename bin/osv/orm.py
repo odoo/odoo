@@ -1843,9 +1843,9 @@ class orm(orm_template):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
             if today:
-                if d[groupby] == str(today):
+                if d[groupby][:10] == str(today):
                     d[groupby] = 'Today'
-                elif d[groupby] == yesterday:
+                elif d[groupby][:10] == yesterday:
                     d[groupby] = 'Yesterday'
                 else:
                     d[groupby] = 'Old'
