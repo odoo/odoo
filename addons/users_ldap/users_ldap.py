@@ -18,18 +18,12 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from service import security
+from osv import fields, osv
 import pooler
 import tools
 from service import security
-try:
-    import ldap
-    from ldap.filter import filter_format
-except ImportError:
-    import netsvc
-    logger = netsvc.Logger()
-    logger.notifyChannel("init", netsvc.LOG_WARNING, "could not import ldap!")
+import ldap
+from ldap.filter import filter_format
 
 
 class CompanyLDAP(osv.osv):
@@ -71,18 +65,20 @@ res_company()
 class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
-        ret = super(users,self).login(db, login, password)        
+        ret = super(users,self).login(db, login, password)
+        tools.debug(ret)
         if ret:
             return ret
         pool = pooler.get_pool(db)
-        cr = pooler.get_db(db).cursor()        
+        cr = pooler.get_db(db).cursor()
         action_obj = pool.get('ir.actions.actions')
         cr.execute("""
-            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn, ldap_password, 
-                   ldap_filter, ldap_base, \"user\", create_user 
-            FROM res_company_ldap 
+            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn, ldap_password,
+                   ldap_filter, ldap_base, "user", create_user
+            FROM res_company_ldap
             WHERE ldap_server != '' and ldap_binddn != '' ORDER BY sequence""")
         for res_company_ldap in cr.dictfetchall():
+            tools.debug(res_company_ldap)
             try:
                 l = ldap.open(res_company_ldap['ldap_server'], res_company_ldap['ldap_server_port'])
                 if l.simple_bind_s(res_company_ldap['ldap_binddn'], res_company_ldap['ldap_password']):
@@ -97,16 +93,18 @@ class users(osv.osv):
                         continue
                     if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
                         dn = result_data[0][0]
+                        tools.debug(dn)
                         name = result_data[0][1]['cn'][0]
-                        if l.bind_s(dn, passwd):
+                        if l.bind_s(dn, password):
                             l.unbind()
                             cr.execute("SELECT id FROM res_users WHERE login=%s",(tools.ustr(login),))
                             res = cr.fetchone()
+                            tools.debug(res)
                             if res:
                                 cr.close()
                                 return res[0]
                             if not res_company_ldap['create_user']:
-                                continue                            
+                                continue
                             action_id = action_obj.search(cr, 1, [('usage', '=', 'menu')])[0]
                             if res_company_ldap['user']:
                                 res = self.copy(cr, 1, res_company_ldap['user'],
@@ -129,6 +127,7 @@ class users(osv.osv):
                             return res
                     l.unbind()
             except Exception, e:
+                tools.debug(e)
                 continue
         cr.close()
         return False
@@ -138,8 +137,7 @@ class users(osv.osv):
             return super(users,self).check(db, uid, passwd)
         except: # AccessDenied
             pass
-        pool = pooler.get_pool(db)
-        cr = pooler.get_db(db).cursor()                
+        cr = pooler.get_db(db).cursor()
         user = self.browse(cr, 1, uid)
         if user and user.company_id.ldaps:
             for res_company_ldap in user.company_id.ldaps:
@@ -156,7 +154,6 @@ class users(osv.osv):
                         result_type, result_data = l.result(result_id, timeout)
                         if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
                             dn = result_data[0][0]
-                            name = result_data[0][1]['cn']
                             if l.bind_s(dn, passwd):
                                 l.unbind()
                                 self._uid_cache.setdefault(db, {})[uid] = passwd
@@ -164,6 +161,7 @@ class users(osv.osv):
                                 return True
                         l.unbind()
                 except Exception, e:
+                    tools.debug(e)
                     pass
         cr.close()
         raise security.ExceptionNoTb('AccessDenied')
