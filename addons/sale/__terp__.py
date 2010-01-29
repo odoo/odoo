@@ -62,6 +62,7 @@
         'sale_demo.xml',
         'test/manual_invoice.xml',
         'test/invoice_packing.xml',
+        'test/bug399817.xml',
     ],
     'installable': True,
     'active': False,
