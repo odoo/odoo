@@ -13,9 +13,9 @@
             <field model="product.pricelist" name="pricelist_id" search="[]" />
             <field name="user_id" ref="base.user_root" />
             <field name="partner_id" ref="base.res_partner_agrolait" />
-            <field model="res.partner.address" name="partner_invoice_id" search="[]" />
-            <field model="res.partner.address" name="partner_shipping_id" search="[]" />
-            <field model="res.partner.address" name="partner_order_id" search="[]" />
+            <field name="partner_invoice_id" ref="base.res_partner_address_8" />
+            <field name="partner_shipping_id" ref="base.res_partner_address_8" />
+            <field name="partner_order_id" ref="base.res_partner_address_8" />
             <field name="order_policy">picking</field>
         </record>
         <!-- Resource: sale.order.line -->
