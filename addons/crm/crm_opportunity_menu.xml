@@ -10,6 +10,7 @@
             src_model="crm.opportunity"
             view_mode="calendar,graph"
             context="{'default_partner_id': active_id, 'default_duration': 4.0}"
+            domain="[('opportunity_id','=',active_id)]"
             view_type="form"/>
 
 	 <act_window
@@ -19,6 +20,7 @@
             src_model="crm.opportunity"
             view_mode="calendar,tree,form"
             context="{'default_partner_id': active_id, 'default_duration': 1.0}"
+            domain="[('opportunity_id','=',active_id)]"
             view_type="form"/>            
             
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
