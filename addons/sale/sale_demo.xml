@@ -198,18 +198,5 @@
         <!-- Run all schedulers -->
         <function model="mrp.procurement" name="run_scheduler"/>
 
-
-        <!-- sale advance demo.. -->
-		<!-- Demo Data for Product -->
-		<record id="advance_product_0" model="product.product">
-			<field name="name">Advance Product</field>
-			<field name="categ_id" ref="product.cat1"/>
-			<field name="type">service</field>
-			<field name="list_price">150.0</field>
-			<field name="standard_price">100.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-		</record>
-
     </data>
 </openerp>
