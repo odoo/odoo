@@ -38,40 +38,28 @@
 #
 #
 
-import time
-import datetime
 import calendar
-import types
-import string
-import netsvc
-import re
-import traceback
-
+import copy
+import datetime
 import pickle
+import random
+import re
+import string
+import sys
+import time
+import traceback
+import types
+from lxml import etree
 
 import fields
+import netsvc
 import tools
-from tools.translate import _
-
-import copy
-import sys
-import copy
-
-try:
-    from lxml import etree
-except ImportError:
-    sys.stderr.write("ERROR: Import lxml module\n")
-    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
-    sys.exit(2)
-
-
 from tools.config import config
+from tools.translate import _
 
 regex_order = re.compile('^([a-z0-9_]+( *desc| *asc)?( *, *|))+$', re.I)
 
 def last_day_of_current_month():
-    import datetime
-    import calendar
     today = datetime.date.today()
     last_day = str(calendar.monthrange(today.year, today.month)[1])
     return time.strftime('%Y-%m-' + last_day)
@@ -2298,7 +2286,6 @@ class orm(orm_template):
                 elif field['ttype'] == 'one2many':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], field['relation_field'], **attrs)
                 elif field['ttype'] == 'many2many':
-                    import random
                     _rel1 = field['relation'].replace('.', '_')
                     _rel2 = field['model'].replace('.', '_')
                     _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, field['name'])
