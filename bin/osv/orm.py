@@ -45,6 +45,7 @@ import types
 import string
 import netsvc
 import re
+import traceback
 
 import pickle
 
@@ -126,6 +127,8 @@ class browse_record_list(list):
 
 
 class browse_record(object):
+    logger = netsvc.Logger()
+
     def __init__(self, cr, uid, id, table, cache, context=None, list_class = None, fields_process={}):
         '''
         table : the object (inherited from orm)
@@ -172,9 +175,11 @@ class browse_record(object):
                 else:
                     return getattr(self._table, name)
             else:
-                logger = netsvc.Logger()
-                logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
-                return None
+                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
+                    "Field '%s' does not exist in object '%s': \n%s" % (
+                        name, self, ''.join(traceback.format_trace())))
+                raise KeyError("Field '%s' does not exist in object '%s'" % (
+                    name, self))
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
@@ -207,8 +212,11 @@ class browse_record(object):
 
 
             if not datas:
-                # Where did those ids come from? Perhaps old entries in ir_model_data?
-                raise except_orm('NoDataError', 'Field %s in %s%s'%(name,self._table_name,str(ids)))
+                # Where did those ids come from? Perhaps old entries in ir_model_dat?
+                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
+                    "No datas found for ids %s in %s \n%s" % (
+                        ids, self, ''.join(traceback.format_trace())))
+                raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for data in datas:
                 if len(str(data['id']).split('-')) > 1:
@@ -233,15 +241,18 @@ class browse_record(object):
                 self._data[data['id']].update(data)
         if not name in self._data[self._id]:
             #how did this happen?
-            logger = netsvc.Logger()
-            logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Ffields: %s, datas: %s"%(str(fffields),str(datas)))
-            logger.notifyChannel("browse_record", netsvc.LOG_ERROR,"Data: %s, Table: %s"%(str(self._data[self._id]),str(self._table)))
-            raise AttributeError(_('Unknown attribute %s in %s ') % (str(name),self._table_name))
+            self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
+                    "Ffields: %s, datas: %s"%(fffields, datas))
+            self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
+                    "Data: %s, Table: %s"%(self._data[self._id], self._table))
+            raise KeyError(_('Unknown attribute %s in %s ') % (name, self))
         return self._data[self._id][name]
 
     def __getattr__(self, name):
-#       raise an AttributeError exception.
-        return self[name]
+        try:
+            return self[name]
+        except KeyError, e:
+            raise AttributeError(e)
 
     def __contains__(self, name):
         return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
