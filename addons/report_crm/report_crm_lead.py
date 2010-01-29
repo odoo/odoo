@@ -164,4 +164,110 @@ class report_crm_lead_section_stage(osv.osv):
 
 report_crm_lead_section_stage()
 
+class report_crm_lead_section_type(osv.osv):
+    _name = "report.crm.lead.section.type"
+    _inherit = "report.crm.case.section.type"
+    _description = "Leads by section and type"
+    _auto = False
+    _columns = {
+        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),
+        'delay_close': fields.char('Delay Close', size=20, readonly=True),
+    }
+    _order = 'type_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_lead_section_type")
+        cr.execute("""
+              create view report_crm_lead_section_type as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.state,
+                    c.type_id,
+                    c.stage_id,
+                    c.section_id,
+                    count(*) as nbr,
+                    sum(planned_revenue) as amount_revenue,
+                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                from
+                    crm_lead c
+                where c.type_id is not null
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.state, c.stage_id, c.type_id, c.section_id)""")
+
+report_crm_lead_section_type()
+
+class report_crm_lead_section_categ_stage(osv.osv):
+    _name = "report.crm.lead.section.categ.stage"
+    _inherit = "report.crm.case.section.categ.stage"
+    _description = "Leads by Section, Category and Stage"
+    _auto = False
+    _columns = {
+        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'delay_close': fields.char('Delay Close', size=20, readonly=True),
+    }
+    _order = 'stage_id, categ_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_lead_section_categ_stage")
+        cr.execute("""
+              create view report_crm_lead_section_categ_stage as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.categ_id,
+                    c.state,
+                    c.stage_id,
+                    c.section_id,
+                    count(*) as nbr,
+                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                from
+                    crm_lead c
+                where c.categ_id is not null AND c.stage_id is not null
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.categ_id, c.state, c.stage_id, c.section_id)""")
+
+report_crm_lead_section_categ_stage()
+
+class report_crm_lead_section_categ_type(osv.osv):
+    _name = "report.crm.lead.section.categ.type"
+    _inherit = "report.crm.case.section.categ.type"
+    _description = "Leads by Section, Category and Type"
+    _auto = False
+    _columns = {
+        'categ_id':fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
+        'delay_close': fields.char('Delay Close', size=20, readonly=True),
+    }
+    _order = 'categ_id, type_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_lead_section_categ_type")
+        cr.execute("""
+              create view report_crm_lead_section_categ_type as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.categ_id,
+                    c.type_id,
+                    c.state,
+                    c.stage_id,
+                    c.section_id,
+                    count(*) as nbr,
+                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                from
+                    crm_lead c
+                where c.categ_id is not null AND c.type_id is not null
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.categ_id, c.type_id, c.state, c.stage_id, c.section_id)""")
+
+report_crm_lead_section_categ_type()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

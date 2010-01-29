@@ -46,7 +46,7 @@ class crm_lead(osv.osv):
     _order = "id desc"
     _inherit = 'crm.case'    
     _columns = {
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
             'type_id': fields.many2one('crm.case.resource.type', 'Lead Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
             'partner_name': fields.char("Employee's Name", size=64),
             'partner_name2': fields.char('Employee Email', size=64),

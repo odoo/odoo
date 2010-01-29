@@ -94,13 +94,11 @@ class opportunity2phonecall(wizard.interface):
                     'section_id' : form['section_id'],
                     'partner_id': opportunity.partner_id.id,
                     'partner_address_id':opportunity.partner_address_id.id,
-                    'description':opportunity.description
+                    'description':opportunity.description,
+                    'opportunity_id':opportunity.id
             }, context=context)
             vals = {}
-            if not opportunity.phonecall_id:
-                vals.update({'phonecall_id' : new_case})
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
-            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+
             phonecall_case_obj.case_open(cr, uid, [new_case])        
             
         value = {            
@@ -142,6 +140,7 @@ class opportunity2meeting(wizard.interface):
                 'section_id' : opportunity.section_id and opportunity.section_id.id or False,
                 'date_deadline': opportunity.date_deadline,
                 'description':opportunity.description,
+                'opportunity_id':opportunity.id
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
