@@ -143,7 +143,7 @@
 		</record>
 		
 		<record model="basic.calendar.lines" id="calendar_lines_alarm">
-			<field name="name">alarm</field>
+			<field name="name">valarm</field>
 			<field name="calendar_id" ref="base_calendar.basic_calendar1" />
 			<field name="object_id" search="[('model','=','calendar.alarm')]" />
 		</record>
@@ -170,13 +170,6 @@
     <field name="fn">field</field>
 </record>
 
-<record model="basic.calendar.fields" id="map_event_4">
-    <field name="name" ref="base_calendar.field_event_attendee"/>
-    <field name="type_id" ref="caldav.calendar_lines_event" />
-	<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.event')]" />
-    <field name="fn">field</field>
-</record>
-
 <record model="basic.calendar.fields" id="map_event_5">
     <field name="name" ref="base_calendar.field_event_rrule"/>
     <field name="type_id" ref="caldav.calendar_lines_event" />
@@ -198,13 +191,6 @@
     <field name="fn">field</field>
 </record>
 
-<record model="basic.calendar.fields" id="map_event_8">
-    <field name="name" ref="base_calendar.field_event_priority"/>
-    <field name="type_id" ref="caldav.calendar_lines_event" />
-	<field name="field_id" search="[('name','=','priority'),('model_id.model','=','calendar.event')]" />
-    <field name="fn">field</field>
-</record>
-
 <record model="basic.calendar.fields" id="map_event_9">
     <field name="name" ref="base_calendar.field_event_location"/>
     <field name="type_id" ref="caldav.calendar_lines_event" />
@@ -216,13 +202,6 @@
     <field name="name" ref="base_calendar.field_event_exrule"/>
     <field name="type_id" ref="caldav.calendar_lines_event" />
 	<field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.event')]" />
-    <field name="fn">field</field>
-</record>
-
-<record model="basic.calendar.fields" id="map_event_11">
-    <field name="name" ref="base_calendar.field_event_status"/>
-    <field name="type_id" ref="caldav.calendar_lines_event" />
-	<field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.event')]" />
     <field name="fn">field</field>
 </record>
 
@@ -284,24 +263,10 @@
 
 
 
-<record model="basic.calendar.fields" id="map_todo_1">
-    <field name="name" ref="base_calendar.field_todo_status"/>
-    <field name="type_id" ref="caldav.calendar_lines_todo" />
-	<field name="field_id" search="[('name','=','state'),('model_id.model','=','calendar.todo')]" />
-    <field name="fn">field</field>
-</record>
-
 <record model="basic.calendar.fields" id="map_todo_2">
     <field name="name" ref="base_calendar.field_todo_exdate"/>
     <field name="type_id" ref="caldav.calendar_lines_todo" />
 	<field name="field_id" search="[('name','=','exdate'),('model_id.model','=','calendar.todo')]" />
-    <field name="fn">field</field>
-</record>
-
-<record model="basic.calendar.fields" id="map_todo_3">
-    <field name="name" ref="base_calendar.field_todo_attendee"/>
-    <field name="type_id" ref="caldav.calendar_lines_todo" />
-	<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','calendar.todo')]" />
     <field name="fn">field</field>
 </record>
 
@@ -333,24 +298,10 @@
     <field name="fn">field</field>
 </record>
 
-<record model="basic.calendar.fields" id="map_todo_9">
-    <field name="name" ref="base_calendar.field_todo_percent"/>
-    <field name="type_id" ref="caldav.calendar_lines_todo" />
-	<field name="field_id" search="[('name','=','progress_rate'),('model_id.model','=','calendar.todo')]" />
-    <field name="fn">field</field>
-</record>
-
 <record model="basic.calendar.fields" id="map_todo_11">
     <field name="name" ref="base_calendar.field_todo_summary"/>
     <field name="type_id" ref="caldav.calendar_lines_todo" />
 	<field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.todo')]" />
-    <field name="fn">field</field>
-</record>
-
-<record model="basic.calendar.fields" id="map_todo_12">
-    <field name="name" ref="base_calendar.field_todo_priority"/>
-    <field name="type_id" ref="caldav.calendar_lines_todo" />
-	<field name="field_id" search="[('name','=','priority'),('model_id.model','=','calendar.todo')]" />
     <field name="fn">field</field>
 </record>
 
@@ -366,13 +317,6 @@
     <field name="type_id" ref="caldav.calendar_lines_todo" />
 	<field name="field_id" search="[('name','=','exrule'),('model_id.model','=','calendar.todo')]" />
     <field name="fn">field</field>
-</record>
-
-<record model="basic.calendar.fields" id="map_todo_15">
-    <field name="name" ref="base_calendar.field_todo_duration"/>
-    <field name="type_id" ref="caldav.calendar_lines_todo" />
-	<field name="field_id" search="[('name','=','planned_hours'),('model_id.model','=','calendar.todo')]" />
-    <field name="fn">hours</field>
 </record>
 
 <record model="basic.calendar.fields" id="map_todo_16">
