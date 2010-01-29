@@ -38,8 +38,8 @@ import xmlrpclib
 import release
 
 class Service(object):
-    """ Base class for *Local* services 
-   
+    """ Base class for *Local* services
+
         Functionality here is trusted, no authentication.
     """
     _services = {}
@@ -52,8 +52,9 @@ class Service(object):
         raise Exception("No group for local services")
         #GROUPS.setdefault(name, {})[self.__name] = self
 
-    def service_exist(self,name):
-        return Service._services.has_key(name)
+    @classmethod
+    def exists(cls, name):
+        return name in cls._services
 
     def exportMethod(self, method):
         if callable(method):
