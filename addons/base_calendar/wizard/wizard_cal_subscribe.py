@@ -66,13 +66,14 @@ class cal_event_subscribe_wizard(wizard.interface):
         model_obj = pooler.get_pool(cr.dbname).get(model)
         context.update({'url': data['form']['url_path'],
                                     'model': data.get('model')})
-        vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), context)
+        vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), \
+                                            data['id'],  context)
         if vals:
             cnt = vals['count']
         return {}
     
     def _result_set(self, cr, uid, data, context=None):
-        return {'msg': 'Subscribed %s Event(s)' % cnt}
+        return {'msg': 'Import Sucessful.'}
     
     states = {
         'init': {

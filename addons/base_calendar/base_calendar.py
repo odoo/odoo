@@ -422,23 +422,27 @@ class basic_calendar_fields(osv.osv):
     _defaults = {
         'fn': lambda *a: 'field',
     }
-
+   
+    def check_line(self, cr, uid, vals, name, context=None):
+        f_obj = self.pool.get('ir.model.fields')
+        field = f_obj.browse(cr, uid, vals['field_id'], context=context)
+        relation = field.relation
+        line_obj = self.pool.get('basic.calendar.lines')
+        l_id = line_obj.search(cr, uid, [('name', '=', name)])
+        if l_id:
+            line = line_obj.browse(cr, uid, l_id, context=context)[0]
+            line_rel = line.object_id.model
+            if (relation != 'NULL') and (not relation == line_rel):
+                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
+        return True
+    
     def create(self, cr, uid, vals, context={}):
         cr.execute('select name from basic_calendar_attributes \
                             where id=%s' % (vals.get('name')))
         name = cr.fetchone()
         name = name[0]
         if name in ('valarm', 'attendee'):
-            f_obj = self.pool.get('ir.model.fields')
-            field = f_obj.browse(cr, uid, vals['field_id'], context=context)
-            relation = field.relation
-            line_obj = self.pool.get('basic.calendar.lines')
-            l_id = line_obj.search(cr, uid, [('name', '=', name)])
-            if l_id:
-                line = line_obj.browse(cr, uid, l_id, context=context)[0]
-                line_rel = line.object_id.model
-                if (relation != 'NULL') and (not relation == line_rel):
-                    raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
+             self.check_line(cr, uid, vals, name, context=context)
         cr.execute("Select count(id) from basic_calendar_fields \
                                 where name=%s and type_id=%s" % (vals.get('name'), vals.get('type_id')))
         res = cr.fetchone()
@@ -446,6 +450,23 @@ class basic_calendar_fields(osv.osv):
             if res[0] > 0:
                 raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
         return super(basic_calendar_fields, self).create(cr, uid, vals, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if not vals:
+            return
+        for id in ids:
+            field = self.browse(cr, uid, id, context=context)
+            name = field.name.name
+            if name in ('valarm', 'attendee'):
+                 self.check_line(cr, uid, vals, name, context=context)
+            qry = "Select count(id) from basic_calendar_fields \
+                                where name=%s and type_id=%s" % (field.name.id, field.type_id.id)
+            cr.execute(qry)
+            res = cr.fetchone()
+            if res:
+                if res[0] > 1:
+                    raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
+        return super(basic_calendar_fields, self).write(cr, uid, ids, vals, context)
 
 basic_calendar_fields()
 
