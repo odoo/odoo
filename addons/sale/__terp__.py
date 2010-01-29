@@ -60,8 +60,8 @@
     ],
     'demo_xml': [
         'sale_demo.xml',
-        'test/sale_manual_test.xml',
-        'test/sale_picking_test.xml',
+        'test/manual_invoice.xml',
+        'test/invoice_packing.xml',
     ],
     'installable': True,
     'active': False,
