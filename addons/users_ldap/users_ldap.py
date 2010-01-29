@@ -46,7 +46,7 @@ class CompanyLDAP(osv.osv):
         'ldap_password': fields.char('LDAP password', size=64, required=True),
         'ldap_filter': fields.char('LDAP filter', size=64, required=True),
         'ldap_base': fields.char('LDAP base', size=64, required=True),
-        'user': fields.many2one('res.users', 'Model user',
+        'user': fields.many2one('res.users', 'Model User',
             help="Model used for user creation"),
         'create_user': fields.boolean('Create user',
             help="Create the user if not in database"),
@@ -63,7 +63,6 @@ CompanyLDAP()
 
 class res_company(osv.osv):
     _inherit = "res.company"
-
     _columns = {
         'ldaps': fields.one2many('res.company.ldap', 'company', 'LDAP Parameters'),
     }
