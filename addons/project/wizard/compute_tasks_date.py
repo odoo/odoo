@@ -27,9 +27,12 @@ from resource.faces import *
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
-
     <field name="project_id" colspan="4"/>
+</form>"""
 
+success_msg = """<?xml version="1.0" ?>
+<form string="Compute Scheduling of Tasks">
+    <label string="Task Scheduling completed scccessfully."/>
 </form>"""
 
 compute_fields = {
@@ -54,12 +57,18 @@ def timeformat_convert(cr, uid, time_string, context={}):
 class wizard_compute_tasks(wizard.interface):
 
     def _compute_date(self, cr, uid, data, context):
-
+        pool = pooler.get_pool(cr.dbname)
+        project_pool = pool.get('project.project')
+        task_pool = pool.get('project.task')
+        resource_pool = pool.get('resource.resource')
+        resource_leaves_pool = pool.get('resource.calendar.leaves')
+        resource_week_pool = pool.get('resource.calendar.week')
+        
         project_id = data['form']['project_id']
-        project = pooler.get_pool(cr.dbname).get('project.project').browse(cr,uid,project_id)
-        task_ids = pooler.get_pool(cr.dbname).get('project.task').search(cr,uid,[('project_id','=',project_id)])
+        project = project_pool.browse(cr,uid,project_id)
+        task_ids = task_pool.search(cr,uid,[('project_id','=',project_id)])
         if task_ids:
-            task_obj = pooler.get_pool(cr.dbname).get('project.task').browse(cr,uid,task_ids)
+            task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
             if task_1.date_start:
                 date_dt = datetime.datetime.strptime(task_1.date_start,"%Y-%m-%d %H:%M:%S")
@@ -72,24 +81,25 @@ class wizard_compute_tasks(wizard.interface):
                 final_lst = []
                 leaves = []
                 if task_obj[i].user_id.id:
-                    resource_id = pooler.get_pool(cr.dbname).get('resource.resource').search(cr,uid,[('user_id','=',task_obj[i].user_id.id)])
+                    resource_id = resource_pool.search(cr,uid,[('user_id','=',task_obj[i].user_id.id)])
                     if resource_id :
-                        resource_obj = pooler.get_pool(cr.dbname).get('resource.resource').browse(cr,uid,resource_id)[0]
+                        resource_obj = resource_pool.browse(cr,uid,resource_id)[0]
                         if resource_obj.calendar_id:
+                            print "resource_obj.calendar_id>>",resource_obj.calendar_id
                             calendar_id = resource_obj.calendar_id.id
-                            resource_leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource_id)])
+                            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',resource_id)])
                         else:
                             calendar_id = project.resource_calendar_id.id
-                            resource_leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
+                            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
 
                         time_range = "8:00-8:00"
                         non_working = ""
-                        wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri"}
+                        wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
                         wk_days = {}
                         wk_time = {}
                         tlist = []
-                        week_ids = pooler.get_pool(cr.dbname).get('resource.calendar.week').search(cr,uid,[('calendar_id','=',calendar_id)])
-                        week_obj = pooler.get_pool(cr.dbname).get('resource.calendar.week').read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
+                        week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
+                        week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
 
                         for week in week_obj:
                             res_str = ""
@@ -123,7 +133,7 @@ class wizard_compute_tasks(wizard.interface):
                             print 'Final list After Adding Non-Working:::',final_lst
 
                         if resource_leave_ids:
-                            res_leaves = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
+                            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
                             for leave in range(len(res_leaves)):
                                 dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
                                 dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
@@ -144,7 +154,7 @@ class wizard_compute_tasks(wizard.interface):
                 if i == 0:
                     new_dt = dt
                 else:
-                    data = pooler.get_pool(cr.dbname).get('project.task').read(cr,uid,[task_obj[i-1].id],['date_end'])[0]
+                    data = task_pool.read(cr,uid,[task_obj[i-1].id],['date_end'])[0]
                     new_dt = data['date_end'][0:16]
 
                 def Project_1():
@@ -167,7 +177,7 @@ class wizard_compute_tasks(wizard.interface):
                 e_date = project_1.calendar.WorkingDate(project_1.task1.end).to_datetime()
                 print 'Start Date::::',s_date,task_obj[i].name
                 print 'End Date::::',e_date,task_obj[i].name
-                pooler.get_pool(cr.dbname).get('project.task').write(cr,uid,[task_obj[i].id],{'date_start':s_date,'date_end':e_date})
+                task_pool.write(cr,uid,[task_obj[i].id],{'date_start':s_date,'date_end':e_date})
 
         return {}
     states = {
@@ -175,13 +185,13 @@ class wizard_compute_tasks(wizard.interface):
             'actions': [],
             'result': {'type':'form', 'arch':compute_form, 'fields':compute_fields, 'state':[
                 ('end', 'Cancel'),
-                ('ok', 'Ok')
-
+                ('compute', 'Compute')
             ]},
         },
-        'ok': {
+        
+        'compute': {
             'actions': [_compute_date],
-            'result': {'type':'state', 'state':'end'},
+            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
         }
     }
 wizard_compute_tasks('wizard.compute.tasks')
