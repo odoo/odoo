@@ -932,6 +932,9 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' : tools.ustr(response_id)})
         else:
             response_id = int(sur_name_read['response'])
+        if response_id not in surv_all_resp_obj.search(cr, uid, []):
+            response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'user_id':uid, 'date_create':datetime.datetime.now(), 'survey_id' : context['survey_id']})
+            surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' : tools.ustr(response_id)})
         for key,val in sur_name_read['store_ans'].items():
             for field in vals:
                 if field.split('_')[0] == val['question_id']:
@@ -1013,7 +1016,6 @@ class survey_question_wiz(osv.osv_memory):
                                 if error:
                                     for res in resp_id_list:
                                         sur_name_read['store_ans'].pop(res)
-                                    surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                                     raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg'])))
                                 resp_obj.write(cr, uid, resp_id, {'comment':val1})
                                 sur_name_read['store_ans'][resp_id].update({key1:val1})
@@ -1050,7 +1052,6 @@ class survey_question_wiz(osv.osv_memory):
                             if error:
                                 for res in resp_id_list:
                                     sur_name_read['store_ans'].pop(res)
-                                surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                                 raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg'])))
                             if key1.split('_')[1] == "single" :
                                 resp_obj.write(cr, uid, resp_id, {'single_text':val1})
@@ -1086,19 +1087,16 @@ class survey_question_wiz(osv.osv_memory):
                     if comment_field and comment_value:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
                     if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "\n you cannot select same answer more than one times'"))
                     if not select_count:
                         resp_obj.write(cr, uid, resp_id, {'state':'skip'})
                     if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
                     if que_rec['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
                         if matrix_list:
@@ -1109,7 +1107,6 @@ class survey_question_wiz(osv.osv_memory):
                             (que_rec['required_type'] == 'a range' and (len(list(set(matrix_list))) < que_rec['minimum_req_ans'] or len(list(set(matrix_list))) > que_rec['maximum_req_ans'])):
                                 for res in resp_id_list:
                                     sur_name_read['store_ans'].pop(res)
-                                surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                                 raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
                         elif (que_rec['required_type'] == 'all' and select_count < len(que_rec['answer_choice_ids'])) or \
                             (que_rec['required_type'] == 'at least' and select_count < que_rec['req_ans']) or \
@@ -1118,12 +1115,10 @@ class survey_question_wiz(osv.osv_memory):
                             (que_rec['required_type'] == 'a range' and (select_count < que_rec['minimum_req_ans'] or select_count > que_rec['maximum_req_ans'])):
                             for res in resp_id_list:
                                 sur_name_read['store_ans'].pop(res)
-                            surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                             raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
                     if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' :0})
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
         else:
             resp_id_list = []
