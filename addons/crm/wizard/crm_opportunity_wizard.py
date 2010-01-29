@@ -141,6 +141,7 @@ class opportunity2meeting(wizard.interface):
                 'section_id' : opportunity.section_id and opportunity.section_id.id or False,
                 'date_deadline': opportunity.date_deadline,
                 'description':opportunity.description,
+                'opportunity_id':opportunity.id
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}

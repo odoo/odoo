@@ -22,6 +22,12 @@
 from osv import fields, osv
 import crm
 
+class crm_opportunity(osv.osv):
+    _name = 'crm.opportunity'
+crm_opportunity()    
+class crm_phonecall(osv.osv):
+    _name = 'crm.phonecall'
+crm_phonecall()    
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
@@ -36,6 +42,8 @@ class crm_meeting(osv.osv):
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
+        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
+        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),
     }
 
 crm_meeting()
