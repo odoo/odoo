@@ -94,12 +94,11 @@ class opportunity2phonecall(wizard.interface):
                     'section_id' : form['section_id'],
                     'partner_id': opportunity.partner_id.id,
                     'partner_address_id':opportunity.partner_address_id.id,
-                    'description':opportunity.description
+                    'description':opportunity.description,
+                    'opportunity_id':opportunity.id
             }, context=context)
             vals = {}
-            if not opportunity.phonecall_id:
-                vals.update({'phonecall_id' : new_case})
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
+
             opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
             phonecall_case_obj.case_open(cr, uid, [new_case])        
             

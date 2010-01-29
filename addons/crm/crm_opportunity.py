@@ -56,7 +56,6 @@ class crm_opportunity(osv.osv):
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
     }
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
