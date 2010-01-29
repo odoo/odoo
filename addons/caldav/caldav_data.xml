@@ -366,7 +366,7 @@
 <record model="basic.calendar.fields" id="map_alarm_3">
     <field name="name" ref="base_calendar.field_alarm_description"/>
     <field name="type_id" ref="caldav.calendar_lines_alarm" />
-	<field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.alarm')]" />
+	<field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.alarm')]" />
     <field name="fn">field</field>
 </record>
 
@@ -394,7 +394,7 @@
 <record model="basic.calendar.fields" id="map_alarm_7">
     <field name="name" ref="base_calendar.field_alarm_summary"/>
     <field name="type_id" ref="caldav.calendar_lines_alarm" />
-	<field name="field_id" search="[('name','=','description'),('model_id.model','=','calendar.alarm')]" />
+	<field name="field_id" search="[('name','=','name'),('model_id.model','=','calendar.alarm')]" />
     <field name="fn">field</field>
 </record>
 

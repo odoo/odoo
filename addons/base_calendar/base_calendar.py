@@ -184,7 +184,10 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() == 'valarm':
                 alarm = self.pool.get('basic.calendar.alarm')
-                vals = alarm.import_cal(cr, uid, cal_data)
+                ctx = context.copy()
+                if cal_children:
+                    ctx.update({'model': cal_children[cal_data.name.lower()]})
+                vals = alarm.import_cal(cr, uid, cal_data, context=ctx)
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
@@ -227,9 +230,11 @@ class CalDAV(object):
                                      data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
                         model = self.__attribute__[field].get('object', False)
+                        ctx = context.copy()
+                        ctx.update({'model': model})
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_cal(cr, uid, model, \
-                                    data[map_field][0], vevent, context=context)
+                                    data[map_field][0], vevent, context=ctx)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             vevent.add(field).value = tools.ustr(data[map_field]) 
@@ -628,11 +633,14 @@ class Alarm(CalDAV, osv.osv_memory):
         trigger.value = delta
 
         # Compute other details
-        valarm.add('DESCRIPTION').value = alarm_data['name']
+        valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
         valarm.add('ACTION').value = alarm_data['action']
         return vevent
 
-    def import_cal(self, cr, uid, ical_data):
+    def import_cal(self, cr, uid, ical_data, context=None):
+        ctx = context.copy()
+        ctx.update({'model': context.get('model', None)})
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
