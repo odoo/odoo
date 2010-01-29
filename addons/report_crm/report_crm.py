@@ -191,5 +191,104 @@ class report_crm_case_section_stage(osv.osv):
 
 report_crm_case_section_stage()
 
+class report_crm_case_section_type(osv.osv):
+    _name = "report.crm.case.section.type"
+    _description = "Cases by Section and Type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'nbr': fields.integer('# of Cases', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+    }
+    _order = 'section_id'
+    
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_case_section_type")
+        cr.execute("""
+              create view report_crm_case_section_type as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.state,
+                    c.section_id,
+                    count(*) as nbr
+                from
+                    crm_case c
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.user_id, c.section_id, c.state)""")
+
+report_crm_case_section_type()
+
+class report_crm_case_section_categ_stage(osv.osv):
+    _name = "report.crm.case.section.categ.stage"
+    _description = "Cases by Section, Category and Stage"
+    _auto = False
+    _columns = {
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'nbr': fields.integer('# of Cases', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+                }
+    _order = 'section_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_case_section_categ_stage")
+        cr.execute("""
+              create view report_crm_case_section_categ_stage as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date,'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.state,
+                    c.section_id,
+                    count(*) as nbr
+                from
+                    crm_case c
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.state, c.section_id)""")
+
+report_crm_case_section_categ_stage()
+
+class report_crm_case_section_categ_type(osv.osv):
+    _name = "report.crm.case.section.categ.type"
+    _description = "Cases by Section, Category and Type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'nbr': fields.integer('# of Cases', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+    }
+    _order = 'section_id'
+
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, "report_crm_case_section_categ_type")
+        cr.execute("""
+              create view report_crm_case_section_categ_type as (
+                select
+                    min(c.id) as id,
+                    to_char(c.create_date, 'YYYY') as name,
+                    to_char(c.create_date, 'MM') as month,
+                    c.user_id,
+                    c.state,
+                    c.section_id,
+                    count(*) as nbr
+                from
+                    crm_case c
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),c.user_id, c.state, c.section_id)""")
+
+report_crm_case_section_categ_type()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
