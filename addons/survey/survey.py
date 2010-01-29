@@ -170,7 +170,7 @@ class survey_question(osv.osv):
         for id in ids1:
             val[id] = 0
         return val
-    
+
     _columns = {
         'page_id' : fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
         'question' :  fields.char('Question', size=128, required=1),
@@ -479,7 +479,18 @@ class survey_response(osv.osv):
         'user_id' : fields.many2one('res.users', 'User'),
         'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Response Type', required=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Response Answer'),
+        'state' : fields.selection([('done', 'Completed '),('skip', 'Skiped')], 'Status', readonly=True),
     }
+    _defaults = {
+        'state' : lambda * a: "skip",
+    }
+    def response_done(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'done' })
+        return True
+
+    def response_skip(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'skip' })
+        return True
 
 survey_response()
 
@@ -601,7 +612,9 @@ class survey_name_wiz(osv.osv_memory):
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': survey_id})
             survey_obj = self.pool.get('survey')
             sur_rec = survey_obj.read(cr,uid,self.read(cr,uid,ids)[0]['survey_id'])
-            survey_obj.write(cr, uid, survey_id, {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
+            if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey']:
+                raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
+            survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         return {
@@ -826,9 +839,11 @@ class survey_question_wiz(osv.osv_memory):
                 else:
                     if not context.has_key('active'):
                         survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
+                        sur_response_obj = self.pool.get('survey.response')
+                        sur_response_obj.write(cr, uid, [sur_name_read['response']], {'state' : 'done'})
                         if sur_rec['send_response']:
                             user_obj = self.pool.get('res.users')
-                            survey_data = survey_obj.browse(cr, uid, int(survey_id))    
+                            survey_data = survey_obj.browse(cr, uid, int(survey_id))
                             response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
                             context.update({'response_id':response_id})
                             report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
@@ -851,9 +866,9 @@ class survey_question_wiz(osv.osv_memory):
                                 cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
                                 resp_email = cr.fetchone()[0]
                             if user_email and resp_email:
-                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks," 
+                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
                                 tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
-                        
+
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your response'})
@@ -933,7 +948,7 @@ class survey_question_wiz(osv.osv_memory):
                 que_id = key.split('_')[0]
                 if que_id not in que_li:
                     que_li.append(que_id)
-                    que_rec = que_obj.read(cr, uid, [que_id], [])[0]
+                    que_rec = que_obj.read(cr, uid, [int(que_id)], [])[0]
                     resp_id = resp_obj.create(cr, uid, {'question_id':que_id, 'date_create':datetime.datetime.now(), \
                          'state':'done','response_id' : response_id })
                     resp_id_list.append(resp_id)
@@ -1113,7 +1128,7 @@ class survey_question_wiz(osv.osv_memory):
         else:
             resp_id_list = []
             for update in click_update:
-                que_rec = que_obj.read(cr, uid , [sur_name_read['store_ans'][update]['question_id']], [])[0]
+                que_rec = que_obj.read(cr, uid , [int(sur_name_read['store_ans'][update]['question_id'])], [])[0]
                 res_ans_obj.unlink(cr, uid,res_ans_obj.search(cr, uid, [('response_id', '=', update)]))
                 surv_tbl_column_obj.unlink(cr, uid,surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)]))
                 resp_id_list.append(update)

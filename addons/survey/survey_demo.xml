@@ -215,6 +215,7 @@
             <field name="comment_label">Why?</field>
             <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_very_integration" model="survey.answer">
             <field name="answer">With each integration</field>
@@ -758,6 +759,7 @@
             <field name="comment_label">No...Why?</field>
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="3"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_yes" model="survey.answer">
             <field name="answer">Yes</field>
@@ -989,6 +991,7 @@
             <field name="comment_label">Comment</field>
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_YES" model="survey.answer">
             <field name="answer">Yes, I plan to use (GB)</field>

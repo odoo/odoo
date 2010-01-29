@@ -141,7 +141,10 @@ class survey_browse_response(report_rml):
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         for response in surv_resp_obj.browse(cr,uid, response_id): 
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
-                rml += """<blockTable colWidths="230.0,150.0,120.0" style="Table_heading">
+                status = "Skip"
+                if response.state == "done":
+                    status = "Complete"
+                rml += """<blockTable colWidths="230.0,120.0,100.0,50" style="Table_heading">
                           <tr>
                             <td>
                               <para style="terp_tblheader_General_Centre">Survey Title </para>
@@ -152,9 +155,12 @@ class survey_browse_response(report_rml):
                             <td>
                               <para style="terp_tblheader_General_Centre">Respose By </para>
                             </td>
+                            <td>
+                              <para style="terp_tblheader_General_Centre">Status</para>
+                            </td>
                           </tr>
                           </blockTable>
-                          <blockTable colWidths="230.0,150.0,120.0" style="Table_head_2">
+                          <blockTable colWidths="230.0,120.0,100.0,50" style="Table_head_2">
                           <tr>
                             <td>
                               <para style="terp_default_Centre_8">""" + to_xml(tools.ustr(survey.title)) + """</para>
@@ -164,6 +170,9 @@ class survey_browse_response(report_rml):
                             </td>
                             <td>
                               <para style="terp_default_Centre_8">""" + to_xml(response.user_id.name) + """</para>
+                            </td>
+                            <td>
+                              <para style="terp_default_Centre_8">""" + status + """</para>
                             </td>
                           </tr>
                         </blockTable>"""

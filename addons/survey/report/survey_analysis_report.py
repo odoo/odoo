@@ -175,7 +175,7 @@ class survey_analysis(report_rml):
                             rml+="""<td><para style="response">""" + tools.ustr(tot_res) + """</para></td>
                                 </tr>"""
                         rml+="""</blockTable>"""
-                        if que.comment_field_type:
+                        if que.is_comment_require:
                             cr.execute("select count(id) from survey_response_line where question_id = %d and comment != ''"% que.id)
                             tot_res = cr.fetchone()[0]
                             rml+="""<blockTable colWidths=" """+ str(500 - last_col) +"," + str(last_col) + """ " style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
@@ -193,7 +193,7 @@ class survey_analysis(report_rml):
                                     <td><para style="answer">""" + tools.ustr(ans.average) + """%</para></td>
                                     <td><para style="answer">""" + tools.ustr(ans.response) + """</para></td></tr>"""
                         rml+="""</blockTable>"""
-                        if que.comment_field_type:
+                        if que.is_comment_require:
                             if que.make_comment_field:
                                 cr.execute("select count(id) from survey_response_line where question_id = %d and comment != ''"% que.id)
                                 tot_res = cr.fetchone()[0]
@@ -296,7 +296,7 @@ class survey_analysis(report_rml):
                                  where sra.answer='%s'  group by sra.value_choice ,sra.answer_id, sra.answer" % (column.title))
                             calc_percantage = cr.dictfetchall()
                             for ans in que.answer_choice_ids:
-                                rml+="""<tr><td><para style="answer_right">""" + tto_xml(tools.ustr(ans.answer)) + """</para></td>"""
+                                rml+="""<tr><td><para style="answer_right">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
                                 for mat_col in range(0, len(menu_choices)):
                                     calc = 0
                                     response = 0

@@ -188,7 +188,6 @@
                		<field name="name" select='1' string="Subject"/>
                    <field name="user_id" select="1" widget="selection">
                    	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
-                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Bugs"/>
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Bugs"/>

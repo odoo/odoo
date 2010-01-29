@@ -817,19 +817,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
-
-       <record id="action_picking_calendar_delivery" model="ir.actions.act_window">
-            <field name="name">Calendar of Deliveries</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">calendar,tree,form</field>
-            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-        </record>
-
         <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="20"/>
-        <menuitem action="action_picking_calendar_delivery" id="menu_action_picking_calendar_delivery" parent="menu_action_picking_tree_delivery"/>
 
         #
         # Sending Products
