@@ -38,7 +38,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Leads Form">
-                <group colspan="4" col="7">
+                <group colspan="4" col="6">
                     <field name="name" select="1" string="Lead Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" select="2"/>
@@ -50,11 +50,10 @@
                     </group>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>
                     <field name="type_id" string="Campaign Type" select="1"/>
-                </group>
-                <field name="date" string="Deadline"/>
-                <group colspan="2" col="4">
+                    <newline/>
+                	<field name="date_deadline"/>
 	                <field name="opportunity_id" string="Opportunity Case"/>
-	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"  colspan="2"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Leads">
