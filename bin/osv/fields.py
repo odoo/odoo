@@ -306,14 +306,16 @@ class many2one(_column):
         obj = obj.pool.get(self._obj)
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         from orm import except_orm
-        try:
-            names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
-        except except_orm:
-            names = {}
-            iids = filter(None, res.values())
-            for iiid in iids:
-                names[iiid] = '// Access Denied //'
 
+        names = {}
+        for record in list(set(filter(None, res.values()))):
+            try:
+                record_name = dict(obj.name_get(cr, user, [record], context))
+            except except_orm:
+                record_name = {}
+                record_name[record] = '// Access Denied //'
+            names.update(record_name)        
+        
         for r in res.keys():
             if res[r] and res[r] in names:
                 res[r] = (res[r], names[res[r]])
