@@ -82,7 +82,6 @@ class res_company(osv.osv):
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context={}):
