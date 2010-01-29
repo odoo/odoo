@@ -23,7 +23,9 @@ from osv import fields,osv
 from osv.orm import except_orm
 import tools
 import pytz
+import pooler
 from tools.translate import _
+from service import security
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -119,6 +121,7 @@ def _companies_get(self,cr, uid, context={}):
 
 class users(osv.osv):
     __admin_ids = {}
+    _uid_cache = {}
     _name = "res.users"
 
     def get_current_company(self, cr, uid):
@@ -259,6 +262,56 @@ class users(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context).res_id
+
+
+    def login(self, db, login, password):
+        if not password:
+            return False
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
+        res = cr.fetchone()
+        cr.close()
+        if res:
+            return res[0]
+        else:
+            return False
+
+    def check_super(self, passwd):
+        if passwd == tools.config['admin_passwd']:
+            return True
+        else:
+            raise security.ExceptionNoTb('AccessDenied')
+
+    def check(self, db, uid, passwd):
+        if not passwd:
+            return False
+        cached_pass = self._uid_cache.get(db, {}).get(uid)
+        if (cached_pass is not None) and cached_pass == passwd:
+            return True
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))    
+        res = cr.fetchone()[0]
+        cr.close()
+        if not bool(res):
+            raise security.ExceptionNoTb('AccessDenied')
+        if res:
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid:passwd}
+        return bool(res)
+
+    def access(self, db, uid, passwd, sec_level, ids):
+        if not passwd:
+            return False
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
+        res = cr.fetchone()
+        cr.close()
+        if not res:
+            raise security.ExceptionNoTb('Bad username or password')
+        return res[0]
 
     _constraints = [
         (_check_company, 'This user can not connect using this company !', ['company_id']),

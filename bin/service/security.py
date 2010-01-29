@@ -22,8 +22,6 @@
 import pooler
 import tools
 
-_uid_cache = {}
-
 # When rejecting a password, we need to give as little info as possible
 class ExceptionNoTb(Exception):
     def __init__(self, msg ):
@@ -32,16 +30,9 @@ class ExceptionNoTb(Exception):
         self.args = (msg, '')
 
 def login(db, login, password):
-    if not password:
-        return False
-    cr = pooler.get_db(db).cursor()    
-    cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
-    res = cr.fetchone()
-    cr.close()
-    if res:
-        return res[0]
-    else:
-        return False
+    pool = pooler.get_pool(db)
+    user_obj = pool.get('res.users')
+    return user_obj.login(db, login, password)
 
 def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
@@ -50,35 +41,14 @@ def check_super(passwd):
         raise ExceptionNoTb('AccessDenied')
 
 def check(db, uid, passwd):
-    if not passwd:
-        return False
-    cached_pass = _uid_cache.get(db, {}).get(uid)
-    if (cached_pass is not None) and cached_pass == passwd:
-        return True
-    cr = pooler.get_db(db).cursor()    
-    cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))    
-    res = cr.fetchone()[0]
-    cr.close()
-    if not bool(res):
-        raise ExceptionNoTb('AccessDenied')
-    if res:
-        if _uid_cache.has_key(db):
-            ulist = _uid_cache[db]
-            ulist[uid] = passwd
-        else:
-            _uid_cache[db] = {uid:passwd}
-    return bool(res)
+    pool = pooler.get_pool(db)
+    user_obj = pool.get('res.users')
+    return user_obj.check(db, uid, passwd)
 
 def access(db, uid, passwd, sec_level, ids):
-    if not passwd:
-        return False
-    cr = pooler.get_db(db).cursor()    
-    cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
-    res = cr.fetchone()
-    cr.close()
-    if not res:
-        raise ExceptionNoTb('Bad username or password')
-    return res[0]
+    pool = pooler.get_pool(db)
+    user_obj = pool.get('res.users')
+    return user_obj.access(db, uid, passwd, sec_level, ids)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
