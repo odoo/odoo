@@ -53,11 +53,11 @@
                         </group>
                     <field name="date_deadline"/>
                     <field name="date" />
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}" />
                     <group colspan="2" attrs="{'invisible' : [('phonecall_id','=',False)]}" >
                         <field name="phonecall_id" />
                     </group>
-					 <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}" />                        
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
