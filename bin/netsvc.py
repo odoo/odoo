@@ -58,7 +58,7 @@ class Service(object):
 
     @classmethod
     def remove(cls, name):
-        if cls.exits(name):
+        if cls.exists(name):
             cls._services.pop(name)
 
     def exportMethod(self, method):
