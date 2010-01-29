@@ -56,6 +56,11 @@ class Service(object):
     def exists(cls, name):
         return name in cls._services
 
+    @classmethod
+    def remove(cls, name):
+        if cls.exits(name):
+            cls._services.pop(name)
+
     def exportMethod(self, method):
         if callable(method):
             self._methods[method.__name__] = method
