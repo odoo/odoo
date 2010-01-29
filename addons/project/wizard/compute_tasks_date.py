@@ -23,7 +23,7 @@ import wizard
 import pooler
 from tools.translate import _
 import datetime
-from resource.faces_new import *
+from resource.faces import *
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
@@ -66,25 +66,29 @@ class wizard_compute_tasks(wizard.interface):
             else:
                 date_dt = datetime.datetime.strptime(project.date_start,"%Y-%m-%d")
             print 'Start Date of Project:::',date_dt
-            pdt = datetime.datetime.strftime(date_dt,"%Y-%m-%d %H:%M")
-
-            class user(Resource):
-                 pass
+            dt = datetime.datetime.strftime(date_dt,"%Y-%m-%d %H:%M")
 
             for i in range(len(task_obj)):
                 final_lst = []
                 leaves = []
                 if task_obj[i].user_id.id:
                     resource_id = pooler.get_pool(cr.dbname).get('resource.resource').search(cr,uid,[('user_id','=',task_obj[i].user_id.id)])
-                    resource_obj = pooler.get_pool(cr.dbname).get('resource.resource').browse(cr,uid,resource_id)[0]
-                    if resource_obj.calendar_id:
+                    if resource_id :
+                        resource_obj = pooler.get_pool(cr.dbname).get('resource.resource').browse(cr,uid,resource_id)[0]
+                        if resource_obj.calendar_id:
+                            calendar_id = resource_obj.calendar_id.id
+                            resource_leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource_id)])
+                        else:
+                            calendar_id = project.resource_calendar_id.id
+                            resource_leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
+
                         time_range = "8:00-8:00"
-                        b = ""
+                        non_working = ""
                         wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri"}
                         wk_days = {}
                         wk_time = {}
                         tlist = []
-                        week_ids = pooler.get_pool(cr.dbname).get('resource.calendar.week').search(cr,uid,[('calendar_id','=',resource_obj.calendar_id.id)])
+                        week_ids = pooler.get_pool(cr.dbname).get('resource.calendar.week').search(cr,uid,[('calendar_id','=',calendar_id)])
                         week_obj = pooler.get_pool(cr.dbname).get('resource.calendar.week').read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
 
                         for week in week_obj:
@@ -113,11 +117,11 @@ class wizard_compute_tasks(wizard.interface):
                             if wk.has_key(k):
                                 wk.pop(k)
                         for v in wk.itervalues():
-                            b += v + ','
-                        final_lst.append((b[:-1],time_range))
-                        print 'Final Tlist:::',tlist
+                            non_working += v + ','
+                        if non_working:
+                            final_lst.append((non_working[:-1],time_range))
+                            print 'Final list After Adding Non-Working:::',final_lst
 
-                        resource_leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource_id)])
                         if resource_leave_ids:
                             res_leaves = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
                             for leave in range(len(res_leaves)):
@@ -133,16 +137,20 @@ class wizard_compute_tasks(wizard.interface):
                 hours = task_obj[i].remaining_hours / task_obj[i].occupation_rate
                 hours = str(hours)[:-2] + 'H'
                 print 'Hours:::',hours
+
+                class user(Resource):
+                 pass
+
                 if i == 0:
-                    ndt = pdt
+                    new_dt = dt
                 else:
                     data = pooler.get_pool(cr.dbname).get('project.task').read(cr,uid,[task_obj[i-1].id],['date_end'])[0]
-                    ndt = data['date_end'][0:16]
+                    new_dt = data['date_end'][0:16]
 
                 def Project_1():
                     resource = user
                     title = project.name
-                    start = ndt
+                    start = new_dt
                     effort = hours
 
                     if final_lst or leaves:
@@ -150,7 +158,7 @@ class wizard_compute_tasks(wizard.interface):
                         vacation = tuple(leaves)
 
                     def task1():
-                        start = ndt
+                        start = new_dt
                         effort = hours
                         title = task_obj[i].name
 
