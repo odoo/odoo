@@ -99,12 +99,12 @@ def _wo_check(self, cr, uid, data, context):
     #    => Ask to a write-off of the difference. This could happen even if both amount are equal,
     #    because if the currency rate
     # Get the amount in company currency for the invoice (according to move lines)
-    inv_amount_company_currency = invoice.move_id.amount
-#    for aml in invoice.move_id.line_id:
-#        if aml.account_id.id == invoice.account_id.id or aml.account_id.type in ('receivable', 'payable'):
-#            inv_amount_company_currency += aml.debit
-#            inv_amount_company_currency -= aml.credit
-#    inv_amount_company_currency = abs(inv_amount_company_currency)
+    inv_amount_company_currency = 0
+    for aml in invoice.move_id.line_id:
+        if aml.account_id.id == invoice.account_id.id or aml.account_id.type in ('receivable', 'payable'):
+            inv_amount_company_currency += aml.debit
+            inv_amount_company_currency -= aml.credit
+    inv_amount_company_currency = abs(inv_amount_company_currency)
 
     # Get the current amount paid in company currency
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
