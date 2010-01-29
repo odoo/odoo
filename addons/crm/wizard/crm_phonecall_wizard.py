@@ -221,6 +221,7 @@ class phonecall2meeting(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {            
             'name': _('Meetings'),
+            'domain' : "[('phonecall_id','=',%s)]"%(data['ids']),         
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
