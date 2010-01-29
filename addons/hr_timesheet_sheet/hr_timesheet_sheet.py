@@ -463,10 +463,12 @@ class hr_attendance(osv.osv):
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
+                            LEFT JOIN resource_resource r \
+                                ON (e.resource_id = r.id) \
                             ON (a.employee_id = e.id)) \
                         ON (s.date_to >= date_trunc('day',a.name) \
                             AND s.date_from <= a.name \
-                            AND s.user_id = e.user_id) \
+                            AND s.user_id = r.user_id) \
                 WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
                 GROUP BY a.id")
         res = dict(cursor.fetchall())

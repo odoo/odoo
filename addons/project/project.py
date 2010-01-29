@@ -324,13 +324,13 @@ class task(osv.osv):
         default['work_ids'] = []
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-	def _check_date(self,cr,uid,ids):
-            for res in self.browse(cr,uid,ids):
-                if res.date_start and res.date_end:
-                    if res.date_start > res.date_end:
-                        return False
-                    return True
-
+    def _check_dates(self, cr, uid, ids):
+         task = self.read(cr, uid, ids[0],['date_start','date_end'])
+         if task['date_start'] and task['date_end']:
+             if task['date_start'] > task['date_end']:
+                 return False
+         return True
+     
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
         'name': fields.char('Task Summary', size=128, required=True),
@@ -380,6 +380,9 @@ class task(osv.osv):
     }
     _order = "sequence, priority, date_deadline, id"
 
+    _constraints = [
+        (_check_dates, 'Error! task start-date must be lower then task end-date.', ['date_start', 'date_end'])
+    ]
     #
     # Override view according to the company definition
     #
