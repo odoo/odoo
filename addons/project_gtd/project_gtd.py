@@ -169,7 +169,7 @@ class project_task(osv.osv):
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d" expand="1" string="%s">''' % (len(tt)+6,_('Getting Things Done'))
+            search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+6,_('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
