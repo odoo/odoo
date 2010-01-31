@@ -22,5 +22,6 @@
 
 import wizard_survey
 import wizard_print_survey
+import wizard_browse_answer
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

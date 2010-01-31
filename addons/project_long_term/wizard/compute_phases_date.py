@@ -107,7 +107,6 @@ class wizard_compute_phases(wizard.interface):
 
                         for k,v in wk_time.items():
                             final_lst.append(tuple(v))
-                        print 'final Dictionary List:::',final_lst
 
                         for k,v in wk_days.items():
                             if wk.has_key(k):
@@ -116,7 +115,6 @@ class wizard_compute_phases(wizard.interface):
                             non_working += v + ','
                         if non_working:
                             final_lst.append((non_working[:-1],time_range))
-                            print 'Final list After Adding Non-Working:::',final_lst
 
                         leave_ids = pooler.get_pool(cr.dbname).get('resource.calendar.leaves').search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
                         if leave_ids:
@@ -128,14 +126,12 @@ class wizard_compute_phases(wizard.interface):
                                 leave_days = no.days + 1
                             [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
                             leaves.sort()
-                            print 'Dt_leavess::',leaves,tuple(leaves)
 
                         for hour in range(0,4):
                             if hour%2 ==0:
                                 hr += float(hours[hour+1]) - float(hours[hour])
 
                 man_days = str(phase_obj[i].duration * hr)[:-2] + 'H'
-                print 'Man-Days:::',man_days
 
                 if i == 0:
                     new_dt = dt
@@ -172,8 +168,6 @@ class wizard_compute_phases(wizard.interface):
                 else:
                     end_date = e_date
 
-                print 'Start Date::::',start_date,phase_obj[i].name
-                print 'End Date::::',end_date,phase_obj[i].name
                 pooler.get_pool(cr.dbname).get('project.phase').write(cr,uid,[phase_obj[i].id],{'date_start':start_date,'date_end':end_date})
 
         return {}

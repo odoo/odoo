@@ -19,7 +19,7 @@
 						        <tree string="Attributes Mapping" editable="bottom">
 							        <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
 							        <field name="fn" select="1" />
-							        <field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]" />
+							        <field name="field_id" select="1" required="1" domain="[('model_id', '=', parent.object_id)]" />
 							        <field name="expr" />
 						        </tree>
 						        <form string="Attributes Mapping">

@@ -74,7 +74,6 @@ class wizard_compute_tasks(wizard.interface):
                 date_dt = datetime.datetime.strptime(task_1.date_start,"%Y-%m-%d %H:%M:%S")
             else:
                 date_dt = datetime.datetime.strptime(project.date_start,"%Y-%m-%d")
-            print 'Start Date of Project:::',date_dt
             dt = datetime.datetime.strftime(date_dt,"%Y-%m-%d %H:%M")
 
             for i in range(len(task_obj)):
@@ -85,7 +84,6 @@ class wizard_compute_tasks(wizard.interface):
                     if resource_id :
                         resource_obj = resource_pool.browse(cr,uid,resource_id)[0]
                         if resource_obj.calendar_id:
-                            print "resource_obj.calendar_id>>",resource_obj.calendar_id
                             calendar_id = resource_obj.calendar_id.id
                             resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',resource_id)])
                         else:
@@ -121,7 +119,6 @@ class wizard_compute_tasks(wizard.interface):
 
                         for k,v in wk_time.items():
                             final_lst.append(tuple(v))
-                        print 'final Dictionary List:::',final_lst
 
                         for k,v in wk_days.items():
                             if wk.has_key(k):
@@ -130,7 +127,6 @@ class wizard_compute_tasks(wizard.interface):
                             non_working += v + ','
                         if non_working:
                             final_lst.append((non_working[:-1],time_range))
-                            print 'Final list After Adding Non-Working:::',final_lst
 
                         if resource_leave_ids:
                             res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
@@ -141,12 +137,10 @@ class wizard_compute_tasks(wizard.interface):
                                 leave_days = no.days + 1
                             [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
                             leaves.sort()
-                            print 'Dt_leaves::',leaves
 
 
                 hours = task_obj[i].remaining_hours / task_obj[i].occupation_rate
                 hours = str(hours)[:-2] + 'H'
-                print 'Hours:::',hours
 
                 class user(Resource):
                  pass
@@ -175,8 +169,6 @@ class wizard_compute_tasks(wizard.interface):
                 project_1 = BalancedProject(Project_1)
                 s_date = project_1.calendar.WorkingDate(project_1.task1.start).to_datetime()
                 e_date = project_1.calendar.WorkingDate(project_1.task1.end).to_datetime()
-                print 'Start Date::::',s_date,task_obj[i].name
-                print 'End Date::::',e_date,task_obj[i].name
                 task_pool.write(cr,uid,[task_obj[i].id],{'date_start':s_date,'date_end':e_date})
 
         return {}

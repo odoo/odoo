@@ -129,12 +129,15 @@ class document_file(osv.osv):
             if len(res):
                 return False
         return True
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default ={}
-        name = self.read(cr, uid, [id])[0]['name']
-        default.update({'name': name+ " (copy)"})
+        if 'name' not in default:
+            name = self.read(cr, uid, [id])[0]['name']
+            default.update({'name': name+ " (copy)"})
         return super(document_file,self).copy(cr,uid,id,default,context)
+
     def write(self, cr, uid, ids, vals, context=None):
         res=self.search(cr,uid,[('id','in',ids)])
         if not len(res):
