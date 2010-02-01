@@ -320,6 +320,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
+            global not_loaded
             not_loaded.append(module)
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
             raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
@@ -710,8 +711,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         graph = create_graph(cr, ['base'], force)
 
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+
+        global not_loaded
         if not_loaded:
             #If some module is not loaded don't proceed further
+            not_loaded = []
             return
         if update_module:
             modobj = pool.get('ir.module.module')

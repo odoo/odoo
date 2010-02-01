@@ -304,6 +304,7 @@ class many2one(_column):
         for id in ids:
             res.setdefault(id, '')
         obj = obj.pool.get(self._obj)
+
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         from orm import except_orm
         try:
@@ -313,7 +314,6 @@ class many2one(_column):
             iids = filter(None, res.values())
             for iiid in iids:
                 names[iiid] = '// Access Denied //'
-
         for r in res.keys():
             if res[r] and res[r] in names:
                 res[r] = (res[r], names[res[r]])

@@ -115,8 +115,7 @@
                         <field name="padding"/>
                         <field name="number_increment"/>
                         <field name="number_next"/>
-			<field name="weight" />
-			<field name="condition" colspan="4" />
+            <field name="weight" />
                         <separator colspan="4" string="Legend (for prefix, suffix)"/>
                         <group col="8" colspan="4">
                             <group>
@@ -151,11 +150,11 @@
                     <field name="name"/>
                     <field name="code"/>
                     <field name="company_id"/>
-					<field name="number_next"/>
-					<field name="number_increment"/>
-					<field name="prefix"/>
-					<field name="padding"/>
-					<field name="active"/>
+                    <field name="number_next"/>
+                    <field name="number_increment"/>
+                    <field name="prefix"/>
+                    <field name="padding"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -341,36 +340,36 @@
                     <field name="usage"/>
                     <field name="view_type"/>
                     <notebook colspan="4">
-                    	<page string="General Settings">
-		                    <field colspan="4" name="view_ids">
-		                        <form string="Views">
-		                            <field colspan="4" name="sequence"/>
-		                            <field name="view_mode"/>
-		                            <field domain="[('type', '=', view_mode)]" name="view_id"/>
-		                        </form>
-		                        <tree string="Views">
-		                            <field name="sequence"/>
-		                            <field name="view_mode"/>
-		                            <field name="view_id"/>
-		                        </tree>
-		                    </field>
-		                    <field colspan="4" name="default_user_ids"/>
-		                    <field colspan="4" name="menus"/>
-		                    <field colspan="4" name="domain"/>
-		                    <field colspan="4" name="context"/>
-		                    <field name="limit"/>
-		                    <field name="auto_refresh"/>
-		                    <newline/>
-		                    <field name="view_mode"/>
-		                    <field name="filter"/>                    
-		                    <field name="view_id"/>
-		                    <field name="search_view_id"/>
-		                </page>
-		                <page string="Security">
-		                	<separator colspan="4" string="Select Groups" />
-		                	<field name="groups_id" nolabel="1" colspan="4" />
-		                </page>
-	                </notebook>                   
+                        <page string="General Settings">
+                            <field colspan="4" name="view_ids">
+                                <form string="Views">
+                                    <field colspan="4" name="sequence"/>
+                                    <field name="view_mode"/>
+                                    <field domain="[('type', '=', view_mode)]" name="view_id"/>
+                                </form>
+                                <tree string="Views">
+                                    <field name="sequence"/>
+                                    <field name="view_mode"/>
+                                    <field name="view_id"/>
+                                </tree>
+                            </field>
+                            <field colspan="4" name="default_user_ids"/>
+                            <field colspan="4" name="menus"/>
+                            <field colspan="4" name="domain"/>
+                            <field colspan="4" name="context"/>
+                            <field name="limit"/>
+                            <field name="auto_refresh"/>
+                            <newline/>
+                            <field name="view_mode"/>
+                            <field name="filter"/>                    
+                            <field name="view_id"/>
+                            <field name="search_view_id"/>
+                        </page>
+                        <page string="Security">
+                            <separator colspan="4" string="Select Groups" />
+                            <field name="groups_id" nolabel="1" colspan="4" />
+                        </page>
+                    </notebook>                   
                 </form>
             </field>
         </record>
@@ -996,7 +995,8 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Menu">
+                <tree string="Menu" editable="top">
+                    <field name="sequence"/>
                     <field icon="icon" name="complete_name"/>
                 </tree>
             </field>
@@ -1216,13 +1216,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action">
-                	<group col="6" colspan="4">
-	                    <field name="name" select="1"/>
-	                    <field name="model_id" select="1"/>
-	                    <field name="state" select="1"/>
-	                    <field name="sequence" select="2"/>
-	                    <field name="condition"/>
-	                </group>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="model_id" select="1"/>
+                        <field name="state" select="1"/>
+                        <field name="sequence" select="2"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Python Code" attrs="{'invisible':[('state','!=','code')]}">
                             <separator colspan="4" string="Python Code"/>
@@ -1235,7 +1234,7 @@
                             <field name="trigger_name" select="2" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
-                        	<separator colspan="4" string="Client Action Configuration"/>
+                            <separator colspan="4" string="Client Action Configuration"/>
                             <field name="action_id" select="2" attrs="{'required':[('state','=','client_action')]}"/>
                         </page>
                         <page string="Email Configuration" attrs="{'invisible':[('state','!=','email')]}">
@@ -1255,7 +1254,7 @@
                         </page>
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>
-                           	<field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'),('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
+                               <field name="srcmodel_id" select="2" attrs="{'required':[('state','!=','dummy'), ('state','!=','sms'), ('state','!=','code'), ('state','!=','loop'),('state','!=','trigger'), ('state','!=','client_action'), ('state','!=','email'), ('state','!=','sms'), ('state','!=','other')]}"/>
                             <field name="fields_lines" nolabel="1" select="2" colspan="4">
                                 <tree string="Field Mappings" editable="top">
                                     <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
