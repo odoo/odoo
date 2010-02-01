@@ -59,6 +59,7 @@ class view(osv.osv):
             ('mdx','mdx'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
+            ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('search','Search')), 'View Type', required=True),
         'arch': fields.text('View Architecture', required=True),

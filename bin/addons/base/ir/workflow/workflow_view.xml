@@ -23,6 +23,22 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_workflow_diagram" model="ir.ui.view">
+            <field name="name">workflow.diagram</field>
+            <field name="model">workflow</field>
+            <field name="type">diagram</field>
+            <field name="arch" type="xml">
+                <diagram string="Workflow Editor">
+				  <node object="workflow.activity">
+				    <field name="name"/>
+				  </node>
+				  <arrow object="workflow.transition" source="activity_from" destination="activity_to">
+				    <field name="name"/>
+				  </arrow>
+				</diagram> 
+            </field>
+        </record>
         <record id="view_workflow_tree" model="ir.ui.view">
             <field name="name">workflow.tree</field>
             <field name="model">workflow</field>
@@ -41,6 +57,7 @@
             <field name="res_model">workflow</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_tree"/>
+            <field name="view_mode">tree,form,diagram</field>
         </record>
         <menuitem action="action_workflow_form" id="menu_workflow" parent="base.menu_workflow_root"/>
 
