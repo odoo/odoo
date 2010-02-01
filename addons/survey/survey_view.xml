@@ -30,7 +30,7 @@
 						<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
 	                        string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'readonly':[('state','!=','open')]}"/>
 						<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
-	                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}" attrs="{'readonly':[('state','!=','draft')]}"/>
+	                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
 					</group>
                     <notebook colspan="4">
                         <page string="Survey">
@@ -93,14 +93,15 @@
 								                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
 								                                </group>
 								                            </group>
-								                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-									                            <field name="comment_column"/>
-									                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
-									                                <field name="column_name" colspan="2"/>
-									                            </group>
-															</group>
 														</group>
 							                        </group>
+							                        <newline/>
+						                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
+							                            <field name="comment_column"/>
+							                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
+							                                <field name="column_name" colspan="2"/>
+							                            </group>
+													</group>
 							                        <newline/>
 							                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
 							                            <separator string="Validation" colspan="4"/>
@@ -351,14 +352,15 @@
 			                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
 			                                </group>
 			                            </group>
-			                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-				                            <field name="comment_column"/>
-				                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
-				                                <field name="column_name" colspan="2"/>
-				                            </group>
-										</group>
 									</group>
 		                        </group>
+		                        <newline/>
+	                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
+		                            <field name="comment_column"/>
+		                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
+		                                <field name="column_name" colspan="2"/>
+		                            </group>
+								</group>
 		                        <newline/>
 		                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
 		                            <separator string="Validation" colspan="4"/>
@@ -544,14 +546,15 @@
 		                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
 		                                </group>
 		                            </group>
-		                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-			                            <field name="comment_column"/>
-			                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
-			                                <field name="column_name" colspan="2"/>
-			                            </group>
-									</group>
 								</group>
 	                        </group>
+	                        <newline/>
+                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
+	                            <field name="comment_column"/>
+	                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
+	                                <field name="column_name" colspan="2"/>
+	                            </group>
+							</group>
 	                        <newline/>
 	                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
 	                            <separator string="Validation" colspan="4"/>

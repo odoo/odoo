@@ -25,7 +25,9 @@ from dateutil.rrule import *
 from osv import osv, fields
 from tools.translate import _
 import base64
+import math
 import pooler
+import pytz
 import re
 import tools
 import vobject
@@ -200,6 +202,7 @@ class CalDAV(object):
         if not datas:
             return
         for data in datas:
+            tzval = None
             vevent = ical.add(name)
             for field in self.__attribute__.keys():
                 map_field = self.ical_get(field, 'field')
@@ -237,6 +240,11 @@ class CalDAV(object):
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_cal(cr, uid, model, \
                                     data[map_field][0], vevent, context=ctx)
+                    elif field == 'vtimezone' and data[map_field]:
+                        tzval = data[map_field]
+                        tz_obj = self.pool.get('basic.calendar.timezone')
+                        ical = tz_obj.export_cal(cr, uid, None, \
+                                     data[map_field], ical, context=context)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             vevent.add(field).value = tools.ustr(data[map_field]) 
@@ -244,7 +252,10 @@ class CalDAV(object):
                             if field in ('exdate'):
                                 vevent.add(field).value = [parser.parse(data[map_field])]
                             else:
-                                vevent.add(field).value = parser.parse(data[map_field])
+                                dtfield = vevent.add(field)
+                                dtfield.value = parser.parse(data[map_field])
+                                if tzval:
+                                    dtfield.params['TZID'] = [tzval]
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -296,11 +307,14 @@ class CalDAV(object):
         ical_data = base64.decodestring(content)
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         parsedCal = vobject.readOne(ical_data)
-        att_data = []
         res = []
+        vals = {}
         for child in parsedCal.getChildren():
             if child.name.lower() in ('vevent', 'vtodo'):
                 vals = self.parse_ics(cr, uid, child, context=context)
+            elif child.name.lower() == 'vtimezone':
+                tz_obj = self.pool.get('basic.calendar.timezone')
+                tz_obj.import_cal(cr, uid, child, context=context)
             else:
                 vals = {}
                 continue
@@ -588,15 +602,51 @@ class FreeBusy(CalDAV):
     }
 
 
-class Timezone(CalDAV):
+class Timezone(CalDAV, osv.osv_memory):
+    _name = 'basic.calendar.timezone'
+    _calname = 'vtimezone'
+    
     __attribute__ = {
-    'tzid': None, # Use: R-1, Type: Text, Specifies the text value that uniquely identifies the "VTIMEZONE" calendar component.
+    'tzid': {'field': 'tzid'}, # Use: R-1, Type: Text, Specifies the text value that uniquely identifies the "VTIMEZONE" calendar component.
     'last-mod': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the information associated with the calendar component was last revised in the calendar store.
     'tzurl': None, # Use: O-1, Type: URI, Provides a means for a VTIMEZONE component to point to a network location that can be used to retrieve an up-to-date version of itself.
     'standardc': {'tzprop': None}, # Use: R-1,
     'daylightc': {'tzprop': None}, # Use: R-1,
     'x-prop': None, # Use: O-n, Type: Text,
     }
+    
+    def get_name_offset(self, cr, uid, tzid, context={}):
+        mytz = pytz.timezone(tzid)
+        mydt = datetime.now(tz=mytz)
+        offset = mydt.utcoffset()
+        val = offset.days * 24 + float(offset.seconds) / 3600
+        realoffset = '%02d%02d' % (math.floor(abs(val)), \
+                                 round(abs(val) % 1 + 0.01, 2) * 60)
+        realoffset = (val < 0 and ('-' + realoffset) or ('+' + realoffset))
+        return (mydt.tzname(), realoffset)
+
+    def export_cal(self, cr, uid, model, tzid, ical, context={}):
+        ctx = context.copy()
+        ctx.update({'model': model})
+        cal_tz = ical.add('vtimezone')
+        cal_tz.add('TZID').value = tzid
+        tz_std = cal_tz.add('STANDARD')
+        tzname, offset = self.get_name_offset(cr, uid, tzid)
+        tz_std.add("TZOFFSETFROM").value = offset
+        tz_std.add("TZOFFSETTO").value = offset
+        tz_std.add("DTSTART").value = datetime.now() # TODO
+        tz_std.add("TZNAME").value = tzname
+        return ical
+    
+    def import_cal(self, cr, uid, ical_data, context=None):
+        for child in ical_data.getChildren():
+            if child.name.lower() == 'tzid':
+                tzname = child.value
+                self.ical_set(child.name.lower(), tzname, 'value')
+        vals = map_data(cr, uid, self)
+        return vals
+
+Timezone()   
 
 
 class Alarm(CalDAV, osv.osv_memory):
