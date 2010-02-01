@@ -864,8 +864,7 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(caldav_id2real_id(id))
-        datas['id'] = caldav_id2real_id(datas['id'])
-        super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+        datas['id'] = caldav_id2real_id(datas['id'])        
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()
