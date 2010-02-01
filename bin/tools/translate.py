@@ -21,7 +21,6 @@
 
 import os
 from datetime import datetime
-from dateutil.tz import tzutc
 
 from os.path import join
 import fnmatch
@@ -281,7 +280,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': datetime.now(tzutc()).strftime('%Y-%m-%d %H:%M:%S%z'),
+                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S%z')+"+0000",
                             }
                           )
 
