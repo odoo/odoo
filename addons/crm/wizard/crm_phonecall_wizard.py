@@ -109,8 +109,10 @@ class phonecall2opportunity(wizard.interface):
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
-                'partner_id': data['form']['partner_id'],                
-                }
+                'partner_id': data['form']['partner_id'], 
+                'opportunity_id' : new_opportunity_id,                
+                }            
+            phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         value = {            
@@ -221,7 +223,7 @@ class phonecall2meeting(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {            
             'name': _('Meetings'),
-            'domain' : "[('phonecall_id','=',%s)]"%(data['ids']),         
+            'domain' : "[('phonecall_id','in',%s)]"%(data['ids']),         
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',

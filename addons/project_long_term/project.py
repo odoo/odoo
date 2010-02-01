@@ -125,17 +125,6 @@ class task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase')
     }
-    def _check_dates(self, cr, uid, ids):
-         leave = self.read(cr, uid, ids[0],['date_start','date_end'])
-         if leave['date_start'] and leave['date_end']:
-             if leave['date_start'] > leave['date_end']:
-                 return False
-         return True
-
-    _constraints = [
-        (_check_dates, 'Error! task start-date must be lower then task end-date.', ['date_start', 'date_end'])
-    ]
-
 task()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

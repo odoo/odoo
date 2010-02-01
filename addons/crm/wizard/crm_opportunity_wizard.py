@@ -99,7 +99,6 @@ class opportunity2phonecall(wizard.interface):
             }, context=context)
             vals = {}
 
-            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
             phonecall_case_obj.case_open(cr, uid, [new_case])        
             
         value = {            
@@ -145,8 +144,7 @@ class opportunity2meeting(wizard.interface):
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
-            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)            
             meeting_case_obj.case_open(cr, uid, [new_meeting_id])        
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
@@ -162,7 +160,7 @@ class opportunity2meeting(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {            
             'name': _('Meetings'),
-            'domain' : "[('opportunity_id','=',%s)]"%(data['ids']),         
+            'domain' : "[('opportunity_id','in',%s)]"%(data['ids']),         
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',

@@ -184,7 +184,10 @@ class CalDAV(object):
                 continue
             if cal_data.name.lower() == 'valarm':
                 alarm = self.pool.get('basic.calendar.alarm')
-                vals = alarm.import_cal(cr, uid, cal_data)
+                ctx = context.copy()
+                if cal_children:
+                    ctx.update({'model': cal_children[cal_data.name.lower()]})
+                vals = alarm.import_cal(cr, uid, cal_data, context=ctx)
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
@@ -194,9 +197,7 @@ class CalDAV(object):
 
     def create_ics(self, cr, uid, datas, name, ical, context=None):
         if not datas:
-            model = context.get('model', None)
-            war_str = "No data available" + (model and " for " + model) or ""
-            raise osv.except_osv(_('Warning !'), _(war_str))
+            return
         for data in datas:
             vevent = ical.add(name)
             for field in self.__attribute__.keys():
@@ -229,9 +230,11 @@ class CalDAV(object):
                                      data[map_field], vevent, context=context)
                     elif field == 'valarm' and data[map_field]:
                         model = self.__attribute__[field].get('object', False)
+                        ctx = context.copy()
+                        ctx.update({'model': model})
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_cal(cr, uid, model, \
-                                    data[map_field][0], vevent, context=context)
+                                    data[map_field][0], vevent, context=ctx)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             vevent.add(field).value = tools.ustr(data[map_field]) 
@@ -333,21 +336,18 @@ class Calendar(CalDAV, osv.osv):
                  }
 
     def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
-        try:
-            cal = self.browse(cr, uid, datas[0])
-            ical = vobject.iCalendar()
-            for line in cal.line_ids:
-                if line.name in ('alarm', 'attendee'):
-                    continue
-                mod_obj = self.pool.get(line.object_id.model)
-                data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
-                datas = mod_obj.read(cr, uid, data_ids, context=context)
-                context.update({'model': line.object_id.model})
-                self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
-                self.create_ics(cr, uid, datas, line.name, ical, context=context)
-            return ical.serialize()
-        except Exception, e:
-            raise osv.except_osv(('Error !'), (str(e)))
+        cal = self.browse(cr, uid, datas[0])
+        ical = vobject.iCalendar()
+        for line in cal.line_ids:
+            if line.name in ('valarm', 'attendee'):
+                continue
+            mod_obj = self.pool.get(line.object_id.model)
+            data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
+            datas = mod_obj.read(cr, uid, data_ids, context=context)
+            context.update({'model': line.object_id.model})
+            self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
+            self.create_ics(cr, uid, datas, line.name, ical, context=context)
+        return ical.serialize()
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
         ical_data = base64.decodestring(content)
@@ -378,7 +378,7 @@ class basic_calendar_line(osv.osv):
     _description = 'Calendar Lines'
     _columns = {
             'name': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
-                                    ('alarm', 'Alarm'), \
+                                    ('valarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64), 
             'object_id': fields.many2one('ir.model', 'Object'), 
@@ -427,6 +427,51 @@ class basic_calendar_fields(osv.osv):
     _defaults = {
         'fn': lambda *a: 'field',
     }
+   
+    def check_line(self, cr, uid, vals, name, context=None):
+        f_obj = self.pool.get('ir.model.fields')
+        field = f_obj.browse(cr, uid, vals['field_id'], context=context)
+        relation = field.relation
+        line_obj = self.pool.get('basic.calendar.lines')
+        l_id = line_obj.search(cr, uid, [('name', '=', name)])
+        if l_id:
+            line = line_obj.browse(cr, uid, l_id, context=context)[0]
+            line_rel = line.object_id.model
+            if (relation != 'NULL') and (not relation == line_rel):
+                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
+        return True
+    
+    def create(self, cr, uid, vals, context={}):
+        cr.execute('select name from basic_calendar_attributes \
+                            where id=%s' % (vals.get('name')))
+        name = cr.fetchone()
+        name = name[0]
+        if name in ('valarm', 'attendee'):
+             self.check_line(cr, uid, vals, name, context=context)
+        cr.execute("Select count(id) from basic_calendar_fields \
+                                where name=%s and type_id=%s" % (vals.get('name'), vals.get('type_id')))
+        res = cr.fetchone()
+        if res:
+            if res[0] > 0:
+                raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
+        return super(basic_calendar_fields, self).create(cr, uid, vals, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if not vals:
+            return
+        for id in ids:
+            field = self.browse(cr, uid, id, context=context)
+            name = field.name.name
+            if name in ('valarm', 'attendee'):
+                 self.check_line(cr, uid, vals, name, context=context)
+            qry = "Select count(id) from basic_calendar_fields \
+                                where name=%s and type_id=%s" % (field.name.id, field.type_id.id)
+            cr.execute(qry)
+            res = cr.fetchone()
+            if res:
+                if res[0] > 1:
+                    raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
+        return super(basic_calendar_fields, self).write(cr, uid, ids, vals, context)
 
 basic_calendar_fields()
 
@@ -588,11 +633,14 @@ class Alarm(CalDAV, osv.osv_memory):
         trigger.value = delta
 
         # Compute other details
-        valarm.add('DESCRIPTION').value = alarm_data['name']
+        valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
         valarm.add('ACTION').value = alarm_data['action']
         return vevent
 
-    def import_cal(self, cr, uid, ical_data):
+    def import_cal(self, cr, uid, ical_data, context=None):
+        ctx = context.copy()
+        ctx.update({'model': context.get('model', None)})
+        self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -19,25 +18,23 @@
 #
 ##############################################################################
 
-
 {
-    "name" : "Long Term Project Management",
-    "version": "1.1",
+    "name" : "Authenticate users with ldap server",
+    "version" : "0.1",
+    "depends" : ["base"],
     "author" : "Tiny",
+    "description": """Add support for authentication by ldap server""",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project"],
-    "description": """Long Term Project management module that track planning, scheduling, resources allocation.
-    """,
-    "init_xml" : [],
-    "demo_xml" : [#"project_demo.xml"
-],
-    "update_xml": [        
-        "project_view.xml",
-        "project_wizard.xml" 
+    "category" : "Generic Modules/Others",
+    "init_xml" : [
     ],
-    'installable': True,
-    'active': False,
-    'certificate': None,
+    "demo_xml" : [
+    ],
+    "update_xml" : [
+        "users_ldap_view.xml",
+    ],
+    "active": False,
+    "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

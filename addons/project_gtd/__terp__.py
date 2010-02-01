@@ -43,7 +43,7 @@ performing those tasks.
     'update_xml': [
         'project_gtd_data.xml',
         'project_gtd_view.xml',
-        'project_gtd_wizard.xml',        
+        'project_gtd_wizard.xml',
         'security/ir.model.access.csv',
     ],
     'demo_xml': ['project_gtd_demo.xml'],
