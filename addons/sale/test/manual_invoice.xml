@@ -13,8 +13,8 @@
             <field model="product.pricelist" name="pricelist_id" search="[]" />
             <field name="user_id" ref="base.user_root" />
             <field name="partner_id" ref="base.res_partner_agrolait" />
-            <field name="partner_invoice_id" ref="base.res_partner_address_8" />
-            <field name="partner_shipping_id" ref="base.res_partner_address_8" />
+            <field name="partner_invoice_id" ref="base.res_partner_address_8invoice" /> <!-- you should patch your server to get res_partner_address_8invoice, or revert to res_partner_address_8 -->
+            <field name="partner_shipping_id" ref="base.res_partner_address_8delivery" /> <!-- you should patch your server to get res_partner_address_8delivery, or revert to res_partner_address_8 -->
             <field name="partner_order_id" ref="base.res_partner_address_8" />
         </record>
         <!-- Resource: sale.order.line -->
@@ -61,6 +61,7 @@
             <test expr="invoice_ids[0].amount_untaxed == amount_untaxed" />
             <test expr="invoice_ids[0].amount_total == amount_total" />
             <test expr="invoice_ids[0].state">draft</test>
+            <test expr="invoice_ids[0].address_invoice_id == partner_invoice_id" />
         </assert>
 
         <!-- Confirm invoice -->
