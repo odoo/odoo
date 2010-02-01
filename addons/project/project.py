@@ -76,10 +76,10 @@ class project(osv.osv):
                 FROM
                     project_task
                 WHERE
-                    project_id in ('''+','.join(map(str,ids2))+''') AND
+                    project_id =ANY(%s) AND
                     state<>'cancelled'
                 GROUP BY
-                    project_id''')
+                    project_id''',(ids2,))
             progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0,0.0,0.0]
@@ -173,7 +173,7 @@ class project(osv.osv):
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
         if ids:
-            cr.execute('update project_task set active=True where project_id in ('+','.join(map(str, ids))+')')
+            cr.execute('update project_task set active=True where project_id =ANY(%s)',(ids,))
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
@@ -222,8 +222,7 @@ class task(osv.osv):
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context):
-        task_set = ','.join(map(str, ids))
-        cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
         hours = dict(cr.fetchall())
         res = {}
         for task in self.browse(cr, uid, ids, context=context):

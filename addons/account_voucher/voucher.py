@@ -406,7 +406,7 @@ class account_voucher(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_voucher ' \
-                'WHERE id IN ('+','.join(map(str, ids))+')')
+                'WHERE id =ANY(%s)',(ids,))
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 number = self.pool.get('ir.sequence').get(cr, uid, invtype)
@@ -417,13 +417,13 @@ class account_voucher(osv.osv):
                     ref = self._convert_ref(cr, uid, number)
 
                 cr.execute('UPDATE account_voucher SET number=%s ' \
-                        'WHERE id=%d', (number, id))
+                        'WHERE id=%s', (number, id))
                 cr.execute('UPDATE account_move_line SET ref=%s ' \
-                        'WHERE move_id=%d AND (ref is null OR ref = \'\')',
+                        'WHERE move_id=%s AND (ref is null OR ref = \'\')',
                         (ref, move_id))
                 cr.execute('UPDATE account_analytic_line SET ref=%s ' \
                         'FROM account_move_line ' \
-                        'WHERE account_move_line.move_id = %d ' \
+                        'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
         return True

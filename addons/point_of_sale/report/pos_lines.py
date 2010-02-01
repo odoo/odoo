@@ -15,7 +15,7 @@
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -48,7 +48,7 @@ class pos_lines(report_sxw.rml_parse):
                               " LEFT JOIN pos_order_line as pol ON po.id = pol.order_id " \
                               " LEFT JOIN product_taxes_rel as ptr ON pol.product_id = ptr.prod_id " \
                               " LEFT JOIN account_tax as acct ON acct.id = ptr.tax_id " \
-                              " WHERE pol.id = %d" %(obj.id))
+                              " WHERE pol.id = %s" ,(obj.id,))
         res=self.cr.fetchone()[0]
         return res
 
