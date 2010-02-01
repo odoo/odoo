@@ -27,10 +27,9 @@
     'description': """
 This module implements a dashboard for project member that includes:
     * List of my open tasks
-    * List of my next deadlines
-    * List of public notes
-    * Graph of my timesheet
-    * Graph of my work analysis
+    * List of messages
+    * Members list of project
+    * Issues
     """,
     'author': 'Tiny',
     'depends': [
