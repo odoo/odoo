@@ -28,7 +28,6 @@ import netsvc
 import re
 import copy
 import sys
-
 from xml import dom
 
 class actions(osv.osv):
@@ -344,59 +343,6 @@ class ir_model_fields(osv.osv):
     _columns = {
         'complete_name': fields.char('Complete Name', size=64, select=1),
     }
-
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
-        return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-#        def get_fields(cr, uid, field, rel):
-#            result = []
-#            mobj = self.pool.get('ir.model')
-#            id = mobj.search(cr, uid, [('model','=',rel)])
-
-#            obj = self.pool.get('ir.model.fields')
-#            ids = obj.search(cr, uid, [('model_id','in',id)])
-#            records = obj.read(cr, uid, ids)
-#            for record in records:
-#                id = record['id']
-#                fld = field + '/' + record['name']
-
-#                result.append((id, fld))
-#            return result
-
-#        if not args:
-#            args=[]
-#        if not context:
-#            context={}
-#            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-
-#        if context.get('key') != 'server_action':
-#            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-#        result = []
-#        obj = self.pool.get('ir.model.fields')
-#        ids = obj.search(cr, uid, args)
-#        records = obj.read(cr, uid, ids)
-#        for record in records:
-#            id = record['id']
-#            field = record['name']
-
-#            if record['ttype'] == 'many2one':
-#                rel = record['relation']
-#                res = get_fields(cr, uid, field, record['relation'])
-#                for rs in res:
-#                    result.append(rs)
-
-#            result.append((id, field))
-
-#        for rs in result:
-#            obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
-
-#        iids = []
-#        for rs in result:
-#            iids.append(rs[0])
-
-#        result = super(ir_model_fields, self).name_search(cr, uid, name, [('complete_name','ilike',name), ('id','in',iids)], operator, context, limit)
-
-#        return result
-
 ir_model_fields()
 
 class server_object_lines(osv.osv):
@@ -429,7 +375,7 @@ class actions_server(osv.osv):
         result = cr.fetchall() or []
         res = []
         for rs in result:
-            if not rs[0] == None and not rs[1] == None:
+            if rs[0] is not None and rs[1] is not None:
                 res.append(rs)
         return res
 
@@ -577,8 +523,8 @@ class actions_server(osv.osv):
             if action.state=='client_action':
                 if not action.action_id:
                     raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
-                result = self.pool.get(action.action_id.type).read(cr, uid, action.action_id.id, context=context)
-                return result
+                return self.pool.get(action.action_id.type)\
+                    .read(cr, uid, action.action_id.id, context=context)
 
             if action.state == 'code':
                 localdict = {
@@ -733,128 +679,29 @@ class act_window_close(osv.osv):
 act_window_close()
 
 # This model use to register action services.
-# if action type is 'configure', it will be start on configuration wizard.
-# if action type is 'service',
-#                - if start_type= 'at once', it will be start at one time on start date
-#                - if start_type='auto', it will be start on auto starting from start date, and stop on stop date
-#                - if start_type="manual", it will start and stop on manually
+TODO_STATES = [('open', 'Not Started'),
+               ('done', 'Done'),
+               ('skip','Skipped'),
+               ('cancel','Cancel')]
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
     _columns={
-        'name':fields.char('Name',size=64,required=True, select=True),
-        'note':fields.text('Text', translate=True),
-        'start_date': fields.datetime('Start Date'),
-        'end_date': fields.datetime('End Date'),
-        'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
-        'sequence':fields.integer('Sequence'),
+        'action_id': fields.many2one(
+            'ir.actions.act_window', 'Action', select=True, required=True,
+            ondelete='cascade'),
+        'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'type':fields.selection([('configure', 'Configure'),('service', 'Service'),('other','Other')], string='Type', required=True),
-        'start_on':fields.selection([('at_once', 'At Once'),('auto', 'Auto'),('manual','Manual')], string='Start On'),
-        'groups_id': fields.many2many('res.groups', 'res_groups_act_todo_rel', 'act_todo_id', 'group_id', 'Groups'),
-        'users_id': fields.many2many('res.users', 'res_users_act_todo_rel', 'act_todo_id', 'user_id', 'Users'),
-        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped'),('cancel','Cancel')], string='State', required=True)
+        'state': fields.selection(TODO_STATES, string='State', required=True),
+        'name':fields.char('Name', size=64),
+        'note':fields.text('Text', translate=True),
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-        'active':lambda *a:True,
-        'type':lambda *a:'configure'
+        'active': lambda *a: True,
     }
     _order="sequence"
 ir_actions_todo()
-
-# This model to use run all configuration actions
-class ir_actions_configuration_wizard(osv.osv_memory):
-    _name='ir.actions.configuration.wizard'
-    def next_configuration_action(self,cr,uid,context={}):
-        item_obj = self.pool.get('ir.actions.todo')
-        item_ids = item_obj.search(cr, uid, [('type','=','configure'),('state', '=', 'open'),('active','=',True)], limit=1, context=context)
-        if item_ids and len(item_ids):
-            item = item_obj.browse(cr, uid, item_ids[0], context=context)
-            return item
-        return False
-    def _get_action_name(self, cr, uid, context={}):
-        next_action=self.next_configuration_action(cr,uid,context=context)
-        if next_action:
-            return next_action.note
-        else:
-            return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
-        return False
-
-    def _get_action(self, cr, uid, context={}):
-        next_action=self.next_configuration_action(cr,uid,context=context)
-        if next_action:
-            return next_action.id
-        return False
-
-    def _progress_get(self,cr,uid, context={}):
-        total = self.pool.get('ir.actions.todo').search_count(cr, uid, [], context)
-        todo = self.pool.get('ir.actions.todo').search_count(cr, uid, [('type','=','configure'),('active','=',True),('state','<>','open')], context)
-        if total > 0.0:
-            return max(5.0,round(todo*100/total))
-        else:
-            return 100.0
-
-    _columns = {
-        'name': fields.text('Next Wizard',readonly=True),
-        'progress': fields.float('Configuration Progress', readonly=True),
-        'item_id':fields.many2one('ir.actions.todo', 'Next Configuration Wizard',invisible=True, readonly=True),
-    }
-    _defaults={
-        'progress': _progress_get,
-        'item_id':_get_action,
-        'name':_get_action_name,
-    }
-    def button_next(self,cr,uid,ids,context=None):
-        user_action=self.pool.get('res.users').browse(cr,uid,uid)
-        act_obj=self.pool.get(user_action.menu_id.type)
-        action_ids=act_obj.search(cr,uid,[('name','=',user_action.menu_id.name)])
-        action_open=act_obj.browse(cr,uid,action_ids)[0]
-        if context.get('menu',False):
-            return{
-                'view_type': action_open.view_type,
-                'view_id':action_open.view_id and [action_open.view_id.id] or False,
-                'res_model': action_open.res_model,
-                'type': action_open.type,
-                'domain':action_open.domain
-            }
-        return {'type':'ir.actions.act_window_close'}
-
-    def button_skip(self,cr,uid,ids,context=None):
-        item_obj = self.pool.get('ir.actions.todo')
-        item_id=self.read(cr,uid,ids)[0]['item_id']
-        if item_id:
-            item = item_obj.browse(cr, uid, item_id, context=context)
-            item_obj.write(cr, uid, item.id, {
-                'state': 'skip',
-                }, context=context)
-            return{
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-            }
-        return self.button_next(cr, uid, ids, context)
-
-    def button_continue(self, cr, uid, ids, context=None):
-        item_obj = self.pool.get('ir.actions.todo')
-        item_id=self.read(cr,uid,ids)[0]['item_id']
-        if item_id:
-            item = item_obj.browse(cr, uid, item_id, context=context)
-            item_obj.write(cr, uid, item.id, {
-                'state': 'done',
-                }, context=context)
-            return{
-                  'view_mode': item.action_id.view_mode,
-                  'view_type': item.action_id.view_type,
-                  'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
-                  'res_model': item.action_id.res_model,
-                  'type': item.action_id.type,
-                  'target':item.action_id.target,
-            }
-        return self.button_next(cr, uid, ids, context)
-ir_actions_configuration_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -60,6 +60,8 @@ ad_paths.append(_ad)    # for get_module_path
 # Modules already loaded
 loaded = []
 
+#Modules whch raised error
+not_loaded = []
 
 class Graph(dict):
 
@@ -318,9 +320,10 @@ def upgrade_graph(graph, cr, module_list, force=None):
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__terp__.py')
         if not mod_path or not terp_file:
+            global not_loaded
+            not_loaded.append(module)
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
-            cr.execute("update ir_module_module set state=%s where name=%s", ('uninstallable', module))
-            continue
+            raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
@@ -372,7 +375,10 @@ def init_module_objects(cr, module_name, obj_list):
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
     todo = []
     for obj in obj_list:
-        result = obj._auto_init(cr, {'module': module_name})
+        try:
+            result = obj._auto_init(cr, {'module': module_name})
+        except Exception, e:
+            raise 
         if result:
             todo += result
         if hasattr(obj, 'init'):
@@ -682,7 +688,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 def load_modules(db, force_demo=False, status=None, update_module=False):
     if not status:
         status = {}
-
     cr = db.cursor()
     if cr:
        cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
@@ -707,6 +712,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
+        global not_loaded
+        if not_loaded:
+            #If some module is not loaded don't proceed further
+            not_loaded = []
+            return
         if update_module:
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
@@ -744,7 +754,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
-
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r

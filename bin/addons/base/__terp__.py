@@ -33,6 +33,7 @@
         'base_menu.xml',
         'security/base_security.xml',
         'res/res_security.xml',
+        'res/res_config.xml',
         'maintenance/maintenance_security.xml'
     ],
     'update_xml': [
@@ -42,6 +43,7 @@
         'ir/workflow/workflow_view.xml',
         'module/module_wizard.xml',
         'module/module_view.xml',
+        'module/module_web_view.xml',
         'module/module_data.xml',
         'module/module_report.xml',
         'res/res_request_view.xml',

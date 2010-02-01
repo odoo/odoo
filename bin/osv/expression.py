@@ -115,14 +115,14 @@ class expression(object):
             main_table = table
             fargs = left.split('.', 1)
             index = i
-            if left in table._inherit_fields:
+            if fargs[0] in table._inherit_fields:
                 while True:
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
                         self.__tables[i] = working_table
                         break
-                    working_table = main_table.pool.get(main_table._inherit_fields[left][0])
+                    working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__tables.values():
                         self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
                         self.__tables[index] = working_table
@@ -145,34 +145,31 @@ class expression(object):
                 if field._type in ['many2many','one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
-                    self.__exp[i] = ('id', 'in', right1)                    
-                
+                    self.__exp[i] = ('id', 'in', right1)
                 continue
 
-            if field._properties:
+            if field._properties and not field.store:
                 # this is a function field
-                if not field.store:
-                    if not field._fnct_search:
-                        # the function field doesn't provide a search function and doesn't store
-                        # values in the database, so we must ignore it : we generate a dummy leaf
-                        self.__exp[i] = self.__DUMMY_LEAF
-                    else:
-                        subexp = field.search(cr, uid, table, left, [self.__exp[i]])
-                        # we assume that the expression is valid
-                        # we create a dummy leaf for forcing the parsing of the resulting expression
-                        self.__exp[i] = '&'
-                        self.__exp.insert(i + 1, self.__DUMMY_LEAF)
-                        for j, se in enumerate(subexp):
-                            self.__exp.insert(i + 2 + j, se)
-
-                # else, the value of the field is store in the database, so we search on it
+                if not field._fnct_search:
+                    # the function field doesn't provide a search function and doesn't store
+                    # values in the database, so we must ignore it : we generate a dummy leaf
+                    self.__exp[i] = self.__DUMMY_LEAF
+                else:
+                    subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
+                    # we assume that the expression is valid
+                    # we create a dummy leaf for forcing the parsing of the resulting expression
+                    self.__exp[i] = '&'
+                    self.__exp.insert(i + 1, self.__DUMMY_LEAF)
+                    for j, se in enumerate(subexp):
+                        self.__exp.insert(i + 2 + j, se)
+            # else, the value of the field is store in the database, so we search on it
 
 
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
                     else:
                         ids2 = list(right)
                     if field._obj != working_table._name:
@@ -186,7 +183,7 @@ class expression(object):
                     
                     if right:
                         if isinstance(right, basestring):
-                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None)]
+                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             operator = 'in' 
                         else:
                             if not isinstance(right,list):
@@ -213,7 +210,7 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -229,7 +226,7 @@ class expression(object):
                     call_null_m2m = True
                     if right:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator)]
+                            res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             operator = 'in'
                         else:
                             if not isinstance(right, list):
@@ -335,7 +332,7 @@ class expression(object):
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
             params = right[1]
         elif operator in ['in', 'not in']:
-            params = right[:]
+            params = right and right[:] or []
             len_before = len(params)
             for i in range(len_before)[::-1]:
                 if params[i] == False:
@@ -344,14 +341,19 @@ class expression(object):
             len_after = len(params)
             check_nulls = len_after != len_before
             query = '(1=0)'
-
+            
             if len_after:
                 if left == 'id':
                     instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
                 query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
-
+            else:
+                # the case for [field, 'in', []] or [left, 'not in', []]
+                if operator == 'in':
+                    query = '(%s.%s IS NULL)' % (table._table, left)
+                else:
+                    query = '(%s.%s IS NOT NULL)' % (table._table, left)
             if check_nulls:
                 query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
         else:

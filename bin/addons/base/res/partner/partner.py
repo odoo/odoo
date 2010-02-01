@@ -115,7 +115,7 @@ def _partner_title_get(self, cr, uid, context={}):
     obj = self.pool.get('res.partner.title')
     ids = obj.search(cr, uid, [('domain', '=', 'partner')])
     res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res]
+    return [(r['shortcut'], r['name']) for r in res] +  [('','')]
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
@@ -151,7 +151,7 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'city':fields.related('address','city',type='char', string='City'),
         'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company',select=1),
     }
 
     def _default_category(self, cr, uid, context={}):
@@ -163,7 +163,7 @@ class res_partner(osv.osv):
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
         'category_id': _default_category,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
     }
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
@@ -271,19 +271,26 @@ class res_partner(osv.osv):
         if (not context.get('category_id', False)):
             return False
         return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
-
+    def main_partner(self, cr, uid):
+        ''' Return the id of the main partner
+        '''
+        model_data = self.pool.get('ir.model.data')
+        return model_data.browse(
+            cr, uid,
+            model_data.search(cr, uid, [('module','=','base'),
+                                        ('name','=','main_partner')])[0],
+            ).res_id
 res_partner()
 
 class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
-    _order = 'id'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.many2one('res.partner.function', 'Function'),
         'title': fields.selection(_contact_title_get, 'Title', size=32),
-        'name': fields.char('Contact Name', size=64),
+        'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
@@ -296,7 +303,8 @@ class res_partner_address(osv.osv):
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
-        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company'),
+#        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
+        'company_id': fields.many2one('res.company', 'Company',select=1),
     }
     _defaults = {
         'active': lambda *a: 1,

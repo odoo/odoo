@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -37,8 +38,8 @@ import xmlrpclib
 import release
 
 class Service(object):
-    """ Base class for *Local* services 
-   
+    """ Base class for *Local* services
+
         Functionality here is trusted, no authentication.
     """
     _services = {}
@@ -51,8 +52,14 @@ class Service(object):
         raise Exception("No group for local services")
         #GROUPS.setdefault(name, {})[self.__name] = self
 
-    def service_exist(self,name):
-        return Service._services.has_key(name)
+    @classmethod
+    def exists(cls, name):
+        return name in cls._services
+
+    @classmethod
+    def remove(cls, name):
+        if cls.exists(name):
+            cls._services.pop(name)
 
     def exportMethod(self, method):
         if callable(method):
@@ -364,10 +371,7 @@ class OpenERPDispatcher:
             self.log('service', service_name)
             self.log('method', method)
             self.log('params', params)
-            if hasattr(self,'auth_provider'):
-                auth = self.auth_provider
-            else:
-                auth = None
+            auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result)
             # We shouldn't marshall None,
@@ -376,10 +380,7 @@ class OpenERPDispatcher:
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
-            if hasattr(e, 'traceback'):
-                tb = e.traceback
-            else:
-                tb = sys.exc_info()
+            tb = getattr(e, 'traceback', sys.exc_info())
             tb_s = "".join(traceback.format_exception(*tb))
             if tools.config['debug_mode']:
                 import pdb

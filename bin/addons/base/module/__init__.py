@@ -20,6 +20,7 @@
 ##############################################################################
 
 import module
+import module_web
 import wizard
 import report
 

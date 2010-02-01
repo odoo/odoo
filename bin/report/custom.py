@@ -290,7 +290,7 @@ class report_custom(report_int):
 
         def _append_node(name, text):
             n = etree.SubElement(config, name)
-            t.text = text
+            n.text = text
 
         _append_node('date', time.strftime('%d/%m/%Y'))
         _append_node('PageFormat', '%s' % report['print_format'])

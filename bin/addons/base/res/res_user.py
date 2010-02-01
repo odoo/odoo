@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,7 +23,9 @@ from osv import fields,osv
 from osv.orm import except_orm
 import tools
 import pytz
+import pooler
 from tools.translate import _
+from service import security
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -60,7 +62,7 @@ class groups(osv.osv):
             if vals['name'].startswith('-'):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
-        gid = super(groups, self).create(cr, uid, vals, context=context)        
+        gid = super(groups, self).create(cr, uid, vals, context=context)
         if context and context.get('noadmin', False):
             pass
         else:
@@ -119,19 +121,21 @@ def _companies_get(self,cr, uid, context={}):
 
 class users(osv.osv):
     __admin_ids = {}
+    _uid_cache = {}
     _name = "res.users"
-    #_log_access = False
-    
+
     def get_current_company(self, cr, uid):
         res=[]
         cr.execute('select company_id, res_company.name from res_users left join res_company on res_company.id = company_id where res_users.id=%s' %uid)
         res = cr.fetchall()
-        return res     
-    
+        return res
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'login': fields.char('Login', size=64, required=True),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
+        'email': fields.char('E-mail', size=64, help='If an email is provided'\
+                             ', the user will be sent a message welcoming him'),
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
@@ -144,7 +148,7 @@ class users(osv.osv):
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
-        'company': fields.selection(_companies_get,  'Company', size=64),        
+        'company': fields.selection(_companies_get,  'Company', size=64),
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -188,13 +192,14 @@ class users(osv.osv):
         return ids or False
 
     _defaults = {
-        'password' : lambda obj,cr,uid,context={} : '',
+        'password' : lambda *a : '',
         'context_lang': lambda *args: 'en_US',
-        'active' : lambda obj,cr,uid,context={} : True,
+        'active' : lambda *a: True,
         'menu_id': _get_menu,
         'action_id': _get_menu,
         'company_id': _get_company,
         'groups_id': _get_group,
+        'address_id': False,
     }
     def company_get(self, cr, uid, uid2):
         company_id = self.pool.get('res.users').browse(cr, uid, uid2).company_id.id
@@ -205,7 +210,7 @@ class users(osv.osv):
         if (ids == [uid]):
             ok = True
             for k in values.keys():
-                if k not in ('password','signature','action_id', 'context_lang', 'context_tz'):
+                if k not in ('password','signature','action_id', 'context_lang', 'context_tz','company_id'):
                     ok=False
             if ok:
                 uid = 1
@@ -246,37 +251,6 @@ class users(osv.osv):
                 result[k[8:]] = getattr(user,k)
         return result
 
-    def action_get(self, cr, uid, context={}):
-        dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
-        return dataobj.browse(cr, uid, data_id, context).res_id
-
-    def action_next(self,cr,uid,ids,context=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-    def action_continue(self,cr,uid,ids,context={}):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-    def action_new(self,cr,uid,ids,context={}):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'res.users',
-                'view_id':self.pool.get('ir.ui.view').search(cr,uid,[('name','=','res.users.confirm.form')]),
-                'type': 'ir.actions.act_window',
-                'target':'new',
-               }
 
     def _check_company(self, cursor, user, ids):
         for user in self.browse(cursor, user, ids):
@@ -284,10 +258,108 @@ class users(osv.osv):
                 return False
         return True
 
+    def action_get(self, cr, uid, context={}):
+        dataobj = self.pool.get('ir.model.data')
+        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
+        return dataobj.browse(cr, uid, data_id, context).res_id
+
+
+    def login(self, db, login, password):
+        if not password:
+            return False
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
+        res = cr.fetchone()
+        cr.close()
+        if res:
+            return res[0]
+        else:
+            return False
+
+    def check_super(self, passwd):
+        if passwd == tools.config['admin_passwd']:
+            return True
+        else:
+            raise security.ExceptionNoTb('AccessDenied')
+
+    def check(self, db, uid, passwd):
+        if not passwd:
+            return False
+        cached_pass = self._uid_cache.get(db, {}).get(uid)
+        if (cached_pass is not None) and cached_pass == passwd:
+            return True
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))    
+        res = cr.fetchone()[0]
+        cr.close()
+        if not bool(res):
+            raise security.ExceptionNoTb('AccessDenied')
+        if res:
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid:passwd}
+        return bool(res)
+
+    def access(self, db, uid, passwd, sec_level, ids):
+        if not passwd:
+            return False
+        cr = pooler.get_db(db).cursor()    
+        cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
+        res = cr.fetchone()
+        cr.close()
+        if not res:
+            raise security.ExceptionNoTb('Bad username or password')
+        return res[0]
+
     _constraints = [
         (_check_company, 'This user can not connect using this company !', ['company_id']),
     ]
 users()
+
+class config_users(osv.osv_memory):
+    _name = 'res.config.users'
+    _inherit = ['res.users', 'res.config']
+
+    def _generate_signature(self, cr, name, email, context=None):
+        return _('--\n%(name)s %(email)s\n') % {
+            'name': name or '',
+            'email': email and ' <'+email+'>' or '',
+            }
+
+    def create_user(self, cr, uid, new_id, context=None):
+        ''' create a new res.user instance from the data stored
+        in the current res.config.users
+        '''
+        base_data = self.read(cr, uid, new_id, context=context)
+        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
+        address = self.pool.get('res.partner.address').create(
+            cr, uid, {'name': base_data['name'],
+                      'email': base_data['email'],
+                      'partner_id': partner_id,},
+            context)
+        user_data = dict(
+            base_data,
+            signature=self._generate_signature(
+                cr, base_data['name'], base_data['email'], context=context),
+            address_id=address,
+            )
+        self.pool.get('res.users').create(
+            cr, uid, user_data, context)
+
+    def execute(self, cr, uid, ids, context=None):
+        self.create_user(cr, uid, ids[0], context=context)
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'res.config.users',
+            'view_id':self.pool.get('ir.ui.view')\
+                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
+            'type': 'ir.actions.act_window',
+            'target':'new',
+            }
+config_users()
 
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
@@ -296,26 +368,20 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     }
 groups2()
 
-
 class res_config_view(osv.osv_memory):
-    _name='res.config.view'
+    _name = 'res.config.view'
+    _inherit = 'res.config'
     _columns = {
         'name':fields.char('Name', size=64),
-        'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),
+        'view': fields.selection([('simple','Simplified'),
+                                  ('extended','Extended')],
+                                 'Interface', required=True ),
     }
     _defaults={
         'view':lambda *args: 'simple',
     }
 
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-    def action_set(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         users_obj = self.pool.get('res.users')
         group_obj=self.pool.get('res.groups')
@@ -325,14 +391,6 @@ class res_config_view(osv.osv_memory):
                 users_obj.write(cr, uid, [uid],{
                                 'groups_id':[(4,group_ids[0])]
                             }, context=context)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-            }
-
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

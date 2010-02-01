@@ -137,7 +137,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
         if os.name != 'nt':
             try:
                 self.server.socket.shutdown(
-                    hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2)
+                    getattr(socket, 'SHUT_RDWR', 2))
             except socket.error, e:
                 if e.errno != 57: raise
                 # OSX, socket shutdowns both sides if any side closes it
@@ -161,11 +161,11 @@ class HttpDaemon(BaseHttpDaemon):
         super(HttpDaemon, self).__init__(interface, port,
                                          handler=MultiHandler2)
 
-class HttpSDaemon(threading.Thread, netsvc.Server):
+class HttpSDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
         try:
-            super(HttpDaemon, self).__init__(interface, port,
-                                             handler=SecureMultiHandler2)
+            super(HttpSDaemon, self).__init__(interface, port,
+                                              handler=SecureMultiHandler2)
         except SSLError, e:
             netsvc.Logger().notifyChannel(
                 'httpd-ssl', netsvc.LOG_CRITICAL,

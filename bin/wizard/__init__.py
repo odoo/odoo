@@ -41,13 +41,13 @@ class except_wizard(Exception):
 
 class interface(netsvc.Service):
     states = {}
-    
+
     def __init__(self, name):
-        assert not self.service_exist('wizard.'+name), 'The wizard "%s" already exists!'%name
+        assert not self.exists('wizard.'+name), 'The wizard "%s" already exists!' % (name,)
         super(interface, self).__init__('wizard.'+name)
         self.exportMethod(self.execute)
         self.wiz_name = name
-        
+
     def translate_view(self, cr, node, state, lang):
         if node.get('string'):
             trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.get('string').encode('utf8'))

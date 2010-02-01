@@ -85,7 +85,7 @@ class _float_format(float, _format):
 
     def __str__(self):
         digits = 2
-        if hasattr(self,'_field') and hasattr(self._field, 'digits') and self._field.digits:
+        if hasattr(self,'_field') and getattr(self._field, 'digits', None):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
@@ -108,7 +108,7 @@ class _date_format(str, _format):
 
     def __str__(self):
         if self.val:
-            if hasattr(self,'name') and (self.name):
+            if getattr(self,'name', None):
                 date = datetime.strptime(self.name, DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
@@ -120,8 +120,13 @@ class _dttime_format(str, _format):
 
     def __str__(self):
         if self.val:
+<<<<<<< TREE
             if hasattr(self,'name') and self.name:
                 datetime = datetime.strptime(self.name, DHM_FORMAT)
+=======
+            if getattr(self,'name', None):
+                datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
+>>>>>>> MERGE-SOURCE
                 return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
         return self.val
 
@@ -255,10 +260,10 @@ class rml_parse(object):
                 parse_format = DHM_FORMAT
 
             # filtering time.strftime('%Y-%m-%d')
-            if type(value) == type(''):
-                parse_format = DHM_FORMAT
-                if (not date_time):
-                    return str(value)
+#            if type(value) == type(''):
+#                parse_format = DHM_FORMAT
+#                if (not date_time):
+#                    return str(value)
 
             if not isinstance(value, time.struct_time):
                 try:
@@ -361,8 +366,11 @@ class report_sxw(report_rml, preprocess.report):
         elif report_type=='mako2html':
             fnct = self.create_source_mako2html
         else:
-            raise Exception('Unknown Report Type: '+report_type)
-        return fnct(cr, uid, ids, data, report_xml, context)
+            raise 'Unknown Report Type'
+        fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
+        if not fnct_ret:
+            return (False,False)
+        return fnct_ret
 
     def create_source_odt(self, cr, uid, ids, data, report_xml, context=None):
         return self.create_single_odt(cr, uid, ids, data, report_xml, context or {})
@@ -394,6 +402,8 @@ class report_sxw(report_rml, preprocess.report):
                         results.append((d,'pdf'))
                         continue
                 result = self.create_single_pdf(cr, uid, [obj.id], data, report_xml, context)
+                if not result:
+                    return False
                 try:
                     if aname:
                         name = aname+'.'+result[1]
@@ -431,6 +441,9 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         title = report_xml.name
         rml = report_xml.report_rml_content
+        # if no rml file is found
+        if not rml:
+            return False
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)

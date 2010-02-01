@@ -1245,6 +1245,9 @@
             <test expr="currency_id.code == 'eur'.upper()"/>
             <test expr="name">Tiny sprl</test>
         </assert>
+        <record id="user_admin" model="res.users">
+            <field name="company_id" ref="main_company"/>
+        </record>    
 
     </data>
 </openerp>

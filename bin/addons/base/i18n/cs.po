@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-09 10:13+0000\n"
-"PO-Revision-Date: 2009-12-15 06:32+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2009-12-18 08:39+0000\n"
+"PO-Revision-Date: 2010-01-04 06:02+0000\n"
+"Last-Translator: Kuvaly [LCT] <kuvaly@seznam.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-01-14 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -191,11 +191,6 @@ msgstr "Více dokumentů"
 #. module: base
 #: field:ir.module.category,module_nr:0
 msgid "Number of Modules"
-msgstr ""
-
-#. module: base
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
 msgstr ""
 
 #. module: base
@@ -403,7 +398,7 @@ msgid "Country Name"
 msgstr "Název země"
 
 #. module: base
-#: model:res.country,name:base.co
+#: model:res.country,name:base.coreturn
 msgid "Colombia"
 msgstr "Kolumbie"
 
@@ -730,6 +725,12 @@ msgid "Iran"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.res_request-act
+#: model:ir.ui.menu,name:base.menu_res_request_act
+msgid "My Requests"
+msgstr ""
+
+#. module: base
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 msgid "Sequence Name"
@@ -983,22 +984,7 @@ msgstr "STOCK_KOPÍROVAT"
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"Model %s Does not Exist !\" % vals['relation']))\n"
-"                 \n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
-"                \n"
-"        return res\n"
-"ir_model_fields()\n"
-"\n"
-"class ir_model_access(osv.osv):\n"
-"    _name = 'ir.model.access'\n"
-"    _columns = {\n"
-"        'name': fields.char('Name', size=64, required=True),\n"
-"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
-"        'group_id': fields.many2one('res.groups', 'Group"
+msgid "Model %s Does not Exist !"
 msgstr ""
 
 #. module: base
@@ -1098,6 +1084,14 @@ msgid "Fixed Width"
 msgstr "Opravená šířka(Fixed width)"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).81.81.37.00."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-calendar"
 msgstr ""
@@ -1132,14 +1126,9 @@ msgid "7.  %H:%M:%S      ==> 18:25:20"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_form
-#: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_partner_form
-#: view:res.partner:0
-#: view:res.partner.category:0
-#: field:res.partner.category,partner_ids:0
-msgid "Partners"
-msgstr "Partneři"
+#: help:res.users,company_id:0
+msgid "The company this user is currently working on."
+msgstr ""
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1345,6 +1334,11 @@ msgstr "Počet aktualizovaných modulů"
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "Skupiny"
+
+#. module: base
+#: constraint:res.users:0
+msgid "This user can not connect using this company !"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1568,6 +1562,12 @@ msgid "Field Mappings"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.res_request-closed
+#: model:ir.ui.menu,name:base.next_id_12_close
+msgid "My Closed Requests"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Customization"
 msgstr ""
@@ -1621,11 +1621,6 @@ msgstr ""
 #. module: base
 #: view:ir.actions.server:0
 msgid "Iteration Actions"
-msgstr ""
-
-#. module: base
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
 msgstr ""
 
 #. module: base
@@ -1831,11 +1826,6 @@ msgid "Dependencies"
 msgstr "Závislosti(Dependencies)"
 
 #. module: base
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "Hlavní společnost"
-
-#. module: base
 #: field:ir.report.custom.fields,bgcolor:0
 msgid "Background Color"
 msgstr "Barva pozadí(Background color)"
@@ -1951,6 +1941,12 @@ msgstr ""
 #: rml:ir.module.reference:0
 msgid "Module"
 msgstr "Modul"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_bank_form
+#: model:ir.ui.menu,name:base.menu_action_res_bank_form
+msgid "Bank List"
+msgstr ""
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -2319,11 +2315,6 @@ msgid "6.  %d, %m         ==> 05, 12"
 msgstr ""
 
 #. module: base
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr ""
-
-#. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
 msgstr ""
@@ -2431,11 +2422,6 @@ msgstr ""
 #: field:res.request.history,name:0
 msgid "Summary"
 msgstr "Shrnutí(Summary)"
-
-#. module: base
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr ""
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -3037,6 +3023,7 @@ msgstr ""
 #. module: base
 #: field:ir.rule,field_id:0
 #: selection:ir.translation,type:0
+#: field:multi_company.default,field_id:0
 msgid "Field"
 msgstr ""
 
@@ -3104,7 +3091,6 @@ msgstr ""
 #: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
-#: field:multi_company.default,name:0
 #: field:res.bank,name:0
 #: field:res.config.view,name:0
 #: field:res.lang,name:0
@@ -3630,8 +3616,6 @@ msgid "Signal (button Name)"
 msgstr "Signál(název tlačítka)Signal (button Name"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_res_bank_form
-#: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:0
 #: field:res.partner,bank_ids:0
 msgid "Banks"
@@ -3892,20 +3876,16 @@ msgid "On Multiple Doc."
 msgstr ""
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_base_config_contact
 #: field:res.partner,address:0
 #: view:res.partner.address:0
 msgid "Contacts"
-msgstr "Kotakty"
+msgstr "Kontakty"
 
 #. module: base
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
-msgstr ""
-
-#. module: base
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr ""
+msgstr "Farské ostrovy"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_upgrade
@@ -4293,11 +4273,6 @@ msgid "French (CH) / Français (CH)"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_res_company
-msgid "List of Company"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_NEW"
 msgstr ""
@@ -4409,6 +4384,11 @@ msgstr ""
 #: model:ir.model,name:base.model_res_partner_event
 msgid "res.partner.event"
 msgstr "res.partner.event"
+
+#. module: base
+#: field:res.company,user_ids:0
+msgid "Accepted Users"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4527,13 +4507,6 @@ msgstr ""
 #. module: base
 #: field:res.partner.event,event_ical_id:0
 msgid "iCal id"
-msgstr ""
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_partner_function_form
-#: model:ir.ui.menu,name:base.menu_partner_function_form
-#: view:res.partner.function:0
-msgid "Partner Functions"
 msgstr ""
 
 #. module: base
@@ -4668,11 +4641,6 @@ msgstr ""
 #. module: base
 #: selection:maintenance.contract,kind:0
 msgid "Full"
-msgstr ""
-
-#. module: base
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
 msgstr ""
 
 #. module: base
@@ -4914,6 +4882,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
 #: model:ir.ui.menu,name:base.menu_action_res_company_form
+#: model:ir.ui.menu,name:base.menu_res_company_global
 #: view:res.company:0
 msgid "Companies"
 msgstr ""
@@ -5344,9 +5313,10 @@ msgid "Active Partner Events"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_rule
-#: model:ir.ui.menu,name:base.menu_action_rule
-msgid "Record Rules"
+#: model:ir.actions.act_window,name:base.action_partner_function_form
+#: model:ir.ui.menu,name:base.menu_partner_function_form
+#: view:res.partner.function:0
+msgid "Contact Functions"
 msgstr ""
 
 #. module: base
@@ -5641,8 +5611,6 @@ msgid "Martinique (French)"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_request-act
-#: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
 #: view:res.request:0
 msgid "Requests"
@@ -5905,6 +5873,11 @@ msgid "Rounding factor"
 msgstr "Faktor zaokrouhlení"
 
 #. module: base
+#: model:ir.model,name:base.model_res_company
+msgid "res.company"
+msgstr "res.company"
+
+#. module: base
 #: wizard_view:module.upgrade,end:0
 #: wizard_view:module.upgrade,start:0
 msgid "System upgrade done"
@@ -5985,6 +5958,11 @@ msgid "Hour 00->24: %(h24)s"
 msgstr ""
 
 #. module: base
+#: help:multi_company.default,field_id:0
+msgid "Select field property"
+msgstr ""
+
+#. module: base
 #: field:res.request.history,date_sent:0
 msgid "Date sent"
 msgstr "Datum odeslání(Date sent)"
@@ -6003,7 +5981,6 @@ msgstr "Měsíc: %(měsíc/e)"
 #: view:ir.sequence:0
 #: field:ir.ui.menu,sequence:0
 #: field:ir.ui.view_sc,sequence:0
-#: field:multi_company.default,sequence:0
 #: field:res.partner.bank,sequence:0
 #: field:wizard.ir.model.menu.create.line,sequence:0
 msgid "Sequence"
@@ -6070,6 +6047,11 @@ msgid "Parent"
 msgstr "Nadřízený"
 
 #. module: base
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,res_model:0
 #: field:ir.actions.report.custom,model:0
 #: field:ir.actions.report.xml,model:0
@@ -6087,7 +6069,6 @@ msgstr "Nadřízený"
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
-#: field:multi_company.default,object_id:0
 #: field:res.request.link,object:0
 #: field:wizard.ir.model.menu.create,model_id:0
 #: field:workflow.triggers,model:0
@@ -6797,6 +6778,17 @@ msgid "Landscape"
 msgstr "Orientace stránky naležato(Landscape)"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_form
+#: model:ir.ui.menu,name:base.menu_base_config_partner
+#: model:ir.ui.menu,name:base.menu_base_partner
+#: model:ir.ui.menu,name:base.menu_partner_form
+#: view:res.partner:0
+#: view:res.partner.category:0
+#: field:res.partner.category,partner_ids:0
+msgid "Partners"
+msgstr "Partneři"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Administration"
 msgstr ""
@@ -7014,11 +7006,6 @@ msgid "Second field should be figures"
 msgstr ""
 
 #. module: base
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_grid_security
 #: model:ir.ui.menu,name:base.menu_ir_access_grid
 msgid "Access Controls Grid"
@@ -7141,11 +7128,6 @@ msgid "Bank Accounts"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_multi_company_default
-msgid "Default multi company"
-msgstr ""
-
-#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Odeslat"
@@ -7238,12 +7220,6 @@ msgid "https://translations.launchpad.net/openobject"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_title
-#: model:ir.ui.menu,name:base.menu_partner_title
-msgid "Titles"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.todo,start_date:0
 msgid "Start Date"
 msgstr ""
@@ -7315,6 +7291,11 @@ msgstr ">"
 #: field:ir.model.access,perm_unlink:0
 msgid "Delete Permission"
 msgstr "Smazat právo"
+
+#. module: base
+#: model:ir.model,name:base.model_multi_company_default
+msgid "multi_company.default"
+msgstr ""
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -7573,6 +7554,11 @@ msgid "Rwanda"
 msgstr ""
 
 #. module: base
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr ""
+
+#. module: base
 #: selection:ir.report.custom.fields,operation:0
 msgid "Calculate Sum"
 msgstr "Vypočítat celek(Calculate sum)"
@@ -7714,6 +7700,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
 msgid "ir.actions.server"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_rule
+#: model:ir.ui.menu,name:base.menu_action_rule
+msgid "Record Rules"
 msgstr ""
 
 #. module: base
@@ -7956,5 +7948,5 @@ msgstr ""
 msgid "Russian / русский язык"
 msgstr "Rusko / русский язык"
 
-#~ msgid "res.company"
-#~ msgstr "res.company"
+#~ msgid "Main Company"
+#~ msgstr "Hlavní společnost"

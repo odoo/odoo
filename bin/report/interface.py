@@ -46,7 +46,7 @@ def toxml(val):
 
 class report_int(netsvc.Service):
     def __init__(self, name, audience='*'):
-        assert not self.service_exist(name), 'The report "%s" already exist!' % name
+        assert not self.exists(name), 'The report "%s" already exists!' % name
         super(report_int, self).__init__(name, audience)
         if name[0:7]<>'report.':
             raise Exception, 'ConceptionError, bad report name, should start with "report."'

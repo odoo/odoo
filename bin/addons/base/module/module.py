@@ -196,10 +196,18 @@ class module(osv.osv):
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for mod in self.read(cr, uid, ids, ['state'], context):
+        mod_names = []    
+        for mod in self.read(cr, uid, ids, ['state','name'], context):
             if mod['state'] in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise orm.except_orm(_('Error'),
                         _('You try to remove a module that is installed or will be installed'))
+            mod_names.append(mod['name'])
+        #Removing the entry from ir_model_data
+        ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
+        
+        if ids_meta:
+            self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
+
         return super(module, self).unlink(cr, uid, ids, context=context)
 
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):

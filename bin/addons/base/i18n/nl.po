@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-12-09 10:13+0000\n"
-"PO-Revision-Date: 2009-12-16 08:24+0000\n"
-"Last-Translator: Pieter J. Kersten (EduSense BV) <Unknown>\n"
+"POT-Creation-Date: 2009-12-18 08:39+0000\n"
+"PO-Revision-Date: 2009-12-24 06:52+0000\n"
+"Last-Translator: mra (Open ERP) <mra@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-17 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-01-14 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -199,11 +199,6 @@ msgstr "Op meerdere doc."
 #: field:ir.module.category,module_nr:0
 msgid "Number of Modules"
 msgstr "Aantal modules"
-
-#. module: base
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr "Bedrijf om het huidige record op te slaan"
 
 #. module: base
 #: field:res.partner.bank.type.field,size:0
@@ -421,7 +416,7 @@ msgid "Country Name"
 msgstr "Naam land"
 
 #. module: base
-#: model:res.country,name:base.co
+#: model:res.country,name:base.coreturn
 msgid "Colombia"
 msgstr "Colombia"
 
@@ -751,6 +746,12 @@ msgid "Iran"
 msgstr "Iran"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.res_request-act
+#: model:ir.ui.menu,name:base.menu_res_request_act
+msgid "My Requests"
+msgstr ""
+
+#. module: base
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 msgid "Sequence Name"
@@ -1010,38 +1011,8 @@ msgstr "STOCK_COPY"
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
-msgid ""
-"Model %s Does not Exist !\" % vals['relation']))\n"
-"                 \n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
-"                \n"
-"        return res\n"
-"ir_model_fields()\n"
-"\n"
-"class ir_model_access(osv.osv):\n"
-"    _name = 'ir.model.access'\n"
-"    _columns = {\n"
-"        'name': fields.char('Name', size=64, required=True),\n"
-"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
-"        'group_id': fields.many2one('res.groups', 'Group"
-msgstr ""
-"Model %s bestaat niet !\" % vals['relation']))\n"
-"                 \n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                self.pool.get(vals['model'])._auto_init(cr, {})\n"
-"                \n"
-"        return res\n"
-"ir_model_fields()\n"
-"\n"
-"class ir_model_access(osv.osv):\n"
-"    _name = 'ir.model.access'\n"
-"    _columns = {\n"
-"        'name': fields.char('Name', size=64, required=True),\n"
-"        'model_id': fields.many2one('ir.model', 'Object', required=True),\n"
-"        'group_id': fields.many2one('res.groups', 'Group"
+msgid "Model %s Does not Exist !"
+msgstr "Model %s bestaat niet !"
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -1142,6 +1113,14 @@ msgid "Fixed Width"
 msgstr "Vaste breedte"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).81.81.37.00."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "terp-calendar"
 msgstr "terp-calendar"
@@ -1176,14 +1155,9 @@ msgid "7.  %H:%M:%S      ==> 18:25:20"
 msgstr "7. %H:%M:%S       ==> 18:25:20"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_form
-#: model:ir.ui.menu,name:base.menu_base_partner
-#: model:ir.ui.menu,name:base.menu_partner_form
-#: view:res.partner:0
-#: view:res.partner.category:0
-#: field:res.partner.category,partner_ids:0
-msgid "Partners"
-msgstr "Relaties"
+#: help:res.users,company_id:0
+msgid "The company this user is currently working on."
+msgstr ""
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1399,6 +1373,11 @@ msgstr "Aantal bijgewerkte modules"
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "Groepen"
+
+#. module: base
+#: constraint:res.users:0
+msgid "This user can not connect using this company !"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1630,6 +1609,12 @@ msgid "Field Mappings"
 msgstr "Veldverwijzingen"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.res_request-closed
+#: model:ir.ui.menu,name:base.next_id_12_close
+msgid "My Closed Requests"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_custom
 msgid "Customization"
 msgstr "Aanpassingen"
@@ -1684,11 +1669,6 @@ msgstr "%p - Equivalent van AM of PM"
 #: view:ir.actions.server:0
 msgid "Iteration Actions"
 msgstr "Repeterende acties"
-
-#. module: base
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr "Bedrijf verbonden aan deze gebruiker"
 
 #. module: base
 #: field:maintenance.contract,date_stop:0
@@ -1893,11 +1873,6 @@ msgid "Dependencies"
 msgstr "Afhankelijkheden"
 
 #. module: base
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "Moederorganisatie"
-
-#. module: base
 #: field:ir.report.custom.fields,bgcolor:0
 msgid "Background Color"
 msgstr "Achtergrondkleur"
@@ -2015,6 +1990,12 @@ msgstr "Veldkoppelingen"
 #: rml:ir.module.reference:0
 msgid "Module"
 msgstr "Module"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_bank_form
+#: model:ir.ui.menu,name:base.menu_action_res_bank_form
+msgid "Bank List"
+msgstr ""
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -2389,11 +2370,6 @@ msgid "6.  %d, %m         ==> 05, 12"
 msgstr "6. %d. %m          ==> 05. 12"
 
 #. module: base
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr "Expressie, dient 'Waar' te zijn om te matchen"
-
-#. module: base
 #: help:res.partner,customer:0
 msgid "Check this box if the partner is a customer."
 msgstr "Vink dit aan als de relatie een klant is"
@@ -2507,11 +2483,6 @@ msgstr "Domein"
 #: field:res.request.history,name:0
 msgid "Summary"
 msgstr "Samenvatting"
-
-#. module: base
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr "Expressie"
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -3127,6 +3098,7 @@ msgstr "Onderhoudscontract toegevoegd !"
 #. module: base
 #: field:ir.rule,field_id:0
 #: selection:ir.translation,type:0
+#: field:multi_company.default,field_id:0
 msgid "Field"
 msgstr "Veld"
 
@@ -3196,7 +3168,6 @@ msgstr "Kazachstan"
 #: field:ir.rule.group,name:0
 #: field:ir.values,name:0
 #: field:maintenance.contract.module,name:0
-#: field:multi_company.default,name:0
 #: field:res.bank,name:0
 #: field:res.config.view,name:0
 #: field:res.lang,name:0
@@ -3731,8 +3702,6 @@ msgid "Signal (button Name)"
 msgstr "Signaal (naam knop)"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_res_bank_form
-#: model:ir.ui.menu,name:base.menu_action_res_bank_form
 #: view:res.bank:0
 #: field:res.partner,bank_ids:0
 msgid "Banks"
@@ -3998,6 +3967,7 @@ msgid "On Multiple Doc."
 msgstr "Op meerdere doc."
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_base_config_contact
 #: field:res.partner,address:0
 #: view:res.partner.address:0
 msgid "Contacts"
@@ -4007,11 +3977,6 @@ msgstr "Contactpersonen"
 #: model:res.country,name:base.fo
 msgid "Faroe Islands"
 msgstr "Faeröereilanden"
-
-#. module: base
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr "Object onderworpen aan deze regels"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_upgrade
@@ -4404,11 +4369,6 @@ msgid "French (CH) / Français (CH)"
 msgstr "Frans (CH) / Français (CH)"
 
 #. module: base
-#: model:ir.model,name:base.model_res_company
-msgid "List of Company"
-msgstr "Lijst van bedrijf"
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_NEW"
 msgstr "STOCK_NEW"
@@ -4523,6 +4483,11 @@ msgstr "Nigeria"
 #: model:ir.model,name:base.model_res_partner_event
 msgid "res.partner.event"
 msgstr "res.partner.event"
+
+#. module: base
+#: field:res.company,user_ids:0
+msgid "Accepted Users"
+msgstr ""
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -4646,13 +4611,6 @@ msgstr "Nepal"
 #: field:res.partner.event,event_ical_id:0
 msgid "iCal id"
 msgstr "iCal id"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_partner_function_form
-#: model:ir.ui.menu,name:base.menu_partner_function_form
-#: view:res.partner.function:0
-msgid "Partner Functions"
-msgstr "Functies relatie"
 
 #. module: base
 #: wizard_view:res.partner.sms_send,init:0
@@ -4789,11 +4747,6 @@ msgstr "_Sluiten"
 #: selection:maintenance.contract,kind:0
 msgid "Full"
 msgstr "Volledig"
-
-#. module: base
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
-msgstr "Standaard bedrijf"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -5036,6 +4989,7 @@ msgstr "Gambia"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_company_form
 #: model:ir.ui.menu,name:base.menu_action_res_company_form
+#: model:ir.ui.menu,name:base.menu_res_company_global
 #: view:res.company:0
 msgid "Companies"
 msgstr "Bedrijven"
@@ -5470,10 +5424,11 @@ msgid "Active Partner Events"
 msgstr "Actieve gebeurtenissen relatie"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_rule
-#: model:ir.ui.menu,name:base.menu_action_rule
-msgid "Record Rules"
-msgstr "Record-regels"
+#: model:ir.actions.act_window,name:base.action_partner_function_form
+#: model:ir.ui.menu,name:base.menu_partner_function_form
+#: view:res.partner.function:0
+msgid "Contact Functions"
+msgstr ""
 
 #. module: base
 #: view:multi_company.default:0
@@ -5769,8 +5724,6 @@ msgid "Martinique (French)"
 msgstr "Martinique"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_request-act
-#: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
 #: view:res.request:0
 msgid "Requests"
@@ -6041,6 +5994,11 @@ msgid "Rounding factor"
 msgstr "Afrondingsfactor"
 
 #. module: base
+#: model:ir.model,name:base.model_res_company
+msgid "res.company"
+msgstr "res.company"
+
+#. module: base
 #: wizard_view:module.upgrade,end:0
 #: wizard_view:module.upgrade,start:0
 msgid "System upgrade done"
@@ -6121,6 +6079,11 @@ msgid "Hour 00->24: %(h24)s"
 msgstr "Uur 00->24: %(h24)s"
 
 #. module: base
+#: help:multi_company.default,field_id:0
+msgid "Select field property"
+msgstr ""
+
+#. module: base
 #: field:res.request.history,date_sent:0
 msgid "Date sent"
 msgstr "Datum verzonden"
@@ -6139,7 +6102,6 @@ msgstr "Maand %(maand)en"
 #: view:ir.sequence:0
 #: field:ir.ui.menu,sequence:0
 #: field:ir.ui.view_sc,sequence:0
-#: field:multi_company.default,sequence:0
 #: field:res.partner.bank,sequence:0
 #: field:wizard.ir.model.menu.create.line,sequence:0
 msgid "Sequence"
@@ -6208,6 +6170,11 @@ msgid "Parent"
 msgstr "Bovenliggend"
 
 #. module: base
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.act_window,res_model:0
 #: field:ir.actions.report.custom,model:0
 #: field:ir.actions.report.xml,model:0
@@ -6225,7 +6192,6 @@ msgstr "Bovenliggend"
 #: selection:ir.translation,type:0
 #: field:ir.ui.view,model:0
 #: field:ir.values,model_id:0
-#: field:multi_company.default,object_id:0
 #: field:res.request.link,object:0
 #: field:wizard.ir.model.menu.create,model_id:0
 #: field:workflow.triggers,model:0
@@ -6949,6 +6915,17 @@ msgid "Landscape"
 msgstr "Liggend"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_partner_form
+#: model:ir.ui.menu,name:base.menu_base_config_partner
+#: model:ir.ui.menu,name:base.menu_base_partner
+#: model:ir.ui.menu,name:base.menu_partner_form
+#: view:res.partner:0
+#: view:res.partner.category:0
+#: field:res.partner.category,partner_ids:0
+msgid "Partners"
+msgstr "Relaties"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Administration"
 msgstr "Beheer"
@@ -7169,11 +7146,6 @@ msgid "Second field should be figures"
 msgstr "Tweede veld zouden figuren moeten zijn"
 
 #. module: base
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr "Benoem het om een record makkelijk terug te vinden"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_grid_security
 #: model:ir.ui.menu,name:base.menu_ir_access_grid
 msgid "Access Controls Grid"
@@ -7296,11 +7268,6 @@ msgid "Bank Accounts"
 msgstr "Bankrekeningen"
 
 #. module: base
-#: model:ir.model,name:base.model_multi_company_default
-msgid "Default multi company"
-msgstr "Standaard meerdere bedrijven"
-
-#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Verzenden"
@@ -7398,12 +7365,6 @@ msgid "https://translations.launchpad.net/openobject"
 msgstr "https://translations.launchpad.net/openobject"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_partner_title
-#: model:ir.ui.menu,name:base.menu_partner_title
-msgid "Titles"
-msgstr "Titels"
-
-#. module: base
 #: field:ir.actions.todo,start_date:0
 msgid "Start Date"
 msgstr "Begindatum"
@@ -7479,6 +7440,11 @@ msgstr ">"
 #: field:ir.model.access,perm_unlink:0
 msgid "Delete Permission"
 msgstr "Toestemming verwijderen"
+
+#. module: base
+#: model:ir.model,name:base.model_multi_company_default
+msgid "multi_company.default"
+msgstr ""
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -7739,6 +7705,11 @@ msgid "Rwanda"
 msgstr "Rwanda"
 
 #. module: base
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr "De BTW lijkt niet correct te zijn."
+
+#. module: base
 #: selection:ir.report.custom.fields,operation:0
 msgid "Calculate Sum"
 msgstr "Bereken som"
@@ -7888,6 +7859,12 @@ msgstr "Laatste versie"
 #: model:ir.model,name:base.model_ir_actions_server
 msgid "ir.actions.server"
 msgstr "ir.actions.server"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_rule
+#: model:ir.ui.menu,name:base.menu_action_rule
+msgid "Record Rules"
+msgstr "Record-regels"
 
 #. module: base
 #: view:ir.actions.report.custom:0
@@ -8131,3 +8108,39 @@ msgstr "Sri Lanka"
 #: selection:module.lang.install,init,lang:0
 msgid "Russian / русский язык"
 msgstr "Russisch / русский язык"
+
+#~ msgid "Main Company"
+#~ msgstr "Moederorganisatie"
+
+#~ msgid "Titles"
+#~ msgstr "Titels"
+
+#~ msgid "Company to store the current record"
+#~ msgstr "Bedrijf om het huidige record op te slaan"
+
+#~ msgid "Company where the user is connected"
+#~ msgstr "Bedrijf verbonden aan deze gebruiker"
+
+#~ msgid "Expression, must be True to match"
+#~ msgstr "Expressie, dient 'Waar' te zijn om te matchen"
+
+#~ msgid "Expression"
+#~ msgstr "Expressie"
+
+#~ msgid "Object affect by this rules"
+#~ msgstr "Object onderworpen aan deze regels"
+
+#~ msgid "Default Company"
+#~ msgstr "Standaard bedrijf"
+
+#~ msgid "Name it to easily find a record"
+#~ msgstr "Benoem het om een record makkelijk terug te vinden"
+
+#~ msgid "List of Company"
+#~ msgstr "Lijst van bedrijf"
+
+#~ msgid "Partner Functions"
+#~ msgstr "Functies relatie"
+
+#~ msgid "Default multi company"
+#~ msgstr "Standaard meerdere bedrijven"
