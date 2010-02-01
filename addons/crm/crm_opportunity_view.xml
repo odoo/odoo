@@ -52,9 +52,10 @@
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                     <field name="date" />
-                    <field name="date_deadline"/>                    
+                    <field name="date_deadline"/>
+                    <field name="phonecall_id" invisible="1"/>                    
                     <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />                    
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action" attrs="{'invisible':[('phonecall_id','!=',False)]}" />                    
                 </group>
                 <notebook colspan="4">
                 <page string="Description">

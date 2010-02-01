@@ -62,6 +62,15 @@ class phonecall2opportunity(wizard.interface):
         'probability': {'type':'float', 'digits':(16,2), 'string': 'Success Probability'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
+    
+    def _check_state(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        case_obj = pool.get('crm.phonecall')
+        for case in case_obj.browse(cr, uid, data['ids']):
+            if case.state != 'open':
+                raise wizard.except_wizard(_('Warning !'),
+                    _('Phone Call state should be \'Open\' before converting to Opportunity.'))
+        return {}
 
     def _selectopportunity(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -164,7 +173,7 @@ class phonecall2opportunity(wizard.interface):
 
     states = {
         'init': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'choice','next_state':_selectChoice}
         },
         'create_partner': {
