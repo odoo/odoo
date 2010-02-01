@@ -19,18 +19,8 @@
 #
 ##############################################################################
 
-from dateutil.rrule import *
 from osv import fields, osv
-import  datetime
-import base64
-import re
-import time
-import tools
-
-from tools.translate import _
-
 import crm
-
 
 class crm_phonecall(osv.osv):
     _name = "crm.phonecall"
@@ -53,6 +43,7 @@ class crm_phonecall(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),        
     }
+ 
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
