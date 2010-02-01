@@ -56,7 +56,6 @@ class account_account(osv.osv):
         return ids2
 
     _columns = {
-
         'journal_id':fields.many2one('account.journal', 'Journal',domain=[('type','=','situation')]),
         'open_bal' : fields.float('Opening Balance',digits=(16,2)),
         'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
