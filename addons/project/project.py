@@ -242,7 +242,6 @@ class task(osv.osv):
         result = {}
         for res in self.browse(cr, uid, ids):
             if date_start and planned:
-                print date_start, planned, occupation_rate
                 resource_id = self.pool.get('resource.resource').search(cr,uid,[('user_id','=',res.user_id.id)])
                 if resource_id:
                     resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
