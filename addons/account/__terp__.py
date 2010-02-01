@@ -68,6 +68,7 @@
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'test/invoice_basic_test.xml',
+        'test/invoice_bug452854_test.xml',
     ],
     'installable': True,
     'active': False,

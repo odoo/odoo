@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- 
+            Illustrate one aspect of bug #452854:
+            Cannot validate invoices with foreign currency or price_accuracy=3
+        -->
+        <!-- This file must be loaded  _after_  account_demo.xml ! -->
+        <record id="invoice_bug452854" model="account.invoice">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="address_invoice_id" ref="base.res_partner_address_tang" />
+            <field name="partner_id" ref="base.res_partner_asus" />
+            <field name="journal_id" ref="account.sales_journal" />
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="account.a_recv" />
+            <field name="name">lp:452854</field>
+            <field name="address_contact_id" ref="base.res_partner_address_tang" />
+        </record>
+        <record id="invoice_bug452854_line_1" model="account.invoice.line">
+            <field name="name">Dummy product</field>
+            <field name="invoice_id" ref="invoice_bug452854" />
+            <field name="price_unit" eval="1000.0/3" />
+            <field name="quantity">1</field>
+            <field name="account_id" ref="account.a_sale" />
+            <field eval="[(6,0,[ref('account.t_vat')])]" name="invoice_line_tax_id" />
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="invoice_bug452854" />
+        <assert id="invoice_bug452854" model="account.invoice" severity="error" string="Invoice lp:452854 validated correctly">
+            <test expr="state">open</test>
+        </assert>
+    </data>
+</openerp>
