@@ -85,7 +85,7 @@ between mails and Open ERP.""",
         'crm_helpdesk_menu.xml', 
         #'crm_report.xml', 
         'security/crm_security.xml', 
-        #'security/ir.model.access.csv', 
+        'security/ir.model.access.csv', 
 
         'process/crm_configuration_process.xml'
     ],

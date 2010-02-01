@@ -421,9 +421,9 @@ class stock_picking(osv.osv):
             from
                 stock_move
             where
-                picking_id in (""" + ','.join(map(str, ids)) + """)
+                picking_id=ANY(%s)
             group by
-                picking_id""")
+                picking_id""",(ids,))
         for pick, dt1, dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
@@ -860,7 +860,6 @@ class stock_production_lot(osv.osv):
             ids = [ids]
 
         res = {}.fromkeys(ids, 0.0)
-
         if locations:
             cr.execute('''select
                     prodlot_id,
@@ -868,11 +867,7 @@ class stock_production_lot(osv.osv):
                 from
                     stock_report_prodlots
                 where
-                    location_id in ('''+','.join(map(str, locations))+''')  and
-                    prodlot_id in  ('''+','.join(map(str, ids))+''')
-                group by
-                    prodlot_id
-            ''')
+                    location_id =ANY(%s) and prodlot_id =ANY(%s) group by prodlot_id''',(locations,ids,))
             res.update(dict(cr.fetchall()))
         return res
 
@@ -884,11 +879,8 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id in ('''+','.join(map(str, locations)) + ''')
-            group by
-                prodlot_id
-            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2])
-        )
+                location_id =ANY(%s) group by prodlot_id
+            having  sum(name) '''+ str(args[0][1]) + str(args[0][2]),(locations,))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids

@@ -2,20 +2,8 @@
 <openerp>
 <data>
 
-	# ------------------------------------------------------
-    # Leads Categories
-    # ------------------------------------------------------
-
-    <record id="crm_lead_categ_action" model="ir.actions.act_window">
-        <field name="name">Lead Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
- 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>      
-		<field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-		<field name="context">{'object_id':'crm.lead'}</field>  			        
-    </record>
     
-    <menuitem action="crm_lead_categ_action" id="menu_crm_case_lead-act" parent="crm.menu_crm_case_categ"/>
+   
 		# ------------------------------------------------------ 
 	    # Stage
 	    # ------------------------------------------------------ 
@@ -41,8 +29,9 @@
                 <group colspan="4" col="7">
                     <field name="name" select="1" string="Lead Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="user_id" select="2"/>
-                    <newline/>
+                    <field name="opportunity_id" string="Opportunity Case"/>                    	                    
+	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                    
                     <label string="Stage: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="stage_id" select="1" nolabel="1"/>
@@ -50,10 +39,10 @@
                     </group>
                     <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>
                     <field name="type_id" string="Campaign Type" select="1"/>
-                </group>
-                <group colspan="2" col="4">
-	                <field name="opportunity_id" string="Opportunity Case"/>
-	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                    <newline/>
+                    <field name="date"/>
+                	<field name="date_deadline"/>
+                    <field name="user_id" select="2"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Leads">
@@ -182,10 +171,6 @@
                            <filter icon="terp-partner"
                                domain="[('user_id','=',uid)]" help="My Leads"
                                default="1"
-                           />
-                           <filter icon="terp-crm"
-                               domain="[('user_id','child_of',[uid])]"
-                               help="My department's Leads"
                            />
                    </field>
                    <field name="state" select="1">

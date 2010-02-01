@@ -71,7 +71,7 @@
         <menuitem name="Fundraising" id="menu_crm_fundraising_tree" parent="crm.next_id_52"/>
         <menuitem action="action_report_crm_fundraising_user_tree" id="menu_crm_fundraising_user_tree" parent="menu_crm_fundraising_tree"/>
         
-        <!-- # fundraising by section and category of case -->
+        <!-- # Fundraising by section and category of case -->
 
         <record id="view_crm_fundraising_categ_tree" model="ir.ui.view">
             <field name="name">report.crm.fundraising.categ.tree</field>
@@ -138,7 +138,7 @@
         </record>
         <menuitem action="action_report_crm_fundraising_categ_tree" id="menu_crm_fundraising_categ_tree" parent="menu_crm_fundraising_tree"/>
         
-        <!-- fundraising by Section  -->
+        <!-- Fundraising by Section  -->
 
         <record id="view_report_crm_fundraising_section_tree" model="ir.ui.view">
             <field name="name">report.crm.fundraising.section.tree</field>
@@ -187,5 +187,240 @@
             <field name="search_view_id" ref="view_report_crm_fundraising_section_filter"/>
         </record>
         <menuitem action="action_report_crm_fundraising_section_tree" id="menu_crm_fundraising_section_tree" parent="menu_crm_fundraising_tree"/>
+		
+		#
+	    # Fundraising by section and type
+	    #
+
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_tree">
+	        <field name="name">CRM Report - Sections and Type(Tree)</field>
+	        <field name="model">report.crm.fundraising.section.type</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_tree"/>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="type_id"/>
+	                <field name="stage_id"/>
+	                <field name="amount_revenue"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_form">
+	        <field name="name">CRM Report - Sections and Type(Form)</field>
+	        <field name="model">report.crm.fundraising.section.type</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_form"/>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="type_id"/>
+	                <field name="stage_id"/>
+	                <field name="amount_revenue"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_graph">
+	        <field name="name">CRM Report - Sections and Type(Graph)</field>
+	        <field name="model">report.crm.fundraising.section.type</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	            <graph string="Fundraising by Section and Type" type="bar" orientation="horizontal">
+	                <field name="type_id"/>
+	                <field name="amount_revenue" operator="+"/>
+	                <field name="section_id" group="True"/>
+	            </graph>
+	        </field>
+	    </record>
+	    <record id="view_crm_fundraising_section_categ_filter" model="ir.ui.view">
+	            <field name="name">CRM Report - Sections and Type(Select)</field>
+	            <field name="model">report.crm.fundraising.section.type</field>
+	            <field name="inherit_id" ref="view_crm_case_section_categ_filter"/>
+	            <field name="type">search</field>
+	            <field name="arch" type="xml">
+	                <field name="section_id" position="after">
+		                <field name="type_id"/>
+		            </field>
+	            </field>
+	        </record>
+	
+	    <record model="ir.actions.act_window" id="action_report_crm_fundraising_section_categ_tree">
+	        <field name="res_model">report.crm.fundraising.section.type</field>
+	        <field name="name">Fundraising by section and type</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="search_view_id" ref="view_crm_fundraising_section_categ_filter"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_graph">
+	       	<field name="sequence" eval="1"/>
+	       	<field name="view_mode">graph</field>
+	   		<field name="view_id" ref="view_crm_fundraising_section_categ_graph"/>
+	   		<field name="act_window_id" ref="action_report_crm_fundraising_section_categ_tree"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_tree">
+	       <field name="sequence" eval="2"/>
+	       <field name="view_mode">tree</field>
+	       <field name="view_id" ref="view_crm_fundraising_section_categ_tree"/>
+	       <field name="act_window_id" ref="action_report_crm_fundraising_section_categ_tree"/>
+	    </record>
+        <menuitem action="action_report_crm_fundraising_section_categ_tree" id="menu_crm_fundraising_section_categ_tree" parent="menu_crm_fundraising_tree"/>
+		
+		#
+	    # Fundraising by section, category and stage
+	    #
+
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_stage_tree">
+	        <field name="name">CRM Report - Section, Category and Stage(Tree)</field>
+	        <field name="model">report.crm.fundraising.section.categ.stage</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_stage_tree"/>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="categ_id"/>
+	                <field name="stage_id"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_stage_form">
+	        <field name="name">CRM Report - Section, Category and Stage(Form)</field>
+	        <field name="model">report.crm.fundraising.section.categ.stage</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_stage_form"/>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="categ_id"/>
+	                <field name="stage_id"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_stage_graph">
+	        <field name="name">CRM Report - Section, Category and Stage(Select)</field>
+	        <field name="model">report.crm.fundraising.section.categ.stage</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	            <graph string="Fundraising by Section, Category and Stage" type="bar" orientation="horizontal">
+	                <field name="categ_id"/>
+	                <field name="nbr" operator="+"/>
+	                <field name="section_id" group="True"/>
+	            </graph>
+	        </field>
+	    </record>
+	    <record id="view_crm_fundraising_section_categ_stage_filter" model="ir.ui.view">
+            <field name="name">CRM Report - Section, Category and Stage(Select)</field>
+            <field name="model">report.crm.fundraising.section.categ.stage</field>
+            <field name="inherit_id" ref="view_crm_case_section_categ_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="section_id" position="after">
+	                <field name="categ_id"/>
+	                <field name="stage_id"/>
+	            </field>
+            </field>
+        </record>
+	
+	    <record model="ir.actions.act_window" id="action_report_crm_fundraising_section_categ_stage_tree">
+	        <field name="res_model">report.crm.fundraising.section.categ.stage</field>
+	        <field name="name">Fundraising by section, category and stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="search_view_id" ref="view_crm_fundraising_section_categ_stage_filter"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_stage_graph">
+	       	<field name="sequence" eval="1"/>
+	       	<field name="view_mode">graph</field>
+	   		<field name="view_id" ref="view_crm_fundraising_section_categ_stage_graph"/>
+	   		<field name="act_window_id" ref="action_report_crm_fundraising_section_categ_stage_tree"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_stage_tree">
+	       <field name="sequence" eval="2"/>
+	       <field name="view_mode">tree</field>
+	       <field name="view_id" ref="view_crm_fundraising_section_categ_stage_tree"/>
+	       <field name="act_window_id" ref="action_report_crm_fundraising_section_categ_stage_tree"/>
+	    </record>
+        <menuitem action="action_report_crm_fundraising_section_categ_stage_tree" id="menu_crm_fundraising_section_categ_stage_tree" parent="menu_crm_fundraising_tree"/>
+        
+        #
+	    # Fundraising by section, category and type
+	    #
+
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_type_tree">
+	        <field name="name">CRM Report - Section, Category and Type(Tree)</field>
+	        <field name="model">report.crm.fundraising.section.categ.type</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_type_tree"/>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="categ_id"/>
+	                <field name="type_id"/>
+	                <field name="stage_id"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_type_form">
+	        <field name="name">CRM Report - Section, Category and Type(Form)</field>
+	        <field name="model">report.crm.fundraising.section.categ.type</field>
+	        <field name="inherit_id" ref="view_crm_case_section_categ_type_form"/>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <field name="user_id" position="after">
+	                <field name="categ_id"/>
+	                <field name="type_id"/>
+	                <field name="stage_id"/>
+	                <field name="delay_close"/>
+	            </field>
+	        </field>
+	    </record>
+	    
+	    <record model="ir.ui.view" id="view_crm_fundraising_section_categ_type_graph">
+	        <field name="name">CRM Report - Section, Category and Type(Select)</field>
+	        <field name="model">report.crm.fundraising.section.categ.type</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	            <graph string="Fundraising by Section, Category and Type" type="bar" orientation="horizontal">
+	                <field name="type_id"/>
+	                <field name="nbr" operator="+"/>
+	                <field name="section_id" group="True"/>
+	            </graph>
+	        </field>
+	    </record>
+	    <record id="view_crm_fundraising_section_categ_type_filter" model="ir.ui.view">
+	            <field name="name">CRM Report - Section, Category and Type(Select)</field>
+	            <field name="model">report.crm.fundraising.section.categ.type</field>
+	            <field name="inherit_id" ref="view_crm_case_section_categ_type_filter"/>
+	            <field name="type">search</field>
+	            <field name="arch" type="xml">
+	                <field name="section_id" position="after">
+		                <field name="categ_id" select="1"/>
+		                <field name="type_id" select="1"/>
+		                <field name="stage_id" select="1"/>
+		            </field>
+	            </field>
+	        </record>
+	
+	    <record model="ir.actions.act_window" id="action_report_crm_fundraising_section_categ_type_tree">
+	        <field name="res_model">report.crm.fundraising.section.categ.type</field>
+	        <field name="name">Fundraising by section, category and type</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="search_view_id" ref="view_crm_fundraising_section_categ_type_filter"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_type_graph">
+	       	<field name="sequence" eval="1"/>
+	       	<field name="view_mode">graph</field>
+	   		<field name="view_id" ref="view_crm_fundraising_section_categ_type_graph"/>
+	   		<field name="act_window_id" ref="action_report_crm_fundraising_section_categ_type_tree"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_crm_fundraising_section_categ_type_tree">
+	       <field name="sequence" eval="2"/>
+	       <field name="view_mode">tree</field>
+	       <field name="view_id" ref="view_crm_fundraising_section_categ_type_tree"/>
+	       <field name="act_window_id" ref="action_report_crm_fundraising_section_categ_type_tree"/>
+	    </record>
+        <menuitem action="action_report_crm_fundraising_section_categ_type_tree" id="menu_crm_fundraising_section_categ_type_tree" parent="menu_crm_fundraising_tree"/>
 	</data>
 </openerp>

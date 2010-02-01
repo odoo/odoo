@@ -215,6 +215,15 @@ request was delegated to"),
     def do_decline(self, cr, uid, ids, context=None, *args):
         self.write(cr, uid, ids, {'state': 'declined'}, context)
 
+    def create(self, cr, uid, vals, context={}):
+        if not vals.get("email") and vals.get("cn"):
+            cnval = vals.get("cn").split(':')
+            email =  filter(lambda x:x.__contains__('@'), cnval)
+            vals['email'] = email[0]
+            vals['cn'] = vals.get("cn")
+        res = super(calendar_attendee, self).create(cr, uid, vals, context)
+        return res
+
 calendar_attendee()
 
 class res_alarm(osv.osv):
@@ -252,6 +261,9 @@ are both optional, but if one occurs, so MUST the other"""),
         model_obj = self.pool.get(model)
         for data in model_obj.browse(cr, uid, ids):
             basic_alarm = data.alarm_id
+            if not context.get('alarm_id'):
+                self.do_alarm_unlink(cr, uid, [data.id], model)
+                return True
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
                 vals = {
@@ -297,7 +309,7 @@ res_alarm()
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'
     _description = 'Event alarm information'
-    _inherits = {'res.alarm': "alarm_id"}
+    _inherit = 'res.alarm'
     __attribute__ = {}
 
     _columns = {
@@ -616,6 +628,8 @@ rule or repeating pattern for anexception to a recurrence set"),
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if not context:
+            context = {}
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
@@ -626,9 +640,10 @@ rule or repeating pattern for anexception to a recurrence set"),
             if not id in new_ids:
                 new_ids.append(id)
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if vals.has_key('alarm_id'):
+        if vals.has_key('alarm_id') or vals.has_key('caldav_alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
-            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date')
+            context.update({'alarm_id': vals.get('alarm_id')})
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
@@ -849,8 +864,7 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(caldav_id2real_id(id))
-        datas['id'] = caldav_id2real_id(datas['id'])
-        super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+        datas['id'] = caldav_id2real_id(datas['id'])        
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()

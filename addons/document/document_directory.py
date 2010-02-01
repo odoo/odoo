@@ -65,6 +65,7 @@ class document_directory(osv.osv):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
+            return None # TODO: check why not display root dir 
             if not mid:
                 return None
         except Exception, e:

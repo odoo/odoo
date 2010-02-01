@@ -51,12 +51,10 @@
                         <field name="stage_id" select="1" nolabel="1"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                    <field name="date" string="Deadline"/>
-                    <group colspan="2">
-                        <field name="phonecall_id" select="1"/>
-                    </group>
-					 <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}" />                        
+                    <field name="date" />
+                    <field name="date_deadline"/>                    
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />                    
                 </group>
                 <notebook colspan="4">
                 <page string="Description">
@@ -153,7 +151,7 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="planned_revenue"/>
                 <field name="probability"/>
-                <field name="date" string="Deadline"/>
+                <field name="date_deadline"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>

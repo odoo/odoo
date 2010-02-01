@@ -208,7 +208,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -245,7 +245,7 @@ class product_template(osv.osv):
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('rima','Rima'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),

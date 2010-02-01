@@ -82,19 +82,19 @@
                     <field name="name" string="Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Assigned to" select="2"/>
-                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />   
-                    <newline/>
-                    <field name="date" string="Planned Date"/>
-                    <field name="duration"/>
-                    <group colspan="2">
-                        <field name="opportunity_id" on_change="onchange_case_id(case_id, name, partner_id)"
-                        context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
-                               'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
-                               'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
-                       
-                    </group>
                     <button string="Schedule a Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
+                    
+                    <newline/>
+                    <field name="date" string="Planned Date"/>
+                    <field name="duration"/>                    
+                    <field name="opportunity_id" on_change="onchange_case_id(case_id, name, partner_id)"
+                    context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
+                           'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
+                           'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
+                       
+                    
+                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />   
                 </group>
                 <notebook colspan="4">
                 <page string="General">
@@ -175,7 +175,6 @@
              		<field name="name" select='1' string="Subject"/>
                		<field name="user_id" select="1" widget="selection">
 	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Phonecalls" default="1"/>
-	                   	<filter icon="terp-crm" domain="[('user_id','child_of',[uid])]" help="My department's Phonecalls"/>
                    </field>
                    <field name="state" select="1">
                        <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>

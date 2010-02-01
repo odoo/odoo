@@ -128,13 +128,27 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_document_directory_form">
+        <field name="name">Directories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="action_dir_view1" model="ir.actions.act_window.view">
+        <field eval="10" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_document_directory_tree"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+    <record id="action_dir_view2" model="ir.actions.act_window.view">
+        <field eval="20" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_document_directory_form"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+
     <menuitem
-        name="Directories"
         action="action_document_directory_form"
         id="menu_document_directories"
         parent="menu_document_management_configuration"/>
@@ -145,7 +159,7 @@
         <field name="name">Directorie's Structure</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">tree</field>
-        <field name="view_id" ref="view_document_directory_tree"/>
+        <field name="view_id" ref="document.view_document_directory_tree"/>
         <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
     </record>
     <menuitem
@@ -300,6 +314,11 @@
         id="act_res_partner_document" name="Related Documents"
         res_model="ir.attachment"
         src_model="res.partner"/>
+
+    <act_window domain="[('parent_id', '=', active_id)]"
+        id="zoom_directory" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="document.directory"/>
 
 </data>
 </openerp>

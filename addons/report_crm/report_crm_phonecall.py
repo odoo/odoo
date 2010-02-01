@@ -36,7 +36,7 @@ report_crm_phonecall_user()
 
 class report_crm_phonecall_categ(osv.osv):
     _name = "report.crm.phonecall.categ"
-    _description = "Phone Calls by section and category"
+    _description = "Phone calls by section and category"
     _auto = False
     _inherit = "report.crm.case.categ"
     _columns = {
@@ -71,7 +71,7 @@ report_crm_phonecall_categ()
 
 class report_crm_phonecall_section(osv.osv):
     _name = "report.crm.phonecall.section"
-    _description = "Phonecalls by Section"
+    _description = "Phone calls by Section"
     _auto = False
     _inherit = "report.crm.case.section"
     
