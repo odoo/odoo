@@ -2,26 +2,6 @@
 <openerp>
 <data noupdate="0">
 
-    <record model="ir.rule.group" id="sale_order_crm_rule_group">
-        <field name="name">Sale Order sale_crm</field>
-        <field name="model_id" search="[('model','=','sale.order')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
-    <record model="ir.rule" id="sale_order_comp_rule">
-        <field name="rule_group" ref="sale_order_crm_rule_group"/>
-        <field name="domain_force">['|',('section_id','=',False),('section_id','in',[user.context_section_id])]</field>
-    </record>
-
-    <record model="ir.rule.group" id="sale_order_line_crm_rule_group">
-        <field name="name">Sale Order Line sale_crm</field>
-        <field name="model_id" search="[('model','=','sale.order.line')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
-    <record model="ir.rule" id="sale_order_line_comp_rule">
-        <field name="rule_group" ref="sale_order_line_crm_rule_group"/>
-        <field name="domain_force">['|',('order_id.section_id','=',False),('order_id.section_id','in',[user.context_section_id])]</field>
-    </record>
-
 
 </data>
 </openerp>

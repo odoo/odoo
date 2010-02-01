@@ -908,8 +908,7 @@ class users(osv.osv):
     _description = "Users"
     _columns = {
         'context_section_id': fields.selection(_section_get, 'Sales Section'),
-        }
-
+    }
 users()
 
 
