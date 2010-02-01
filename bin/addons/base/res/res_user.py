@@ -48,7 +48,6 @@ class groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
@@ -185,7 +184,6 @@ class users(osv.osv):
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
