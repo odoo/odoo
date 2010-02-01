@@ -41,6 +41,11 @@
             <field name="code">cash</field>
             <field name="close_method">balance</field>
         </record>
+        <record id="account_type_tax" model="account.account.type">
+            <field name="name">Tax</field> 
+            <field name="code">Tax</field>
+            <field name="close_method">unreconciled</field>
+        </record>
 
         <!--
         Chart of Account
@@ -139,9 +144,8 @@ your own chart of account.
             <field name="name">Taxes</field>
             <field name="code">x 445000</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_income"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="account_type_tax"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="note">
 This chart of account is used for automated testing purpose. It is installed
