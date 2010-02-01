@@ -483,7 +483,8 @@ rule or repeating pattern for anexception to a recurrence set"),
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-                }
+        'user_id': fields.many2one('res.users', 'Responsible'),
+    }
     
     _defaults = {
          'class': lambda *a: 'public', 
