@@ -242,15 +242,16 @@ class task(osv.osv):
         result = {}
         for res in self.browse(cr, uid, ids):
             if date_start and planned:
+                print date_start, planned, occupation_rate
                 resource_id = self.pool.get('resource.resource').search(cr,uid,[('user_id','=',res.user_id.id)])
-                resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
-                d = mx.DateTime.strptime(date_start,'%Y-%m-%d %H:%M:%S')
-                hrs = (planned)/(occupation_rate)
-                work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, d, hrs or 0.0, resource_obj.id)
-                result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-        result['remaining_hours'] = planned-effective
+                if resource_id:
+                    resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
+                    d = mx.DateTime.strptime(date_start,'%Y-%m-%d %H:%M:%S')
+                    hrs = (planned)/(occupation_rate)
+                    work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, d, hrs or 0.0, resource_obj.id)
+                    result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+            result['remaining_hours'] = planned-effective
         return {'value':result}
-
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
