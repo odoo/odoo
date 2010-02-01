@@ -53,7 +53,7 @@ py_short_version = '%s.%s' % sys.version_info[:2]
 required_modules = [
     ('lxml', 'lxml module: pythonic libxml2 and libxslt bindings'),
     ('mako', 'Mako template engine'),
-    ('mx', "egenix's mx library for its extended DateTime module"),
+    ('dateutil', "Labix powerful extensions to the standard datetime module"),
     ('psycopg2', 'PostgreSQL module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
