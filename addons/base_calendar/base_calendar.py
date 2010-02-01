@@ -29,6 +29,7 @@ import pooler
 import re
 import tools
 import vobject
+import time
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -52,11 +53,11 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
-        cr.execute(qry)
+        cr.execute(qry)        
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
             return (id, None)
-        return False
+        return (False, None)
 
 def openobjectid2uid(cr, uidval, oomodel):
     value = 'OpenObject-%s_%s@%s' % (oomodel, uidval, cr.dbname)
@@ -217,7 +218,8 @@ class CalDAV(object):
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids: 
                             rdata = self.pool.get(model).read(cr, uid, r_ids)
-                            rcal = self.export_cal(cr, uid, rdata, context=context)
+                            event_obj = self.pool.get('basic.calendar.event')
+                            rcal = event_obj.export_cal(cr, uid, rdata, context=context)
                             for revents in rcal.contents['vevent']:
                                 ical.contents['vevent'].append(revents)
                         if data.get('recurrent_uid', None):
@@ -306,7 +308,6 @@ class CalDAV(object):
             self.ical_reset('value')
         return res
 
-
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'
     _description = 'Calendar'
@@ -328,16 +329,18 @@ class Calendar(CalDAV, osv.osv):
     _columns = {
             'name': fields.char("Name", size=64), 
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'), 
-            'active': fields.boolean('Active'), 
+            'active': fields.boolean('Active'),
+            'create_date': fields.datetime('Created Date'), 
+            'write_date': fields.datetime('Modifided Date'), 
     }
 
     _defaults = {
                 'active': lambda *a: True,
                  }
 
-    def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
-        cal = self.browse(cr, uid, datas[0])
-        ical = vobject.iCalendar()
+    def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
+        cal = self.browse(cr, uid, ids[0])
+        ical = vobject.iCalendar()        
         for line in cal.line_ids:
             if line.name in ('valarm', 'attendee'):
                 continue
@@ -350,6 +353,8 @@ class Calendar(CalDAV, osv.osv):
         return ical.serialize()
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
+        if not context:
+            context = {}
         ical_data = base64.decodestring(content)
         parsedCal = vobject.readOne(ical_data)
         if not data_id:
@@ -370,7 +375,6 @@ class Calendar(CalDAV, osv.osv):
                 else:
                     self.check_import(cr, uid, [val], context=context)
         return {}
-
 Calendar()
     
 class basic_calendar_line(osv.osv):

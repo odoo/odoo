@@ -42,7 +42,7 @@ class account_move_line(osv.osv):
                         WHERE move_line_id = ml.id
                         AND po.state != 'cancel') as amount
                     FROM account_move_line ml
-                    WHERE id in (%s)""" % (",".join(map(str,map(int, ids)))))
+                    WHERE id =ANY(%s)""" ,(ids,))
         r=dict(cr.fetchall())
         return r
 
