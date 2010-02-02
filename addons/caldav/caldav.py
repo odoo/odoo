@@ -112,12 +112,11 @@ class calendar_attendee(osv.osv):
                 fromdata = map(get_delegate_data, attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
-                # TO fix date for project task
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date'])[0]
-                    result[id][name] = None#obj['date']
+                    result[id][name] = obj['date']
                 else:
                     result[id][name] = None
             if name == 'event_end_date':
@@ -136,6 +135,10 @@ class calendar_attendee(osv.osv):
                     result[id][name] = obj['user_id']
                 else:
                     result[id][name] = uid
+            if name == 'language':
+                user_obj = self.pool.get('res.users')
+                lang = user_obj.read(cr, uid, uid, ['context_lang']) ['context_lang']
+                result[id][name] = lang.replace('_', '-')
         return result
 
     def _links_get(self, cr, uid, context={}):
@@ -182,11 +185,10 @@ request was delegated to"),
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'),
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language': fields.selection(_lang_get, 'Language', 
-                                  help="To specify the language for text values in a property or property parameter."), 
+        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."),
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
