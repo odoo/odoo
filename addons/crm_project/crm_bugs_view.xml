@@ -189,11 +189,12 @@
                    <field name="user_id" select="1" widget="selection">
                    	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
                    </field>
-                   <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Bugs"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
-                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Bugs"/>
-                   </field>
+					<field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />
+                 </field>
                </group>
             </search>
          </field>
