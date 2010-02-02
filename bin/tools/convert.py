@@ -18,25 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-import re
 import cStringIO
-from lxml import etree
-import osv
-import ir
-import pooler
-
 import csv
+import logging
 import os.path
+import pickle
+import re
+import sys
+import time
+
+from datetime import datetime
+from lxml import etree
+
+import ir
 import misc
 import netsvc
-
+import osv
+import pooler
 from config import config
-import logging
-
-import sys
-import pickle
-
 
 class ConvertError(Exception):
     def __init__(self, doc, orig_excpt):
@@ -79,11 +78,9 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 return f_val
             a_eval = node.get('eval','')
             if a_eval:
-                import time
-                from mx import DateTime
                 idref2 = idref.copy()
                 idref2['time'] = time
-                idref2['DateTime'] = DateTime
+                idref2['DateTime'] = datetime
                 import release
                 idref2['version'] = release.major_version
                 idref2['ref'] = lambda x: self.id_get(cr, False, x)

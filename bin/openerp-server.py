@@ -79,10 +79,6 @@ for name, value in [('addons_path', tools.config['addons_path']),
 
 import time
 
-if sys.platform == 'win32':
-    import mx.DateTime
-    mx.DateTime.strptime = lambda x, y: mx.DateTime.mktime(time.strptime(x, y))
-
 #----------------------------------------------------------
 # init net service
 #----------------------------------------------------------
