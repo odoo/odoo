@@ -214,7 +214,16 @@ class browse_record(object):
                             else:
                                 ids2 = data[n]
                             if ids2:
-                                data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                # FIXME: this happen when a _inherits object
+                                #        overwrite a field of it parent. Need
+                                #        testing to be sure we got the right
+                                #        object and not the parent one.
+                                if not isinstance(ids2, browse_record):
+                                    data[n] = browse_record(self._cr,
+                                        self._uid, ids2, obj, self._cache,
+                                        context=self._context,
+                                        list_class=self._list_class,
+                                        fields_process=self._fields_process)
                             else:
                                 data[n] = browse_null()
                         else:
@@ -2225,7 +2234,7 @@ class orm(orm_template):
                     return 'length("%s") as "%s"' % (f, f)
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
-            order_by = self._parent_order or self._order            
+            order_by = self._parent_order or self._order
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
