@@ -49,9 +49,9 @@ class crm_cases(osv.osv):
         res = mailgate_obj.partner_get(cr, uid, msg['From'])
         if res:
             data.update(res)
-        res = self.create(cr, uid, data)
+        res = self.create(cr, uid, data)        
         cases = self.browse(cr, uid, [res])       
-        self.__history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
+        self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
         return res
     
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):         
@@ -80,7 +80,7 @@ class crm_cases(osv.osv):
 
         res = self.write(cr, uid, ids, data)
         cases = self.browse(cr, uid, [res])       
-        self.__history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])        
+        self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])        
         getattr(self,act)(cr, uid, ids)
         return res
 

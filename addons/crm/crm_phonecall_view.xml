@@ -1,20 +1,20 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
     # ------------------------------------------------------
     # Phonecall Categories
     # ------------------------------------------------------
-   
+
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-		<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field> 
+		<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
 		<field name="context">{'object_id':'crm.phonecall'}</field>
     </record>
-   
+
    <menuitem action="crm_phonecall_categ_action" id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
     # Fund Stage
@@ -24,11 +24,11 @@
 	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
  			<field name="view_id" ref="crm.crm_case_stage_tree"/>
-			<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>	
+			<field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
 			<field name="context">{'object_id':'crm.phonecall'}</field>
 	    </record>
 	  <menuitem action="crm_phonecall_stage_act" id="menu_crm_phonecall_stage_act" parent="crm.menu_crm_case_stage"/>
-	        
+
     # ------------------------------------------------------
     # Phone Calls
     # ------------------------------------------------------
@@ -45,7 +45,7 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />                       
+                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
             </tree>
@@ -62,12 +62,12 @@
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
-                <group col="2">    
+                <group col="2">
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />            
+                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
-                </group>        
+                </group>
             </tree>
         </field>
     </record>
@@ -84,25 +84,25 @@
                     <field name="user_id" string="Assigned to" select="2"/>
                     <button string="Schedule a Meeting"
                         name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
-                    
+
                     <newline/>
                     <field name="date" string="Planned Date"/>
-                    <field name="duration"/>                    
+                    <field name="duration"/>
                     <field name="opportunity_id" on_change="onchange_case_id(case_id, name, partner_id)"
                     context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
                            'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
                            'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
-                       
-                    
-                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />   
+
+
+                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 </group>
                 <notebook colspan="4">
                 <page string="General">
                     <field name="categ_id" string="Direction" select="1" on_change="onchange_categ_id(categ_id)" required="1"/>
-                    <field name="active" string="Reminder"/>                    
+                    <field name="active" string="Reminder"/>
                     <group colspan="2" col="3">
                         <field name="partner_id" string="Partner"/>
-                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_phonecall_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"  />   
+                        <button string="Convert to Partner" icon="terp-crm" name="%(wizard_crm_phonecall_partner_create)d" type="action" attrs="{'invisible':[('partner_id','!=',False)]}"  />
                     </group>
                     <field name="partner_address_id" string="Contact"/>
                     <field name="partner_phone"/>
@@ -179,11 +179,11 @@
                    <field name="state" select="1">
                        <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
                    </field>
-					<field name="section_id" select="1" widget="selection" string="Section">
+					<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
 						<filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"/>		
-			   		</field>     				
+                               help="My section"/>
+			   		</field>
                    </group>
            </search>
         </field>

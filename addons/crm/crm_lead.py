@@ -19,21 +19,8 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
 from osv import fields,osv,orm
-from osv.orm import except_orm
-
 import crm
-
 
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
@@ -65,9 +52,9 @@ class crm_lead(osv.osv):
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-                                                                       
              'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
     }
+    
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}

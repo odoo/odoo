@@ -334,6 +334,7 @@
                                 <separator string="Dates" colspan="2"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
+                                <field name="occupation_rate"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" select="2"/>
@@ -477,11 +478,11 @@
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection">
+                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
