@@ -254,7 +254,7 @@ class task(osv.osv):
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
-            return context['project_id']
+            return int(context['project_id'])
         return False
 
     #_sql_constraints = [
@@ -527,6 +527,12 @@ class message(osv.osv):
         'date': fields.date('Date'),
         'user_id': fields.many2one('res.users', 'User'),
         }
+    def _default_project(self, cr, uid, context={}):
+        if 'project_id' in context and context['project_id']:
+            return int(context['project_id'])
+        return False    
+    _defaults = {
+              'project_id':_default_project}    
 message()
 
 def _project_get(self, cr, uid, context={}):
