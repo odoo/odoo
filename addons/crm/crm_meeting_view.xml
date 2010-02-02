@@ -9,11 +9,11 @@
         <field name="name">Meeting Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>        
+        <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
 		<field name="domain">[('object_id.model', '=', 'crm.meeting')]</field>
-		<field name="context">{'object_id':'crm.meeting'}</field>                
+		<field name="context">{'object_id':'crm.meeting'}</field>
     </record>
-     <menuitem action="crm_meeting_categ_action" id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ"/>    
+     <menuitem action="crm_meeting_categ_action" id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ"/>
 
     # ------------------------------------------------------
     # Meetings
@@ -43,11 +43,11 @@
                             	colspan="1" />
                             <button string="Custom"
             					name="%(caldav.action_calendar_custom_rrule_wizard)d"
-            					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}" 
+            					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
                                 attrs="{'readonly': [('rrule_type','!=','custom')]}"
                                 />
                     </group>
-                   
+
             	</group>
             	<notebook colspan="4">
             		<page string="Description">
@@ -88,7 +88,7 @@
             		<page string="Other Information">
             			<field name="priority"/>
             			<field name="show_as"/>
-            			<field name="alarm_id" string="Reminder" widget="selection" />            			
+            			<field name="alarm_id" string="Reminder" widget="selection" />
             			<field name="class"/>
             			<field name="user_id"/>
             			<field name="vtimezone"/>
@@ -167,16 +167,16 @@
 	               		<separator orientation="vertical"/>
 	               		<field name="name" select="1" string="Subject"/>
 	               		<field name="partner_id" select="1"/>
-	               		<field name="section_id" select="1" widget="selection">
+	               		<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection">
 							<filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section"
-                           />	
-						 </field>   
+                           />
+						 </field>
 	               		<field name="user_id" select="1" widget="selection"/>
 	               	</group>
                 </search>
         	</field>
-    	</record>        
+    	</record>
 	</data>
 </openerp>
