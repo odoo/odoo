@@ -82,8 +82,11 @@ class calendar_attendee(osv.osv):
         result = {}
 
         def get_delegate_data(user):
-            email = user.address_id and user.address_id.email or ''
-            return self._get_address(user.name, email)
+            if not user.address_id.email:
+                raise osv.except_osv(_('Error!'), \
+                                ("User does not have an email Address"))
+            email = (user.address_id and ('MAILTO:' + user.address_id.email)) or ''
+            return email
 
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
@@ -192,7 +195,7 @@ request was delegated to"),
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
-        'email': fields.char('Email', size=124), 
+        'email': fields.char('Email', size=124, required=True), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
         'ref': fields.reference('Document Ref', selection=_links_get, size=128), 
@@ -503,9 +506,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         event_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
         ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
-        cal_val = ical.serialize()
-        cal_val = cal_val.replace('"', '').strip()
-        return cal_val
+        return ical.serialize()
 
     def import_cal(self, cr, uid, data, data_id=None, context={}):
         event_obj = self.pool.get('basic.calendar.event')

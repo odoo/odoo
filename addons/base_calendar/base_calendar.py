@@ -775,14 +775,15 @@ class Attendee(CalDAV, osv.osv_memory):
             cn_val = ''
             for a_key, a_val in self.__attribute__.items():
                 if attendee[a_val['field']] and a_val['field'] != 'cn':
-                    if a_val['type'] == 'text':
+                    if a_val['type'] in ('text', 'char', 'selection'):
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                     elif a_val['type'] == 'boolean':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                 if a_val['field'] == 'cn' and attendee[a_val['field']]:
                     cn_val = [str(attendee[a_val['field']])]
-            if cn_val:
-                attendee_add.params['CN'] = cn_val
+                    if cn_val:
+                        attendee_add.params['CN'] = cn_val
+            attendee_add.value = 'MAILTO:' + attendee['email']
         return vevent
 
 Attendee()
