@@ -2104,7 +2104,7 @@ class orm(orm_template):
                 fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
                 if fld_def._type in ('many2one', 'one2one'):
                     obj = self.pool.get(fld_def._obj)
-                    if not obj.search(cr, uid, [('id', '=', field_value)]):
+                    if not obj.search(cr, uid, [('id', '=', field_value or False)]):
                         continue
                 if fld_def._type in ('many2many'):
                     obj = self.pool.get(fld_def._obj)
