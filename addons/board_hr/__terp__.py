@@ -21,32 +21,22 @@
 
 
 {
-    'name': 'Board for project users',
+    'name': 'Board for Human Reasources Management',
     'version': '1.0',
-    'category': 'Board/Projects & Services',
+    'category': '',
     'description': """
-This module implements a dashboard for project member that includes:
-    * List of my open tasks
-    * List of messages
-    * Members list of project
-    * Issues
+This module implements a dashboard for human resource management that includes:
+    * My Current Timesheet
+    * My Leaves
+    * My Expenses
     """,
     'author': 'Tiny',
-    'depends': [
-        'project',
-        'report_timesheet',
-        'board',
-        'report_analytic_planning',
-        'report_analytic_line',
-        'report_task',
-        'hr_timesheet_sheet',
-        'crm_project',
-        'resource'
+    'depends': [ 'crm_project','board','hr_expense','hr_timesheet_sheet','hr_holidays'
     ],
-    'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],
-    'demo_xml': ['board_project_demo.xml'],
+    'update_xml': ['board_hr_view.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0039350482013',
+    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
