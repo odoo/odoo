@@ -426,7 +426,7 @@ class calendar_event(osv.osv):
     __attribute__ = {}
     
     def _tz_get(self,cr,uid, context={}):
-        return [(x, x) for x in pytz.all_timezones]
+        return [(x.lower(), x) for x in pytz.all_timezones]
 
     def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
         if rtype == 'none' or not rtype:

@@ -197,6 +197,8 @@ class CalDAV(object):
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
+                if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
+                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self)
         return vals
@@ -258,7 +260,7 @@ class CalDAV(object):
                                 dtfield = vevent.add(field)
                                 dtfield.value = parser.parse(data[map_field])
                                 if tzval:
-                                    dtfield.params['TZID'] = [tzval]
+                                    dtfield.params['TZID'] = [tzval.title()]
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -315,9 +317,6 @@ class CalDAV(object):
         for child in parsedCal.getChildren():
             if child.name.lower() in ('vevent', 'vtodo'):
                 vals = self.parse_ics(cr, uid, child, context=context)
-            elif child.name.lower() == 'vtimezone':
-                tz_obj = self.pool.get('basic.calendar.timezone')
-                tz_obj.import_cal(cr, uid, child, context=context)
             else:
                 vals = {}
                 continue
@@ -623,7 +622,7 @@ class Timezone(CalDAV, osv.osv_memory):
     }
     
     def get_name_offset(self, cr, uid, tzid, context={}):
-        mytz = pytz.timezone(tzid)
+        mytz = pytz.timezone(tzid.title())
         mydt = datetime.now(tz=mytz)
         offset = mydt.utcoffset()
         val = offset.days * 24 + float(offset.seconds) / 3600
@@ -636,7 +635,7 @@ class Timezone(CalDAV, osv.osv_memory):
         ctx = context.copy()
         ctx.update({'model': model})
         cal_tz = ical.add('vtimezone')
-        cal_tz.add('TZID').value = tzid
+        cal_tz.add('TZID').value = tzid.title()
         tz_std = cal_tz.add('STANDARD')
         tzname, offset = self.get_name_offset(cr, uid, tzid)
         tz_std.add("TZOFFSETFROM").value = offset
