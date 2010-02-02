@@ -148,17 +148,6 @@
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
                <group col="6" colspan="1">
-                   <filter icon="gtk-jump-to"
-                   	string="Inbound"
-                   	domain="[('categ_id.name','=','Inbound')]"
-                   	separator="1" help="All Inbound Phonecalls"
-                   />
-                   <filter icon="gtk-redo"
-                   	string="Outbound"
-                   	domain="[('categ_id.name','=','Outbound')]"
-                   	separator="1" help="All Outbound Phonecalls"
-                   />
-                   <separator orientation="vertical"/>
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
                    	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"

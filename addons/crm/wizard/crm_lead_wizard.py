@@ -116,7 +116,8 @@ class lead2opportunity(wizard.interface):
                 'description':lead.description,
                 'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
-                'priority':lead.priority,         
+                'priority':lead.priority,
+                'date': lead.date,
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
@@ -128,7 +129,7 @@ class lead2opportunity(wizard.interface):
                 vals.update({'opportunity_id' : new_opportunity.id})
 
             lead_case_obj.write(cr, uid, [lead.id], vals)
-            lead_case_obj.case_cancel(cr, uid, [lead.id])
+            lead_case_obj.case_close(cr, uid, [lead.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         
         value = {            
