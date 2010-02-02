@@ -133,10 +133,10 @@
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meetings" date_start="date" color="section_id" date_delay="duration">
+            <calendar string="Meetings" date_start="date" color="user_id" date_delay="duration">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="user_id" widget="selection"/>
+                <field name="section_id" widget="selection"/>
             </calendar>
         </field>
     </record>
