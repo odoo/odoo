@@ -161,11 +161,11 @@ class HttpDaemon(BaseHttpDaemon):
         super(HttpDaemon, self).__init__(interface, port,
                                          handler=MultiHandler2)
 
-class HttpSDaemon(threading.Thread, netsvc.Server):
+class HttpSDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
         try:
-            super(HttpDaemon, self).__init__(interface, port,
-                                             handler=SecureMultiHandler2)
+            super(HttpSDaemon, self).__init__(interface, port,
+                                              handler=SecureMultiHandler2)
         except SSLError, e:
             netsvc.Logger().notifyChannel(
                 'httpd-ssl', netsvc.LOG_CRITICAL,
