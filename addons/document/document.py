@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,6 +35,7 @@ from psycopg2 import Binary
 import tools
 from tools.translate import _
 import nodes
+
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
@@ -185,7 +186,8 @@ class document_file(osv.osv):
             import urllib
             datas=base64.encodestring(urllib.urlopen(vals['link']).read())
         else:
-            datas=vals.get('datas',False)
+            datas = vals.get('datas',False)
+
         vals['file_size']= datas and len(datas) or 0
         if not self._check_duplication(cr,uid,vals):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))

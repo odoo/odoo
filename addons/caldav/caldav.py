@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
+from base_calendar import base_calendar
 from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from dateutil import parser
 from osv import fields, osv
-from base_calendar import base_calendar
 from service import web_services
 from tools.translate import _
 import base64
 import pooler
+import pytz
 import re
 import time
 
@@ -423,6 +424,9 @@ class calendar_event(osv.osv):
     _name = "calendar.event"
     _description = "Calendar Event"
     __attribute__ = {}
+    
+    def _tz_get(self,cr,uid, context={}):
+        return [(x, x) for x in pytz.all_timezones]
 
     def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
         if rtype == 'none' or not rtype:
@@ -483,7 +487,9 @@ rule or repeating pattern for anexception to a recurrence set"),
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-                }
+        'vtimezone': fields.selection(_tz_get,  'Timezone', size=64), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
+    }
     
     _defaults = {
          'class': lambda *a: 'public', 
@@ -864,8 +870,7 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(caldav_id2real_id(id))
-        datas['id'] = caldav_id2real_id(datas['id'])
-        super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+        datas['id'] = caldav_id2real_id(datas['id'])        
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()

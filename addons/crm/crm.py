@@ -79,7 +79,7 @@ class crm_case_section(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -580,7 +580,7 @@ class crm_case(osv.osv):
 
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-        model_obj = self.pool.get('ir.model')
+        model_obj = self.pool.get('ir.model')        
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
@@ -820,14 +820,7 @@ class crm_case_history(osv.osv):
     _name = "crm.case.history"
     _description = "Case history"
     _order = "id desc"
-    _inherits = {'crm.case.log':"log_id"}
-
-    def create(self, cr, user, vals, context=None):
-        if vals.has_key('res_id') and vals['res_id']:
-            case_obj = self.pool.get(vals['model_id'])
-            cases = case_obj.browse(cr, user, [vals['res_id']])
-            case_obj._action(cr, user, cases, '')
-        return super(crm_case_history, self).create(cr, user, vals, context)
+    _inherits = {'crm.case.log':"log_id"}    
 
     def _note_get(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -908,8 +901,7 @@ class users(osv.osv):
     _description = "Users"
     _columns = {
         'context_section_id': fields.selection(_section_get, 'Sales Section'),
-        }
-
+    }
 users()
 
 

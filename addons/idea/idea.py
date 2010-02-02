@@ -79,7 +79,6 @@ class idea_idea(osv.osv):
                     GROUP BY i.id
                 """
 
-
         cr.execute(sql,(ids,))
         return dict(cr.fetchall())
 

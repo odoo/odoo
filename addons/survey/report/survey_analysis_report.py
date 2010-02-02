@@ -257,6 +257,8 @@ class survey_analysis(report_rml):
                                         sqc.question_id = sr.question_id  and sra.answer_id = %d and sqc.title ='%s'\
                                         group by sra.answer_id,sqc.rating_weight" % (ans.id,matrix_ans[mat_col]))
                                 col_weight =  cr.fetchone()
+                                if not col_weight :
+                                    col_weight= (0,0)
                                 res_count = col_weight[0]
                                 if tot_res:
                                     rating_weight_sum += col_weight[1] * tot_res

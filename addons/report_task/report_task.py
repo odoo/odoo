@@ -91,11 +91,11 @@ class  report_closed_task(osv.osv):
                    tsk.date_deadline as date_deadline, tsk.planned_hours as planned_hours,
                    tsk.delay_hours as delay_hours, tsk.progress as progress,
                    tsk.priority as priority, tsk.state as state,
-                   tsk.remaining_hours as remaining_hours, tsk.date_close as date_close
+                   tsk.remaining_hours as remaining_hours, tsk.date_end as date_close
                 from
                     project_task tsk
                 where
-                    (tsk.date_close <= CURRENT_DATE AND tsk.date_close > (CURRENT_DATE-15))
+                    (tsk.date_end <= CURRENT_DATE AND tsk.date_end > (CURRENT_DATE-15))
             )
         ''')
 report_closed_task()

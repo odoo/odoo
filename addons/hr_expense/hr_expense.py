@@ -38,8 +38,7 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id =ANY(%s) GROUP BY s.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 
@@ -188,8 +187,7 @@ class hr_expense_line(osv.osv):
     def _amount(self, cr, uid, ids, field_name, arg, context):
         if not len(ids):
             return {}
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN ("+id_set+") GROUP BY l.id ")
+        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id =ANY(%s) GROUP BY l.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 

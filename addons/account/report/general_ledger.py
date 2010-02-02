@@ -89,7 +89,7 @@ class general_ledger(rml_parse.rml_parse):
             # We have the account ID we will search all account move line from now until this time
             # We are in the case of we are on the top of the account move Line
             cr.execute('SELECT distinct(ac.code) as code_rest,ac.name as name_rest from account_account AS ac, account_move_line mv\
-                    where ac.id = mv.account_id and mv.move_id = ' + num_id_move +' and mv.account_id <> ' + account_id )
+                    where ac.id = mv.account_id and mv.move_id = %s and mv.account_id <> %s' ,(num_id_move,account_id,))
             res_mv = cr.dictfetchall()
             # we need a result more than 2 line to make the test so we will made the the on 1 because we have exclude the current line
             if (len(res_mv) >=1):
@@ -120,15 +120,11 @@ class general_ledger(rml_parse.rml_parse):
             ## This function will return the most aged date
             periods = form['periods'][0][2]
             if not periods:
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """
-                    """
+                self.cr.execute("""
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""",(form['fiscalyear'],))
             else:
-                periods_id = ','.join(map(str, periods))
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
-                    """
-            self.cr.execute(sql)
+               self.cr.execute("""
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""",(periods,))
             res = self.cr.dictfetchall()
             borne_min = res[0]['start_date']
             borne_max = res[0]['stop_date']
@@ -138,15 +134,11 @@ class general_ledger(rml_parse.rml_parse):
         elif form['state'] == 'all':
             periods = form['periods'][0][2]
             if not periods:
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """
-                    """
+               self.cr.execute("""
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""",(form['fiscalyear'],))
             else:
-                periods_id = ','.join(map(str, periods))
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
-                    """
-            self.cr.execute(sql)
+               self.cr.execute("""
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id  =ANY(%s)""",(periods,))
             res = self.cr.dictfetchall()
             period_min = res[0]['start_date']
             period_max = res[0]['stop_date']
@@ -230,8 +222,8 @@ class general_ledger(rml_parse.rml_parse):
         else:
             ## We will now compute solde initiaux
             for move in res:
-                SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
-                self.cr.execute(SOLDEINIT)
+                self.cr.execute("""SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l \
+                                   WHERE l.account_id = %s AND l.date <  %s  AND l.date >  %s""",(move.id,self.borne_date['max_date'],self.borne_date['min_date']))
                 resultat = self.cr.dictfetchall()
                 if resultat[0] :
                     if resultat[0]['sum_debit'] == None:
@@ -284,7 +276,7 @@ class general_ledger(rml_parse.rml_parse):
         for l in res:
             line = self.pool.get('account.move.line').browse(self.cr, self.uid, l['id'])
             l['move'] = line.move_id.name
-            self.cr.execute('Select id from account_invoice where move_id =%s'%(line.move_id.id))
+            self.cr.execute('Select id from account_invoice where move_id =%s',(line.move_id.id,))
             tmpres = self.cr.dictfetchall()
             if len(tmpres) > 0 :
                 inv = self.pool.get('account.invoice').browse(self.cr, self.uid, tmpres[0]['id'])
@@ -312,7 +304,7 @@ class general_ledger(rml_parse.rml_parse):
 
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s "%(account.id, self.query))
+                "WHERE l.account_id = %s AND "+self.query,(account.id,))
         ## Add solde init to the result
         #
         sum_debit = self.cr.fetchone()[0] or 0.0
@@ -326,7 +318,7 @@ class general_ledger(rml_parse.rml_parse):
 
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s "%(account.id,self.query))
+                "WHERE l.account_id = %s AND "+ self.query,(account.id,))
         ## Add solde init to the result
         #
         sum_credit = self.cr.fetchone()[0] or 0.0
@@ -340,7 +332,7 @@ class general_ledger(rml_parse.rml_parse):
     def _sum_solde_account(self, account, form):
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND %s"%(account.id,self.query))
+                "WHERE l.account_id = %s AND "+ self.query,(account.id,))
         sum_solde = self.cr.fetchone()[0] or 0.0
         if form.get('soldeinit', False):
             sum_solde += account.init_debit - account.init_credit
@@ -352,7 +344,7 @@ class general_ledger(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id in ("+','.join(map(str, self.child_ids))+") AND "+self.query)
+                "WHERE l.account_id =ANY(%s) AND "+ self.query,(self.child_ids,))
         sum_debit = self.cr.fetchone()[0] or 0.0
         return sum_debit
 
@@ -361,7 +353,7 @@ class general_ledger(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id in ("+','.join(map(str, self.child_ids))+") AND "+self.query)
+                "WHERE l.account_id =ANY(%s) AND "+ self.query,(self.child_ids,))
         ## Add solde init to the result
         #
         sum_credit = self.cr.fetchone()[0] or 0.0
@@ -372,14 +364,14 @@ class general_ledger(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id in ("+','.join(map(str, self.child_ids))+") AND "+self.query)
+                "WHERE l.account_id =ANY(%s) AND "+ self.query,(self.child_ids,))
         sum_solde = self.cr.fetchone()[0] or 0.0
         return sum_solde
 
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code as code "\
                 "FROM res_currency c,account_account as ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
+                "WHERE ac.id = %s AND ac.currency_id = c.id",(account_id,))
         result = self.cr.fetchone()
         if result:
             self.account_currency = result[0]
