@@ -19,19 +19,7 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
 from osv import fields,osv,orm
-from osv.orm import except_orm
-
 from crm import crm
 
 class crm_project_future_request(osv.osv):
@@ -70,13 +58,7 @@ class crm_project_future_request(osv.osv):
 
     _defaults = {
           'project_id':_get_project
-          }
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
-
-
+    }
+    
 crm_project_future_request()
 
