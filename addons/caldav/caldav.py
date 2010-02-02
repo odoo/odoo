@@ -31,6 +31,7 @@ import pooler
 import pytz
 import re
 import time
+import tools
 
 months = {
         1:"January", 2:"February", 3:"March", 4:"April", \
@@ -64,6 +65,54 @@ def _links_get(self, cr, uid, context={}):
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
+
+html_invitation = """
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>%(name)s</title>
+</head>
+<div>
+<table cellspacing="0" cellpadding="0" border=3D "1" summary=3D"">
+    <tr align="center">
+        <td bgcolor="DFDFDF">
+        <h3>%(name)s</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <table cellpadding="8" cellspacing="0" border=3D "0" summary=3D
+            "Eventdetails" bgcolor="f6f6f6">
+            <tr>
+                <td>
+                <div><b><i>Start Date</i></b></div>
+                </td>
+                <td>%(start_date)s</td>
+                <td>
+                <div><b><i>End Date</i></b></div>
+                </td>
+                <td>%(end_date)s</td>
+            </tr>
+            <tr>
+                <td><b><i>Description</i></b></td>
+                <td colspan="3">%(description)s</td>
+            </tr>
+            <tr>
+                <td>
+                <div><b><i>Location</i></b></div>
+                </td>
+                <td colspan="3">%(location)s</td>
+            </tr>
+            <tr>
+                <td>
+                <div><b><i>Event Attendees</i></b></div>
+                </td>
+                <td colspan="3">
+                <div>
+                <div>%(attendees)s</div>
+                </div>
+                </td>
+            </tr>
+        </table>"""
 
 class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
@@ -1064,6 +1113,25 @@ class invite_attendee_wizard(osv.osv_memory):
             vals.update({'email': datas['email']})
             att_id = att_obj.create(cr, uid, vals)
             obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+
+            sub = '[OpenERP Invitation] %s'  % (res_obj.name)
+            body_vals = {'name': res_obj.name, 
+                        'start_date': res_obj.date, 
+                        'end_date': res_obj.date_deadline or None, 
+                        'description': res_obj.description, 
+                        'location': res_obj.location or '-', 
+                        'attendees': '-' #Todo
+            }
+            body = html_invitation % body_vals
+            mail_to = [datas['email']]
+            tools.email_send(
+                    res_obj.user_id.name, 
+                    mail_to, 
+                    sub, 
+                    body, 
+                    subtype='html'
+                )
+
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
