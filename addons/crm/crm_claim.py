@@ -53,12 +53,6 @@ class crm_claim(osv.osv):
                  'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
     
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}    
-
 crm_claim()
 
 
