@@ -31,7 +31,7 @@
 <!--		Event Attribute mapping for Calendar-->
 
         <record model="basic.calendar" id="base_calendar.basic_calendar1">
-			<field name="name">meeting</field>
+			<field name="name">Meetings</field>
 		</record>
 
         <record model="basic.calendar.lines" id="caldav.calendar_lines_event">
@@ -102,6 +102,7 @@
 		    <field name="type_id" ref="caldav.calendar_lines_event" />
 			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','crm.meeting')]" />
 		    <field name="fn">field</field>
+		    <field name="mapping">{'1': '1', '2': '2', '3': '2','4': '2', '5': '3', '6': '4', '7': '4', '8': '4', '9': '5'}</field>
 		</record>	
 		
 
