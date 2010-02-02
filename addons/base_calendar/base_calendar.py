@@ -71,7 +71,10 @@ def get_attribute_mapping(cr, uid, calname, context={}):
         pool = pooler.get_pool(cr.dbname)
         field_obj = pool.get('basic.calendar.fields')
         type_obj = pool.get('basic.calendar.lines')
-        type_id = type_obj.search(cr, uid, [('object_id.model', '=', context.get('model'))])
+        domain = [('object_id.model', '=', context.get('model'))]
+        if context.get('calendar_id'):
+            domain.append(('calendar_id', '=', context.get('calendar_id')))
+        type_id = type_obj.search(cr, uid, domain)
         fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
         res = {}
         for field in field_obj.browse(cr, uid, fids):
@@ -361,7 +364,9 @@ class Calendar(CalDAV, osv.osv):
             mod_obj = self.pool.get(line.object_id.model)
             data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
             datas = mod_obj.read(cr, uid, data_ids, context=context)
-            context.update({'model': line.object_id.model})
+            context.update({'model': line.object_id.model, 
+                                    'calendar_id': cal.id
+                                    })
             self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
             self.create_ics(cr, uid, datas, line.name, ical, context=context)
         return ical.serialize()
@@ -380,7 +385,9 @@ class Calendar(CalDAV, osv.osv):
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
-                context.update({'model': cal_children[child.name.lower()]})
+                context.update({'model': cal_children[child.name.lower()], 
+                                'calendar_id': cal.id
+                                })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
                 obj = self.pool.get(cal_children[child.name.lower()])
