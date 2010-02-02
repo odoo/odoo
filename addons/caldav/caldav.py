@@ -116,7 +116,7 @@ class calendar_attendee(osv.osv):
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date'])[0]
-                    result[id][name] = obj['date']
+                    result[id][name] = obj.get('date')
                 else:
                     result[id][name] = None
             if name == 'event_end_date':
@@ -124,7 +124,7 @@ class calendar_attendee(osv.osv):
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
-                    result[id][name] = obj['date_deadline']
+                    result[id][name] = obj.get('date_deadline')
                 else:
                     result[id][name] = None
             if name == 'sent_by_uid':
@@ -132,7 +132,7 @@ class calendar_attendee(osv.osv):
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['user_id'])[0]
-                    result[id][name] = obj['user_id']
+                    result[id][name] = obj.get('user_id')
                 else:
                     result[id][name] = uid
             if name == 'language':
@@ -1003,9 +1003,7 @@ class res_users(osv.osv):
             status = 'busy'
             res.update({user_id:status})
 
-        #TOCHECK: Delegrated Event
-        #cr.execute("SELECT user_id,'busy' FROM att_del_to_user_rel where user_id = ANY(%s)", (ids,))
-        #res.update(cr.dictfetchall())
+        #TOCHECK: Delegrated Event        
         for user_id in ids:
             if user_id not in res:
                 res[user_id] = 'free'
