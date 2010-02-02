@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,9 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import document_caldav
+
+{
+    'name': 'Board for Human Reasources Management',
+    'version': '1.0',
+    'category': '',
+    'description': """
+This module implements a dashboard for human resource management that includes:
+    * My Current Timesheet
+    * My Leaves
+    * My Expenses
+    """,
+    'author': 'Tiny',
+    'depends': [ 'crm_project','board','hr_expense','hr_timesheet_sheet','hr_holidays'
+    ],
+    'update_xml': ['board_hr_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -148,7 +148,20 @@
             </field>
         </record>
 
-
+        <!-- My leave dashboard -->
+        <record model="ir.ui.view" id="view_my_leave_board_tree">
+            <field name="name">hr.holidays.per.user.form</field>
+            <field name="model">hr.holidays.per.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="My Leaves" editable="top">
+                    <field name="holiday_status"/>
+                    <field name="max_leaves"/>
+                    <field name="leaves_taken" />
+                    <field name="remaining_leaves"/>
+                </tree>
+            </field>
+        </record>
 
        <!-- <menuitem
           name="Holidays Management"

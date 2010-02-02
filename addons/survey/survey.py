@@ -331,9 +331,9 @@ class survey_question(osv.osv):
                         raise osv.except_osv(_('Error !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
             if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
                 for col in vals['column_heading_ids']:
-                    if col[2].has_key('menu_choice') and not col[2]['menu_choice']:
+                    if col[2] and  col[2].has_key('menu_choice') and not col[2]['menu_choice']:
                         raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading"))
-                    elif col[2].has_key('menu_choice') and col[2]['menu_choice'].strip() == '':
+                    elif col[2] and col[2].has_key('menu_choice') and col[2]['menu_choice'].strip() == '':
                         raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
@@ -740,24 +740,28 @@ class survey_question_wiz(osv.osv_memory):
                                    fields[tools.ustr(que) + "_commentcolumn_"+tools.ustr(row['id']) + "_field"] = {'type':'char', 'size' : 255, 'string':tools.ustr(que_rec['column_name']), 'views':{}}
                                    etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_commentcolumn_"+tools.ustr(row['id'])+ "_field"})
                         elif que_rec['type'] == 'matrix_of_choices_only_multi_ans':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '2', 'colspan': '2'})
+                            xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec['column_heading_ids']) + 1), 'colspan': '4'})
+                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
+                            for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
+                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']),'colspan': '1'})
                             for row in ans_ids:
                                 etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer'])) +' :-', 'align': '0.0'})
-                                etree.SubElement(xml_group, 'newline')
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
-                                    etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['title'])})
+                                    etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['title']), 'nolabel':"1"})
                                     fields[tools.ustr(que) + "_" + tools.ustr(row['id'])  + "_" + tools.ustr(col['title'])] = {'type':'boolean', 'string': col['title']}
                         elif que_rec['type'] == 'matrix_of_drop_down_menus':
-                            xml_group = etree.SubElement(xml_group, 'group', {'col': '2', 'colspan': '2'})
+                            xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec['column_heading_ids']) + 1), 'colspan': '4'})
+                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
+                            for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
+                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']),'colspan': '1'})
                             for row in ans_ids:
                                 etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer']))+' :-', 'align': '0.0'})
-                                etree.SubElement(xml_group, 'newline')
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
                                     selection = []
                                     if col['menu_choice']:
                                         for item in col['menu_choice'].split('\n'):
                                             if item and not item.strip() == '': selection.append((item ,item))
-                                    etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['title'])})
+                                    etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['title']),'nolabel':'1'})
                                     fields[tools.ustr(que) + "_" + tools.ustr(row['id'])  + "_" + tools.ustr(col['title'])] = {'type':'selection', 'string': col['title'], 'selection':selection}
                         elif que_rec['type'] == 'multiple_textboxes':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '1', 'colspan': '4'})
@@ -1238,7 +1242,7 @@ class survey_question_wiz(osv.osv_memory):
                             numeric_sum += int(val)
                         elif val and len(key.split('_')) == 3:
                             resp_obj.write(cr, uid, update, {'state': 'done'})
-                            if type(val) == type(''):
+                            if type(val) == type('') or type(val) == type(u''):
                                 ans_create_id = res_ans_obj.create(cr, uid, {'response_id':update, 'answer_id':ans_id_len[1], 'answer' : ans_id_len[2], 'value_choice' : val})
                                 sur_name_read['store_ans'][update].update({key:val})
                             else:

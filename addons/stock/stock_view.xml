@@ -72,7 +72,7 @@
                                 <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
-                                <field name="prod_lot_id"/>                                
+                                <field name="prod_lot_id"/>
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                             </tree>
                             <form string="Inventory Lines">
@@ -84,7 +84,7 @@
 	                                <field name="prod_lot_id"/>
 	                                <button name="%(split_inventory_lots)d" string="Split in Production Lots" type="action" icon="gtk-justify-fill"/>
                                 </group>
-                                
+
                             </form>
                         </field>
                     </page><page string="Posted Inventory">
@@ -532,7 +532,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
+
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
             <field name="model">stock.picking</field>
@@ -1299,7 +1299,7 @@
                     <field name="prodlot_id" string="Lot"/>
                     <field name="date_planned"/>
                     <field name="backorder_id"/>
-                    <field name="state"/>                    
+                    <field name="state"/>
                     <button name="%(partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
                     <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
                 </tree>
@@ -1375,7 +1375,7 @@
                     </group>
             	</search>
             </field>
-        </record>        
+        </record>
 
     	<record id="action_reception_picking_move" model="ir.actions.act_window">
             <field name="name">Reception Picking Stock Move</field>
@@ -1485,6 +1485,79 @@
             <field eval="'ir.actions.wizard,%d'%ref('location_product')" name="value"/>
             <field eval="True" name="object"/>
         </record>  
+
+		<!-- Graph Views -->
+		<!--  Products To Received Vs Planned -->
+		<record model="ir.ui.view" id="view_move_graph_reception_picking_tree">
+	        <field name="name">Products To Received</field>
+	        <field name="model">report.products.to.received.planned</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+		        <tree string="Products To Received" >
+		            <field name="qty" />
+		            <field name="planned_qty" />
+		            <field name="date"/>
+		        </tree>
+	        </field>
+	    </record>
+
+		<record model="ir.ui.view" id="view_move_graph_reception_picking">
+	        <field name="name">Products To Received</field>
+	        <field name="model">report.products.to.received.planned</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	        <graph string="Products To Received" type="bar" orientation="vertical">
+				<field name="date"/>
+	            <field name="qty" operator="+"/>
+	            <field name="planned_qty" operator="+"/>
+	        </graph>
+	        </field>
+	    </record>
+
+	    <record id="action_move_graph_reception_picking" model="ir.actions.act_window">
+	        <field name="name">Reception Picking Stock Move</field>
+	        <field name="res_model">report.products.to.received.planned</field>
+	        <field name="type">ir.actions.act_window</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="view_id" ref="view_move_graph_reception_picking"/>
+	    </record>
+
+		<!--  Delivery Product Vs Planned -->
+		<record model="ir.ui.view" id="view_move_delivery_products_planned_tree">
+	        <field name="name">Delivery Products</field>
+	        <field name="model">report.delivery.products.planned</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+		        <tree string="Products To Received" >
+		            <field name="qty" />
+		            <field name="planned_qty" />
+		            <field name="date"/>
+		        </tree>
+	        </field>
+	    </record>
+
+		<record model="ir.ui.view" id="view_move_delivery_products_planned_graph">
+	        <field name="name">Delivery Products</field>
+	        <field name="model">report.delivery.products.planned</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	        <graph string="Products To Received" type="bar" orientation="vertical">
+	        	<field name="date"/>
+	            <field name="qty" operator="+"/>
+	            <field name="planned_qty" operator="+"/>
+	        </graph>
+	        </field>
+	    </record>
+
+	    <record id="action_move_delivery_products_planned" model="ir.actions.act_window">
+	        <field name="name">Delivery Products Vs Planned</field>
+	        <field name="res_model">report.delivery.products.planned</field>
+	        <field name="type">ir.actions.act_window</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	        <field name="view_id" ref="view_move_delivery_products_planned_graph"/>
+	    </record>
 
     </data>
 </openerp>

@@ -268,7 +268,7 @@ class survey_browse_response(report_rml):
                                 </blockTable>"""
                         elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','rating_scale','matrix_of_drop_down_menus']:
                             if len(answer) and answer[0].state == "done":
-                                if que.comment_column:
+                                if que.type  in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
                                     pass
                                 cols_widhts = []
                                 cols_widhts.append(200)
@@ -278,7 +278,7 @@ class survey_browse_response(report_rml):
                                 tmp=0.0
                                 sum = 0.0
                                 i = 0
-                                if que.comment_column:
+                                if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
                                     for col in cols_widhts:
                                         if i==0:
                                             cols_widhts[i] = cols_widhts[i]/2.0
@@ -292,7 +292,7 @@ class survey_browse_response(report_rml):
                                     if col.title not in matrix_ans:
                                         matrix_ans.append(col.title)
                                 len_matrix = len(matrix_ans)
-                                if que.comment_column:
+                                if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
                                     matrix_ans.append(que.column_name)
                                 rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>"""
                                 for mat_col in matrix_ans:
@@ -342,14 +342,14 @@ class survey_browse_response(report_rml):
                                                         <rect x="0.1cm" y="-0.45cm" width="0.5 cm" height="0.5cm" fill="yes" stroke="yes"  round="0.1cm"/>
                                                         </illustration>"""
                                         rml+= """<td>""" + value + """</td>"""
-                                    if que.comment_column:
+                                    if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
                                         if comment_value=='False':
                                             comment_value = ''
                                         rml+= """<td><para style="response">"""+ to_xml(tools.ustr(comment_value)) + """</para></td>"""
                                     rml+="""  </tr></blockTable>"""
-                                if que.comment_field_type:
+                                if que.is_comment_require:
                                     rml+="""<blockTable colWidths="500" style="Table1"><tr>
-                                            <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment)) + """</para></td></tr></blockTable>"""
+                                            <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment or '')) + """</para></td></tr></blockTable>"""
                             else:
                                 rml +="""<blockTable colWidths="500" style="Table1">
                                  <tr>  <td> <para style="response">No Response</para></td> </tr>

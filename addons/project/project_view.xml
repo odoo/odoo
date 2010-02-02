@@ -57,9 +57,9 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button 
+                                <button
                                     string="New Project Based on Template"
-                                    name="%(wizard_duplicate_template)d"  type="action" 
+                                    name="%(wizard_duplicate_template)d"  type="action"
                                     states="template" icon="gtk-new"/>
                             </group>
                         </page>
@@ -366,10 +366,10 @@
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours"/>
                     <field name="date_deadline"/>
                     <field name="type" groups="base.group_extended"/>
-                    <button name="next_type" 
-                        states="draft,open,pending" 
-                        string="Change Stage" 
-                        type="object" 
+                    <button name="next_type"
+                        states="draft,open,pending"
+                        string="Change Stage"
+                        type="object"
                         icon="gtk-go-forward"
                         groups="base.group_extended"
                         help="Change Type"/>
@@ -478,7 +478,7 @@
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection">
+                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
@@ -685,5 +685,20 @@
 
         <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
+		<!-- Editable list of messages -->
+	    <record id="view_project_editable_message_tree" model="ir.ui.view">
+            <field name="name">project.message.form</field>
+            <field name="model">project.message</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Messages" editable="top">
+                        <field name="subject" select="1"/>
+                        <field name="description" select="1"/>
+                        <field name="project_id" select="1"/>
+                        <field name="date" select="1"/>
+                        <field name="user_id" select="1"/>
+                </tree>
+            </field>
+       </record>
     </data>
 </openerp>

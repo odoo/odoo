@@ -54,20 +54,20 @@ class crm_project_bug(osv.osv):
         'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
-        
+
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration') ,
-        'probability': fields.float('Probability (%)'),       
+        'probability': fields.float('Probability (%)'),
     }
 
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
-           return user.context_project_id.id
+           return user.context_project_id
        return False
 
     _defaults = {
@@ -77,8 +77,8 @@ class crm_project_bug(osv.osv):
         if not categ:
             return {'value':{}}
         cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}    
-    
+        return {'value':{'probability':cat}}
+
 
 crm_project_bug()
 

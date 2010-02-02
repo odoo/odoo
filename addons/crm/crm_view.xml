@@ -48,9 +48,9 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 
-        # ------------------------------------------------------ 
+        # ------------------------------------------------------
         # Stage
-        # ------------------------------------------------------ 
+        # ------------------------------------------------------
         <record model="ir.ui.view" id="crm_case_stage_tree">
             <field name="name">crm.case.stage.tree</field>
             <field name="model">crm.case.stage</field>
@@ -92,7 +92,7 @@
                 <form string="Case Category">
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
-                    <field name="object_id"  invisible="1" />                    
+                    <field name="object_id"  invisible="1" />
                     <field name="probability"/>
                 </form>
             </field>
@@ -117,7 +117,7 @@
             <field name="view_id" ref="crm_case_categ_tree-view"/>
         </record>
         <menuitem id="menu_crm_case_categ"   name="Categories"  parent="crm.menu_crm_configuration"/>
-        
+
         <menuitem action="crm_case_section_act" id="menu_crm_case_section_act" parent="crm.menu_crm_configuration"/>
 
 <!--        <menuitem id="next_id_52" name="All Cases" parent="crm.menu_crm" sequence="1"/>-->
@@ -442,11 +442,11 @@
                        <field name="name" select='1'/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
-                     <field name="section_id" select="1" widget="selection" string="Section"/>
+                     <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section"/>
                </search>
             </field>
         </record>
-    
+
         <record id="crm_case_categ0-act" model="ir.actions.act_window">
             <field name="name">Cases</field>
             <field name="res_model">crm.case</field>
@@ -507,8 +507,8 @@
                        <separator orientation="vertical"/>
                      <group col="6" colspan="2">
                        <field name="date" select="1"/>
-                    <field name="user_id" select="1" widget="selection"/>                    
-                     <field name="section_id" select="1" widget="selection" string="Section"/>
+                    <field name="user_id" select="1" widget="selection"/>
+                     <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section"/>
                     </group>
                 </search>
             </field>
