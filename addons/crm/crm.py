@@ -22,14 +22,14 @@
 import time
 import re
 import os
-
-import mx.DateTime
 import base64
+import tools
+import mx.DateTime
 
 from tools.translate import _
-
-import tools
-from osv import fields,osv,orm
+from osv import fields 
+from osv import osv 
+from osv import orm
 from osv.orm import except_orm
 
 MAX_LEVEL = 15
