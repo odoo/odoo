@@ -37,6 +37,5 @@ This module implements a dashboard for human resource management that includes:
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
