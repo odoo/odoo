@@ -112,7 +112,7 @@ def _get_info(self, cr, uid, data, context):
         return {}
         
     pool = pooler.get_pool(cr.dbname)
-    case = pool.get('crm.lead').browse(cr, uid, data['id'])
+    case = pool.get(data.get('model')).browse(cr, uid, data['id'])
 
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
