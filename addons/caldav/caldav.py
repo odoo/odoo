@@ -67,52 +67,106 @@ def _links_get(self, cr, uid, context={}):
     return [(r['object'], r['name']) for r in res]
 
 html_invitation = """
+<html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <title>%(name)s</title>
 </head>
-<div>
-<table cellspacing="0" cellpadding="0" border=3D "1" summary=3D"">
-    <tr align="center">
+<body>
+<table border="0" cellspacing="10" cellpadding="0" width="100%%"
+    style="font-family: Arial, Sans-serif; font-size: 14">
+    <tr>
+        <td width="100%%">Hello,</td>
+    </tr>
+    <tr>
+        <td width="100%%">You are invited for OpenERP Event.</td>
+    </tr>
+    <tr>
+        <td width="100%%">Below are the details of event :</td>
+    </tr>
+</table>
+
+<table cellspacing="0" cellpadding="5" border="0" summary=""
+    style="width: 90%%; font-family: Arial, Sans-serif; border: 1px Solid #ccc; background-color: #f6f6f6">
+    <tr valign="center" align="center">
         <td bgcolor="DFDFDF">
         <h3>%(name)s</h3>
         </td>
     </tr>
     <tr>
         <td>
-        <table cellpadding="8" cellspacing="0" border=3D "0" summary=3D
-            "Eventdetails" bgcolor="f6f6f6">
+        <table cellpadding="8" cellspacing="0" border="0"
+            style="font-size: 14" summary="Eventdetails" bgcolor="f6f6f6"
+            width="90%%">
             <tr>
-                <td>
-                <div><b><i>Start Date</i></b></div>
+                <td width="21%%">
+                <div><b>Start Date</b></div>
                 </td>
-                <td>%(start_date)s</td>
-                <td>
-                <div><b><i>End Date</i></b></div>
+                <td><b>:</b> %(start_date)s</td>
+                <td width="15%%">
+                <div><b>End Date</b></div>
                 </td>
-                <td>%(end_date)s</td>
+                <td><b>:</b> %(end_date)s</td>
             </tr>
             <tr>
-                <td><b><i>Description</i></b></td>
-                <td colspan="3">%(description)s</td>
-            </tr>
-            <tr>
-                <td>
-                <div><b><i>Location</i></b></div>
-                </td>
-                <td colspan="3">%(location)s</td>
+                <td><b>Description</b></td>
+                <td colspan="3"><b>:</b> %(description)s</td>
             </tr>
             <tr>
                 <td>
-                <div><b><i>Event Attendees</i></b></div>
+                <div><b>Location</b></div>
+                </td>
+                <td colspan="3"><b>:</b> %(location)s</td>
+            </tr>
+            <tr>
+                <td>
+                <div><b>Event Attendees</b></div>
                 </td>
                 <td colspan="3">
                 <div>
-                <div>%(attendees)s</div>
+                <div><b>:</b> %(attendees)s</div>
                 </div>
                 </td>
             </tr>
-        </table>"""
+            <td><b>Are you coming?</b></td>
+            <td colspan="3">
+            <UL>
+                <LI>
+                YES
+                <LI>
+                NO
+                <LI>
+                MAYBE
+            </UL>
+            </td>
+            <tr>
+        </table>
+        </td>
+    </tr>
+</table>
+<table border="0" cellspacing="10" cellpadding="0" width="100%%"
+    style="font-family: Arial, Sans-serif; font-size: 14">
+    <tr>
+        <td width="100%%"><b>Note:</b> If you are interested please reply this
+        mail and keep only your response from options <i>YES, NO</i>
+        and <i>MAYBE</i>.</td>
+    </tr>
+    <tr>
+        <td width="100%%">From:</td>
+    </tr>
+    <tr>
+        <td width="100%%">%(user)s</td>
+    </tr>
+    <tr valign="top">
+        <td width="100%%">-<font color="a7a7a7">-------------------------</font></td>
+    </tr>
+    <tr>
+        <td width="100%%"> <font color="a7a7a7">%(sign)s</font></td>
+    </tr>
+</table>
+</body>
+</html>
+"""
 
 class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
@@ -253,6 +307,30 @@ request was delegated to"),
     _defaults = {
         'state':  lambda *x: 'needs-action', 
     }
+    
+    response_re = response_re = re.compile("Are you coming\?.*(YES|NO|MAYBE).*", re.UNICODE)
+    
+    def msg_new(self, cr, uid, msg):        
+        return False
+        
+    def msg_act_get(self, msg):
+        mailgate_obj = self.pool.get('mail.gateway')
+        body = mailgate_obj.msg_body_get(msg)
+        actions = {}
+        res = self.response_re.findall(body['body'])
+        if res:
+                actions['state'] = res[0]
+        return actions
+
+    def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
+        msg_actions = self.msg_act_get(msg)
+        if msg_actions.get('state'):
+            if msg_actions['state'] in ['YES','NO','MAYBE']:
+                mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
+                status = mapping[msg_actions['state']]
+                print 'Got response for invitation id: %s as %s'  % (ids, status)
+                self.write(cr, uid, ids, {'state': status})
+        return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
@@ -278,7 +356,7 @@ request was delegated to"),
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
-
+    
 calendar_attendee()
 
 class res_alarm(osv.osv):
@@ -457,7 +535,7 @@ or contains the text to be used for display"""),
                       %s
 
                 """  % (alarm.name, alarm.trigger_date, alarm.description, \
-                    alarm.user_id.name, alarm.user_id.sign)
+                    alarm.user_id.name, alarm.user_id.signature)
                 mail_to = [alarm.user_id.address_id.email]
                 for att in alarm.attendee_ids:
                     mail_to.append(att.user_id.address_id.email)
@@ -1113,23 +1191,27 @@ class invite_attendee_wizard(osv.osv_memory):
             vals.update({'email': datas['email']})
             att_id = att_obj.create(cr, uid, vals)
             obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
-
-            sub = '[OpenERP Invitation] %s'  % (res_obj.name)
+            sign = res_obj.user_id and res_obj.user_id.signature or ''
+            sign = '<br>'.join(sign and sign.split('\n') or [])
+            sub = '[%d] %s'  % (att_id, res_obj.name)
             body_vals = {'name': res_obj.name, 
                         'start_date': res_obj.date, 
                         'end_date': res_obj.date_deadline or None, 
                         'description': res_obj.description, 
                         'location': res_obj.location or '-', 
-                        'attendees': '-' #Todo
+                        'attendees': '-',  #Todo
+                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
+                        'sign': sign
             }
             body = html_invitation % body_vals
             mail_to = [datas['email']]
             tools.email_send(
-                    res_obj.user_id.name, 
+                    tools.config.get('email_from',False), 
                     mail_to, 
                     sub, 
                     body, 
-                    subtype='html'
+                    subtype='html', 
+                    reply_to=tools.config.get('email_from',False), 
                 )
 
         elif  type == 'partner':
