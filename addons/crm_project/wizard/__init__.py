@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,5 @@
 ##############################################################################
 
 
-{
-    'name': 'CRM Stuff in Job ',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """
-        This module provide  Store the Job
-    """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['crm','hr','board_crm_configuration','survey'],
-    'init_xml': [
-        'crm_hr_data.xml'
-    ],
-    'update_xml': [
-        'crm_hr_wizard.xml',
-        'crm_hr_view.xml',
-        'crm_hr_menu.xml',
-        'report_crm_hr_view.xml',
-        'security/crm_hr_security.xml',
-        'security/ir.model.access.csv',
-        'board_crm_hr_statistical_view.xml',
-     ],
-    'demo_xml': [
-        'crm_hr_demo.xml'
-    ],
-    'installable': True,
-    'active': False,
-}
+import crm_bug_wizard
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

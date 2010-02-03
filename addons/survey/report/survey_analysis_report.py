@@ -167,7 +167,7 @@ class survey_analysis(report_rml):
                                     if cal['answer'] == matrix_ans[mat_col]:
                                         cal_count = cal['count']
                                 if tot_res:
-                                    percantage = float(cal_count)*100 / tot_res
+                                    percantage = round(float(cal_count)*100 / tot_res,2)
                                 if percantage:
                                     rml += """<td color="#FFF435"><para style="answer_bold">""" + tools.ustr(percantage) +"% (" + tools.ustr(cal_count) + """)</para></td>"""
                                 else:
@@ -257,14 +257,17 @@ class survey_analysis(report_rml):
                                         sqc.question_id = sr.question_id  and sra.answer_id = %d and sqc.title ='%s'\
                                         group by sra.answer_id,sqc.rating_weight" % (ans.id,matrix_ans[mat_col]))
                                 col_weight =  cr.fetchone()
-                                if not col_weight :
+                                
+                                if not col_weight:
                                     col_weight= (0,0)
+                                elif not col_weight[1]:
+                                    col_weight = (col_weight[0],0)
                                 res_count = col_weight[0]
-                                if tot_res:
-                                    rating_weight_sum += col_weight[1] * tot_res
+                                if tot_res and res_count:
+                                    rating_weight_sum += int(col_weight[1]) * tot_res
                                     tot_per = round((float(tot_res) * 100) / int(res_count), 2)
                                 else:
-                                    tot_res = 0
+                                    tor_res = 0
                                     tot_per = 0.0
                                 if tot_res:
                                     rml += """<td><para style="answer_bold">""" + tools.ustr(tot_per) + "%(" + tools.ustr(tot_res) + """)</para></td>"""
@@ -309,7 +312,7 @@ class survey_analysis(report_rml):
                                             calc = per['count']
                                     percantage = 0.00
                                     if calc and response:
-                                        percantage = (float(calc)* 100) / response
+                                        percantage = round((float(calc)* 100) / response,2)
                                     if calc:
                                         rml+="""<td><para style="answer_bold">""" +tools.ustr(percantage)+"% (" +  tools.ustr(calc) + """)</para></td>"""
                                     else:

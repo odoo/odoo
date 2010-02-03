@@ -22,7 +22,7 @@
 
 
 {
-    'name': 'CRM Stuff in Project Management',
+    'name': 'Bug Reporting in Project Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
@@ -35,9 +35,9 @@
         'crm_bugs_data.xml'
     ],
     'update_xml': [
+        'crm_bug_wizard.xml',
         'crm_bugs_view.xml',
-        'crm_bugs_menu.xml',
-        'crm_feature_view.xml',
+        'crm_bugs_menu.xml',        
         'crm_feature_menu.xml',
         'report_crm_project_bug_view.xml',
         'security/crm_project_security.xml',
