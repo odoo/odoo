@@ -973,7 +973,6 @@ class survey_question_wiz(osv.osv_memory):
                     comment_value = False
                     response_list = []
                     for key1, val1 in vals.items():
-                        print "FOR::::::::::",key1,val1
                         if val1 and key1.split('_')[1] == "table" and key1.split('_')[0] == que_id:
                             surv_tbl_column_obj.create(cr, uid, {'response_table_id' : resp_id,'column_id':key1.split('_')[2], 'name':key1.split('_')[3], 'value' : val1})
                             sur_name_read['store_ans'][resp_id].update({key1:val1})
@@ -1074,13 +1073,10 @@ class survey_question_wiz(osv.osv_memory):
                             select_count += 1
                             numeric_sum += int(val1)
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 3:
-                            print "V:::::::::::::::::",key1, val1
                             if type(val1) == type('') or type(val1) == type(u''):
-                                print "VA:::::::::::::::::::DROP DOWN::::::::"
                                 ans_create_id = res_ans_obj.create(cr, uid, {'response_id':resp_id, 'answer_id':key1.split('_')[1], 'answer' : key1.split('_')[2], 'value_choice' : val1})
                                 sur_name_read['store_ans'][resp_id].update({key1:val1})
                             else:
-                                print ":A:::::::::::::multiple answer :::"
                                 ans_create_id = res_ans_obj.create(cr, uid, {'response_id':resp_id, 'answer_id':key1.split('_')[1], 'answer' : key1.split('_')[2]})
                                 sur_name_read['store_ans'][resp_id].update({key1:True})
                             matrix_list.append(key1.split('_')[0] + '_' + key1.split('_')[1])
