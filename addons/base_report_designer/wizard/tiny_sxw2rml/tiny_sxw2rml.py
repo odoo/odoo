@@ -202,7 +202,7 @@ class DomApi(DomApiGeneral):
                 s.appendChild(temp)
                 c = self.findChildrenByName(s,"style:properties")
             c = c[0]
-            dict = self.style_properties_dict[(s.getAttribute("style:name")).encode("latin-1")] or {}
+            dict = self.style_properties_dict[(s.getAttribute("style:name")).encode("utf-8")] or {}
             for attribute in dict.keys():
                 c.setAttribute(self.openOfficeStringUtf8(attribute),self.openOfficeStringUtf8(dict[attribute]))
 
@@ -251,7 +251,7 @@ class DomApi(DomApiGeneral):
         Caution: in this dict the nodes from two dom apis are merged!"""
         for st in (self.styles_dom,self.content_dom):
             for s in st.getElementsByTagName("style:style"):
-                name = s.getAttribute("style:name").encode("latin-1")
+                name = s.getAttribute("style:name").encode("utf-8")
                 self.style_dict[name] = s
         return True
 
@@ -262,14 +262,14 @@ class DomApi(DomApiGeneral):
         res = {}
 
         if self.style_dict[style_name].hasAttribute("style:parent-style-name"):
-            parent = self.style_dict[style_name].getAttribute("style:parent-style-name").encode("latin-1")
+            parent = self.style_dict[style_name].getAttribute("style:parent-style-name").encode("utf-8")
             res = self.getStylePropertiesDict(parent)
 
         childs = self.style_dict[style_name].childNodes
         for c in childs:
             if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties")>0 :
                 for attr in c._attrs.keys():
-                    res[attr] = c.getAttribute(attr).encode("latin-1")
+                    res[attr] = c.getAttribute(attr).encode("utf-8")
         return res
 
 class PyOpenOffice(object):
