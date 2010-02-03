@@ -196,7 +196,7 @@ class module(osv.osv):
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
-        mod_names = []    
+        mod_names = []
         for mod in self.read(cr, uid, ids, ['state','name'], context):
             if mod['state'] in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise orm.except_orm(_('Error'),
@@ -204,7 +204,7 @@ class module(osv.osv):
             mod_names.append(mod['name'])
         #Removing the entry from ir_model_data
         ids_meta = self.pool.get('ir.model.data').search(cr, uid, [('name', '=', 'module_meta_information'), ('module', 'in', mod_names)])
-        
+
         if ids_meta:
             self.pool.get('ir.model.data').unlink(cr, uid, ids_meta, context)
 
@@ -476,6 +476,9 @@ class module(osv.osv):
             for lang in filter_lang:
                 iso_lang = tools.get_iso_codes(lang)
                 f = os.path.join(modpath, 'i18n', iso_lang + '.po')
+                if not os.path.exists(f) and iso_lang.find('_') != -1:
+                    f = os.path.join(modpath, 'i18n', iso_lang.split('_')[0] + '.po')
+                    iso_lang = iso_lang.split('_')[0]
                 if os.path.exists(f):
                     logger.notifyChannel("i18n", netsvc.LOG_INFO, 'module %s: loading translation file for language %s' % (mod.name, iso_lang))
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
