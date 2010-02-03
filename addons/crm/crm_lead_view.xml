@@ -26,33 +26,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Leads Form">
-                <group colspan="4" col="7">
-                    <field name="name" select="1" string="Lead Subject"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="opportunity_id" string="Opportunity Case"/>
-	                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
-
-                    <label string="Stage: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="stage_id" select="1" nolabel="1"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
-                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source"/>
-                    <field name="type_id" string="Campaign Type" select="1"/>
+                <group colspan="4" col="5">
+                    <field name="partner_name" string="Lead Name" required="1"/>
+                    <field name="name" string="Lead Subject"/>                                       
+                    <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>                    
                     <newline/>
-                    <field name="date"/>
-                	<field name="date_deadline"/>
-                    <field name="user_id" select="2"/>
+                    <field name="partner_name2" string="Contact Name"/>                    
+                    <field name="email_from" string="Email"/>                    
+                    
                 </group>
                 <notebook colspan="4">
                 <page string="Leads">
-                    <separator string="Lead Information" colspan="4"/>
-                    <field name="partner_name" string="Lead Name"/>
-                    <field name="partner_name2" string="Contact Name"/>
+                    <separator colspan="4" string="Communication"/>
                     <field name="partner_phone"/>
                     <field name="partner_mobile"/>
-                    <field name="email_from" string="Lead Email"/>
-                    <newline/>
                     <label string="Partner:" align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="partner_id" nolabel="1" colspan="1"/>
@@ -63,9 +50,23 @@
                     </group>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
 
-                    <field name="priority" string="Priority"/>
-                    <newline/>
-                    <separator colspan="4" string="Lead Details"/>
+                    <separator colspan="4" string="Status and Categarization"/>
+                    <group colspan="4" col="6">
+                        <field name="user_id" select="2"/>
+                        <label string="Status: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
+                        <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                   
+                        <field name="type_id" string="Campaign" select="1"/>
+                        <field name="section_id" colspan="1" widget="selection"/>
+                        <field name="priority" string="Priority"/>
+        
+                        <field name="create_date"/>
+	                </group>
+                    <separator colspan="4" string="Details"/>
                     <field name="description" nolabel="1" colspan="4"/>
 
                     <separator colspan="4"/>
@@ -115,14 +116,12 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'pending');grey: state in ('cancel','done')">
-                <field name="id"/>
-                <field name="name" string="Lead Subject"/>
-                <field name="partner_phone"/>
-                <field name="partner_name2" string="Contact Name"/>
-                <field name="stage_id"/>
+            <tree string="Leads Tree"  colors="red:state=='open';black:state in ('draft', 'pending');grey: state in ('cancel','done')">                
+                <field name="partner_name" string="Lead Name"/>
+                <field name="stage_id" string="Status"/>
+                <field name="create_date"/>
                 <field name="categ_id" string="Lead Source"/>
-                <field name="type_id" string="Campaign Type"/>
+                <field name="email_from" string="Email"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
