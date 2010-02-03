@@ -36,25 +36,30 @@
         <field name="arch" type="xml">
             <form string="Bug Tracker Form">
                 <group colspan="4" col="6">
-                  	<field name="project_id" required="True"/>
                     <field name="name" string="Title" colspan="2"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
-                        <label string="Resolution: " align="1.0"/>
-                        <group colspan="1" col="2">
-                            <field name="stage_id" select="1" nolabel="1"/>
-                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                        </group>
                     <field name="date"/>
-                    <field name="user_id" />
+                  	<field name="project_id" required="True"/>  
+                    <field name="categ_id"  on_change="onchange_categ_id(categ_id)" widget="selection" required="1" domain="[('object_id.model', '=', 'crm.project.bug')]"/>
+                    <label string="Resolution: " align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="stage_id" select="1" nolabel="1"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    </group>
+                    <label string="Related Task: " align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="task_id"  nolabel="1"/>
+                        <button string="Convert To Task" name="%(wizard_crm_bug_task_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('task_id','!=',False)]}"/>
+                    </group>                                     
+                    
                 </group>
                 <notebook colspan="4">
                 <page string="General">
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                     <field name="email_from" colspan="2"/>
+                    <field name="user_id" />
                     <separator colspan="4"/>
-                    <field name="type_id" string="Version"/>
-                    <field name="categ_id"  on_change="onchange_categ_id(categ_id)"/>
+                    <field name="type_id" string="Version"/>                    
                     <field name="priority" string="Severity"/>
                     <newline/>
                     <separator string= "Description" colspan="4"/>
@@ -159,6 +164,10 @@
         <field name="arch" type="xml">
             <search string="Search Bugs">
                <group col="7" colspan="1">
+                   <filter icon="gtk-media-forward" string="Accepted Bugs"
+                   	domain="[('stage_id.name','=','Accepted as Bug')]"
+                   	separator="1" help="All Accepted Bugs"
+                   /> 
                    <filter icon="gtk-apply" string="Fixed Bugs"
                    	domain="[('stage_id.name','=','Fixed')]"
                    	separator="1" help="All Fixed Bugs"
@@ -166,11 +175,7 @@
                    <filter icon="gtk-media-pause" string="Waiting Bugs"
                    	domain="[('stage_id.name','=','Awaiting Response')]"
                    	separator="1" help="All Waiting Bugs"
-                   />
-                   <filter icon="gtk-media-forward" string="Future Bugs"
-                   	domain="[('stage_id.name','=','Future')]"
-                   	separator="1" help="All Future Bugs"
-                   />
+                   />                   
                    <separator orientation="vertical"/>
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
