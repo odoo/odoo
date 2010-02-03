@@ -653,7 +653,7 @@ class crm_case(osv.osv):
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
                     self.format_body(body),
                     reply_to=case.section_id.reply_to,
-                    tinycrm=str(case.id),
+                    openobject_id=str(case.id),
                     attach=attach_to_send
                 )
                 if flag:
@@ -713,7 +713,7 @@ class crm_case(osv.osv):
                 '['+str(case.id)+'] '+case.name,
                 self.format_body(body),
                 reply_to=case.section_id.reply_to,
-                tinycrm=str(case.id)
+                openobject_id=str(case.id)
             )
         return True
 
@@ -885,7 +885,7 @@ class crm_email_add_cc_wizard(osv.osv_memory):
             subject or '['+str(case.id)+'] '+case.name,
             crm_case.format_body(body),
             email_cc = [email],
-            tinycrm=str(case.id)
+            openobject_id=str(case.id)
         )
         if flag:
             crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
