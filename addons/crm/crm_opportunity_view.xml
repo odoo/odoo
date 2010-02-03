@@ -39,24 +39,25 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Opportunities">
-                <group colspan="4" col="5">                    
+                <group colspan="3" col="4">                    
                     <field name="name" select="1" string="Opportunity" colspan="4"/>
-                    <button string="Schedule a Meeting"
-                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
-                    <newline/>
                     <field name="planned_revenue" required="1"/>
                     <field name="planned_cost"/>
-                    <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />
-                    <newline/>
                     <field name="probability"/>
-                    <field name="date_deadline" string="Excepted Close Date"/>
+                    <field name="date_deadline" string="Excepted Close Date" required="1"/>
                     
                 </group>
-                <notebook colspan="4">
+                <group colspan="1" col="1">
+                    <button string="Schedule Meeting"
+                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
+                    <button string="Schedule Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />
+                </group>
+                <group colspan="3" col="4">
+                <notebook>
                 <page string="Opportunity">
                     <separator colspan="4" string="Communication"/>                    
-                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                    <field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                     <field name="email_from" colspan="2" string="Email"/>
                     <field name="partner_phone" colspan="2"/>
@@ -66,7 +67,7 @@
                         <field name="user_id" select="2" string="Responsible"/>
                         <label string="Sales Stage: " align="1.0"/>
                         <group colspan="1" col="2">
-                        <field name="stage_id" select="1" nolabel="1"/>
+                        <field name="stage_id" select="1" nolabel="1" required="1" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
                         <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
@@ -146,6 +147,7 @@
                     <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
                  </page>
                 </notebook>
+                </group>
             </form>
         </field>
     </record>
