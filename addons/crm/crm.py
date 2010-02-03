@@ -313,7 +313,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64,required=True),
+        'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
