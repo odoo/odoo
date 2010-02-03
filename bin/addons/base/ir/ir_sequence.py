@@ -71,6 +71,8 @@ class ir_sequence(osv.osv):
         }
 
     def get_id(self, cr, uid, sequence_id, test='id=%s', context=None):
+        if test not in ('id=%s', 'code=%s'):
+            raise ValueError('invalid test')
         cr.execute('SELECT id, number_next, prefix, suffix, padding FROM ir_sequence WHERE '+test+' AND active=%s FOR UPDATE', (sequence_id, True))
         res = cr.dictfetchone()
         if res:
