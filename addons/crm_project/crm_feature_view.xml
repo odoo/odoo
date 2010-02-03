@@ -164,11 +164,12 @@
                    <field name="user_id" select="1" widget="selection">
                    	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Future Requests" default="1"/>
                    </field>
-                   <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Future Requests"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Future Requests"/>
-                       <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Future Requests"/>
-                   </field>
+					<field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />
+                    </field>       
                </group>
             </search>
          </field>

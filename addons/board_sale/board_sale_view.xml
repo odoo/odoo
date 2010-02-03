@@ -5,6 +5,24 @@
             <field name="name">Sales</field>
         </record>
 
+		<record model="ir.actions.act_window" id="board_crm_case_categ_phone_incoming0">
+	        <field name="res_model">crm.phonecall</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,calendar</field>
+	        <field name="view_id" ref="crm.crm_case_phone_tree_view"/>
+	        <field name="domain">[('user_id','=',uid)]</field>
+	        <field name="context" eval="{'default_state':'open'}"/>
+	        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+	    </record>
+
+		<record model="ir.actions.act_window" id="board_crm_case_categ_meet">
+	        <field name="res_model">crm.meeting</field>
+	        <field name="view_mode">tree,form,gantt</field>
+	        <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
+	        <field name="domain">[('user_id','=',uid)]</field>
+	        <field name="domain">[('date','&gt;=',time.strftime('%Y-%m-%d')),('date','&lt;=',(datetime.datetime.today() + datetime.timedelta(days=2)).strftime('%Y-%m-%d'))]</field>
+	        <field name="context" eval="{'default_state':'open'}"/>
+	    </record>
         <record id="board_sales_manager_form" model="ir.ui.view">
             <field name="name">board.sales.manager.form</field>
             <field name="model">board.board</field>
@@ -14,13 +32,16 @@
                     <hpaned position="100">
                         <child1>
                             <action colspan="4" height="200" name="%(sale.action_order_tree5)d" string="My quotations" width="510" domain="[('state','=','draft'),('user_id','=',uid)]"/>
-                            <action colspan="4" name="%(report_sale.action_order_sale_list)d" string="Top ten sales of the month"/>
-                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree)d" string="Cases statistics"/>
+                            <action colspan="4" name="%(board_crm_case_categ_phone_incoming0)d" string="My planned calling calls (IN / OUT)" width="510"/>
+<!--                            <action colspan="4" name="%(report_sale.action_order_sale_list)d" string="Top ten sales of the month"/>-->
+<!--                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree)d" string="Cases statistics"/>-->
                         </child1>
 
                         <child2>
-                            <action colspan="4" name="%(report_sale.action_order_category_tree_all)d" string="Average Sales by Category of Products(this month)" view_mode="graph,tree"/>
-                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree)d" string="Cases of the month" view_mode="graph,tree"/>
+							<action colspan="4" name="%(crm.crm_case_category_act_oppor11)d" string="My Opportunities" width="510" domain="[('user_id','=',uid)]"/>
+							<action colspan="4" name="%(board_crm_case_categ_meet)d" String="My Meetings" domain="[('state','=','open')]" width="510"/>
+<!--                            <action colspan="4" name="%(report_sale.action_order_category_tree_all)d" string="Average Sales by Category of Products(this month)" view_mode="graph,tree"/>-->
+<!--                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree)d" string="Cases of the month" view_mode="graph,tree"/>-->
                         </child2>
                     </hpaned>
                 </form>

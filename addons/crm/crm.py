@@ -406,6 +406,12 @@ class crm_case(osv.osv):
 
         return True
 
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
+
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id:
             return {}

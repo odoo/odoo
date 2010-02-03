@@ -71,7 +71,10 @@ def get_attribute_mapping(cr, uid, calname, context={}):
         pool = pooler.get_pool(cr.dbname)
         field_obj = pool.get('basic.calendar.fields')
         type_obj = pool.get('basic.calendar.lines')
-        type_id = type_obj.search(cr, uid, [('object_id.model', '=', context.get('model'))])
+        domain = [('object_id.model', '=', context.get('model'))]
+        if context.get('calendar_id'):
+            domain.append(('calendar_id', '=', context.get('calendar_id')))
+        type_id = type_obj.search(cr, uid, domain)
         fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
         res = {}
         for field in field_obj.browse(cr, uid, fids):
@@ -194,6 +197,8 @@ class CalDAV(object):
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
             if cal_data.name.lower() in self.__attribute__:
+                if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
+                    self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self)
         return vals
@@ -255,7 +260,7 @@ class CalDAV(object):
                                 dtfield = vevent.add(field)
                                 dtfield.value = parser.parse(data[map_field])
                                 if tzval:
-                                    dtfield.params['TZID'] = [tzval]
+                                    dtfield.params['TZID'] = [tzval.title()]
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -312,9 +317,6 @@ class CalDAV(object):
         for child in parsedCal.getChildren():
             if child.name.lower() in ('vevent', 'vtodo'):
                 vals = self.parse_ics(cr, uid, child, context=context)
-            elif child.name.lower() == 'vtimezone':
-                tz_obj = self.pool.get('basic.calendar.timezone')
-                tz_obj.import_cal(cr, uid, child, context=context)
             else:
                 vals = {}
                 continue
@@ -361,7 +363,9 @@ class Calendar(CalDAV, osv.osv):
             mod_obj = self.pool.get(line.object_id.model)
             data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
             datas = mod_obj.read(cr, uid, data_ids, context=context)
-            context.update({'model': line.object_id.model})
+            context.update({'model': line.object_id.model, 
+                                    'calendar_id': cal.id
+                                    })
             self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
             self.create_ics(cr, uid, datas, line.name, ical, context=context)
         return ical.serialize()
@@ -380,7 +384,9 @@ class Calendar(CalDAV, osv.osv):
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
-                context.update({'model': cal_children[child.name.lower()]})
+                context.update({'model': cal_children[child.name.lower()], 
+                                'calendar_id': cal.id
+                                })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
                 obj = self.pool.get(cal_children[child.name.lower()])
@@ -616,7 +622,7 @@ class Timezone(CalDAV, osv.osv_memory):
     }
     
     def get_name_offset(self, cr, uid, tzid, context={}):
-        mytz = pytz.timezone(tzid)
+        mytz = pytz.timezone(tzid.title())
         mydt = datetime.now(tz=mytz)
         offset = mydt.utcoffset()
         val = offset.days * 24 + float(offset.seconds) / 3600
@@ -629,7 +635,7 @@ class Timezone(CalDAV, osv.osv_memory):
         ctx = context.copy()
         ctx.update({'model': model})
         cal_tz = ical.add('vtimezone')
-        cal_tz.add('TZID').value = tzid
+        cal_tz.add('TZID').value = tzid.title()
         tz_std = cal_tz.add('STANDARD')
         tzname, offset = self.get_name_offset(cr, uid, tzid)
         tz_std.add("TZOFFSETFROM").value = offset
@@ -769,14 +775,15 @@ class Attendee(CalDAV, osv.osv_memory):
             cn_val = ''
             for a_key, a_val in self.__attribute__.items():
                 if attendee[a_val['field']] and a_val['field'] != 'cn':
-                    if a_val['type'] == 'text':
+                    if a_val['type'] in ('text', 'char', 'selection'):
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                     elif a_val['type'] == 'boolean':
                         attendee_add.params[a_key] = [str(attendee[a_val['field']])]
                 if a_val['field'] == 'cn' and attendee[a_val['field']]:
                     cn_val = [str(attendee[a_val['field']])]
-            if cn_val:
-                attendee_add.params['CN'] = cn_val
+                    if cn_val:
+                        attendee_add.params['CN'] = cn_val
+            attendee_add.value = 'MAILTO:' + attendee['email']
         return vevent
 
 Attendee()

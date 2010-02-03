@@ -20,18 +20,5 @@
 ##############################################################################
 
 
-{
-    'name': 'Support for caldav based on Document Management System',
-    'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """Allows to synchronise calendars with others applications.""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['caldav','document_webdav', 'crm'],
-    'init_xml': ['document_data.xml'],
-    'update_xml': ['document_view.xml'],
-    'demo_xml': ['document_demo.xml'],
-    'installable': True,
-    'active': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

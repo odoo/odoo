@@ -19,6 +19,25 @@
             </field>
         </record>
 
+        <!-- Editable current timesheet used  in dashboard-->
+        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets" editable="top">
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -46,7 +65,7 @@
                 </tree>
             </field>
         </record>
-<!-- 
+<!--
         <record id="hr_timesheet_day_form" model="ir.ui.view">
             <field name="name">hr.timesheet.day.form</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -61,7 +80,7 @@
                 </form>
             </field>
         </record>
- 
+
         <record id="hr_timesheet_day_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>

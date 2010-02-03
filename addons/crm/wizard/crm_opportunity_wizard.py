@@ -56,6 +56,10 @@ class opportunity2phonecall(wizard.interface):
         case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')        
         categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
         case = case_obj.browse(cr, uid, data['id'])
+        if case.state != 'open':
+            raise wizard.except_wizard(_('Warning !'),
+                _('Opportunity should be in \'Open\' state before converting to Phone Call.'))
+            return {}
         return {
                 'user_id' : case.user_id and case.user_id.id,
                 'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,

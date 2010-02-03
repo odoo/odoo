@@ -19,15 +19,8 @@
 #
 ##############################################################################
 
-import tools
 from osv import fields, osv
-import os
-import pooler
-import netsvc
-from tools.translate import _
 import crm
-
-
 
 class crm_claim(osv.osv):
     _name = "crm.claim"
@@ -59,12 +52,7 @@ class crm_claim(osv.osv):
     _defaults = {
                  'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}    
-
+    
 crm_claim()
 
 
