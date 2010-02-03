@@ -79,7 +79,7 @@ html_invitation = """
         <td width="100%%">Hello,</td>
     </tr>
     <tr>
-        <td width="100%%">You are invited for OpenERP Event.</td>
+        <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
     </tr>
     <tr>
         <td width="100%%">Below are the details of event :</td>
@@ -102,44 +102,48 @@ html_invitation = """
                 <td width="21%%">
                 <div><b>Start Date</b></div>
                 </td>
-                <td><b>:</b> %(start_date)s</td>
+                <td><b>:</b></td>
+                <td>%(start_date)s</td>
                 <td width="15%%">
                 <div><b>End Date</b></div>
                 </td>
-                <td><b>:</b> %(end_date)s</td>
+                <td><b>:</b></td>
+                <td width="25%%">%(end_date)s</td>
             </tr>
-            <tr>
+            <tr valign="top">
                 <td><b>Description</b></td>
-                <td colspan="3"><b>:</b> %(description)s</td>
+                <td><b>:</b></td>
+                <td colspan="3">%(description)s</td>
             </tr>
-            <tr>
+            <tr valign="top">
                 <td>
                 <div><b>Location</b></div>
                 </td>
-                <td colspan="3"><b>:</b> %(location)s</td>
+                <td><b>:</b></td>
+                <td colspan="3">%(location)s</td>
             </tr>
-            <tr>
+            <tr valign="top">
                 <td>
                 <div><b>Event Attendees</b></div>
                 </td>
+                <td><b>:</b></td>
                 <td colspan="3">
                 <div>
-                <div><b>:</b> %(attendees)s</div>
+                <div>%(attendees)s</div>
                 </div>
                 </td>
             </tr>
-            <td><b>Are you coming?</b></td>
-            <td colspan="3">
-            <UL>
-                <LI>
-                YES
-                <LI>
-                NO
-                <LI>
-                MAYBE
-            </UL>
-            </td>
-            <tr>
+            <tr valign="top">
+                <td><b>Are you coming?</b></td>
+                <td><b>:</b></td>
+                <td colspan="3">
+                <UL>
+                    <LI>YES</LI>
+                    <LI>NO</LI>
+                    <LI>MAYBE</LI>
+                </UL>
+                </td>
+            </tr>
         </table>
         </td>
     </tr>
@@ -1203,11 +1207,12 @@ class invite_attendee_wizard(osv.osv_memory):
             body_vals = {'name': res_obj.name, 
                         'start_date': res_obj.date, 
                         'end_date': res_obj.date_deadline or None, 
-                        'description': res_obj.description, 
+                        'description': res_obj.description or '-', 
                         'location': res_obj.location or '-', 
-                        'attendees': '<br>'.join(att_infos),  #Todo
+                        'attendees': '<br>'.join(att_infos), 
                         'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
-                        'sign': sign
+                        'sign': sign, 
+                        'company': company
             }
             body = html_invitation % body_vals
             mail_to = [datas['email']]

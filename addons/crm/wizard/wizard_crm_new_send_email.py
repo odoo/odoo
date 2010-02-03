@@ -70,7 +70,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
 
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get(data['model'])
+    case_pool=pool.get(data.get('model'))
 
     case = case_pool.browse(cr,uid,data['ids'])[0]
     case_pool.write(cr, uid, [case.id], {
