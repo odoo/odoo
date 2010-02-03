@@ -93,7 +93,8 @@ def _mass_mail_send(self, cr, uid, data, context):
         case_pool.format_body(body),
         attach=attach,
         reply_to=case.section_id.reply_to,
-        tinycrm=str(case.id)
+        
+        openobject_id=str(case.id)
     )
     if flag:
         if data['form']['state'] == 'unchanged':
