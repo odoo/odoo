@@ -89,7 +89,6 @@ def _mass_mail_send(self, cr, uid, data, context):
         case.user_id.address_id.email,
         emails,
         data['form']['subject'],
-        body,
         case_pool.format_body(body),
         attach=attach,
         reply_to=case.section_id.reply_to,

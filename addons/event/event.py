@@ -201,7 +201,7 @@ class event_registration(osv.osv):
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
             if dest and src:
-                tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+                tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.case_id.id))
             if not src:
                 raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
@@ -216,9 +216,9 @@ class event_registration(osv.osv):
             if reg_id.event_id.mail_auto_confirm or reg_id.event_id.mail_auto_registr:
                 if dest and src:
                     if reg_id.event_id.state in ['draft', 'fixed', 'open','confirm','running'] and reg_id.event_id.mail_auto_registr:
-                        tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, tinycrm = str(reg_id.case_id.id))
+                        tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, openobject_id = str(reg_id.case_id.id))
                     if (reg_id.event_id.state in ['confirm','running']) and reg_id.event_id.mail_auto_confirm:
-                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.case_id.id))
                 if not src:
                     raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
