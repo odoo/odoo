@@ -1831,23 +1831,17 @@ class orm(orm_template):
             alldata[r['id']] = r
             del r['id']
 
-        today = ''
-        if fget.has_key(groupby) and fget[groupby]['type'] in ('date','datetime'):
-            today = datetime.date.today()
-            yesterday = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
         for d in data:
             if fget.has_key(groupby):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
-            if today:
-                if d[groupby][:10] == str(today):
-                    d[groupby] = 'Today'
-                elif d[groupby][:10] == yesterday:
-                    d[groupby] = 'Yesterday'
-                else:
-                    d[groupby] = 'Old'
+                if fget[groupby]['type'] in ('date','datetime'):
+                   today = datetime.date.today()
+                   if d[groupby][:10] == str(today):
+                       d[groupby] = 'Today'
+                   else:
+                       d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
