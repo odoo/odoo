@@ -187,10 +187,10 @@ class base_action_rule(osv.osv):
         action_ids = self.pool.get('base.action.rule').search(cr, uid, scrit)
         level = MAX_LEVEL
         if cases and action_ids:
-            cr.execute('select * from base_action_rule_history where rule_id in (%s)' %(','.join(map(lambda x: "'"+str(x.id)+"'",cases))))
+            cr.execute('select id, rule_id, res_id, date_action_last, date_action_next' \
+                       ' from base_action_rule_history where rule_id in (%s)' %(','.join(map(lambda x: "'"+str(x.id)+"'",cases))))
             history = cr.fetchall()
-            checkids = map(lambda x: x[0], history or [])
-            
+            checkids = map(lambda x: x[1], history or [])
             if not len(history) or len(history) < len(cases):
                 for case in cases:
                     if case.id not in checkids:
@@ -253,8 +253,8 @@ class base_action_rule(osv.osv):
                                 base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
                             elif action.trg_date_type=='action_last':
                                 for hist in history:
-                                    if hist[6]:
-                                        base = mx.DateTime.strptime(hist[6], '%Y-%m-%d %H:%M:%S')
+                                    if hist[3]:
+                                        base = mx.DateTime.strptime(hist[3], '%Y-%m-%d %H:%M:%S')
                                     else:
                                         base = mx.DateTime.strptime(cs.create_date[:19], '%Y-%m-%d %H:%M:%S')
                             elif action.trg_date_type=='deadline' and cs.date_deadline:
@@ -272,11 +272,11 @@ class base_action_rule(osv.osv):
                                 dt = d.strftime('%Y-%m-%d %H:%M:%S')
                                 for hist in history:
                                     ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                            ((not hist[8]) or \
-                                            (dt >= hist[8] and \
-                                            hist[6] < hist[8]))
+                                            ((not hist[4]) or \
+                                            (dt >= hist[4] and \
+                                            hist[3] < hist[4]))
                                     if not ok:
-                                        if not hist[8] or dt < hist[8]:
+                                        if not hist[4] or dt < hist[4]:
                                             history_obj.write(cr, uid, [hist[0]], {'date_action_next': dt}, context)
         
                             else:

@@ -48,9 +48,10 @@ class base_action_rule(osv.osv):
         cr.execute("select nextcall from ir_cron where model='base.action.rule'")
         action_next = cr.fetchone()[0]
         if rules:
-            cr.execute('select * from base_action_rule_history where rule_id in (%s)' %(','.join(map(lambda x: "'"+str(x.id)+"'",rules))))
+            cr.execute('select id, rule_id, res_id, date_action_last, date_action_next' \
+                       ' from base_action_rule_history where rule_id in (%s)' %(','.join(map(lambda x: "'"+str(x.id)+"'",rules))))
             history = cr.fetchall()
-            checkids = map(lambda x: x[0], history or [])
+            checkids = map(lambda x: x[1], history or [])
             if not len(history) or len(history) < len(rules):
                 for rule in rules:
                     if rule.id not in checkids:
@@ -95,8 +96,8 @@ class base_action_rule(osv.osv):
                         base = mx.DateTime.strptime(data.create_date[:19], '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='action_last':
                         for hist in history:
-                            if hist[6]:
-                                base = hist[8]
+                            if hist[3]:
+                                base = hist[4]
                             else:
                                 base = mx.DateTime.strptime(data.create_date[:19], '%Y-%m-%d %H:%M:%S')
                     elif action.trg_date_type=='date' and data.date:
@@ -112,11 +113,11 @@ class base_action_rule(osv.osv):
                         dt = d.strftime('%Y-%m-%d %H:%M:%S')
                         for hist in history:
                             ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                    ((not hist[8]) or \
-                                    (dt >= hist[8] and \
-                                    hist[6] < hist[8]))
+                                    ((not hist[4]) or \
+                                    (dt >= hist[4] and \
+                                    hist[3] < hist[4]))
                             if not ok:
-                                if not hist[8] or dt < hist[8]:
+                                if not hist[4] or dt < hist[4]:
                                     history_obj.write(cr, uid, [hist[0]], {'date_action_next': dt}, context)
 
                     else:
@@ -127,8 +128,8 @@ class base_action_rule(osv.osv):
                             context.update({'active_id':case.id,'active_ids':[case.id]})
                             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
                 for hist in history:
-                    if hist[6]:
-                        base = hist[8]
+                    if hist[3]:
+                        base = hist[4]
                     history_obj.write(cr, uid, [hist[0]], {'date_action_last': base, 'date_action_next': action_next})
         return True
 
