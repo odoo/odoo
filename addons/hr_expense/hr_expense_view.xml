@@ -37,6 +37,21 @@
             </field>
         </record>
 
+        <record id="view_editable_expenses_tree" model="ir.ui.view">
+            <field name="name">hr.expense.expense.tree</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Expenses" editable="top">
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
 
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form</field>

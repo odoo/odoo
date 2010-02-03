@@ -102,6 +102,10 @@ class survey_form(report_rml):
               <blockValign value="TOP"/>
               <lineStyle kind="LINEBELOW" colorName="#8f8f8f" start="0,-1" stop="1,-1"/>
             </blockTableStyle>
+            <blockTableStyle id="note_table">
+              <blockAlignment value="LEFT"/>
+              <blockValign value="TOP"/>
+            </blockTableStyle>
             <blockTableStyle id="Table4">
               <blockAlignment value="LEFT"/>
               <blockValign value="TOP"/>
@@ -147,6 +151,10 @@ class survey_form(report_rml):
                 <blockTable colWidths='"""+_tbl_widths+"""' style="page_tbl">
                     <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
                 </blockTable>"""
+                if page.note:
+                    rml += """<para style="P2"></para><blockTable colWidths='"""+_tbl_widths+"""' style="note_table">
+                                <tr><td><para style="descriptive_text">""" + to_xml(tools.ustr(page.note or '')) + """</para></td></tr>
+                            </blockTable>"""
                 for que in page.question_ids:
                     cols_widhts=[]
                     rml +="""

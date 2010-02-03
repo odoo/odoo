@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,10 +27,9 @@
     'description': """
 This module implements a dashboard for project member that includes:
     * List of my open tasks
-    * List of my next deadlines
-    * List of public notes
-    * Graph of my timesheet
-    * Graph of my work analysis
+    * List of messages
+    * Members list of project
+    * Issues
     """,
     'author': 'Tiny',
     'depends': [
@@ -40,7 +39,9 @@ This module implements a dashboard for project member that includes:
         'report_analytic_planning',
         'report_analytic_line',
         'report_task',
-        'hr_timesheet_sheet'
+        'hr_timesheet_sheet',
+        'crm_project',
+        'resource'
     ],
     'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],
     'demo_xml': ['board_project_demo.xml'],

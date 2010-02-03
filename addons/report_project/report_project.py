@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,13 +46,13 @@ class report_project_task_user(osv.osv):
             create or replace view report_project_task_user as (
                 select
                     min(t.id) as id,
-                    to_char(date_close, 'YYYY') as name,
-                    to_char(date_close, 'MM') as month,
+                    to_char(date_end, 'YYYY') as name,
+                    to_char(date_end, 'MM') as month,
                     count(distinct t.id) as task_closed,
                     t.user_id,
                     t.project_id,
                     sum(planned_hours) as hours_planned,
-                    to_char(avg(date_close::abstime-t.create_date::timestamp), 'DD"d" HH24:MI:SS') as closing_days,
+                    to_char(avg(date_end::abstime-t.create_date::timestamp), 'DD"d" HH24:MI:SS') as closing_days,
                     sum(w.hours) as hours_effective,
                     ((sum(planned_hours)-sum(w.hours))/count(distinct t.id))::decimal(16,2) as hours_delay
                 from project_task t
@@ -60,7 +60,7 @@ class report_project_task_user(osv.osv):
                 where
                     t.state='done'
                 group by
-                    to_char(date_close, 'YYYY'),to_char(date_close, 'MM'),t.user_id,project_id
+                    to_char(date_end, 'YYYY'),to_char(date_end, 'MM'),t.user_id,project_id
             )
         """)
 report_project_task_user()
@@ -89,12 +89,12 @@ class report_project_task(osv.osv):
             create or replace view report_project_task as (
                 select
                     min(t.id) as id,
-                    to_char(date_close, 'YYYY') as name,
-                    to_char(date_close, 'MM') as month,
+                    to_char(date_end, 'YYYY') as name,
+                    to_char(date_end, 'MM') as month,
                     count(distinct t.id) as task_closed,
                     t.project_id,
                     sum(planned_hours) as hours_planned,
-                    to_char(avg(date_close::abstime-t.create_date::timestamp), 'DD"d" HH12:MI:SS') as closing_days,
+                    to_char(avg(date_end::abstime-t.create_date::timestamp), 'DD"d" HH12:MI:SS') as closing_days,
                     sum(w.hours) as hours_effective,
                     ((sum(planned_hours)-sum(w.hours))/count(distinct t.id))::decimal(16,2) as hours_delay
                 from project_task t
@@ -102,7 +102,7 @@ class report_project_task(osv.osv):
                 where
                     t.state='done'
                 group by
-                    to_char(date_close, 'YYYY'),to_char(date_close, 'MM'),project_id
+                    to_char(date_end, 'YYYY'),to_char(date_end, 'MM'),project_id
             )
         """)
 report_project_task()

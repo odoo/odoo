@@ -21,16 +21,20 @@
 
 
 {
-    'name': 'Support for caldav based on Document Management System',
+    'name': 'Board for Human Reasources Management',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """Allows to synchronise calendars with others applications.""",
+    'category': '',
+    'description': """
+This module implements a dashboard for human resource management that includes:
+    * My Current Timesheet
+    * My Leaves
+    * My Expenses
+    """,
     'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['caldav','document_webdav', 'crm'],
-    'init_xml': ['document_data.xml'],
-    'update_xml': ['document_view.xml'],
-    'demo_xml': ['document_demo.xml'],
+    'depends': [ 'crm_project','board','hr_expense','hr_timesheet_sheet','hr_holidays'
+    ],
+    'update_xml': ['board_hr_view.xml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
 }

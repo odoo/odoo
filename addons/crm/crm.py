@@ -313,7 +313,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64,required=True),
+        'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
@@ -405,6 +405,12 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
 
         return True
+
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
 
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id:

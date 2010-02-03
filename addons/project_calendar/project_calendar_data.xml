@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 	<data noupdate="1">
+
         <record model="basic.calendar" id="base_calendar.basic_calendar2">
-			<field name="name">meeting_todo</field>
+			<field name="name">Meeting-Todo</field>
 		</record>
 		
         <record model="basic.calendar.lines" id="caldav.calendar_lines_todo">
@@ -81,6 +82,7 @@
 			<field name="type_id" ref="caldav.calendar_lines_todo" />
 			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','project.task')]" />
 			<field name="fn">field</field>
+			<field name="mapping">{'1': '0', '2': '1', '3': '1','4': '1', '5': '2', '6': '3', '7': '3', '8': '3', '9': '4'}</field>
 		</record>
 
         <record model="basic.calendar.fields" id="map_todo_13">
@@ -438,11 +440,6 @@
 	        <field name="field_id" search="[('name','=','rsvp'),('model_id.model','=','calendar.attendee')]" />
             <field name="fn">field</field>
         </record>
-		
-		
-		
-		
-		
 		
 	</data>
 </openerp>

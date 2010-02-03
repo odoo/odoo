@@ -70,7 +70,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
 
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get('crm.case')
+    case_pool=pool.get(data['model'])
 
     case = case_pool.browse(cr,uid,data['ids'])[0]
     case_pool.write(cr, uid, [case.id], {
@@ -110,13 +110,18 @@ def _mass_mail_send(self, cr, uid, data, context):
 def _get_info(self, cr, uid, data, context):
     if not data['id']:
         return {}
+        
     pool = pooler.get_pool(cr.dbname)
-    case = pool.get('crm.case').browse(cr,uid,data['ids'])[0]
-    #if not case.email_from:
-    #    raise wizard.except_wizard(_('Error'),_('You must put a Partner eMail to use this action!'))
+    case = pool.get(data['model']).browse(cr, uid, data['id'])
+
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
-    return {'to': case.email_from,'subject': case.name,'cc': case.email_cc or ''}
+        
+    return {
+        'to': case.email_from, 
+        'subject': case.name, 
+        'cc': case.email_cc or ''
+    }
     
 class wizard_send_mail(wizard.interface):
     states = {

@@ -22,6 +22,23 @@
                 </tree>
             </field>
         </record>
+        <!-- Editable My task -->
+        <record id="view_task_tree" model="ir.ui.view">
+            <field name="name">project.task.tree</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field eval="99" name="priority"/>
+            <field name="arch" type="xml">
+                  <tree editable="top" colors="red:date_deadline&lt;current_date;blue:date_deadline==current_date;black:date_deadline&gt;current_date" string="My Tasks">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="date_deadline"/>
+                    <field name="planned_hours"/>
+                    <field name="effective_hours"/>
+                    <field name="priority"/>
+                </tree>
+            </field>
+        </record>
         <record id="action_view_task_tree" model="ir.actions.act_window">
             <field name="name">My Open Tasks</field>
             <field name="res_model">project.task</field>
@@ -47,6 +64,25 @@
             <field name="domain">[('type','=','Project')]</field>
         </record>
 
+		<!--Actions for deshboard -->
+
+        <record id="action_view_project_editable_messages_tree" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">project.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="project.view_project_message_tree"/>
+       </record>
+
+        <record id="action_view_project_member_tree" model="ir.actions.act_window">
+            <field name="name">Project's Members</field>
+            <field name="res_model">resource.resource</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('resource_type','=','user')]</field>
+            <field name="view_id" ref="resource.view_project_member_tree"/>
+        </record>
+
         <record id="board_project_form" model="ir.ui.view">
             <field name="name">board.project.form</field>
             <field name="model">board.board</field>
@@ -56,12 +92,12 @@
                     <hpaned>
                         <child1>
                             <action colspan="4" height="220" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            <action colspan="4" height="150" name="%(action_view_task_tree_deadline)d" string="My Deadlines"/>
-                            <action colspan="4" height="150" name="%(action_view_board_note_tree)d" string="Public Notes"/>
-                        </child1>
+                            <action colspan="4" name="%(crm_project.crm_case_categ_act0)d" string="Issues"/>
+                            
+                         </child1>
                         <child2>
-                            <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_form)d" string="My Planning" domain="[('user_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]"/>
-                            <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_all)d" string="Timesheets"/>
+                             <action colspan="4" height="150" name="%(action_view_project_member_tree)d" string="Members list of project"/>
+                             <action colspan="4" name="%(action_view_project_editable_messages_tree)d" string="Messages"/>
                         </child2>
                     </hpaned>
                 </form>

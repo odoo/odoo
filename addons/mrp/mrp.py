@@ -790,7 +790,7 @@ class mrp_procurement(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
         'date_close': fields.datetime('Date Closed'),
-        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_qty': fields.float('Quantity', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
@@ -800,7 +800,7 @@ class mrp_procurement(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
 
         'close_move': fields.boolean('Close Move at end', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Requisition Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Requisition, you probably want to use" \
             " a make to order method."),
