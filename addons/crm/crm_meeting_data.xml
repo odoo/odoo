@@ -53,8 +53,6 @@
 			<field name="object_id" search="[('model','=','calendar.attendee')]" />
 		</record>
 		
-		
-		
         <record model="basic.calendar.fields" id="map_event_1">
             <field name="name" ref="base_calendar.field_event_uid"/>
             <field name="type_id" ref="caldav.calendar_lines_event" />
@@ -66,6 +64,13 @@
             <field name="name" ref="base_calendar.field_event_recurrence-id"/>
             <field name="type_id" ref="caldav.calendar_lines_event" />
 	        <field name="field_id" search="[('name','=','recurrent_id'),('model_id.model','=','calendar.event')]" />
+            <field name="fn">field</field>
+        </record>
+        
+        <record model="basic.calendar.fields" id="map_event_3">
+            <field name="name" ref="base_calendar.field_event_vtimezone"/>
+            <field name="type_id" ref="caldav.calendar_lines_event" />
+	        <field name="field_id" search="[('name','=','vtimezone'),('model_id.model','=','calendar.event')]" />
             <field name="fn">field</field>
         </record>
 
