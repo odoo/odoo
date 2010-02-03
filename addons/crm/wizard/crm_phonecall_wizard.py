@@ -287,18 +287,18 @@ class partner_create(wizard.interface):
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
         for case in case_obj.browse(cr, uid, data['ids']):
-            partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
+            partner_id = partner_obj.search(cr, uid, [('name', '=', case.name)])
             if partner_id:
                 raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
             else:
                 partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_name or case.name,
+                    'name': case.name,
                     'user_id': case.user_id.id,
                     'comment': case.description,
                 })
             contact_id = contact_obj.create(cr, uid, {
                 'partner_id': partner_id,
-                'name': case.partner_name2,
+                'name': case.name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from
