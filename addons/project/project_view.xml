@@ -463,7 +463,7 @@
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -628,14 +628,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Messages">
-                    <group colspan="6">
-                        <field name="subject" select="1"/>
-                        <field name="description"/>
-                        <field name="project_id" />
-                        <field name="date" select="2"/>
-                        <field name="user_id" select="1"/>
-                    </group>
-                </form>
+					<group colspan="6">
+                        <field name="subject" select="1" string="Title"/>
+                        <field name="project_id"/>
+						<field name="user_id" select="1"/>
+                      	<field name="date" select="2"/>
+					 </group>
+						<separator string="Description"  colspan="4"/>
+						<field name="description"  nolabel="1" colspan="4"/>
+				</form>
             </field>
        </record>
 

@@ -521,18 +521,21 @@ class message(osv.osv):
     _name = "project.message"
     _description = "Message"
     _columns = {
-        'subject': fields.char('Subject', size=128),
-        'description': fields.char('Description', size =128),
+        'subject': fields.char('Subject', size=128, required="True"),
+        'description': fields.text('Description'),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
         'date': fields.date('Date'),
-        'user_id': fields.many2one('res.users', 'User'),
+        'user_id': fields.many2one('res.users', 'User', required="True"),
         }
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
-        return False    
+        return False
+
     _defaults = {
-              'project_id':_default_project}    
+        'user_id' : lambda self,cr,uid,ctx : uid,                 
+        'project_id':_default_project}    
+
 message()
 
 def _project_get(self, cr, uid, context={}):
