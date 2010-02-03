@@ -36,32 +36,23 @@
                     </group>
                     <group colspan="1" col="1">
                     <button string="Create Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>                    
-                    <label string=""/>
+                    <button string="Convert to Partner"
+                                icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
+                                type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
+                            />
                     </group>
                     <group colspan="3" col="4">
                     <notebook>
                     <page string="Leads">
-                        <separator colspan="4" string="Communication"/>
+                        <separator colspan="4" string="Communication"/>                                                                        
+                        <field name="partner_id" string="Partner"/>
+                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
                         <field name="partner_phone"/>
                         <field name="partner_mobile"/>
-                        <label string="Partner:" align="1.0"/>
-                        <group colspan="1" col="2">
-                            <field name="partner_id" nolabel="1" colspan="1"/>
-                            <button string="Convert to Partner"
-                                icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
-                                type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
-                            />
-                        </group>
-                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
-
                         <separator colspan="4" string="Status and Categarization"/>
                         <group colspan="4" col="6">
-                            <field name="user_id" select="2"/>
-                            <label string="Status: " align="1.0"/>
-                            <group colspan="1" col="2">
-                                <field name="stage_id" select="1" nolabel="1" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
-                                <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                            </group>
+                            <field name="user_id" select="2"/>                                                        
+                            <field name="stage_id" select="1" string="Status" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>                                
                             <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
                        
                             <field name="type_id" string="Campaign" select="1"/>
