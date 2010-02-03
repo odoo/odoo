@@ -1656,12 +1656,21 @@ class report_products_to_received_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_products_to_received_planned')
         cr.execute("""
             create or replace view report_products_to_received_planned as (
-               select
-                     distinct current_date as date,
-                     min(id) as id,
-                     (select sum(product_qty)  from  stock_move where to_char(date,'YYYY-MM-DD')::date = current_date ) as qty,
-                     (select sum(product_qty)  from  stock_move where to_char(date_planned,'YYYY-MM-DD')::date = current_date) as planned_qty
-                from  stock_move
+               select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
+                   from stock_picking picking
+                    inner join stock_move stock
+                    on picking.id = stock.picking_id and picking.type = 'in'
+                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+                    group by stock.date
+
+                    union
+
+               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
+                    from stock_picking picking
+                    inner join stock_move stock
+                    on picking.id = stock.picking_id and picking.type = 'in'
+                    where stock.date_planned between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+        group by stock.date_planned
                 )
         """)
 report_products_to_received_planned()
@@ -1681,12 +1690,23 @@ class report_delivery_products_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_delivery_products_planned')
         cr.execute("""
             create or replace view report_delivery_products_planned as (
-                select
-                     distinct current_date as date,
-                     min(sm.id) as id,
-                     (select sum(product_qty)  from  stock_move join stock_picking sp on (sm.picking_id = sp.id ) where to_char(sm.date,'YYYY-MM-DD')::date = current_date ) as qty,
-                     (select sum(product_qty)  from  stock_move join stock_picking sp on (sm.picking_id = sp.id ) where to_char(sm.date_planned,'YYYY-MM-DD')::date = current_date) as planned_qty
-                from  stock_move sm join stock_picking sp on (sm.picking_id = sp.id ) where sp.type = 'out' group by sm.picking_id, sm.date, sm.date_planned
+                select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
+                   from stock_picking picking
+                    inner join stock_move stock
+                    on picking.id = stock.picking_id and picking.type = 'out'
+                    where stock.date between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+                    group by stock.date
+
+                    union
+
+               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
+                    from stock_picking picking
+                    inner join stock_move stock
+                    on picking.id = stock.picking_id and picking.type = 'out'
+                    where stock.date_planned between (select cast(date_trunc('week', current_date) as date)) and (select cast(date_trunc('week', current_date) as date) + 7)
+        group by stock.date_planned
+
+
                 )
         """)
 report_delivery_products_planned()
