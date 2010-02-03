@@ -325,7 +325,7 @@ request was delegated to"),
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
         msg_actions = self.msg_act_get(msg)
         if msg_actions.get('state'):
-            if msg_actions['state'] in ['YES','NO','MAYBE']:
+            if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
                 mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
                 status = mapping[msg_actions['state']]
                 print 'Got response for invitation id: %s as %s'  % (ids, status)
@@ -541,7 +541,7 @@ or contains the text to be used for display"""),
                     mail_to.append(att.user_id.address_id.email)
 
                 tools.email_send(
-                    tools.confirm['from_mail'], 
+                    tools.config.get('email_from',False), 
                     mail_to, 
                     sub, 
                     body
@@ -1189,17 +1189,23 @@ class invite_attendee_wizard(osv.osv_memory):
 
         elif  type == 'external' and datas.get('email'):
             vals.update({'email': datas['email']})
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+            att_infos = []
+            for att in res_obj.attendee_ids:
+                att_infos.append(((att.user_id and att.user_id.name) or \
+                             (att.partner_id and att.partner_id.name) or \
+                                att.email) +  ' - Status: ' + att.state.title())
             att_id = att_obj.create(cr, uid, vals)
             obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
             sign = res_obj.user_id and res_obj.user_id.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
-            sub = '[%d] %s'  % (att_id, res_obj.name)
+            sub = '[%s Invitation][%d] %s'  % (company, att_id, res_obj.name)
             body_vals = {'name': res_obj.name, 
                         'start_date': res_obj.date, 
                         'end_date': res_obj.date_deadline or None, 
                         'description': res_obj.description, 
                         'location': res_obj.location or '-', 
-                        'attendees': '-',  #Todo
+                        'attendees': '<br>'.join(att_infos),  #Todo
                         'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
                         'sign': sign
             }
@@ -1211,7 +1217,7 @@ class invite_attendee_wizard(osv.osv_memory):
                     sub, 
                     body, 
                     subtype='html', 
-                    reply_to=tools.config.get('email_from',False), 
+                    reply_to=tools.config.get('email_from',False)
                 )
 
         elif  type == 'partner':
