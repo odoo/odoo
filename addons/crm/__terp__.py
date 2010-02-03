@@ -44,7 +44,7 @@ The CRM module has a email gateway for the synchronisation interface
 between mails and Open ERP.""", 
     'author': 'Tiny', 
     'website': 'http://www.openerp.com', 
-    'depends': ['base', 
+    'depends': ['base', 'base_action_rule',
                         'caldav', 
                         'process', 
                         'mail_gateway', 

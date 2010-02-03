@@ -57,10 +57,10 @@
                             <separator colspan="4" string="Conditions on States"/>
                             <field name="trg_state_from" select="2"/>
                             <field name="trg_state_to" select="2"/>
-                            <separator colspan="4" string="Conditions on Case Fields"/>
-                            <field name="regex_name" string="Regex on Case Name" colspan="2"/>
+                            <separator colspan="4" string="Conditions on Model Fields"/>
+                            <field name="regex_name" string="Regex on Model Name" colspan="2"/>
                             <field name="trg_user_id" select="2"/>
-                            <separator colspan="4" string="Conditions on Case Partner"/>
+                            <separator colspan="4" string="Conditions on Model Partner"/>
                             <field name="trg_partner_id"/>
                             <field name="trg_partner_categ_id"/>
                             <separator colspan="4" string="Conditions on Priority Range"/>
@@ -73,10 +73,8 @@
                                 <field name="trg_date_range" nolabel="1"/>
                                 <field name="trg_date_range_type" nolabel="1"/>
                             </group>
-                            <separator colspan="4" string="Condition on Communication History"/>
-                            <field name="regex_history" string="Regex on Communication History"/>
                             <separator colspan="4" string="Note"/>
-                            <label align="0.0" string="The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
+                            <label align="0.0" string="The rule use a AND operator. The model must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
                         </page>
                         <page string="Actions">
                             <separator colspan="4" string="Fields to Change"/>

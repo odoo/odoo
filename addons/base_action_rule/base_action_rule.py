@@ -1,6 +1,7 @@
 import time
 import mx.DateTime
 
+import tools
 from osv import fields, osv, orm
 from osv.orm import except_orm
 
@@ -44,45 +45,91 @@ class base_action_rule(osv.osv):
             scrit = []
         history = []
         history_obj = self.pool.get('base.action.rule.history')
+        cr.execute("select nextcall from ir_cron where model='base.action.rule'")
+        action_next = cr.fetchone()[0]
         if rules:
             cr.execute('select * from base_action_rule_history where rule_id in (%s)' %(','.join(map(lambda x: "'"+str(x.id)+"'",rules))))
             history = cr.fetchall()
             checkids = map(lambda x: x[0], history or [])
-            
             if not len(history) or len(history) < len(rules):
                 for rule in rules:
                     if rule.id not in checkids:
                         lastDate = mx.DateTime.strptime(rule.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                        history_obj.create(cr, uid, {'rule_id': rule.id, 'res_id': rule.name.id, 'date_action_last': lastDate})
+                        history_obj.create(cr, uid, {'rule_id': rule.id, 'res_id': rule.name.id, 'date_action_last': lastDate, 'date_action_next': action_next})
         
         for rule in rules:
+            obj = self.pool.get(rule.name.model)
+            rec_ids = obj.search(cr, uid, [])
             for action in rule.rule_lines:
-                if action.trg_date_type=='create':
-                    base = mx.DateTime.strptime(rule.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='action_last':
-                    for hist in history:
-                        if hist[6]:
-                            base = mx.DateTime.strptime(hist[6][:19], '%Y-%m-%d %H:%M:%S')
-                        else:
-                            base = mx.DateTime.strptime(rule.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                        history_obj.write(cr, uid, [hist[0]], {'date_action_last': base})
-                elif action.trg_date_type=='deadline' and rule.name.date_deadline:
-                    base = mx.DateTime.strptime(rule.name.date_deadline, '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='date' and rule.name.date:
-                    base = mx.DateTime.strptime(rule.name.date, '%Y-%m-%d %H:%M:%S')
-                
-                if base:
-                    fnct = {
-                        'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
-                        'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
-                        'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
-                        'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
-                    }
-                    d = base + fnct[action.trg_date_range_type](action.trg_date_range)
-                    dt = d.strftime('%Y-%m-%d %H:%M:%S')
-                    for hist in history:
-                        if not hist[8] or dt < hist[8]:
-                            history_obj.write(cr, uid, [hist[0]], {'date_action_next': dt}, context)
+                for data in obj.browse(cr, uid, rec_ids):
+                    ok = True
+                    ok = ok and (not action.trg_state_from or action.trg_state_from==data.state)
+                    ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
+                    ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==data.user_id.id)
+                    ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==data.partner_id.id)
+                    ok = ok and (
+                        not action.trg_partner_categ_id.id or
+                        (
+                            data.partner_id.id and
+                            (action.trg_partner_categ_id.id in map(lambda x: x.id, data.partner_id.category_id or []))
+                        )
+                    )
+                    ok = ok and (not action.trg_priority_from or action.trg_priority_from>=data.priority)
+                    ok = ok and (not action.trg_priority_to or action.trg_priority_to<=data.priority)
+
+                    reg_name = action.regex_name
+                    result_name = True
+                    if reg_name:
+                        ptrn = re.compile(str(reg_name))
+                        _result = ptrn.search(str(data.name))
+                        if not _result:
+                            result_name = False
+                    regex_n = not reg_name or result_name
+                    ok = ok and regex_n
+                    
+                    if not ok:
+                        continue
+                    
+                    base = False
+                    if action.trg_date_type=='create':
+                        base = mx.DateTime.strptime(data.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                    elif action.trg_date_type=='action_last':
+                        for hist in history:
+                            if hist[6]:
+                                base = hist[8]
+                            else:
+                                base = mx.DateTime.strptime(data.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                    elif action.trg_date_type=='date' and data.date:
+                        base = mx.DateTime.strptime(data.date, '%Y-%m-%d %H:%M:%S')
+                    if base:
+                        fnct = {
+                            'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
+                            'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
+                            'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
+                            'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
+                        }
+                        d = base + fnct[action.trg_date_range_type](action.trg_date_range)
+                        dt = d.strftime('%Y-%m-%d %H:%M:%S')
+                        for hist in history:
+                            ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
+                                    ((not hist[8]) or \
+                                    (dt >= hist[8] and \
+                                    hist[6] < hist[8]))
+                            if not ok:
+                                if not hist[8] or dt < hist[8]:
+                                    history_obj.write(cr, uid, [hist[0]], {'date_action_next': dt}, context)
+
+                    else:
+                        ok = action.trg_date_type=='none'
+
+                    if ok:
+                        if action.server_action_id:
+                            context.update({'active_id':case.id,'active_ids':[case.id]})
+                            self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
+                for hist in history:
+                    if hist[6]:
+                        base = hist[8]
+                    history_obj.write(cr, uid, [hist[0]], {'date_action_last': base, 'date_action_next': action_next})
         return True
 
 base_action_rule()
@@ -103,7 +150,6 @@ class base_action_rule_line(osv.osv):
             ('none','None'),
             ('create','Creation Date'),
             ('action_last','Last Action Date'),
-            ('deadline','Deadline'),
             ('date','Date'),
             ], 'Trigger Date', size=16),
         'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date, specifies you can put a negative number " \
@@ -135,10 +181,9 @@ class base_action_rule_line(osv.osv):
         'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)',help="Check this if you want the rule to mark CC(mail to any other person defined in actions)."),
         'act_mail_to_email': fields.char('Mail to these emails', size=128,help="Email-id of the persons whom mail is to be sent"),
         'act_mail_body': fields.text('Mail body',help="Content of mail"),
-        'regex_name': fields.char('Regular Expression on Case Name', size=128),
-        'regex_history': fields.char('Regular Expression on Case History', size=128),
+        'regex_name': fields.char('Regular Expression on Model Name', size=128),
         'server_action_id': fields.many2one('ir.actions.server','Server Action',help="Describes the action name." \
-                                                    "eg:on which object which ation to be taken on basis of which condition"),
+                                                    "eg:on which object which action to be taken on basis of which condition"),
     }
     
     _defaults = {
@@ -154,13 +199,32 @@ class base_action_rule_line(osv.osv):
     
     _order = 'sequence'
     
+    def format_body(self, body):
+        return body and tools.ustr(body.encode('ascii', 'replace')) or ''
+
+    def format_mail(self, case, body):
+        data = {
+            'case_id': case.id,
+            'case_subject': case.name,
+            'case_date': case.date,
+            'case_description': case.description,
+
+            'case_user': (case.user_id and case.user_id.name) or '/',
+            'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',
+            'case_user_phone': (case.user_id and case.user_id.address_id and case.user_id.address_id.phone) or '/',
+
+            'email_from': case.email_from,
+            'partner': (case.partner_id and case.partner_id.name) or '/',
+            'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
+        }
+        return self.format_body(body % data)
+    
     def _check_mail(self, cr, uid, ids, context=None):
         emptycase = orm.browse_null()
         for rule in self.browse(cr, uid, ids):
             if rule.act_mail_body:
                 try:
-                    obj = self.pool.get(rule.rule_id.name.model)
-                    obj.format_mail(emptycase, rule.act_mail_body)
+                    self.format_mail(emptycase, rule.act_mail_body)
                 except (ValueError, KeyError, TypeError):
                     return False
         return True
