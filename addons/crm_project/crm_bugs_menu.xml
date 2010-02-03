@@ -6,34 +6,34 @@
     <record model="crm.case.categ" id="categ1">
         <field name="name">Bugs</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
+		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
     </record>
     <record model="crm.case.categ" id="categ2">
         <field name="name">Patches</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
+		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
     </record>
     <record model="crm.case.categ" id="categ3">
         <field name="name">Feature Requests</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
+		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage2">
         <field name="name">Fixed</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
+		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage5">
         <field name="name">Awaiting Response</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>    
+		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
+    </record>
     <record model="crm.case.stage" id="stage7">
         <field name="name">Future</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>   
-    </record>       
-    
+        <field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>
+    </record>
+
 
     ######################## BUG TRACKING (menu) ###########################
     <!--
@@ -67,7 +67,7 @@
         <field name="act_window_id" ref="crm_case_categ_act0"/>
     </record>
 
-    <!--<menuitem id="menu_aftertask" name="Bug" parent="project.menu_main" visible="False"/>-->
+    <!--<menuitem id="menu_aftertask" name="Bug" parent="base.menu_main_pm" visible="False"/>-->
     <menuitem name="Issues" id="menu_crm_case_bug_track"  parent="project.menu_project_management" action="crm_case_categ_act0"/>
 </data>
 </openerp>
