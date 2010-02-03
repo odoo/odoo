@@ -540,7 +540,10 @@ class crm_case(osv.osv):
         cases = self.browse(cr, uid, [res])
         cases[0].state # to fill the browse record cache
         obj = self.pool.get('base.action.rule')
-        obj._action(cr,uid, cases, 'draft')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr,uid, rules, 'draft')
         return res
 
     def remind_partner(self, cr, uid, ids, context={}, attach=False):
@@ -551,7 +554,7 @@ class crm_case(osv.osv):
             destination=True):
         for case in self.browse(cr, uid, ids):
             if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'),("Reply TO is not specified in Section"))
+                raise osv.except_osv(_('Error!'),("Reply To is not specified in Section"))
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),("Partner Email is not specified in Case"))
             if case.section_id.reply_to and case.email_from:
@@ -674,7 +677,10 @@ class crm_case(osv.osv):
         # We use the cache of cases to keep the old case state
         #
         obj = self.pool.get('base.action.rule')
-        obj._action(cr,uid, cases, 'done')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr,uid, rules, 'done')
         return True
 
     def case_escalate(self, cr, uid, ids, *args):
@@ -691,7 +697,10 @@ class crm_case(osv.osv):
         cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
         obj = self.pool.get('base.action.rule')
-        obj._action(cr, uid, cases, 'escalate')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr, uid, rules, 'escalate')
         return True
 
 
@@ -704,7 +713,10 @@ class crm_case(osv.osv):
                 data['user_id'] = uid
             self.write(cr, uid, ids, data)
         obj = self.pool.get('base.action.rule')
-        obj._action(cr,uid, cases, 'open')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr,uid, rules, 'open')
         return True
 
 
@@ -714,7 +726,10 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state':'cancel', 'active':True})
         obj = self.pool.get('base.action.rule')
-        obj._action(cr,uid, cases, 'cancel')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr,uid, rules, 'cancel')
         return True
 
     def case_pending(self, cr, uid, ids, *args):
@@ -723,7 +738,10 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state':'pending', 'active':True})
         obj = self.pool.get('base.action.rule')
-        obj._action(cr,uid, cases, 'pending')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr,uid, rules, 'pending')
         return True
 
     def case_reset(self, cr, uid, ids, *args):
@@ -732,7 +750,10 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state':'draft', 'active':True})
         obj = self.pool.get('base.action.rule')
-        obj._action(cr, uid, cases, 'draft')
+        objids = obj.search(cr, uid, [('name.model','=','crm.case')])
+        if len(objids):
+            rules = obj.browse(cr, uid, objids)
+            obj._action(cr, uid, rules, 'draft')
         return True
 crm_case()
 
