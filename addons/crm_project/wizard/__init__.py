@@ -21,31 +21,5 @@
 ##############################################################################
 
 
-{
-    'name': 'Bug Reporting in Project Management',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """
-        This module provide  Store the project  bugs with  cases
-    """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['crm','project','report_crm'],
-    'init_xml': [
-        'crm_bugs_data.xml'
-    ],
-    'update_xml': [
-        'crm_bug_wizard.xml',
-        'crm_bugs_view.xml',
-        'crm_bugs_menu.xml',        
-        'crm_feature_menu.xml',
-        'report_crm_project_bug_view.xml',
-        'security/crm_project_security.xml',
-        'security/ir.model.access.csv',
-     ],
-    'demo_xml': ['crm_bugs_demo.xml'],
-    'installable': True,
-    'active': False,
-    'certificate': '',
-}
+import crm_bug_wizard
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
