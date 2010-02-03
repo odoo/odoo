@@ -873,7 +873,7 @@
                     <field name="partner_id" invisible="1" select="1"/>
                     <field name="amount" invisible="1" select="1"/>
 
-                    <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
+                    <field colspan="4" height="250" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
