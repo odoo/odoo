@@ -38,7 +38,7 @@ from crm import crm
 class crm_project_bug(osv.osv):
     _name = "crm.project.bug"
     _description = "Project Bug Cases"
-    _order = "id desc"
+    _order = "priority, id desc"
     _inherit = 'crm.case'
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),

@@ -36,10 +36,10 @@
         <field name="arch" type="xml">
             <form string="Bug Tracker Form">
                 <group colspan="4" col="6">
-                    <field name="name" string="Title" colspan="2"/>
-                    <field name="date"/>
+                    <field name="name" string="Title" colspan="2"/>                    
                   	<field name="project_id" required="True"/>  
                     <field name="categ_id"  on_change="onchange_categ_id(categ_id)" widget="selection" required="1" domain="[('object_id.model', '=', 'crm.project.bug')]"/>
+                    <field name="user_id" />
                     <label string="Resolution: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="stage_id" select="1" nolabel="1"/>
@@ -56,8 +56,7 @@
                 <page string="General">
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <field name="email_from" colspan="2"/>
-                    <field name="user_id" />
+                    <field name="email_from" colspan="2"/>                    
                     <separator colspan="4"/>
                     <field name="type_id" string="Version"/>                    
                     <field name="priority" string="Severity"/>
@@ -163,20 +162,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Bugs">
-               <group col="7" colspan="1">
-                   <filter icon="gtk-media-forward" string="Accepted Bugs"
-                   	domain="[('stage_id.name','=','Accepted as Bug')]"
-                   	separator="1" help="All Accepted Bugs"
-                   /> 
-                   <filter icon="gtk-apply" string="Fixed Bugs"
-                   	domain="[('stage_id.name','=','Fixed')]"
-                   	separator="1" help="All Fixed Bugs"
-                   />
-                   <filter icon="gtk-media-pause" string="Waiting Bugs"
-                   	domain="[('stage_id.name','=','Awaiting Response')]"
-                   	separator="1" help="All Waiting Bugs"
-                   />                   
-                   <separator orientation="vertical"/>
+               <group col="3" colspan="1">                   
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
                    	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -186,20 +172,25 @@
                    	string="    7 Days    " separator="1"
                    	domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                    	help="Bugs during last 7 days"
-                   />
+                   />                   
+                   
                </group>
                <separator orientation="vertical"/>
-               <group col="4" colspan="2">
+               <group col="5" colspan="2">
                		<field name="name" select='1' string="Subject"/>
-                   <field name="user_id" select="1" widget="selection">
-                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
-                   </field>
-					<field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+                    <field name="user_id" select="1" widget="selection">
+                   	    <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
+                    </field>
+                    <field name="state" select="1">
+                       <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" default="1"/>
+                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
+                    </field>                   
+					<field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
 							<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
+                               domain="[('project_id','=',context.get('project_id',False))]"
+                               help="My Project"
                            />
-                 </field>
+                    </field>
                </group>
             </search>
          </field>
