@@ -63,7 +63,7 @@ except ImportError:
 
 from tools.config import config
 
-regex_order = re.compile('^([a-z0-9_]+( *desc| *asc)?( *, *|))+$', re.I)
+regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 def last_day_of_current_month():
     import datetime
