@@ -309,14 +309,26 @@ class sale_order(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}
+
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
-        val = {'partner_invoice_id': addr['invoice'], 'partner_order_id': addr['contact'], 'partner_shipping_id': addr['delivery'], 'payment_term': payment_term, 'fiscal_position': fiscal_position}
+        dedicated_salesman = part.user_id and part.user_id.id or False
+
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_order_id': addr['contact'],
+            'partner_shipping_id': addr['delivery'],
+            'payment_term': payment_term,
+            'fiscal_position': fiscal_position,
+            'user_id': dedicated_salesman,
+        }
+
         if pricelist:
             val['pricelist_id'] = pricelist
+
         return {'value': val}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context={}):
