@@ -1836,7 +1836,7 @@ class orm(orm_template):
             if fget.has_key(groupby):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
-                if fget[groupby]['type'] in ('date','datetime'):
+                if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    today = datetime.date.today()
                    if d[groupby][:10] == str(today):
                        d[groupby] = 'Today'
