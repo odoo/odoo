@@ -20,8 +20,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import netsvc
 import tools
 import pooler
@@ -31,12 +32,12 @@ def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
 
 _intervalTypes = {
-    'work_days': lambda interval: DateTime.RelativeDateTime(days=interval),
-    'days': lambda interval: DateTime.RelativeDateTime(days=interval),
-    'hours': lambda interval: DateTime.RelativeDateTime(hours=interval),
-    'weeks': lambda interval: DateTime.RelativeDateTime(days=7*interval),
-    'months': lambda interval: DateTime.RelativeDateTime(months=interval),
-    'minutes': lambda interval: DateTime.RelativeDateTime(minutes=interval),
+    'work_days': lambda interval: relativedelta(days=interval),
+    'days': lambda interval: relativedelta(days=interval),
+    'hours': lambda interval: relativedelta(hours=interval),
+    'weeks': lambda interval: relativedelta(days=7*interval),
+    'months': lambda interval: relativedelta(months=interval),
+    'minutes': lambda interval: relativedelta(minutes=interval),
 }
 
 class ir_cron(osv.osv, netsvc.Agent):
@@ -100,10 +101,10 @@ class ir_cron(osv.osv, netsvc.Agent):
         cr = db.cursor()
         try:
             if not pool._init:
-                now = DateTime.now()
+                now = datetime.now()
                 cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
                 for job in cr.dictfetchall():
-                    nextcall = DateTime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
+                    nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
                     numbercall = job['numbercall']
                 
                     ok = False

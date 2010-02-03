@@ -25,7 +25,7 @@ import cStringIO
 import base64
 import copy
 import locale
-import mx.DateTime
+from datetime import datetime
 import os
 import re
 import time
@@ -109,7 +109,7 @@ class _date_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                date = mx.DateTime.strptime(self.name,DT_FORMAT)
+                date = datetime.strptime(self.name, DT_FORMAT)
                 return date.strftime(self.lang_obj.date_format)
         return self.val
 
@@ -121,7 +121,7 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                datetime = mx.DateTime.strptime(self.name,DHM_FORMAT)
+                datetime = datetime.strptime(self.name, DHM_FORMAT)
                 return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
         return self.val
 
@@ -262,11 +262,11 @@ class rml_parse(object):
 
             if not isinstance(value, time.struct_time):
                 try:
-                    date = mx.DateTime.strptime(str(value),parse_format)
+                    date = datetime.datetime(str(value), parse_format)
                 except:# sometimes it takes converted values into value, so we dont need conversion.
                     return str(value)
             else:
-                date = mx.DateTime.DateTime(*(value.timetuple()[:6]))
+                date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
         return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 

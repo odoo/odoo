@@ -27,7 +27,7 @@ from report import render
 import locale
 
 import time, os
-import mx.DateTime
+from datetime import datetime
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
@@ -165,19 +165,19 @@ class report_printscreen_list(report_int):
 
                 if fields[f]['type'] == 'date' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d')
+                    d1 = datetime.strptime(line[f],'%y-%m-%d')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
                     format = str(locale.nl_langinfo(locale.T_FMT))
-                    d1= mx.DateTime.strptime(line[f],'%H:%M:%S')
+                    d1 = datetime.strptime(line[f], '%H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
-                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d %H:%M:%S')
+                    d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
                     

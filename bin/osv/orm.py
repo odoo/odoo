@@ -165,7 +165,7 @@ class browse_record(object):
             else:
                 self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
                     "Field '%s' does not exist in object '%s': \n%s" % (
-                        name, self, ''.join(traceback.format_trace())))
+                        name, self, ''.join(traceback.format_exc())))
                 raise KeyError("Field '%s' does not exist in object '%s'" % (
                     name, self))
 
@@ -203,7 +203,7 @@ class browse_record(object):
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
                 self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
                     "No datas found for ids %s in %s \n%s" % (
-                        ids, self, ''.join(traceback.format_trace())))
+                        ids, self, ''.join(traceback.format_exc())))
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for data in datas:

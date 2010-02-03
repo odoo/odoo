@@ -113,12 +113,6 @@ def _lang_get(self, cr, uid, context={}):
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
-def _companies_get(self,cr, uid, context={}):
-    res=[]
-    ids = self.pool.get('res.users').browse(cr, uid, uid, context).company_ids
-    res = [(i.id,i.name) for i in ids]
-    return res
-
 class users(osv.osv):
     __admin_ids = {}
     _uid_cache = {}
@@ -147,8 +141,7 @@ class users(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', help="The company this user is currently working on.", required=True),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
-        'company': fields.selection(_companies_get,  'Company', size=64),
+        'context_tz': fields.selection(_tz_get,  'Timezone', size=64),       
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -180,8 +173,11 @@ class users(osv.osv):
         ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
         return ids and ids[0] or False
 
-    def _get_company(self,cr, uid, context={}):
-        return self.pool.get('res.users').browse(cr, uid, uid, context).company_id.id
+    def _get_company(self,cr, uid, context={}, uid2=False):
+        if not uid2:
+            uid2 = uid
+        user = self.pool.get('res.users').browse(cr, uid, uid2, context)        
+        return user.company_id.id
 
     def _get_menu(self,cr, uid, context={}):
         ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
@@ -201,9 +197,8 @@ class users(osv.osv):
         'groups_id': _get_group,
         'address_id': False,
     }
-    def company_get(self, cr, uid, uid2):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid2).company_id.id
-        return company_id
+    def company_get(self, cr, uid, uid2, context={}):
+        return self._get_company(cr, uid, context=context, uid2=uid2)
     company_get = tools.cache()(company_get)
 
     def write(self, cr, uid, ids, values, *args, **argv):
@@ -251,13 +246,7 @@ class users(osv.osv):
                 result[k[8:]] = getattr(user,k)
         return result
 
-
-    def _check_company(self, cursor, user, ids):
-        for user in self.browse(cursor, user, ids):
-            if user.company_ids and (user.company_id.id not in map(lambda x: x.id, user.company_ids)):
-                return False
-        return True
-
+    
     def action_get(self, cr, uid, context={}):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
@@ -312,10 +301,7 @@ class users(osv.osv):
         if not res:
             raise security.ExceptionNoTb('Bad username or password')
         return res[0]
-
-    _constraints = [
-        (_check_company, 'This user can not connect using this company !', ['company_id']),
-    ]
+   
 users()
 
 class config_users(osv.osv_memory):
