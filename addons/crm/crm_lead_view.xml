@@ -26,22 +26,24 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Leads Form">
-                <group>
-                    <group colspan="3" col="4">
+                
+                    <group colspan="4" col="4">
                         <field name="partner_name" string="Lead Name" required="1"/>
                         <field name="name" string="Lead Subject"/>
                         <field name="partner_name2" string="Contact Name"/>                    
-                        <field name="email_from" string="Email"/>                    
-                        
+                        <field name="email_from" string="Email"/>  
+                        <newline/>                  
+                        <group colspan="4" col="5">
+                            <label string="" colspan="2"/>
+                            <button string="Create Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>                    
+                            <button string="Convert to Partner"
+                                        icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
+                                        type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
+                                    />
+                        </group>
                     </group>
-                    <group colspan="1" col="1">
-                    <button string="Create Opportunity" name="%(wizard_crm_lead_opportunity_set)d" icon="gtk-index" type="action"/>                    
-                    <button string="Convert to Partner"
-                                icon="terp-partner" name="%(wizard_crm_lead_partner_create)d"
-                                type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
-                            />
-                    </group>
-                    <group colspan="3" col="4">
+                    
+                    <group colspan="4" col="4">
                     <notebook>
                     <page string="Leads">
                         <separator colspan="4" string="Communication"/>                                                                        
@@ -105,7 +107,7 @@
                     </notebook>
                     </group>
 
-                </group>
+                
 
             </form>
         </field>
