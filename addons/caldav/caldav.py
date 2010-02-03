@@ -31,6 +31,7 @@ import pooler
 import pytz
 import re
 import time
+import tools
 
 months = {
         1:"January", 2:"February", 3:"March", 4:"April", \
@@ -65,6 +66,54 @@ def _links_get(self, cr, uid, context={}):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
+html_invitation = """
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>%(name)s</title>
+</head>
+<div>
+<table cellspacing="0" cellpadding="0" border=3D "1" summary=3D"">
+    <tr align="center">
+        <td bgcolor="DFDFDF">
+        <h3>%(name)s</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+        <table cellpadding="8" cellspacing="0" border=3D "0" summary=3D
+            "Eventdetails" bgcolor="f6f6f6">
+            <tr>
+                <td>
+                <div><b><i>Start Date</i></b></div>
+                </td>
+                <td>%(start_date)s</td>
+                <td>
+                <div><b><i>End Date</i></b></div>
+                </td>
+                <td>%(end_date)s</td>
+            </tr>
+            <tr>
+                <td><b><i>Description</i></b></td>
+                <td colspan="3">%(description)s</td>
+            </tr>
+            <tr>
+                <td>
+                <div><b><i>Location</i></b></div>
+                </td>
+                <td colspan="3">%(location)s</td>
+            </tr>
+            <tr>
+                <td>
+                <div><b><i>Event Attendees</i></b></div>
+                </td>
+                <td colspan="3">
+                <div>
+                <div>%(attendees)s</div>
+                </div>
+                </td>
+            </tr>
+        </table>"""
+
 class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
     _description = 'Attendee information'
@@ -82,8 +131,11 @@ class calendar_attendee(osv.osv):
         result = {}
 
         def get_delegate_data(user):
-            email = user.address_id and user.address_id.email or ''
-            return self._get_address(user.name, email)
+            if not user.address_id.email:
+                raise osv.except_osv(_('Error!'), \
+                                ("User does not have an email Address"))
+            email = (user.address_id and ('MAILTO:' + user.address_id.email)) or ''
+            return email
 
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
@@ -112,12 +164,11 @@ class calendar_attendee(osv.osv):
                 fromdata = map(get_delegate_data, attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
-                # TO fix date for project task
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date'])[0]
-                    result[id][name] = None#obj['date']
+                    result[id][name] = obj.get('date')
                 else:
                     result[id][name] = None
             if name == 'event_end_date':
@@ -125,7 +176,7 @@ class calendar_attendee(osv.osv):
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
-                    result[id][name] = obj['date_deadline']
+                    result[id][name] = obj.get('date_deadline')
                 else:
                     result[id][name] = None
             if name == 'sent_by_uid':
@@ -133,9 +184,13 @@ class calendar_attendee(osv.osv):
                     model, res_id = tuple(attdata.ref.split(','))
                     model_obj = self.pool.get(model)
                     obj = model_obj.read(cr, uid, res_id, ['user_id'])[0]
-                    result[id][name] = obj['user_id']
+                    result[id][name] = obj.get('user_id')
                 else:
                     result[id][name] = uid
+            if name == 'language':
+                user_obj = self.pool.get('res.users')
+                lang = user_obj.read(cr, uid, uid, ['context_lang']) ['context_lang']
+                result[id][name] = lang.replace('_', '-')
         return result
 
     def _links_get(self, cr, uid, context={}):
@@ -182,15 +237,14 @@ request was delegated to"),
         'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.many2one('res.users', 'Sent by User'), 
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'),
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language': fields.selection(_lang_get, 'Language', 
-                                  help="To specify the language for text values in a property or property parameter."), 
+        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."),
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
-        'email': fields.char('Email', size=124), 
+        'email': fields.char('Email', size=124, required=True), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
         'ref': fields.reference('Document Ref', selection=_links_get, size=128), 
@@ -501,9 +555,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         event_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
         ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
-        cal_val = ical.serialize()
-        cal_val = cal_val.replace('"', '').strip()
-        return cal_val
+        return ical.serialize()
 
     def import_cal(self, cr, uid, data, data_id=None, context={}):
         event_obj = self.pool.get('basic.calendar.event')
@@ -1001,9 +1053,7 @@ class res_users(osv.osv):
             status = 'busy'
             res.update({user_id:status})
 
-        #TOCHECK: Delegrated Event
-        #cr.execute("SELECT user_id,'busy' FROM att_del_to_user_rel where user_id = ANY(%s)", (ids,))
-        #res.update(cr.dictfetchall())
+        #TOCHECK: Delegrated Event        
         for user_id in ids:
             if user_id not in res:
                 res[user_id] = 'free'
@@ -1063,6 +1113,25 @@ class invite_attendee_wizard(osv.osv_memory):
             vals.update({'email': datas['email']})
             att_id = att_obj.create(cr, uid, vals)
             obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+
+            sub = '[OpenERP Invitation] %s'  % (res_obj.name)
+            body_vals = {'name': res_obj.name, 
+                        'start_date': res_obj.date, 
+                        'end_date': res_obj.date_deadline or None, 
+                        'description': res_obj.description, 
+                        'location': res_obj.location or '-', 
+                        'attendees': '-' #Todo
+            }
+            body = html_invitation % body_vals
+            mail_to = [datas['email']]
+            tools.email_send(
+                    res_obj.user_id.name, 
+                    mail_to, 
+                    sub, 
+                    body, 
+                    subtype='html'
+                )
+
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):

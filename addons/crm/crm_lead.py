@@ -54,11 +54,5 @@ class crm_lead(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
              'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
     }
-    
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}        
 
 crm_lead()
