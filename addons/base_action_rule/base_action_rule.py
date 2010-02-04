@@ -125,7 +125,7 @@ class base_action_rule(osv.osv):
 
                     if ok:
                         if action.server_action_id:
-                            context.update({'active_id':case.id,'active_ids':[case.id]})
+                            context.update({'active_id': data.id,'active_ids': [data.id]})
                             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
                 for hist in history:
                     if hist[3]:
@@ -164,7 +164,7 @@ class base_action_rule_line(osv.osv):
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
 
         'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
-        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximim Priority'),
+        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximum Priority'),
         
 
         'act_method': fields.char('Call Object Method', size=64),

@@ -198,7 +198,7 @@ class base_action_rule(osv.osv):
                         history_obj.create(cr, uid, {'rule_id': case.id, 'res_id': case.name.id, 'date_action_last': lastDate, 'date_action_next': action_next})
         caseobj = self.pool.get('crm.case')
         case_ids = caseobj.search(cr, uid, [('state', 'not in', ('cancel','done'))])
-    
+        
         while len(action_ids) and level:
             newactions = []
             actions = self.pool.get('base.action.rule').browse(cr, uid, action_ids, context)
@@ -221,8 +221,6 @@ class base_action_rule(osv.osv):
                                     (action.trg_partner_categ_id.id in map(lambda x: x.id, cs.partner_id.category_id or []))
                                 )
                             )
-                            ok = ok and (not action.trg_priority_from or action.trg_priority_from>=case.priority)
-                            ok = ok and (not action.trg_priority_to or action.trg_priority_to<=case.priority)
         
                             reg_name = action.regex_name
                             result_name = True
@@ -284,7 +282,7 @@ class base_action_rule(osv.osv):
         
                             if ok:
                                 if action.server_action_id:
-                                    context.update({'active_id':cs.id,'active_ids':[cs.id]})
+                                    context.update({'active_id': cs.id,'active_ids': [cs.id]})
                                     self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
                                 write = {}
                                 if action.act_state:
