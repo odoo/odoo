@@ -288,16 +288,11 @@ class survey_form(report_rml):
                                 else:
                                     rml+="""<td><illustration>""" + value + """</illustration></td>"""
                             rml+= """</tr></blockTable>"""
-                    elif que.type in ['multiple_textboxes','numerical_textboxes', 'date_and_time','date']:
+                    elif que.type in ['multiple_textboxes','numerical_textboxes', 'date_and_time','date','multiple_textboxes_diff_type']:
                         cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
                         cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                         colWidths = tools.ustr(colWidths) + 'cm'
-                        rect_len = ""
-                        if que.type in ['multiple_textboxes']:
-                            rect_len =  tools.ustr(cols_widhts[0] - 0.3) + "cm"
-                        else:
-                            rect_len = "6cm"
                         for ans in que.answer_choice_ids:
                             rml +="""<para style="P1"></para>
                             <blockTable colWidths=" """+ colWidths + """ " style="ans_tbl">
@@ -305,7 +300,7 @@ class survey_form(report_rml):
                                 <td><para style="answer">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>
                                     <td>
                                     <illustration>
-                                        <rect x="0.0cm" y="-0.5cm" width='""" + tools.ustr(rect_len) + """' height="0.6cm" fill="no" stroke="yes"/>
+                                        <rect x="0.0cm" y="-0.5cm" width='""" + tools.ustr(str(cols_widhts[0] - 0.3) + "cm") + """' height="0.6cm" fill="no" stroke="yes"/>
                                     </illustration>
                                     </td>
                                 </tr>
@@ -313,14 +308,11 @@ class survey_form(report_rml):
                     elif que.type in ['comment']:
                         cols_widhts.append(float(_tbl_widths.replace('cm','')))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                        colWidths = colWidths+'cm'
-                        rect_len = ""
-                        rect_len =  tools.ustr(cols_widhts[0] - 0.4) + "cm"
-                        rml+="""<blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
+                        rml+="""<blockTable colWidths=" """ + colWidths + """cm " style="ans_tbl">
                             <tr>
                                 <td><para style="comment"><font color="white"> </font></para>
                                     <illustration>
-                                        <rect x="0.0cm" y="0.3cm" width='""" + tools.ustr(rect_len) + """' height="1.5cm" fill="no" stroke="yes"/>
+                                        <rect x="0.1cm" y="0.3cm" width='""" + tools.ustr(str(float(colWidths) - 0.6) +'cm') + """' height="1.5cm" fill="no" stroke="yes"/>
                                     </illustration>
                                 </td>
                             </tr>
@@ -328,13 +320,12 @@ class survey_form(report_rml):
                     elif que.type in ['single_textbox']:
                         cols_widhts.append(float(_tbl_widths.replace('cm','')))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                        colWidths = colWidths+'cm'
                         rml+="""<para style="P2"><font color="white"> </font></para>
-                        <blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
+                        <blockTable colWidths=" """ + colWidths + """cm " style="ans_tbl">
                             <tr>
                                 <td>
                                     <illustration>
-                                        <rect x="0.2cm" y="0.3cm" width="15.0 cm" height="0.6cm" fill="no" stroke="yes"/>
+                                        <rect x="0.2cm" y="0.3cm" width='""" + tools.ustr(str(float(colWidths) - 0.7) +'cm') + """' height="0.6cm" fill="no" stroke="yes"/>
                                     </illustration>
                                 </td>
                             </tr>
