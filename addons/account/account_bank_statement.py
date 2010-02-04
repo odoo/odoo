@@ -107,7 +107,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True,
             states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
@@ -343,6 +343,17 @@ class account_bank_statement(osv.osv):
                 context=context)[0]
         return {'value': {'balance_start': balance_start, 'currency': currency}}
 
+    def unlink(self, cr, uid, ids, context=None):
+        stat = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for t in stat:
+            if t['state'] in ('draft'):
+                unlink_ids.append(t['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+    
 account_bank_statement()
 
 
