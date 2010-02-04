@@ -82,7 +82,7 @@ html_invitation = """
         <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
     </tr>
     <tr>
-        <td width="100%%">Below are the details of event :</td>
+        <td width="100%%">Below are the details of event:</td>
     </tr>
 </table>
 
@@ -237,7 +237,7 @@ class calendar_attendee(osv.osv):
                     result[id][name] = uid
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['context_lang']) ['context_lang']
+                lang = user_obj.read(cr, uid, uid, ['context_lang'])['context_lang']
                 result[id][name] = lang.replace('_', '-')
         return result
 
@@ -285,10 +285,10 @@ request was delegated to"),
         'del_from_user_ids': fields.many2many('calendar.attendee', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'),
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."),
+        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."), 
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
@@ -424,7 +424,7 @@ are both optional, but if one occurs, so MUST the other"""),
         model_obj = self.pool.get(model)
         for datas in model_obj.browse(cr, uid, ids):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
-            if alarm_ids and len(alarm_ids):
+            if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set caldav_alarm_id=NULL, alarm_id=NULL\
                              where id=%s' % (model_obj._table, datas.id))
@@ -486,7 +486,7 @@ or contains the text to be used for display"""),
         res = super(calendar_alarm, self).create(cr, uid, vals, context)
         return res
 
-    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
+    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False,\
                        context=None):
         if not context:
             context = {}
@@ -535,7 +535,7 @@ or contains the text to be used for display"""),
                     mail_to.append(att.user_id.address_id.email)
 
                 tools.email_send(
-                    tools.config.get('email_from',False), 
+                    tools.config.get('email_from', False), 
                     mail_to, 
                     sub, 
                     body
@@ -551,7 +551,7 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
     
-    def _tz_get(self,cr,uid, context={}):
+    def _tz_get(self, cr, uid, context={}):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
     def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
@@ -590,7 +590,7 @@ class calendar_event(osv.osv):
         'name': fields.char('Description', size=64, required=True), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
-        'create_date': fields.datetime('Created' ,readonly=True), 
+        'create_date': fields.datetime('Created', readonly=True), 
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
         'description': fields.text('Your action'), 
@@ -613,7 +613,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.selection(_tz_get,  'Timezone', size=64), 
+        'vtimezone': fields.selection(_tz_get, 'Timezone', size=64), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
     }
     
@@ -637,8 +637,8 @@ rule or repeating pattern for anexception to a recurrence set"),
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         for val in vals:
-            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, \
-                                                             val.get('recurrent_id'))
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], \
+                                    self._name, val.get('recurrent_id'))
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
             val.pop('id')
@@ -752,8 +752,8 @@ rule or repeating pattern for anexception to a recurrence set"),
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
                     until_date = arg[2]
-        res = super(calendar_event, self).search(cr, uid, args_without_date, offset, 
-                limit, order, context, count)
+        res = super(calendar_event, self).search(cr, uid, args_without_date, \
+                                 offset, limit, order, context, count)
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
 
@@ -825,8 +825,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                 for record in self.read(cr, uid, [caldav_id2real_id(id)], \
                                             ['date', 'rrule', 'exdate']):
                     if record['rrule']:
-                        exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + \
-                                    ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
                             res = self.write(cr, uid, [caldav_id2real_id(id)], {'exdate': exdate})
                     else:
@@ -867,14 +866,14 @@ class calendar_todo(osv.osv):
         return True
 
     _columns = {
-        'date': fields.function(_get_date, method=True,   fnct_inv=_set_date, \
-                                        string='Duration', store=True, type='datetime'),
+        'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \
+                                        string='Duration', store=True, type='datetime'), 
         'duration': fields.integer('Duration'), 
     }
     
     __attribute__ = {}
     
-    def import_cal(self, cr, uid, data, data_id=None,  context={}):
+    def import_cal(self, cr, uid, data, data_id=None, context={}):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
@@ -954,7 +953,7 @@ class ir_values(osv.osv):
                 new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, \
+        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,\
                     value, replace, isobject, meta, preserve_user, company)
 
     def get(self, cr, uid, key, key2, models, meta=False, context={}, \
