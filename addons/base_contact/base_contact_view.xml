@@ -421,5 +421,14 @@
         />
         <menuitem name="Contacts" id="menu_procurement_mgt_partner_contact_form" action="action_partner_contact_form"
       parent="purchase.menu_procurement_management_supplier"/>
+
+	<!-- Act window defining a shorcut on partner address to open all his jobs -->
+    <act_window
+        id="act_res_partner_jobs" name="Open Jobs"
+        domain="[('address_id', '=', active_id)]"
+        res_model="res.partner.job"
+        src_model="res.partner.address"
+        />
+
 </data>
 </openerp>
