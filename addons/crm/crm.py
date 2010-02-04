@@ -325,7 +325,10 @@ class base_action_rule(osv.osv):
                                 if len(emails) and action.act_mail_body:
                                     emails = list(set(emails))
                                     caseobj.email_send(cr, uid, cs, emails, action.act_mail_body)
-                                break
+                for hist in history:
+                    if hist[3]:
+                        base = hist[4]
+                    history_obj.write(cr, uid, [hist[0]], {'date_action_last': base, 'date_action_next': action_next})
             action_ids = newactions
             level -= 1
         return True

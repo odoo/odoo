@@ -1,5 +1,6 @@
 import time
 import mx.DateTime
+import re
 
 import tools
 from osv import fields, osv, orm
@@ -57,7 +58,6 @@ class base_action_rule(osv.osv):
                     if rule.id not in checkids:
                         lastDate = mx.DateTime.strptime(rule.create_date[:19], '%Y-%m-%d %H:%M:%S')
                         history_obj.create(cr, uid, {'rule_id': rule.id, 'res_id': rule.name.id, 'date_action_last': lastDate, 'date_action_next': action_next})
-        
         for rule in rules:
             obj = self.pool.get(rule.name.model)
             rec_ids = obj.search(cr, uid, [])
@@ -127,6 +127,44 @@ class base_action_rule(osv.osv):
                         if action.server_action_id:
                             context.update({'active_id': data.id,'active_ids': [data.id]})
                             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
+                        write = {}
+                        if action.act_state:
+                            data.state = action.act_state
+                            write['state'] = action.act_state
+                        if action.act_user_id:
+                            data.user_id = action.act_user_id
+                            write['user_id'] = action.act_user_id.id
+                        if action.act_priority:
+                            data.priority = action.act_priority
+                            write['priority'] = action.act_priority
+                        if action.act_email_cc:
+                            if '@' in (data.email_cc or ''):
+                                emails = data.email_cc.split(",")
+                                if  action.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
+                                    write['email_cc'] = data.email_cc+','+action.act_email_cc
+                            else:
+                                write['email_cc'] = action.act_email_cc
+                        obj.write(cr, uid, [data.id], write, context)
+                        if action.act_remind_user:
+                            obj.remind_user(cr, uid, [data.id], context, attach=action.act_remind_attach)
+                        if action.act_remind_partner:
+                            obj.remind_partner(cr, uid, [data.id], context, attach=action.act_remind_attach)
+                        if action.act_method:
+                            getattr(caseobj, 'act_method')(cr, uid, [data.id], action, context)
+                        emails = []
+                        if action.act_mail_to_user:
+                            if data.user_id and data.user_id.address_id:
+                                emails.append(data.user_id.address_id.email)
+                        if action.act_mail_to_partner:
+                            emails.append(data.email_from)
+                        if action.act_mail_to_watchers:
+                            emails += (action.act_email_cc or '').split(',')
+                        if action.act_mail_to_email:
+                            emails += (action.act_mail_to_email or '').split(',')
+                        emails = filter(None, emails)
+                        if len(emails) and action.act_mail_body:
+                            emails = list(set(emails))
+                            obj.email_send(cr, uid, data, emails, action.act_mail_body)
                 for hist in history:
                     if hist[3]:
                         base = hist[4]
