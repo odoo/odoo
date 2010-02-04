@@ -28,7 +28,7 @@
     All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['hr_timesheet', 'hr_timesheet_invoice','hr_attendance'],
+    'depends': ['hr_timesheet', 'hr_timesheet_invoice'],
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv', 'report_timesheet_view.xml'],
     'demo_xml': [],
