@@ -55,6 +55,7 @@ from tools.func import wraps
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
+from inspect import stack
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
@@ -91,10 +92,7 @@ class Cursor(object):
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.__closed = False   # real initialisation value
         self.autocommit(False)
-
-        if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
-            from inspect import stack
-            self.__caller = tuple(stack()[2][1:3])
+        self.__caller = tuple(stack()[2][1:3])
 
     def __del__(self):
         if not self.__closed:
@@ -103,10 +101,9 @@ class Cursor(object):
             # but the database connection is not put back into the connection
             # pool, preventing some operation on the database like dropping it.
             # This can also lead to a server overload.
-            if tools.config['log_level'] in (netsvc.LOG_DEBUG, netsvc.LOG_DEBUG_RPC):
-                msg = "Cursor not closed explicitly\n"  \
-                      "Cursor was created at %s:%s" % self.__caller
-                log(msg, netsvc.LOG_WARNING)
+            msg = "Cursor not closed explicitly\n"  \
+                  "Cursor was created at %s:%s" % self.__caller
+            log(msg, netsvc.LOG_WARNING)
             self.close()
 
     @check
@@ -228,9 +225,14 @@ class ConnectionPool(object):
         self._lock = threading.Lock()
         self._logger = netsvc.Logger()
 
+    def __repr__(self):
+        used = len([1 for c, u in self._connections[:] if u])
+        count = len(self._connections)
+        return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
+
     def _debug(self, msg):
+        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, repr(self))
         self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
-        #pass
 
     @locked
     def borrow(self, dsn):
@@ -250,7 +252,7 @@ class ConnectionPool(object):
             return result
 
         if len(self._connections) >= self._maxconn:
-            # try to remove the older connection not used
+            # try to remove the oldest connection not used
             for i, (cnx, used) in enumerate(self._connections):
                 if not used:
                     self._debug('Removing old connection at index %d: %s' % (i, cnx.dsn))
@@ -258,7 +260,7 @@ class ConnectionPool(object):
                     break
             else:
                 # note: this code is called only if the for loop has completed (no break)
-                raise PoolError('Connection Pool Full')
+                raise PoolError('The Connection Pool Is Full')
 
         self._debug('Create new connection')
         result = psycopg2.connect(dsn=dsn)
