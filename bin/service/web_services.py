@@ -135,7 +135,6 @@ class db(netsvc.Service):
 
     def get_progress(self, password, id):
         security.check_super(password)
-        tools.debug((id, self.actions.keys()))
         if self.actions[id]['thread'].isAlive():
 #           return addons.init_progress[db_name]
             return (min(self.actions[id].get('progress', 0),0.95), [])
