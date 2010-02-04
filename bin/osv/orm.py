@@ -2140,7 +2140,7 @@ class orm(orm_template):
                     field_value = field_value2
                 value[field] = field_value
         for key in context or {}:
-            if key.startswith('default_'):
+            if key.startswith('default_') and (key[8:] in fields_list):
                 value[key[8:]] = context[key]
         return value
 
