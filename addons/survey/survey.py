@@ -263,7 +263,6 @@ class survey_question(osv.osv):
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
-        print ":A:::::::::::::::::::::::::",type
         if type in ['multiple_textboxes_diff_type']:
             return {'value': {'in_visible_answer_type':False}}
         if type in ['rating_scale']:
@@ -461,7 +460,7 @@ class survey_answer(osv.osv):
         if context.get('in_visible_answer_type',False):
             return context['in_visible_answer_type']
         return False
-    
+
     _columns = {
         'question_id' : fields.many2one('survey.question', 'Question', ondelete='cascade'),
         'answer' : fields.char('Answer', size=128, required=1),
