@@ -170,15 +170,14 @@ class project_task(osv.osv):
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
             search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
-            search_extended += '''<filter domain="[]"  string="Simplified View" context="{'set_editable':True,'set_visible':True}"/>'''
-            search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox" />'''
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" />'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'set_visible':True}"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
             <field name="context_id" select="1" widget="selection" />
