@@ -71,7 +71,7 @@ def _search_invoices(obj, cr, uid, data, context):
         
         move_line_id = line_obj.search(cr, uid, args_move_line,context=context)
         if move_line_id:
-            repeated_move_line_ids.append(move_line_id)
+            repeated_move_line_ids += move_line_id
         
     journal_ids = data['form']['journal_id'][0][2]
 
