@@ -5,11 +5,11 @@
         <wizard id="wizard_delegate_task" menu="False" model="project.task" name="project.task.delegate" string="Delegate Task"/>
 
         <wizard id="wizard_compute_task" model="project.task" name="wizard.compute.tasks" string="Compute Task Scheduling"/>
-		<menuitem icon="terp-project" id="menu_main" name="Project Management"/>
+		<menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
 		<menuitem
             action="wizard_compute_task"
             id="menu_wizard_compute_task"
-            parent="menu_main"
+            parent="base.menu_pm_planning"
             type="wizard"
             sequence="1"/>
 
