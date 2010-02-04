@@ -30,7 +30,7 @@
     """,
     'author': 'Tiny & Axelor',
     'website': 'http://openerp.com',
-    'depends': ['base','document'],
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
         'wiki_view.xml',
