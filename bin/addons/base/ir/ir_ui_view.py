@@ -132,89 +132,54 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def graph_get(self, cr, uid, id, scale, context={}):
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, scale,context={}):
+        nodes= []
+        nodes_name = []
+        transitions = []
+        start = []
+        tres = {}
+        no_ancester = []
 
-        _Node={}
-        _Arrow={}
-        _Ids = self.search(cr, uid, [('type','=','diagram')], context=context)
-        _Models = self.browse(cr, uid, _Ids, context)
+        _Model_Obj = self.pool.get(model)
+        _Node_Obj = self.pool.get(node_obj)
+        _Arrow_Obj = self.pool.get(conn_obj)
 
-        for _Model in _Models:
+        for model_key,model_value in _Model_Obj._columns.items():
+                if model_value._type == 'one2many':
+                    if model_value._obj==node_obj:
+                        _Node_Field=model_key
+                    flag=False
+                    for node_key,node_value in _Node_Obj._columns.items():
+                        if node_value._type=='one2many':
+                             if src_node in _Arrow_Obj._columns:
+                                if flag:
+                                   _Source_Field = node_key
+                             if des_node in _Arrow_Obj._columns:
+                                if not flag:
+                                    _Destination_Field = node_key
+                                    flag = True
 
-            from lxml import etree
-            import StringIO,xml.dom.minidom
-
-            d = xml.dom.minidom.parseString(str(_Model.arch))
-            de = d.documentElement
-
-            def node_attributes(node):
-                result = {}
-                attrs = node.attributes
-                if attrs is None:
-                    return {}
-                for i in range(attrs.length):
-                    result[attrs.item(i).localName] = str(attrs.item(i).nodeValue)
-                    if attrs.item(i).localName == "digits" and isinstance(attrs.item(i).nodeValue, (str, unicode)):
-                        result[attrs.item(i).localName] = eval(attrs.item(i).nodeValue)
-                return result
-
-            for n in [i for i in de.childNodes]:
-                if n.nodeName=='node':
-                    _Node.update(node_attributes(n))
-                elif n.nodeName=='arrow':
-                    _Arrow.update(node_attributes(n))
-
-            _Model_Obj = self.pool.get(str(_Model.model))
-
-            for _Field,_Value in _Model_Obj._columns.items():
-                if _Value._type == 'one2many':
-                    if _Value._obj==_Node['object']:
-                        _Node_Obj = self.pool.get(_Value._obj)
-                        _Node_Field = _Field
-                    _Flag=False
-                    for _Field_1,_Value_1 in _Node_Obj._columns.items():
-                      if _Value_1._type == 'one2many':
-                          if _Value_1._obj==_Arrow['object']:
-                             _Arrow_Obj = self.pool.get(_Value_1._obj)
-                             for _Key,_Val in _Arrow_Obj._columns.items():
-                                if _Arrow['source'] == _Key:
-                                    if _Flag:
-                                       _Source_Field = _Field_1
-                                if _Arrow['destination'] == _Key:
-                                    if not _Flag:
-                                        _Destination_Field = _Field_1
-                                        _Flag = True
-            nodes= []
-            nodes_name = []
-            transitions = []
-            start = []
-            tres = {}
-            no_ancester = []
-            workflow = _Model_Obj.read(cr, uid, id, [],context)
-            for a in _Node_Obj.read(cr,uid, workflow[_Node_Field],[]):
-                nodes_name.append((a['id'],a['name']))
-                nodes.append(a['id'])
-                if a['flow_start']:
-                    start.append(a['id'])
-                else:
-                    if not a[_Source_Field]:
-                        no_ancester.append(a['id'])
-
-                for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
-                    transitions.append((a['id'], t[_Arrow['destination']][0]))
-                    tres[t['id']] = (a['id'], t[_Arrow['destination']][0])
-
-            g  = graph(nodes, transitions, no_ancester)
-            g.process(start)
-            g.scale(*scale)
-            result = g.result_get()
-            results = {}
-
-            for node in nodes_name:
-                results[str(node[0])] = result[node[0]]
-                results[str(node[0])]['name'] = node[1]
-
-            return {'nodes': results, 'transitions': tres}
+        datas = _Model_Obj.read(cr, uid, id, [],context)
+        for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
+            nodes_name.append((a['id'],a['name']))
+            nodes.append(a['id'])
+            if a['flow_start']:
+                start.append(a['id'])
+            else:
+                if not a[_Source_Field]:
+                    no_ancester.append(a['id'])
+            for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
+                transitions.append((a['id'], t[des_node][0]))
+                tres[t['id']] = (a['id'], t[des_node][0])
+        g  = graph(nodes, transitions, no_ancester)
+        g.process(start)
+        g.scale(*scale)
+        result = g.result_get()
+        results = {}
+        for node in nodes_name:
+            results[str(node[0])] = result[node[0]]
+            results[str(node[0])]['name'] = node[1]
+        return {'nodes': results, 'transitions': tres}
 view()
 
 class view_sc(osv.osv):
