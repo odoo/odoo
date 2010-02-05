@@ -365,7 +365,9 @@ class account_account(osv.osv):
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
         while(ids):
-            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str, ids))+')')
+            cr.execute('SELECT DISTINCT child_id '\
+                       'FROM account_account_consol_rel '\
+                       'WHERE parent_id IN %s', (tuple(ids),))
             child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             c_ids = child_ids
             if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
