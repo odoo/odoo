@@ -145,7 +145,7 @@ class view(osv.osv):
         _Arrow_Obj = self.pool.get(conn_obj)
 
         for model_key,model_value in _Model_Obj._columns.items():
-                if model_value._type=='one2many' and model_value._obj==node_obj:
+                if model_value._type=='one2many':
                     if model_value._obj==node_obj:
                         _Node_Field=model_key
                     flag=False
