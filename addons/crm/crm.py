@@ -726,17 +726,23 @@ class crm_case(osv.osv):
             data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
         return {'value':data}
 
-
-
-
-    def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
-        if not part:
-            return {'value':{}}
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         data = {}
-        if not email:
-            data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, part).email
-        return {'value':data}
+        if not add:
+            return {'value': {'email_from': False}}
+        data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, add).email
+        return {'value': data}
 
+    def onchange_partner_id(self, cr, uid, ids, part):
+        data = {}
+        if not part:
+            return {'value': {'partner_address_id': False, 
+                                   'email_from': False}}
+        add = self.pool.get('res.partner').address_get(cr, uid, [part])['default']
+        data['partner_address_id'] = add
+        data.update(self.onchange_partner_address_id(cr, uid, ids, add)['value'])
+        return {'value': data}
+    
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
