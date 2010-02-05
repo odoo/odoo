@@ -434,7 +434,7 @@
                            default="1" help="Cases Related to Current User"
                        />
                        <field name="state" select="1">
-                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Cases"/>
+                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Cases"/>
                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Cases"/>
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Cases"/>
                        </field>

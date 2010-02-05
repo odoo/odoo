@@ -177,9 +177,9 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                    <group col="4" colspan="1">
-                       <filter icon="gtk-new" string="New Claims"
-                       	domain="[('state','=','draft')]"
-                       	separator="1" help="New Claims"
+                       <filter icon="gtk-new" string="Current Claims"
+                       	domain="[('state','in',('draft', 'open'))]"
+                       	separator="1" help="Current Claims" default="1"
                        />
                        <filter icon="gtk-execute"
                        	string="In Progress Claims"
