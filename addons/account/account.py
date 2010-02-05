@@ -22,6 +22,8 @@
 import time
 import logging
 
+from operator import itemgetter
+
 import netsvc
 from osv import fields, osv
 
@@ -368,7 +370,7 @@ class account_account(osv.osv):
             cr.execute('SELECT DISTINCT child_id '\
                        'FROM account_account_consol_rel '\
                        'WHERE parent_id IN %s', (tuple(ids),))
-            child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+            child_ids = map(itemgetter(0), cr.fetchall())
             c_ids = child_ids
             if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
                 return False
