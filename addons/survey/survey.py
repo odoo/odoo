@@ -92,10 +92,10 @@ class survey(osv.osv):
     def survey_cancel(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'cancel' })
         return True
-    
+
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
-    
+
 survey()
 
 class survey_history(osv.osv):
@@ -155,7 +155,7 @@ class survey_page(osv.osv):
 
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
-    
+
 survey_page()
 
 class survey_question(osv.osv):
@@ -408,7 +408,7 @@ class survey_question(osv.osv):
     def default_get(self, cr, uid, fields, context={}):
         data = super(survey_question, self).default_get(cr, uid, fields, context)
         if context.has_key('line_order') and context['line_order']:
-            
+
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         if context.has_key('page_id'):
@@ -484,7 +484,7 @@ class survey_answer(osv.osv):
         'sequence' : fields.integer('Sequence'),
         'response' : fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
         'average' : fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
-        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float'),('selection','Selection'),('email','Email Address')], "Type of Answer",required=1),
+        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float'),('selection','Selection'),('email','Email')], "Type of Answer",required=1),
         'menu_choice' : fields.text('Menu Choices'),
         'in_visible_answer_type':fields.boolean('Is Answer Type Invisible??')
     }
