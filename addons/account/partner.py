@@ -91,20 +91,16 @@ class res_partner(osv.osv):
     _description = 'Partner'
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("""select
-                l.partner_id, a.type, sum(l.debit-l.credit)
-            from
-                account_move_line l
-            left join
-                account_account a on (l.account_id=a.id)
-            where
-                a.type in ('receivable','payable') and
-                l.partner_id in (%s) and
-                l.reconcile_id is null and
-                """ % (','.join(map(str, ids)),))+query+"""
-            group by
-                l.partner_id, a.type
-            """)
+        cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
+                      FROM account_move_line l
+                      LEFT JOIN account_account a ON (l.account_id=a.id)
+                      WHERE a.type IN ('receivable','payable')
+                      AND l.partner_id in %s
+                      AND l.reconcile_id IS NULL
+                      AND """ + query + """
+                      GROUP BY l.partner_id, a.type
+                      """,
+                   (tuple(ids),))
         tinvert = {
             'credit': 'receivable',
             'debit': 'payable'
