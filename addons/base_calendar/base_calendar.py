@@ -30,9 +30,14 @@ import pooler
 import pytz
 import re
 import tools
-import vobject
 import time
 
+
+try:
+    import vobject
+except ImportError:
+    raise osv.except_osv('vobject Import Error!','Please install python-vobject from http://vobject.skyhouseconsulting.com/')
+ 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
@@ -66,33 +71,33 @@ def openobjectid2uid(cr, uidval, oomodel):
     return value
 
 def get_attribute_mapping(cr, uid, calname, context={}):
-        if not context:
-            context = {}
-        pool = pooler.get_pool(cr.dbname)
-        field_obj = pool.get('basic.calendar.fields')
-        type_obj = pool.get('basic.calendar.lines')
-        domain = [('object_id.model', '=', context.get('model'))]
-        if context.get('calendar_id'):
-            domain.append(('calendar_id', '=', context.get('calendar_id')))
-        type_id = type_obj.search(cr, uid, domain)
-        fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
-        res = {}
-        for field in field_obj.browse(cr, uid, fids):
-            attr = field.name.name
-            res[attr] = {}
-            res[attr]['field'] = field.field_id.name
-            res[attr]['type'] = field.field_id.ttype
-            if field.fn == 'hours':
-                res[attr]['type'] = "timedelta"
-            if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
-                res[attr]['object'] = field.field_id.relation
-            elif res[attr]['type'] in ('selection') and field.mapping:
-                res[attr]['mapping'] = eval(field.mapping)
-        if not res.get('uid', None):
-            res['uid'] = {}
-            res['uid']['field'] = 'id'
-            res['uid']['type'] = "integer"
-        return res
+    if not context:
+        context = {}
+    pool = pooler.get_pool(cr.dbname)
+    field_obj = pool.get('basic.calendar.fields')
+    type_obj = pool.get('basic.calendar.lines')
+    domain = [('object_id.model', '=', context.get('model'))]
+    if context.get('calendar_id'):
+        domain.append(('calendar_id', '=', context.get('calendar_id')))
+    type_id = type_obj.search(cr, uid, domain)
+    fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
+    res = {}
+    for field in field_obj.browse(cr, uid, fids):
+        attr = field.name.name
+        res[attr] = {}
+        res[attr]['field'] = field.field_id.name
+        res[attr]['type'] = field.field_id.ttype
+        if field.fn == 'hours':
+            res[attr]['type'] = "timedelta"
+        if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
+            res[attr]['object'] = field.field_id.relation
+        elif res[attr]['type'] in ('selection') and field.mapping:
+            res[attr]['mapping'] = eval(field.mapping)
+    if not res.get('uid', None):
+        res['uid'] = {}
+        res['uid']['field'] = 'id'
+        res['uid']['type'] = "integer"
+    return res
 
 def map_data(cr, uid, obj):
     vals = {}
@@ -345,13 +350,13 @@ class Calendar(CalDAV, osv.osv):
     _columns = {
             'name': fields.char("Name", size=64), 
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'), 
-            'active': fields.boolean('Active'),
+            'active': fields.boolean('Active'), 
             'create_date': fields.datetime('Created Date'), 
             'write_date': fields.datetime('Modifided Date'), 
     }
 
     _defaults = {
-                'active': lambda *a: True,
+                'active': lambda *a: True, 
                  }
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
@@ -413,7 +418,7 @@ class basic_calendar_line(osv.osv):
     }   
 
     _defaults = {
-        'domain': lambda *a: '[]',
+        'domain': lambda *a: '[]', 
     }
     
 basic_calendar_line()
@@ -422,11 +427,11 @@ class basic_calendar_attribute(osv.osv):
     _name = 'basic.calendar.attributes'
     _description = 'Calendar attributes'
     _columns = {        
-        'name': fields.char("Name", size=64, required=True),
+        'name': fields.char("Name", size=64, required=True), 
         'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
                                     ('alarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
-                                    string="Type", size=64, required=True),        
+                                    string="Type", size=64, required=True), 
     }
 
 basic_calendar_attribute()
@@ -436,20 +441,20 @@ class basic_calendar_fields(osv.osv):
     _description = 'Calendar fields'
 
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
-        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True),
+        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'), 
+        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True), 
         'type_id': fields.many2one('basic.calendar.lines', 'Type', \
-                                   required=True, ondelete='cascade'),
-        'expr': fields.char("Expression", size=64),
-        'fn': fields.selection( [('field', 'Use the field'),
-                        ('const', 'Expression as constant'),
-                        ('hours', 'Interval in hours'),
-                        ],'Function'), 
+                                   required=True, ondelete='cascade'), 
+        'expr': fields.char("Expression", size=64), 
+        'fn': fields.selection([('field', 'Use the field'), 
+                        ('const', 'Expression as constant'), 
+                        ('hours', 'Interval in hours'), 
+                        ], 'Function'), 
         'mapping': fields.text('Mapping'), 
     }
 
     _defaults = {
-        'fn': lambda *a: 'field',
+        'fn': lambda *a: 'field', 
     }
    
     def check_line(self, cr, uid, vals, name, context=None):
@@ -471,7 +476,7 @@ class basic_calendar_fields(osv.osv):
         name = cr.fetchone()
         name = name[0]
         if name in ('valarm', 'attendee'):
-             self.check_line(cr, uid, vals, name, context=context)
+            self.check_line(cr, uid, vals, name, context=context)
         cr.execute("Select count(id) from basic_calendar_fields \
                                 where name=%s and type_id=%s" % (vals.get('name'), vals.get('type_id')))
         res = cr.fetchone()
@@ -487,7 +492,7 @@ class basic_calendar_fields(osv.osv):
             field = self.browse(cr, uid, id, context=context)
             name = field.name.name
             if name in ('valarm', 'attendee'):
-                 self.check_line(cr, uid, vals, name, context=context)
+                self.check_line(cr, uid, vals, name, context=context)
             qry = "Select count(id) from basic_calendar_fields \
                                 where name=%s and type_id=%s" % (field.name.id, field.type_id.id)
             cr.execute(qry)

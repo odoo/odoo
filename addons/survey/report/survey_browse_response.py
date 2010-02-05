@@ -51,6 +51,10 @@ class survey_browse_response(report_rml):
                       <blockValign value="TOP"/>
                       <lineStyle kind="LINEBELOW" colorName="#e6e6e6"/>
                     </blockTableStyle>
+                    <blockTableStyle id="note_table">
+                      <blockAlignment value="LEFT"/>
+                      <blockValign value="TOP"/>
+                    </blockTableStyle>
                     <blockTableStyle id="Table2">
                       <blockAlignment value="LEFT"/>
                       <blockValign value="TOP"/>
@@ -139,11 +143,11 @@ class survey_browse_response(report_rml):
             response_id = surv_resp_obj.search(cr, uid, [('survey_id','in',ids)])
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
-        for response in surv_resp_obj.browse(cr,uid, response_id): 
+        for response in surv_resp_obj.browse(cr,uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
-                status = "Skip"
+                status = "Not Finished"
                 if response.state == "done":
-                    status = "Complete"
+                    status = "Finished"
                 rml += """<blockTable colWidths="230.0,120.0,100.0,50" style="Table_heading">
                           <tr>
                             <td>
@@ -183,6 +187,13 @@ class survey_browse_response(report_rml):
                                     <td><para style="page">Page :- """ + to_xml(tools.ustr(page.title)) + """</para></td>
                                   </tr>
                                </blockTable>"""
+                    if page.note:
+                        rml += """<para style="P2"></para>
+                             <blockTable colWidths="500" style="note_table">
+                                  <tr>
+                                    <td><para style="response">""" + to_xml(tools.ustr(page.note)) + """</para></td>
+                                  </tr>
+                               </blockTable>"""
                     for que in page.question_ids:
                         rml += """<para style="P2"></para>
                                 <blockTable colWidths="500" style="Table5">
@@ -213,11 +224,14 @@ class survey_browse_response(report_rml):
                                     rml +="""<blockTable colWidths=" """ + str(colWidths) + """ " style="Table51"><tr>"""
                                     table_data = col_heading.browse(cr, uid, col_heading.search(cr, uid, [('response_table_id', '=', answer[0].id),('name','=',row)]))
                                     for column in matrix_ans:
-                                        value = """<font color="white"> </font>"""
+                                        value = False
                                         for col in table_data:
                                             if column == col.column_id.title:
                                                 value = col.value
-                                        rml += """<td> <para style="terp_default_9">""" + to_xml(tools.ustr(value)) +"""</para></td>"""
+                                        if value:
+                                            rml += """<td> <para style="terp_default_9">""" + to_xml(tools.ustr(value)) +"""</para></td>"""
+                                        else:
+                                            rml += """<td><para style="terp_default_9"><font color ="white"> </font></para></td>"""
                                     rml += """</tr></blockTable>"""
                             else:
                                 rml +="""<blockTable colWidths="500" style="Table1">
@@ -237,7 +251,7 @@ class survey_browse_response(report_rml):
                                 rml +="""<blockTable colWidths="500" style="Table1">
                                  <tr>  <td> <para style="response">No Response</para></td> </tr>
                                 </blockTable>"""
-                        elif que.type in ['multiple_textboxes','date','date_and_time','numerical_textboxes']:
+                        elif que.type in ['multiple_textboxes_diff_type','multiple_textboxes','date','date_and_time','numerical_textboxes','multiple_textboxes_diff_type']:
                             if len(answer) and answer[0].state == "done":
                                 for ans in answer[0].response_answer_ids:
                                     rml +="""<blockTable colWidths="200,300" style="Table1">
@@ -287,16 +301,16 @@ class survey_browse_response(report_rml):
                                         i+=1
                                     cols_widhts.append(round(tmp,2))
                                 colWidths = ",".join(map(tools.ustr, cols_widhts))
-                                matrix_ans = ['',]
+                                matrix_ans = [(0,''),]
                                 for col in que.column_heading_ids:
                                     if col.title not in matrix_ans:
-                                        matrix_ans.append(col.title)
+                                        matrix_ans.append((col.id,col.title))
                                 len_matrix = len(matrix_ans)
                                 if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
                                     matrix_ans.append(que.column_name)
                                 rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>"""
-                                for mat_col in matrix_ans:
-                                    rml+="""<td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
+                                for mat_col in range(0, len(matrix_ans)):
+                                    rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
                                 rml +="""</tr>"""
                                 rml+="""</blockTable>"""
                                 i=0
@@ -312,7 +326,7 @@ class survey_browse_response(report_rml):
                                     for mat_col in range(1, len_matrix):
                                         value = """"""
                                         for res_ans in answer[0].response_answer_ids:
-                                            if res_ans.answer_id.id == ans.id and res_ans.answer == matrix_ans[mat_col]:
+                                            if res_ans.answer_id.id == ans.id and res_ans.column_id.id == matrix_ans[mat_col][0]:
                                                 comment_value =  to_xml(tools.ustr(res_ans.comment_field))
                                                 if que.type in ['matrix_of_drop_down_menus']:
                                                     value = """<para style="response">""" + to_xml(tools.ustr(res_ans.value_choice)) + """</para>"""
@@ -354,8 +368,8 @@ class survey_browse_response(report_rml):
                                 rml +="""<blockTable colWidths="500" style="Table1">
                                  <tr>  <td> <para style="response">No Response</para></td> </tr>
                                 </blockTable>"""
-                
-                rml += """<pageBreak/>"""
+
+                    rml += """<pageBreak/>"""
         rml += """</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]

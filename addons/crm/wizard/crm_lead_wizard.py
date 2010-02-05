@@ -117,6 +117,7 @@ class lead2opportunity(wizard.interface):
                 'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
                 'priority':lead.priority,
+                'categ_id':lead.categ_id.id,
                 'date': lead.date,
             })       
             

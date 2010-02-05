@@ -67,52 +67,110 @@ def _links_get(self, cr, uid, context={}):
     return [(r['object'], r['name']) for r in res]
 
 html_invitation = """
+<html>
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 <title>%(name)s</title>
 </head>
-<div>
-<table cellspacing="0" cellpadding="0" border=3D "1" summary=3D"">
-    <tr align="center">
+<body>
+<table border="0" cellspacing="10" cellpadding="0" width="100%%"
+    style="font-family: Arial, Sans-serif; font-size: 14">
+    <tr>
+        <td width="100%%">Hello,</td>
+    </tr>
+    <tr>
+        <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
+    </tr>
+    <tr>
+        <td width="100%%">Below are the details of event:</td>
+    </tr>
+</table>
+
+<table cellspacing="0" cellpadding="5" border="0" summary=""
+    style="width: 90%%; font-family: Arial, Sans-serif; border: 1px Solid #ccc; background-color: #f6f6f6">
+    <tr valign="center" align="center">
         <td bgcolor="DFDFDF">
         <h3>%(name)s</h3>
         </td>
     </tr>
     <tr>
         <td>
-        <table cellpadding="8" cellspacing="0" border=3D "0" summary=3D
-            "Eventdetails" bgcolor="f6f6f6">
+        <table cellpadding="8" cellspacing="0" border="0"
+            style="font-size: 14" summary="Eventdetails" bgcolor="f6f6f6"
+            width="90%%">
             <tr>
-                <td>
-                <div><b><i>Start Date</i></b></div>
+                <td width="21%%">
+                <div><b>Start Date</b></div>
                 </td>
+                <td><b>:</b></td>
                 <td>%(start_date)s</td>
-                <td>
-                <div><b><i>End Date</i></b></div>
+                <td width="15%%">
+                <div><b>End Date</b></div>
                 </td>
-                <td>%(end_date)s</td>
+                <td><b>:</b></td>
+                <td width="25%%">%(end_date)s</td>
             </tr>
-            <tr>
-                <td><b><i>Description</i></b></td>
+            <tr valign="top">
+                <td><b>Description</b></td>
+                <td><b>:</b></td>
                 <td colspan="3">%(description)s</td>
             </tr>
-            <tr>
+            <tr valign="top">
                 <td>
-                <div><b><i>Location</i></b></div>
+                <div><b>Location</b></div>
                 </td>
+                <td><b>:</b></td>
                 <td colspan="3">%(location)s</td>
             </tr>
-            <tr>
+            <tr valign="top">
                 <td>
-                <div><b><i>Event Attendees</i></b></div>
+                <div><b>Event Attendees</b></div>
                 </td>
+                <td><b>:</b></td>
                 <td colspan="3">
                 <div>
                 <div>%(attendees)s</div>
                 </div>
                 </td>
             </tr>
-        </table>"""
+            <tr valign="top">
+                <td><b>Are you coming?</b></td>
+                <td><b>:</b></td>
+                <td colspan="3">
+                <UL>
+                    <LI>YES</LI>
+                    <LI>NO</LI>
+                    <LI>MAYBE</LI>
+                </UL>
+                </td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+<table border="0" cellspacing="10" cellpadding="0" width="100%%"
+    style="font-family: Arial, Sans-serif; font-size: 14">
+    <tr>
+        <td width="100%%"><b>Note:</b> If you are interested please reply this
+        mail and keep only your response from options <i>YES, NO</i>
+        and <i>MAYBE</i>.</td>
+    </tr>
+    <tr>
+        <td width="100%%">From:</td>
+    </tr>
+    <tr>
+        <td width="100%%">%(user)s</td>
+    </tr>
+    <tr valign="top">
+        <td width="100%%">-<font color="a7a7a7">-------------------------</font></td>
+    </tr>
+    <tr>
+        <td width="100%%"> <font color="a7a7a7">%(sign)s</font></td>
+    </tr>
+</table>
+</body>
+</html>
+"""
 
 class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
@@ -129,13 +187,6 @@ class calendar_attendee(osv.osv):
     def _compute_data(self, cr, uid, ids, name, arg, context):
         name = name[0]
         result = {}
-
-        def get_delegate_data(user):
-            if not user.address_id.email:
-                raise osv.except_osv(_('Error!'), \
-                                ("User does not have an email Address"))
-            email = (user.address_id and ('MAILTO:' + user.address_id.email)) or ''
-            return email
 
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
@@ -155,13 +206,10 @@ class calendar_attendee(osv.osv):
                 else:
                     result[id][name] = self._get_address(None, attdata.email)
             if name == 'delegated_to':
-                user_obj = self.pool.get('res.users')
-                todata = map(get_delegate_data, attdata.del_to_user_ids)
+                todata = map(lambda x:('MAILTO:' + x.email) or '', attdata.del_to_user_ids)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
-                dstring = []
-                user_obj = self.pool.get('res.users')
-                fromdata = map(get_delegate_data, attdata.del_from_user_ids)
+                fromdata = map(lambda x:('MAILTO:' + x.email) or '', attdata.del_from_user_ids)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
@@ -189,7 +237,7 @@ class calendar_attendee(osv.osv):
                     result[id][name] = uid
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['context_lang']) ['context_lang']
+                lang = user_obj.read(cr, uid, uid, ['context_lang'])['context_lang']
                 result[id][name] = lang.replace('_', '-')
         return result
 
@@ -230,17 +278,17 @@ class calendar_attendee(osv.osv):
                 string='Delegated To', type="char", size=124, store=True, \
                 multi='delegated_to', help="The users that the original \
 request was delegated to"), 
-        'del_to_user_ids': fields.many2many('res.users', 'att_del_to_user_rel', 
+        'del_to_user_ids': fields.many2many('calendar.attendee', 'att_del_to_user_rel', 
                                   'attendee_id', 'user_id', 'Users'), 
         'delegated_from': fields.function(_compute_data, method=True, string=\
             'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
-        'del_from_user_ids': fields.many2many('res.users', 'att_del_from_user_rel', \
+        'del_from_user_ids': fields.many2many('calendar.attendee', 'att_del_from_user_rel', \
                                       'attendee_id', 'user_id', 'Users'), 
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'),
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."),
+        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."), 
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
@@ -253,6 +301,30 @@ request was delegated to"),
     _defaults = {
         'state':  lambda *x: 'needs-action', 
     }
+    
+    response_re = response_re = re.compile("Are you coming\?.*(YES|NO|MAYBE).*", re.UNICODE)
+    
+    def msg_new(self, cr, uid, msg):        
+        return False
+        
+    def msg_act_get(self, msg):
+        mailgate_obj = self.pool.get('mail.gateway')
+        body = mailgate_obj.msg_body_get(msg)
+        actions = {}
+        res = self.response_re.findall(body['body'])
+        if res:
+                actions['state'] = res[0]
+        return actions
+
+    def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
+        msg_actions = self.msg_act_get(msg)
+        if msg_actions.get('state'):
+            if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
+                mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
+                status = mapping[msg_actions['state']]
+                print 'Got response for invitation id: %s as %s'  % (ids, status)
+                self.write(cr, uid, ids, {'state': status})
+        return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
@@ -278,7 +350,7 @@ request was delegated to"),
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
-
+    
 calendar_attendee()
 
 class res_alarm(osv.osv):
@@ -352,7 +424,7 @@ are both optional, but if one occurs, so MUST the other"""),
         model_obj = self.pool.get(model)
         for datas in model_obj.browse(cr, uid, ids):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
-            if alarm_ids and len(alarm_ids):
+            if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set caldav_alarm_id=NULL, alarm_id=NULL\
                              where id=%s' % (model_obj._table, datas.id))
@@ -414,7 +486,7 @@ or contains the text to be used for display"""),
         res = super(calendar_alarm, self).create(cr, uid, vals, context)
         return res
 
-    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
+    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False,\
                        context=None):
         if not context:
             context = {}
@@ -457,13 +529,13 @@ or contains the text to be used for display"""),
                       %s
 
                 """  % (alarm.name, alarm.trigger_date, alarm.description, \
-                    alarm.user_id.name, alarm.user_id.sign)
+                    alarm.user_id.name, alarm.user_id.signature)
                 mail_to = [alarm.user_id.address_id.email]
                 for att in alarm.attendee_ids:
                     mail_to.append(att.user_id.address_id.email)
 
                 tools.email_send(
-                    tools.confirm['from_mail'], 
+                    tools.config.get('email_from', False), 
                     mail_to, 
                     sub, 
                     body
@@ -479,7 +551,7 @@ class calendar_event(osv.osv):
     _description = "Calendar Event"
     __attribute__ = {}
     
-    def _tz_get(self,cr,uid, context={}):
+    def _tz_get(self, cr, uid, context={}):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
     def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
@@ -518,7 +590,7 @@ class calendar_event(osv.osv):
         'name': fields.char('Description', size=64, required=True), 
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
-        'create_date': fields.datetime('Created' ,readonly=True), 
+        'create_date': fields.datetime('Created', readonly=True), 
         'duration': fields.function(_get_duration, method=True, \
                                     fnct_inv=_set_duration, string='Duration'), 
         'description': fields.text('Your action'), 
@@ -541,7 +613,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         'caldav_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.selection(_tz_get,  'Timezone', size=64), 
+        'vtimezone': fields.selection(_tz_get, 'Timezone', size=64), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
     }
     
@@ -565,8 +637,8 @@ rule or repeating pattern for anexception to a recurrence set"),
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         for val in vals:
-            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], self._name, \
-                                                             val.get('recurrent_id'))
+            exists, r_id = base_calendar.uid2openobjectid(cr, val['id'], \
+                                    self._name, val.get('recurrent_id'))
             if val.has_key('create_date'): val.pop('create_date')
             val['caldav_url'] = context.get('url') or ''
             val.pop('id')
@@ -680,8 +752,8 @@ rule or repeating pattern for anexception to a recurrence set"),
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
                     until_date = arg[2]
-        res = super(calendar_event, self).search(cr, uid, args_without_date, offset, 
-                limit, order, context, count)
+        res = super(calendar_event, self).search(cr, uid, args_without_date, \
+                                 offset, limit, order, context, count)
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
 
@@ -753,8 +825,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                 for record in self.read(cr, uid, [caldav_id2real_id(id)], \
                                             ['date', 'rrule', 'exdate']):
                     if record['rrule']:
-                        exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + \
-                                    ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
                             res = self.write(cr, uid, [caldav_id2real_id(id)], {'exdate': exdate})
                     else:
@@ -795,14 +866,14 @@ class calendar_todo(osv.osv):
         return True
 
     _columns = {
-        'date': fields.function(_get_date, method=True,   fnct_inv=_set_date, \
-                                        string='Duration', store=True, type='datetime'),
+        'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \
+                                        string='Duration', store=True, type='datetime'), 
         'duration': fields.integer('Duration'), 
     }
     
     __attribute__ = {}
     
-    def import_cal(self, cr, uid, data, data_id=None,  context={}):
+    def import_cal(self, cr, uid, data, data_id=None, context={}):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
@@ -882,7 +953,7 @@ class ir_values(osv.osv):
                 new_model.append((data[0], caldav_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, \
+        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,\
                     value, replace, isobject, meta, preserve_user, company)
 
     def get(self, cr, uid, key, key2, models, meta=False, context={}, \
@@ -1087,6 +1158,9 @@ class invite_attendee_wizard(osv.osv_memory):
               }
 
     def do_invite(self, cr, uid, ids, context={}):
+        model2field = {
+                       'calendar.attendee': 'del_to_user_ids', 
+                       'crm.meeting': 'attendee_ids'}
         datas = self.read(cr, uid, ids)[0]
         if not context or not context.get('model'):
             return {}
@@ -1096,7 +1170,9 @@ class invite_attendee_wizard(osv.osv_memory):
         res_obj = obj.browse(cr, uid, context['active_id'])
         type = datas.get('type')
         att_obj = self.pool.get('calendar.attendee')
-        vals = {'ref': '%s,%s' % (model, caldav_id2real_id(context['active_id']))}
+        vals = {}
+        if not model == 'calendar.attendee':
+            vals = {'ref': '%s,%s' % (model, caldav_id2real_id(context['active_id']))}
         if type == 'internal':
             user_obj = self.pool.get('res.users')
             for user_id in datas.get('user_ids', []):
@@ -1107,39 +1183,53 @@ class invite_attendee_wizard(osv.osv_memory):
                 vals.update({'user_id': user_id, 
                                      'email': user.address_id.email})
                 att_id = att_obj.create(cr, uid, vals)
-                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+                obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
 
         elif  type == 'external' and datas.get('email'):
             vals.update({'email': datas['email']})
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+            att_infos = []
+            for att in res_obj.attendee_ids:
+                att_infos.append(((att.user_id and att.user_id.name) or \
+                             (att.partner_id and att.partner_id.name) or \
+                                att.email) +  ' - Status: ' + att.state.title())
             att_id = att_obj.create(cr, uid, vals)
-            obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
-
-            sub = '[OpenERP Invitation] %s'  % (res_obj.name)
+            obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
+            sign = res_obj.user_id and res_obj.user_id.signature or ''
+            sign = '<br>'.join(sign and sign.split('\n') or [])
+            sub = '[%s Invitation][%d] %s'  % (company, att_id, res_obj.name)
             body_vals = {'name': res_obj.name, 
                         'start_date': res_obj.date, 
                         'end_date': res_obj.date_deadline or None, 
-                        'description': res_obj.description, 
+                        'description': res_obj.description or '-', 
                         'location': res_obj.location or '-', 
-                        'attendees': '-' #Todo
+                        'attendees': '<br>'.join(att_infos), 
+                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
+                        'sign': sign, 
+                        'company': company
             }
             body = html_invitation % body_vals
             mail_to = [datas['email']]
             tools.email_send(
-                    res_obj.user_id.name, 
+                    tools.config.get('email_from', False), 
                     mail_to, 
                     sub, 
                     body, 
-                    subtype='html'
+                    subtype='html', 
+                    reply_to=tools.config.get('email_from', False)
                 )
 
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
+                if not contact.email:
+                    raise osv.except_osv(_('Error!'), \
+                                    ("Partner does not have an email Address"))
                 vals.update({
                              'partner_address_id': contact.id, 
                              'email': contact.email})
                 att_id = att_obj.create(cr, uid, vals)
-                obj.write(cr, uid, res_obj.id, {'attendee_ids': [(4, att_id)]})
+                obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
         return {}
 
 

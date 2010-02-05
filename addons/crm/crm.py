@@ -22,14 +22,14 @@
 import time
 import re
 import os
-
-import mx.DateTime
 import base64
+import tools
+import mx.DateTime
 
 from tools.translate import _
-
-import tools
-from osv import fields,osv,orm
+from osv import fields 
+from osv import osv 
+from osv import orm
 from osv.orm import except_orm
 
 MAX_LEVEL = 15
@@ -313,7 +313,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64,required=True),
+        'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
@@ -653,7 +653,7 @@ class crm_case(osv.osv):
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
                     self.format_body(body),
                     reply_to=case.section_id.reply_to,
-                    tinycrm=str(case.id),
+                    openobject_id=str(case.id),
                     attach=attach_to_send
                 )
                 if flag:
@@ -713,7 +713,7 @@ class crm_case(osv.osv):
                 '['+str(case.id)+'] '+case.name,
                 self.format_body(body),
                 reply_to=case.section_id.reply_to,
-                tinycrm=str(case.id)
+                openobject_id=str(case.id)
             )
         return True
 
@@ -726,17 +726,23 @@ class crm_case(osv.osv):
             data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
         return {'value':data}
 
-
-
-
-    def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
-        if not part:
-            return {'value':{}}
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         data = {}
-        if not email:
-            data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, part).email
-        return {'value':data}
+        if not add:
+            return {'value': {'email_from': False}}
+        data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, add).email
+        return {'value': data}
 
+    def onchange_partner_id(self, cr, uid, ids, part):
+        data = {}
+        if not part:
+            return {'value': {'partner_address_id': False, 
+                                   'email_from': False}}
+        add = self.pool.get('res.partner').address_get(cr, uid, [part])['default']
+        data['partner_address_id'] = add
+        data.update(self.onchange_partner_address_id(cr, uid, ids, add)['value'])
+        return {'value': data}
+    
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -876,19 +882,22 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         if not context:
             return {}
         history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
-        crm_case = self.pool.get('crm.case')
-        case = history_line.log_id.case_id
+        model_obj = self.pool.get('ir.model')
+        model = history_line.log_id.model_id.model
+        model_pool = self.pool.get(model)
+        case = model_pool.browse(cr, uid, history_line.log_id.res_id)
         body = history_line.description.replace('\n','\n> ')
         flag = tools.email_send(
             case.user_id.address_id.email,
             [case.email_from],
             subject or '['+str(case.id)+'] '+case.name,
-            crm_case.format_body(body),
+            model_pool.format_body(body),
             email_cc = [email],
-            tinycrm=str(case.id)
+            openobject_id=str(case.id),
+            subtype="html"
         )
         if flag:
-            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
+            model_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
         else:
             raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))
         return {}

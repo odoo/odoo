@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-01-29 14:02+0000\n"
-"Last-Translator: Carlo <Unknown>\n"
+"PO-Revision-Date: 2010-02-03 19:01+0000\n"
+"Last-Translator: Davide Corio <davide.corio@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-01-30 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-02-04 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -288,6 +288,11 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Se vengono utilizzati i termini di pagamento, la data di scadenza verrà "
+"calcolata automaticamente alla generazione dei movimenti contabili. Se i "
+"termini di pagamento e la data di scadenza non vengono valorizzati, equivale "
+"al pagamento diretto. Il termine di pagamento può essere calcolato a fronte "
+"di diverse scadenze, per esempio 50% subito e 50% dopo un mese."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -321,7 +326,7 @@ msgstr "Origine"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Nome Movimento"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -353,7 +358,7 @@ msgstr "Tassa"
 #. module: account
 #: rml:account.general.journal:0
 msgid "Debit Trans."
-msgstr ""
+msgstr "Debito Trans."
 
 #. module: account
 #: field:account.analytic.line,account_id:0

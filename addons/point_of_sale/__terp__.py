@@ -49,7 +49,7 @@ Main features :
         'pos_data.xml',
         'pos_workflow.xml',
         'statement_view.xml',
-        'statement_report.xml', 
+        'statement_report.xml',
         'statement_data.xml',
         'statement_wizard.xml'
     ],
@@ -66,6 +66,5 @@ Main features :
     ],
     'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
     'installable': True,
-    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

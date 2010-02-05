@@ -540,6 +540,11 @@
                        <field name="routing_id" select='1'/>
                        <field name="origin" select='1'/>
                     </group>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+					</group>                         
                </search>
             </field>
         </record>
@@ -669,7 +674,7 @@
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines">
+                <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -753,6 +758,11 @@
                        <field name="date_planned" select='1'/>
                        <field name="state" select='1'/>
                     </group>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+					</group>  
                 </search>
             </field>
         </record>

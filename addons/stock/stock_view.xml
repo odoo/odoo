@@ -665,6 +665,11 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+					</group>                   
               </search>
             </field>
         </record>
@@ -786,6 +791,11 @@
                         <field name="name" select="1"/>
                         <field name="origin" select="1"/>
                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="10">
+                        <filter string="By Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
+                        <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>                        
+					</group>                  
               </search>
             </field>
         </record>
@@ -939,6 +949,11 @@
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+					</group>                      
                 </search>
             </field>
         </record>
@@ -1094,6 +1109,11 @@
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+					</group>                      
                 </search>
             </field>
         </record>
@@ -1142,6 +1162,11 @@
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
+                        <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+					</group>                      
                 </search>
             </field>
         </record>
@@ -1254,6 +1279,13 @@
 	                    <field name="location_dest_id" select="1"/>
 	                    <field name="product_id" select="1"/>
                     </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Location" icon="terp-stock" domain="[]" context="{'group_by':'location_id'}"/>
+						<filter string="By Product" icon="terp-stock" domain="[]"  context="{'group_by':'product_id'}"/>
+						<filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Destion Location" icon="terp-stock" domain="[]" context="{'group_by':'location_dest_id'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+					</group>                       
             	</search>
             </field>
         </record>
@@ -1373,6 +1405,11 @@
 	            		<field name="partner_id" string="Supplier" select="1"/>
 	                    <field name="product_id"/>
                     </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
+						<filter string="By Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
+						<filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+						<filter string="By Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+					</group>                        
             	</search>
             </field>
         </record>
