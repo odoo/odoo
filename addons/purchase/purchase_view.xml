@@ -161,7 +161,7 @@
                         <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
                     </field>
                 </group>
-  				<group expand="1" string="Group By..." colspan="4" col="10">
+  				<group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
 					<filter string="By Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
 					<filter string="By State" icon="terp-purchase" domain="[]"  context="{'group_by':'state'}"/>
 					<filter string="By Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
