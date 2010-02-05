@@ -43,6 +43,18 @@ class stock_picking(osv.osv):
                             fpos = ol.invoice_id.fiscal_position or False
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                             self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
+                            
+        elif type == 'in_invoice':
+            for inv in self.pool.get('account.invoice').browse(cr, uid, res.values(), context=context):
+                for ol in inv.invoice_line:
+                    if ol.product_id:
+                        oa = ol.product_id.product_tmpl_id.property_stock_account_input and ol.product_id.product_tmpl_id.property_stock_account_input.id
+                        if not oa:
+                            oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id        
+                        if oa:
+                            fpos = ol.invoice_id.fiscal_position or False
+                            a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
+                            self.pool.get('account.invoice.line').write(cr, uid, [ol.id], {'account_id': a})
         return res
 
 stock_picking()

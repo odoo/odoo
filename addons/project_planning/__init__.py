@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,37 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
+import project_planning
+import report
 
-{
-    "name" : "Project Management",
-    "version": "1.1",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "analytic", "hr", "process", "mail_gateway"],
-    "description": """Project management module that track multi-level projects, tasks,
-works done on tasks, eso. It is able to render planning, order tasks, eso.
-    """,
-    "init_xml" : [],
-    "update_xml": [
-        "security/project_security.xml",
-        "security/ir.model.access.csv",
-        "project_data.xml",
-        "project_wizard.xml",
-        "project_view.xml",
-        "project_report.xml",
-        "process/task_process.xml",
-        "project_installer.xml",
-    ],
-    'demo_xml': [
-        'project_demo.xml'
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': '0075116868317',
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

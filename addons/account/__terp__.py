@@ -23,7 +23,7 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "base", "process"],
+    "depends" : ["product", "analytic", "process"],
     "author" : "Tiny",
     "description": """Financial and accounting module that covers:
     General accounting
