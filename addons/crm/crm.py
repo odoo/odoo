@@ -882,19 +882,22 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         if not context:
             return {}
         history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
-        crm_case = self.pool.get('crm.case')
-        case = history_line.log_id.case_id
+        model_obj = self.pool.get('ir.model')
+        model = history_line.log_id.model_id.model
+        model_pool = self.pool.get(model)
+        case = model_pool.browse(cr, uid, history_line.log_id.res_id)
         body = history_line.description.replace('\n','\n> ')
         flag = tools.email_send(
             case.user_id.address_id.email,
             [case.email_from],
             subject or '['+str(case.id)+'] '+case.name,
-            crm_case.format_body(body),
+            model_pool.format_body(body),
             email_cc = [email],
-            openobject_id=str(case.id)
+            openobject_id=str(case.id),
+            subtype="html"
         )
         if flag:
-            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
+            model_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
         else:
             raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))
         return {}
