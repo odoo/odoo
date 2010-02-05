@@ -1182,25 +1182,28 @@ class account_tax_code(osv.osv):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context, where =''):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
+    def _sum(self, cr, uid, ids, name, args, context,
+             where ='', where_params=()):
+        parent_ids = tuple(self.search(
+            cr, uid, [('parent_id', 'child_of', ids)]))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
                             (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+                    WHERE line.tax_code_id in %s '+where+' \
                         AND move.id = line.move_id \
                         AND ((invoice.state = \'paid\') \
                             OR (invoice.id IS NULL)) \
-                    GROUP BY line.tax_code_id')
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         else:
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                    GROUP BY line.tax_code_id')
+                    WHERE line.tax_code_id in %s '+where+' \
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         res=dict(cr.fetchall())
         for record in self.browse(cr, uid, ids, context):
             def _rec_get(record):
@@ -1217,12 +1220,14 @@ class account_tax_code(osv.osv):
         else:
             fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
         where = ''
+        where_params = ()
         if fiscalyear_id:
             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
             if pids:
-                where = ' and period_id in (' + (','.join(pids))+')'
+                where = ' and period_id in %s'
+                where_params = (tuple(pids),)
         return self._sum(cr, uid, ids, name, args, context,
-                where=where)
+                where=where, where_params=where_params)
 
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
@@ -1233,7 +1238,8 @@ class account_tax_code(osv.osv):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
         return self._sum(cr, uid, ids, name, args, context,
-                where=' and line.period_id='+str(period_id))
+                         where=' and line.period_id=%s',
+                         where_params=(period_id,))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
@@ -1275,7 +1281,10 @@ class account_tax_code(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str,ids))+')')
+            cr.execute('SELECT DISTINCT parent_id '\
+                       'FROM account_tax_code '\
+                       'WHERE id IN %s',
+                       (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
