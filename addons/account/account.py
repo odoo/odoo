@@ -1031,7 +1031,10 @@ class account_move(osv.osv):
         else:
             line_id2 = 0
 
-        cr.execute('select sum('+mode+') from account_move_line where move_id=%s and id<>%s', (move.id, line_id2))
+        cr.execute('SELECT SUM(%s) '\
+                   'FROM account_move_line '\
+                   'WHERE move_id=%s AND id<>%s',
+                   (mode, move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
