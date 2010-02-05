@@ -145,19 +145,17 @@ class view(osv.osv):
         _Arrow_Obj = self.pool.get(conn_obj)
 
         for model_key,model_value in _Model_Obj._columns.items():
-                if model_value._type == 'one2many':
+                if model_value._type=='one2many' and model_value._obj==node_obj:
                     if model_value._obj==node_obj:
                         _Node_Field=model_key
                     flag=False
                     for node_key,node_value in _Node_Obj._columns.items():
                         if node_value._type=='one2many':
-                             if src_node in _Arrow_Obj._columns:
-                                if flag:
-                                   _Source_Field = node_key
-                             if des_node in _Arrow_Obj._columns:
-                                if not flag:
-                                    _Destination_Field = node_key
-                                    flag = True
+                             if src_node in _Arrow_Obj._columns and flag:
+                                _Source_Field=node_key
+                             if des_node in _Arrow_Obj._columns and not flag:
+                                _Destination_Field=node_key
+                                flag = True
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
