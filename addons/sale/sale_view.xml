@@ -458,13 +458,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Sales Configuration
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Sales Configuration</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    Set the policies selected by default when creating a new
-                    sale order."/>
+                  <label colspan="4" align="0.0"
+                         string="Set the policies selected by default when creating a new sale order."/>
                   <separator colspan="4"
                        string="Configure Sale Order Logistic"/>
                   <newline/>
