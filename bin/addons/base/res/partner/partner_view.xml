@@ -91,7 +91,7 @@
             <field name="type">form</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Partner Address">
+                <form string="Address">
                     <field colspan="4" name="partner_id" select="1"/>
                     <newline/>
                     <field name="name" select="1"/>
@@ -118,7 +118,7 @@
             </field>
         </record>
         <record id="action_partner_address_form" model="ir.actions.act_window">
-            <field name="name">Partner Addresses</field>
+            <field name="name">Addresses</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.address</field>
             <field name="view_type">form</field>
@@ -136,7 +136,7 @@
             <field name="view_id" ref="view_partner_address_form1"/>
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
-        <menuitem action="action_partner_address_form" id="menu_partner_address_form" parent="base.menu_base_config_partner" sequence="30"/>
+        <menuitem action="action_partner_address_form" id="menu_partner_address_form" parent="base.menu_address_book" sequence="30"/>
 
         <!--
           =========================================
@@ -568,7 +568,7 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-<!--        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>-->
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name">Partner Categories</field>
