@@ -78,6 +78,7 @@
                 <field name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
                 <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
                 <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
     </record>
@@ -92,7 +93,6 @@
                 <newline/>
                 <field name="context_id" select="2" widget="selection" groups="project_gtd.group_project_getting"/>
                 <field name="timebox_id" select="1" groups="project_gtd.group_project_getting"/>
-                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
                 <newline/>
             </field>
         </field>
