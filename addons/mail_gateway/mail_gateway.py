@@ -61,6 +61,29 @@ class mail_gateway_server(osv.osv):
         elif server_type == 'imap':
             port = ssl and 993 or 143
         return {'value':{'port':port}}
+    
+    def check_duplicate(self, cr, uid, vals, limit):
+        cr.execute("select count(id) from mail_gateway_server \
+                        where name='%s' and server_type='%s' and login='%s'" % \
+                        (vals['name'], vals['server_type'], vals['login']))
+        res = cr.fetchone()
+        if res:
+            if res[0] > limit:
+                raise osv.except_osv(_('Warning !'), _('Can\'t have duplicate server configuration!'))
+
+    def create(self, cr, uid, vals, context={}):
+        self.check_duplicate(cr, uid, vals, 0)
+        return super(mail_gateway_server, self).create(cr, uid, vals, context=context)
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if not vals:
+            return
+        res = super(mail_gateway_server, self).write(cr, uid, ids, vals, context)
+        for id in ids:
+            vals = self.read(cr, uid, id, ['name', 'server_type', 'login'], context=context)
+            self.check_duplicate(cr, uid, vals, 1)
+        return res
+    
 mail_gateway_server()
 
 
