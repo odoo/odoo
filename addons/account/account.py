@@ -20,8 +20,9 @@
 #
 ##############################################################################
 import time
-import netsvc
+import logging
 
+import netsvc
 from osv import fields, osv
 
 from tools.misc import currency
@@ -149,6 +150,7 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
+    logger = logging.getLogger(_name)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -195,19 +197,33 @@ class account_account(osv.osv):
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2 + ids3
 
-    def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
-        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
+    def __compute(self, cr, uid, ids, field_names, arg=None, context={},
+                  query='', query_params=()):
+        """ compute the balance, debit and/or credit for the provided
+        account ids
+
+        Arguments:
+        `ids`: account ids
+        `field_names`: the fields to compute (a list of any of
+                       'balance', 'debit' and 'credit')
+        `arg`: unused fields.function stuff
+        `query`: additional query filter (as a string)
+        `query_params`: parameters for the provided query string
+                        (__compute will handle their escaping) as a
+                        tuple
+        """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit "
+            'balance': "COALESCE(SUM(l.debit),0) " \
+                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit"
         }
         #get all the necessary accounts
-        ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
+        children_and_consolidated = self._get_children_and_consol(
+            cr, uid, ids, context)
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
-        if ids2:
+        if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
@@ -215,23 +231,31 @@ class account_account(osv.osv):
                 wheres.append(query.strip())
             if aml_query:
                 wheres.append(aml_query.strip())
-            query = " AND ".join(wheres)
-
-            cr.execute(("SELECT l.account_id as id, " +\
-                    ' , '.join(map(lambda x: mapping[x], field_names)) +
-                    "FROM " \
-                        "account_move_line l " \
-                    "WHERE " \
-                        "l.account_id IN (%s) " \
-                        + query +
-                    " GROUP BY l.account_id") % (acc_set, ))
+            filters = " AND ".join(wheres)
+            self.logger.debug('Filters: %s', filters)
+            # IN might not work ideally in case there are too many
+            # children_and_consolidated, in that case join on a
+            # values() e.g.:
+            # SELECT l.account_id as id FROM account_move_line l
+            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
+            # ON l.account_id = tmp.id
+            # or make _get_children_and_consol return a query and join on that
+            request = ("SELECT l.account_id as id, " +\
+                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       " FROM account_move_line l" \
+                       " WHERE l.account_id IN %s " \
+                            + filters +
+                       " GROUP BY l.account_id")
+            params = (tuple(children_and_consolidated),) + query_params
+            cr.execute(request, params)
+            self.logger.debug('Status: %s', cr.statusmessage)
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
 
-
         # consolidate accounts with direct children
-        brs = list(self.browse(cr, uid, ids2, context=context))
+        brs = list(self.browse(cr, uid, children_and_consolidated,
+                               context=context))
         sums = {}
         while brs:
             current = brs[0]

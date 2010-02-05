@@ -67,9 +67,11 @@ class account_account(osv.osv):
     def compute_total(self, cr, uid, ids, yr_st_date, yr_end_date, st_date, end_date, field_names, context={}):
         if not (st_date >= yr_st_date and end_date <= yr_end_date):
             return {}
-        query = "l.date >= '%s' AND l.date <= '%s'" (st_date, end_date)
-        return self.__compute(cr, uid, ids, field_names, context=context, query=query)
-        
+        return self.__compute(
+            cr, uid, ids, field_names, context=context,
+            query="l.date >= '%s' AND l.date <= '%s'",
+            query_params=(st_date, end_date))
+
     def create(self, cr, uid, vals, context={}):
         name=self.search(cr,uid,[('name','ilike',vals['name']),('company_id','=',vals['name'])])
         if name:
