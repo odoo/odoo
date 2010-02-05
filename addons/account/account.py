@@ -197,7 +197,7 @@ class account_account(osv.osv):
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2 + ids3
 
-    def __compute(self, cr, uid, ids, field_names, arg=None, context={},
+    def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
         """ compute the balance, debit and/or credit for the provided
         account ids
@@ -220,7 +220,7 @@ class account_account(osv.osv):
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(
-            cr, uid, ids, context)
+            cr, uid, ids, context=context)
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         if children_and_consolidated:
