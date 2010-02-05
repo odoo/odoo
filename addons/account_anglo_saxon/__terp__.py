@@ -18,17 +18,18 @@
 #
 ##############################################################################
 {
-    "name" : "Stock Account",
-    "version" : "1.1",
-    "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "name" : "Stock Accounting for Anglo Saxon countries",
+    "version" : "1.2",
+    "author" : "Tiny, Veritos",
+    "website" : "http://tinyerp.com - http://veritos.nl",
     "description" : """This module will support the Anglo-Saxons accounting methodology by 
     changing the accounting logic with stock transactions. The difference between the Anglo-Saxon accounting countries 
     and the Rhine or also called Continental accounting countries is the moment of taking the Cost of Goods Sold versus Cost of Sales. 
     Anglo-Saxons accounting does take the cost when sales invoice is created, Continental accounting will take the cost at he moment the goods are shipped.
     This module will add this functionality by using a interim account, to store the value of shipped goods and will contra book this interim account 
-    when the invoice is created to transfer this amount to the debtor or creditor account.""",
-    "depends" : ["product", "account", "sale", "purchase"],
+    when the invoice is created to transfer this amount to the debtor or creditor account.
+    Secondly, price differences between actual purchase price and fixed product standard price are booked on a seperate account""",
+    "depends" : ["product", "account", "sale", "purchase", "stock"],
     "category" : "Generic Modules/Inventory Control",
     "init_xml" : [],
     "demo_xml" : [],
