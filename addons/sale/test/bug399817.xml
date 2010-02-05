@@ -41,7 +41,7 @@
         <function model="stock.picking" name="draft_validate">
             <value eval="[obj(ref('bug399817')).picking_ids[0].id]" model="sale.order" />
         </function>
-        <assert id="bug399817" model="sale.order" severity="error" string="the sale order's first picking is done">
+        <assert id="bug399817" model="sale.order" severity="warning" string="the sale order's first picking is done">
             <test expr="len(picking_ids) == 2" />
             <test expr="picking_ids[0].state">done</test>
         </assert>
@@ -50,10 +50,10 @@
         <function model="stock.picking" name="action_cancel">
             <value eval="[obj(ref('bug399817')).picking_ids[1].id]" model="sale.order" />
         </function>
-        <assert id="bug399817" model="sale.order" severity="error" string="the sale order's second picking is cancelled">
+        <assert id="bug399817" model="sale.order" severity="warn" string="the sale order's second picking is cancelled">
             <test expr="picking_ids[1].state">cancel</test>
         </assert>
-        <assert id="bug399817" model="sale.order" severity="error" string="the sale order's second picking is cancelled">
+        <assert id="bug399817" model="sale.order" severity="error" string="the sale order's is picked">
             <test expr="shipped == True" /> <!-- at this stage, the order should be marked picked -->
         </assert>
     </data>
