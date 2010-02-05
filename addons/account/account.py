@@ -909,7 +909,9 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s', ('draft', tuple(ids)))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
