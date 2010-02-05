@@ -893,7 +893,10 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s',
+                       ('posted', tuple(ids)))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
         return True
