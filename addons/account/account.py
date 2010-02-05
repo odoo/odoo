@@ -35,6 +35,26 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 from tools import config
 
+def check_cycle(self, cr, uid, ids):
+    """ climbs the ``self._table.parent_id`` chains for 100 levels or
+    until it can't find any more parent(s)
+
+    Returns true if it runs out of parents (no cycle), false if
+    it can recurse 100 times without ending all chains
+    """
+    level = 100
+    while len(ids):
+        cr.execute('SELECT DISTINCT parent_id '\
+                   'FROM '+self._table+' '\
+                   'WHERE id IN %s '\
+                   'AND parent_id IS NOT NULL',
+                   (tuple(ids),))
+        ids = map(itemgetter(0), cr.fetchall())
+        if not level:
+            return False
+        level -= 1
+    return True
+
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
     _description = "Payment Term"
@@ -1278,19 +1298,7 @@ class account_tax_code(osv.osv):
         'sign': lambda *args: 1.0,
         'notprintable': lambda *a: False,
     }
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('SELECT DISTINCT parent_id '\
-                       'FROM account_tax_code '\
-                       'WHERE id IN %s',
-                       (tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
@@ -1903,16 +1911,7 @@ class account_account_template(osv.osv):
         'type' : lambda *a :'view',
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
     ]
@@ -1962,16 +1961,7 @@ class account_tax_code_template(osv.osv):
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive Tax Codes.', ['parent_id'])
     ]
