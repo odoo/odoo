@@ -124,7 +124,7 @@ class res_partner_job(osv.osv):
                 self._order = 'sequence_partner'
             elif arg[0] == 'contact_id':
                 self._order = 'sequence_contact'
-            elif arg[0] == 'name':
+
                 contact_obj = self.pool.get('res.partner.contact')
                 search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
                 contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
