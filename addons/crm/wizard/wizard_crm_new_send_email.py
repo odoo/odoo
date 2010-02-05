@@ -70,7 +70,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
 
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get(data['model'])
+    case_pool=pool.get(data.get('model'))
 
     case = case_pool.browse(cr,uid,data['ids'])[0]
     case_pool.write(cr, uid, [case.id], {
@@ -89,11 +89,11 @@ def _mass_mail_send(self, cr, uid, data, context):
         case.user_id.address_id.email,
         emails,
         data['form']['subject'],
-        body,
         case_pool.format_body(body),
         attach=attach,
         reply_to=case.section_id.reply_to,
-        tinycrm=str(case.id)
+        
+        openobject_id=str(case.id)
     )
     if flag:
         if data['form']['state'] == 'unchanged':
@@ -112,7 +112,7 @@ def _get_info(self, cr, uid, data, context):
         return {}
         
     pool = pooler.get_pool(cr.dbname)
-    case = pool.get(data['model']).browse(cr, uid, data['id'])
+    case = pool.get(data.get('model')).browse(cr, uid, data['id'])
 
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))

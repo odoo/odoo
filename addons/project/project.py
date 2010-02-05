@@ -108,7 +108,7 @@ class project(osv.osv):
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
-        'resource_ids': fields.many2many('resource.resource', 'project_resource_rel', 'project_id', 'resource_id', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project."),
         'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project."),
@@ -521,18 +521,21 @@ class message(osv.osv):
     _name = "project.message"
     _description = "Message"
     _columns = {
-        'subject': fields.char('Subject', size=128),
-        'description': fields.char('Description', size =128),
+        'subject': fields.char('Subject', size=128, required="True"),
+        'description': fields.text('Description'),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
         'date': fields.date('Date'),
-        'user_id': fields.many2one('res.users', 'User'),
+        'user_id': fields.many2one('res.users', 'User', required="True"),
         }
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
-        return False    
+        return False
+
     _defaults = {
-              'project_id':_default_project}    
+        'user_id' : lambda self,cr,uid,ctx : uid,                 
+        'project_id':_default_project}    
+
 message()
 
 def _project_get(self, cr, uid, context={}):

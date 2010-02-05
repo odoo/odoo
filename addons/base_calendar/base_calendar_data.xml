@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">	
+	<data noupdate="1">
 		
 
 		<!--		Event attributes-->
@@ -54,7 +54,12 @@
 			<field name="name">valarm</field>
 			<field name="type">vevent</field>
 		</record>
-
+		
+		<record model="basic.calendar.attributes" id="field_event_vtimezone">
+			<field name="name">vtimezone</field>
+			<field name="type">vevent</field>
+		</record>
+		
 		<record model="basic.calendar.attributes" id="field_event_priority">
 			<field name="name">priority</field>
 			<field name="type">vevent</field>
@@ -172,7 +177,12 @@
 			<field name="name">seq</field>
 			<field name="type">vtodo</field>
 		</record>
-
+		
+		<record model="basic.calendar.attributes" id="field_todo_vtimezone">
+			<field name="name">vtimezone</field>
+			<field name="type">vtodo</field>
+		</record>
+		
 		<record model="basic.calendar.attributes" id="field_todo_url">
 			<field name="name">url</field>
 			<field name="type">vtodo</field>

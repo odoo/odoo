@@ -144,13 +144,13 @@ class survey_analysis(report_rml):
                         for col in range(0, len(que.column_heading_ids) + 1):
                             cols_widhts.append(float(300 / (len(que.column_heading_ids) + 1)))
                         colWidths = ",".join(map(tools.ustr, cols_widhts))
-                        matrix_ans = ['',]
+                        matrix_ans = [(0,'')]
                         for col in que.column_heading_ids:
                             if col.title not in matrix_ans:
-                                matrix_ans.append(col.title)
+                                matrix_ans.append((col.id,col.title))
                         rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>"""
-                        for mat_col in matrix_ans:
-                            rml+="""<td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
+                        for mat_col in range(0, len(matrix_ans)):
+                            rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
                         rml+="""<td><para style="response">Response Count</para></td>
                                 </tr>"""
                         last_col = cols_widhts[-1]
@@ -158,13 +158,13 @@ class survey_analysis(report_rml):
                             rml+="""<tr><td><para style="answer">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
                             cr.execute("select count(id) from survey_response_answer sra where sra.answer_id = %d"%(ans.id))
                             tot_res = cr.fetchone()[0]
-                            cr.execute("select count(id) ,sra.answer from survey_response_answer sra where sra.answer_id = %d group by sra.answer" % ans.id)
+                            cr.execute("select count(id) ,sra.column_id from survey_response_answer sra where sra.answer_id = %d group by sra.column_id" % ans.id)
                             calc_res = cr.dictfetchall()
                             for mat_col in range(1, len(matrix_ans)):
                                 percantage = 0
                                 cal_count = 0
                                 for cal in calc_res:
-                                    if cal['answer'] == matrix_ans[mat_col]:
+                                    if cal['column_id'] == matrix_ans[mat_col][0]:
                                         cal_count = cal['count']
                                 if tot_res:
                                     percantage = round(float(cal_count)*100 / tot_res,2)
@@ -181,7 +181,7 @@ class survey_analysis(report_rml):
                             rml+="""<blockTable colWidths=" """+ str(500 - last_col) +"," + str(last_col) + """ " style="Table1"><tr><td><para style="answer_right">""" + to_xml(tools.ustr(que.comment_label)) + """</para></td>
                                     <td><para style="answer">""" + tools.ustr(tot_res) + """</para></td></tr></blockTable>"""
 
-                    elif que.type in['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'multiple_textboxes','date_and_time','date']:
+                    elif que.type in['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'multiple_textboxes','date_and_time','date','multiple_textboxes_diff_type']:
                         rml +="""<blockTable colWidths="280.0,120,100.0" style="Table1">"""
                         rml += """ <tr>
                              <td> <para style="Standard"> </para></td>
@@ -234,13 +234,13 @@ class survey_analysis(report_rml):
                         for col in range(0,len(que.column_heading_ids) + 2):
                             cols_widhts.append(float(300 / (len(que.column_heading_ids) + 2)))
                         colWidths = ",".join(map(tools.ustr, cols_widhts))
-                        matrix_ans = ['',]
+                        matrix_ans = [(0,'')]
                         for col in que.column_heading_ids:
                             if col.title not in matrix_ans:
-                                matrix_ans.append(col.title)
+                                matrix_ans.append((col.id,col.title))
                         rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>"""
-                        for mat_col in matrix_ans:
-                            rml+="""<td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
+                        for mat_col in range(0,len(matrix_ans)):
+                            rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
                         rml+="""<td><para style="response">Rating Average</para></td>
                                 <td><para style="response">Response Count</para></td>
                                 </tr>"""
@@ -250,14 +250,13 @@ class survey_analysis(report_rml):
                             rating_weight_sum = 0
                             for mat_col in range(1, len(matrix_ans)):
                                 cr.execute("select count(sra.answer_id) from survey_response_line sr, survey_response_answer sra\
-                                     where sr.id = sra.response_id and  sra.answer_id = %d and sra.answer ='%s'" % (ans.id,matrix_ans[mat_col]))
+                                     where sr.id = sra.response_id and  sra.answer_id = %d and sra.column_id ='%d'" % (ans.id,matrix_ans[mat_col][0]))
                                 tot_res = cr.fetchone()[0]
                                 cr.execute("select count(sra.answer_id),sqc.rating_weight from survey_response_line sr, survey_response_answer sra ,\
                                         survey_question_column_heading sqc where sr.id = sra.response_id and \
                                         sqc.question_id = sr.question_id  and sra.answer_id = %d and sqc.title ='%s'\
-                                        group by sra.answer_id,sqc.rating_weight" % (ans.id,matrix_ans[mat_col]))
+                                        group by sra.answer_id,sqc.rating_weight" % (ans.id,matrix_ans[mat_col][1]))
                                 col_weight =  cr.fetchone()
-                                
                                 if not col_weight:
                                     col_weight= (0,0)
                                 elif not col_weight[1]:
@@ -295,10 +294,10 @@ class survey_analysis(report_rml):
                                 rml += """<td><para style="response">""" + to_xml(tools.ustr(menu)) + """</para></td>"""
                             rml += """<td><para style="response">Response Count</para></td></tr>"""
                             cr.execute("select count(id), sra.answer_id from survey_response_answer sra \
-                                     where sra.answer='%s' group by sra.answer_id "  % (column.title))
+                                     where sra.column_id='%s' group by sra.answer_id "  % (column.id))
                             res_count = cr.dictfetchall()
-                            cr.execute("select count(sra.id),sra.value_choice, sra.answer_id, sra.answer from survey_response_answer sra \
-                                 where sra.answer='%s'  group by sra.value_choice ,sra.answer_id, sra.answer" % (column.title))
+                            cr.execute("select count(sra.id),sra.value_choice, sra.answer_id, sra.column_id from survey_response_answer sra \
+                                 where sra.column_id='%s'  group by sra.value_choice ,sra.answer_id, sra.column_id" % (column.id))
                             calc_percantage = cr.dictfetchall()
                             for ans in que.answer_choice_ids:
                                 rml+="""<tr><td><para style="answer_right">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""

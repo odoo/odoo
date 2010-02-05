@@ -47,7 +47,7 @@
             <field name="view_id" ref="view_scrum_project_tree"/>
             <field name="domain">[('parent_id','=',False),('scrum','=',1)]</field>
         </record>
-        <menuitem id="next_id_67" name="Scrum" parent="project.menu_main"/><menuitem action="action_scrum_project_tree" id="menu_action_scrum_project_tree" parent="next_id_67"/>
+        <menuitem id="next_id_67" name="Scrum" parent="base.menu_main_pm"/><menuitem action="action_scrum_project_tree" id="menu_action_scrum_project_tree" parent="next_id_67"/>
 
         <record id="action_scrum_project_form" model="ir.actions.act_window">
             <field name="name">Edit Projects</field>

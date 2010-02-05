@@ -51,7 +51,7 @@ email_send_fields = {
 # this sends an email to ALL the addresses of the selected partners.
 def _mass_mail_send(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get('crm.case')
+    case_pool=pool.get(data['model'])
 
     hist_obj = pool.get('crm.case.history').browse(cr,uid,data['ids'])[0]
     case = hist_obj.log_id.case_id
@@ -71,7 +71,7 @@ def _mass_mail_send(self, cr, uid, data, context):
         data['form']['subject'],
         case_pool.format_body(body),
         reply_to=case.section_id.reply_to,
-        tinycrm=str(case.id)
+        openobject_id=str(case.id)
     )
     return {}
 

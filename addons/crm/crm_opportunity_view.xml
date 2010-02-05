@@ -39,37 +39,45 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Opportunities">
-                <group colspan="4" col="7">
-                    <field name="name" select="1" string="Opportunity" colspan="2"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="user_id" select="2" string="Responsible"/>
-					<button string="Schedule a Meeting"
-                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
-                        <newline/>
-                        <label string="Sales Stage: " align="1.0"/>
-                        <group colspan="1" col="2">
-                        <field name="stage_id" select="1" nolabel="1"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                        </group>
-                    <field name="date" />
-                    <field name="date_deadline"/>
-                    <button string="Schedule a Phone Call"
-                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />
-                </group>
-                <notebook colspan="4">
-                <page string="Description">
-                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <field name="email_from" colspan="2"/>
-                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Source"/>
-                    <field name="priority" string="Priority"/>
-                    <field name="type_id" select="1" string="Type"/>
-                    <separator colspan="4" string="Estimates"/>
-                    <field name="planned_revenue"/>
+                <group colspan="4" col="4">                    
+                    <field name="name" select="1" string="Opportunity" colspan="4"/>
+                    <field name="planned_revenue" required="1"/>
                     <field name="planned_cost"/>
                     <field name="probability"/>
-                    <separator colspan="4" string="Description Information"/>
-                        <field name="description" nolabel="1" colspan="4"/>
+                    <field name="date_deadline" string="Excepted Close Date" required="1"/>
+                    <group colspan="4" col="5">
+                    <label string="" colspan="2"/>
+                    <button string="Schedule Meeting"
+                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
+                    <button string="Schedule Call"
+                        name="%(wizard_crm_opportunity_reschedule_phone_call)d" icon="gtk-redo" type="action"  />
+                </group>
+                </group>
+                
+                <group colspan="4" col="4">
+                <notebook>
+                <page string="Opportunity">
+                    <separator colspan="4" string="Communication"/>                    
+                    <field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                    <field name="email_from" colspan="2" string="Email"/>
+                    <field name="partner_phone" colspan="2"/>
+
+                    <separator colspan="4" string="Status and Categarization"/>
+                    <group colspan="4" col="6">
+                        <field name="user_id" select="2" string="Responsible"/>                        
+                        <field name="stage_id" select="1" string="Sales Stage" required="1" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>                        
+                        <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                        <field name="type_id" select="1" string="Campaign"/>
+                        <field name="section_id" colspan="1" widget="selection"/>
+                        <field name="priority" string="Priority"/>
+                    
+                    </group>
+                    
+                    
+                    
+                    <separator colspan="4" string="Details"/>
+                    <field name="description" nolabel="1" colspan="4"/>
 
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
@@ -136,6 +144,7 @@
                     <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
                  </page>
                 </notebook>
+                </group>
             </form>
         </field>
     </record>
@@ -151,7 +160,7 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="planned_revenue"/>
                 <field name="probability"/>
-                <field name="date_deadline"/>
+                <field name="date_deadline" string="Excepted Close Date"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
