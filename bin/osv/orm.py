@@ -932,6 +932,17 @@ class orm_template(object):
             self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
+        """ Set default values for the object's fields.
+
+        Returns a dict of {field_name:default_value}
+
+        Arguments:
+        `fields_list`: the fields for which the object doesn't have
+                       any value yet, and default values need to be
+                       provided. If fields outside this list are
+                       returned, the user-provided values will be
+                       overwritten.
+        """
         return {}
 
     def perm_read(self, cr, user, ids, context=None, details=True):
