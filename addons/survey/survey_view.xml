@@ -853,13 +853,6 @@
                             <field name="response_answer_ids" colspan="4" nolabel="1"/>
                             <group col="5" colspan="4">
                                 <field name="state"/>
-                                <button name="response_draft"
-                                    string="Set to draft" states="done,skip" type="object"
-                                    icon="gtk-new"/>
-                                <button name="response_done" string="Done"
-                                    states="draft" type="object" icon="gtk-go-forward"/>
-                                <button name="response_skip" string="Skip"
-                                    states="draft" type="object" icon="gtk-close"/>
                             </group>
                         </page>
                         <page string="Single Textboxes">
@@ -1127,7 +1120,7 @@
 			groups="group_survey_manager,group_survey_user" icon="STOCK_INDEX"/>
 
 		<menuitem action="wizard_browse_answer" id="menu_wizard_browse_answer"
-			parent="main_menu_survey" type="wizard"/>
+			parent="main_menu_survey" type="wizard" groups="group_survey_manager"/>
 
     </data>
 </openerp>
