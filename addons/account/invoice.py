@@ -948,7 +948,9 @@ class account_invoice(osv.osv):
         line_ids = []
         total = 0.0
         line = self.pool.get('account.move.line')
-        cr.execute('select id from account_move_line where move_id in ('+str(move_id)+','+str(invoice.move_id.id)+')')
+        cr.execute('SELECT id FROM account_move_line '\
+                   'WHERE move_id in %s',
+                   ((move_id, invoice.move_id.id),))
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
         for l in lines+invoice.payment_ids:
             if l.account_id.id==src_account_id:
