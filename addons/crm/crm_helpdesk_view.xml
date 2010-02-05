@@ -164,7 +164,7 @@
                <group col="6" colspan="1">
                    <filter icon="gtk-home" string="Today"
                    	separator="1"
-                   	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                    	help="Todays's Helpdesk Requests"
                    />
                    <filter icon="gtk-media-rewind"
