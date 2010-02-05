@@ -30,9 +30,14 @@ import pooler
 import pytz
 import re
 import tools
-import vobject
 import time
 
+
+try:
+    import vobject
+except ImportError:
+    raise osv.except_osv('vobject Import Error!','Please install python-vobject from http://vobject.skyhouseconsulting.com/')
+ 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
