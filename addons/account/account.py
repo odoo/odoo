@@ -795,7 +795,10 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        cr.execute('SELECT move_id, SUM(debit) '\
+                   'FROM account_move_line '\
+                   'WHERE move_id IN %s '\
+                   'GROUP BY move_id', (tuple(ids),))
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
