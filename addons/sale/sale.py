@@ -303,6 +303,8 @@ class sale_order(osv.osv):
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
+            # Deleting the existing instance of workflow for SO
+            wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
         return True
 

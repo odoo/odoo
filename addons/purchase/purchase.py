@@ -300,6 +300,8 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
         wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
+            # Deleting the existing instance of workflow for PO
+            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)            
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         return True
 
