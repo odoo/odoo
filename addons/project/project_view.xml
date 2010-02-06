@@ -445,6 +445,8 @@
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
+                        <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-project"/>
+                        <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
