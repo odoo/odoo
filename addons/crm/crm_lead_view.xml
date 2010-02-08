@@ -46,7 +46,7 @@
                     <group colspan="4" col="4">
                     <notebook>
                     <page string="Leads">
-                        <separator colspan="4" string="Communication"/>                                                                        
+                        <separator colspan="4" string="Communication"/>
                         <field name="partner_id" string="Partner"
                         	on_change="onchange_partner_id(partner_id)" />
                         <field name="partner_address_id"
@@ -58,17 +58,17 @@
                         <group colspan="4" col="6">
                             <field name="user_id" select="2"/>                                                        
                             <field name="stage_id" select="1" string="Status" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>                                
-                            <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
-                       
+                            <field name="categ_id" select="1"
+                            	on_change="onchange_categ_id(categ_id)"
+                            	string="Lead Source" widget="selection"
+                            	domain="[('object_id.model', '=', 'crm.opportunity')]" />
                             <field name="type_id" string="Campaign" select="1"/>
                             <field name="section_id" colspan="1" widget="selection"/>
                             <field name="priority" string="Priority"/>
-            
                             <field name="date" string="Create Date"/>
 	                    </group>
                         <separator colspan="4" string="Details"/>
                         <field name="description" nolabel="1" colspan="4"/>
-
                         <separator colspan="4"/>
                         <group col="8" colspan="4">
                             <field name="state" select="2"/>
@@ -105,13 +105,13 @@
                                 <field name="date"/>
                             </tree>
                         </field>
-                        <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                        <button colspan="4" string="Send New Email"
+                        	name="%(crm.wizard_crm_new_send_mail)d"
+                        	context="{'mail':'new'}" icon="gtk-go-forward"
+                        	type="action" />
                      </page>
                     </notebook>
                     </group>
-
-                
-
             </form>
         </field>
     </record>

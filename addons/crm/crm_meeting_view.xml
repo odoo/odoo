@@ -115,8 +115,8 @@
             <tree string="Meetings Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id" widget="char"/>
                 <field name="name" string="Title"/>
-                <field name="date" string="Next Meeting"/>
-                <field name="section_id" widget="selection"/>
+                <field name="date" string="Meeting Date"/>
+                <field name="section_id" />
                 <field name="priority"/>
                 <field name="categ_id"/>
                 <field name="user_id"/>
@@ -162,7 +162,7 @@
             	<search string="Search Meetings">
                		<group col="12" colspan="4">
                			<filter icon="terp-crm" string="My Meetings" domain="[('user_id','=',uid)]" help="My Meetings"/>
-	               		<filter icon="terp-crm" string="Draft" domain="[('state','in',('draft', 'open'))]" default="1" help="Current Meetings"/>
+	               		<filter icon="terp-crm" string="Current" domain="[('state','in',('draft', 'open'))]" default="1" help="Current Meetings"/>
 	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" help="Confirmed Meetings"/>
 	               		<separator orientation="vertical"/>
 	               		<field name="name" select="1" string="Subject"/>
