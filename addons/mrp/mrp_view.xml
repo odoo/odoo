@@ -3,7 +3,7 @@
     <data>
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="3"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="1"/>
 
@@ -544,7 +544,7 @@
                         <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
-					</group>                         
+					</group>
                </search>
             </field>
         </record>
@@ -762,7 +762,7 @@
                         <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
-					</group>  
+					</group>
                 </search>
             </field>
         </record>
