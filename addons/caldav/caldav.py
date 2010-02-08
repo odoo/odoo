@@ -186,9 +186,9 @@ class invite_attendee_wizard(osv.osv_memory):
         'email': fields.char('Email', size=124), 
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
                                   'invite_id', 'contact_id', 'Contacts'), 
+        'send_mail': fields.boolean('Send mail?', help='Check this if you want\
+ to send an Email to Invited Person')
               }
-
-    
 
     def do_invite(self, cr, uid, ids, context={}):            
         datas = self.read(cr, uid, ids)[0]
@@ -241,9 +241,12 @@ class invite_attendee_wizard(osv.osv_memory):
             })
         att_id = att_obj.create(cr, uid, vals)
         if model_field:
-            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
-
-        att_obj._send_mail(cr, uid, [att_id], mail_to, email_from=tools.config.get('email_from', False))
+            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)], 
+                                            'state': 'delegated'})
+        
+        if datas.get('send_mail'):
+            att_obj._send_mail(cr, uid, [att_id], mail_to, \
+                   email_from=tools.config.get('email_from', False))
                 
         return {}
 
@@ -374,8 +377,8 @@ class calendar_attendee(osv.osv):
 request was delegated to"),         
         'delegated_from': fields.function(_compute_data, method=True, string=\
             'Delegated From', type="char", store=True, size=124, multi='delegated_from'),        
-        'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel', 'attendee_id', 'parent_id', 'Delegrated To'),
-        'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel', 'attendee_id', 'child_id', 'Delegrated From'),  
+        'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel', 'attendee_id', 'parent_id', 'Delegrated From'),
+        'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel', 'attendee_id', 'child_id', 'Delegrated To'),  
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
         'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
@@ -394,7 +397,7 @@ request was delegated to"),
         'state':  lambda *x: 'needs-action', 
     }
     
-    response_re = response_re = re.compile("Are you coming\?.*(YES|NO|MAYBE).*", re.UNICODE)
+    response_re = response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
     
     def msg_new(self, cr, uid, msg):        
         return False
