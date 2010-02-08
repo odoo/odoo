@@ -2,28 +2,28 @@
 <openerp>
 	<data>
 		<record id="survey_2" model="survey">
-			<field name="title">EMPLOYEE EVALUATION</field>
+			<field name="title">Employee Evaluation</field>
 			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
 		</record>
 	</data>
 	<data>
 		<record id="survey_3" model="survey">
-			<field name="title">EMPLOYEE OPINION</field>
+			<field name="title">Employee Opinion</field>
 			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
 		</record>
 	</data>
 	<data>
 		<record id="survey_page_1" model="survey.page">
-			<field name="title">EMPLOYEE EVALUATION FORM</field>
+			<field name="title">Employee Evaluation Form</field>
 			<field name="survey_id" ref="survey_2"/>
 			<field eval="1" name="sequence"/>
 		</record>
 	</data>
 	<data>
 		<record id="survey_page_2" model="survey.page">
-			<field name="title">PROCESS</field>
+			<field name="title">Process</field>
 			<field name="survey_id" ref="survey_3"/>
 			<field eval="1" name="sequence"/>
 		</record>
@@ -31,14 +31,14 @@
 
 	<data>
 		<record id="survey_page_5" model="survey.page">
-			<field name="title">WORK PLAN</field>
+			<field name="title">Work Plan</field>
 			<field name="survey_id" ref="survey_2"/>
 			<field eval="2" name="sequence"/>
 		</record>
 	</data>
 	<data>
 		<record id="survey_page_6" model="survey.page">
-			<field name="title">EMPLOYEE PERFORMANCE IN KEY AREAS</field>
+			<field name="title">Employee Performance In Key Areas</field>
 			<field name="survey_id" ref="survey_2"/>
 			<field eval="3" name="sequence"/>
 			<field name="note">The appraiser should rate the employee’s major work accomplishments and performance according to the metric provided below :
@@ -52,7 +52,7 @@
 
 	<data>
 		<record id="survey_page_16" model="survey.page">
-			<field name="title">PROFESSIONAL DEVELOPMENT AND PERFORMANCE PLAN (optional)</field>
+			<field name="title">Professional Development And Performance Plan (optional)</field>
 			<field name="survey_id" ref="survey_2"/>
 			<field eval="4" name="sequence"/>
 			<field name="note">Identify professional, performance, or project objectives you recommend for employee’s continued career development over the coming year. </field>
@@ -61,7 +61,7 @@
 
 	<data>
 		<record id="survey_page_26" model="survey.page">
-			<field name="title">EMPLOYEE COMMENTS</field>
+			<field name="title">Employee Comments</field>
 			<field name="survey_id" ref="survey_2"/>
 			<field eval="5" name="sequence"/>
 		</record>
@@ -69,7 +69,7 @@
 
 	<data>
 		<record id="survey_page_10" model="survey.page">
-			<field name="title">SURVEY</field>
+			<field name="title">Survey</field>
 			<field name="survey_id" ref="survey_3"/>
 			<field eval="5" name="sequence"/>
 		</record>
@@ -138,7 +138,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="1" name="sequence"/>
-			<field name="question">ENGAGEMENT</field>
+			<field name="question">Engagement</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -162,10 +162,10 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="1" name="sequence"/>
-			<field name="question">SUBJECT</field>
+			<field name="question">Subject</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
-			<field name="column_name">RECOMMENDATIONS / EVALUATIONS</field>
+			<field name="column_name">Recommendations / Evaluations</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
 			<field eval="0" name="make_comment_field"/>
 			<field eval="0" name="in_visible_menu_choice"/>
@@ -188,7 +188,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="2" name="sequence"/>
-			<field name="question">LEADERSHIP</field>
+			<field name="question">Leadership</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field eval="0" name="in_visible_menu_choice"/>
@@ -209,7 +209,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="2" name="sequence"/>
-			<field name="question">PROCESS</field>
+			<field name="question">Process</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">comment</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -236,7 +236,7 @@
 			<field name="question">Supervisors only : </field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
-			<field name="column_name">RECOMMENDATIONS / EVALUATIONS </field>
+			<field name="column_name">Recommendations / Evaluations</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
 			<field eval="0" name="make_comment_field"/>
 			<field eval="0" name="in_visible_menu_choice"/>
@@ -259,7 +259,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="1" name="sequence"/>
-			<field name="question">WORK PLAN</field>
+			<field name="question">Work Plan</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">table</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -285,7 +285,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="3" name="sequence"/>
-			<field name="question">EFFECTIVENESS</field>
+			<field name="question">Effectiveness</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -312,7 +312,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="4" name="sequence"/>
-			<field name="question">CONTINUOUS IMPROVEMENT</field>
+			<field name="question">Continuous Improvement</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -362,7 +362,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="5" name="sequence"/>
-			<field name="question">OPENNESS</field>
+			<field name="question">Openness</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -389,7 +389,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="3" name="sequence"/>
-			<field name="question">OVERALL PERFORMANCE SUMMARY RATING</field>
+			<field name="question">Overall Performance Summary Rating</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">descriptive_text</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -415,7 +415,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="2" name="sequence"/>
-			<field name="question">OVERALL PURPOSE OF EMPLOYEE APPRAISAL</field>
+			<field name="question">Overall Purpose Of Employee Appraisal</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">descriptive_text</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -442,7 +442,7 @@
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="6" name="sequence"/>
-			<field name="question">MISCELLANEOUS</field>
+			<field name="question">Miscellaneous</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">matrix_of_choices_only_one_ans</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -590,7 +590,7 @@ Once the form had been filled, the employee send it to his supervisor.
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="3" name="sequence"/>
-			<field name="question">EVALUATION PROCESS</field>
+			<field name="question">Evaluation Process</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">descriptive_text</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -634,7 +634,7 @@ Once the form had been filled, the employee send it to his supervisor.
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="2" name="sequence"/>
-			<field name="question">PROFESSIONAL DEVELOPMENT OBJECTIVES </field>
+			<field name="question">Professional Development Objectives </field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">comment</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -659,7 +659,7 @@ Once the form had been filled, the employee send it to his supervisor.
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="2" name="sequence"/>
-			<field name="question">PERSONAL PERFORMANCE OBJECTIVES</field>
+			<field name="question">Personal Performance Objectives</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">comment</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
@@ -684,7 +684,7 @@ Once the form had been filled, the employee send it to his supervisor.
 			<field eval="0" name="rating_allow_one_column_require"/>
 			<field name="req_error_msg">This question requires an answer.</field>
 			<field eval="4" name="sequence"/>
-			<field name="question">PROJECT OBJECTIVES</field>
+			<field name="question">Project Objectives</field>
 			<field eval="0" name="is_require_answer"/>
 			<field name="type">comment</field>
 			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
