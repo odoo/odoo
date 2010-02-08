@@ -144,6 +144,13 @@ class survey_form(report_rml):
                 <blockTable colWidths='"""+_tbl_widths+"""' style="title_tbl">
                     <tr><td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td></tr>
                 </blockTable>"""
+
+            if survey.note:
+                rml += """
+                <para style="P2"></para>
+                    <blockTable colWidths='"""+_tbl_widths+"""' style="note_table">
+                        <tr><td><para style="descriptive_text">""" + to_xml(tools.ustr(survey.note)) + """</para><para style="P2"><font></font></para></td></tr>
+                    </blockTable>"""
             seq = 0
             for page in survey.page_ids:
                 seq+=1
