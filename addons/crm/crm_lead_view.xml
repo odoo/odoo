@@ -156,37 +156,40 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-               <group col="3" colspan="1">
-                <filter icon="gtk-home" string="   Today   "
-                    separator="1"
-                    domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
-                    help="Todays's Leads"
-                />
-                <filter icon="gtk-media-rewind" string="    7 Days    "
-                    separator="1" help="Leads during last 7 days"
-                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                />
-               </group>
-               <separator orientation="vertical"/>
-               <group col="6" colspan="2">
-                   <field name="name" select="1"/>
-                   <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-partner"
-                               domain="[('user_id','=',uid)]" help="My Leads"
-                               default="1"
-                           />
-                   </field>
-                   <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Leads" default="1"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Leads"/>
-                   </field>
-					<field name="section_id" select="1" default="context.get('section_id', False)" widget="selection" string="Section">
- 						<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
-                           />
-					</field>
-               </group>
+                <group colspan="4">
+                   <group col="3" colspan="1">
+                    <filter icon="gtk-home" string="   Today   "
+                        separator="1"
+                        domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                        help="Todays's Leads"
+                    />
+                    <filter icon="gtk-media-rewind" string="    7 Days    "
+                        separator="1" help="Leads during last 7 days"
+                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                    />
+                   </group>
+                    <separator orientation="vertical"/>
+                   <group col="6" colspan="2">
+                       <field name="name" select="1"/>
+                       <field name="user_id" select="1" widget="selection">
+                               <filter icon="terp-partner"
+                                   domain="[('user_id','=',uid)]" help="My Leads"
+                                   default="1"
+                               />
+                       </field>
+                       <field name="state" select="1">
+                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Leads" default="1"/>
+                           <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Leads"/>
+                       </field>
+					    <field name="section_id" select="1" default="context.get('section_id', False)" widget="selection" string="Section">
+     						<filter icon="terp-crm"
+                                   domain="[('section_id','=',context.get('section_id',False))]"
+                                   help="My section"
+                               />
+					    </field>
+                   </group>
+                </group>
+                <newline/>
                <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="By Status" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>                        
                         <filter string="By Lead Source" icon="terp-crm" domain="[]"  context="{'group_by':'categ_id'}"/>
