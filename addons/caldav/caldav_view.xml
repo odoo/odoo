@@ -85,10 +85,10 @@
             			</page>
             			<page string="Delegation Info">
             				<separator string="Delegated to" colspan="4" />
-            				<field name="del_to_user_ids" nolabel="1"
+            				<field name="parent_ids" nolabel="1"
             					colspan="4" readonly="1" />
             				<separator string="Delegated from" colspan="4" />
-            				<field name="del_from_user_ids" nolabel="1"
+            				<field name="child_ids" nolabel="1"
             					colspan="4" readonly="1" />
             			</page>
             		</notebook>
@@ -105,7 +105,7 @@
 	                        	name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
 	                        	string="Delegate" type="action"
 	                        	icon="gtk-sort-descending"
-	                        	context="{'model' : 'calendar.attendee', 'state' : 'delegated'}" />
+	                        	context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
             		</group>
             	</form>
             </field>

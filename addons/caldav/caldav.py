@@ -172,6 +172,96 @@ html_invitation = """
 </html>
 """
 
+class invite_attendee_wizard(osv.osv_memory):
+    _name = "caldav.invite.attendee"
+    _description = "Invite Attendees"
+
+    _columns = {
+        'type': fields.selection([('internal', 'Internal User'), \
+              ('external', 'External Email'), \
+              ('partner', 'Partner Contacts')], 'Type', required=True), 
+        'user_ids': fields.many2many('res.users', 'invite_user_rel', 
+                                  'invite_id', 'user_id', 'Users'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'email': fields.char('Email', size=124), 
+        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
+                                  'invite_id', 'contact_id', 'Contacts'), 
+              }
+
+    
+
+    def do_invite(self, cr, uid, ids, context={}):            
+        datas = self.read(cr, uid, ids)[0]
+        model = False
+        model_field = False
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        model_field = context.get('attendee_field', False)
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context['active_id'])
+        type = datas.get('type')
+        att_obj = self.pool.get('calendar.attendee')
+        vals = {}
+        mail_to = []
+        if not model == 'calendar.attendee':
+            vals = {'ref': '%s,%s' % (model, caldav_id2real_id(context['active_id']))}
+
+        if type == 'internal':
+            user_obj = self.pool.get('res.users')
+            for user_id in datas.get('user_ids', []):
+                user = user_obj.browse(cr, uid, user_id)
+                if not user.address_id.email:
+                    raise osv.except_osv(_('Error!'), \
+                                    ("User does not have an email Address"))
+                vals.update({'user_id': user_id, 
+                                     'email': user.address_id.email})
+                mail_to.append(user.address_id.email)
+                
+        elif  type == 'external' and datas.get('email'):
+            vals.update({'email': datas['email']})
+            mail_to.append(datas['email'])
+        elif  type == 'partner':
+            add_obj = self.pool.get('res.partner.address')
+            for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
+                if not contact.email:
+                    raise osv.except_osv(_('Error!'), \
+                                    ("Partner does not have an email Address"))
+                vals.update({
+                             'partner_address_id': contact.id, 
+                             'email': contact.email})
+                mail_to.append(contact.email)
+
+        if model == 'calendar.attendee':
+            att = att_obj.browse(cr, uid, context['active_id'])
+            vals.update({
+                'parent_ids' : [(4, att.id)],
+                'ref': att.ref
+            })
+        att_id = att_obj.create(cr, uid, vals)
+        if model_field:
+            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
+
+        att_obj._send_mail(cr, uid, [att_id], mail_to, email_from=tools.config.get('email_from', False))
+                
+        return {}
+
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):
+        if not partner_id:
+            return {'value': {'contact_ids': []}}
+        cr.execute('select id from res_partner_address \
+                         where partner_id=%s' % (partner_id))
+        contacts = map(lambda x: x[0], cr.fetchall())
+        if not contacts:
+            raise osv.except_osv(_('Error!'), \
+                                ("Partner does not have any Contacts"))
+
+        return {'value': {'contact_ids': contacts}}
+
+invite_attendee_wizard()
+
 class calendar_attendee(osv.osv):
     _name = 'calendar.attendee'
     _description = 'Attendee information'
@@ -206,10 +296,14 @@ class calendar_attendee(osv.osv):
                 else:
                     result[id][name] = self._get_address(None, attdata.email)
             if name == 'delegated_to':
-                todata = map(lambda x:('MAILTO:' + x.email) or '', attdata.del_to_user_ids)
+                todata = []
+                for parent in attdata.parent_ids:
+                    todata.append('MAILTO:' + parent.email)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
-                fromdata = map(lambda x:('MAILTO:' + x.email) or '', attdata.del_from_user_ids)
+                fromdata = []
+                for child in attdata.child_ids:
+                    fromdata.append('MAILTO:' + child.email)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
@@ -277,13 +371,11 @@ class calendar_attendee(osv.osv):
         'delegated_to': fields.function(_compute_data, method=True, \
                 string='Delegated To', type="char", size=124, store=True, \
                 multi='delegated_to', help="The users that the original \
-request was delegated to"), 
-        'del_to_user_ids': fields.many2many('calendar.attendee', 'att_del_to_user_rel', 
-                                  'attendee_id', 'user_id', 'Users'), 
+request was delegated to"),         
         'delegated_from': fields.function(_compute_data, method=True, string=\
-            'Delegated From', type="char", store=True, size=124, multi='delegated_from'), 
-        'del_from_user_ids': fields.many2many('calendar.attendee', 'att_del_from_user_rel', \
-                                      'attendee_id', 'user_id', 'Users'), 
+            'Delegated From', type="char", store=True, size=124, multi='delegated_from'),        
+        'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel', 'attendee_id', 'parent_id', 'Delegrated To'),
+        'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel', 'attendee_id', 'child_id', 'Delegrated From'),  
         'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
         'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'), 
         'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
@@ -326,6 +418,43 @@ request was delegated to"),
                 self.write(cr, uid, ids, {'state': status})
         return True
 
+    def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        for att in self.browse(cr, uid, ids, context=context):
+            sign = att.sent_by_uid and att.sent_by_uid.signature or ''
+            sign = '<br>'.join(sign and sign.split('\n') or [])
+            model, res_id = tuple(att.ref.split(','))            
+            res_obj = self.pool.get(model).browse(cr, uid, res_id)
+            if res_obj and len(res_obj):
+                res_obj = res_obj[0]
+            sub = '[%s Invitation][%d] %s'  % (company, att.id, res_obj.name)
+            att_infos = []
+            other_invitaion_ids = self.search(cr, uid, [('ref','=',att.ref)])
+            for att2 in self.browse(cr, uid, other_invitaion_ids):
+                att_infos.append(((att2.user_id and att2.user_id.name) or \
+                             (att2.partner_id and att2.partner_id.name) or \
+                                att2.email) +  ' - Status: ' + att2.state.title())
+            body_vals = {'name': res_obj.name, 
+                        'start_date': res_obj.date, 
+                        'end_date': res_obj.date_deadline or None, 
+                        'description': res_obj.description or '-', 
+                        'location': res_obj.location or '-', 
+                        'attendees': '<br>'.join(att_infos), 
+                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
+                        'sign': sign, 
+                        'company': company
+            }
+            body = html_invitation % body_vals
+            if mail_to and email_from:
+                tools.email_send(
+                        email_from, 
+                        mail_to, 
+                        sub, 
+                        body, 
+                        subtype='html', 
+                        reply_to=email_from
+                    ) 
+            return True
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
             return {'value': {'email': ''}}
@@ -1140,112 +1269,4 @@ class res_users(osv.osv):
                     string='Free/Busy', method=True), 
     }
 res_users()
-
-class invite_attendee_wizard(osv.osv_memory):
-    _name = "caldav.invite.attendee"
-    _description = "Invite Attendees"
-
-    _columns = {
-        'type': fields.selection([('internal', 'Internal User'), \
-              ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True), 
-        'user_ids': fields.many2many('res.users', 'invite_user_rel', 
-                                  'invite_id', 'user_id', 'Users'), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'email': fields.char('Email', size=124), 
-        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
-                                  'invite_id', 'contact_id', 'Contacts'), 
-              }
-
-    def do_invite(self, cr, uid, ids, context={}):
-        model2field = {
-                       'calendar.attendee': 'del_to_user_ids', 
-                       'crm.meeting': 'attendee_ids'}
-        datas = self.read(cr, uid, ids)[0]
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
-        type = datas.get('type')
-        att_obj = self.pool.get('calendar.attendee')
-        vals = {}
-        if not model == 'calendar.attendee':
-            vals = {'ref': '%s,%s' % (model, caldav_id2real_id(context['active_id']))}
-        if type == 'internal':
-            user_obj = self.pool.get('res.users')
-            for user_id in datas.get('user_ids', []):
-                user = user_obj.browse(cr, uid, user_id)
-                if not user.address_id.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("User does not have an email Address"))
-                vals.update({'user_id': user_id, 
-                                     'email': user.address_id.email})
-                att_id = att_obj.create(cr, uid, vals)
-                obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
-
-        elif  type == 'external' and datas.get('email'):
-            vals.update({'email': datas['email']})
-            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-            att_infos = []
-            for att in res_obj.attendee_ids:
-                att_infos.append(((att.user_id and att.user_id.name) or \
-                             (att.partner_id and att.partner_id.name) or \
-                                att.email) +  ' - Status: ' + att.state.title())
-            att_id = att_obj.create(cr, uid, vals)
-            obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
-            sign = res_obj.user_id and res_obj.user_id.signature or ''
-            sign = '<br>'.join(sign and sign.split('\n') or [])
-            sub = '[%s Invitation][%d] %s'  % (company, att_id, res_obj.name)
-            body_vals = {'name': res_obj.name, 
-                        'start_date': res_obj.date, 
-                        'end_date': res_obj.date_deadline or None, 
-                        'description': res_obj.description or '-', 
-                        'location': res_obj.location or '-', 
-                        'attendees': '<br>'.join(att_infos), 
-                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
-                        'sign': sign, 
-                        'company': company
-            }
-            body = html_invitation % body_vals
-            mail_to = [datas['email']]
-            tools.email_send(
-                    tools.config.get('email_from', False), 
-                    mail_to, 
-                    sub, 
-                    body, 
-                    subtype='html', 
-                    reply_to=tools.config.get('email_from', False)
-                )
-
-        elif  type == 'partner':
-            add_obj = self.pool.get('res.partner.address')
-            for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
-                if not contact.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("Partner does not have an email Address"))
-                vals.update({
-                             'partner_address_id': contact.id, 
-                             'email': contact.email})
-                att_id = att_obj.create(cr, uid, vals)
-                obj.write(cr, uid, res_obj.id, {model2field[model]: [(4, att_id)]})
-        return {}
-
-
-    def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):
-        if not partner_id:
-            return {'value': {'contact_ids': []}}
-        cr.execute('select id from res_partner_address \
-                         where partner_id=%s' % (partner_id))
-        contacts = map(lambda x: x[0], cr.fetchall())
-        if not contacts:
-            raise osv.except_osv(_('Error!'), \
-                                ("Partner does not have any Contacts"))
-
-        return {'value': {'contact_ids': contacts}}
-
-invite_attendee_wizard()
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
