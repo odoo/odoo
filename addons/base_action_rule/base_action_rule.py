@@ -5,6 +5,7 @@ import re
 import tools
 from osv import fields, osv, orm
 from osv.orm import except_orm
+from tools.translate import _
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -25,12 +26,94 @@ AVAILABLE_PRIORITIES = [
 class base_action_rule(osv.osv):
     _name = 'base.action.rule'
     _description = 'Action Rules'
+    
+    def _get_max_level(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for check in self.browse(cr, uid, ids):
+            if check.rule_lines and len(check.rule_lines) < 15:
+                res[check.id] = len(check.rule_lines)
+            elif len(check.rule_lines) > 15:
+                raise osv.except_osv(_('Error !'), _('Max Level exceeded.'))
+        return res
+    
     _columns = {
-        'name': fields.many2one('ir.model', 'Model', required=True),
-        'max_level': fields.integer('Max Level'),
-        'rule_lines': fields.one2many('base.action.rule.line','rule_id','Rule Lines'),
-        'create_date': fields.datetime('Create Date', readonly=1)
+        'name': fields.many2one('ir.model', 'Model', required=True, states={'activate': [('readonly', True)]}),
+        'max_level': fields.function(_get_max_level, method=True, string='Max Level', 
+                    type='integer', store=True, help='Specifies maximum rule lines can be entered.'),
+        'rule_lines': fields.one2many('base.action.rule.line','rule_id','Rule Lines', states={'activate': [('readonly', True)]}),
+        'create_date': fields.datetime('Create Date', readonly=1),
+        'state': fields.selection([('draft','Draft'),('activate','Activated'),('deactivate','Deactivated')],'State',readonly=1)
     }
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
+    
+    def button_activate_rule(self, cr, uid, ids, context=None):
+        check = self.browse(cr, uid, ids[0]).rule_lines
+        if not check:
+            raise osv.except_osv(_('Error !'), _('Rule Lines are empty ! Cannot activate the Rule.'))
+        cronobj = self.pool.get('ir.cron')
+        cronids = cronobj.search(cr,uid,[('model','=','base.action.rule'),('active','=',False)])
+        if cronids:
+            cronobj.write(cr, uid, cronids, {'active': True})
+        self.write(cr, uid, ids, {'state': 'activate'})
+        return True
+    
+    def button_deactivate_rule(self, cr, uid, ids, context=None):
+        cronobj = self.pool.get('ir.cron')
+        cronids = cronobj.search(cr,uid,[('model','=','base.action.rule'),('active','=',True)])
+        if cronids:
+            cronobj.write(cr, uid, cronids, {'active': False})
+        self.write(cr, uid, ids, {'state': 'deactivate'})
+        return True
+    
+    def remind_partner(self, cr, uid, ids, context={}, attach=False):
+        return self.remind_user(cr, uid, ids, context, attach,
+                destination=False)
+
+    def remind_user(self, cr, uid, ids, context={}, attach=False, destination=True):
+        ruleline_obj = self.pool.get('base.action.rule.line')
+        for rule in self.browse(cr, uid, ids):
+            for action in rule.rule_lines:
+                if not action.act_remind_user:
+                    raise osv.except_osv(_('Warning!'), ("Remind Responsible should be active."))
+                if action.trg_user_id and action.trg_user_id.address_id and not action.trg_user_id.address_id.email:
+                    raise osv.except_osv(_('Error!'), ("User Email is not specified."))
+                if action.trg_user_id and action.trg_user_id.address_id and action.trg_user_id.address_id.email:
+                    src = action.trg_user_id.address_id.email
+                    dest = action.act_reply_to
+                    body = action.act_mail_body
+                    if not destination:
+                        src, dest = dest, src
+                        if action.trg_user_id.signature:
+                            body += '\n\n%s' % (action.trg_user_id.signature or '')
+                    dest = [dest]
+    
+                    attach_to_send = None
+    
+                    if attach:
+                        attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', rule.name.model), ('res_id', '=', rule.name.id)])
+                        attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+                        attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+    
+                    # Send an email
+                    flag = tools.email_send(
+                        src,
+                        dest,
+                        "Reminder: [%s] %s" % (str(rule.name.id), rule.name.model, ),
+                        ruleline_obj.format_body(body),
+                        reply_to=action.act_reply_to,
+                        openobject_id=str(rule.name.id),
+                        attach=attach_to_send
+                    )
+                    if flag:
+                        raise except_orm(_('Email!'),
+                                _("Email Successfully Sent by %s") % action.trg_user_id.name)
+                    else:
+                        raise except_orm(_('Email!'),
+                                _("Email is not sent Successfully for %s") % action.trg_user_id.name)
+        return True
     
     def _check(self, cr, uid, ids=False, context={}):
         '''
@@ -146,11 +229,9 @@ class base_action_rule(osv.osv):
                                 write['email_cc'] = action.act_email_cc
                         obj.write(cr, uid, [data.id], write, context)
                         if action.act_remind_user:
-                            obj.remind_user(cr, uid, [data.id], context, attach=action.act_remind_attach)
+                            self.remind_user(cr, uid, [rule.id], context, attach=action.act_remind_attach)
                         if action.act_remind_partner:
-                            obj.remind_partner(cr, uid, [data.id], context, attach=action.act_remind_attach)
-                        if action.act_method:
-                            getattr(caseobj, 'act_method')(cr, uid, [data.id], action, context)
+                            self.remind_partner(cr, uid, [rule.id], context, attach=action.act_remind_attach)
                         emails = []
                         if action.act_mail_to_user:
                             if data.user_id and data.user_id.address_id:
@@ -203,6 +284,7 @@ class base_action_rule_line(osv.osv):
 
         'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
         'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximum Priority'),
+        'act_method': fields.char('Call Object Method', size=64),
         'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
         'act_user_id': fields.many2one('res.users', 'Set responsible to'),
         'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),
@@ -210,6 +292,7 @@ class base_action_rule_line(osv.osv):
 
         'act_remind_partner': fields.boolean('Remind Partner', help="Check this if you want the rule to send a reminder by email to the partner."),
         'act_remind_user': fields.boolean('Remind responsible', help="Check this if you want the rule to send a reminder by email to the user."),
+        'act_reply_to': fields.char('Reply-To', size=64),
         'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the case be attached to the reminder email sent."),
 
         'act_mail_to_user': fields.boolean('Mail to responsible',help="Check this if you want the rule to send an email to the responsible person."),
@@ -274,9 +357,9 @@ base_action_rule_line()
 class base_action_rule_history(osv.osv):
     _name = 'base.action.rule.history'
     _description = 'Action Rule History'
-    _rec_name = 'rule_id'
     _columns = {
         'rule_id': fields.many2one('base.action.rule','Rule', required=True, readonly=1),
+        'name': fields.related('rule_id', 'name', type='many2one', relation='ir.model', string='Model', readonly=1),
         'res_id': fields.integer('Resource ID', readonly=1),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),  

@@ -198,10 +198,11 @@ class base_action_rule(osv.osv):
                         history_obj.create(cr, uid, {'rule_id': case.id, 'res_id': case.name.id, 'date_action_last': lastDate, 'date_action_next': action_next})
         caseobj = self.pool.get('crm.case')
         case_ids = caseobj.search(cr, uid, [('state', 'not in', ('cancel','done'))])
+        ruleobj = self.pool.get('base.action.rule')
         
         while len(action_ids) and level:
             newactions = []
-            actions = self.pool.get('base.action.rule').browse(cr, uid, action_ids, context)
+            actions = ruleobj.browse(cr, uid, action_ids, context)
             for case in cases:
                 for line in actions:
                     for action in line.rule_lines:
@@ -306,9 +307,9 @@ class base_action_rule(osv.osv):
                                         write['email_cc'] = action.act_email_cc
                                 caseobj.write(cr, uid, [cs.id], write, context)
                                 if action.act_remind_user:
-                                    caseobj.remind_user(cr, uid, [cs.id], context, attach=action.act_remind_attach)
+                                    ruleobj.remind_user(cr, uid, [case.id], context, attach=action.act_remind_attach)
                                 if action.act_remind_partner:
-                                    caseobj.remind_partner(cr, uid, [cs.id], context, attach=action.act_remind_attach)
+                                    ruleobj.remind_partner(cr, uid, [case.id], context, attach=action.act_remind_attach)
                                 if action.act_method:
                                     getattr(caseobj, 'act_method')(cr, uid, [cs.id], action, context)
                                 emails = []
@@ -546,50 +547,6 @@ class crm_case(osv.osv):
             rules = obj.browse(cr, uid, objids)
             obj._action(cr,uid, rules, 'draft')
         return res
-
-    def remind_partner(self, cr, uid, ids, context={}, attach=False):
-        return self.remind_user(cr, uid, ids, context, attach,
-                destination=False)
-
-    def remind_user(self, cr, uid, ids, context={}, attach=False, 
-            destination=True):
-        for case in self.browse(cr, uid, ids):
-            if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in Section"))
-            if not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
-            if case.section_id.reply_to and case.email_from:
-                src = case.email_from
-                dest = case.section_id.reply_to
-                body = case.email_last or case.description
-                if not destination:
-                    src, dest = dest, src
-                    if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature or '')
-                dest = [dest]
-
-                attach_to_send = None
-
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
-
-                # Send an email
-                flag = tools.email_send(
-                    src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
-                    self.format_body(body),
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    attach=attach_to_send
-                )
-                if flag:
-                    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                else:
-                    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True
 
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):

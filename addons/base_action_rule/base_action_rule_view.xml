@@ -14,7 +14,13 @@
                 <form string="Action Rule">
                 	<field name="name" select="1"/>
                 	<field name="max_level" select="1"/>
-                	<field name="rule_lines" colspan="4"/>
+                	<field name="rule_lines" colspan="4" />
+                	<newline/>
+                	<group col="4" colspan="4">
+	               		<field name="state"/>
+	               		<button name="button_activate_rule" states="draft,deactivate" string="Activate" icon="gtk-execute" type="object"/>
+	               		<button name="button_deactivate_rule" states="activate" string="De-activate" icon="gtk-execute" type="object"/>
+                	</group>
                 </form>
             </field>
    		</record>
@@ -82,9 +88,12 @@
                             <field name="act_user_id"/>
                             <field name="act_priority"/>
                             <separator colspan="4" string="E-Mail Reminders (includes the content of the case)"/>
-                            <field name="act_remind_user"/>
                             <field name="act_remind_partner"/>
                             <field name="act_remind_attach"/>
+                            <field name="act_remind_user"/>
+                            <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
+                            	<field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                            </group>
                             <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Server Action to be Triggered"/>
                             <field name="server_action_id"/>
@@ -95,7 +104,7 @@
                             <field name="act_mail_to_partner"/>
                             <field name="act_mail_to_watchers"/>
                             <field colspan="4" name="act_mail_to_email"/>
-                            <field colspan="4" name="act_mail_body"/>
+                            <field colspan="4" name="act_mail_body" attrs="{'required':[('act_remind_user','=',True)]}"/>
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
                             <label align="0.0" string="%%(case_id)s = Case ID" colspan="2"/>
                             <label align="0.0" string="%%(case_subject)s = Case subject" colspan="2"/>
@@ -142,7 +151,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule History">
-                	<field name="rule_id" select="1"/>
+                	<field name="name" select="1"/>
                 	<field name="res_id" select="1"/>
                 	<field name="date_action_last"/>
                 	<field name="date_action_next"/>
@@ -156,7 +165,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Action Rule History">
-                	<field name="rule_id" select="1"/>
+                	<field name="name" select="1"/>
                 	<field name="res_id" select="1"/>
                 	<field name="date_action_last"/>
                 	<field name="date_action_next"/>
