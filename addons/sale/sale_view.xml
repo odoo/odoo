@@ -244,7 +244,7 @@
                         <field name="date_order" select="1"/>
 					</group>
 					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
-						<filter string="By Parnter" icon="terp-sale" domain="[]" default="1" context="{'group_by':'partner_id'}"/>
+						<filter string="By Customer" icon="terp-sale" domain="[]" default="1" context="{'group_by':'partner_id'}"/>
                         <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="By Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
 					</group>                        
@@ -414,7 +414,7 @@
 					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
 						<filter string="By Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="By Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Scheduled" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
 					</group>                        
                         
                     </group>
