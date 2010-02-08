@@ -57,6 +57,7 @@ class project_work(osv.osv):
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
         res['general_account_id'] = a
+        res['product_uom_id'] = emp.product_id.uom_id.id
         return res
         
     def create(self, cr, uid, vals, *args, **kwargs):
@@ -77,6 +78,7 @@ class project_work(osv.osv):
         vals_line['general_account_id'] = result['general_account_id']
         vals_line['journal_id'] = result['journal_id']
         vals_line['amount'] = 00.0
+        vals_line['product_uom_id'] = result['product_uom_id']
         timeline_id = obj.create(cr, uid, vals_line, {})
 
         vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, timeline_id).product_id.standard_price
@@ -101,6 +103,7 @@ class project_work(osv.osv):
                 vals_line['product_id'] = result['product_id']
                 vals_line['general_account_id'] = result['general_account_id']
                 vals_line['journal_id'] = result['journal_id']
+                vals_line['product_uom_id'] = result['product_uom_id']
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
