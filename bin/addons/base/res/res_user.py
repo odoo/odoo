@@ -40,7 +40,12 @@ class groups(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
     ]
-
+    
+    def copy(self, cr, uid, id, default=None, context={}):
+        group_name = self.read(cr, uid, [id], ['name'])[0]['name']
+        default.update({'name': group_name +' (copy)'})
+        return super(groups, self).copy(cr, uid, id, default, context)
+    
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
