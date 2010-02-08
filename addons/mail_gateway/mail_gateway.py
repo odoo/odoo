@@ -54,6 +54,22 @@ class mail_gateway_server(osv.osv):
         'server_type':lambda * a:'pop',
         'active':lambda * a:True,
     }
+    
+    def check_duplicate(self, cr, uid, ids):
+        vals = self.read(cr, uid, ids, ['name', 'login'])[0]
+        cr.execute("select count(id) from mail_gateway_server \
+                        where name='%s' and login='%s'" % \
+                        (vals['name'], vals['login']))
+        res = cr.fetchone()
+        if res:
+            if res[0] > 1:
+                return False
+        return True 
+
+    _constraints = [
+        (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['name', 'login'])
+    ]
+    
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
         port = 0
         if server_type == 'pop':
@@ -61,6 +77,7 @@ class mail_gateway_server(osv.osv):
         elif server_type == 'imap':
             port = ssl and 993 or 143
         return {'value':{'port':port}}
+    
 mail_gateway_server()
 
 

@@ -101,6 +101,7 @@ def _mass_mail_send(self, cr, uid, data, context):
         elif data['form']['state'] == 'pending':
             case_pool.case_pending(cr, uid, data['ids'])
         cr.commit()
+        raise wizard.except_wizard(_('Email!'),("Email Successfully Sent"))
     else:
         raise wizard.except_wizard(_('Warning!'),_("Email not sent !"))
     return {}

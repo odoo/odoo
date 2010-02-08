@@ -12,7 +12,6 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_tree_view"/>
         <field name="domain" eval="[('categ_id','=',ref('feature_request_categ'))]"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="view_crm_case_bugs_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_future_tree_view0">

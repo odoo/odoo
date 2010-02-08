@@ -203,9 +203,6 @@ class base_action_rule_line(osv.osv):
 
         'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
         'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximum Priority'),
-        
-
-        'act_method': fields.char('Call Object Method', size=64),
         'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
         'act_user_id': fields.many2one('res.users', 'Set responsible to'),
         'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),

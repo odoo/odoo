@@ -162,7 +162,7 @@
                <group col="6" colspan="1">
                    <filter icon="gtk-home" string="Today"
                    	separator="1"
-                   	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                    	help="Todays's Helpdesk Requests"
                    />
                    <filter icon="gtk-media-rewind"
@@ -178,7 +178,7 @@
 	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Helpdesk Requests" default="1"/>
                    </field>
                    <field name="state" select="1">
-                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current " default="1"/>
                    </field>
 					<field name="section_id" select="1" widget="selection" string="Section">
 						<filter icon="terp-crm"

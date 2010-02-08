@@ -546,10 +546,9 @@ def _project_get(self, cr, uid, context={}):
     else:
         cr.execute("""SELECT project.id,account.name FROM project_project project
                    LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s) OR project.id IN (SELECT project_id FROM project_resource_rel
-                                                                 WHERE resource_id IN (SELECT id FROM resource_resource
-                                                                                       WHERE (user_id= %s)))"""%(uid, uid))
+                   WHERE (account.user_id = %s)"""%(uid))
         res = cr.fetchall()
+        print res
         res = [(str(r[0]),r[1]) for r in res]
     return res
 

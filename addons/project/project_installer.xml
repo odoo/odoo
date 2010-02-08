@@ -4,49 +4,34 @@
       <field name="name">project.installer.view</field>
       <field name="model">project.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_view_base"/>
+      <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes"><attribute name="string">
-              Project Modules Installation
-          </attribute></form>
+          <form position="attributes">
+            <attribute name="string">Project Modules Installation</attribute>
+          </form>
 
-          <group string="res_config_contents" position="replace">
-            <separator string="Configure Your Project Management"
-                       colspan="4"/>
-            <image name="gtk-dialog-info"/>
-            <newline/>
-            <label align="0.0" string=" Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit. Cras metus
-                augue, ultricies et vehicula id, fringilla quis
-                mauris. Vestibulum fringilla ipsum sit amet est
-                adipiscing eget euismod velit semper. Proin non mauris
-                velit. Donec malesuada nisi sed augue viverra commodo
-                sagittis nisi rutrum. Cras vitae libero nunc, a
-                molestie sapien. Proin et augue sit amet est egestas
-                fermentum ut eu lacus. Etiam nisi orci, volutpat
-                aliquam viverra interdum, vehicula iaculis
-                lectus. Mauris ligula sapien, auctor in pharetra non,
-                ultrices quis odio."/>
-            <group>
-              <separator string="Project Management" colspan="4"/>
-              <field name="project_long_term"/>
-              <field name="project_wiki"/>
-              <field name="hr_timesheet_sheet"/>
-              <field name="hr_timesheet_invoice"/>
-              <field name="account_budget"/>
-              <field name="project_messages"/>
-              <field name="project_crm"/>
-              <separator string="Methodologies" colspan="4"/>
-              <field name="scrum"/>
-              <field name="project_gtd"/>
-            </group>
-          </group>
-
-          <xpath expr='//button[@name="action_skip"]' position='replace'/>
-          <xpath expr='//button[@name="action_next"]' position='attributes'>
-            <attribute name='string'>Install Modules</attribute>
+          <separator string="title" position="attributes">
+            <attribute name="string"
+                       >Configure Your Project Management</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string">Various OpenERP applications are available to bring your project management to the next levels of control and flexibility.</attribute>
           </xpath>
+          <group colspan="8">
+            <separator string="Project Management" colspan="4"/>
+            <field name="project_long_term"/>
+            <field name="project_wiki"/>
+            <field name="hr_timesheet_sheet"/>
+            <field name="hr_timesheet_invoice"/>
+            <field name="account_budget"/>
+            <field name="project_messages"/>
+            <field name="project_crm"/>
+            <separator string="Methodologies" colspan="4"/>
+            <field name="scrum"/>
+            <field name="project_gtd"/>
+          </group>
         </data>
       </field>
     </record>
@@ -63,7 +48,7 @@
 
     <record id="project_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_project_installer"/>
-      <field name="sequence">1</field>
+      <field name="sequence">3</field>
     </record>
   </data>
 </openerp>

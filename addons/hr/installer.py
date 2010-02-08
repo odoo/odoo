@@ -26,13 +26,27 @@ class hr_installer(osv.osv_memory):
 
     _columns = {
         # Human Resources Management
-        'hr_holidays':fields.boolean('Holidays / Leaves Management'),
-        'hr_expense':fields.boolean('Expenses'),
-        'hr_jobs':fields.boolean('Recruitement Process'),
-        'hr_timesheet_sheet':fields.boolean('Timesheets'),
-        'hr_contract':fields.boolean("Employee's Contracts"),
-        'hr_evaluation':fields.boolean('Periodic Evaluations'),
-        'hr_attendance':fields.boolean('Attendances (Sign In/Out)'),
+        'hr_holidays':fields.boolean('Holidays / Leaves Management',
+            help="Tracks employee leaves allocations, requests and planning."
+                 "\n\nCan also plug into OpenERP's agendas and calendars "
+                 "applications in order to display accepted leaves requests on"
+                 " OpenERP's calendars."),
+        'hr_expense':fields.boolean('Expenses',
+            help="Tracks and manages employee expenses, and can "
+                 "automatically re-invoice clients if the expenses are "
+                 "project-related."),
+        'crm_hr':fields.boolean('Recruitment Process',
+            help="Helps you manage and streamline your recruitment process."),
+        'hr_timesheet_sheet':fields.boolean('Timesheets',
+            help="Tracks and helps employees encode and validate timesheets "
+                 "and attendance."),
+        'hr_contract':fields.boolean("Employee's Contracts",
+            help="Extends employee profiles to help manage their contracts."),
+        'hr_evaluation':fields.boolean('Periodic Evaluations',
+            help="Lets you create and manage the periodic evaluation and "
+                 "performance review of employees."),
+        'hr_attendance':fields.boolean('Attendances (Sign In/Out)',
+            help="Simplifies the management of employee attendances."),
         }
     _defaults = {
         'hr_holidays': True,

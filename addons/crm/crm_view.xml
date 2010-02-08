@@ -372,7 +372,7 @@
                            default="1" help="Cases Related to Current User"
                        />
                        <field name="state" select="1">
-                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Cases"/>
+                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Cases"/>
                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Cases"/>
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Cases"/>
                        </field>
@@ -501,24 +501,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Segmentation">
-                    <field name="name" select="1"/>
-                    <field name="exclusif"/>
+                	<group col="6" colspan="4">
+	                    <field name="name" select="1"/>
+	                    <field name="categ_id" select="2"/>
+	                    <field name="exclusif"/>
+	                </group>
                     <notebook colspan="4">
-                        <page string="Segmentation">
-                            <separator colspan="4" string="Segmentation Description"/>
-                            <field name="name" select="1"/>
-                            <field name="exclusif"/>
-                            <newline/>
-                            <field colspan="2" name="categ_id" select="2"/>
-                            <newline/>
-                            <field colspan="4" name="description" select="2"/>
-                            <field name="state"/>
-                            <group col="3" colspan="2">
-                                <button name="process_start" states="not running" string="Compute Segmentation" type="object" icon="gtk-execute"/>
-                                <button name="process_stop" states="running" string="Stop Process" type="object" icon="gtk-cancel"/>
-                                <button name="process_continue" states="running" string="Continue Process" type="object" icon="gtk-go-forward"/>
-                            </group>
-                        </page>
                         <page string="Sales Purchase">
                             <field name="sales_purchase_active"/>
                             <separator colspan="4" string="State of Mind Computation"/>
@@ -527,9 +515,18 @@
                             <field name="som_interval_decrease"/>
                             <field name="som_interval_default"/>
                             <separator colspan="4" string="Segmentation Test"/>
-                            <field colspan="4" name="segmentation_line" widget="one2many_list"/>
+                            <field colspan="4" name="segmentation_line" widget="one2many_list" nolabel="1"/>
                         </page>
+                        <page string="Description">
+       	                    <field colspan="4" name="description" select="2" nolabel="1"/>
+       	                </page>
                     </notebook>
+                    <field name="state"/>
+                    <group col="3" colspan="2">
+                        <button name="process_start" states="not running" string="Compute Segmentation" type="object" icon="gtk-execute"/>
+                        <button name="process_stop" states="running" string="Stop Process" type="object" icon="gtk-cancel"/>
+                        <button name="process_continue" states="running" string="Continue Process" type="object" icon="gtk-go-forward"/>
+                    </group>
                 </form>
             </field>
         </record>

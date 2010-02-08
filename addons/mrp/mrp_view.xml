@@ -782,21 +782,13 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>            
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field> 
+            <field name="context">{}</field>            
         </record>
 
       <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
-                  name="Requisitions" sequence="5" />
-		<record id="mrp_procurement_action_quotation" model="ir.actions.act_window">
-            <field name="name">Quotation Request</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-	    <menuitem action="mrp_procurement_action_quotation" id="menu_procurement_request_quotation" parent="purchase.menu_procurement_management"
-                  name="Request for Quotations" sequence="6" />
+                  name="Requisitions" sequence="5" />	
 
 
 

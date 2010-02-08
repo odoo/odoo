@@ -1451,9 +1451,9 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Account Configure
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Account Configure</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
                     <separator col="4" colspan="4" string="Create a Fiscal Year"/>
                     <field name="name"/>
@@ -1461,8 +1461,6 @@
                     <field name="date1"/>
                     <field name="date2"/>
                     <field name="period" colspan="4"/>
-                    <separator col="4" colspan="4" string="Select Chart of Accounts"/>
-                    <field name="charts"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position="replace"/>
               </data>
@@ -1734,16 +1732,14 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Generate Chart of Accounts from a Chart Template
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Generate Chart of Accounts from a Chart Template</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
                   <separator col="4" colspan="4" string="
                     Generate Chart of Accounts from a Chart Template"/>
-                  <label align="0.0" colspan="4" string="
-                    This will automatically configure your chart of accounts,
-                    bank accounts, taxes and journals according to the selected
-                    template"/>
+                  <label align="0.0" colspan="4"
+                         string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template"/>
                   <field name="company_id"  widget="selection"
                          groups="base.group_multi_company"/>
                   <field name ="code_digits" />

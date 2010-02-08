@@ -1,5 +1,5 @@
 <openerp>
-  <data>    
+  <data>
     <record model="ir.actions.url" id="action_document_browse">
         <field name="name">Browse Files</field>
         <field name="url">ftp://localhost:8021/</field>
@@ -21,17 +21,16 @@
         <field name="inherit_id" ref="base.res_config_view_base"/>
         <field name="arch" type="xml">
           <data>
-            <form position="attributes"><attribute name="string">
-              Auto Configure
-            </attribute></form>
+            <form position="attributes">
+              <attribute name="string">Auto Configure</attribute>
+            </form>
             <group string="res_config_contents" position="replace">
                 <separator string="FTP Server Configuration." colspan="4"/>
                 <label align="0.0" colspan="4"
-                       string="Choose the address and port for the Document
-                               Management System's FTP server."/>
+                       string="Choose the address for the Document Management System's FTP server."/>
                 <field name="host"/>
             </group>
-            <xpath expr='//button[@name="action_skip"]' position="replace"/>
+            <xpath expr="//button[@name='action_skip']" position="replace"/>
           </data>
         </field>
     </record>
@@ -51,4 +50,3 @@
     </record>
   </data>
 </openerp>
-

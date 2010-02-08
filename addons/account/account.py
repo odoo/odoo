@@ -1748,15 +1748,6 @@ class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
     _inherit = 'res.config'
 
-    def _get_charts(self, cr, uid, context):
-        module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'),
-                                        ('state', '<>', 'installed')])
-        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
-        res.append((-1, 'None'))
-        res.sort(key=lambda x: x[1])
-        return res
-
     _columns = {
         'name':fields.char(
             'Name', required=True, size=64,
@@ -1768,7 +1759,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': fields.date('End Date', required=True),
         'period':fields.selection([('month','Month'), ('3months','3 Months')],
                                   'Periods', required=True),
-        'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
     }
     _defaults = {
         'code': lambda *a: time.strftime('%Y'),
@@ -1777,14 +1767,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
     }
-    def install_account_chart(self, cr, uid, ids, context=None):
-        for res in self.read(cr,uid,ids):
-            chart_id = res['charts']
-            if chart_id > 0:
-                mod_obj = self.pool.get('ir.module.module')
-                mod_obj.button_install(cr, uid, [chart_id], context=context)
-        cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
     def execute(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
@@ -1804,7 +1786,6 @@ class account_config_wizard(osv.osv_memory):
                     res_obj.create_period(cr,uid,[new_id])
                 elif res['period']=='3months':
                     res_obj.create_period3(cr,uid,[new_id])
-        self.install_account_chart(cr,uid,ids)
 account_config_wizard()
 
 

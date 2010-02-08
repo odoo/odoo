@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sale_order_report_tree" model="ir.ui.view">
+            <field name="name">report.sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Orders">
+                	<field name="partner_id"/>
+                    <field name="date_order"/>
+                    <field name="invoiced_rate"/>
+                    <field name="picked_rate"/>
+                    <field name="amount_untaxed"/>
+                    <field name="amount_tax"/>
+                    <field name="amount_total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sale_order_report_all" model="ir.actions.act_window">
+            <field name="name">Sale Orders By Month </field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'report':True}</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+        </record>        
+	    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim01">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="sale.view_sale_order_report_tree"/>
+	        <field name="act_window_id" ref="action_sale_order_report_all"/>
+	    </record>        
+		<record model="ir.actions.act_window.view" id="action_order_product02">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">graph</field>
+	        <field name="view_id" ref="sale.view_sale_order_graph"/>
+	        <field name="act_window_id" ref="action_sale_order_report_all"/>
+	    </record>      
+	
+	<!-- Sale Orders by Product-->
+	
+        <record id="view_order_report_tree" model="ir.ui.view">
+			<field name="name">report.sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Orders by Product">
+                    <field name="name"/>
+                    <field name="order_id" invisible="True"/>
+                    <field name="product_uom_qty" />
+                    <field name="product_uom"/>
+                    <field name="product_id"/>
+                    <field name="price_unit" />
+                    <field name="discount"/>
+                    <field name="price_subtotal" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_order_report_tree_all" model="ir.actions.act_window">
+            <field name="name">Sale Orders by Product</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'report':True}</field>
+   			<field name="domain">[('product_uom_qty','!=','0')]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_line_filter"/>
+        </record>
+	    <record model="ir.actions.act_window.view" id="action_order_product01">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_order_report_tree"/>
+	        <field name="act_window_id" ref="action_order_report_tree_all"/>
+	    </record>   
+	    <record model="ir.actions.act_window.view" id="action_order_product02">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">graph</field>
+	        <field name="view_id" ref="sale.view_order_line_graph"/>
+	        <field name="act_window_id" ref="action_order_report_tree_all"/>
+	    </record>      
+
+	<menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
+    <menuitem action="action_sale_order_report_all" id="menu_report_sale_order_all" parent="base.next_id_64" sequence="3"/>
+    
+    <menuitem action="action_order_report_tree_all" id="menu_report_order_product_all1" parent="base.next_id_64" sequence="3"/>
+     
+      </data>
+    </openerp>    

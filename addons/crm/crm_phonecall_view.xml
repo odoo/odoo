@@ -17,7 +17,7 @@
 
    <menuitem action="crm_phonecall_categ_action" id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
-    # Fund Stage
+    # Phonecall Stage
     # ------------------------------------------------------
 	    <record id="crm_phonecall_stage_act" model="ir.actions.act_window">
 	        <field name="name">Phonecall Stages</field>
@@ -77,28 +77,27 @@
         <field name="model">crm.phonecall</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Claims">
-                <group colspan="4" col="7">
+            <form string="Phone Call">
+                <group colspan="4" col="4">
                     <field name="name" string="Subject"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Assigned to" select="2"/>
-                    <button string="Schedule a Meeting"
-                        name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
-
-                    <newline/>
                     <field name="date" string="Planned Date"/>
                     <field name="duration"/>
                     <field name="opportunity_id" on_change="onchange_case_id(case_id, name, partner_id)"
                     context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
                            'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
-                           'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
-
-
-                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-                </group>
+	                          'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}"/>
+					<newline/>
+					<group col="5" colspan="4">
+						<label string="" colspan="2"/>
+						<button string="Schedule a Meeting"
+	                        name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo" type="action" />
+	                    <button string="Convert to Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d" icon="gtk-index" type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                	</group>
                 <notebook colspan="4">
                 <page string="General">
-                    <field name="categ_id" string="Direction" select="1" on_change="onchange_categ_id(categ_id)" required="1"/>
+                    <field name="categ_id" string="Direction" select="1" on_change="onchange_categ_id(categ_id)" required="1" readonly="1"/>
                     <field name="active" string="Reminder"/>
                     <group colspan="2" col="3">
                         <field name="partner_id" string="Partner"/>
@@ -123,6 +122,7 @@
                     </group>
                 </page>
                </notebook>
+               </group>
            </form>
         </field>
     </record>
@@ -150,7 +150,7 @@
                <group col="6" colspan="1">
                    <filter icon="gtk-home" string="   Today   "
                    	separator="1"
-                   	domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                   	domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                    	help="Todays's Phonecalls"
                    />
                    <filter icon="gtk-media-rewind"
@@ -166,7 +166,7 @@
 	                   	<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Phonecalls" default="1"/>
                    </field>
                    <field name="state" select="1">
-                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current "/>
+                       <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current " default="1"/>
                    </field>
 					<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
 						<filter icon="terp-crm"
@@ -177,7 +177,6 @@
            </search>
         </field>
     </record>
-
 
     </data>
 </openerp>

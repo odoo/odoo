@@ -351,7 +351,7 @@ class base_action_rule_line(osv.osv):
             ('date','Date'),
             ], 'Trigger Date', size=16),
     }
-    
+
 base_action_rule_line()
 
 def _links_get(self, cr, uid, context={}):
@@ -551,24 +551,21 @@ class crm_case(osv.osv):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    def remind_user(self, cr, uid, ids, context={}, attach=False,
+    def remind_user(self, cr, uid, ids, context={}, attach=False, 
             destination=True):
         for case in self.browse(cr, uid, ids):
             if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'),("Reply To is not specified in Section"))
+                raise osv.except_osv(_('Error!'), ("Reply To is not specified in Section"))
             if not case.email_from:
-                raise osv.except_osv(_('Error!'),("Partner Email is not specified in Case"))
+                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
-                if not src:
-                    raise osv.except_osv(_('Error!'),
-                        _("No E-Mail ID Found for the Responsible Partner or missing reply address in section!"))
                 dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:
-                    src,dest = dest,src
+                    src, dest = dest, src
                     if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        body += '\n\n%s' % (case.user_id.signature or '')
                 dest = [dest]
 
                 attach_to_send = None

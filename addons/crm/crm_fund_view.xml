@@ -186,7 +186,7 @@
                        	help="Funds Related to Current User"
                        />
                        <field name="state" select="1">
-                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Funds"/>
+                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Funds" default="1"/>
                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Funds"/>
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
                        </field>

@@ -46,12 +46,12 @@ At the end of the month, the planning manager can also check if the encoded time
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
-        'report_analytic_planning_view.xml',
-        'report_analytic_planning_report.xml'
+        'project_planning_view.xml',
+        'project_planning_report.xml'
     ],
     'demo_xml': [
         #'report_account_analytic.planning.csv', 
-        'report_analytic_planning_demo.xml',
+        'project_planning_demo.xml',
     ],
     'installable': True,
     'active': False,
