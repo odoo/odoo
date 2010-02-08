@@ -47,5 +47,41 @@
       </field>
     </record>
 
+    <record id="res_config_installer" model="ir.ui.view">
+      <field name="name">Inheritable view for installer objects</field>
+      <field name="model">res.config.installer</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+
+        <form>
+          <group colspan="4">
+            <separator string="title" colspan="4"/>
+            <group colspan="4" col="10">
+              <group colspan="2">
+                <image name="gtk-dialog-info"/>
+                <newline/>
+                <label align="0.0" string="description" width="200"/>
+              </group>
+              <group colspan="8"/>
+            </group>
+          </group>
+          <separator string="" colspan="4"/>
+          <group colspan="4" col="8">
+            <field name="progress" widget="progressbar"/>
+            <label string="" colspan="3"/>
+            <group colspan="1" col="2">
+              <button name="action_skip" icon="gtk-goto-last" special="cancel"
+                      type="object" string="Skip"/>
+            </group>
+            <group colspan="1" col="2">
+              <button name="action_next" icon="gtk-go-forward"
+                      type="object" string="Install Modules"/>
+            </group>
+          </group>
+        </form>
+
+      </field>
+    </record>
+
   </data>
 </openerp>

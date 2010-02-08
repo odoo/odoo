@@ -932,6 +932,17 @@ class orm_template(object):
             self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
+        """ Set default values for the object's fields.
+
+        Returns a dict of {field_name:default_value}
+
+        Arguments:
+        `fields_list`: the fields for which the object doesn't have
+                       any value yet, and default values need to be
+                       provided. If fields outside this list are
+                       returned, the user-provided values will be
+                       overwritten.
+        """
         return {}
 
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -1450,6 +1461,7 @@ class orm_template(object):
                     'client_action_relate', [(self._name, False)], False,
                     context)
             resprint = map(clean, resprint)
+            print "resprintresprint",resprint
             resaction = map(clean, resaction)
             resaction = filter(lambda x: not x.get('multi', False), resaction)
             resprint = filter(lambda x: not x.get('multi', False), resprint)
@@ -1836,7 +1848,7 @@ class orm(orm_template):
             if fget.has_key(groupby):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
-                if fget[groupby]['type'] in ('date','datetime'):
+                if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    today = datetime.date.today()
                    if d[groupby][:10] == str(today):
                        d[groupby] = 'Today'

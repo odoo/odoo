@@ -165,7 +165,7 @@ class report_printscreen_list(report_int):
 
                 if fields[f]['type'] == 'date' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                    d1 = datetime.strptime(line[f],'%y-%m-%d')
+                    d1 = datetime.strptime(line[f],'%Y-%m-%d')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
