@@ -158,8 +158,8 @@
                 <field name="name" string="Opportunities"/>
                 <field name="stage_id"  string="Sales Stage"/>
                 <field name="partner_id" string="Partner"/>
-                <field name="planned_revenue"/>
-                <field name="probability"/>
+                <field name="planned_revenue" sum="Total of Planned Revenue"/>
+                <field name="probability" avg="Avg. of Probability"/>
                 <field name="date_deadline" string="Excepted Close Date"/>
                 <field name="user_id"/>
                 <field name="state"/>
@@ -219,6 +219,12 @@
                                help="My section"/>
 			   		</field>
                </group>
+                <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="By Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>                        
+                        <filter string="By Partner" icon="terp-crm" domain="[]"  context="{'group_by':'partner_id'}"/>
+                        <filter string="By Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
+                        
+                </group>
            </search>
         </field>
     </record>

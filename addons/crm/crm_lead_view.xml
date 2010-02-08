@@ -187,6 +187,13 @@
                            />
 					</field>
                </group>
+               <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="By Status" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>                        
+                        <filter string="By Lead Source" icon="terp-crm" domain="[]"  context="{'group_by':'categ_id'}"/>
+                        <filter string="By Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="By Create Date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
+                        
+                </group> 
            </search>
         </field>
     </record>
