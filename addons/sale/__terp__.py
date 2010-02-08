@@ -55,6 +55,7 @@
         'sale_report.xml',
         'sale_wizard.xml',
         'stock_view.xml',
+        'report_sale_view.xml',
         'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],

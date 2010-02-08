@@ -47,7 +47,7 @@
 """,
     'author': 'Tiny & Axelor',
     'website': 'http://www.openerp.com',
-    'depends': ['hr', 'crm', 'process','hr_attendance'],
+    'depends': ['hr', 'crm', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

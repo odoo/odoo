@@ -80,11 +80,9 @@ def _mass_mail_send(self, cr, uid, data, context):
     emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
     emails = filter(None, emails)
     body = data['form']['text']
-    if not case.user_id.address_id.email:
-        raise wizard.except_wizard(_('Warning!'),_("Please specify user's email address !"))
     if case.user_id.signature:
         body += '\n\n%s' % (case.user_id.signature)
-    case_pool._history(cr, uid, [case], _('Send'), history=True, email=False, details=body)
+    case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['form']['to'], details=body)
     flag = tools.email_send(
         case.user_id.address_id.email,
         emails,
@@ -92,8 +90,8 @@ def _mass_mail_send(self, cr, uid, data, context):
         case_pool.format_body(body),
         attach=attach,
         reply_to=case.section_id.reply_to,
-        
-        openobject_id=str(case.id)
+        openobject_id=str(case.id), 
+        subtype="html"
     )
     if flag:
         if data['form']['state'] == 'unchanged':
@@ -103,6 +101,7 @@ def _mass_mail_send(self, cr, uid, data, context):
         elif data['form']['state'] == 'pending':
             case_pool.case_pending(cr, uid, data['ids'])
         cr.commit()
+        raise wizard.except_wizard(_('Email!'),("Email Successfully Sent"))
     else:
         raise wizard.except_wizard(_('Warning!'),_("Email not sent !"))
     return {}
@@ -113,9 +112,10 @@ def _get_info(self, cr, uid, data, context):
         
     pool = pooler.get_pool(cr.dbname)
     case = pool.get(data.get('model')).browse(cr, uid, data['id'])
-
     if not case.user_id:
         raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
+    if not case.user_id.address_id.email:
+        raise wizard.except_wizard(_('Warning!'),_("Please specify user's email address !"))
         
     return {
         'to': case.email_from, 

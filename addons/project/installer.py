@@ -26,15 +26,30 @@ class project_installer(osv.osv_memory):
 
     _columns = {
         # Project Management
-        'project_long_term':fields.boolean('Long Term Planning'),
-        'project_wiki':fields.boolean('Specifications in a Wiki'),
-        'hr_timesheet_sheet':fields.boolean('Timesheets'),
-        'hr_timesheet_invoice':fields.boolean('Invoice Based on Hours'),
-        'account_budget':fields.boolean('Budgets'),
-        'project_messages':fields.boolean('Project Messages'),
-        'project_crm':fields.boolean('Issues Tracker & Features Requests'),
+        'project_long_term':fields.boolean('Long Term Planning',
+            help="Enables long-term projects tracking, including "
+                 "multiple-phase projects and resource allocation handling."),
+        'project_wiki':fields.boolean('Specifications in a Wiki',
+            help=""),
+        'hr_timesheet_sheet':fields.boolean('Timesheets',
+            help="Tracks and helps employees encode and validate timesheets "
+                 "and attendance."),
+        'hr_timesheet_invoice':fields.boolean('Invoice Based on Hours',
+            help="Helps generate invoice based on based on human resources "
+                 "costs and general expenses."),
+        'account_budget':fields.boolean('Budgets',
+            help="Helps accountants manage analytic and crossover budgets."),
+        'project_messages':fields.boolean('Project Messages',
+            help="Lets employees send messages to other members of the "
+                 "projects they're working on."),
+        'project_crm':fields.boolean('Issues Tracker',
+            help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
-        'scrum':fields.boolean('SCRUM'),
-        'project_gtd':fields.boolean('Getting Things Done'),
+        'scrum':fields.boolean('SCRUM',
+            help="Implements and tracks the concepts and task types defined "
+                 "in the SCRUM methodology."),
+        'project_gtd':fields.boolean('Getting Things Done',
+            help="Embeds the Getting Things Done concepts into OpenERP's "
+                 "project management."),
         }
 project_installer()

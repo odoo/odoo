@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!--<menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"
+        <!--<menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchase Management"
             groups="group_purchase_user"/>-->
-       <menuitem icon="terp-purchase" id="menu_purchase_root" name="Procurement Management"
+       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Procurement Management"
             groups="group_purchase_user"/>
 	   <menuitem id="menu_procurement_management" name="Procurement Management"
-            parent="menu_purchase_root" sequence="1"/>
+            parent="base.menu_purchase_root" sequence="1"/>
 
      <!--supplier menu-->
-     <menuitem id="menu_procurement_management_supplier" name="Suppliers"
-            parent="menu_purchase_root" sequence="3"/>
+     <menuitem id="base.menu_procurement_management_supplier" name="Suppliers"
+            parent="base.menu_purchase_root" sequence="3"/>
      <menuitem id="menu_procurement_management_supplier_name" name="Suppliers"
-            parent="menu_procurement_management_supplier" action="base.action_partner_supplier_form" />
+            parent="base.menu_procurement_management_supplier" action="base.action_partner_supplier_form" sequence="1"/>
 
 
 
           <!--Inventory control-->
       <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
-            parent="menu_purchase_root" sequence="4"/>
+            parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
       		name="Incoming shipments" sequence="9"/>
         <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
@@ -26,13 +26,13 @@
 
      <!--Invoice control-->
       <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
-            parent="menu_purchase_root" sequence="6"/>
-     <menuitem name="Pending Invoices" id="menu_procurement_management_panding_invoice" action="account.action_invoice_tree_panding_invoice"
+            parent="base.menu_purchase_root" sequence="6"/>
+     <menuitem name="Pending Invoices" id="menu_procurement_management_pending_invoice" action="account.action_invoice_tree_pending_invoice"
       parent="menu_procurement_management_invoice"/>
 
       <!--product menu-->
       <menuitem id="menu_procurement_management_product" name="Product"
-            parent="menu_purchase_root" sequence="8"/>
+            parent="base.menu_purchase_root" sequence="8"/>
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
       parent="menu_procurement_management_product"/>
 
@@ -161,7 +161,7 @@
                         <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
                     </field>
                 </group>
-  				<group expand="1" string="Group By..." colspan="4" col="10">
+  				<group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
 					<filter string="By Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
 					<filter string="By State" icon="terp-purchase" domain="[]"  context="{'group_by':'state'}"/>
 					<filter string="By Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
@@ -169,6 +169,17 @@
               </search>
             </field>
         </record>
+
+        <record id="purchase_rfq" model="ir.actions.act_window">
+            <field name="name">Quotation Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="view_mode">tree,form</field>            
+        </record>
+	    <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
+                  name="Request for Quotations" sequence="6" />
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>

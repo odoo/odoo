@@ -92,10 +92,10 @@ class survey(osv.osv):
     def survey_cancel(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'cancel' })
         return True
-    
+
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
-    
+
 survey()
 
 class survey_history(osv.osv):
@@ -155,7 +155,7 @@ class survey_page(osv.osv):
 
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
-    
+
 survey_page()
 
 class survey_question(osv.osv):
@@ -269,16 +269,26 @@ class survey_question(osv.osv):
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
+        val = {}
+        val['is_require_answer'] = False
+        val['is_comment_require'] = False
+        val['is_validation_require'] = False
+        val['comment_column'] = False
         if type in ['multiple_textboxes_diff_type']:
-            return {'value': {'in_visible_answer_type':False}}
+            val['in_visible_answer_type'] = False
+            return {'value': val}
         if type in ['rating_scale']:
-            return {'value': {'in_visible_rating_weight':False,'in_visible_menu_choice':True}}
+            val.update({'in_visible_rating_weight':False,'in_visible_menu_choice':True})
+            return {'value': val}
         elif type in ['matrix_of_drop_down_menus']:
-            return {'value': {'in_visible_rating_weight':True,'in_visible_menu_choice':False}}
+            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':False})
+            return {'value': val}
         elif type in ['single_textbox']:
-            return {'value': {'in_visible_rating_weight':True,'in_visible_menu_choice':True}}
+            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True})
+            return {'value': val}
         else:
-            return {'value': {'in_visible_rating_weight':True,'in_visible_menu_choice':True,'in_visible_answer_type':True}}
+            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True,'in_visible_answer_type':True})
+            return {'value': val}
 
     def write(self, cr, uid, ids, vals, context=None):
         questions = self.read(cr,uid, ids, ['answer_choice_ids', 'type', 'required_type','req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids'])
@@ -398,7 +408,7 @@ class survey_question(osv.osv):
     def default_get(self, cr, uid, fields, context={}):
         data = super(survey_question, self).default_get(cr, uid, fields, context)
         if context.has_key('line_order') and context['line_order']:
-            
+
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         if context.has_key('page_id'):
@@ -474,7 +484,8 @@ class survey_answer(osv.osv):
         'sequence' : fields.integer('Sequence'),
         'response' : fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
         'average' : fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
-        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float')], "Type of Answer",required=1),
+        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float'),('selection','Selection'),('email','Email')], "Type of Answer",required=1),
+        'menu_choice' : fields.text('Menu Choices'),
         'in_visible_answer_type':fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
@@ -499,12 +510,13 @@ class survey_response(osv.osv):
         'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
         'user_id' : fields.many2one('res.users', 'User'),
-        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Response Type', required=1),
+        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Response Type', required=1, readonly=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Response Answer'),
         'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], 'Status', readonly=True),
     }
     _defaults = {
         'state' : lambda * a: "skip",
+        'response_type' : lambda * a: "manually",
     }
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
@@ -529,18 +541,6 @@ class survey_response_line(osv.osv):
     _defaults = {
         'state' : lambda * a: "draft",
     }
-
-    def response_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'draft' })
-        return True
-
-    def response_done(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'done' })
-        return True
-
-    def response_skip(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'skip' })
-        return True
 
 survey_response_line()
 
@@ -702,7 +702,10 @@ class survey_question_wiz(osv.osv_memory):
                     fields = {}
                     pag_rec = page_obj.read(cr, uid, p_id)
                     xml_form = etree.Element('form', {'string': _(tools.ustr(pag_rec['title']))})
-                    etree.SubElement(xml_form, 'label', {'string': to_xml(tools.ustr(pag_rec['note'] or '')), 'align': '0.0', 'colspan':'4'})
+                    xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+                    if pag_rec['note']:
+                        for que_test in pag_rec['note'].split('\n'):
+                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
                     que_ids = pag_rec['question_ids']
                     qu_no = 0
                     for que in que_ids:
@@ -832,12 +835,21 @@ class survey_question_wiz(osv.osv_memory):
                         elif que_rec['type'] == 'multiple_textboxes_diff_type':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
-                                if ans['type'] == "char" :
+                                if ans['type'] == "email" :
                                     fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'char', 'size':255, 'string':ans['answer']}
+                                    etree.SubElement(xml_group, 'field', {'widget':'email','width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
                                 else:
-                                    fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type': str(ans['type']), 'string':ans['answer']}
-
+                                    etree.SubElement(xml_group, 'field', {'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
+                                    if ans['type'] == "char" :
+                                        fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'char', 'size':255, 'string':ans['answer']}
+                                    elif ans['type'] in ['integer','float','date','datetime']:
+                                        fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type': str(ans['type']), 'string':ans['answer']}
+                                    else:
+                                        selection = []
+                                        if ans['menu_choice']:
+                                            for item in ans['menu_choice'].split('\n'):
+                                                if item and not item.strip() == '': selection.append((item ,item))
+                                        fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'selection', 'selection' : selection, 'string':ans['answer']}
                         if que_rec['type'] in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale'] and que_rec['is_comment_require']:
                             if que_rec['type'] in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec['comment_field_type'] in ['char','text'] and que_rec['make_comment_field']:
                                 etree.SubElement(xml_group, 'field', {'name': tools.ustr(que) + "_otherfield", 'colspan':"4"})
@@ -1031,10 +1043,10 @@ class survey_question_wiz(osv.osv_memory):
                                 comment_value = True
                             else:
                                 error = False
-                                if que_rec['comment_valid_type'] == 'must_be_specific_length':
+                                if que_rec['is_comment_require'] and que_rec['comment_valid_type'] == 'must_be_specific_length':
                                     if (not val1 and  que_rec['comment_minimum_no']) or len(val1) <  que_rec['comment_minimum_no'] or len(val1) > que_rec['comment_maximum_no']:
                                         error = True
-                                elif que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
+                                elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                     error = False
                                     try:
                                         if que_rec['comment_valid_type'] == 'must_be_whole_number':
@@ -1051,7 +1063,7 @@ class survey_question_wiz(osv.osv_memory):
                                                 error = True
                                     except:
                                         error = True
-                                elif que_rec['comment_valid_type'] == 'must_be_email_address':
+                                elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] == 'must_be_email_address':
                                     import re
                                     if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val1) == None:
                                             error = True
@@ -1067,10 +1079,10 @@ class survey_question_wiz(osv.osv_memory):
                             select_count += 1
                         elif val1 and key1.split('_')[0] == que_id and (key1.split('_')[1] == "single"  or (len(key1.split('_')) > 2 and key1.split('_')[2] == 'multi')):
                             error = False
-                            if que_rec['validation_type'] == 'must_be_specific_length':
+                            if que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_specific_length':
                                 if (not val1 and  que_rec['validation_minimum_no']) or len(val1) <  que_rec['validation_minimum_no'] or len(val1) > que_rec['validation_maximum_no']:
                                     error = True
-                            elif que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
+                            elif que_rec['is_validation_require'] and que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                 error = False
                                 try:
                                     if que_rec['validation_type'] == 'must_be_whole_number':
@@ -1087,7 +1099,7 @@ class survey_question_wiz(osv.osv_memory):
                                             error = True
                                 except:
                                     error = True
-                            elif que_rec['validation_type'] == 'must_be_email_address':
+                            elif que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_email_address':
                                 import re
                                 if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val1) == None:
                                         error = True
@@ -1213,10 +1225,10 @@ class survey_question_wiz(osv.osv_memory):
                                 comment_value = True
                             else:
                                 error = False
-                                if que_rec['comment_valid_type'] == 'must_be_specific_length':
+                                if que_rec['is_comment_require'] and  que_rec['comment_valid_type'] == 'must_be_specific_length':
                                     if (not val and  que_rec['comment_minimum_no']) or len(val) <  que_rec['comment_minimum_no'] or len(val) > que_rec['comment_maximum_no']:
                                         error = True
-                                elif que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
+                                elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                     try:
                                         if que_rec['comment_valid_type'] == 'must_be_whole_number':
                                             value = int(val)
@@ -1232,7 +1244,7 @@ class survey_question_wiz(osv.osv_memory):
                                                 error = True
                                     except:
                                         error = True
-                                elif que_rec['comment_valid_type'] == 'must_be_email_address':
+                                elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] == 'must_be_email_address':
                                     import re
                                     if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val) == None:
                                             error = True
@@ -1246,10 +1258,10 @@ class survey_question_wiz(osv.osv_memory):
                             select_count += 1
                         elif val and (key.split('_')[1] == "single"  or (len(key.split('_')) > 2 and key.split('_')[2] == 'multi')):
                             error = False
-                            if que_rec['validation_type'] == 'must_be_specific_length':
+                            if que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_specific_length':
                                 if (not val and  que_rec['validation_minimum_no']) or len(val) <  que_rec['validation_minimum_no'] or len(val) > que_rec['validation_maximum_no']:
                                     error = True
-                            elif que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
+                            elif que_rec['is_validation_require'] and que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                 error = False
                                 try:
                                     if que_rec['validation_type'] == 'must_be_whole_number':
@@ -1266,7 +1278,7 @@ class survey_question_wiz(osv.osv_memory):
                                             error = True
                                 except Exception ,e:
                                     error = True
-                            elif que_rec['validation_type'] == 'must_be_email_address':
+                            elif que_rec['is_validation_require'] and  que_rec['validation_type'] == 'must_be_email_address':
                                 import re
                                 if re.match("^[a-zA-Z0-9._%-+]+@[a-zA-Z0-9._%-]+.[a-zA-Z]{2,6}$", val) == None:
                                         error = True

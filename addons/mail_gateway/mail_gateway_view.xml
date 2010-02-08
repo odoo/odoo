@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    <record id="mail_gateway_history_form" model="ir.ui.view">
+            <field name="name">mail.gateway.history.form</field>
+            <field name="model">mail.gateway.history</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Gateway History">
+                    <field name="name"/>
+                    <field name="res_id"/>
+                    <separator string="Note" colspan="4"/>
+                    <field name="note" nolabel="1" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_gateway_history_tree" model="ir.ui.view">
+            <field name="name">mail.gateway.history.tree</field>
+            <field name="model">mail.gateway.history</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Gateway History">
+                    <field name="name" select="1"/>
+                    <field name="res_id"/>
+                    <field name="gateway_id"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="mail_gateway_act" model="ir.actions.act_window">
+            <field name="name">Gateway History</field>
+            <field name="res_model">mail.gateway.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mail_gateway_history_tree"/>
+        </record>
+
+        <act_window context="{'gateway_id': active_id}"
+        	domain="[('gateway_id', '=', active_id)]"
+        	id="act_gateway_history" name="Email History"
+        	res_model="mail.gateway.history" src_model="mail.gateway" />
+
         <record id="mail_gateway_form" model="ir.ui.view">
             <field name="name">mail.gateway.form</field>
             <field name="model">mail.gateway</field>
@@ -12,18 +53,6 @@
                     <field name="server_id" />
                     <field name="reply_to"/>
                     <field name="email_default" />
-                    <field name="mail_history" widget="one2many_list" nolabel="1" colspan="4">
-                        <tree string="Email History">
-                            <field name="name"/>
-                            <field name="res_id"/>                                                        
-                        </tree>
-                       <form string="Email History">
-                            <field name="name"/>
-                            <field name="res_id"/>                            
-                            <separator colspan="4" string="Notes"/>
-                            <field name="note" nolabel="1" colspan="4"/>
-                       </form>
-                    </field>
                 </form>
             </field>
         </record>

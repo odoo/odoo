@@ -335,8 +335,8 @@
                         <field name="partner_id" select='1'/>
                         <field name="amount_total" string="Price" select='1'/>
                         <field name="origin" select='1'/>
- 					</group>                        
-                    <group expand="1" string="Group By..." colspan="4" col="10">
+ 					</group>                
+                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
                         <filter string="By Partner" icon="terp-account" domain="[]" context="{'group_by':'partner_id'}"/>
 						<filter string="By State" icon="terp-account" domain="[]"  context="{'group_by':'state'}"/>
 						<filter string="By Date Invoice" icon="terp-account" domain="[]" context="{'group_by':'date_invoice'}"/>
@@ -355,8 +355,8 @@
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
 
-        <record id="action_invoice_tree_panding_invoice" model="ir.actions.act_window">
-            <field name="name">Panding Invoice</field>
+        <record id="action_invoice_tree_pending_invoice" model="ir.actions.act_window">
+            <field name="name">Pending Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>

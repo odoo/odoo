@@ -1,7 +1,10 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 
+#    2004-2010 Tiny SPRL (<http://tiny.be>). 
+#    2009-2010 Veritos (http://veritos.nl).
+#    All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,14 +33,20 @@ class account_invoice_line(osv.osv):
             for i_line in inv.invoice_line:
                 if i_line.product_id:
                     if inv.type == 'out_invoice':
+                        # debit account dacc will be the output account
+                        # first check the product, if empty check the category                        
                         dacc = i_line.product_id.product_tmpl_id.property_stock_account_output and i_line.product_id.product_tmpl_id.property_stock_account_output.id
                         if not dacc:
                             dacc = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
                     else:
+                        # = out_refund
+                        # debit account dacc will be the input account
+                        # first check the product, if empty check the category                        
                         dacc = i_line.product_id.product_tmpl_id.property_stock_account_input and i_line.product_id.product_tmpl_id.property_stock_account_input.id
                         if not dacc:
                             dacc = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
-                            
+                    # in both cases the credit account cacc will be the expense account
+                    # first check the product, if empty check the category                                    
                     cacc = i_line.product_id.product_tmpl_id.property_account_expense and i_line.product_id.product_tmpl_id.property_account_expense.id
                     if not cacc:
                         cacc = i_line.product_id.categ_id.property_account_expense_categ and i_line.product_id.categ_id.property_account_expense_categ.id
@@ -71,27 +80,36 @@ class account_invoice_line(osv.osv):
             for i_line in inv.invoice_line:
                 if i_line.product_id:
                     if i_line.product_id.product_tmpl_id.type != 'service':
+                        # get the price difference account at the product                        
                         acc = i_line.product_id.product_tmpl_id.property_account_creditor_price_difference and i_line.product_id.product_tmpl_id.property_account_creditor_price_difference.id
                         if not acc:
+                            # if not found on the product get the price difference account at the category                            
                             acc = i_line.product_id.categ_id.property_account_creditor_price_difference_categ and i_line.product_id.categ_id.property_account_creditor_price_difference_categ.id
                         a = None
                         if inv.type == 'in_invoice':
+                            # oa will be the stock input account
+                            # first check the product, if empty check the category                             
                             oa = i_line.product_id.product_tmpl_id.property_stock_account_input and i_line.product_id.product_tmpl_id.property_stock_account_input.id
                             if not oa:
                                 oa = i_line.product_id.categ_id.property_stock_account_input_categ and i_line.product_id.categ_id.property_stock_account_input_categ.id
                         else:
+                            # = in_refund
+                            # oa will be the stock output account
+                            # first check the product, if empty check the category                            
                             oa = i_line.product_id.product_tmpl_id.property_stock_account_output and i_line.product_id.product_tmpl_id.property_stock_account_output.id
                             if not oa:
                                 oa = i_line.product_id.categ_id.property_stock_account_output_categ and i_line.product_id.categ_id.property_stock_account_output_categ.id
                         if oa:
+                            # get the fiscal position                            
                             fpos = i_line.invoice_id.fiscal_position or False
                             a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                         diff_res = []
+                        # calculate and write down the possible price difference between invoice price and product price                        
                         for line in res:
                             if a == line['account_id'] and i_line.product_id.id == line['product_id']:
                                 uom = i_line.product_id.uos_id or i_line.product_id.uom_id
                                 standard_price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, i_line.product_id.product_tmpl_id.standard_price, i_line.uos_id.id)
-                                if standard_price != i_line.price_unit and line['price'] == i_line.price_unit and acc:
+                                if standard_price != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc:
                                     price_diff = i_line.price_unit - standard_price
                                     line.update({'price':standard_price * line['quantity']})
                                     diff_res.append({

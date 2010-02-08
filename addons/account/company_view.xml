@@ -15,45 +15,5 @@
              </notebook>
             </field>
         </record>
-        
-        <!-- Wizard for Configuration of Overdue Payments -->
-        
-        <record model="ir.ui.view" id="wizard_company_setup_form">
-            <field name="name">wizard.company.setup.form</field>
-            <field name="model">wizard.company.setup</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes"><attribute name="string">
-                  Overdue Payment Report Message
-                </attribute></form>
-                <group string="res_config_contents" position="replace">
-                    <field name="company_id" select="1" 
-                           on_change="onchange_company_id(company_id)"
-                           groups="base.group_multi_company"/>
-                    <separator string="Message" colspan="4"/>
-                    <field name="overdue_msg" nolabel="1" colspan="4"/>
-                </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_wizard_company_setup_form" model="ir.actions.act_window">
-            <field name="name">Overdue Payment Report Message</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">wizard.company.setup</field>
-            <field name="view_id" ref="wizard_company_setup_form"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-
-        <record id="config_wizard_account_base_setup_form" model="ir.actions.todo">
-            <field name="action_id" ref="action_wizard_company_setup_form"/>
-        </record>
     </data>
 </openerp>

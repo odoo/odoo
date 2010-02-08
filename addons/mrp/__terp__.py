@@ -54,9 +54,6 @@
     * Print a production order
     * Stock forecasts
     """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['stock', 'hr', 'purchase', 'product', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/mrp_security.xml',

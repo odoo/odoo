@@ -143,12 +143,13 @@ class survey_browse_response(report_rml):
             response_id = surv_resp_obj.search(cr, uid, [('survey_id','in',ids)])
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
+        surv_ans_obj = pooler.get_pool(cr.dbname).get('survey.answer')
         for response in surv_resp_obj.browse(cr,uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 status = "Not Finished"
                 if response.state == "done":
                     status = "Finished"
-                rml += """<blockTable colWidths="230.0,120.0,100.0,50" style="Table_heading">
+                rml += """<blockTable colWidths="210.0,120.0,100.0,70" style="Table_heading">
                           <tr>
                             <td>
                               <para style="terp_tblheader_General_Centre">Survey Title </para>
@@ -164,7 +165,7 @@ class survey_browse_response(report_rml):
                             </td>
                           </tr>
                           </blockTable>
-                          <blockTable colWidths="230.0,120.0,100.0,50" style="Table_head_2">
+                          <blockTable colWidths="210.0,120.0,100.0,70" style="Table_head_2">
                           <tr>
                             <td>
                               <para style="terp_default_Centre_8">""" + to_xml(tools.ustr(survey.title)) + """</para>
@@ -239,25 +240,100 @@ class survey_browse_response(report_rml):
                                 </blockTable>"""
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:
                             if len(answer) and answer[0].state == "done":
+                                ans_list = []
                                 for ans in answer[0].response_answer_ids:
-                                    rml +="""<blockTable colWidths="500" style="Table1">
-                                         <tr> <td> <para style="response">""" + to_xml(tools.ustr(ans.answer_id.answer)) + """</para></td></tr>
-                                        </blockTable>"""
-                                if que.comment_field_type:
-                                    if answer[0].comment:
-                                        rml+="""<blockTable colWidths="500" style="Table1"><tr>
+                                    ans_list.append(to_xml(tools.ustr(ans.answer_id.answer)))
+                        
+                                answer_choice=[]
+                                _divide_columns_for_matrix = 20
+                                _display_ans_in_rows = 5
+                                _tbl_widths = 500
+                                for ans in que['answer_choice_ids']:
+                                    answer_choice.append(to_xml(tools.ustr((ans.answer))))
+        
+                                def divide_list(lst, n):
+                                    return [lst[i::n] for i in range(n)]
+        
+                                divide_list = divide_list(answer_choice,_display_ans_in_rows)
+                                for lst in divide_list:
+                                    if que.type == 'multiple_choice_multiple_ans':
+                                        if len(lst)<>0 and len(lst)<>int(round(float(len(answer_choice))/_display_ans_in_rows,0)):
+                                           lst.append('')
+                                    if not lst:
+                                       del divide_list[divide_list.index(lst):]
+                                for divide in divide_list:
+                                    a = _divide_columns_for_matrix*len(divide)
+                                    b = float(_tbl_widths) - float(a)
+                                    cols_widhts=[]
+                                    for div in range(0,len(divide)):
+                                        cols_widhts.append(float(a/len(divide)))
+                                        cols_widhts.append(float(b/len(divide)))
+                                    colWidths = ",".join(map(tools.ustr, cols_widhts))
+                                    rml+="""<blockTable colWidths=" """ + colWidths + """ " style="Table1">
+                                                <tr>"""
+                                    for div in range(0,len(divide)):
+                                       if divide[div]!='':
+                                           if que.type == 'multiple_choice_multiple_ans':
+                                               if divide[div] in ans_list:
+                                                   rml += """<td><illustration><fill color="white"/>
+                                                        <rect x="0.1cm" y="-0.45cm" width="0.5 cm" height="0.5cm" fill="yes" stroke="yes"  round="0.1cm"/>
+                                                        <fill color="gray"/>
+                                                        <rect x="0.2cm" y="-0.35cm" width="0.3 cm" height="0.3cm" fill="yes" stroke="no"  round="0.1cm"/>
+                                                        </illustration></td>
+                                                   <td><para style="answer">""" + divide[div] + """</para></td>"""
+                                               else:
+                                                   rml+="""
+                                                   <td>
+                                                       <illustration>
+                                                           <rect x="0.1cm" y="-0.45cm" width="0.5 cm" height="0.5cm" fill="no" stroke="yes"  round="0.1cm"/>
+                                                        </illustration>
+                                                   </td>
+                                                   <td><para style="answer">""" + divide[div] + """</para></td>"""
+                                           else:
+                                               if divide[div] in ans_list:
+                                                   rml += """<td><illustration><fill color="white"/>
+                                                            <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes" round="0.1cm"/>
+                                                            <fill color="gray"/>
+                                                            <circle x="0.3cm" y="-0.18cm" radius="0.10 cm" fill="yes" stroke="no" round="0.1cm"/>
+                                                        </illustration></td>
+                                                   <td><para style="answer">""" + divide[div] + """</para></td>"""
+                                               else:
+                                                   rml+="""
+                                               <td>
+                                                   <illustration>
+                                                       <circle x="0.3cm" y="-0.18cm" radius="0.23 cm" fill="no" stroke="yes" round="0.1cm"/>
+                                                    </illustration>
+                                               </td>
+                                               <td><para style="answer">""" + divide[div] + """</para></td>"""
+                                       else:
+                                           rml+="""
+                                           <td></td>
+                                           <td></td>"""
+                                    rml+="""</tr></blockTable>"""
+                                if que.is_comment_require and answer[0].comment:
+                                    rml+="""<blockTable colWidths="500" style="Table1"><tr>
                                                 <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment)) + """</para></td></tr></blockTable>"""
+
                             else:
                                 rml +="""<blockTable colWidths="500" style="Table1">
                                  <tr>  <td> <para style="response">No Response</para></td> </tr>
                                 </blockTable>"""
                         elif que.type in ['multiple_textboxes_diff_type','multiple_textboxes','date','date_and_time','numerical_textboxes','multiple_textboxes_diff_type']:
                             if len(answer) and answer[0].state == "done":
+                                answer_list = {}
                                 for ans in answer[0].response_answer_ids:
-                                    rml +="""<blockTable colWidths="200,300" style="Table1">
-                                         <tr> <td> <para style="response">""" + to_xml(tools.ustr(ans.answer_id.answer)) + """</para></td>
-                                         <td> <para style="response">""" + to_xml(tools.ustr(ans.answer)) + """</para></td></tr>
-                                        </blockTable>"""
+                                    answer_list[ans.answer_id.answer] = ans.answer
+                                for que_ans in que['answer_choice_ids']:
+                                    if que_ans.answer in answer_list:
+                                        rml +="""<blockTable colWidths="200,300" style="Table1">
+                                             <tr> <td> <para style="response">""" + to_xml(tools.ustr(que_ans.answer)) + """</para></td>
+                                             <td> <para style="response">""" + to_xml(tools.ustr(answer_list[que_ans.answer])) + """</para></td></tr>
+                                            </blockTable>"""
+                                    else:
+                                        rml +="""<blockTable colWidths="200,300" style="Table1">
+                                             <tr> <td> <para style="response">""" + to_xml(tools.ustr(que_ans.answer)) + """</para></td>
+                                             <td> <para style="response"></para></td></tr>
+                                            </blockTable>"""
                             else:
                                 rml +="""<blockTable colWidths="500" style="Table1">
                                  <tr>  <td> <para style="response">No Response</para></td> </tr>

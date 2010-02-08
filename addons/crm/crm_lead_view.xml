@@ -57,7 +57,7 @@
                         <separator colspan="4" string="Status and Categarization"/>
                         <group colspan="4" col="6">
                             <field name="user_id" select="2"/>                                                        
-                            <field name="stage_id" select="1" string="Status" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>                                
+                            <field name="stage_id" select="1" string="Status" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>                                
                             <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Lead Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
                        
                             <field name="type_id" string="Campaign" select="1"/>
@@ -159,7 +159,7 @@
                <group col="3" colspan="1">
                 <filter icon="gtk-home" string="   Today   "
                     separator="1"
-                    domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                    domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                     help="Todays's Leads"
                 />
                 <filter icon="gtk-media-rewind" string="    7 Days    "
@@ -177,7 +177,7 @@
                            />
                    </field>
                    <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Leads"/>
+                       <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Leads" default="1"/>
                        <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Leads"/>
                    </field>
 					<field name="section_id" select="1" default="context.get('section_id', False)" widget="selection" string="Section">

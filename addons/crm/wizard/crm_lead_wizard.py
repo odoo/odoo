@@ -106,7 +106,6 @@ class lead2opportunity(wizard.interface):
         lead_case_obj = pool.get('crm.lead')
         opportunity_case_obj = pool.get('crm.opportunity')        
         for lead in lead_case_obj.browse(cr, uid, data['ids']):
-            #TODO : Take other info from lead       
             new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
@@ -116,9 +115,12 @@ class lead2opportunity(wizard.interface):
                 'description':lead.description,
                 'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
-                'priority':lead.priority,
-                'categ_id':lead.categ_id.id,
+                'priority': lead.priority,
                 'date': lead.date,
+                'partner_phone': lead.partner_phone,
+                'canal_id': lead.canal_id,
+                'som': lead.som,
+                'email_from': lead.email_from
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
