@@ -312,7 +312,7 @@
                                 <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="History">
+                        <page string="History" groups="base.group_extended">
                             <field name="id" select="1"/>
                             <field name="active" select="2"/>
                             <separator colspan="4" string="Dates"/>
@@ -328,7 +328,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Emails">
+                        <page string="Emails" groups="base.group_extended">
                            <group colspan="4">
                                <field colspan="4" name="email_cc" string="CC"/>
                            </group>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse"/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" sequence="2"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="3"/>
    		<menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
@@ -669,7 +669,7 @@
                         <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>                   
+					</group>
               </search>
             </field>
         </record>
@@ -794,8 +794,8 @@
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
                         <filter string="By Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
                         <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-						<filter string="By Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>                        
-					</group>                  
+						<filter string="By Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+					</group>
               </search>
             </field>
         </record>
@@ -953,7 +953,7 @@
                         <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>                      
+					</group>
                 </search>
             </field>
         </record>
@@ -1113,7 +1113,7 @@
                         <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>                      
+					</group>
                 </search>
             </field>
         </record>
@@ -1166,7 +1166,7 @@
                         <filter string="By Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>                      
+					</group>
                 </search>
             </field>
         </record>
@@ -1285,7 +1285,7 @@
 						<filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Destion Location" icon="terp-stock" domain="[]" context="{'group_by':'location_dest_id'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
-					</group>                       
+					</group>
             	</search>
             </field>
         </record>
@@ -1409,7 +1409,7 @@
 						<filter string="By Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
 						<filter string="By State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="By Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
-					</group>                        
+					</group>
             	</search>
             </field>
         </record>

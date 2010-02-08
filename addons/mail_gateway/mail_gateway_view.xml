@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Gateway History">
                     <field name="name"/>
+                    <field name="gateway_id"/>
+                    <field name="model_id"/>
                     <field name="res_id"/>
                     <separator string="Note" colspan="4"/>
                     <field name="note" nolabel="1" colspan="4"/>
@@ -22,6 +24,7 @@
             <field name="arch" type="xml">
                 <tree string="Gateway History">
                     <field name="name" select="1"/>
+                    <field name="model_id"/>
                     <field name="res_id"/>
                     <field name="gateway_id"/>
                 </tree>

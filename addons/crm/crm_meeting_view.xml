@@ -24,19 +24,17 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings Form">
-            	<group col="4" colspan="6">
-            		<field name="name" select="1" string="Summary"
-            			colspan="3" />
-            		<field name="section_id" widget="selection"
-            			colspan="1" />
-            	</group>
-            	<group col="6" colspan="6">
+            <form string="Meetings Form">            	
+            	<group col="6" colspan="4">
+                    <field name="name" select="1" string="Summary"
+            			colspan="4" />
+                    <field name="location" />
             		<field name="date" string="Start Date" required="1" />
             		<field name="duration" widget="float_time" />
             		<field name="date_deadline" string="End Date" required="1" />
-            		<field name="location" />
+            		
             		<field name="categ_id"/>
+                    <field name="alarm_id" string="Reminder" widget="selection" />
             		<group colspan="2" col="3" attrs="{'readonly':[('recurrent_uid','!=',False)]}">
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"
@@ -58,7 +56,7 @@
             			<button string="Invite People"
             				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
             				icon="terp-partner" type="action"
-            				context="{'model' : 'crm.meeting'}" colspan="2"/>
+            				context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
             			<field name="attendee_ids" colspan="4"
             				nolabel="1" widget="one2many" mode="tree,form">
             				<tree string="Atendee details" editable="top">
@@ -87,10 +85,11 @@
             		</page>
             		<page string="Other Information">
             			<field name="priority"/>
-            			<field name="show_as"/>
-            			<field name="alarm_id" string="Reminder" widget="selection" />
+            			<field name="show_as"/>            			
             			<field name="class"/>
             			<field name="user_id"/>
+                        <field name="section_id" widget="selection"
+            			/>
             			<field name="vtimezone"/>
             			<field name="recurrent_id" invisible="1" />
             			<field name="recurrent_uid" invisible="1" />
@@ -115,8 +114,8 @@
             <tree string="Meetings Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id" widget="char"/>
                 <field name="name" string="Title"/>
-                <field name="date" string="Next Meeting"/>
-                <field name="section_id" widget="selection"/>
+                <field name="date" string="Meeting Date"/>
+                <field name="section_id" />
                 <field name="priority"/>
                 <field name="categ_id"/>
                 <field name="user_id"/>
@@ -162,7 +161,7 @@
             	<search string="Search Meetings">
                		<group col="12" colspan="4">
                			<filter icon="terp-crm" string="My Meetings" domain="[('user_id','=',uid)]" help="My Meetings"/>
-	               		<filter icon="terp-crm" string="Draft" domain="[('state','in',('draft', 'open'))]" default="1" help="Current Meetings"/>
+	               		<filter icon="terp-crm" string="Current" domain="[('state','in',('draft', 'open'))]" default="1" help="Current Meetings"/>
 	                    <filter icon="terp-crm" string="Confirmed" domain="[('state','=','done')]" help="Confirmed Meetings"/>
 	               		<separator orientation="vertical"/>
 	               		<field name="name" select="1" string="Subject"/>
