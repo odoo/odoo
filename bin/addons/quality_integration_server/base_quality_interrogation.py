@@ -174,28 +174,7 @@ def create_db(uri, dbname, user='admin', pwd='admin', lang='en_US'):
     if dbname in db_list:
         drop_db(uri, dbname)
     id = execute(conn,'create',admin_passwd, dbname, True, lang)
-    wait(id,uri)
-    uid = login_conn.login(dbname, user, pwd)
-
-    wiz_id = execute(wiz_conn,'create', dbname, uid, user, 'base_setup.base_setup')
-
-    state = 'init'
-    datas = {'form':{}}
-
-    while state!='config':
-        res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
-        if state=='init':
-            datas['form'].update( res['datas'] )
-        if res['type']=='form':
-            for field in res['fields'].keys():
-                datas['form'][field] = datas['form'].get(field,False)
-            state = res['state'][-1][0]
-            datas['form'].update({
-                'profile': -1
-            })
-        elif res['type']=='state':
-            state = res['state']
-    res = execute(wiz_conn, 'execute', dbname, uid, pwd, wiz_id, datas, state, {})
+    wait(id,uri)    
     install_module(uri, dbname, ['base_module_quality'],user=user,pwd=pwd)
     return True
 
