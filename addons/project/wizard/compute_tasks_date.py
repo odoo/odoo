@@ -24,6 +24,8 @@ import pooler
 from tools.translate import _
 import datetime
 from resource.faces import *
+from new import classobj
+import operator
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
@@ -32,7 +34,7 @@ compute_form = """<?xml version="1.0" ?>
 
 success_msg = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
-    <label string="Task Scheduling completed scccessfully."/>
+    <label string="Task Scheduling completed successfully."/>
 </form>"""
 
 compute_fields = {
@@ -40,18 +42,18 @@ compute_fields = {
 
 }
 def timeformat_convert(cr, uid, time_string, context={}):
+#    Function to convert input time string:: 8.5 to output time string 8:30
+
         strg = str(time_string)[-2:]
         last_strg = str(time_string)[0:-2]
         if strg != '.0':
             if '.' not in strg:
                 strg = '.' + strg
                 last_strg = str(time_string)[:-3]
-
             new_strg = round(float(strg) / 0.016666667)
             converted_strg = last_strg + ':' + str(new_strg)[:-2]
         else:
             converted_strg = last_strg + ':00'
-
         return converted_strg
 
 class wizard_compute_tasks(wizard.interface):
@@ -63,115 +65,145 @@ class wizard_compute_tasks(wizard.interface):
         resource_pool = pool.get('resource.resource')
         resource_leaves_pool = pool.get('resource.calendar.leaves')
         resource_week_pool = pool.get('resource.calendar.week')
-        
+        user_pool = pool.get('res.users')
+
         project_id = data['form']['project_id']
         project = project_pool.browse(cr,uid,project_id)
         task_ids = task_pool.search(cr,uid,[('project_id','=',project_id)])
         if task_ids:
+            wktime_cal = []
+            leaves = []
+            task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
-            if task_1.date_start:
-                date_dt = datetime.datetime.strptime(task_1.date_start,"%Y-%m-%d %H:%M:%S")
-            else:
-                date_dt = datetime.datetime.strptime(project.date_start,"%Y-%m-%d")
-            dt = datetime.datetime.strftime(date_dt,"%Y-%m-%d %H:%M")
+            dt_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
+            calendar_id = project.resource_calendar_id.id
 
-            for i in range(len(task_obj)):
-                final_lst = []
-                leaves = []
-                if task_obj[i].user_id.id:
-                    resource_id = resource_pool.search(cr,uid,[('user_id','=',task_obj[i].user_id.id)])
-                    if resource_id :
-                        resource_obj = resource_pool.browse(cr,uid,resource_id)[0]
-                        if resource_obj.calendar_id:
-                            calendar_id = resource_obj.calendar_id.id
-                            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',resource_id)])
-                        else:
-                            calendar_id = project.resource_calendar_id.id
-                            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
+#     If project has a working calendar then that would be used otherwise
+#     the default faces calendar would  be used
+            if calendar_id:
+                resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
+                time_range = "8:00-8:00"
+                non_working = ""
+                wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
+                wk_days = {}
+                wk_time = {}
+                wktime_list = []
+                week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
+                week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
 
-                        time_range = "8:00-8:00"
-                        non_working = ""
-                        wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
-                        wk_days = {}
-                        wk_time = {}
-                        tlist = []
-                        week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
-                        week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
+#     Converting time formats into appropriate format required
+#     and creating a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
+                for week in week_obj:
+                    res_str = ""
+                    if wk.has_key(week['dayofweek']):
+                        day = wk[week['dayofweek']]
+                        wk_days[week['dayofweek']] = wk[week['dayofweek']]
 
-                        for week in week_obj:
-                            res_str = ""
-                            if wk.has_key(week['dayofweek']):
-                                day = wk[week['dayofweek']]
-                                wk_days[week['dayofweek']] = wk[week['dayofweek']]
+                    hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
+                    hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
+                    res_str = hour_from_str + '-' + hour_to_str
+                    wktime_list.append((day,res_str))
 
-                            hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
-                            hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
-                            res_str = hour_from_str + '-' + hour_to_str
-                            tlist.append((day,res_str))
+#     Converting it to format like [('mon', '8:00-12:00', '13:00-18:00')]
+                for item in wktime_list:
+                    if wk_time.has_key(item[0]):
+                        wk_time[item[0]].append(item[1])
+                    else:
+                        wk_time[item[0]] = [item[0]]
+                        wk_time[item[0]].append(item[1])
 
-                        for item in tlist:
-                            if wk_time.has_key(item[0]):
-                                wk_time[item[0]].append(item[1])
-                            else:
-                                wk_time[item[0]] = [item[0]]
-                                wk_time[item[0]].append(item[1])
+                for k,v in wk_time.items():
+                    wktime_cal.append(tuple(v))
 
-                        for k,v in wk_time.items():
-                            final_lst.append(tuple(v))
+#     For non working days adding [('tue,wed,fri,sat,sun', '8:00-8:00')]
+                for k,v in wk_days.items():
+                    if wk.has_key(k):
+                        wk.pop(k)
+                for v in wk.itervalues():
+                    non_working += v + ','
+                if non_working:
+                    wktime_cal.append((non_working[:-1],time_range))
 
-                        for k,v in wk_days.items():
-                            if wk.has_key(k):
-                                wk.pop(k)
-                        for v in wk.itervalues():
-                            non_working += v + ','
-                        if non_working:
-                            final_lst.append((non_working[:-1],time_range))
+#     If project working calendar has any leaves
+                if resource_leave_ids:
+                    res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+                    for leave in range(len(res_leaves)):
+                        dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
+                        dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                        no = dt_end - dt_start
+                        leave_days = no.days + 1
+                    [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
+                    leaves.sort()
 
-                        if resource_leave_ids:
-                            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
-                            for leave in range(len(res_leaves)):
-                                dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
-                                dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
-                                no = dt_end - dt_start
-                                leave_days = no.days + 1
-                            [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
-                            leaves.sort()
+#    To create resources which are the Project Members
+            resource = project.members
+            resource_objs = []
+            for no in range(len(resource)):
+                resource_id = resource_pool.search(cr,uid,[('user_id','=',resource[no].id)])
+                resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name}))
 
+#     To create dynamic no of tasks
+            def tasks(j,eff):
+                def task():
+                    """
+                    task is a dynamic method!
+                    """
+                    effort = eff
+                task.__doc__ = "TaskNO%d" %j
+                task.__name__ = "task%d" %j
+                return task
 
-                hours = task_obj[i].remaining_hours / task_obj[i].occupation_rate
-                hours = str(hours)[:-2] + 'H'
+#     To create dynamic no of tasks with the resource specified
+            def tasks_resource(j,eff,obj):
+                def task():
+                    """
+                    task is a dynamic method!
+                    """
+                    effort = eff
+                    resource = obj
+                task.__doc__ = "TaskNO%d" %j
+                task.__name__ = "task%d" %j
+                return task
 
-                class user(Resource):
-                 pass
+#    Creating the project with all the tasks and resources
+            def Project():
+                resource = reduce(operator.or_,resource_objs)
+                title = project.name
+                start = dt_start
 
-                if i == 0:
-                    new_dt = dt
-                else:
-                    data = task_pool.read(cr,uid,[task_obj[i-1].id],['date_end'])[0]
-                    new_dt = data['date_end'][0:16]
-
-                def Project_1():
-                    resource = user
-                    title = project.name
-                    start = new_dt
-                    effort = hours
-
-                    if final_lst or leaves:
-                        working_days = final_lst
+#    If project has calendar
+                if wktime_cal or leaves:
+                        working_days = wktime_cal
                         vacation = tuple(leaves)
 
-                    def task1():
-                        start = new_dt
-                        effort = hours
-                        title = task_obj[i].name
+#    Dynamic Creation of tasks
+                for i in range(len(task_obj)):
+                    hours = str(task_obj[i].planned_hours / task_obj[i].occupation_rate)[:-2] + 'H'
+                    if task_obj[i].user_id:
+                        for resource_object in resource_objs:
+                            if resource_object.__name__ == task_obj[i].user_id.name:
+                               task = tasks_resource(i,hours,resource_object)
+                    else:
+                        task = tasks(i,hours)
 
-                project_1 = BalancedProject(Project_1)
-                s_date = project_1.calendar.WorkingDate(project_1.task1.start).to_datetime()
-                e_date = project_1.calendar.WorkingDate(project_1.task1.end).to_datetime()
-                task_pool.write(cr,uid,[task_obj[i].id],{'date_start':s_date,'date_end':e_date})
-
+            project = BalancedProject(Project)
+            task_no = len(task_obj)
+            loop_no = 0
+            for t in project:
+                no2 = loop_no
+                while loop_no <= task_no:
+                    s_date = t.start.to_datetime()
+                    e_date = t.end.to_datetime()
+                    print 'Start Date And End Date:::',s_date,e_date,t.name,t.booked_resource
+                    if loop_no != 0:
+                        user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
+                        task_pool.write(cr,uid,[task_obj[loop_no - 1].id],{'date_start':s_date,'date_end':e_date,'user_id':user_id[0]})
+                    loop_no = task_no + 1
+                loop_no = no2
+                loop_no +=1
         return {}
+
     states = {
         'init': {
             'actions': [],
@@ -180,7 +212,8 @@ class wizard_compute_tasks(wizard.interface):
                 ('compute', 'Compute')
             ]},
         },
-        
+
+
         'compute': {
             'actions': [_compute_date],
             'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
@@ -190,4 +223,3 @@ wizard_compute_tasks('wizard.compute.tasks')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
