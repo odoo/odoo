@@ -570,7 +570,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <field name="password" position="after">
-                 <field name="context_project_id" completion="1"/>
+                 <field name="context_project_id" completion="1" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -583,7 +583,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
              <page string="Current Activity" position="inside">
-                    <field name="context_project_id" completion="1" />
+                    <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
                 </page>
             </field>
         </record>

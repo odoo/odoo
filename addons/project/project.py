@@ -557,8 +557,8 @@ class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
     _columns = {
-        'context_project_id': fields.selection(_project_get, 'Project'),
-        }
+        'context_project_id': fields.many2one('project.project', 'Project')
+     }
 users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
