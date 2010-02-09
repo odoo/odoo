@@ -17,7 +17,7 @@
                 	<field name="rule_lines" colspan="4" />
                 	<newline/>
                 	<group col="4" colspan="4">
-	               		<field name="state"/>
+	               		<field name="state" select="1"/>
 	               		<button name="button_activate_rule" states="draft,deactivate" string="Activate" icon="gtk-execute" type="object"/>
 	               		<button name="button_deactivate_rule" states="activate" string="De-activate" icon="gtk-execute" type="object"/>
                 	</group>
@@ -30,11 +30,11 @@
             <field name="model">base.action.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Action Rule">
-                	<field name="name" select="1"/>
-                	<field name="max_level" select="1"/>
+                <tree string="Action Rule" colors="red:state=='activate'">
+                	<field name="name"/>
+                	<field name="max_level"/>
                 	<field name="rule_lines"/>
-                	<field name="state" select="1"/>
+                	<field name="state"/>
                 </tree>
             </field>
    		</record>
