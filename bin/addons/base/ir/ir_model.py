@@ -75,7 +75,7 @@ class ir_model(osv.osv):
         if context:
             context.pop('__last_update', None)
         return super(ir_model,self).write(cr, user, ids, vals, context)
-
+        
     def create(self, cr, user, vals, context=None):
         if context and context.get('manual',False):
             vals['state']='manual'
@@ -83,7 +83,9 @@ class ir_model(osv.osv):
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
             self.pool.get(vals['model']).__init__(self.pool, cr)
-            self.pool.get(vals['model'])._auto_init(cr,{'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+            ctx = context.copy()
+            ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+            self.pool.get(vals['model'])._auto_init(cr, ctx)
             #pooler.restart_pool(cr.dbname)
         return res
 
@@ -260,9 +262,12 @@ class ir_model_fields(osv.osv):
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
-                self.pool.get(vals['model'])._auto_init(cr, {'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+                ctx = context.copy()
+                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
+                self.pool.get(vals['model'])._auto_init(cr, ctx)
 
         return res
+    
 ir_model_fields()
 
 class ir_model_access(osv.osv):

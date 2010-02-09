@@ -1771,10 +1771,14 @@ class orm(orm_template):
 
             # iterate on the "object columns"
             todo_update_store = []
+            update_custom_fields = context.get('update_custom_fields', False)
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
                     #raise _('Can not define a column %s. Reserved keyword !') % (k,)
+                #Not Updating Custom fields
+                if k.startswith('x_') and not update_custom_fields:
+                    continue
                 f = self._columns[k]
 
                 if isinstance(f, fields.one2many):
