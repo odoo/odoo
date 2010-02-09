@@ -49,40 +49,40 @@ class workflow(osv.osv):
     #
 
 
-    def graph_get(self, cr, uid, id, scale, context={}):
-
-        nodes= []
-        nodes_name = []
-        transitions = []
-        start = []
-        tres = {}
-        no_ancester = []
-        workflow = self.browse(cr, uid, id, context)
-        for a in workflow.activities:
-            nodes_name.append((a.id,a.name))
-            nodes.append(a.id)
-            if a.flow_start:
-                start.append(a.id)
-            else:
-                if not a.in_transitions:
-                    no_ancester.append(a.id)
-
-            for t in a.out_transitions:
-                transitions.append((a.id, t.act_to.id))
-                tres[t.id] = (a.id, t.act_to.id)
-
-
-        g  = graph(nodes, transitions, no_ancester)
-        g.process(start)
-        g.scale(*scale)
-        result = g.result_get()
-        results = {}
-
-        for node in nodes_name:
-            results[str(node[0])] = result[node[0]]
-            results[str(node[0])]['name'] = node[1]
-
-        return {'nodes': results, 'transitions': tres}
+#    def graph_get(self, cr, uid, id, scale, context={}):
+#
+#        nodes= []
+#        nodes_name = []
+#        transitions = []
+#        start = []
+#        tres = {}
+#        no_ancester = []
+#        workflow = self.browse(cr, uid, id, context)
+#        for a in workflow.activities:
+#            nodes_name.append((a.id,a.name))
+#            nodes.append(a.id)
+#            if a.flow_start:
+#                start.append(a.id)
+#            else:
+#                if not a.in_transitions:
+#                    no_ancester.append(a.id)
+#
+#            for t in a.out_transitions:
+#                transitions.append((a.id, t.act_to.id))
+#                tres[t.id] = (a.id, t.act_to.id)
+#
+#
+#        g  = graph(nodes, transitions, no_ancester)
+#        g.process(start)
+#        g.scale(*scale)
+#        result = g.result_get()
+#        results = {}
+#
+#        for node in nodes_name:
+#            results[str(node[0])] = result[node[0]]
+#            results[str(node[0])]['name'] = node[1]
+#
+#        return {'nodes': results, 'transitions': tres}
 
 
     def create(self, cr, user, vals, context=None):
